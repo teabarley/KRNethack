@@ -1,0 +1,399 @@
+# NetHack 3.6  epitaph.txt       $NHDT-Date: 1524689580 2018/04/25 20:53:00 $  $NHDT-Branch: NetHack-3.6.0 $:$NHDT-Revision: 1.3 $
+# Copyright (c) 2015 by Pasi Kallinen
+# NetHack may be freely redistributed.  See license for details.
+# Epitaphs for random headstones
+#
+#
+고인의 명복을 빕니다
+R.I.P.
+고인의 띵복을 액션빔
+주의 -- 이 무덤 안에는 가치 있는 거 없음.
+1994-1995. 가장 오래 산 넷핵 플레이어
+무연고 넷핵 플레이어의 무덤
+이게 누군지 확실하진 않았지만, 어쨌든 우리는 그를 여기 묻었다.
+Sparky - 그는 좋은 개였습니다.
+Beware of Electric Third Rail
+원산지:대만
+친구였고, 훌륭한 멋쟁이였으며, 죽어버렸고, 이젠 음식이 되었노라.
+비틀쥬스 비틀쥬스 비틀쥬스
+아래를 봐!
+부디 날 파내지 마, 여기 묻혀있는게 죽여주도록 좋으니까 - 거주민
+우체부여, 보낼 주소를 받아 적어주게. 게헨놈, 아스모데우스의 성채, 왼쪽에서 다섯번째 레뮤어에게.
+Mary had a little lamb/Its fleece was white as snow/When Mary was in trouble/The lamb was first to go
+조심해, 안 그러면 너도 이렇게 될 수 있으니까!
+Soon you'll join this fellow in hell! -- the Wizard of Yendor
+Caution! This grave contains toxic waste
+Sum quod eris
+Here lies an Atheist, all dressed up and no place to go
+Here lies Ezekiel, age 102.  The good die young.
+Here lies my wife: Here let her lie! Now she's at rest and so am I.
+Here lies Johnny Yeast.  Pardon me for not rising.
+He always lied while on the earth and now he's lying in it
+나 자신이 재가 되어버렸지.
+곧 무르익을 것이요, 곧 썩을 것이요, 곧 사라지겠지만 잊히지 않으리라.
+조나단 이스트 여기 잠들다. 브레이크 대신 가스를 밟아버린.
+저리가!
+Alas fair Death, 'twas missed in life - some peace and quiet from my wife
+Applaud, my friends, the comedy is finished.
+At last... a nice long sleep.
+Audi Partem Alteram
+바질, 곰에게 습격당함.
+Burninated
+혼란이 내 묘비명이 되리니
+크리스마스까지 열지 마시오
+Don't be daft, they couldn't hit an elephant at this dist-
+Don't forget to stop and smell the roses
+Don't let this happen to you!
+Dulce et decorum est pro patria mori
+Et in Arcadia ego
+Fatty and skinny went to bed.  Fatty rolled over and skinny was dead.  Skinny Smith 1983-2000.
+Finally I am becoming stupider no more
+Follow me to hell
+...for famous men have the whole earth as their memorial
+Game over, man.  Game over.
+저리 가! 난 여기서 낮잠을 자고 있다고! 망할 모험가들...
+Gone fishin'
+Good night, sweet prince: And flights of angels sing thee to thy rest!
+Go Team Ant!
+He farmed his way here
+치명적 오류에 의해 죽은 프로그래머 여기 잠들다
+산성 방울을 밥으로 먹으려 하던 밥 여기 잠들다
+Here lies Dudley, killed by another %&#@#& newt.
+Here lies Gregg, choked on an egg
+여기에 거짓말이 잠들다.... 진짜야.
+Here lies The Lady's maid, died of a Vorpal Blade
+지뢰를 밟고 폭사한 잭의 왼발 여기 잠들다.. 혹시 그의 다른 부분을 찾으면 좀 갖고 와 줄래?
+녀석은 너무 오래 기다렸어
+뱃사공이나 할 걸
+그가 한 일이 자기 목숨보다 오래가지 못한다면, 이 돌에 남은 표식이 뭐겠어?
+이길 수 있겠는데?
+빨간 약 파란 약 둘 다 줘!
+나는 살아남을꺼야!
+검은 용에게 사망 - 이 무덤은 비어있음
+날 꺼내줘!
+잘 어울리네, 메두사.
+스미스 부인, 사과가 목에 걸려 사망. 애통해하는 남편과 딸, 손녀를 뒤로하고 떠남
+Nobody believed her when she said her feet were killing her
+No!  I don't want to see my damn conduct!
+One corpse, sans head
+전체적으로 봤을 때, 광산마을에 있는 게 나았어.
+휴가감
+이런.
+밥먹으러감
+팔렸음
+누가 설치 했다 우리 폭탄!
+Take my stuff, I don't need it anymore
+Taking a year dead for tax reasons
+The reports of my demise are completely accurate
+(여기에 판매상품을 놓으세요)
+This was actually just a pit, but since there was a corpse, we filled it
+납골당은 이쪽
+브루투스, 너마저?
+비었음
+어서 오세요!
+Wish you were here!
+아니, 나도 죽었어.
+다른 사람을 찾아보세요
+...and they made me engrave my own headstone too!
+...but the blood has stopped pumping and I am left to decay...
+<Expletive Deleted>
+A masochist is never satisfied.
+Ach, 'twas a wee monster in the loch
+받아들이고, 즐기고, 살아남아라.
+모험의 즐거움? 하!
+After all, what are friends for...
+After this, nothing will shock me
+After three days, fish and guests stink
+Age and treachery will always overcome youth and skill
+Ageing is not so bad.  The real killer is when you stop.
+나 정말 꼴통이지?
+앨저넌
+All else failed...
+운빨신을 찬양하라
+비긴 걸로 하지 않을래?
+끝이 좋으면 다 좋은 거야.
+마침내 혼자로구나!
+떠다니는 눈은 반드시 뒤에서 공격할 것
+내가 아직도 즐기고 있나?
+And I can still crawl, I'm not dead yet!
+And all I wanted was a free lunch
+And all of the signs were right there on your face
+And don't give me that innocent look either!
+그리고 모두 죽었답니다. 흑흑흑
+And here I go again...
+And nobody cares until somebody famous dies...
+그래서 끝난 거야?
+그래서...시작이구나.
+살다 보면 곰한테 잡아먹힐 때도 있는 법이지.
+And then 'e nailed me 'ead to the floor!
+And they said it couldn't be done!
+And what do I look like?  The living?
+그래, 그건 다 걔 잘못이야!
+And you said it was pretty here...
+또 다른 길 잃은 영혼
+Any day above ground is a good day!
+Any more of this and I'll die of a stroke before I'm 30.
+Anybody seen my head?
+Anyone for deathmatch?
+Anything for a change.
+Anything that kills you makes you ... well, dead
+Anything worth doing is worth overdoing.
+유니콘은 순결한 사람한테도 덤비더라고!
+Are we all being disintegrated, or is it just me?
+At least I'm good at something
+자살 시도 성공자
+Auri sacra fames
+Auribus teneo lupum
+준비해라!
+Beauty survives
+Been Here.  Now Gone.  Had a Good Time.
+Been through Hell, eh?  What did you bring me?
+Beg your pardon, didn't recognize you, I've changed a lot.
+Being dead builds character
+Beloved daughter, a treasure, buried here.
+Best friends come and go....  Mine just die.
+Better be dead than a fat slave
+Better luck next time
+Beware of Discordians bearing answers
+Beware the ...
+Bloody Hell...
+Bloody barbarians!
+Blown upward out of sight: He sought the leak by candlelight
+뇌...뇌...신선한 사람 뇌...
+Buried the cat.  Took an hour.  Damn thing kept fighting.
+함정은 해체됐을 텐데!
+CONNECT 1964 - NO CARRIER 1994
+연락처가 필요하신 분은 연락해 주세요.
+너는 날 수 있냐?
+Can you believe that thing is STILL moving?
+Can you come up with some better ending for this?
+Can you feel anything when I do this?
+Can you give me mouth to mouth, you just took my breath away.
+이것보다 덜한 시련도 충분했을 것을...
+Can't eat, can't sleep, had to bury the husband here.
+Can't you hit me?!
+Chaos, panic and disorder.  My work here is done.
+Check enclosed.
+이거 봐! 내 뇌야!
+Chivalry is only reasonably dead
+관짝 팝니다. 영원히 쓸 수 있어요
+Come Monday, I'll be all right.
+Come and see the violence inherent in the system
+Come back here!  I'll bite your bloody knees off!
+Commodore Business Machines, Inc.  Died for our sins.
+널 도와줄 수 있는 사람한테 불평해라
+내 죄를 신에게 고하라고? 어떤 신?
+혼란이 내 묘비명이 되리니
+Cooties?  Ain't no cooties on me!
+누가 이 올가미 좀 빼 줄래?
+Could you check again?  My name MUST be there.
+Could you please take a breath mint?
+Couldn't I be sedated for this?
+Courage is looking at your setbacks with serenity
+Cover me, I'm going in!
+Crash course in brain surgery
+Cross my fingers for me.
+Curse god and die
+Cut to fit
+De'Ath
+Dead Again?  Pardon me for not getting it right the first time!
+Dead and loving every moment!
+Dear wife of mine.  Died of a broken heart, after I took it out of her.
+내 무덤 밟지 마!
+용이라고? 용이 어디 있어?
+Drawn and quartered
+Either I'm dead or my watch has stopped.
+엘리자 - 내가 정말 살아 있었던 거야, 아니면 그냥 내가 그렇게 생각했던 거야?
+엘비스
+사악한 길로 들어서지 마시오
+Eris?  I don't need Eris
+Eternal Damnation, Come and stay a long while!
+Even The Dead pay taxes (and they aren't Grateful).
+Even a tomb stone will say good things when you're down!
+Ever notice that live is evil backwards?
+Every day is starting to look like Monday
+Every day, in every way, I am getting better and better.
+Every survival kit should include a sense of humor
+나는 추악하게 지냈고, 불결하게 살았다
+Ex post fucto
+Excellent day to have a rotten day.
+Excuse me for not standing up.
+Experience isn't everything.  First, you've got to survive.
+First shalt thou pull out the Holy Pin
+For a Breath, I Tarry...
+For recreational use only.
+For sale: One soul, slightly used.  Asking for 3 wishes.
+For some moments in life, there are no words.
+Forget Disney World, I'm going to Hell!
+Forget about the dog, Beware of my wife.
+Funeral - Real fun.
+Gawd, it's depressing in here, isn't it?
+진품 폭발하는 묘비. (주)Acme 묘비.
+돌아와! 아직 안 끝났어...
+Go ahead, I dare you to!
+Go ahead, it's either you or him.
+골디락스 - 이 궤짝은 딱 맞았다.
+떠났으나 잊히지 않으리라
+Gone Underground For Good
+Gone away owin' more than he could pay.
+Gone, but not forgiven
+Got a life.  Didn't know what to do with it.
+무덤이라고? 난 재도 안 남았는데?!
+지옥으로부터의 인사 - 네가 여기 오길 바란다.
+도와줘! 여기 너무 어두워.... 아, 눈 감고 있었구나, 미안.
+하! 난 소득세 절대 안 내!
+Have you come to raise the dead?
+Having a good time can be deadly.
+Having a great time.  Where am I exactly??
+He died of the flux.
+He died today....  May we rest in peace!
+He got the upside, I got the downside.
+He lost his face when he was beheaded.
+He missed me first.
+He's not dead, he just smells that way.
+Help! I've fallen and I can't get up!
+Help, I can't wake up!
+피노키오 여기 잠들다
+Here lies the body of John Round.  Lost at sea and never found.
+Here there be dragons
+Hey, I didn't write this stuff!
+Hodie mihi, cras tibi
+Hold my calls
+즐거운 우리 지옥
+Humpty Dumpty, a Bad Egg.  He was pushed off the wall.
+우물쭈물하다 이렇게 될 줄 알았다.
+내가 아프다고 말했잖아!
+I ain't broke but I am badly bent.
+I ain't old.  I'm chronologically advantaged.
+I am NOT a vampire.  I just like to bite..nibble, really!
+I am here.  Wish you were fine.
+I am not dead yet, but watch for further reports.
+I believe them bones are me.
+I broke his brain.
+I can feel it.  My mind.  It's going.  I can feel it.
+I can't go to Hell.  They're afraid I'm gonna take over!
+I can't go to hell, they don't want me.
+I didn't believe in reincarnation the last time, either.
+I didn't mean it when I said 'Bite me'
+I died laughing
+I disbelieved in reincarnation in my last life, too.
+I hacked myself to death
+I have all the time in the world
+I knew I'd find a use for this gravestone!
+I know my mind.  And it's around here someplace.
+I lied!  I'll never be alright!
+어둠 속에 있는 게 나을 것 같군.
+I like to be here when I can.
+I may rise but I refuse to shine.
+I never get any either.
+불덩이를 쟤한테 던지라니까, 나 말고!
+I told you I would never say goodbye.
+I used to be amusing.  Now I'm just disgusting.
+I used up all my sick days, so now I'm calling in dead.
+나를 죽인 것은 <알 수 없는 낙서>
+내가 누구였냐고? 알 필요 없다.
+조용히 가진 않을 거다.
+I'd give you a piece of my mind... but I can't find it.
+I'd rather be breathing
+나는 돌아온다!
+I'll be mellow when I'm dead.  For now, let's PARTY!
+I'm doing this only for tax purposes.
+I'm not afraid of Death!  What's he gonna do? Kill me?
+I'm not getting enough money, so I'm not going to engrave anything useful here.
+I'm not saying anything.
+I'm weeth stupeed --->
+If you thought you had problems...
+Ignorance kills daily.
+Ignore me... I'm just here for my looks!
+Ilene Toofar -- Fell off a cliff
+이게 다인가?
+Is there life before Death?
+Is this a joke, or a grave matter?
+It happens sometimes.  People just explode.
+It must be Thursday.  I never could get the hang of Thursdays.
+그건 공정한 싸움이 아니었어.
+It wasn't so easy.
+재물을 다 얻은 다음에 불을 지를 것
+Just doing my job here
+Killed by diarrhea of mouth and constipation of brain.
+그녀를 쉬게 놔두어라
+나를 죽게 놔두어라.
+Let's play Hide the Corpse
+삶은 꿈같지 않다
+Madge Ination -- It wasn't all in my head
+Meet me in Heaven
+Move on, there's nothing to see here.
+Mr. Flintstone -- Yabba-dabba-done
+My heart is not in this
+No one ever died from it
+No, you want room 12A, next door.
+아니, 저 상자는 함정일리가 없어. 장담해.
+더는 안 돼!
+모든 흙이 모든 것을 지탱하진 못하지.
+Now I have a life
+Now I lay thee down to sleep... wanna join me?
+OK, here is a question: Where ARE your tanlines?
+Obesa Cantavit
+Oh! An untimely death.
+Oh, by the way, how was my funeral?
+"오, 자기... 보고 싶었어!" 라고 말하곤, 나를 다시 쏘더라고.
+Ok, so the light does go off.  Now let me out of here.
+돌머리
+아! 누가 나좀 멈춰줘!
+이런!
+Out for the night.  Leave a message.
+Ow!  Do that again!
+내 먼지를 용서해줘.
+내 다른 부분은 여전히 작동한다고.
+Please, not in front of those orcs!
+천국에서 만날 준비나 하라고.
+R2D2 -- Rest, Tin Piece
+안심해, 첫 레벨에서는 아무것도 일어나지 않아.
+Res omnia mea culpa est
+Rest In Pieces
+Rest, rest, perturbed spirit.
+Rip Torn
+She always said her feet were killing her but nobody believed her.
+She died of a chest cold.
+So let it be written, so let it be done!
+So then I says, How do I know you're the real angel of death?
+Some patients insist on dying.
+Some people have it dead easy, don't they?
+묻혀버리는 것보다 나은 게 있지.
+그래, 날 믿어, 난 변호사야...
+Thank God I wore my corset, because I think my sides have split.
+이게 끝입니다.
+The Gods DO have a sense of humor: I'm living proof!
+The frog's dead.  He Kermitted suicide.
+This dungeon is a pushover
+This elevator doesn't go to Heaven
+이 비석은 체험판입니다. 정식판은 10 zorkmid입니다.
+이 비석은 Yendorian 상조가 제공했습니다.
+이건 내 삶에서 그리 중요한 부분이 아니야.
+내 잘못이야.
+이 쪽이 위로 가게 놓으시오
+Tim Burr - 나무에 깔려 죽음
+Tone it down a bit, I'm trying to get some rest here.
+Virtually Alive
+We Will Meet Again.
+Weep not, he is at rest
+단테의 지옥에 온 것을 환영합니다. 몇 층으로 안내할까요?
+Well, at least they listened to my sermon...
+Went to be an angel.
+What are you doing over there?
+What are you smiling at?
+What can you say, Death's got appeal...!
+What health care?
+What pit?
+When the gods want to punish you, they answer your prayers.
+Where e'er you be let your wind go free.  Keeping it in was the death of me!
+환불은 어디서 하죠?
+Will let you know for sure in a day or two...
+마법사들은 겁쟁이야
+구더기들이 청소 중, 방해하지 마시오!
+Would you mind moving a bit?  I'm short of breath down here.
+Would you quit being evil over my shoulder?
+Ya really had me going baby, but now I'm gone.
+Yes Dear, just a few more minutes...
+독이 있다고 말 안 했잖아요!
+You set my heart aflame.  You gave me heartburn.
