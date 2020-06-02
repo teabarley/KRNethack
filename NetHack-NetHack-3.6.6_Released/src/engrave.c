@@ -558,7 +558,7 @@ doengrave()
     if (u.uswallow) {
         if (is_animal(u.ustuck->data)) {
             /*KR pline("What would you write?  \"Jonah was here\"?"); */
-            pline("뭐라고 쓰고 싶어? \"요나가 여기 있었다\"?");
+            pline("뭐라고 쓰고 싶은 거야? \"요나가 여기 있었다\"?");
             return 0;
         } else if (is_whirly(u.ustuck->data)) {
             cant_reach_floor(u.ux, u.uy, FALSE, FALSE);
@@ -828,6 +828,7 @@ doengrave()
                         pline("이것은 굴삭의 지팡이다!");
                     doknown = TRUE;
                 }
+#if 0 /*KR:T*/
                 Strcpy(post_engr_text,
                        (Blind && !Deaf)
                           ? "You hear drilling!"    /* Deaf-aware */
@@ -841,6 +842,21 @@ doengrave()
                                        == DRAWBRIDGE_DOWN)
                                        ? "Splinters fly up from the bridge."
                                        : "Gravel flies up from the floor.");
+#else
+                Strcpy(post_engr_text,
+                       (Blind && !Deaf)
+                          ? "구멍을 파는 소리가 들린다!"    /* Deaf-aware */
+                          : Blind
+                             ? "당신은 진동을 느꼈다."
+                             : IS_GRAVE(levl[u.ux][u.uy].typ)
+                                 ? "묘비에서 파편이 튀었다."
+                                 : is_ice(u.ux, u.uy)
+                                    ? "얼어붙은 표면에서 얼음 조각이 튀었다!"
+                                    : (level.locations[u.ux][u.uy].typ
+                                       == DRAWBRIDGE_DOWN)
+                                       ? "도개교에서 파편이 튀었다."
+                                       : "바닥에서 자갈이 튀었다.");
+#endif
                 break;
             /* type = BURN wands */
             case WAN_FIRE:
@@ -848,11 +864,14 @@ doengrave()
                 type = BURN;
                 if (!objects[otmp->otyp].oc_name_known) {
                     if (flags.verbose)
-                        pline("This %s is a wand of fire!", xname(otmp));
+                        /*KR pline("This %s is a wand of fire!", xname(otmp)); */
+                        pline("이 %s는 화염의 지팡이다!", xname(otmp));
                     doknown = TRUE;
                 }
-                Strcpy(post_engr_text, Blind ? "You feel the wand heat up."
-                                             : "Flames fly from the wand.");
+           /*KR Strcpy(post_engr_text, Blind ? "You feel the wand heat up."
+                                             : "Flames fly from the wand."); */
+                Strcpy(post_engr_text, Blind ? "당신은 지팡이가 뜨거워진다고 느낀다."
+                                             : "지팡이에서 불똥이 튀었다.");
                 break;
             case WAN_LIGHTNING:
                 ptext = TRUE;
