@@ -1874,7 +1874,7 @@ struct obj *otmp;
     } else if (poisonous(&mons[mnum]) && rn2(5)) {
         tp++;
         /*KR pline("Ecch - that must have been poisonous!"); */
-        pline("으엑 - Ecch - 독이 들었던 게 분명해!");
+        pline("으엑- 독이 들었던 게 분명해!");
         if (!Poison_resistance) {
             losestr(rnd(4));
 #if 0 /*KR:T*/
@@ -1922,7 +1922,7 @@ struct obj *otmp;
     } else if ((mnum == PM_COCKATRICE || mnum == PM_CHICKATRICE)
                && (Stone_resistance || Hallucination)) {
         /*KR pline("This tastes just like chicken!"); */
-        pline("치킨 맛이 나네!");
+        pline("신기하네? 닭고기 맛이 나!");
     } else if (mnum == PM_FLOATING_EYE && u.umonnum == PM_RAVEN) {
         /*KR You("peck the eyeball with delight."); */
         You("행복하게 눈알을 쪼아 먹었다.");
@@ -1962,7 +1962,7 @@ struct obj *otmp;
                 ? (yummy ? ((u.umonnum == PM_TIGER) ? "좋았어!" : "별로 안 좋다")
                          : palatable ? "그저 그렇다" : "메스껍다")
                 : (yummy ? "엄청 맛있다" : palatable ? "그저 그렇다" : "끔찍한 맛이다"),
-              (yummy || !palatable) ? "！" : "．");
+              (yummy || !palatable) ? "！" : ".");
 #endif
     }
 
@@ -2581,7 +2581,7 @@ struct obj *otmp;
                won't have to wait for a prince to be rescued/revived */
             if (Race_if(PM_DWARF) && Hallucination)
                 /*KR verbalize("Heigh-ho, ho-hum, I think I'll skip work today."); */
-                verbalize("헤이-호, 호-흠, 오늘은 일하러 안 가야지.");
+                verbalize("헤이-호, 호-흠, 모르겠다! 오늘은 회사 안 가야지.");
             else if (Deaf || !flags.acoustics)
                 /*KR You("fall asleep."); */
                 You("잠에 빠졌다.");

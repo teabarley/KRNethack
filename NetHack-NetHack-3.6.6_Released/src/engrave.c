@@ -878,16 +878,20 @@ doengrave()
                 type = BURN;
                 if (!objects[otmp->otyp].oc_name_known) {
                     if (flags.verbose)
-                        pline("This %s is a wand of lightning!", xname(otmp));
+                        /*KR pline("This %s is a wand of lightning!", xname(otmp)); */
+                        pline("이 %s는 번개의 지팡이다!", xname(otmp));
                     doknown = TRUE;
                 }
                 if (!Blind) {
-                    Strcpy(post_engr_text, "Lightning arcs from the wand.");
+                    /*KR Strcpy(post_engr_text, "Lightning arcs from the wand."); */
+                    Strcpy(post_engr_text, "지팡이에서 불꽃이 튀었다.");
                     doblind = TRUE;
                 } else
                     Strcpy(post_engr_text, !Deaf
-                                ? "You hear crackling!"  /* Deaf-aware */
-                                : "Your hair stands up!");
+                        /*KR    ? "You hear crackling!"  /* Deaf-aware */
+                           /*   : "Your hair stands up!"); */
+                                ? "당신은 빠직빠직 소리를 듣는다!"  /* Deaf-aware */
+                                : "당신의 머리가 곤두섰다!");
                 break;
 
             /* type = MARK wands */
@@ -904,7 +908,8 @@ doengrave()
                     zapwand = TRUE;
                 /* empty wand just doesn't write */
                 else
-                    pline_The("wand is too worn out to engrave.");
+                    /*KR pline_The("wand is too worn out to engrave."); */
+                    pline_The("지팡이는 새기기에는 너무 낡았다.");
             }
         }
         break;
@@ -914,20 +919,23 @@ doengrave()
             if ((int) otmp->spe > -3)
                 type = ENGRAVE;
             else
-                pline("%s too dull for engraving.", Yobjnam2(otmp, "are"));
+                /*KR pline("%s too dull for engraving.", Yobjnam2(otmp, "are")); */
+                pline("%s은/는 새기기에는 너무 무디다.", xname(otmp));
         }
         break;
 
     case TOOL_CLASS:
         if (otmp == ublindf) {
             pline(
-                "That is a bit difficult to engrave with, don't you think?");
+                /*KR "That is a bit difficult to engrave with, don't you think?"); */
+                "그걸로는 좀 새기기 어려울 것 같아. 그렇게 생각하지 않니?");
             return 0;
         }
         switch (otmp->otyp) {
         case MAGIC_MARKER:
             if (otmp->spe <= 0)
-                Your("marker has dried out.");
+                /*KR Your("marker has dried out."); */
+                Your("마커펜이 말라 버렸다.");
             else
                 type = MARK;
             break;
@@ -941,16 +949,28 @@ doengrave()
                     if (is_wet_towel(otmp))
                         dry_a_towel(otmp, -1, TRUE);
                     if (!Blind)
-                        You("wipe out the message here.");
+                        /*KR You("wipe out the message here."); */
+                        You("여기 있던 메시지를 닦아냈다.");
                     else
+#if 0 /*KR:T*/
                         pline("%s %s.", Yobjnam2(otmp, "get"),
                               is_ice(u.ux, u.uy) ? "frosty" : "dusty");
+#else
+                        pline("%s은/는 %s이/가 되었다.", xname(otmp),
+                            is_ice(u.ux, u.uy) ? "서리 투성이" : "먼지 범벅");
+#endif
                     dengr = TRUE;
                 } else
-                    pline("%s can't wipe out this engraving.", Yname2(otmp));
+                    /*KR pline("%s can't wipe out this engraving.", Yname2(otmp)); */
+                    pline("이 글자는 %s(으)로는 닦아낼 수 없다.", xname(otmp));
             else
+#if 0 /*KR:T*/
                 pline("%s %s.", Yobjnam2(otmp, "get"),
                       is_ice(u.ux, u.uy) ? "frosty" : "dusty");
+#else
+                pline("%s은/는 %s이/가 되었다.", xname(otmp),
+                    is_ice(u.ux, u.uy) ? "서리 투성이" : "먼지 범벅");
+#endif
             break;
         default:
             break;
@@ -959,7 +979,8 @@ doengrave()
 
     case VENOM_CLASS:
         if (wizard) {
-            pline("Writing a poison pen letter??");
+            /*KR pline("Writing a poison pen letter??"); */
+            pline("호오. 이거야말로 진짜 '독이 되는 말'이지.");
             break;
         }
         /*FALLTHRU*/
@@ -1002,16 +1023,28 @@ doengrave()
     if (*buf) {
         make_engr_at(u.ux, u.uy, buf, moves, type);
         if (!Blind)
-            pline_The("engraving now reads: \"%s\".", buf);
+            /*KR pline_The("engraving now reads: \"%s\".", buf); */
+            pline("새긴 글자는 이제 이렇게 읽힌다: \"%s\".", buf);
         ptext = FALSE;
     }
     if (zapwand && (otmp->spe < 0)) {
+#if 0 /*KR:T*/
         pline("%s %sturns to dust.", The(xname(otmp)),
               Blind ? "" : "glows violently, then ");
+#else
+        pline("%s이/가 %s가루로 변했다.", The(xname(otmp)),
+            Blind ? "" : "막 빛나더니, ");
+#endif
         if (!IS_GRAVE(levl[u.ux][u.uy].typ))
+#if 0 /*KR:T*/
             You(
     "are not going to get anywhere trying to write in the %s with your dust.",
                 is_ice(u.ux, u.uy) ? "frost" : "dust");
+#else
+            You(
+                "먼지로 %s에 무언가 쓰려고 했지만, 그럴 수 없었다.",
+                is_ice(u.ux, u.uy) ? "서리" : "먼지");
+#endif
         useup(otmp);
         otmp = 0; /* wand is now gone */
         ptext = FALSE;
@@ -1036,7 +1069,8 @@ doengrave()
         } else if (type == oep->engr_type
                    && (!Blind || oep->engr_type == BURN
                        || oep->engr_type == ENGRAVE)) {
-            c = yn_function("Do you want to add to the current engraving?",
+            /*KR c = yn_function("Do you want to add to the current engraving?", */
+            c = yn_function("현재 새겨진 글자에 추가하시겠습니까?",
                             ynqchars, 'y');
             if (c == 'q') {
                 pline1(Never_mind);
@@ -1049,12 +1083,21 @@ doengrave()
                 || oep->engr_type == ENGR_BLOOD
                 || oep->engr_type == MARK) {
                 if (!Blind) {
+#if 0 /*KR:T*/
                     You("wipe out the message that was %s here.",
                         (oep->engr_type == DUST)
                             ? "written in the dust"
                             : (oep->engr_type == ENGR_BLOOD)
                                 ? "scrawled in blood"
                                 : "written");
+#else
+                    You("%s메시지를 지워버렸다.",
+                        (oep->engr_type == DUST)
+                        ? "먼지에 쓰인 "
+                        : (oep->engr_type == ENGR_BLOOD)
+                        ? "피로 휘갈겨진 "
+                        : "쓰여져 있는 ");
+#endif
                     del_engr(oep);
                     oep = (struct engr *) 0;
                 } else
@@ -1062,15 +1105,24 @@ doengrave()
                      */
                     eow = TRUE;
             } else if (type == DUST || type == MARK || type == ENGR_BLOOD) {
+#if 0 /*KR:T*/
                 You("cannot wipe out the message that is %s the %s here.",
                     oep->engr_type == BURN
                         ? (is_ice(u.ux, u.uy) ? "melted into" : "burned into")
                         : "engraved in",
                     surface(u.ux, u.uy));
+#else
+                You("%s에 %s 메시지를 지울 수는 없다.",
+                    surface(u.ux, u.uy),
+                    oep->engr_type == BURN
+                    ? (is_ice(u.ux, u.uy) ? "녹아 있는" : "눌어붙어 있는")
+                    : "새겨진");
+#endif
                 return 1;
             } else if (type != oep->engr_type || c == 'n') {
                 if (!Blind || can_reach_floor(TRUE))
-                    You("will overwrite the current message.");
+                    /*KR You("will overwrite the current message."); */
+                    You("메시지를 덮어쓰려고 했다.");
                 eow = TRUE;
             }
         }
@@ -1079,41 +1131,60 @@ doengrave()
     eloc = surface(u.ux, u.uy);
     switch (type) {
     default:
-        everb = (oep && !eow ? "add to the weird writing on"
-                             : "write strangely on");
+   /*KR everb = (oep && !eow ? "add to the weird writing on"
+                             : "write strangely on"); */
+        everb = (oep && !eow ? "이상한 글자에 더했다"
+                             : "이상한 글자를 썼다");
         break;
     case DUST:
-        everb = (oep && !eow ? "add to the writing in" : "write in");
-        eloc = is_ice(u.ux, u.uy) ? "frost" : "dust";
+   /*KR everb = (oep && !eow ? "add to the writing in" : "write in");
+        eloc = is_ice(u.ux, u.uy) ? "frost" : "dust"; */
+        everb = (oep && !eow ? "덧붙여 썼다" : "썼다");
+        eloc = is_ice(u.ux, u.uy) ? "서리" : "먼지";
         break;
     case HEADSTONE:
-        everb = (oep && !eow ? "add to the epitaph on" : "engrave on");
+   /*KR everb = (oep && !eow ? "add to the epitaph on" : "engrave on"); */
+        everb = (oep && !eow ? "묘비문에 글자를 더했다" : "묘비문을 새겼다");
         break;
     case ENGRAVE:
-        everb = (oep && !eow ? "add to the engraving in" : "engrave in");
+        /*KR everb = (oep && !eow ? "add to the engraving in" : "engrave in"); */
+        everb = (oep && !eow ? "글자를 덧붙여 썼다" : "새겼다");
         break;
     case BURN:
         everb = (oep && !eow
-                     ? (is_ice(u.ux, u.uy) ? "add to the text melted into"
+                /*KR ? (is_ice(u.ux, u.uy) ? "add to the text melted into"
                                            : "add to the text burned into")
-                     : (is_ice(u.ux, u.uy) ? "melt into" : "burn into"));
+                     : (is_ice(u.ux, u.uy) ? "melt into" : "burn into")); */
+                     ? (is_ice(u.ux, u.uy) ? "녹은 글씨에 더했다"
+                                           : "눌어붙은 글씨에 더했다")
+                     : (is_ice(u.ux, u.uy) ? "녹였다" : "눌어붙게 헸다"));
         break;
     case MARK:
-        everb = (oep && !eow ? "add to the graffiti on" : "scribble on");
+        /*KR everb = (oep && !eow ? "add to the graffiti on" : "scribble on"); */
+        everb = (oep && !eow ? "그래피티에 덧붙여 썼다" : "휘갈겨 썼다");
         break;
     case ENGR_BLOOD:
-        everb = (oep && !eow ? "add to the scrawl on" : "scrawl on");
+        /*KR everb = (oep && !eow ? "add to the scrawl on" : "scrawl on"); */
+        everb = (oep && !eow ? "덧붙여 휘갈겨 썼다" : "휘갈겨 썼다");
         break;
     }
 
     /* Tell adventurer what is going on */
     if (otmp != &zeroobj)
-        You("%s the %s with %s.", everb, eloc, doname(otmp));
+        /*KR You("%s the %s with %s.", everb, eloc, doname(otmp)); */
+        /*KR You write on(everb) the floor(eloc) with your finger(doname(otmp)) */
+        /*JP jpast(everb)를 사용. 수정필요*/
+        You("%s으로 %s에 %s.", doname(otmp), eloc, everb);
     else
-        You("%s the %s with your %s.", everb, eloc, body_part(FINGERTIP));
+        /*KR You("%s the %s with your %s.", everb, eloc, body_part(FINGERTIP)); */
+        /*KR You write on(everb) the floor(eloc) with your finger(body_part(FINGERTIP))*/
+        You("%s으로 %s에 %s.", body_part(FINGERTIP), eloc, everb);
 
     /* Prompt for engraving! */
-    Sprintf(qbuf, "What do you want to %s the %s here?", everb, eloc);
+    /*KR Sprintf(qbuf, "What do you want to %s the %s here?", everb, eloc); */
+    /*KR What do you want to write on(everb) the floor(eloc) here? */
+    /*KR 여기 있는 %s(바닥)에 무엇을 %s? */
+    Sprintf(qbuf, "당신은 %s에 %s. 뭐라고 쓰시겠습니까?", eloc, everb);
     getlin(qbuf, ebuf);
     /* convert tabs to spaces and condense consecutive spaces to one */
     mungspaces(ebuf);
@@ -1127,8 +1198,12 @@ doengrave()
     if (len == 0 || index(ebuf, '\033')) {
         if (zapwand) {
             if (!Blind)
+#if 0 /*KR:T*/
                 pline("%s, then %s.", Tobjnam(otmp, "glow"),
                       otense(otmp, "fade"));
+#else
+                pline("%s이/가 빛났지만, 이내 사라졌다.", xname(otmp));
+#endif
             return 1;
         } else {
             pline1(Never_mind);
@@ -1148,6 +1223,7 @@ doengrave()
         if (((type == DUST || type == ENGR_BLOOD) && !rn2(25))
             || (Blind && !rn2(11)) || (Confusion && !rn2(7))
             || (Stunned && !rn2(4)) || (Hallucination && !rn2(2)))
+            /*JP 일본어에서는 jrndm_replace라는 것으로 랜덤화시킴. 수정필요*/
             *sp = ' ' + rnd(96 - 2); /* ASCII '!' thru '~'
                                         (excludes ' ' and DEL) */
     }
@@ -1165,11 +1241,13 @@ doengrave()
     default:
         multi = -(len / 10);
         if (multi)
+            /*KR nomovemsg = "You finish your weird engraving."; */
             nomovemsg = "You finish your weird engraving.";
         break;
     case DUST:
         multi = -(len / 10);
         if (multi)
+            /*KR nomovemsg = "You finish writing in the dust."; */
             nomovemsg = "You finish writing in the dust.";
         break;
     case HEADSTONE:
@@ -1184,7 +1262,8 @@ doengrave()
              * to engrave "Elbereth" all at once.
              * However, you can engrave "Elb", then "ere", then "th".
              */
-            pline("%s dull.", Yobjnam2(otmp, "get"));
+            /*KR pline("%s dull.", Yobjnam2(otmp, "get")); */
+            Your("%s이/가 무뎌졌다.", xname(otmp));
             costly_alteration(otmp, COST_DEGRD);
             if (len > maxelen) {
                 multi = -maxelen;
@@ -1197,21 +1276,25 @@ doengrave()
             multi = -len;
         }
         if (multi)
-            nomovemsg = "You finish engraving.";
+            /*KR nomovemsg = "You finish engraving."; */
+            nomovemsg = "당신은 새기기를 마쳤다.";
         break;
     case BURN:
         multi = -(len / 10);
         if (multi)
             nomovemsg = is_ice(u.ux, u.uy)
-                          ? "You finish melting your message into the ice."
-                          : "You finish burning your message into the floor.";
+                     /*KR ? "You finish melting your message into the ice."
+                          : "You finish burning your message into the floor."; */
+                          ? "당신은 얼음에 메시지 녹이기를 마쳤다."
+                          : "당신은 바닥에 메시지 눌어붙게 만들기를 마쳤다.";
         break;
     case MARK:
         multi = -(len / 10);
         if (otmp->otyp == MAGIC_MARKER) {
             maxelen = otmp->spe * 2; /* one charge / 2 letters */
             if (len > maxelen) {
-                Your("marker dries out.");
+                /*KR Your("marker dries out."); */
+                Your("마커펜이 말라 버렸다.");
                 otmp->spe = 0;
                 multi = -(maxelen / 10);
             } else if (len > 1)
@@ -1220,12 +1303,14 @@ doengrave()
                 otmp->spe -= 1; /* Prevent infinite graffiti */
         }
         if (multi)
-            nomovemsg = "You finish defacing the dungeon.";
+            /*KR nomovemsg = "You finish defacing the dungeon."; */
+            nomovemsg = "당신은 던전 벽에 흠집 내기를 마쳤다.";
         break;
     case ENGR_BLOOD:
         multi = -(len / 10);
         if (multi)
-            nomovemsg = "You finish scrawling.";
+            /*KR nomovemsg = "You finish scrawling."; */
+            nomovemsg = "당신은 휘갈겨 쓰기를 마쳤다.";
         break;
     }
 
@@ -1235,10 +1320,14 @@ doengrave()
             if (*sp == ' ')
                 maxelen--;
         if (!maxelen && *sp) {
+            /*JP 한자의 1바이트분 만이 남지 않도록 */
+            /* is_kanji2 함수. 수정필요*/
             *sp = '\0';
             if (multi)
-                nomovemsg = "You cannot write any more.";
-            You("are only able to write \"%s\".", ebuf);
+                /*KR nomovemsg = "You cannot write any more.";
+            You("are only able to write \"%s\".", ebuf); */
+                nomovemsg = "당신은 더 이상 쓸 수 없다.";
+            You("\"%s\"(이)라고만 쓸 수 있었다.", ebuf);
         }
     }
 
@@ -1251,7 +1340,8 @@ doengrave()
     if (post_engr_text[0])
         pline("%s", post_engr_text);
     if (doblind && !resists_blnd(&youmonst)) {
-        You("are blinded by the flash!");
+        /*KR You("are blinded by the flash!"); */
+        You("섬광으로 눈이 멀었다!");
         make_blinded((long) rnd(50), FALSE);
         if (!Blind)
             Your1(vision_clears);
