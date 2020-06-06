@@ -18,12 +18,14 @@ void
 floating_above(what)
 const char *what;
 {
-    const char *umsg = "are floating high above the %s.";
+    /*KR const char *umsg = "are floating high above the %s."; */
+    const char *umsg = "%s의 위에 높이 떠 있다.";
 
     if (u.utrap && (u.utraptype == TT_INFLOOR || u.utraptype == TT_LAVA)) {
         /* when stuck in floor (not possible at fountain or sink location,
            so must be attempting to move down), override the usual message */
-        umsg = "are trapped in the %s.";
+        /*KR umsg = "are trapped in the %s."; */
+        umsg = "%s에 붙잡혀 있다.";
         what = surface(u.ux, u.uy); /* probably redundant */
     }
     You(umsg, what);
@@ -38,17 +40,24 @@ dowatersnakes()
 
     if (!(mvitals[PM_WATER_MOCCASIN].mvflags & G_GONE)) {
         if (!Blind)
+#if 0 /*KR:T*/
             pline("An endless stream of %s pours forth!",
                   Hallucination ? makeplural(rndmonnam(NULL)) : "snakes");
+#else
+            pline("%s들이 끝없이 쏟아져 나온다!",
+                Hallucination ? rndmonnam(NULL) : "뱀");
+#endif
         else
-            You_hear("%s hissing!", something);
+            /*KR You_hear("%s hissing!", something); */
+            You_hear("무언가가 쉬익하는 소리를 듣는다!");
         while (num-- > 0)
             if ((mtmp = makemon(&mons[PM_WATER_MOCCASIN], u.ux, u.uy,
                                 NO_MM_FLAGS)) != 0
                 && t_at(mtmp->mx, mtmp->my))
                 (void) mintrap(mtmp);
     } else
-        pline_The("fountain bubbles furiously for a moment, then calms.");
+        /*KR pline_The("fountain bubbles furiously for a moment, then calms."); */
+        pline("분수가 잠시동안 격렬히 끓어올랐지만, 이윽고 잠잠해졌다.");
 }
 
 /* Water demon */
@@ -61,22 +70,32 @@ dowaterdemon()
         if ((mtmp = makemon(&mons[PM_WATER_DEMON], u.ux, u.uy,
                             NO_MM_FLAGS)) != 0) {
             if (!Blind)
-                You("unleash %s!", a_monnam(mtmp));
+                /*KR You("unleash %s!", a_monnam(mtmp));
             else
-                You_feel("the presence of evil.");
+                You_feel("the presence of evil."); */
+
+                You("%s을 해방시켰다!", a_monnam(mtmp));
+            else
+                You_feel("악마의 존재를 느낀다.");
 
             /* Give those on low levels a (slightly) better chance of survival
              */
             if (rnd(100) > (80 + level_difficulty())) {
+#if 0 /*KR:T*/
                 pline("Grateful for %s release, %s grants you a wish!",
                       mhis(mtmp), mhe(mtmp));
+#else
+                pline("%s 해방에 고마워하며, %s가 당신의 소원을 이루어 준다!",
+                   mhis(mtmp), mhe(mtmp));
+#endif
                 /* give a wish and discard the monster (mtmp set to null) */
                 mongrantswish(&mtmp);
             } else if (t_at(mtmp->mx, mtmp->my))
                 (void) mintrap(mtmp);
         }
     } else
-        pline_The("fountain bubbles furiously for a moment, then calms.");
+        /*KR pline_The("fountain bubbles furiously for a moment, then calms."); */
+        pline("분수가 잠시동안 격렬히 끓어올랐지만, 이윽고 잠잠해졌다.");
 }
 
 /* Water Nymph */
@@ -89,16 +108,22 @@ dowaternymph()
         && (mtmp = makemon(&mons[PM_WATER_NYMPH], u.ux, u.uy,
                            NO_MM_FLAGS)) != 0) {
         if (!Blind)
-            You("attract %s!", a_monnam(mtmp));
+            /*KR You("attract %s!", a_monnam(mtmp));
         else
-            You_hear("a seductive voice.");
+            You_hear("a seductive voice."); */
+            You("%s를 끌어들인다!", a_monnam(mtmp));
+        else
+            You_hear("유혹적인 목소리를 듣는다.");
         mtmp->msleeping = 0;
         if (t_at(mtmp->mx, mtmp->my))
             (void) mintrap(mtmp);
     } else if (!Blind)
-        pline("A large bubble rises to the surface and pops.");
+        /*KR pline("A large bubble rises to the surface and pops.");
     else
-        You_hear("a loud pop.");
+        You_hear("a loud pop."); */
+        pline("커다란 거품이 표면으로 올라와 터진다.");
+    else
+        You_hear("커다란 펑 소리를 듣는다.");
 }
 
 /* Gushing forth along LOS from (u.ux, u.uy) */
@@ -111,9 +136,12 @@ int drinking;
     do_clear_area(u.ux, u.uy, 7, gush, (genericptr_t) &madepool);
     if (!madepool) {
         if (drinking)
-            Your("thirst is quenched.");
+            /*KR Your("thirst is quenched.");
         else
-            pline("Water sprays all over you.");
+            pline("Water sprays all over you."); */
+            Your("갈증이 해소되었다.");
+        else
+            pline("물이 당신의 온몸에 뿌려진다.");
     }
 }
 
@@ -134,7 +162,8 @@ genericptr_t poolcnt;
         return;
 
     if (!((*(int *) poolcnt)++))
-        pline("Water gushes forth from the overflowing fountain!");
+        /*KR pline("Water gushes forth from the overflowing fountain!"); */
+        pline("넘쳐 흐르는 분수에서 물이 앞으로 쏟아져 나온다!");
 
     /* Put a pool at x, y */
     levl[x][y].typ = POOL, levl[x][y].flags = 0;
@@ -153,9 +182,12 @@ STATIC_OVL void
 dofindgem()
 {
     if (!Blind)
-        You("spot a gem in the sparkling waters!");
+        /*KR You("spot a gem in the sparkling waters!");
     else
-        You_feel("a gem here!");
+        You_feel("a gem here!"); */
+        You("부글거리는 물 속에서 보석을 발견한다!");
+    else
+        You_feel("여기서 보석을 느낀다!");
     (void) mksobj_at(rnd_class(DILITHIUM_CRYSTAL, LUCKSTONE - 1), u.ux, u.uy,
                      FALSE, FALSE);
     SET_FOUNTAIN_LOOTED(u.ux, u.uy);
@@ -181,9 +213,12 @@ boolean isyou;
                 if (is_watch(mtmp->data) && couldsee(mtmp->mx, mtmp->my)
                     && mtmp->mpeaceful) {
                     if (!Deaf) {
-                        pline("%s yells:", Amonnam(mtmp));
-                        verbalize("Hey, stop using that fountain!");
+                        /*KR pline("%s yells:", Amonnam(mtmp));
+                        verbalize("Hey, stop using that fountain!"); */
+                        pline("%s가 소리쳤다:", Amonnam(mtmp));
+                        verbalize("이봐, 당장 그 분수 사용을 그만둬!");
                     } else {
+#if 0 /*KR:T*/
                         pline("%s earnestly %s %s %s!",
                               Amonnam(mtmp),
                               nolimbs(mtmp->data) ? "shakes" : "waves",
@@ -191,24 +226,34 @@ boolean isyou;
                               nolimbs(mtmp->data)
                                       ? mbodypart(mtmp, HEAD)
                                       : makeplural(mbodypart(mtmp, ARM)));
+#else
+                        pline("%s은/는 진지하게 %s을/를 흔들었다!",
+                            Amonnam(mtmp),
+                            nolimbs(mtmp->data)
+                                    ? mbodypart(mtmp, HEAD)
+                                    : makeplural(mbodypart(mtmp, ARM)));
+#endif
                     }
                     break;
                 }
             }
             /* You can see or hear this effect */
             if (!mtmp)
-                pline_The("flow reduces to a trickle.");
+                /*KR pline_The("flow reduces to a trickle."); */
+                pline("물줄기가 가늘어졌다.");
             return;
         }
         if (isyou && wizard) {
-            if (yn("Dry up fountain?") == 'n')
+            /*KR if (yn("Dry up fountain?") == 'n') */
+            if (yn("분수를 말리시겠습니까?") == 'n')
                 return;
         }
         /* replace the fountain with ordinary floor */
         levl[x][y].typ = ROOM, levl[x][y].flags = 0;
         levl[x][y].blessedftn = 0;
         if (cansee(x, y))
-            pline_The("fountain dries up!");
+            /*KR pline_The("fountain dries up!"); */
+            pline("분수가 말라버렸다!");
         /* The location is seen if the hero/monster is invisible
            or felt if the hero is blind. */
         newsym(x, y);
@@ -226,14 +271,16 @@ drinkfountain()
     register int fate = rnd(30);
 
     if (Levitation) {
-        floating_above("fountain");
+        /*KR floating_above("fountain"); */
+        floating_above("분수");
         return;
     }
 
     if (mgkftn && u.uluck >= 0 && fate >= 10) {
         int i, ii, littleluck = (u.uluck < 4);
 
-        pline("Wow!  This makes you feel great!");
+        /*KR pline("Wow!  This makes you feel great!"); */
+        pline("와! 이것은 당신을 기분좋게 만든다!");
         /* blessed restore ability */
         for (ii = 0; ii < A_MAX; ii++)
             if (ABASE(ii) < AMAX(ii)) {
@@ -249,14 +296,16 @@ drinkfountain()
                 i = 0;
         }
         display_nhwindow(WIN_MESSAGE, FALSE);
-        pline("A wisp of vapor escapes the fountain...");
+        /*KR pline("A wisp of vapor escapes the fountain..."); */
+        pline("분수에서 한 줄기의 수증기가 빠져나간다...");
         exercise(A_WIS, TRUE);
         levl[u.ux][u.uy].blessedftn = 0;
         return;
     }
 
     if (fate < 10) {
-        pline_The("cool draught refreshes you.");
+        /*KR pline_The("cool draught refreshes you."); */
+        pline("시원한 한 모금이 당신을 상쾌하게 한다.");
         u.uhunger += rnd(10); /* don't choke on water */
         newuhs(FALSE);
         if (mgkftn)
@@ -264,27 +313,34 @@ drinkfountain()
     } else {
         switch (fate) {
         case 19: /* Self-knowledge */
-            You_feel("self-knowledgeable...");
+            /*KR You_feel("self-knowledgeable..."); */
+            You("자각하고 있음을 느낀다...");
             display_nhwindow(WIN_MESSAGE, FALSE);
             enlightenment(MAGICENLIGHTENMENT, ENL_GAMEINPROGRESS);
             exercise(A_WIS, TRUE);
-            pline_The("feeling subsides.");
+            /*KR pline_The("feeling subsides."); */
+            pline("느낌이 가라앉는다.");
             break;
         case 20: /* Foul water */
-            pline_The("water is foul!  You gag and vomit.");
+            /*KR pline_The("water is foul!  You gag and vomit."); */
+            pline("이 물은 상했다! 당신은 메스꺼워서 구토한다.");
             morehungry(rn1(20, 11));
             vomit();
             break;
         case 21: /* Poisonous */
-            pline_The("water is contaminated!");
+            /*KR pline_The("water is contaminated!"); */
+            pline("이 물은 오염되었다!");
             if (Poison_resistance) {
-                pline("Perhaps it is runoff from the nearby %s farm.",
+                /*KR pline("Perhaps it is runoff from the nearby %s farm.", */
+                pline("어쩌면 이 물은 근처의 %s 농장에서 흘러나온 물일 지도 모른다.",
                       fruitname(FALSE));
-                losehp(rnd(4), "unrefrigerated sip of juice", KILLED_BY_AN);
+                /*KR losehp(rnd(4), "unrefrigerated sip of juice", KILLED_BY_AN); */
+                losehp(rnd(4), "냉장 보관하지 않은 주스 한 모금에", KILLED_BY_AN);
                 break;
             }
             losestr(rn1(4, 3));
-            losehp(rnd(10), "contaminated water", KILLED_BY);
+            /*KR losehp(rnd(10), "contaminated water", KILLED_BY); */
+            losehp(rnd(10), "오염된 물로", KILLED_BY);
             exercise(A_CON, FALSE);
             break;
         case 22: /* Fountain of snakes! */
@@ -296,7 +352,8 @@ drinkfountain()
         case 24: /* Curse an item */ {
             register struct obj *obj;
 
-            pline("This water's no good!");
+            /*KR pline("This water's no good!"); */
+            pline("이 물은 오염되었다!");
             morehungry(rn1(20, 11));
             exercise(A_CON, FALSE);
             for (obj = invent; obj; obj = obj->nobj)
@@ -307,14 +364,20 @@ drinkfountain()
         case 25: /* See invisible */
             if (Blind) {
                 if (Invisible) {
-                    You("feel transparent.");
+                    /*KR You("feel transparent.");
                 } else {
                     You("feel very self-conscious.");
-                    pline("Then it passes.");
+                    pline("Then it passes."); */
+                    You("당신은 투명해짐을 느낀다.");
+                } else {
+                    You("당신은 자신의 존재를 매우 강하게 느꼈으나,");
+                    pline("이윽고 사라졌다.");
                 }
             } else {
-                You_see("an image of someone stalking you.");
-                pline("But it disappears.");
+                /*KR You_see("an image of someone stalking you.");
+                pline("But it disappears."); */
+                You("당신을 미행하는 누군가의 형상을 보았으나, ");
+                pline("이윽고 사라졌다.");
             }
             HSee_invisible |= FROMOUTSIDE;
             newsym(u.ux, u.uy);
@@ -337,8 +400,13 @@ drinkfountain()
         {
             register struct monst *mtmp;
 
+#if 0 /*KR:T*/
             pline("This %s gives you bad breath!",
-                  hliquid("water"));
+                hliquid("water"));
+#else
+            pline("이 %s 때문에 지독한 입냄새가 난다!",
+                hliquid("물"));
+#endif
             for (mtmp = fmon; mtmp; mtmp = mtmp->nmon) {
                 if (DEADMONSTER(mtmp))
                     continue;
@@ -350,8 +418,13 @@ drinkfountain()
             dogushforth(TRUE);
             break;
         default:
+#if 0 /*KR:T*/
             pline("This tepid %s is tasteless.",
-                  hliquid("water"));
+                hliquid("water"));
+#else
+            pline("이 미지근한 %s은 아무 맛도 나지 않는다.",
+                hliquid("물"));
+#endif
             break;
         }
     }
@@ -363,7 +436,8 @@ dipfountain(obj)
 register struct obj *obj;
 {
     if (Levitation) {
-        floating_above("fountain");
+        /*KR floating_above("fountain"); */
+        floating_above("분수");
         return;
     }
 
@@ -374,9 +448,15 @@ register struct obj *obj;
         && !exist_artifact(LONG_SWORD, artiname(ART_EXCALIBUR))) {
         if (u.ualign.type != A_LAWFUL) {
             /* Ha!  Trying to cheat her. */
+#if 0 /*KR:T*/
             pline("A freezing mist rises from the %s and envelopes the sword.",
-                  hliquid("water"));
+                hliquid("water"));
             pline_The("fountain disappears!");
+#else
+            pline("%s에서 냉랭한 안개가 올라와 칼을 감싼다.",
+                hliquid("물"));
+            pline("분수가 사라진다!");
+#endif
             curse(obj);
             if (obj->spe > -6 && !rn2(3))
                 obj->spe--;
@@ -385,9 +465,10 @@ register struct obj *obj;
         } else {
             /* The lady of the lake acts! - Eric Backus */
             /* Be *REAL* nice */
-            pline(
-              "From the murky depths, a hand reaches up to bless the sword.");
-            pline("As the hand retreats, the fountain disappears!");
+            /*KR pline("From the murky depths, a hand reaches up to bless the sword.");
+            pline("As the hand retreats, the fountain disappears!"); */
+            pline("탁한 물 속에서 칼을 축복하기 위해 손이 뻗어나왔다.");
+            pline("손이 되돌아가며, 분수가 사라진다!");
             obj = oname(obj, artiname(ART_EXCALIBUR));
             discover_artifact(ART_EXCALIBUR);
             bless(obj);
@@ -424,10 +505,12 @@ register struct obj *obj;
     case 20: /* Uncurse the item */
         if (obj->cursed) {
             if (!Blind)
-                pline_The("%s glows for a moment.", hliquid("water"));
+                /*KR pline_The("%s glows for a moment.", hliquid("water")); */
+                pline_The("%s이 잠시 빛난다.", hliquid("물"));
             uncurse(obj);
         } else {
-            pline("A feeling of loss comes over you.");
+            /*KR pline("A feeling of loss comes over you."); */
+            pline("무언가 잃어버린 기분이 흘러들어온다.");
         }
         break;
     case 21: /* Water Demon */
@@ -449,13 +532,16 @@ register struct obj *obj;
         dogushforth(FALSE);
         break;
     case 26: /* Strange feeling */
-        pline("A strange tingling runs up your %s.", body_part(ARM));
+        /*KR pline("A strange tingling runs up your %s.", body_part(ARM)); */
+        pline("이상한 저림이 당신의 %s을 타고 올라온다.", body_part(ARM));
         break;
     case 27: /* Strange feeling */
-        You_feel("a sudden chill.");
+        /*KR You_feel("a sudden chill."); */
+        You("갑자기 오한을 느낀다.");
         break;
     case 28: /* Strange feeling */
-        pline("An urge to take a bath overwhelms you.");
+        /*KR pline("An urge to take a bath overwhelms you."); */
+        pline("당신은 목욕을 하고 싶은 욕망에 휩싸인다.");
         {
             long money = money_cnt(invent);
             struct obj *otmp;
@@ -474,7 +560,8 @@ register struct obj *obj;
                         if (!otmp->quan)
                             delobj(otmp);
                     }
-                You("lost some of your money in the fountain!");
+                /*KR You("lost some of your money in the fountain!"); */
+                You("당신은 분수에서 금화를 조금 잃었다!");
                 CLEAR_FOUNTAIN_LOOTED(u.ux, u.uy);
                 exercise(A_WIS, FALSE);
             }
@@ -492,8 +579,13 @@ register struct obj *obj;
                                    + 1) * 2) + 5),
                       u.ux, u.uy);
         if (!Blind)
+#if 0 /*KR:T*/
             pline("Far below you, you see coins glistening in the %s.",
-                  hliquid("water"));
+                hliquid("water"));
+#else
+            pline("당신은 발밑 너머 %s 속에서 동전이 반짝이는 것을 본다.",
+                hliquid("물"));
+#endif
         exercise(A_WIS, TRUE);
         newsym(u.ux, u.uy);
         break;
@@ -507,7 +599,8 @@ breaksink(x, y)
 int x, y;
 {
     if (cansee(x, y) || (x == u.ux && y == u.uy))
-        pline_The("pipes break!  Water spurts out!");
+        /*KR pline_The("pipes break!  Water spurts out!"); */
+        pline("배수관이 부서졌다! 물이 분출해 나온다!");
     level.flags.nsinks--;
     levl[x][y].typ = FOUNTAIN, levl[x][y].looted = 0;
     levl[x][y].blessedftn = 0;
@@ -523,33 +616,46 @@ drinksink()
     struct monst *mtmp;
 
     if (Levitation) {
-        floating_above("sink");
+        /*KR floating_above("sink"); */
+        floating_above("개수대");
         return;
     }
     switch (rn2(20)) {
     case 0:
-        You("take a sip of very cold %s.", hliquid("water"));
+        /*KR You("take a sip of very cold %s.", hliquid("water")); */
+        You("매우 차가운 %s을 홀짝였다.", hliquid("물"));
         break;
     case 1:
-        You("take a sip of very warm %s.", hliquid("water"));
+        /*KR You("take a sip of very warm %s.", hliquid("water")); */
+        You("아주 따뜻한 %s을 홀짝였다.", hliquid("물"));
         break;
     case 2:
-        You("take a sip of scalding hot %s.", hliquid("water"));
+        /*KR You("take a sip of scalding hot %s.", hliquid("water")); */
+        You("펄펄 끓는 %s을 홀짝였다.", hliquid("물"));
         if (Fire_resistance)
-            pline("It seems quite tasty.");
+            /*KR pline("It seems quite tasty."); */
+            pline("꽤나 맛있는 것 같다.");
         else
-            losehp(rnd(6), "sipping boiling water", KILLED_BY);
+            /*KR losehp(rnd(6), "sipping boiling water", KILLED_BY); */
+            losehp(rnd(6), "끓는 물을 홀짝여서", KILLED_BY);
         /* boiling water burns considered fire damage */
         break;
     case 3:
         if (mvitals[PM_SEWER_RAT].mvflags & G_GONE)
-            pline_The("sink seems quite dirty.");
+            /*KR pline_The("sink seems quite dirty."); */
+            pline("개수구가 매우 더러워 보인다.");
         else {
             mtmp = makemon(&mons[PM_SEWER_RAT], u.ux, u.uy, NO_MM_FLAGS);
             if (mtmp)
+#if 0 /*KR:T*/
                 pline("Eek!  There's %s in the sink!",
-                      (Blind || !canspotmon(mtmp)) ? "something squirmy"
-                                                   : a_monnam(mtmp));
+                    (Blind || !canspotmon(mtmp)) ? "something squirmy"
+                    : a_monnam(mtmp));
+#else
+                pline("꺄악! 개수구에 %s이/가 있어!",
+                    (Blind || !canspotmon(mtmp)) ? "뭔가 꿈틀대는 것"
+                    : a_monnam(mtmp));
+#endif
         }
         break;
     case 4:
@@ -561,8 +667,14 @@ drinksink()
             }
         } while (!otmp);
         otmp->cursed = otmp->blessed = 0;
+#if 0 /*KR:T*/
         pline("Some %s liquid flows from the faucet.",
-              Blind ? "odd" : hcolor(OBJ_DESCR(objects[otmp->otyp])));
+            Blind ? "odd" : hcolor(OBJ_DESCR(objects[otmp->otyp])));
+#else
+        pline("수도꼭지에서 %s액체가 흘러나온다.",
+            Blind ? "왠 이상한 " :
+            hcolor(OBJ_DESCR(objects[otmp->otyp])));
+#endif
         otmp->dknown = !(Blind || Hallucination);
         otmp->quan++;       /* Avoid panic upon useup() */
         otmp->fromsink = 1; /* kludge for docall() */
@@ -571,57 +683,74 @@ drinksink()
         break;
     case 5:
         if (!(levl[u.ux][u.uy].looted & S_LRING)) {
-            You("find a ring in the sink!");
+            /*KR You("find a ring in the sink!"); */
+            You("개수대에서 반지를 발견했다!");
             (void) mkobj_at(RING_CLASS, u.ux, u.uy, TRUE);
             levl[u.ux][u.uy].looted |= S_LRING;
             exercise(A_WIS, TRUE);
             newsym(u.ux, u.uy);
         } else
-            pline("Some dirty %s backs up in the drain.", hliquid("water"));
+            /*KR pline("Some dirty %s backs up in the drain.", hliquid("water")); */
+            pline("배수구에서 더러운 %s이 역류해 나왔다.", hliquid("물"));
         break;
     case 6:
         breaksink(u.ux, u.uy);
         break;
     case 7:
-        pline_The("%s moves as though of its own will!", hliquid("water"));
+        /*KR pline_The("%s moves as though of its own will!", hliquid("water")); */
+        pline_The("%s이 자유의지를 가지고 움직인다!", hliquid("물"));
         if ((mvitals[PM_WATER_ELEMENTAL].mvflags & G_GONE)
             || !makemon(&mons[PM_WATER_ELEMENTAL], u.ux, u.uy, NO_MM_FLAGS))
-            pline("But it quiets down.");
+            /*KR pline("But it quiets down."); */
+            pline("하지만 이내 잠잠해졌다.");
         break;
     case 8:
-        pline("Yuk, this %s tastes awful.", hliquid("water"));
+        /*KR pline("Yuk, this %s tastes awful.", hliquid("water")); */
+        pline("우욱, 이 %s은 맛이 끔찍하다.", hliquid("물"));
         more_experienced(1, 0);
         newexplevel();
         break;
     case 9:
-        pline("Gaggg... this tastes like sewage!  You vomit.");
+        /*KR pline("Gaggg... this tastes like sewage!  You vomit."); */
+        pline("으웨엑... 하수 맛이 난다! 당신은 토한다.");
         morehungry(rn1(30 - ACURR(A_CON), 11));
         vomit();
         break;
     case 10:
-        pline("This %s contains toxic wastes!", hliquid("water"));
+        /*KR pline("This %s contains toxic wastes!", hliquid("water")); */
+        pline("이 %s에는 유독성 폐기물이 들어 있다!", hliquid("물"));
         if (!Unchanging) {
-            You("undergo a freakish metamorphosis!");
+            /*KR You("undergo a freakish metamorphosis!"); */
+            You("기묘한 변화를 겪는다!");
             polyself(0);
         }
         break;
     /* more odd messages --JJB */
     case 11:
-        You_hear("clanking from the pipes...");
+        /*KR You_hear("clanking from the pipes..."); */
+        You_hear("배수관에서 절꺽거리는 소리가 나는 것을 듣는다...");
         break;
     case 12:
-        You_hear("snatches of song from among the sewers...");
+        /*KR You_hear("snatches of song from among the sewers..."); */
+        You_hear("하수도에 울려퍼지는 노래 몇 가닥을 듣는다...");
         break;
     case 19:
         if (Hallucination) {
-            pline("From the murky drain, a hand reaches up... --oops--");
+            /*KR pline("From the murky drain, a hand reaches up... --oops--"); */
+            pline("어두운 배수구 속에서, 손이 뻗어나왔다... --어이쿠 손이 미끄러졌네--");
             break;
         }
         /*FALLTHRU*/
     default:
+#if 0 /*KR:T*/
         You("take a sip of %s %s.",
             rn2(3) ? (rn2(2) ? "cold" : "warm") : "hot",
             hliquid("water"));
+#else
+        You("%s %s을 홀짝였다.",
+            rn2(3) ? (rn2(2) ? "차가운" : "따뜻한") : "뜨거운",
+            hliquid("물"));
+#endif
     }
 }
 
