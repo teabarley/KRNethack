@@ -77,13 +77,20 @@ boolean pushing;
             if (pushing) {
                 char whobuf[BUFSZ];
 
-                Strcpy(whobuf, "you");
+                /*KR Strcpy(whobuf, "you"); */
+                Strcpy(whobuf, "당신");
                 if (u.usteed)
                     Strcpy(whobuf, y_monnam(u.usteed));
+#if 0 /*KR:T*/
                 pline("%s %s %s into the %s.", upstart(whobuf),
                       vtense(whobuf, "push"), the(xname(otmp)), what);
+#else
+                pline("%s은 %s를 %s 안으로 밀어넣었다.", whobuf,
+                    xname(otmp), what);
+#endif
                 if (flags.verbose && !Blind)
-                    pline("Now you can cross it!");
+                    /*KR pline("Now you can cross it!"); */
+                    pline("이제 건널 수 있어!");
                 /* no splashing in this case */
             }
         }
@@ -1620,9 +1627,12 @@ boolean at_stairs, falling, portal;
             "This place %s familiar...", 0 /* no message */
         };
         static const char *const halu_fam_msgs[4] = {
-            "Whoa!  Everything %s different.",
+           /*KR "Whoa!  Everything %s different.",
             "You are surrounded by twisty little passages, all alike.",
             "Gee, this %s like uncle Conan's place...", 0 /* no message */
+            "와아! 모든 게 다르게 보여!",
+            "당신은 모두 똑같이 생긴 작고 꼬불꼬불한 통로들에 둘러싸였다.",
+            "세상에나, 코난 삼촌네 집이랑 완전 똑같잖아?", 0 /* no message */
         };
         const char *mesg;
         char buf[BUFSZ];
@@ -1664,9 +1674,11 @@ boolean at_stairs, falling, portal;
         }
     } else {
         if (new && Is_rogue_level(&u.uz))
-            You("enter what seems to be an older, more primitive world.");
+            /*KR You("enter what seems to be an older, more primitive world."); */
+            You("오래되고, 매우 단순해 보이는 세계에 들어섰다.");
         /* main dungeon message from your quest leader */
-        if (!In_quest(&u.uz0) && at_dgn_entrance("The Quest")
+        /*KR if (!In_quest(&u.uz0) && at_dgn_entrance("The Quest") */
+        if (!In_quest(&u.uz0) && at_dgn_entrance("퀘스트")
             && !(u.uevent.qcompleted || u.uevent.qexpelled
                  || quest_status.leader_is_dead)) {
             if (!u.uevent.qcalled) {
@@ -1684,7 +1696,8 @@ boolean at_stairs, falling, portal;
 #endif
 
     if ((annotation = get_annotation(&u.uz)) != 0)
-        You("remember this level as %s.", annotation);
+        /*KR You("remember this level as %s.", annotation); */
+        You("이 층을 %s(으)로 기억하고 있다.", annotation);
 
     /* assume this will always return TRUE when changing level */
     (void) in_out_region(u.ux, u.uy);
@@ -1931,7 +1944,8 @@ wipeoff(VOID_ARGS)
     else
         Blinded -= 4;
     if (!Blinded) {
-        pline("You've got the glop off.");
+        /*KR pline("You've got the glop off."); */
+        You("%에서 끈적끈적한 것을 닦아냈다.", body_part(FACE));
         u.ucreamed = 0;
         if (!gulp_blnd_check()) {
             Blinded = 1;
@@ -1939,7 +1953,8 @@ wipeoff(VOID_ARGS)
         }
         return 0;
     } else if (!u.ucreamed) {
-        Your("%s feels clean now.", body_part(FACE));
+        /*KR Your("%s feels clean now.", body_part(FACE)); */
+        Your("%s이 깨끗해졌다.", body_part(FACE));
         return 0;
     }
     return 1; /* still busy */
@@ -1951,14 +1966,16 @@ dowipe()
     if (u.ucreamed) {
         static NEARDATA char buf[39];
 
-        Sprintf(buf, "wiping off your %s", body_part(FACE));
+   /*KR Sprintf(buf, "wiping off your %s", body_part(FACE)); */
+        Sprintf(buf, "%s을 닦고 있다", body_part(FACE));
         set_occupation(wipeoff, buf, 0);
         /* Not totally correct; what if they change back after now
          * but before they're finished wiping?
          */
         return 1;
     }
-    Your("%s is already clean.", body_part(FACE));
+    /*KR Your("%s is already clean.", body_part(FACE)); */
+    Your("%s은 이미 깨끗하다.", body_part(FACE));
     return 1;
 }
 
@@ -1999,6 +2016,7 @@ int how; /* 0: ordinary, 1: dismounting steed, 2: limbs turn to stone */
            before the final stages and that calls us (how==2) to cure
            wounded legs, but we want to suppress the feel better message */
         if (!u.usteed && how != 2) {
+#if 0 /*KR:T*/
             const char *legs = body_part(LEG);
 
             if ((EWounded_legs & BOTH_SIDES) == BOTH_SIDES)
@@ -2006,6 +2024,9 @@ int how; /* 0: ordinary, 1: dismounting steed, 2: limbs turn to stone */
             /* this used to say "somewhat better" but that was
                misleading since legs are being fully healed */
             Your("%s %s better.", legs, vtense(legs, "feel"));
+#else
+            Your("%s가 나아졌다.", body_part(LEG));
+#endif
         }
 
         HWounded_legs = EWounded_legs = 0L;
