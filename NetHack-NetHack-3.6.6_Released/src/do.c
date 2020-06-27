@@ -97,11 +97,18 @@ boolean pushing;
         if (!fills_up || !pushing) { /* splashing occurs */
             if (!u.uinwater) {
                 if (pushing ? !Blind : cansee(rx, ry)) {
+#if 0 /*KR:T*/
                     There("is a large splash as %s %s the %s.",
                           the(xname(otmp)), fills_up ? "fills" : "falls into",
                           what);
+#else
+                    pline("%s가 %s에 %s 철퍽 하고 커다랗게 튀었다.",
+                        xname(otmp), what,
+                        fills_up ? "채워지며" : "떨어지며");
+#endif
                 } else if (!Deaf)
-                    You_hear("a%s splash.", lava ? " sizzling" : "");
+                    /*KR You_hear("a%s splash.", lava ? " sizzling" : ""); */
+                    You_hear("%s하고 튀는 소리를 들었다.", lava ? "치이익 " : "촥 ");
                 wake_nearto(rx, ry, 40);
             }
 
@@ -109,18 +116,26 @@ boolean pushing;
                 u.uinwater = 0;
                 docrt();
                 vision_full_recalc = 1;
-                You("find yourself on dry land again!");
+                /*KR You("find yourself on dry land again!"); */
+                You("어느샌가 다시 마른 땅 위에 있었다!");
             } else if (lava && distu(rx, ry) <= 2) {
                 int dmg;
+#if 0 /*KR:T*/
                 You("are hit by molten %s%c",
                     hliquid("lava"), Fire_resistance ? '.' : '!');
+#else
+                You("녹은 %s에 맞았다%s",
+                    hliquid("용암"), Fire_resistance ? "." : "!");
+#endif
                 burn_away_slime();
                 dmg = d((Fire_resistance ? 1 : 3), 6);
                 losehp(Maybe_Half_Phys(dmg), /* lava damage */
-                       "molten lava", KILLED_BY);
+                    /*KR "molten lava", KILLED_BY); */
+                       "녹은 용암에", KILLED_BY);
             } else if (!fills_up && flags.verbose
                        && (pushing ? !Blind : cansee(rx, ry)))
-                pline("It sinks without a trace!");
+                /*KR pline("It sinks without a trace!"); */
+                pline("그것은 흔적도 없이 가라앉았다!");
         }
 
         /* boulder is now gone */
@@ -210,7 +225,8 @@ const char *verb;
         }
         if (*verb) {
             if (Blind && (x == u.ux) && (y == u.uy)) {
-                You_hear("a CRASH! beneath you.");
+                /*KR You_hear("a CRASH! beneath you."); */
+                You_hear("등 뒤에서 쾅! 하는 소리를 들었다.");
             } else if (!Blind && cansee(x, y)) {
                 pline_The("boulder %s%s.",
                           (ttyp == TRAPDOOR && !tseen)
@@ -296,7 +312,8 @@ register struct obj *obj;
         if (!Hallucination)
             obj->bknown = 1; /* ok to bypass set_bknown() */
     } else {
-        pline("%s %s on the altar.", Doname2(obj), otense(obj, "land"));
+        /*KR pline("%s %s on the altar.", Doname2(obj), otense(obj, "land")); */
+        pline("%s을/를 제단 위에 올렸다.", Doname2(obj));
         if (obj->oclass != COIN_CLASS)
             obj->bknown = 1; /* ok to bypass set_bknown() */
     }
@@ -361,9 +378,11 @@ polymorph_sink()
     /* give message even if blind; we know we're not levitating,
        so can feel the outcome even if we can't directly see it */
     if (levl[u.ux][u.uy].typ != ROOM)
-        pline_The("sink transforms into %s!", an(defsyms[sym].explanation));
+        /*KR pline_The("sink transforms into %s!", an(defsyms[sym].explanation)); */
+        pline_The("싱크대가 %s(으)로 변했다!", defsyms[sym].explanation);
     else
-        pline_The("sink vanishes.");
+        /*KR pline_The("sink vanishes."); */
+        pline("싱크대가 사라진다.");
     newsym(u.ux, u.uy);
 }
 
@@ -408,42 +427,61 @@ register struct obj *obj;
     boolean ideed = TRUE;
     boolean nosink = FALSE;
 
-    You("drop %s down the drain.", doname(obj));
+    /*KR You("drop %s down the drain.", doname(obj)); */
+    You("%s을/를 개수구에 떨어뜨렸다.", doname(obj));
     obj->in_use = TRUE;  /* block free identification via interrupt */
     switch (obj->otyp) { /* effects that can be noticed without eyes */
     case RIN_SEARCHING:
-        You("thought %s got lost in the sink, but there it is!", yname(obj));
+        /*KR You("thought %s got lost in the sink, but there it is!", yname(obj)); */
+        You("%s을/를 잃어버렸다고 생각했지만, 다시 찾아냈다!", yname(obj));
         goto giveback;
     case RIN_SLOW_DIGESTION:
-        pline_The("ring is regurgitated!");
+        /*KR pline_The("ring is regurgitated!"); */
+        pline("반지가 역류되어 나왔다!");
  giveback:
         obj->in_use = FALSE;
         dropx(obj);
         trycall(obj);
         return;
     case RIN_LEVITATION:
-        pline_The("sink quivers upward for a moment.");
+        /*KR pline_The("sink quivers upward for a moment."); */
+        pline("싱크대가 잠시 위아래로 떨렸다.");
         break;
     case RIN_POISON_RESISTANCE:
-        You("smell rotten %s.", makeplural(fruitname(FALSE)));
+        /*KR You("smell rotten %s.", makeplural(fruitname(FALSE))); */
+        pline("썩은 %s의 냄새가 난다.", fruitname(FALSE));
         break;
     case RIN_AGGRAVATE_MONSTER:
+#if 0 /*KR:T*/
         pline("Several %s buzz angrily around the sink.",
               Hallucination ? makeplural(rndmonnam(NULL)) : "flies");
+#else
+        pline("%s 여러 마리가 싱크대 근처에서 화난 듯이 웅웅거린다.",
+            Hallucination ? rndmonnam(NULL) : "파리");
+#endif
         break;
     case RIN_SHOCK_RESISTANCE:
-        pline("Static electricity surrounds the sink.");
+        /*KR pline("Static electricity surrounds the sink."); */
+        pline("정전기가 싱크대를 감싼다.");
         break;
     case RIN_CONFLICT:
-        You_hear("loud noises coming from the drain.");
+        /*KR You_hear("loud noises coming from the drain."); */
+        You_hear("개수구에서 큰 소리가 났다.");
         break;
     case RIN_SUSTAIN_ABILITY: /* KMH */
-        pline_The("%s flow seems fixed.", hliquid("water"));
+        /*KR pline_The("%s flow seems fixed.", hliquid("water")); */
+        pline_The("%s의 흐름이 일정해졌다.", hliquid("물"));
         break;
     case RIN_GAIN_STRENGTH:
+#if 0 /*KR:T*/
         pline_The("%s flow seems %ser now.",
                   hliquid("water"),
                   (obj->spe < 0) ? "weak" : "strong");
+#else
+        pline("%s의 흐름이 %해졌다.",
+            hliquid("물"),
+            (obj->spe < 0) ? "약" : "강");
+#endif
         break;
     case RIN_GAIN_CONSTITUTION:
         pline_The("%s flow seems %ser now.",
