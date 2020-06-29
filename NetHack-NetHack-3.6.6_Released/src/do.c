@@ -77,38 +77,24 @@ boolean pushing;
             if (pushing) {
                 char whobuf[BUFSZ];
 
-                /*KR Strcpy(whobuf, "you"); */
-                Strcpy(whobuf, "당신");
+                Strcpy(whobuf, "you");
                 if (u.usteed)
                     Strcpy(whobuf, y_monnam(u.usteed));
-#if 0 /*KR:T*/
                 pline("%s %s %s into the %s.", upstart(whobuf),
                       vtense(whobuf, "push"), the(xname(otmp)), what);
-#else
-                pline("%s은 %s를 %s 안으로 밀어넣었다.", whobuf,
-                    xname(otmp), what);
-#endif
                 if (flags.verbose && !Blind)
-                    /*KR pline("Now you can cross it!"); */
-                    pline("이제 건널 수 있어!");
+                    pline("Now you can cross it!");
                 /* no splashing in this case */
             }
         }
         if (!fills_up || !pushing) { /* splashing occurs */
             if (!u.uinwater) {
                 if (pushing ? !Blind : cansee(rx, ry)) {
-#if 0 /*KR:T*/
                     There("is a large splash as %s %s the %s.",
                           the(xname(otmp)), fills_up ? "fills" : "falls into",
                           what);
-#else
-                    pline("%s가 %s에 %s 철퍽 하고 커다랗게 튀었다.",
-                        xname(otmp), what,
-                        fills_up ? "채워지며" : "떨어지며");
-#endif
                 } else if (!Deaf)
-                    /*KR You_hear("a%s splash.", lava ? " sizzling" : ""); */
-                    You_hear("%s하고 튀는 소리를 들었다.", lava ? "치이익 " : "촥 ");
+                    You_hear("a%s splash.", lava ? " sizzling" : "");
                 wake_nearto(rx, ry, 40);
             }
 
@@ -116,26 +102,18 @@ boolean pushing;
                 u.uinwater = 0;
                 docrt();
                 vision_full_recalc = 1;
-                /*KR You("find yourself on dry land again!"); */
-                You("어느샌가 다시 마른 땅 위에 있었다!");
+                You("find yourself on dry land again!");
             } else if (lava && distu(rx, ry) <= 2) {
                 int dmg;
-#if 0 /*KR:T*/
                 You("are hit by molten %s%c",
                     hliquid("lava"), Fire_resistance ? '.' : '!');
-#else
-                You("녹은 %s에 맞았다%s",
-                    hliquid("용암"), Fire_resistance ? "." : "!");
-#endif
                 burn_away_slime();
                 dmg = d((Fire_resistance ? 1 : 3), 6);
                 losehp(Maybe_Half_Phys(dmg), /* lava damage */
-                    /*KR "molten lava", KILLED_BY); */
-                       "녹은 용암에", KILLED_BY);
+                       "molten lava", KILLED_BY);
             } else if (!fills_up && flags.verbose
                        && (pushing ? !Blind : cansee(rx, ry)))
-                /*KR pline("It sinks without a trace!"); */
-                pline("그것은 흔적도 없이 가라앉았다!");
+                pline("It sinks without a trace!");
         }
 
         /* boulder is now gone */
@@ -225,8 +203,7 @@ const char *verb;
         }
         if (*verb) {
             if (Blind && (x == u.ux) && (y == u.uy)) {
-                /*KR You_hear("a CRASH! beneath you."); */
-                You_hear("등 뒤에서 쾅! 하는 소리를 들었다.");
+                You_hear("a CRASH! beneath you.");
             } else if (!Blind && cansee(x, y)) {
                 pline_The("boulder %s%s.",
                           (ttyp == TRAPDOOR && !tseen)
@@ -312,8 +289,7 @@ register struct obj *obj;
         if (!Hallucination)
             obj->bknown = 1; /* ok to bypass set_bknown() */
     } else {
-        /*KR pline("%s %s on the altar.", Doname2(obj), otense(obj, "land")); */
-        pline("%s을/를 제단 위에 올렸다.", Doname2(obj));
+        pline("%s %s on the altar.", Doname2(obj), otense(obj, "land"));
         if (obj->oclass != COIN_CLASS)
             obj->bknown = 1; /* ok to bypass set_bknown() */
     }
@@ -378,11 +354,9 @@ polymorph_sink()
     /* give message even if blind; we know we're not levitating,
        so can feel the outcome even if we can't directly see it */
     if (levl[u.ux][u.uy].typ != ROOM)
-        /*KR pline_The("sink transforms into %s!", an(defsyms[sym].explanation)); */
-        pline_The("싱크대가 %s(으)로 변했다!", defsyms[sym].explanation);
+        pline_The("sink transforms into %s!", an(defsyms[sym].explanation));
     else
-        /*KR pline_The("sink vanishes."); */
-        pline("싱크대가 사라진다.");
+        pline_The("sink vanishes.");
     newsym(u.ux, u.uy);
 }
 
@@ -427,61 +401,42 @@ register struct obj *obj;
     boolean ideed = TRUE;
     boolean nosink = FALSE;
 
-    /*KR You("drop %s down the drain.", doname(obj)); */
-    You("%s을/를 개수구에 떨어뜨렸다.", doname(obj));
+    You("drop %s down the drain.", doname(obj));
     obj->in_use = TRUE;  /* block free identification via interrupt */
     switch (obj->otyp) { /* effects that can be noticed without eyes */
     case RIN_SEARCHING:
-        /*KR You("thought %s got lost in the sink, but there it is!", yname(obj)); */
-        You("%s을/를 잃어버렸다고 생각했지만, 다시 찾아냈다!", yname(obj));
+        You("thought %s got lost in the sink, but there it is!", yname(obj));
         goto giveback;
     case RIN_SLOW_DIGESTION:
-        /*KR pline_The("ring is regurgitated!"); */
-        pline("반지가 역류되어 나왔다!");
+        pline_The("ring is regurgitated!");
  giveback:
         obj->in_use = FALSE;
         dropx(obj);
         trycall(obj);
         return;
     case RIN_LEVITATION:
-        /*KR pline_The("sink quivers upward for a moment."); */
-        pline("싱크대가 잠시 위아래로 떨렸다.");
+        pline_The("sink quivers upward for a moment.");
         break;
     case RIN_POISON_RESISTANCE:
-        /*KR You("smell rotten %s.", makeplural(fruitname(FALSE))); */
-        pline("썩은 %s의 냄새가 난다.", fruitname(FALSE));
+        You("smell rotten %s.", makeplural(fruitname(FALSE)));
         break;
     case RIN_AGGRAVATE_MONSTER:
-#if 0 /*KR:T*/
         pline("Several %s buzz angrily around the sink.",
               Hallucination ? makeplural(rndmonnam(NULL)) : "flies");
-#else
-        pline("%s 여러 마리가 싱크대 근처에서 화난 듯이 웅웅거린다.",
-            Hallucination ? rndmonnam(NULL) : "파리");
-#endif
         break;
     case RIN_SHOCK_RESISTANCE:
-        /*KR pline("Static electricity surrounds the sink."); */
-        pline("정전기가 싱크대를 감싼다.");
+        pline("Static electricity surrounds the sink.");
         break;
     case RIN_CONFLICT:
-        /*KR You_hear("loud noises coming from the drain."); */
-        You_hear("개수구에서 큰 소리가 났다.");
+        You_hear("loud noises coming from the drain.");
         break;
     case RIN_SUSTAIN_ABILITY: /* KMH */
-        /*KR pline_The("%s flow seems fixed.", hliquid("water")); */
-        pline_The("%s의 흐름이 일정해졌다.", hliquid("물"));
+        pline_The("%s flow seems fixed.", hliquid("water"));
         break;
     case RIN_GAIN_STRENGTH:
-#if 0 /*KR:T*/
         pline_The("%s flow seems %ser now.",
                   hliquid("water"),
                   (obj->spe < 0) ? "weak" : "strong");
-#else
-        pline("%s의 흐름이 %해졌다.",
-            hliquid("물"),
-            (obj->spe < 0) ? "약" : "강");
-#endif
         break;
     case RIN_GAIN_CONSTITUTION:
         pline_The("%s flow seems %ser now.",
@@ -1665,12 +1620,9 @@ boolean at_stairs, falling, portal;
             "This place %s familiar...", 0 /* no message */
         };
         static const char *const halu_fam_msgs[4] = {
-           /*KR "Whoa!  Everything %s different.",
+            "Whoa!  Everything %s different.",
             "You are surrounded by twisty little passages, all alike.",
             "Gee, this %s like uncle Conan's place...", 0 /* no message */
-            "와아! 모든 게 다르게 보여!",
-            "당신은 모두 똑같이 생긴 작고 꼬불꼬불한 통로들에 둘러싸였다.",
-            "세상에나, 코난 삼촌네 집이랑 완전 똑같잖아?", 0 /* no message */
         };
         const char *mesg;
         char buf[BUFSZ];
@@ -1712,11 +1664,9 @@ boolean at_stairs, falling, portal;
         }
     } else {
         if (new && Is_rogue_level(&u.uz))
-            /*KR You("enter what seems to be an older, more primitive world."); */
-            You("오래되고, 매우 단순해 보이는 세계에 들어섰다.");
+            You("enter what seems to be an older, more primitive world.");
         /* main dungeon message from your quest leader */
-        /*KR if (!In_quest(&u.uz0) && at_dgn_entrance("The Quest") */
-        if (!In_quest(&u.uz0) && at_dgn_entrance("퀘스트")
+        if (!In_quest(&u.uz0) && at_dgn_entrance("The Quest")
             && !(u.uevent.qcompleted || u.uevent.qexpelled
                  || quest_status.leader_is_dead)) {
             if (!u.uevent.qcalled) {
@@ -1734,8 +1684,7 @@ boolean at_stairs, falling, portal;
 #endif
 
     if ((annotation = get_annotation(&u.uz)) != 0)
-        /*KR You("remember this level as %s.", annotation); */
-        You("이 층을 %s(으)로 기억하고 있다.", annotation);
+        You("remember this level as %s.", annotation);
 
     /* assume this will always return TRUE when changing level */
     (void) in_out_region(u.ux, u.uy);
@@ -1982,8 +1931,7 @@ wipeoff(VOID_ARGS)
     else
         Blinded -= 4;
     if (!Blinded) {
-        /*KR pline("You've got the glop off."); */
-        You("%에서 끈적끈적한 것을 닦아냈다.", body_part(FACE));
+        pline("You've got the glop off.");
         u.ucreamed = 0;
         if (!gulp_blnd_check()) {
             Blinded = 1;
@@ -1991,8 +1939,7 @@ wipeoff(VOID_ARGS)
         }
         return 0;
     } else if (!u.ucreamed) {
-        /*KR Your("%s feels clean now.", body_part(FACE)); */
-        Your("%s이 깨끗해졌다.", body_part(FACE));
+        Your("%s feels clean now.", body_part(FACE));
         return 0;
     }
     return 1; /* still busy */
@@ -2004,16 +1951,14 @@ dowipe()
     if (u.ucreamed) {
         static NEARDATA char buf[39];
 
-   /*KR Sprintf(buf, "wiping off your %s", body_part(FACE)); */
-        Sprintf(buf, "%s을 닦고 있다", body_part(FACE));
+        Sprintf(buf, "wiping off your %s", body_part(FACE));
         set_occupation(wipeoff, buf, 0);
         /* Not totally correct; what if they change back after now
          * but before they're finished wiping?
          */
         return 1;
     }
-    /*KR Your("%s is already clean.", body_part(FACE)); */
-    Your("%s은 이미 깨끗하다.", body_part(FACE));
+    Your("%s is already clean.", body_part(FACE));
     return 1;
 }
 
@@ -2054,7 +1999,6 @@ int how; /* 0: ordinary, 1: dismounting steed, 2: limbs turn to stone */
            before the final stages and that calls us (how==2) to cure
            wounded legs, but we want to suppress the feel better message */
         if (!u.usteed && how != 2) {
-#if 0 /*KR:T*/
             const char *legs = body_part(LEG);
 
             if ((EWounded_legs & BOTH_SIDES) == BOTH_SIDES)
@@ -2062,9 +2006,6 @@ int how; /* 0: ordinary, 1: dismounting steed, 2: limbs turn to stone */
             /* this used to say "somewhat better" but that was
                misleading since legs are being fully healed */
             Your("%s %s better.", legs, vtense(legs, "feel"));
-#else
-            Your("%s가 나아졌다.", body_part(LEG));
-#endif
         }
 
         HWounded_legs = EWounded_legs = 0L;
