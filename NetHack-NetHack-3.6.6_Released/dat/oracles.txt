@@ -1,48 +1,48 @@
 -----
-If thy wand hath run out of charges, thou mayst zap it again and again; though
-naught will happen at first, verily, thy persistence shall be rewarded, as
-one last charge may yet be wrested from it!
+만약 그대의 지팡이를 다 썼더라도 다시 사용해보아라; 
+처음에는 아무 것도 일어나지 않겠지만, 
+확실히 그대의 인내심은 마지막 한 번의 힘이 풀려남으로 보상받으리라!
 -----
-Though the shopkeepers be wary, thieves have nevertheless stolen much by using
-their digging wands to hasten exits through the pavement.
+상인들이 매우 조심성이 있음에도 불구하고, 
+도둑들은 굴착의 지팡이로 출구를 뚫어 물건을 훔친다.
 -----
-If thou hast had trouble with rust on thine armor or weapons, thou shouldst
-know that thou canst prevent this by, while in a confused state, reading the
-magical parchments which normally are used to cause their enchantment.
-Unguents of lubrication may provide similar protection, albeit of a
-transitory nature.
+방어구나 무기가 녹슬어 버리는 것이 문제라면, 
+혼란한 상태에서 보통은 방어구나 무기의 강화에 사용되는 두루마리를 
+읽는 것으로 녹을 방지할 수 있다는 것을 알아야 한다. 
+윤활유 또한 일시적이지만 비슷한 효과를 낸다.
 -----
-Behold the cockatrice, whose diminutive stature belies its hidden might.  The
-cockatrice can petrify any ordinary being it contacts--save those wise
-adventurers who eat a dead lizard or blob of acid when they feel themselves
-slowly turning to stone.
+코카트리스를 보라. 
+코카트리스의 작은 키는 그것의 숨겨진 힘을 눈치채지 못하게 한다. 
+코카트리스는 접촉하는 모든 보통의 존재를 석화시킬 수 있다. 
+자신이 천천히 돌로 굳어가는 것을 느낄 때 
+도마뱀 시체나 산성 방울을 먹는 현명한 모험가들을 제외하고.
 -----
-While some wayfarers rely on scrounging finished armour in the dungeon, the
-resourceful know the mystical means by which mail may be fashioned out of
-scales from a dragon's hide.
+어떤 여행자들은 던전에서 완성된 방어구를 훔치는 데 의존하지만, 
+수완 좋은 사람은 용비늘로 갑옷을 만드는 신비로운 방법을 알고 있다.
 -----
-It is customarily known among travelers that extra-healing draughts may clear
-thy senses when thou art addled by delusory visions.  But never forget, the
-lowly potion which makes one sick may be used for the same purpose.
+여행자들은 관습적으로 extra-healing을 마시는 것으로 그 감각을 정화하여, 
+혼란한 시야를 바로잡을 수 있다는 것을 알고 있다. 그러나, 명심하라. 
+사람을 병들게 만드는 하찮은 포션 또한 동일한 용도로 쓰일 수 있음을.
 -----
-While the consumption of lizard flesh or water beloved of the gods may clear
-the muddled head, the application of the horn of a creature of utmost purity
-can alleviate many other afflictions as well.
+도마뱀의 살점, 혹은 신의 은총을 받은 물을 섭취함으로써 
+혼란스러운 머릿속을 맑게 할 수도 있으나, 
+그저 지극히 순수한 짐승의 뿔을 사용함으로써 
+다른 많은 괴로움을 완화할 수 있으리라.
 -----
-If thou wouldst travel quickly between distant locations, thou must be
-able to control thy teleports, and in a confused state misread the scroll
-which usually teleports thyself locally.  Daring adventurers have also
-performed the same feat sans need for scrolls or potions by stepping into
-a particular ambuscade.
+그대가 먼 거리를 이동할 때, 
+그대는 반드시 그대의 순간이동을 제어할 수 있어야 할 것이며, 
+그대를 주로 짧은 거리만 순간이동 하도록 하는 두루마리를 혼란스러운 상태에서 
+오독 해야 할 것이다. 대담한 모험가들은 스크롤이나 포션 없이, 
+그저 특정한 지점에 올라서는 것 만으로 같은 일을 해왔다.
 -----
-Almost all adventurers who come this way hope to pass the dread Medusa.  To
-do this, the best advice is to keep thine eyes blindfolded and to cause the
-creature to espy its own reflection in a mirror.
+이곳을 거쳐간 거의 모든 모험가들은 
+저 공포스러운 메두사를 넘어설 수 있기를 바랐다. 
+이를 위한 최고의 방안은 그대의 눈을 안대로 가리고, 
+그 괴물이 거울에 비친 스스로의 모습을 보도록 하는 것이다.
 -----
-And where it is written "ad aerarium", diligent searching will often reveal
-the way to a trap which sends one to the Magic Memory Vault, where the riches
-of Croesus are stored; however, escaping from the vault with its gold is much
-harder than getting in.
+부지런한 자들은 종종 "ad aerarium"이라 쓰인 장소를 발견하게 될 지니, 
+그곳에는 크로이소스의 재물을 축적해둔 마법의 기억 창고로 통하는 길이 있노라.
+허나, 그 황금을 탈취하는 것은 금고에 들어서는 것 이상으로 고된 일일 것이니.
 -----
 It is well known that wily shopkeepers raise their prices whene'er they
 espy the garish apparel of the approaching tourist or the countenance of a

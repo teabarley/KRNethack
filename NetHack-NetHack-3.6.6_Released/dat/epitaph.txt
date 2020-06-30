@@ -131,11 +131,11 @@ And what do I look like?  The living?
 그래, 그건 다 걔 잘못이야!
 And you said it was pretty here...
 또 다른 길 잃은 영혼
-Any day above ground is a good day!
+아무리 비참한 삶이라도 죽음보다 더하랴!
 Any more of this and I'll die of a stroke before I'm 30.
-Anybody seen my head?
+제 머리 보신 분?
 Anyone for deathmatch?
-Anything for a change.
+아무거나 교환 받습니다.
 Anything that kills you makes you ... well, dead
 Anything worth doing is worth overdoing.
 유니콘은 순결한 사람한테도 덤비더라고!
@@ -222,7 +222,7 @@ Experience isn't everything.  First, you've got to survive.
 First shalt thou pull out the Holy Pin
 For a Breath, I Tarry...
 For recreational use only.
-For sale: One soul, slightly used.  Asking for 3 wishes.
+팝니다: 영혼 하나, 사용감 있음, 소원 세 개를 빌었음
 For some moments in life, there are no words.
 Forget Disney World, I'm going to Hell!
 Forget about the dog, Beware of my wife.
@@ -367,8 +367,8 @@ The Gods DO have a sense of humor: I'm living proof!
 The frog's dead.  He Kermitted suicide.
 This dungeon is a pushover
 This elevator doesn't go to Heaven
-이 비석은 체험판입니다. 정식판은 10 zorkmid입니다.
-이 비석은 Yendorian 상조가 제공했습니다.
+이 비석은 체험판입니다. 정식판은 10 조크미드입니다.
+이 비석은 옌도리안 상조가 제공했습니다.
 이건 내 삶에서 그리 중요한 부분이 아니야.
 내 잘못이야.
 이 쪽이 위로 가게 놓으시오
