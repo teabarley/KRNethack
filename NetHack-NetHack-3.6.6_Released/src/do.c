@@ -1839,17 +1839,25 @@ struct obj *corpse;
 
             if (container_where == OBJ_MINVENT && cansee(mtmp->mx, mtmp->my)
                 && mcarry && canseemon(mcarry) && container) {
+                /*KR pline("%s writhes out of %s!", Amonnam(mtmp), */
                 pline("%s writhes out of %s!", Amonnam(mtmp),
                       yname(container));
             } else if (container_where == OBJ_INVENT && container) {
                 Strcpy(sackname, an(xname(container)));
+#if 0 /*KR:T*/
                 pline("%s %s out of %s in your pack!",
                       Blind ? Something : Amonnam(mtmp),
                       locomotion(mtmp->data, "writhes"), sackname);
+#else
+                pline("%s이/가 당신의 배낭 속 %s에서 빠져나오려고 한다!",
+                    Blind ? Something : Amonnam(mtmp),
+                    sackname);
+#endif
             } else if (container_where == OBJ_FLOOR && container
                        && cansee(mtmp->mx, mtmp->my)) {
                 Strcpy(sackname, an(xname(container)));
-                pline("%s escapes from %s!", Amonnam(mtmp), sackname);
+                /*KR pline("%s escapes from %s!", Amonnam(mtmp), sackname); */
+                pline("%s이/가 %s에서 빠져나왔다!", Amonnam(mtmp), sackname);
             }
             break;
         }
@@ -1884,11 +1892,20 @@ long timeout UNUSED;
 
         if (rloc(mtmp, TRUE)) {
             if (notice_it && !canseemon(mtmp))
-                pline("%s vanishes.", monname);
+                /*KR pline("%s vanishes.", monname); */
+                pline("%s이/가 사라졌다.", monname);
             else if (!notice_it && canseemon(mtmp))
+#if 0 /*KR:T*/
                 pline("%s appears.", Monnam(mtmp)); /* not pre-rloc monname */
+#else
+                pline("%s이/가 나타났다.", Monnam(mtmp)); /* not pre-rloc monname */
+#endif
             else if (notice_it && dist2(mtmp->mx, mtmp->my, x, y) > 2)
+#if 0 /*KR:T*/
                 pline("%s teleports.", monname); /* saw it and still see it */
+#else
+                pline("%s이/가 순간이동했다.", monname); /* 봤고, 여전히 볼 수 있음 */
+#endif
         }
     }
 
@@ -1903,7 +1920,8 @@ long timeout UNUSED;
                 if (!rn2(3))
                     break;
         } else { /* rot this corpse away */
-            You_feel("%sless hassled.", is_rider(mptr) ? "much " : "");
+            /*KR You_feel("%sless hassled.", is_rider(mptr) ? "much " : ""); */
+            You("고민거리가 %s줄어들었다.", is_rider(mptr) ? "훨씬 " : "");
             action = ROT_CORPSE;
             when = 250L - (monstermoves - body->age);
             if (when < 1L)
@@ -1931,7 +1949,8 @@ wipeoff(VOID_ARGS)
     else
         Blinded -= 4;
     if (!Blinded) {
-        pline("You've got the glop off.");
+        /*KR pline("You've got the glop off."); */
+        You("%s에서 끈적끈적한 것을 닦아냈다.", body_part(FACE));
         u.ucreamed = 0;
         if (!gulp_blnd_check()) {
             Blinded = 1;
@@ -1939,7 +1958,8 @@ wipeoff(VOID_ARGS)
         }
         return 0;
     } else if (!u.ucreamed) {
-        Your("%s feels clean now.", body_part(FACE));
+        /*KR Your("%s feels clean now.", body_part(FACE)); */
+        Your("%s이 깨끗해졌다.", body_part(FACE));
         return 0;
     }
     return 1; /* still busy */
@@ -1951,14 +1971,16 @@ dowipe()
     if (u.ucreamed) {
         static NEARDATA char buf[39];
 
-        Sprintf(buf, "wiping off your %s", body_part(FACE));
+        /*KR Sprintf(buf, "wiping off your %s", body_part(FACE)); */
+        Sprintf(buf, "당신의 %s을 닦고 있다", body_part(FACE));
         set_occupation(wipeoff, buf, 0);
         /* Not totally correct; what if they change back after now
          * but before they're finished wiping?
          */
         return 1;
     }
-    Your("%s is already clean.", body_part(FACE));
+    /*KR Your("%s is already clean.", body_part(FACE)); */
+    Your("%s은 이미 깨끗하다.", body_part(FACE));
     return 1;
 }
 
@@ -1999,6 +2021,7 @@ int how; /* 0: ordinary, 1: dismounting steed, 2: limbs turn to stone */
            before the final stages and that calls us (how==2) to cure
            wounded legs, but we want to suppress the feel better message */
         if (!u.usteed && how != 2) {
+#if 0 /*KR:T*/
             const char *legs = body_part(LEG);
 
             if ((EWounded_legs & BOTH_SIDES) == BOTH_SIDES)
@@ -2006,6 +2029,9 @@ int how; /* 0: ordinary, 1: dismounting steed, 2: limbs turn to stone */
             /* this used to say "somewhat better" but that was
                misleading since legs are being fully healed */
             Your("%s %s better.", legs, vtense(legs, "feel"));
+#else
+            Your("%s가 괜찮아졌다.", body_part(LEG));
+#endif
         }
 
         HWounded_legs = EWounded_legs = 0L;
