@@ -9,15 +9,31 @@
 
 /* part of the output on gain or loss of attribute */
 static const char
+#if 0 /*KR:T*/
     *const plusattr[] = { "strong", "smart", "wise",
                           "agile",  "tough", "charismatic" },
+#else
+    *const plusattr[] = { "강하다", "영리하다", "현명하다",
+                          "민첩하다", "굳세다", "매력적이다" },
+#endif
+#if 0 /*KR:T*/
     *const minusattr[] = { "weak",    "stupid",
                            "foolish", "clumsy",
                            "fragile", "repulsive" };
+#else
+    *const minusattr[] = { "약하다",  "우둔하다",
+                           "어리석다", "서툴다",
+                           "허약하다", "추하다" };
+#endif
 /* also used by enlightenment for non-abbreviated status info */
 const char
+#if 0 /*KR:T*/
     *const attrname[] = { "strength", "intelligence", "wisdom",
                           "dexterity", "constitution", "charisma" };
+#else
+    *const attrname[] = { "힘", "지능", "지혜",
+                          "민첩", "체력", "매력" };
+#endif
 
 static const struct innate {
     schar ulevel;
@@ -25,65 +41,90 @@ static const struct innate {
     const char *gainstr, *losestr;
 } arc_abil[] = { { 1, &(HStealth), "", "" },
                  { 1, &(HFast), "", "" },
-                 { 10, &(HSearching), "perceptive", "" },
+            /*KR { 10, &(HSearching), "perceptive", "" }, */
+                 { 10, &(HSearching), "지각력을 얻었다", "지각력을 잃었다" },
                  { 0, 0, 0, 0 } },
 
   bar_abil[] = { { 1, &(HPoison_resistance), "", "" },
-                 { 7, &(HFast), "quick", "slow" },
-                 { 15, &(HStealth), "stealthy", "" },
+            /*KR { 7, &(HFast), "quick", "slow" }, */
+                 { 7, &(HFast), "빨라졌다", "느려졌다" },
+            /*KR { 15, &(HStealth), "stealthy", "" }, */
+                 { 15, &(HStealth), "은밀해졌다", "눈에 띄게 되었다" },
                  { 0, 0, 0, 0 } },
 
-  cav_abil[] = { { 7, &(HFast), "quick", "slow" },
-                 { 15, &(HWarning), "sensitive", "" },
+  /*KR cav_abil[] = { { 7, &(HFast), "quick", "slow" }, */
+  cav_abil[] = { { 7, &(HFast), "빨리졌다", "느려졌다" },
+            /*KR { 15, &(HWarning), "sensitive", "" }, */
+                 { 15, &(HWarning), "민감해졌다", "둔감해졌다" },
                  { 0, 0, 0, 0 } },
 
   hea_abil[] = { { 1, &(HPoison_resistance), "", "" },
-                 { 15, &(HWarning), "sensitive", "" },
+            /*KR { 15, &(HWarning), "sensitive", "" }, */
+                 { 15, &(HWarning), "민감해졌다", "둔감해졌다" },
                  { 0, 0, 0, 0 } },
 
-  kni_abil[] = { { 7, &(HFast), "quick", "slow" }, { 0, 0, 0, 0 } },
+/*KR kni_abil[] = { { 7, &(HFast), "quick", "slow" }, { 0, 0, 0, 0 } }, */
+  kni_abil[] = { { 7, &(HFast), "빨라졌다", "느려졌다" }, { 0, 0, 0, 0 } },
 
   mon_abil[] = { { 1, &(HFast), "", "" },
                  { 1, &(HSleep_resistance), "", "" },
                  { 1, &(HSee_invisible), "", "" },
-                 { 3, &(HPoison_resistance), "healthy", "" },
-                 { 5, &(HStealth), "stealthy", "" },
-                 { 7, &(HWarning), "sensitive", "" },
-                 { 9, &(HSearching), "perceptive", "unaware" },
-                 { 11, &(HFire_resistance), "cool", "warmer" },
-                 { 13, &(HCold_resistance), "warm", "cooler" },
-                 { 15, &(HShock_resistance), "insulated", "conductive" },
-                 { 17, &(HTeleport_control), "controlled", "uncontrolled" },
+    /*KR { 3, &(HPoison_resistance), "healthy", "" }, */
+                 { 3, &(HPoison_resistance), "건강해졌다", "" },
+    /*KR { 5, &(HStealth), "stealthy", "" }, */
+                 { 5, &(HStealth), "은밀해졌다", "눈에 띄게 되었다" },
+    /*KR { 7, &(HWarning), "sensitive", "" }, */
+                 { 7, &(HWarning), "민감해졌다", "둔감해졌다" },
+    /*KR { 9, &(HSearching), "perceptive", "unaware" }, */
+                 { 9, &(HSearching), "지각력을 얻었다", "지각력을 잃었다" },
+    /*KR { 11, &(HFire_resistance), "cool", "warmer" }, */
+                 { 11, &(HFire_resistance), "시원해졌다", "따뜻해졌다" },
+    /*KR { 13, &(HCold_resistance), "warm", "cooler" }, */
+                 { 13, &(HCold_resistance), "따뜻해졌다", "시원해졌다" },
+    /*KR { 15, &(HShock_resistance), "insulated", "conductive" }, */
+                 { 15, &(HShock_resistance), "부도체가 되었다", "도체가 되었다" },
+    /*KR { 17, &(HTeleport_control), "controlled", "uncontrolled" }, */
+                 { 17, &(HTeleport_control), "통제력을 얻었다", "통제력을 잃었다" },
                  { 0, 0, 0, 0 } },
 
-  pri_abil[] = { { 15, &(HWarning), "sensitive", "" },
-                 { 20, &(HFire_resistance), "cool", "warmer" },
+    /*KR pri_abil[] = { { 15, &(HWarning), "sensitive", "" }, */
+  pri_abil[] = { { 15, &(HWarning), "민감해졌다", "둔감해졌다" },
+    /*KR { 20, &(HFire_resistance), "cool", "warmer" }, */
+                 { 20, &(HFire_resistance), "시원해졌다", "따뜻해졌다" },
                  { 0, 0, 0, 0 } },
 
   ran_abil[] = { { 1, &(HSearching), "", "" },
-                 { 7, &(HStealth), "stealthy", "" },
+    /*KR { 7, &(HStealth), "stealthy", "" }, */
+                 { 7, &(HStealth), "은밀해졌다", "눈에 띄게 되었다" },
                  { 15, &(HSee_invisible), "", "" },
                  { 0, 0, 0, 0 } },
 
   rog_abil[] = { { 1, &(HStealth), "", "" },
-                 { 10, &(HSearching), "perceptive", "" },
+    /*KR { 10, &(HSearching), "perceptive", "" }, */
+                 { 10, &(HSearching), "지각력을 얻었다", "지각력을 잃었다" },
                  { 0, 0, 0, 0 } },
 
   sam_abil[] = { { 1, &(HFast), "", "" },
-                 { 15, &(HStealth), "stealthy", "" },
+    /*KR { 15, &(HStealth), "stealthy", "" }, */
+                 { 15, &(HStealth), "은밀해졌다", "눈에 띄게 되었다" },
                  { 0, 0, 0, 0 } },
 
-  tou_abil[] = { { 10, &(HSearching), "perceptive", "" },
-                 { 20, &(HPoison_resistance), "hardy", "" },
+    /*KR tou_abil[] = { { 10, &(HSearching), "perceptive", "" }, */
+  tou_abil[] = { { 10, &(HSearching), "지각력을 얻었다", "지각력을 잃었다" },
+    /*KR { 20, &(HPoison_resistance), "hardy", "" }, */
+                 { 20, &(HPoison_resistance), "면독성을 얻었다", "면독성을 잃었다" },
                  { 0, 0, 0, 0 } },
 
   val_abil[] = { { 1, &(HCold_resistance), "", "" },
                  { 1, &(HStealth), "", "" },
-                 { 7, &(HFast), "quick", "slow" },
+    /*KR { 7, &(HFast), "quick", "slow" }, */
+                 { 7, &(HFast), "빨라졌다", "느려졌다" },
                  { 0, 0, 0, 0 } },
 
-  wiz_abil[] = { { 15, &(HWarning), "sensitive", "" },
-                 { 17, &(HTeleport_control), "controlled", "uncontrolled" },
+    /*KR wiz_abil[] = { { 15, &(HWarning), "sensitive", "" }, */
+  wiz_abil[] = { { 15, &(HWarning), "민감해졌다", "둔감해졌다" },
+    /*KR { 17, &(HTeleport_control), "controlled", "uncontrolled" }, */
+                 { 17, &(HTeleport_control), "통제력을 얻었다", "통제력을 잃었다" },
                  { 0, 0, 0, 0 } },
 
   /* Intrinsics conferred by race */
@@ -91,7 +132,8 @@ static const struct innate {
                  { 0, 0, 0, 0 } },
 
   elf_abil[] = { { 1, &HInfravision, "", "" },
-                 { 4, &HSleep_resistance, "awake", "tired" },
+    /*KR { 4, &HSleep_resistance, "awake", "tired" }, */
+                 { 4, &HSleep_resistance, "잠이 깼다", "잠이 온다" },
                  { 0, 0, 0, 0 } },
 
   gno_abil[] = { { 1, &HInfravision, "", "" },
@@ -124,6 +166,7 @@ int msgflg; /* positive => no message, zero => message, and */
 
     if ((ndx == A_INT || ndx == A_WIS) && uarmh && uarmh->otyp == DUNCE_CAP) {
         if (msgflg == 0)
+            /*KR Your("cap constricts briefly, then relaxes again."); */
             Your("cap constricts briefly, then relaxes again.");
         return FALSE;
     }
@@ -171,19 +214,30 @@ int msgflg; /* positive => no message, zero => message, and */
     if (ACURR(ndx) == old_acurr) {
         if (msgflg == 0 && flags.verbose) {
             if (ABASE(ndx) == old_abase && AMAX(ndx) == old_amax) {
+#if 0 /*KR:T*/
                 pline("You're %s as %s as you can get.",
                       abonflg ? "currently" : "already", attrstr);
+#else
+                You("%s 충분히 %s.",
+                    abonflg ? "지금으로써는" : "이미", attrstr);
+#endif
             } else {
                 /* current stayed the same but base value changed, or
                    base is at minimum and reduction caused max to drop */
+#if 0 /*KR:T*/
                 Your("innate %s has %s.", attrname[ndx],
                      (incr > 0) ? "improved" : "declined");
+#else
+                Your("내재적인 %s가 %s.", attrname[ndx],
+                    (incr > 0) ? "향상되었다" : "저하되었다");
+#endif
             }
         }
         return FALSE;
     }
 
     if (msgflg <= 0)
+        /*KR You_feel("%s%s!", (incr > 1 || incr < -1) ? "very " : "", attrstr); */
         You_feel("%s%s!", (incr > 1 || incr < -1) ? "very " : "", attrstr);
     context.botl = TRUE;
     if (program_state.in_moveloop && (ndx == A_STR || ndx == A_CON))
@@ -236,12 +290,36 @@ static const struct poison_effect_message {
     void VDECL((*delivery_func), (const char *, ...));
     const char *effect_msg;
 } poiseff[] = {
+#if 0 /*KR:T*/
     { You_feel, "weaker" },             /* A_STR */
+#else
+    { You_feel, "약해졌다" },             /* A_STR */
+#endif
+#if 0 /*KR:T*/
     { Your, "brain is on fire" },       /* A_INT */
+#else
+    { You, "머리에 불이 날 것 같다" },       /* A_INT */
+#endif
+#if 0 /*KR:T*/
     { Your, "judgement is impaired" },  /* A_WIS */
+#else
+    { You, "판단력을 잃었다" },  /* A_WIS */
+#endif
+#if 0 /*KR:T*/
     { Your, "muscles won't obey you" }, /* A_DEX */
+#else
+    { Your, "몸이 말을 듣지 않는다" }, /* A_DEX */
+#endif
+#if 0 /*KR:T*/
     { You_feel, "very sick" },          /* A_CON */
+#else
+    { You_feel, "몸 상태가 매우 나빠졌다" },          /* A_CON */
+#endif
+#if 0 /*KR:T*/
     { You, "break out in hives" }       /* A_CHA */
+#else
+    { You, "두드러기가 났다" }       /* A_CHA */
+#endif
 };
 
 /* feedback for attribute loss due to poisoning */
@@ -261,10 +339,13 @@ boolean exclaim; /* emphasis */
      * (dunce cap) is such that we don't need message fixups for them.
      */
     if (typ == A_STR && ACURR(A_STR) == STR19(25))
-        msg_txt = "innately weaker";
+        /*KR msg_txt = "innately weaker"; */
+        msg_txt = "내재적으로 약해졌다";
     else if (typ == A_CON && ACURR(A_CON) == 25)
-        msg_txt = "sick inside";
+        /*KR msg_txt = "sick inside"; */
+        msg_txt = "속이 아프다";
 
+    /*KR (*func)("%s%c", msg_txt, exclaim ? '!' : '.'); */
     (*func)("%s%c", msg_txt, exclaim ? '!' : '.');
 }
 
@@ -281,21 +362,33 @@ boolean thrown_weapon; /* thrown weapons are less deadly */
     /* inform player about being poisoned unless that's already been done;
        "blast" has given a "blast of poison gas" message; "poison arrow",
        "poison dart", etc have implicitly given poison messages too... */
+#if 0 /*KR:T*/
     if (strcmp(reason, "blast") && !strstri(reason, "poison")) {
+#else
+    if (strcmp(reason, "폭발") && !strstri(reason, "독")) {
+#endif
+#if 0 /*KR*/
         boolean plural = (reason[strlen(reason) - 1] == 's') ? 1 : 0;
+#endif
 
         /* avoid "The" Orcus's sting was poisoned... */
+#if 0 /*KR:T*/
         pline("%s%s %s poisoned!",
               isupper((uchar) *reason) ? "" : "The ", reason,
               plural ? "were" : "was");
+#else
+        pline("%s은/는 독에 중독되었다!", reason);
+#endif
     }
     if (Poison_resistance) {
         if (!strcmp(reason, "blast"))
             shieldeff(u.ux, u.uy);
-        pline_The("poison doesn't seem to affect you.");
+        /*KR pline_The("poison doesn't seem to affect you."); */
+        pline("당신에게는 독이 듣지 않는 것 같다.");
         return;
     }
 
+#if 0 /*KR 한국어에서는 불필요*/
     /* suppress killer prefix if it already has one */
     i = name_to_mon(pkiller);
     if (i >= LOW_PM && (mons[i].geno & G_UNIQ)) {
@@ -307,13 +400,15 @@ boolean thrown_weapon; /* thrown weapons are less deadly */
         /*[ does this need a plural check too? ]*/
         kprefix = KILLED_BY;
     }
+#endif
 
     i = !fatal ? 1 : rn2(fatal + (thrown_weapon ? 20 : 0));
     if (i == 0 && typ != A_CHA) {
         /* instant kill */
         u.uhp = -1;
         context.botl = TRUE;
-        pline_The("poison was deadly...");
+        /*KR pline_The("poison was deadly..."); */
+        pline("치사량에 이르는 독이었다...");
     } else if (i > 5) {
         /* HP damage; more likely--but less severe--with missiles */
         loss = thrown_weapon ? rnd(6) : rn1(10, 6);
@@ -329,9 +424,13 @@ boolean thrown_weapon; /* thrown weapons are less deadly */
 
     if (u.uhp < 1) {
         killer.format = kprefix;
+#if 0 /*KR 한국어에서는 구별하지 않음 */
         Strcpy(killer.name, pkiller);
         /* "Poisoned by a poisoned ___" is redundant */
         done(strstri(pkiller, "poison") ? DIED : POISONING);
+#else
+        done(POISONING);
+#endif
     }
     (void) encumber_msg();
 }
@@ -515,12 +614,21 @@ exerper()
 /* exercise/abuse text (must be in attribute order, not botl order);
    phrased as "You must have been [][0]." or "You haven't been [][1]." */
 static NEARDATA const char *const exertext[A_MAX][2] = {
+#if 0 /*KR:T*/
     { "exercising diligently", "exercising properly" },           /* Str */
     { 0, 0 },                                                     /* Int */
     { "very observant", "paying attention" },                     /* Wis */
     { "working on your reflexes", "working on reflexes lately" }, /* Dex */
     { "leading a healthy life-style", "watching your health" },   /* Con */
     { 0, 0 },                                                     /* Cha */
+#else
+    { "열심히 운동하고 있었음", "건성건성 운동하고 있었음" },            /* Str */
+    { 0, 0 },                                                            /* Int */
+    { "신중하게 행동하고 있었음", "주의를 기울이지 않았음" },            /* Wis */
+    { "반사신경을 단련하고 있었음", "최근 반사신경을 단련하지 않았음" }, /* Dex */
+    { "건강한 생활습관을 가지고 있었음", "건강관리를 소홀히 했음" },     /* Con */
+    { 0, 0 },                                                            /* Cha */
+#endif
 };
 
 void
@@ -596,9 +704,14 @@ exerchk()
                 /* if you actually changed an attrib - zero accumulation */
                 AEXE(i) = ax = 0;
                 /* then print an explanation */
+#if 0 /*KR:T*/
                 You("%s %s.",
                     (mod_val > 0) ? "must have been" : "haven't been",
                     exertext[i][(mod_val > 0) ? 0 : 1]);
+#else
+                You("%s이 틀림없다.",
+                    exertext[i][(mod_val > 0) ? 0 : 1]);
+#endif
             }
  nextattrib:
             /* this used to be ``AEXE(i) /= 2'' but that would produce
@@ -822,11 +935,16 @@ int propidx; /* special cases can have negative values */
     /*
      * Restrict the source of the attributes just to debug mode for now
      */
+/*KR "당신은 당신의 ~로 인해"는 부자연스러우므로 simplenames()를 사용 */
+/*KR 원래는 minimal_xname()을 사용해야 하지만 static이므로 대체함 */
     if (wizard) {
-        static NEARDATA const char because_of[] = " because of %s";
+        /*KR static NEARDATA const char because_of[] = " because of %s"; */
+        static NEARDATA const char because_of[] = " %s 때문에";
 
         if (propidx >= 0) {
+#if 0 /*KR*/
             char *p;
+#endif
             struct obj *obj = (struct obj *) 0;
             int innateness = is_innate(propidx);
 
@@ -845,18 +963,25 @@ int propidx; /* special cases can have negative values */
              * takes priority over knight's innate but limited jumping.
              */
             if (propidx == BLINDED && u.uroleplay.blind)
-                Sprintf(buf, " from birth");
+                /*KR Sprintf(buf, " from birth"); */
+                Sprintf(buf, " 태어나서부터");
             else if (innateness == FROM_ROLE || innateness == FROM_RACE)
-                Strcpy(buf, " innately");
+                /*KR Strcpy(buf, " innately"); */
+                Strcpy(buf, " 태어나면서");
             else if (innateness == FROM_INTR) /* [].intrinsic & FROMOUTSIDE */
-                Strcpy(buf, " intrinsically");
+                /*KR Strcpy(buf, " intrinsically"); */
+                Strcpy(buf, " 내적으로");
             else if (innateness == FROM_EXP)
-                Strcpy(buf, " because of your experience");
+                /*KR Strcpy(buf, " because of your experience"); */
+                Strcpy(buf, " 경험에 의해");
             else if (innateness == FROM_LYCN)
-                Strcpy(buf, " due to your lycanthropy");
+                /*KR Strcpy(buf, " due to your lycanthropy"); */
+                Strcpy(buf, " 야수병에 의해");
             else if (innateness == FROM_FORM)
-                Strcpy(buf, " from current creature form");
+                /*KR Strcpy(buf, " from current creature form"); */
+                Strcpy(buf, " 현재의 모습에서");
             else if (propidx == FAST && Very_fast)
+#if 0 /*KR:T*/
                 Sprintf(buf, because_of,
                         ((HFast & TIMEOUT) != 0L) ? "a potion or spell"
                           : ((EFast & W_ARMF) != 0L && uarmf->dknown
@@ -864,20 +989,33 @@ int propidx; /* special cases can have negative values */
                               ? ysimple_name(uarmf) /* speed boots */
                                 : EFast ? "worn equipment"
                                   : something);
+#else
+                Sprintf(buf, because_of,
+                        ((HFast& TIMEOUT) != 0L) ? "물약이나 마법"
+                          : ((EFast & W_ARMF) != 0L && uarmf->dknown
+                             && objects[uarmf->otyp].oc_name_known)
+                              ? ysimple_name(uarmf) /* speed boots */
+                                : EFast ? "입은 장비"
+                                  : something);
+#endif
             else if (wizard
                      && (obj = what_gives(&u.uprops[propidx].extrinsic)) != 0)
                 Sprintf(buf, because_of, obj->oartifact
                                              ? bare_artifactname(obj)
-                                             : ysimple_name(obj));
+                                        /*KR : ysimple_name(obj)); */
+                                             : simpleonames(obj));
             else if (propidx == BLINDED && Blindfolded_only)
-                Sprintf(buf, because_of, ysimple_name(ublindf));
+                /*KR Sprintf(buf, because_of, ysimple_name(ublindf)); */
+                Sprintf(buf, because_of, simpleonames(ublindf));
 
+#if 0 /*KR 미사용 */
             /* remove some verbosity and/or redundancy */
             if ((p = strstri(buf, " pair of ")) != 0)
                 copynchars(p + 1, p + 9, BUFSZ); /* overlapping buffers ok */
             else if (propidx == STRANGLED
                      && (p = strstri(buf, " of strangulation")) != 0)
                 *p = '\0';
+#endif
 
         } else { /* negative property index */
             /* if more blocking capabilities get implemented we'll need to
@@ -890,13 +1028,23 @@ int propidx; /* special cases can have negative values */
                 break;
             case INVIS:
                 if (u.uprops[INVIS].blocked & W_ARMC)
+#if 0 /*KR*/
                     Sprintf(buf, because_of,
                             ysimple_name(uarmc)); /* mummy wrapping */
+#else
+                    Sprintf(buf, because_of,
+                        simpleonames(uarmc)); /* mummy wrapping */
+#endif
                 break;
             case CLAIRVOYANT:
                 if (wizard && (u.uprops[CLAIRVOYANT].blocked & W_ARMH))
+#if 0 /*KR*/
                     Sprintf(buf, because_of,
                             ysimple_name(uarmh)); /* cornuthaum */
+#else
+                    Sprintf(buf, because_of,
+                        simpleonames(uarmh)); /* cornuthaum */
+#endif
                 break;
             }
         }
@@ -953,13 +1101,16 @@ int oldlevel, newlevel;
                 *(abil->ability) |= mask;
             if (!(*(abil->ability) & INTRINSIC & ~mask)) {
                 if (*(abil->gainstr))
-                    You_feel("%s!", abil->gainstr);
+               /*KR You_feel("%s!", abil->gainstr); */
+                    You("%s한 기분이 든다!", abil->gainstr);
             }
         } else if (oldlevel >= abil->ulevel && newlevel < abil->ulevel) {
             *(abil->ability) &= ~mask;
             if (!(*(abil->ability) & INTRINSIC)) {
                 if (*(abil->losestr))
-                    You_feel("%s!", abil->losestr);
+               /*KR You_feel("%s!", abil->losestr); */
+                    You("%s한 기분이 든다!", abil->losestr);
+               /*KR 이 조건은 만족되지 않을 것임 */
                 else if (*(abil->gainstr))
                     You_feel("less %s!", abil->gainstr);
             }
@@ -1151,17 +1302,29 @@ int reason; /* 0==conversion, 1==helm-of-OA on, 2==helm-of-OA off */
         /* worn helm of opposite alignment might block change */
         if (!uarmh || uarmh->otyp != HELM_OF_OPPOSITE_ALIGNMENT)
             u.ualign.type = u.ualignbase[A_CURRENT];
+#if 0 /*KR:T*/
         You("have a %ssense of a new direction.",
             (u.ualign.type != oldalign) ? "sudden " : "");
+#else
+        You("%s 새로운 방향성을 느낀다.",
+            (u.ualign.type != oldalign) ? "갑자기" : "");
+#endif
     } else {
         /* putting on or taking off a helm of opposite alignment */
         u.ualign.type = (aligntyp) newalign;
         if (reason == 1)
-            Your("mind oscillates %s.", Hallucination ? "wildly" : "briefly");
+       /*KR Your("mind oscillates %s.", Hallucination ? "wildly" : "briefly"); */
+            You("%s동요한다.", Hallucination ? "극도로 " : "잠시 ");
         else if (reason == 2)
+#if 0 /*KR:T*/
             Your("mind is %s.", Hallucination
                                     ? "much of a muchness"
                                     : "back in sync with your body");
+#else
+            Your("생각이 %s.", Hallucination
+                                    ? "매우 비슷해졌다"
+                                    : "다시 몸과 일치하게 되었다");
+#endif
     }
     if (u.ualign.type != oldalign) {
         u.ualign.record = 0; /* slate is wiped clean */
