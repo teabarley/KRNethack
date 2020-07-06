@@ -27,9 +27,13 @@ nhsym rogue_syms[SYM_MAX] = DUMMY;   /* rogue symbols           */
 nhsym ov_primary_syms[SYM_MAX] = DUMMY;   /* overides via config SYMBOL */
 nhsym ov_rogue_syms[SYM_MAX] = DUMMY;   /* overides via config ROGUESYMBOL */
 nhsym warnsyms[WARNCOUNT] = DUMMY; /* the current warning display symbols */
+#if 0 /*KR:T*/
 const char invisexplain[] = "remembered, unseen, creature",
-           altinvisexplain[] = "unseen creature"; /* for clairvoyance */
-           
+altinvisexplain[] = "unseen creature"; /* for clairvoyance */
+#else
+const char invisexplain[] = "기억하고 있지만 보이지 않는 생명체",
+altinvisexplain[] = "보이지 않는 생명체"; /* for clairvoyance */
+#endif           
 /* Default object class symbols.  See objclass.h.
  * {symbol, name, explain}
  *     name:    used in object_detect().
@@ -37,7 +41,7 @@ const char invisexplain[] = "remembered, unseen, creature",
  */
 const struct class_sym def_oc_syms[MAXOCLASSES] = {
     { '\0', "", "" }, /* placeholder for the "random class" */
-    { ILLOBJ_SYM, "illegal objects", "strange object" },
+    /*KR { ILLOBJ_SYM, "illegal objects", "strange object" },
     { WEAPON_SYM, "weapons", "weapon" },
     { ARMOR_SYM, "armor", "suit or piece of armor" },
     { RING_SYM, "rings", "ring" },
@@ -53,13 +57,30 @@ const struct class_sym def_oc_syms[MAXOCLASSES] = {
     { ROCK_SYM, "large stones", "boulder or statue" },
     { BALL_SYM, "iron balls", "iron ball" },
     { CHAIN_SYM, "chains", "iron chain" },
-    { VENOM_SYM, "venoms", "splash of venom" }
+    { VENOM_SYM, "venoms", "splash of venom" } */
+    { ILLOBJ_SYM, "이상한 물체", "이상한 물체" },
+    { WEAPON_SYM, "무기", "무기" },
+    { ARMOR_SYM, "갑옷", "의복 또는 갑옷류" },
+    { RING_SYM, "반지", "반지" },
+    { AMULET_SYM, "부적", "부적" },
+    { TOOL_SYM, "도구", "유용한 아이템(곡괭이, 열쇠, 램프...)" },
+    { FOOD_SYM, "음식", "음식" },
+    { POTION_SYM, "물약", "물약" },
+    { SCROLL_SYM, "두루마리", "두루마리" },
+    { SPBOOK_SYM, "주문서", "주문서" },
+    { WAND_SYM, "지팡이", "지팡이" },
+    { GOLD_SYM, "금화", "금화 더미" },
+    { GEM_SYM, "돌", "보석 또는 돌" },
+    { ROCK_SYM, "큰 돌", "바위 또는 조각상" },
+    { BALL_SYM, "쇠공", "쇠공" },
+    { CHAIN_SYM, "사슬", "쇠사슬" },
+    { VENOM_SYM, "독", "독액" }
 };
 
 /* Default monster class symbols.  See monsym.h. */
 const struct class_sym def_monsyms[MAXMCLASSES] = {
     { '\0', "", "" },
-    { DEF_ANT, "", "ant or other insect" },
+    /*KR { DEF_ANT, "", "ant or other insect" },
     { DEF_BLOB, "", "blob" },
     { DEF_COCKATRICE, "", "cockatrice" },
     { DEF_DOG, "", "dog or other canine" },
@@ -118,28 +139,95 @@ const struct class_sym def_monsyms[MAXMCLASSES] = {
     { DEF_EEL, "", "sea monster" },
     { DEF_LIZARD, "", "lizard" },
     { DEF_WORM_TAIL, "", "long worm tail" },
-    { DEF_MIMIC_DEF, "", "mimic" },
+    { DEF_MIMIC_DEF, "", "mimic" }, */
+    { DEF_ANT, "", "개미 또는 다른 곤충" },
+    { DEF_BLOB, "", "방울" },
+    { DEF_COCKATRICE, "", "코카트리스" },
+    { DEF_DOG, "", "개 또는 다른 개과 동물" },
+    { DEF_EYE, "", "눈 또는 구체" },
+    { DEF_FELINE, "", "고양이 또는 다른 고양이과 동물" },
+    { DEF_GREMLIN, "", "그렘린" },
+    { DEF_HUMANOID, "", "인간형" },
+    { DEF_IMP, "", "임프 또는 하급 데몬" },
+    { DEF_JELLY, "", "젤리" },
+    { DEF_KOBOLD, "", "코볼트" },
+    { DEF_LEPRECHAUN, "", "레프리콘" },
+    { DEF_MIMIC, "", "미믹" },
+    { DEF_NYMPH, "", "님프" },
+    { DEF_ORC, "", "오크" },
+    { DEF_PIERCER, "", "피어서" },
+    { DEF_QUADRUPED, "", "네발 짐승" },
+    { DEF_RODENT, "", "설치류" },
+    { DEF_SPIDER, "", "거미류 또는 지네" },
+    { DEF_TRAPPER, "", "트래퍼 또는 럴커" },
+    { DEF_UNICORN, "", "유니콘 또는 말" },
+    { DEF_VORTEX, "", "소용돌이" },
+    { DEF_WORM, "", "지렁이" },
+    { DEF_XAN, "", "젠 또는 다른 신화/환상 속 곤충" },
+    { DEF_LIGHT, "", "빛" },
+    { DEF_ZRUTY, "", "즈루티" },
+    { DEF_ANGEL, "", "천상의 존재" },
+    { DEF_BAT, "", "박쥐 또는 새" },
+    { DEF_CENTAUR, "", "센타우르" },
+    { DEF_DRAGON, "", "용" },
+    { DEF_ELEMENTAL, "", "원소" },
+    { DEF_FUNGUS, "", "균류 또는 곰팡이류" },
+    { DEF_GNOME, "", "노움" },
+    { DEF_GIANT, "", "거인" },
+    { '\0', "", "투명한 몬스터" },
+    { DEF_JABBERWOCK, "", "재버워크" },
+    { DEF_KOP, "", "키스톤 경찰" },
+    { DEF_LICH, "", "리치" },
+    { DEF_MUMMY, "", "미라" },
+    { DEF_NAGA, "", "나가" },
+    { DEF_OGRE, "", "오우거" },
+    { DEF_PUDDING, "", "푸딩 또는 연니" }, /*KR ooze */
+    { DEF_QUANTMECH, "", "양자역학자" },
+    { DEF_RUSTMONST, "", "녹괴물 또는 디스인첸터" },
+    { DEF_SNAKE, "", "뱀" },
+    { DEF_TROLL, "", "트롤" },
+    { DEF_UMBER, "", "움버 헐크" },
+    { DEF_VAMPIRE, "", "흡혈귀" },
+    { DEF_WRAITH, "", "레이스" },
+    { DEF_XORN, "", "쏘른" },
+    { DEF_YETI, "", "유인원류 생명체" },
+    { DEF_ZOMBIE, "", "좀비" },
+    { DEF_HUMAN, "", "인간 또는 엘프" },
+    { DEF_GHOST, "", "유령" },
+    { DEF_GOLEM, "", "골렘" },
+    { DEF_DEMON, "", "상급 데몬" },
+    { DEF_EEL, "", "바다 괴물" },
+    { DEF_LIZARD, "", "도마뱀" },
+    { DEF_WORM_TAIL, "", "긴 지렁이 꼬리" },
+    { DEF_MIMIC_DEF, "", "미믹" },
 };
 
 const struct symdef def_warnsyms[WARNCOUNT] = {
     /* white warning  */
-    { '0', "unknown creature causing you worry",    C(CLR_WHITE) },
+    /*KR { '0', "unknown creature causing you worry",    C(CLR_WHITE) }, */
+    { '0', "당신을 신경쓰이게 만드는 미지의 생명체",    C(CLR_WHITE) },
     /* pink warning   */
-    { '1', "unknown creature causing you concern",  C(CLR_RED) },
+    /*KR { '1', "unknown creature causing you concern",  C(CLR_RED) }, */
+    { '1', "당신을 걱정하게 만드는 미지의 생명체",  C(CLR_RED) },
     /* red warning    */
-    { '2', "unknown creature causing you anxiety",  C(CLR_RED) },
+    /*KR { '2', "unknown creature causing you anxiety",  C(CLR_RED) }, */
+    { '2', "당신을 불안하게 만드는 미지의 생명체",  C(CLR_RED) },
     /* ruby warning   */
-    { '3', "unknown creature causing you disquiet", C(CLR_RED) },
+    /*KR { '3', "unknown creature causing you disquiet", C(CLR_RED) }, */
+    { '3', "당신을 동요하게 만드는 미지의 생명체", C(CLR_RED) },
     /* purple warning */
-    { '4', "unknown creature causing you alarm",    C(CLR_MAGENTA) },
+    /*KR { '4', "unknown creature causing you alarm",    C(CLR_MAGENTA) }, */
+    { '4', "당신을 두렵게 만드는 미지의 생명체",    C(CLR_MAGENTA) },
     /* black warning  */
-    { '5', "unknown creature causing you dread",    C(CLR_BRIGHT_MAGENTA) },
+    /*KR { '5', "unknown creature causing you dread",    C(CLR_BRIGHT_MAGENTA) }, */
+    { '5', "당신을 무서워하게 만드는 미지의 생명체",    C(CLR_BRIGHT_MAGENTA) },
 };
 
 /*
  *  Default screen symbols with explanations and colors.
  */
 const struct symdef defsyms[MAXPCHARS] = {
+#if 0 /*KR:T*/
 /* 0*/ { ' ', "dark part of a room", C(NO_COLOR) },  /* stone */
        { '|', "wall", C(CLR_GRAY) },                 /* vwall */
        { '-', "wall", C(CLR_GRAY) },                 /* hwall */
@@ -150,6 +238,19 @@ const struct symdef defsyms[MAXPCHARS] = {
        { '-', "wall", C(CLR_GRAY) },                 /* crwall */
        { '-', "wall", C(CLR_GRAY) },                 /* tuwall */
        { '-', "wall", C(CLR_GRAY) },                 /* tdwall */
+#else
+/* 0*/ { ' ', "방의 어두운 부분", C(NO_COLOR) },  /* stone */
+       { '|', "벽", C(CLR_GRAY) },                 /* vwall */
+       { '-', "벽", C(CLR_GRAY) },                 /* hwall */
+       { '-', "벽", C(CLR_GRAY) },                 /* tlcorn */
+       { '-', "벽", C(CLR_GRAY) },                 /* trcorn */
+       { '-', "벽", C(CLR_GRAY) },                 /* blcorn */
+       { '-', "벽", C(CLR_GRAY) },                 /* brcorn */
+       { '-', "벽", C(CLR_GRAY) },                 /* crwall */
+       { '-', "벽", C(CLR_GRAY) },                 /* tuwall */
+       { '-', "벽", C(CLR_GRAY) },                 /* tdwall */
+#endif
+#if 0 /*KR:T*/
 /*10*/ { '|', "wall", C(CLR_GRAY) },                 /* tlwall */
        { '|', "wall", C(CLR_GRAY) },                 /* trwall */
        { '.', "doorway", C(CLR_GRAY) },              /* ndoor */
@@ -160,6 +261,19 @@ const struct symdef defsyms[MAXPCHARS] = {
        { '#', "iron bars", C(HI_METAL) },            /* bars */
        { '#', "tree", C(CLR_GREEN) },                /* tree */
        { '.', "floor of a room", C(CLR_GRAY) },      /* room */
+#else
+/*10*/ { '|', "벽", C(CLR_GRAY) },                 /* tlwall */
+       { '|', "벽", C(CLR_GRAY) },                 /* trwall */
+       { '.', "출입구", C(CLR_GRAY) },              /* ndoor */
+       { '-', "열린 문", C(CLR_BROWN) },           /* vodoor */
+       { '|', "열린 문", C(CLR_BROWN) },           /* hodoor */
+       { '+', "닫힌 문", C(CLR_BROWN) },         /* vcdoor */
+       { '+', "닫힌 문", C(CLR_BROWN) },         /* hcdoor */
+       { '#', "철창", C(HI_METAL) },            /* bars */
+       { '#', "나무", C(CLR_GREEN) },                /* tree */
+       { '.', "방의 바닥", C(CLR_GRAY) },      /* room */
+#endif
+#if 0 /*KR:T*/
 /*20*/ { '.', "dark part of a room", C(CLR_BLACK) }, /* dark room */
        { '#', "corridor", C(CLR_GRAY) },             /* dark corr */
        { '#', "lit corridor", C(CLR_GRAY) },   /* lit corr (see mapglyph.c) */
@@ -170,6 +284,19 @@ const struct symdef defsyms[MAXPCHARS] = {
        { '_', "altar", C(CLR_GRAY) },                /* altar */
        { '|', "grave", C(CLR_WHITE) },               /* grave */
        { '\\', "opulent throne", C(HI_GOLD) },       /* throne */
+#else
+/*20*/ { '.', "방의 어두운 부분", C(CLR_BLACK) }, /* dark room */
+       { '#', "통로", C(CLR_GRAY) },             /* dark corr */
+       { '#', "밝은 통로", C(CLR_GRAY) },   /* lit corr (see mapglyph.c) */
+       { '<', "올라가는 계단", C(CLR_GRAY) },         /* upstair */
+       { '>', "내려가는 계단", C(CLR_GRAY) },       /* dnstair */
+       { '<', "올라가는 사다리", C(CLR_BROWN) },           /* upladder */
+       { '>', "내려가는 사다리", C(CLR_BROWN) },         /* dnladder */
+       { '_', "제단", C(CLR_GRAY) },                /* altar */
+       { '|', "무덤", C(CLR_WHITE) },               /* grave */
+       { '\\', "화려한 왕좌", C(HI_GOLD) },       /* throne */
+#endif
+#if 0 /*KR:T*/
 /*30*/ { '#', "sink", C(CLR_GRAY) },                 /* sink */
        { '{', "fountain", C(CLR_BRIGHT_BLUE) },      /* fountain */
        { '}', "water", C(CLR_BLUE) },                /* pool */
@@ -180,6 +307,19 @@ const struct symdef defsyms[MAXPCHARS] = {
        { '#', "raised drawbridge", C(CLR_BROWN) },   /* vcdbridge */
        { '#', "raised drawbridge", C(CLR_BROWN) },   /* hcdbridge */
        { ' ', "air", C(CLR_CYAN) },                  /* open air */
+#else
+/*30*/ { '#', "싱크대", C(CLR_GRAY) },                 /* sink */
+       { '{', "분수", C(CLR_BRIGHT_BLUE) },      /* fountain */
+       { '}', "물", C(CLR_BLUE) },                /* pool */
+       { '.', "얼음", C(CLR_CYAN) },                  /* ice */
+       { '}', "녹은 용암", C(CLR_RED) },           /* lava */
+       { '.', "내려간 도개교", C(CLR_BROWN) },  /* vodbridge */
+       { '.', "내려간 도개교", C(CLR_BROWN) },  /* hodbridge */
+       { '#', "올라간 도개교", C(CLR_BROWN) },   /* vcdbridge */
+       { '#', "올라간 도개교", C(CLR_BROWN) },   /* hcdbridge */
+       { ' ', "공기", C(CLR_CYAN) },                  /* open air */
+#endif
+#if 0 /*KR:T*/
 /*40*/ { '#', "cloud", C(CLR_GRAY) },                /* [part of] a cloud */
        { '}', "water", C(CLR_BLUE) },                /* under water */
        { '^', "arrow trap", C(HI_METAL) },           /* trap */
@@ -190,6 +330,19 @@ const struct symdef defsyms[MAXPCHARS] = {
        { '^', "land mine", C(CLR_RED) },             /* trap */
        { '^', "rolling boulder trap", C(CLR_GRAY) }, /* trap */
        { '^', "sleeping gas trap", C(HI_ZAP) },      /* trap */
+#else
+/*40*/ { '#', "구름", C(CLR_GRAY) },                /* [part of] a cloud */
+       { '}', "물", C(CLR_BLUE) },                /* under water */
+       { '^', "화살 함정", C(HI_METAL) },           /* trap */
+       { '^', "다트 함정", C(HI_METAL) },            /* trap */
+       { '^', "낙석 함정", C(CLR_GRAY) },    /* trap */
+       { '^', "삐걱거리는 판자", C(CLR_BROWN) },       /* trap */
+       { '^', "곰덫", C(HI_METAL) },            /* trap */
+       { '^', "지뢰", C(CLR_RED) },             /* trap */
+       { '^', "굴러가는 바위 함정", C(CLR_GRAY) }, /* trap */
+       { '^', "수면 가스 함정", C(HI_ZAP) },      /* trap */
+#endif
+#if 0 /*KR:T*/
 /*50*/ { '^', "rust trap", C(CLR_BLUE) },            /* trap */
        { '^', "fire trap", C(CLR_ORANGE) },          /* trap */
        { '^', "pit", C(CLR_BLACK) },                 /* trap */
@@ -200,6 +353,19 @@ const struct symdef defsyms[MAXPCHARS] = {
        { '^', "level teleporter", C(CLR_MAGENTA) },    /* trap */
        { '^', "magic portal", C(CLR_BRIGHT_MAGENTA) }, /* trap */
        { '"', "web", C(CLR_GRAY) },                    /* web */
+#else
+/*50*/ { '^', "녹 함정", C(CLR_BLUE) },             /* trap */
+       { '^', "화염 함정", C(CLR_ORANGE) },         /* trap */
+       { '^', "구덩이", C(CLR_BLACK) },             /* trap */
+       { '^', "가시투성이 구덩이", C(CLR_BLACK) },  /* trap */
+       { '^', "구멍", C(CLR_BROWN) },               /* trap */
+       { '^', "함정문", C(CLR_BROWN) },             /* trap */
+       { '^', "순간이동 함정", C(CLR_MAGENTA) },    /* trap */
+       { '^', "층 순간이동기", C(CLR_MAGENTA) },    /* trap */
+       { '^', "마법 포탈", C(CLR_BRIGHT_MAGENTA) }, /* trap */
+       { '"', "거미줄", C(CLR_GRAY) },              /* web */
+#endif
+#if 0 /*KR:T*/
 /*60*/ { '^', "statue trap", C(CLR_GRAY) },            /* trap */
        { '^', "magic trap", C(HI_ZAP) },               /* trap */
        { '^', "anti-magic field", C(HI_ZAP) },         /* trap */
@@ -213,13 +379,33 @@ const struct symdef defsyms[MAXPCHARS] = {
        { '*', "", C(CLR_WHITE) },               /* dig beam */
        { '!', "", C(CLR_WHITE) },               /* camera flash beam */
        { ')', "", C(HI_WOOD) },                 /* boomerang open left */
+#else
+/*60*/ { '^', "조각상 함정", C(CLR_GRAY) },            /* trap */
+       { '^', "마법 함정", C(HI_ZAP) },               /* trap */
+       { '^', "대마법장", C(HI_ZAP) },         /* trap */
+       { '^', "폴리모프 함정", C(CLR_BRIGHT_GREEN) }, /* trap */
+       { '~', "진동하는 정사각형", C(CLR_MAGENTA) },    /* "trap" */
+       /* zap colors are changed by mapglyph() to match type of beam */
+       { '|', "", C(CLR_GRAY) },                /* vbeam */
+       { '-', "", C(CLR_GRAY) },                /* hbeam */
+       { '\\', "", C(CLR_GRAY) },               /* lslant */
+       { '/', "", C(CLR_GRAY) },                /* rslant */
+       { '*', "", C(CLR_WHITE) },               /* dig beam */
+       { '!', "", C(CLR_WHITE) },               /* camera flash beam */
+       { ')', "", C(HI_WOOD) },                 /* boomerang open left */
+#endif
 /*70*/ { '(', "", C(HI_WOOD) },                 /* boomerang open right */
        { '0', "", C(HI_ZAP) },                  /* 4 magic shield symbols */
        { '#', "", C(HI_ZAP) },
        { '@', "", C(HI_ZAP) },
        { '*', "", C(HI_ZAP) },
+#if 0 /*KR:T*/
        { '#', "poison cloud", C(CLR_BRIGHT_GREEN) },   /* part of a cloud */
        { '?', "valid position", C(CLR_BRIGHT_GREEN) }, /*  target position */
+#else
+       { '#', "독구름", C(CLR_BRIGHT_GREEN) },           /* part of a cloud */
+       { '?', "유효한 위치", C(CLR_BRIGHT_GREEN) },     /*  target position */
+#endif
        /* swallow colors are changed by mapglyph() to match engulfing monst */
        { '/', "", C(CLR_GREEN) },         /* swallow top left      */
        { '-', "", C(CLR_GREEN) },         /* swallow top center    */
