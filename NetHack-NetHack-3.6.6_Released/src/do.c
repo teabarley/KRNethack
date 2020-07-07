@@ -1664,8 +1664,11 @@ boolean at_stairs, falling, portal;
         }
     } else {
         if (new && Is_rogue_level(&u.uz))
-            You("enter what seems to be an older, more primitive world.");
+       /*KR You("enter what seems to be an older, more primitive world."); */
+            You("오래되고, 매우 단순해 보이는 세계에 들어섰다.");
         /* main dungeon message from your quest leader */
+   /*KR if (!In_quest(&u.uz0) && at_dgn_entrance("The Quest") */
+        /*KR 그냥 수정 시 Oops 오류 발생. 연동된 무언가가 있는지 확인필요 */
         if (!In_quest(&u.uz0) && at_dgn_entrance("The Quest")
             && !(u.uevent.qcompleted || u.uevent.qexpelled
                  || quest_status.leader_is_dead)) {
@@ -1684,7 +1687,8 @@ boolean at_stairs, falling, portal;
 #endif
 
     if ((annotation = get_annotation(&u.uz)) != 0)
-        You("remember this level as %s.", annotation);
+   /*KR You("remember this level as %s.", annotation); */
+        You("이 층을 %s(으)로 기억하고 있다.", annotation);
 
     /* assume this will always return TRUE when changing level */
     (void) in_out_region(u.ux, u.uy);
@@ -1790,9 +1794,15 @@ struct obj *corpse;
     where = corpse->where;
     is_uwep = (corpse == uwep);
     chewed = (corpse->oeaten != 0);
+#if 0 /*KR:T*/
     Strcpy(cname, corpse_xname(corpse,
                                chewed ? "bite-covered" : (const char *) 0,
                                CXN_SINGULAR));
+#else
+    Strcpy(cname, corpse_xname(corpse,
+                               chewed ? "물린 자국이 있음" : (const char *) 0,
+                               CXN_SINGULAR));
+#endif
     mcarry = (where == OBJ_MINVENT) ? corpse->ocarry : 0;
 
     if (where == OBJ_CONTAINED) {
@@ -1811,27 +1821,46 @@ struct obj *corpse;
         switch (where) {
         case OBJ_INVENT:
             if (is_uwep)
-                pline_The("%s writhes out of your grasp!", cname);
+           /*KR pline_The("%s writhes out of your grasp!", cname); */
+                pline_The("%s이/가 발버둥친다!", cname);
             else
-                You_feel("squirming in your backpack!");
+           /*KR You_feel("squirming in your backpack!"); */
+                pline("가방 속에서 뭔가가 꿈틀대는 것이 느껴진다!");
             break;
 
         case OBJ_FLOOR:
             if (cansee(mtmp->mx, mtmp->my))
+#if 0 /*KR:T*/
                 pline("%s rises from the dead!",
                       chewed ? Adjmonnam(mtmp, "bite-covered")
                              : Monnam(mtmp));
+#else
+                pline("%s이/가 되살아났다!",
+                    chewed ? Adjmonnam(mtmp, "물린 자국이 있음")
+                           : Monnam(mtmp));
+#endif
             break;
 
         case OBJ_MINVENT: /* probably a nymph's */
             if (cansee(mtmp->mx, mtmp->my)) {
                 if (canseemon(mcarry))
+#if 0 /*KR:T*/
                     pline("Startled, %s drops %s as it revives!",
                           mon_nam(mcarry), an(cname));
+#else
+                    pline("%s가 되살아난 것에 놀라서, %s은/는 %s을/를 떨어뜨렸다!",
+                          cname, mon_nam(mcarry), cname);
+#endif
                 else
+#if 0 /*KR:T*/
                     pline("%s suddenly appears!",
                           chewed ? Adjmonnam(mtmp, "bite-covered")
                                  : Monnam(mtmp));
+#else
+                    pline("%s이/가 갑자기 나타났다!",
+                        chewed ? Adjmonnam(mtmp, "물린 자국이 있음")
+                               : Monnam(mtmp));
+#endif
             }
             break;
         case OBJ_CONTAINED: {
@@ -1840,7 +1869,7 @@ struct obj *corpse;
             if (container_where == OBJ_MINVENT && cansee(mtmp->mx, mtmp->my)
                 && mcarry && canseemon(mcarry) && container) {
                 /*KR pline("%s writhes out of %s!", Amonnam(mtmp), */
-                pline("%s writhes out of %s!", Amonnam(mtmp),
+                pline("%s이/가 %s에서 빠져나오려고 한다!", Amonnam(mtmp),
                       yname(container));
             } else if (container_where == OBJ_INVENT && container) {
                 Strcpy(sackname, an(xname(container)));
