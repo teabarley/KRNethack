@@ -2739,7 +2739,7 @@ struct obj **optr;
                                          : "set the figurine on the ground"),
         Blind ? "supposedly " : "");
 #else
-    You("%s. 그리자 그것이 변신했다.",
+    You("%s. 그러자 그것이 변신했다.",
         (u.dx || u.dy) ? "옆에 모형을 두었다"
                        : (Is_airlevel(&u.uz) || Is_waterlevel(&u.uz)
                           || is_pool(cc.x, cc.y))

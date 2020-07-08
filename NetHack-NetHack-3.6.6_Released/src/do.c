@@ -77,24 +77,38 @@ boolean pushing;
             if (pushing) {
                 char whobuf[BUFSZ];
 
-                Strcpy(whobuf, "you");
+                /*KR Strcpy(whobuf, "you"); */
+                Strcpy(whobuf, "당신");
                 if (u.usteed)
                     Strcpy(whobuf, y_monnam(u.usteed));
+#if 0 /*KR:T*/
                 pline("%s %s %s into the %s.", upstart(whobuf),
                       vtense(whobuf, "push"), the(xname(otmp)), what);
+#else
+                pline("%s은/는 %s을/를 %s 안으로 밀어넣었다.", whobuf,
+                    xname(otmp), what);
+#endif
                 if (flags.verbose && !Blind)
-                    pline("Now you can cross it!");
+                    /*KR pline("Now you can cross it!"); */
+                    pline("이제 건널 수 있어!");
                 /* no splashing in this case */
             }
         }
         if (!fills_up || !pushing) { /* splashing occurs */
             if (!u.uinwater) {
                 if (pushing ? !Blind : cansee(rx, ry)) {
+#if 0 /*KR:T*/
                     There("is a large splash as %s %s the %s.",
                           the(xname(otmp)), fills_up ? "fills" : "falls into",
                           what);
+#else
+                    pline("%s가 %s에 %s 철퍽 하고 커다랗게 튀었다.",
+                        xname(otmp), what,
+                        fills_up ? "채워지며" : "떨어지며");
+#endif
                 } else if (!Deaf)
-                    You_hear("a%s splash.", lava ? " sizzling" : "");
+                    /*KR You_hear("a%s splash.", lava ? " sizzling" : ""); */
+                    You_hear("%s하고 튀는 소리를 들었다.", lava ? "치이익 " : "철퍽");
                 wake_nearto(rx, ry, 40);
             }
 
@@ -102,18 +116,26 @@ boolean pushing;
                 u.uinwater = 0;
                 docrt();
                 vision_full_recalc = 1;
-                You("find yourself on dry land again!");
+                /*KR You("find yourself on dry land again!"); */
+                You("어느샌가 다시 마른 땅 위에 있었다!");
             } else if (lava && distu(rx, ry) <= 2) {
                 int dmg;
+#if 0 /*KR:T*/
                 You("are hit by molten %s%c",
                     hliquid("lava"), Fire_resistance ? '.' : '!');
+#else
+                You("녹은 %s에 맞았다%s",
+                    hliquid("용암"), Fire_resistance ? "." : "!");
+#endif
                 burn_away_slime();
                 dmg = d((Fire_resistance ? 1 : 3), 6);
                 losehp(Maybe_Half_Phys(dmg), /* lava damage */
-                       "molten lava", KILLED_BY);
+               /*KR "molten lava", KILLED_BY); */
+                    "녹은 용암에", KILLED_BY);
             } else if (!fills_up && flags.verbose
                        && (pushing ? !Blind : cansee(rx, ry)))
-                pline("It sinks without a trace!");
+           /*KR pline("It sinks without a trace!"); */
+                pline("그것은 흔적도 없이 가라앉았다!");
         }
 
         /* boulder is now gone */
@@ -136,9 +158,12 @@ struct obj *obj;
 int x, y;
 const char *verb;
 {
+    /*KR JNethack에서는 #if 1 *JP* *trap.c* 
+    extern const char *set_you[2]; 라고 추가함 */
     struct trap *t;
     struct monst *mtmp;
     struct obj *otmp;
+    /*KR JNethack에서는 밑의 두 줄을 미사용 처리(if 0 endif)시킴 */
     boolean tseen;
     int ttyp = NO_TRAP;
 
@@ -152,11 +177,14 @@ const char *verb;
         return TRUE;
     } else if (obj->otyp == BOULDER && (t = t_at(x, y)) != 0
                && (is_pit(t->ttyp) || is_hole(t->ttyp))) {
+        /*KR JNethack에서는 밑의 두 줄을 미사용 처리(if 0 endif)시킴 */
         ttyp = t->ttyp;
         tseen = t->tseen ? TRUE : FALSE;
         if (((mtmp = m_at(x, y)) && mtmp->mtrapped)
             || (u.utrap && u.ux == x && u.uy == y)) {
             if (*verb && (cansee(x, y) || distu(x, y) == 0))
+                /*KR jpast(verb) 사용. 수정필요. */
+                /*KR dbridge.c 1032줄 flooreffects, do.c 159줄 verb */
                 pline("%s boulder %s into the pit%s.",
                       Blind ? "A" : "The",
                       vtense((const char *) 0, verb),
@@ -179,10 +207,17 @@ const char *verb;
                         mtmp->mhp -= damage;
                         if (DEADMONSTER(mtmp)) {
                             if (canspotmon(mtmp))
+#if 0 /*KR:T*/
                                 pline("%s is %s!", Monnam(mtmp),
-                                      (nonliving(mtmp->data)
-                                       || is_vampshifter(mtmp))
-                                      ? "destroyed" : "killed");
+                                    (nonliving(mtmp->data)
+                                        || is_vampshifter(mtmp))
+                                    ? "destroyed" : "killed");
+#else
+                                pline("%s이/가 %s!", Monnam(mtmp),
+                                    (nonliving(mtmp->data)
+                                     || is_vampshifter(mtmp))
+                                    ? "쓰러졌다" : "죽었다");
+#endif
                             mondied(mtmp);
                         }
                     } else {
