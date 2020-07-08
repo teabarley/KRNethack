@@ -229,8 +229,13 @@ const char *verb;
                 mtmp->mtrapped = 0;
             } else {
                 if (!Passes_walls && !throws_rocks(youmonst.data)) {
+#if 0 /*KR*/
                     losehp(Maybe_Half_Phys(rnd(15)),
-                           "squished under a boulder", NO_KILLER_PREFIX);
+                        "squished under a boulder", NO_KILLER_PREFIX);
+#else
+                    losehp(Maybe_Half_Phys(rnd(15)),
+                        "바위 밑에 깔려서", KILLED_BY);
+#endif
                     return FALSE; /* player remains trapped */
                 } else
                     reset_utrap(TRUE);
@@ -238,17 +243,26 @@ const char *verb;
         }
         if (*verb) {
             if (Blind && (x == u.ux) && (y == u.uy)) {
-                You_hear("a CRASH! beneath you.");
+                /*KR You_hear("a CRASH! beneath you."); */
+                You_hear("등 뒤에서 쾅! 하는 소리를 들었다.");
             } else if (!Blind && cansee(x, y)) {
+#if 0 /*KR:T*/
                 pline_The("boulder %s%s.",
-                          (ttyp == TRAPDOOR && !tseen)
-                              ? "triggers and " : "",
-                          (ttyp == TRAPDOOR)
-                              ? "plugs a trap door"
-                              : (ttyp == HOLE) ? "plugs a hole"
-                                               : "fills a pit");
+                    (ttyp == TRAPDOOR && !tseen)
+                    ? "triggers and " : "",
+                    (ttyp == TRAPDOOR)
+                    ? "plugs a trap door"
+                    : (ttyp == HOLE) ? "plugs a hole"
+                    : "fills a pit");
+#else
+                pline_The("바위가 %s%s.", t->tseen ? "" : "함정으로 작동되어 ",
+                    t->ttyp == TRAPDOOR ? "함정문을 메웠다" :
+                    t->ttyp == HOLE ? "구멍을 메웠다" :
+                    "구덩이를 메웠다");
+#endif
             } else {
-                You_hear("a boulder %s.", verb);
+           /*KR You_hear("a boulder %s.", verb); */
+                You_hear("바위가 %s 하는 소리를 듣는다.", verb);
             }
         }
         /*
@@ -271,9 +285,11 @@ const char *verb;
             && ((x == u.ux) && (y == u.uy))) {
             if (!Underwater) {
                 if (weight(obj) > 9) {
-                    pline("Splash!");
+               /*KR pline("Splash!"); */
+                    pline("철벅!");
                 } else if (Levitation || Flying) {
-                    pline("Plop!");
+               /*KR pline("Plop!"); */
+                    pline("퐁당!");
                 }
             }
             map_background(x, y, 0);
@@ -283,11 +299,15 @@ const char *verb;
     } else if (u.ux == x && u.uy == y && (t = t_at(x, y)) != 0
                && (uteetering_at_seen_pit(t) || uescaped_shaft(t))) {
         if (Blind && !Deaf)
-            You_hear("%s tumble downwards.", the(xname(obj)));
+       /*KR You_hear("%s tumble downwards.", the(xname(obj))); */
+            You_hear("%s가 아래로 굴러 떨어지는 소리를 듣는다.", xname(obj));
         else
+            /*KR pline("%s가 %s구멍으로 굴러 떨어졌다.", xname(obj), 
+                       the_your[t->madeby_u] ? "당신이 만든" : ""); 
+             테스트용 문장. 자작이므로 추후 올바른 방법을 찾으면 삭제하기 */
             pline("%s %s into %s %s.", The(xname(obj)),
-                  otense(obj, "tumble"), the_your[t->madeby_u],
-                  is_pit(t->ttyp) ? "pit" : "hole");
+                otense(obj, "tumble"), the_your[t->madeby_u],
+                is_pit(t->ttyp) ? "pit" : "hole");
     } else if (obj->globby) {
         /* Globby things like puddings might stick together */
         while (obj && (otmp = obj_nexto_xy(obj, x, y, TRUE)) != 0) {
@@ -318,13 +338,19 @@ register struct obj *obj;
     }
 
     if (obj->blessed || obj->cursed) {
+#if 0 /*KR:T*/ /*KR JNethack에서는 an 대신 jconj_adj를 사용해줌 */
         There("is %s flash as %s %s the altar.",
               an(hcolor(obj->blessed ? NH_AMBER : NH_BLACK)), doname(obj),
               otense(obj, "hit"));
+#else
+        pline("%s이/가 제단에 닿자 %s 빛이 난다.",
+            doname(obj), an(hcolor(obj->blessed ? NH_AMBER : NH_BLACK)));
+#endif
         if (!Hallucination)
             obj->bknown = 1; /* ok to bypass set_bknown() */
     } else {
-        pline("%s %s on the altar.", Doname2(obj), otense(obj, "land"));
+   /*KR pline("%s %s on the altar.", Doname2(obj), otense(obj, "land")); */
+        pline("%s을/를 제단 위에 놓았다.", Doname2(obj));
         if (obj->oclass != COIN_CLASS)
             obj->bknown = 1; /* ok to bypass set_bknown() */
     }
@@ -389,9 +415,11 @@ polymorph_sink()
     /* give message even if blind; we know we're not levitating,
        so can feel the outcome even if we can't directly see it */
     if (levl[u.ux][u.uy].typ != ROOM)
-        pline_The("sink transforms into %s!", an(defsyms[sym].explanation));
+   /*KR pline_The("sink transforms into %s!", an(defsyms[sym].explanation)); */
+        pline_The("싱크대가 %s(으)로 변했다!", defsyms[sym].explanation);
     else
-        pline_The("sink vanishes.");
+   /*KR pline_The("sink vanishes."); */
+        pline("싱크대가 사라졌다.");
     newsym(u.ux, u.uy);
 }
 
