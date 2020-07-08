@@ -1530,11 +1530,17 @@ boolean at_stairs, falling, portal;
                            at_ladder ? "falling off a ladder"
                                      : "tumbling down a flight of stairs",
                            KILLED_BY);
-                selftouch("Falling, you");
+                /*KR selftouch("Falling, you"); */
+                selftouch("떨어지며, 당신은");
             } else { /* ordinary descent */
                 if (flags.verbose)
+#if 0 /*KR:T*/
                     You("%s.", at_ladder ? "climb down the ladder"
                                          : "descend the stairs");
+#else
+                    You("%s.", at_ladder ? "사다리를 올라갔다"
+                                         : "계단을 내려갔다");
+#endif
             }
         }
     } else { /* trap door or level_tele or In_endgame */
@@ -1542,7 +1548,8 @@ boolean at_stairs, falling, portal;
         if (falling) {
             if (Punished)
                 ballfall();
-            selftouch("Falling, you");
+            /*KR selftouch("Falling, you"); */
+            selftouch("떨어지며, 당신은");
         }
     }
 
@@ -1599,14 +1606,18 @@ boolean at_stairs, falling, portal;
     /* Check whether we just entered Gehennom. */
     if (!In_hell(&u.uz0) && Inhell) {
         if (Is_valley(&u.uz)) {
-            You("arrive at the Valley of the Dead...");
-            pline_The("odor of burnt flesh and decay pervades the air.");
+            /*KR You("arrive at the Valley of the Dead..."); */
+            You("망자의 계곡에 도달했다...");
+            /*KR pline_The("odor of burnt flesh and decay pervades the air."); */
+            pline("불에 타고 썩어들어간 살갗 냄새가 공기중에 가득하다.");
 #ifdef MICRO
             display_nhwindow(WIN_MESSAGE, FALSE);
 #endif
-            You_hear("groans and moans everywhere.");
+       /*KR You_hear("groans and moans everywhere."); */
+            You_hear("여기저기서 구슬프게 울부짖는 신음소리를 듣는다.");
         } else
-            pline("It is hot here.  You smell smoke...");
+       /*KR pline("It is hot here.  You smell smoke..."); */
+            pline("이곳은 덥다. 연기 냄새가 난다...");
         u.uachieve.enter_gehennom = 1;
     }
     /* in case we've managed to bypass the Valley's stairway down */
@@ -1615,14 +1626,26 @@ boolean at_stairs, falling, portal;
 
     if (familiar) {
         static const char *const fam_msgs[4] = {
-            "You have a sense of deja vu.",
-            "You feel like you've been here before.",
+            /*KR "You have a sense of deja vu.", */
+            "당신은 데자뷔를 느낀다.",
+            /*KR "You feel like you've been here before.", */
+            "전에 이곳에 왔던 것 같은 기분이 든다.",
+#if 0 /*KR:T*/
             "This place %s familiar...", 0 /* no message */
+#else
+            "이 장소는 눈에 익은 곳이다...", 0 /* no message */
+#endif
         };
         static const char *const halu_fam_msgs[4] = {
-            "Whoa!  Everything %s different.",
-            "You are surrounded by twisty little passages, all alike.",
+            /*KR "Whoa!  Everything %s different.", */
+            "와아! 모든 게 다르게 보여!",
+            /*KR "You are surrounded by twisty little passages, all alike.", */
+            "당신은 모두 똑같이 생긴 작고 꼬불꼬불한 통로들에 둘러싸였다.",
+#if 0 /*KR:T*/
             "Gee, this %s like uncle Conan's place...", 0 /* no message */
+#else
+            "세상에나, 코난 삼촌네 집이랑 완전 똑같잖아?", 0 /* no message */
+#endif
         };
         const char *mesg;
         char buf[BUFSZ];
@@ -1668,7 +1691,8 @@ boolean at_stairs, falling, portal;
             You("오래되고, 매우 단순해 보이는 세계에 들어섰다.");
         /* main dungeon message from your quest leader */
    /*KR if (!In_quest(&u.uz0) && at_dgn_entrance("The Quest") */
-        /*KR 그냥 수정 시 Oops 오류 발생. 연동된 무언가가 있는지 확인필요 */
+        /*KR dungeon.c, dungeon.def, quest.txt, quest.c, mklev.c, trap.c */
+        /*KR 이 8개에 들어*/
         if (!In_quest(&u.uz0) && at_dgn_entrance("The Quest")
             && !(u.uevent.qcompleted || u.uevent.qexpelled
                  || quest_status.leader_is_dead)) {
