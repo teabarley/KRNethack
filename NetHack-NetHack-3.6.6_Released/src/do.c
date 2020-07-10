@@ -523,18 +523,35 @@ register struct obj *obj;
 #endif
         break;
     case RIN_GAIN_CONSTITUTION:
+#if 0 /*KR:T*/
         pline_The("%s flow seems %ser now.",
-                  hliquid("water"),
-                  (obj->spe < 0) ? "less" : "great");
+            hliquid("water"),
+            (obj->spe < 0) ? "less" : "great");
+#else
+        pline("%s살이 %s.",
+            hliquid("물"),
+            (obj->spe < 0) ? "줄어들었다" : "불어났다");
+#endif
         break;
     case RIN_INCREASE_ACCURACY: /* KMH */
+#if 0 /*KR:T*/
         pline_The("%s flow %s the drain.",
-                  hliquid("water"),
-                  (obj->spe < 0) ? "misses" : "hits");
+            hliquid("water"),
+            (obj->spe < 0) ? "misses" : "hits");
+#else
+        pline("%s살이 개수구%s.",
+            hliquid("물"),
+            (obj->spe < 0) ? "를 빗나갔다" : "에 명중했다");
+#endif
         break;
     case RIN_INCREASE_DAMAGE:
+#if 0 /*KR:T*/
         pline_The("water's force seems %ser now.",
-                  (obj->spe < 0) ? "small" : "great");
+            (obj->spe < 0) ? "small" : "great");
+#else
+        pline("물살이 %s.",
+            (obj->spe < 0) ? "약해졌다" : "거세졌다");
+#endif
         break;
     case RIN_HUNGER:
         ideed = FALSE;
@@ -543,8 +560,12 @@ register struct obj *obj;
             if (otmp != uball && otmp != uchain
                 && !obj_resists(otmp, 1, 99)) {
                 if (!Blind) {
+#if 0 /*KR:T*/
                     pline("Suddenly, %s %s from the sink!", doname(otmp),
-                          otense(otmp, "vanish"));
+                        otense(otmp, "vanish"));
+#else
+                    pline("갑자기, %s이/가 싱크대에서 사라졌다!", doname(otmp));
+#endif
                     ideed = TRUE;
                 }
                 delobj(otmp);
@@ -553,13 +574,15 @@ register struct obj *obj;
         break;
     case MEAT_RING:
         /* Not the same as aggravate monster; besides, it's obvious. */
-        pline("Several flies buzz around the sink.");
+        /*KR pline("Several flies buzz around the sink."); */
+        pline("싱크대 근처에서 파리 여러 마리가 웅웅거린다.");
         break;
     case RIN_TELEPORTATION:
         nosink = teleport_sink();
         /* give message even if blind; we know we're not levitating,
            so can feel the outcome even if we can't directly see it */
-        pline_The("sink %svanishes.", nosink ? "" : "momentarily ");
+        /*KR pline_The("sink %svanishes.", nosink ? "" : "momentarily "); */
+        pline_The("싱크대가 %s사라진다.", nosink ? "" : "잠시 ");
         ideed = FALSE;
         break;
     case RIN_POLYMORPH:
@@ -576,48 +599,74 @@ register struct obj *obj;
         ideed = TRUE;
         switch (obj->otyp) { /* effects that need eyes */
         case RIN_ADORNMENT:
-            pline_The("faucets flash brightly for a moment.");
+            /*KR pline_The("faucets flash brightly for a moment."); */
+            pline("수도꼭지가 잠시 밝게 빛난다.");
             break;
         case RIN_REGENERATION:
-            pline_The("sink looks as good as new.");
+            /*KR pline_The("sink looks as good as new."); */
+            pline("싱크대가 새 것처럼 보인다.");
             break;
         case RIN_INVISIBILITY:
-            You("don't see anything happen to the sink.");
+            /*KR You("don't see anything happen to the sink.");*/
+            pline("싱크대에 무슨 일이 일어나는지 보이지 않는다.");
             break;
         case RIN_FREE_ACTION:
-            You_see("the ring slide right down the drain!");
+            /*KR You_see("the ring slide right down the drain!"); */
+            pline("반지가 개수구를 살짝 피해서 지나간다!");
             break;
         case RIN_SEE_INVISIBLE:
+#if 0 /*KR:T*/
             You_see("some %s in the sink.",
                     Hallucination ? "oxygen molecules" : "air");
+#else
+            pline("싱크대 안에 %s 보인다.",
+                  Hallucination ? "산소 분자가" : "공기 방울이");
+#endif
             break;
         case RIN_STEALTH:
-            pline_The("sink seems to blend into the floor for a moment.");
+            /*KR pline_The("sink seems to blend into the floor for a moment."); */
+            pline("싱크대가 잠시 바닥에 스며드는 것처럼 보였다.");
             break;
         case RIN_FIRE_RESISTANCE:
+#if 0 /*KR hliquid를 사용하지 않는 형태로 */
             pline_The("hot %s faucet flashes brightly for a moment.",
                       hliquid("water"));
+#else
+            pline("온수 꼭지가 잠시 밝게 빛난다.");
+#endif
             break;
         case RIN_COLD_RESISTANCE:
+#if 0 /*KR hliquid를 사용하지 않는 형태로 */
             pline_The("cold %s faucet flashes brightly for a moment.",
-                      hliquid("water"));
+                hliquid("water"));
+#else 
+            pline("냉수 꼭지가 잠시 밝게 빛난다.");
+#endif
             break;
         case RIN_PROTECTION_FROM_SHAPE_CHAN:
-            pline_The("sink looks nothing like a fountain.");
+            /*KR pline_The("sink looks nothing like a fountain."); */
+            pline("싱크대가 분수와 전혀 다른 것처럼 보인다.");
             break;
         case RIN_PROTECTION:
-            pline_The("sink glows %s for a moment.",
+            /*JP jconj_adj 사용. 수정필요*/
+            /*KR pline_The("sink glows %s for a moment.", */
+            pline("싱크대가 잠시 %s 빛난다.",
                       hcolor((obj->spe < 0) ? NH_BLACK : NH_SILVER));
             break;
         case RIN_WARNING:
-            pline_The("sink glows %s for a moment.", hcolor(NH_WHITE));
+            /*JP jconj_adj 사용. 수정필요 */
+            /*KR pline_The("sink glows %s for a moment.", hcolor(NH_WHITE)); */
+            pline("싱크대가 잠시 %s 빛난다.", hcolor(NH_WHITE));
             break;
         case RIN_TELEPORT_CONTROL:
-            pline_The("sink looks like it is being beamed aboard somewhere.");
+            /*KR beam aboard는 스타 트랙의 '전송' */
+            /*KR pline_The("sink looks like it is being beamed aboard somewhere."); */
+            pline("싱크대가 어디론가 전송되고 있는 것처럼 보인다.");
             break;
         case RIN_POLYMORPH_CONTROL:
             pline_The(
-                  "sink momentarily looks like a regularly erupting geyser.");
+             /*KR "sink momentarily looks like a regularly erupting geyser."); */
+                  "싱크대가 잠시 주기적으로 분출되는 간헐천처럼 보였다.");
             break;
         default:
             break;
@@ -626,10 +675,12 @@ register struct obj *obj;
     if (ideed)
         trycall(obj);
     else if (!nosink)
-        You_hear("the ring bouncing down the drainpipe.");
+        /*KR You_hear("the ring bouncing down the drainpipe."); */
+        You_hear("반지가 배수관에 부딪히며 떨어지는 소리를 듣는다.");
 
     if (!rn2(20) && !nosink) {
-        pline_The("sink backs up, leaving %s.", doname(obj));
+        /*KR pline_The("sink backs up, leaving %s.", doname(obj)); */
+        pline("싱크대가 역류해서 %s를 남겼다.", doname(obj));
         obj->in_use = FALSE;
         dropx(obj);
     } else if (!rn2(5)) {
@@ -650,19 +701,27 @@ const char *word;
 {
     if (obj->owornmask & (W_ARMOR | W_ACCESSORY)) {
         if (*word)
-            Norep("You cannot %s %s you are wearing.", word, something);
+            /*KR Norep("You cannot %s %s you are wearing.", word, something); */
+            Norep("당신이 착용하고 있는 것을 %s 할 수는 없다.", word);
         return FALSE;
     }
     if (obj->otyp == LOADSTONE && obj->cursed) {
         /* getobj() kludge sets corpsenm to user's specified count
            when refusing to split a stack of cursed loadstones */
         if (*word) {
+#if 0 /*KR 한국어에서는 불필요 */
             /* getobj() ignores a count for throwing since that is
                implicitly forced to be 1; replicate its kludge... */
             if (!strcmp(word, "throw") && obj->quan > 1L)
                 obj->corpsenm = 1;
+#endif
+#if 0 /*KR:T*/
             pline("For some reason, you cannot %s%s the stone%s!", word,
                   obj->corpsenm ? " any of" : "", plur(obj->quan));
+#else
+            pline("무슨 이유에서인지, 당신은 돌을 %s 할 수 없다!",
+                  word);
+#endif
         }
         obj->corpsenm = 0; /* reset */
         set_bknown(obj, 1);
@@ -670,12 +729,14 @@ const char *word;
     }
     if (obj->otyp == LEASH && obj->leashmon != 0) {
         if (*word)
-            pline_The("leash is tied around your %s.", body_part(HAND));
+       /*KR pline_The("leash is tied around your %s.", body_part(HAND)); */
+            pline("당신의 %s에 줄이 감겨 있다.", body_part(HAND));
         return FALSE;
     }
     if (obj->owornmask & W_SADDLE) {
         if (*word)
-            You("cannot %s %s you are sitting on.", word, something);
+       /*KR You("cannot %s %s you are sitting on.", word, something); */
+            You("타고 있는 동안에는 %s 할 수 없다.", word);
         return FALSE;
     }
     return TRUE;
@@ -687,6 +748,7 @@ register struct obj *obj;
 {
     if (!obj)
         return 0;
+    /*KR if (!canletgo(obj, "drop")) */
     if (!canletgo(obj, "drop"))
         return 0;
     if (obj == uwep) {
