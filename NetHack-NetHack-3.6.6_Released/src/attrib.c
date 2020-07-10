@@ -377,7 +377,7 @@ boolean thrown_weapon; /* thrown weapons are less deadly */
               isupper((uchar) *reason) ? "" : "The ", reason,
               plural ? "were" : "was");
 #else
-        pline("%s은/는 독에 중독되었다!", reason);
+        pline("%s은/는 유독했다!", reason);
 #endif
     }
     if (Poison_resistance) {

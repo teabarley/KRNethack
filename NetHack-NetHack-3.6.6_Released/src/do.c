@@ -302,12 +302,14 @@ const char *verb;
        /*KR You_hear("%s tumble downwards.", the(xname(obj))); */
             You_hear("%s가 아래로 굴러 떨어지는 소리를 듣는다.", xname(obj));
         else
+            /*KR pline("%s %s into %s %s.", The(xname(obj)),
+                otense(obj, "tumble"), the_your[t->madeby_u],
+                is_pit(t->ttyp) ? "pit" : "hole"); */
             /*KR pline("%s가 %s구멍으로 굴러 떨어졌다.", xname(obj), 
                        the_your[t->madeby_u] ? "당신이 만든" : ""); 
              테스트용 문장. 자작이므로 추후 올바른 방법을 찾으면 삭제하기 */
-            pline("%s %s into %s %s.", The(xname(obj)),
-                otense(obj, "tumble"), the_your[t->madeby_u],
-                is_pit(t->ttyp) ? "pit" : "hole");
+            pline("%s가 %s구멍으로 굴러 떨어졌다.", xname(obj),
+                the_your[t->madeby_u] ? "당신이 만든" : "");
     } else if (obj->globby) {
         /* Globby things like puddings might stick together */
         while (obj && (otmp = obj_nexto_xy(obj, x, y, TRUE)) != 0) {
@@ -464,42 +466,61 @@ register struct obj *obj;
     boolean ideed = TRUE;
     boolean nosink = FALSE;
 
-    You("drop %s down the drain.", doname(obj));
+    /*KR You("drop %s down the drain.", doname(obj)); */
+    You("%s을/를 개수구에 떨어뜨렸다.", doname(obj));
     obj->in_use = TRUE;  /* block free identification via interrupt */
     switch (obj->otyp) { /* effects that can be noticed without eyes */
     case RIN_SEARCHING:
-        You("thought %s got lost in the sink, but there it is!", yname(obj));
+   /*KR You("thought %s got lost in the sink, but there it is!", yname(obj)); */
+        You("%s을/를 잃어버렸다고 생각했지만, 다시 찾아냈다!", yname(obj));
         goto giveback;
     case RIN_SLOW_DIGESTION:
-        pline_The("ring is regurgitated!");
- giveback:
+   /*KR pline_The("ring is regurgitated!"); */
+        pline("반지가 역류되어 나왔다!");
+    giveback:
         obj->in_use = FALSE;
         dropx(obj);
         trycall(obj);
         return;
     case RIN_LEVITATION:
-        pline_The("sink quivers upward for a moment.");
+   /*KR pline_The("sink quivers upward for a moment."); */
+        pline("싱크대가 잠시 위아래로 떨렸다.");
         break;
     case RIN_POISON_RESISTANCE:
-        You("smell rotten %s.", makeplural(fruitname(FALSE)));
+   /*KR You("smell rotten %s.", makeplural(fruitname(FALSE))); */
+        pline("썩은 %s의 냄새가 난다.", fruitname(FALSE));
         break;
     case RIN_AGGRAVATE_MONSTER:
+#if 0 /*KR:T*/
         pline("Several %s buzz angrily around the sink.",
-              Hallucination ? makeplural(rndmonnam(NULL)) : "flies");
+            Hallucination ? makeplural(rndmonnam(NULL)) : "flies");
+#else
+        pline("%s 여러 마리가 싱크대 근처에서 화난 듯이 웅웅거린다.",
+            Hallucination ? rndmonnam(NULL) : "파리");
+#endif
         break;
     case RIN_SHOCK_RESISTANCE:
-        pline("Static electricity surrounds the sink.");
+   /*KR pline("Static electricity surrounds the sink."); */
+        pline("정전기가 싱크대를 감싼다.");
         break;
     case RIN_CONFLICT:
-        You_hear("loud noises coming from the drain.");
+   /*KR You_hear("loud noises coming from the drain."); */
+        You_hear("개수구에서 큰 소리가 났다.");
         break;
     case RIN_SUSTAIN_ABILITY: /* KMH */
-        pline_The("%s flow seems fixed.", hliquid("water"));
+   /*KR pline_The("%s flow seems fixed.", hliquid("water")); */
+        pline_The("%s의 흐름이 일정해졌다.", hliquid("물"));
         break;
     case RIN_GAIN_STRENGTH:
+#if 0 /*KR:T*/
         pline_The("%s flow seems %ser now.",
-                  hliquid("water"),
-                  (obj->spe < 0) ? "weak" : "strong");
+            hliquid("water"),
+            (obj->spe < 0) ? "weak" : "strong");
+#else
+        pline("%s의 흐름이 %해졌다.",
+            hliquid("물"),
+            (obj->spe < 0) ? "약" : "강");
+#endif
         break;
     case RIN_GAIN_CONSTITUTION:
         pline_The("%s flow seems %ser now.",
