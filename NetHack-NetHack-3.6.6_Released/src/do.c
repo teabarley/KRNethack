@@ -1192,39 +1192,67 @@ dodown()
         if (yn("Are you sure you want to enter?") != 'y')
             return 0;
         else
+            /*KR pline("So be it."); */
             pline("So be it.");
         u.uevent.gehennom_entered = 1; /* don't ask again */
     }
 
     if (!next_to_u()) {
-        You("are held back by your pet!");
+        /*KR You("are held back by your pet!"); */
+        You("애완동물에게 제지당했다!");
         return 0;
     }
 
     if (trap) {
+#if 0 /*KR*/
         const char *down_or_thru = trap->ttyp == HOLE ? "down" : "through";
+#endif
+#if 0 /*KR*/
         const char *actn = Flying ? "fly" : locomotion(youmonst.data, "jump");
+#else
+        const char* actn = "";
+#endif
 
         if (youmonst.data->msize >= MZ_HUGE) {
             char qbuf[QBUFSZ];
 
+#if 0 /*KR:T*/
             You("don't fit %s easily.", down_or_thru);
             Sprintf(qbuf, "Try to squeeze %s?", down_or_thru);
+#else
+            pline("이곳은 좁아서 쉽게 통과할 수 없다.");
+            Sprintf(qbuf, "몸을 밀어 넣으시겠습니까?");
+#endif
             if (yn(qbuf) == 'y') {
                 if (!rn2(3)) {
+#if 0 /*KR*/
                     actn = "manage to squeeze";
+#else
+                    actn = "어떻게든";
+#endif
+#if 0 /*KR*/
                     losehp(Maybe_Half_Phys(rnd(4)),
-                           "contusion from a small passage", KILLED_BY);
+                        "contusion from a small passage", KILLED_BY);
+#else
+                    losehp(Maybe_Half_Phys(rnd(4)),
+                        "좁은 통로에서의 타박상으로", KILLED_BY);
+#endif
                 } else {
-                    You("were unable to fit %s.", down_or_thru);
+                    /*KR You("were unable to fit %s.", down_or_thru); */
+                    You("빠져나올 수 없었다.");
                     return 0;
                 }
             } else {
                 return 0;
             }
         }
+#if 0 /*KR:T*/
         You("%s %s the %s.", actn, down_or_thru,
             trap->ttyp == HOLE ? "hole" : "trap door");
+#else
+        You("%s %s.", actn,
+            trap->ttyp == HOLE ? "구멍을 빠져나왔다" : "함정문을 빠져나왔다");
+#endif
     }
     if (trap && Is_stronghold(&u.uz)) {
         goto_hell(FALSE, TRUE);
@@ -1253,33 +1281,48 @@ doup()
         && (!xupladder || u.ux != xupladder || u.uy != yupladder)
         && (!sstairs.sx || u.ux != sstairs.sx || u.uy != sstairs.sy
             || !sstairs.up)) {
-        You_cant("go up here.");
+   /*KR You_cant("go up here."); */
+        You("여기서는 올라갈 수 없다.");
         return 0;
     }
     if (stucksteed(TRUE)) {
         return 0;
     }
     if (u.ustuck) {
+#if 0 /*KR:T*/
         You("are %s, and cannot go up.",
             !u.uswallow ? "being held" : is_animal(u.ustuck->data)
                                              ? "swallowed"
                                              : "engulfed");
+#else
+        You("%s 올라갈 수 없다.",
+            !u.uswallow ? "잡혀 있기 때문에" : is_animal(u.ustuck->data)
+            ? "삼켜져 있기 때문에"
+            : "휩쓸려 있기 때문에");
+#endif
         return 1;
     }
     if (near_capacity() > SLT_ENCUMBER) {
         /* No levitation check; inv_weight() already allows for it */
+#if 0 /*KR:T*/
         Your("load is too heavy to climb the %s.",
              levl[u.ux][u.uy].typ == STAIRS ? "stairs" : "ladder");
+#else
+        Your("짐은 %s 오르기에 너무 무겁습니다.",
+            levl[u.ux][u.uy].typ == STAIRS ? "계단을" : "사다리를");
+#endif
         return 1;
     }
     if (ledger_no(&u.uz) == 1) {
         if (iflags.debug_fuzzer)
             return 0;
-        if (yn("Beware, there will be no return!  Still climb?") != 'y')
+        /*KR if (yn("Beware, there will be no return!  Still climb?") != 'y') */
+        if (yn("주의하십시오, 돌아올 수 없게 됩니다! 그래도 올라가겠습니까?") != 'y')
             return 0;
     }
     if (!next_to_u()) {
-        You("are held back by your pet!");
+        /*KR You("are held back by your pet!"); */
+        You("애완동물에게 제지당했다!");
         return 0;
     }
     at_ladder = (boolean) (levl[u.ux][u.uy].typ == LADDER);
@@ -1318,8 +1361,10 @@ currentlevel_rewrite()
     if (!savelev(fd, ledger_no(&u.uz), COUNT_SAVE)) {
         (void) nhclose(fd);
         delete_levelfile(ledger_no(&u.uz));
-        pline("NetHack is out of disk space for making levels!");
-        You("can save, quit, or continue playing.");
+        /*KR pline("NetHack is out of disk space for making levels!"); */
+        pline("레벨을 만들 디스크 용량이 부족합니다!");
+        /*KR You("can save, quit, or continue playing."); */
+        You("저장하거나, 종료하거나, 계속 플레이하실 수 있습니다.");
         return -1;
     }
 #endif
@@ -1459,7 +1504,8 @@ boolean at_stairs, falling, portal;
 
             new_ledger = ledger_no(newlevel);
 
-            pline("A mysterious force momentarily surrounds you...");
+            /*KR pline("A mysterious force momentarily surrounds you..."); */
+            pline("불가사의한 힘이 순간적으로 당신을 감싼다...");
             if (on_level(newlevel, &u.uz)) {
                 (void) safe_teleds(FALSE);
                 (void) next_to_u();
@@ -1473,7 +1519,8 @@ boolean at_stairs, falling, portal;
      * (s)he has been given the go-ahead by the leader.
      */
     if (on_level(&u.uz, &qstart_level) && !newdungeon && !ok_to_quest()) {
-        pline("A mysterious force prevents you from descending.");
+        /*KR pline("A mysterious force prevents you from descending."); */
+        pline("불가사의한 힘이 당신을 내려가지 못하게 막는다.");
         return;
     }
 
@@ -1643,11 +1690,17 @@ boolean at_stairs, falling, portal;
                fly up the stairs; fly up along the ladder */
             great_effort = (Punished && !Levitation);
             if (flags.verbose || great_effort)
+#if 0 /*KR*/
                 pline("%s %s up%s the %s.",
                       great_effort ? "With great effort, you" : "You",
                       Levitation ? "float" : Flying ? "fly" : "climb",
                       (Flying && at_ladder) ? " along" : "",
                       at_ladder ? "ladder" : "stairs");
+#else /* 날아갔다고 해도 아무튼 '올라감' */
+                You("%s%s 올라갔다.",
+                    great_effort ? "겨우내" : "",
+                    at_ladder ? "사다리를" : "계단을");
+#endif
         } else { /* down */
             if (at_ladder)
                 u_on_newpos(xupladder, yupladder);
@@ -1659,11 +1712,17 @@ boolean at_stairs, falling, portal;
                 ; /* stayed on same level? (no transit effects) */
             } else if (Flying) {
                 if (flags.verbose)
+#if 0 /*KR:T*/
                     You("fly down %s.",
                         at_ladder ? "along the ladder" : "the stairs");
+#else
+                    You("날아서 %s 내려갔다.",
+                        at_ladder ? "사다리를 따라" : "계단을");
+#endif
             } else if (near_capacity() > UNENCUMBERED
                        || Punished || Fumbling) {
-                You("fall down the %s.", at_ladder ? "ladder" : "stairs");
+           /*KR You("fall down the %s.", at_ladder ? "ladder" : "stairs"); */
+                You("%s 굴러 떨어졌다.", at_ladder ? "사다리를" : "계단을");
                 if (Punished) {
                     drag_down();
                     ballrelease(FALSE);
@@ -1673,8 +1732,10 @@ boolean at_stairs, falling, portal;
                     dismount_steed(DISMOUNT_FELL);
                 else
                     losehp(Maybe_Half_Phys(rnd(3)),
-                           at_ladder ? "falling off a ladder"
-                                     : "tumbling down a flight of stairs",
+                      /*KR at_ladder ? "falling off a ladder" */
+                           at_ladder ? "사다리에서 떨어지며"
+                                /*KR : "tumbling down a flight of stairs", */
+                                     : "계단을 굴러 떨어지며",
                            KILLED_BY);
                 /*KR selftouch("Falling, you"); */
                 selftouch("떨어지며, 당신은");
