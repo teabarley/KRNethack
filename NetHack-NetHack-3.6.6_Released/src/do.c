@@ -749,7 +749,7 @@ register struct obj *obj;
     if (!obj)
         return 0;
     /*KR if (!canletgo(obj, "drop")) */
-    if (!canletgo(obj, "drop"))
+    if (!canletgo(obj, "버리다"))
         return 0;
     if (obj == uwep) {
         if (welded(uwep)) {
@@ -773,8 +773,13 @@ register struct obj *obj;
             /* doname can call s_suffix, reusing its buffer */
             Strcpy(monbuf, s_suffix(mon_nam(u.ustuck)));
             onam_p = is_unpaid(obj) ? yobjnam(obj, (char *) 0) : doname(obj);
+#if 0 /*KR:T*/
             You("drop %s into %s %s.", onam_p, monbuf,
                 mbodypart(u.ustuck, STOMACH));
+#else
+            You("%s을/를 %s %s에 버렸다.", onam_p, monbuf,
+                mbodypart(u.ustuck, STOMACH));
+#endif
         }
     } else {
         if ((obj->oclass == RING_CLASS || obj->otyp == MEAT_RING)
@@ -791,7 +796,8 @@ register struct obj *obj;
             if (levhack)
                 ELevitation = W_ART; /* other than W_ARTI */
             if (flags.verbose)
-                You("drop %s.", doname(obj));
+                /*KR You("drop %s.", doname(obj)); */
+                You("%s을/를 버렸다.", doname(obj));
             /* Ensure update when we drop gold objects */
             if (obj->oclass == COIN_CLASS)
                 context.botl = 1;
@@ -802,7 +808,8 @@ register struct obj *obj;
             return 1;
         }
         if (!IS_ALTAR(levl[u.ux][u.uy].typ) && flags.verbose)
-            You("drop %s.", doname(obj));
+            /*KR You("drop %s.", doname(obj)); */
+            You("%s을/를 버렸다.", doname(obj));
     }
     dropx(obj);
     return 1;
@@ -849,7 +856,8 @@ boolean with_impact;
     if (obj == uswapwep)
         setuswapwep((struct obj *) 0);
 
-    if (!u.uswallow && flooreffects(obj, u.ux, u.uy, "drop"))
+    /*KR if (!u.uswallow && flooreffects(obj, u.ux, u.uy, "drop")) */
+    if (!u.uswallow && flooreffects(obj, u.ux, u.uy, "버리다"))
         return;
     /* uswallow check done by GAN 01/29/87 */
     if (u.uswallow) {
@@ -946,7 +954,8 @@ doddrop()
     int result = 0;
 
     if (!invent) {
-        You("have nothing to drop.");
+        /*KR You("have nothing to drop."); */
+        You("버릴 것이 아무 것도 없다.");
         return 0;
     }
     add_valid_menu_class(0); /* clear any classes already there */
@@ -979,7 +988,8 @@ int retry;
         all_categories = (retry == -2);
     } else if (flags.menu_style == MENU_FULL) {
         all_categories = FALSE;
-        n = query_category("Drop what type of items?", invent,
+        /*KR n = query_category("Drop what type of items?", invent, */
+        n = query_category("어떤 종류의 아이템을 버리시겠습니까?", invent,
                            UNPAID_TYPES | ALL_TYPES | CHOOSE_ALL | BUC_BLESSED
                                | BUC_CURSED | BUC_UNCURSED | BUC_UNKNOWN,
                            &pick_list, PICK_ANY);
@@ -1031,9 +1041,15 @@ int retry;
         bypass_objlist(invent, FALSE);
     } else {
         /* should coordinate with perm invent, maybe not show worn items */
+#if 0 /*KR:T*/
         n = query_objlist("What would you like to drop?", &invent,
                           (USE_INVLET | INVORDER_SORT), &pick_list, PICK_ANY,
                           all_categories ? allow_all : allow_category);
+#else
+        n = query_objlist("어떤 것을 버리시겠습니까?", &invent,
+                          (USE_INVLET | INVORDER_SORT), &pick_list, PICK_ANY,
+                          all_categories ? allow_all : allow_category);
+#endif
         if (n > 0) {
             /*
              * picklist[] contains a set of pointers into inventory, but
@@ -1117,7 +1133,8 @@ dodown()
             if (float_down(I_SPECIAL | TIMEOUT, W_ARTI)) {
                 return 1; /* came down, so moved */
             } else if (!HLevitation && !ELevitation) {
-                Your("latent levitation ceases.");
+                /*KR Your("latent levitation ceases."); */
+                Your("잠재적 부유가 멈췄다.");
                 return 1; /* did something, effectively moved */
             }
         }
@@ -1136,23 +1153,37 @@ dodown()
                     (glyph_to_cmap(levl[u.ux][u.uy].glyph) == S_dnladder);
         }
         if (Is_airlevel(&u.uz))
-            You("are floating in the %s.", surface(u.ux, u.uy));
+            /*KR You("are floating in the %s.", surface(u.ux, u.uy)); */
+            You("%s 중에 떠 있다.", surface(u.ux, u.uy));
         else if (Is_waterlevel(&u.uz))
+#if 0 /*KR:T*/
             You("are floating in %s.",
                 is_pool(u.ux, u.uy) ? "the water" : "a bubble of air");
+#else
+            You("%s 속에 떠 있다.",
+                is_pool(u.ux, u.uy) ? "물" : "공기 거품");
+#endif
         else
+#if 0 /*KR:T*/
             floating_above(stairs_down ? "stairs" : ladder_down
                                                     ? "ladder"
                                                     : surface(u.ux, u.uy));
+#else
+            floating_above(stairs_down ? "계단" : ladder_down
+                                                  ? "사다리"
+                                                  : surface(u.ux, u.uy));
+#endif
         return 0; /* didn't move */
     }
 
     if (Upolyd && ceiling_hider(&mons[u.umonnum]) && u.uundetected) {
         u.uundetected = 0;
         if (Flying) { /* lurker above */
-            You("fly out of hiding.");
+            /*KR You("fly out of hiding."); */
+            You("숨어있던 곳에서 뛰쳐나왔다.");
         } else { /* piercer */
-            You("drop to the %s.", surface(u.ux, u.uy));
+            /*KR You("drop to the %s.", surface(u.ux, u.uy)); */
+            You("%s에 떨어졌다.", surface(u.ux, u.uy));
             if (is_pool_or_lava(u.ux, u.uy)) {
                 pooleffects(FALSE);
             } else {
@@ -1174,26 +1205,37 @@ dodown()
             if (flags.autodig && !context.nopick && uwep && is_pick(uwep)) {
                 return use_pick_axe2(uwep);
             } else {
-                You_cant("go down here.");
+                /*KR You_cant("go down here."); */
+                pline("여기서는 내려갈 수 없다.");
                 return 0;
             }
         }
     }
     if (u.ustuck) {
+#if 0 /*KR*/
         You("are %s, and cannot go down.",
             !u.uswallow ? "being held" : is_animal(u.ustuck->data)
                                              ? "swallowed"
                                              : "engulfed");
+#else
+        You("%s 내려갈 수 없다.",
+            !u.uswallow ? "붙잡혀 있으므로" : is_animal(u.ustuck->data)
+                                                   ? "삼켜져 있으므로"
+                                                   : "휩쓸려 있으므로");
+#endif
         return 1;
     }
     if (on_level(&valley_level, &u.uz) && !u.uevent.gehennom_entered) {
-        You("are standing at the gate to Gehennom.");
-        pline("Unspeakable cruelty and harm lurk down there.");
-        if (yn("Are you sure you want to enter?") != 'y')
+        /*KR You("are standing at the gate to Gehennom."); */
+        You("게헨놈의 입구 앞에 서 있다.");
+        /*KR pline("Unspeakable cruelty and harm lurk down there."); */
+        pline("형용할 수 없는 잔혹함과 위협이 저 아래에 도사리고 있다.");
+        /*KR if (yn("Are you sure you want to enter?") != 'y') */
+        if (yn("정말로 들어가시겠습니까?") != 'y')
             return 0;
         else
             /*KR pline("So be it."); */
-            pline("So be it.");
+            pline("그러면 좋을 대로 하기를.");
         u.uevent.gehennom_entered = 1; /* don't ask again */
     }
 
@@ -1282,7 +1324,7 @@ doup()
         && (!sstairs.sx || u.ux != sstairs.sx || u.uy != sstairs.sy
             || !sstairs.up)) {
    /*KR You_cant("go up here."); */
-        You("여기서는 올라갈 수 없다.");
+        pline("여기서는 올라갈 수 없다.");
         return 0;
     }
     if (stucksteed(TRUE)) {
@@ -1832,7 +1874,7 @@ boolean at_stairs, falling, portal;
         u.uevent.gehennom_entered = 1;
 
     if (familiar) {
-        static const char *const fam_msgs[4] = {
+        static const char* const fam_msgs[4] = {
             /*KR "You have a sense of deja vu.", */
             "당신은 데자뷔를 느낀다.",
             /*KR "You feel like you've been here before.", */
@@ -1843,7 +1885,7 @@ boolean at_stairs, falling, portal;
             "이 장소는 눈에 익은 곳이다...", 0 /* no message */
 #endif
         };
-        static const char *const halu_fam_msgs[4] = {
+        static const char* const halu_fam_msgs[4] = {
             /*KR "Whoa!  Everything %s different.", */
             "와아! 모든 게 다르게 보여!",
             /*KR "You are surrounded by twisty little passages, all alike.", */
@@ -1854,18 +1896,22 @@ boolean at_stairs, falling, portal;
             "세상에나, 코난 삼촌네 집이랑 완전 똑같잖아?", 0 /* no message */
 #endif
         };
-        const char *mesg;
+        const char* mesg;
+#if 0 /*KR*/
         char buf[BUFSZ];
+#endif
         int which = rn2(4);
 
         if (Hallucination)
             mesg = halu_fam_msgs[which];
         else
             mesg = fam_msgs[which];
+#if 0 /*KR: 한국어에서는 여기까지 하지는 않음 */
         if (mesg && index(mesg, '%')) {
             Sprintf(buf, mesg, !Blind ? "looks" : "seems");
             mesg = buf;
         }
+#endif
         if (mesg)
             pline1(mesg);
     }
@@ -1880,12 +1926,15 @@ boolean at_stairs, falling, portal;
         onquest(); /* might be reaching locate|goal level */
     } else if (In_V_tower(&u.uz)) {
         if (newdungeon && In_hell(&u.uz0))
-            pline_The("heat and smoke are gone.");
+            /*KR pline_The("heat and smoke are gone."); */
+            pline("열기와 연기가 사라졌다.");
     } else if (Is_knox(&u.uz)) {
         /* alarm stops working once Croesus has died */
         if (new || !mvitals[PM_CROESUS].died) {
-            You("have penetrated a high security area!");
-            pline("An alarm sounds!");
+            /*KR You("have penetrated a high security area!"); */
+            You("최고보안구역에 침투했다!");
+            /*KR pline("An alarm sounds!"); */
+            pline("경보 장치가 울렸다!");
             for (mtmp = fmon; mtmp; mtmp = mtmp->nmon) {
                 if (DEADMONSTER(mtmp))
                     continue;
@@ -1899,7 +1948,7 @@ boolean at_stairs, falling, portal;
         /* main dungeon message from your quest leader */
    /*KR if (!In_quest(&u.uz0) && at_dgn_entrance("The Quest") */
         /*KR dungeon.c, dungeon.def, quest.txt, quest.c, mklev.c, trap.c */
-        /*KR 이 8개에 들어*/
+        /*KR 이 8개에 들어있음. 동시 수정필요. */
         if (!In_quest(&u.uz0) && at_dgn_entrance("The Quest")
             && !(u.uevent.qcompleted || u.uevent.qexpelled
                  || quest_status.leader_is_dead)) {
