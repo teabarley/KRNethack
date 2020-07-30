@@ -219,25 +219,49 @@ const char *goal;
         char kbuf[BUFSZ];
 
         if (getpos_getvalid) {
+#if 0 /*KR:T*/
             Sprintf(sbuf, "Use '%s' or '%s' to move to valid locations.",
-                    visctrl(Cmd.spkeys[NHKF_GETPOS_VALID_NEXT]),
-                    visctrl(Cmd.spkeys[NHKF_GETPOS_VALID_PREV]));
+                visctrl(Cmd.spkeys[NHKF_GETPOS_VALID_NEXT]),
+                visctrl(Cmd.spkeys[NHKF_GETPOS_VALID_PREV]));
+#else
+            Sprintf(sbuf, "'%s'나 '%s'로 유효한 위치로 이동합니다.",
+                visctrl(Cmd.spkeys[NHKF_GETPOS_VALID_NEXT]),
+                visctrl(Cmd.spkeys[NHKF_GETPOS_VALID_PREV]));
+#endif
             putstr(tmpwin, 0, sbuf);
         }
         if (getpos_hilitefunc) {
+#if 0 /*KR:T*/
             Sprintf(sbuf, "Use '%s' to display valid locations.",
-                    visctrl(Cmd.spkeys[NHKF_GETPOS_SHOWVALID]));
+                visctrl(Cmd.spkeys[NHKF_GETPOS_SHOWVALID]));
+#else
+            Sprintf(sbuf, "'%s'로 유효한 위치를 표시합니다.",
+                visctrl(Cmd.spkeys[NHKF_GETPOS_SHOWVALID]));
+#endif
             putstr(tmpwin, 0, sbuf);
         }
+#if 0 /*KR:T*/
         Sprintf(sbuf, "Use '%s' to toggle automatic description.",
-                visctrl(Cmd.spkeys[NHKF_GETPOS_AUTODESC]));
+            visctrl(Cmd.spkeys[NHKF_GETPOS_AUTODESC]));
+#else
+        Sprintf(sbuf, "'%s'로 자동 설명을 전환합니다.",
+            visctrl(Cmd.spkeys[NHKF_GETPOS_AUTODESC]));
+#endif
         putstr(tmpwin, 0, sbuf);
         if (iflags.cmdassist) { /* assisting the '/' command, I suppose... */
+#if 0 /*KR:T*/
             Sprintf(sbuf,
-                    (iflags.getpos_coords == GPCOORDS_NONE)
-         ? "(Set 'whatis_coord' option to include coordinates with '%s' text.)"
-         : "(Reset 'whatis_coord' option to omit coordinates from '%s' text.)",
-                    visctrl(Cmd.spkeys[NHKF_GETPOS_AUTODESC]));
+                (iflags.getpos_coords == GPCOORDS_NONE)
+                ? "(Set 'whatis_coord' option to include coordinates with '%s' text.)"
+                : "(Reset 'whatis_coord' option to omit coordinates from '%s' text.)",
+                visctrl(Cmd.spkeys[NHKF_GETPOS_AUTODESC]));
+#else
+            Sprintf(sbuf,
+                (iflags.getpos_coords == GPCOORDS_NONE)
+                ? "('%s'에 좌표를 포함시키려면 'whatis_coord' 옵션을 설정해주세요.)"
+                : "('%s'에서 좌표를 생략하려면 'whatis_coord' 옵션을 해제해주세요.)",
+                visctrl(Cmd.spkeys[NHKF_GETPOS_AUTODESC]));
+#endif
         }
         /* disgusting hack; the alternate selection characters work for any
            getpos call, but only matter for dowhatis (and doquickwhatis) */
@@ -1797,7 +1821,8 @@ boolean called;
     if (adjective)
         Strcat(strcat(buf, adjective), " ");
     if (do_invis)
-        Strcat(buf, "invisible ");
+   /*KR Strcat(buf, "invisible "); */
+        Strcat(buf, "보이지 않는 ");
     if (do_saddle && (mtmp->misc_worn_check & W_SADDLE) && !Blind
         && !Hallucination)
         Strcat(buf, "saddled ");
@@ -1815,7 +1840,8 @@ boolean called;
         char *name = MNAME(mtmp);
 
         if (mdat == &mons[PM_GHOST]) {
-            Sprintf(eos(buf), "%s ghost", s_suffix(name));
+            /*KR Sprintf(eos(buf), "%s ghost", s_suffix(name)); */
+            Sprintf(buf, "%s의 유령", name);
             name_at_start = TRUE;
         } else if (called) {
             Sprintf(eos(buf), "%s called %s", pm_name, name);
@@ -2183,11 +2209,13 @@ rndcolor()
     int k = rn2(CLR_MAX);
 
     return Hallucination ? hcolor((char *) 0)
+                    /*KR : (k == NO_COLOR) ? "colorless" */
                          : (k == NO_COLOR) ? "colorless"
                                            : c_obj_colors[k];
 }
 
 static NEARDATA const char *const hliquids[] = {
+#if 0 /*KR:T*/
     "yoghurt", "oobleck", "clotted blood", "diluted water", "purified water",
     "instant coffee", "tea", "herbal infusion", "liquid rainbow",
     "creamy foam", "mulled wine", "bouillon", "nectar", "grog", "flubber",
@@ -2195,6 +2223,15 @@ static NEARDATA const char *const hliquids[] = {
     "caramel sauce", "ink", "aqueous humour", "milk substitute",
     "fruit juice", "glowing lava", "gastric acid", "mineral water",
     "cough syrup", "quicksilver", "sweet vitriol", "grey goo", "pink slime",
+#else
+    "요거트", "우블렉", "응혈", "증류수", "정제수",
+    "인스턴트 커피", "홍차", "herbal infusion", "liquid rainbow",
+    "creamy foam", "mulled wine", "bouillon", "nectar", "grog", "flubber",
+    "케첩", "slow light", "oil", "vinaigrette", "liquid crystal", "꿀",
+    "캐러멜 소스", "잉크", "aqueous humour", "milk substitute",
+    "과일 주스", "glowing lava", "gastric acid", "광천수",
+    "cough syrup", "수은", "sweet vitriol", "grey goo", "분홍 슬라임",
+#endif
 };
 
 const char *

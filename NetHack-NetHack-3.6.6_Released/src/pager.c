@@ -2012,23 +2012,38 @@ static struct {
     void NDECL((*f));
     const char *text;
 } help_menu_items[] = {
-    { hmenu_doextversion, "About NetHack (version information)." },
-    { dispfile_help, "Long description of the game and commands." },
-    { dispfile_shelp, "List of game commands." },
-    { hmenu_dohistory, "Concise history of NetHack." },
-    { hmenu_dowhatis, "Info on a character in the game display." },
-    { hmenu_dowhatdoes, "Info on what a given key does." },
-    { option_help, "List of game options." },
-    { dispfile_optionfile, "Longer explanation of game options." },
-    { dokeylist, "Full list of keyboard commands" },
-    { hmenu_doextlist, "List of extended commands." },
-    { domenucontrols, "List menu control keys" },
-    { dispfile_license, "The NetHack license." },
-    { docontact, "Support information." },
+    /*KR { hmenu_doextversion, "About NetHack (version information)." }, */
+    { hmenu_doextversion, "NetHack에 대하여 (버전 정보)" },
+    /*KR { dispfile_help, "Long description of the game and commands." }, */
+    { dispfile_help, "게임과 명령어에 대한 긴 설명" },
+    /*KR { dispfile_shelp, "List of game commands." }, */
+    { dispfile_shelp, "게임 명령어 목록" },
+    /*KR { hmenu_dohistory, "Concise history of NetHack." }, */
+    { hmenu_dohistory, "NetHack의 간략한 역사" },
+    /*KR { hmenu_dowhatis, "Info on a character in the game display." }, */
+    { hmenu_dowhatis, "게임 화면에 표시된 문자의 정보" },
+    /*KR { hmenu_dowhatdoes, "Info on what a given key does." }, */
+    { hmenu_dowhatdoes, "입력된 키의 기능에 대한 정보" },
+    /*KR { option_help, "List of game options." }, */
+    { option_help, "게임 환경설정 목록" },
+    /*KR { dispfile_optionfile, "Longer explanation of game options." }, */
+    { dispfile_optionfile, "게임 환경설정에 대한 긴 설명" },
+    /*KR { dokeylist, "Full list of keyboard commands" }, */
+    { dokeylist, "키보드 명령어의 전체 목록" },
+    /*KR { hmenu_doextlist, "List of extended commands." }, */
+    { hmenu_doextlist, "확장 명령어 목록" },
+    /*KR { domenucontrols, "List menu control keys" }, */
+    { domenucontrols, "메뉴 조작키 목록" },
+    /*KR { dispfile_license, "The NetHack license." }, */
+    { dispfile_license, "NetHack의 라이센스" },
+    /*KR { docontact, "Support information." }, */
+    { docontact, "지원 정보" },
 #ifdef PORT_HELP
-    { port_help, "%s-specific help and commands." },
+    /*KR { port_help, "%s-specific help and commands." }, */
+    { port_help, "%s 전용 도움말 및 명령어" },
 #endif
-    { dispfile_debughelp, "List of wizard-mode commands." },
+    /*KR { dispfile_debughelp, "List of wizard-mode commands." }, */
+    { dispfile_debughelp, "위자드 모드의 명령어 목록" },
     { (void NDECL((*))) 0, (char *) 0 }
 };
 
