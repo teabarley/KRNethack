@@ -1,30 +1,6 @@
 /* NetHack 3.6	objects.c	$NHDT-Date: 1535422421 2018/08/28 02:13:41 $  $NHDT-Branch: NetHack-3.6.2-beta01 $:$NHDT-Revision: 1.51 $ */
-/* Copyright (c) Mike Threepoint, 1989.                           */
+/* Copyright (c) Mike Threepoint, 1989.                                   */
 /* NetHack may be freely redistributed.  See license for details. */
-
-/*
- * The data in this file is processed twice, to construct two arrays.
- * On the first pass, only object name and object description matter.
- * On the second pass, all object-class fields except those two matter.
- * 2nd pass is a recursive inclusion of this file, not a 2nd compilation.
- * The name/description array is also used by makedefs and lev_comp.
- *
- * #ifndef OBJECTS_PASS_2_
- * # define OBJECT(name,desc,foo,bar,glorkum) name,desc
- * struct objdescr obj_descr[] =
- * #else
- * # define OBJECT(name,desc,foo,bar,glorkum) foo,bar,glorkum
- * struct objclass objects[] =
- * #endif
- * {
- *   { OBJECT("strange object",NULL, 1,2,3) },
- *   { OBJECT("arrow","pointy stick", 4,5,6) },
- *   ...
- *   { OBJECT(NULL,NULL, 0,0,0) }
- * };
- * #define OBJECTS_PASS_2_
- * #include "objects.c"
- */
 
 /* *INDENT-OFF* */
 /* clang-format off */
@@ -46,37 +22,24 @@ struct monst { struct monst *dummy; };  /* lint: struct obj's union */
 
 /* objects have symbols: ) [ = " ( % ! ? + / $ * ` 0 _ . */
 
-/*
- *      Note:  OBJ() and BITS() macros are used to avoid exceeding argument
- *      limits imposed by some compilers.  The ctnr field of BITS currently
- *      does not map into struct objclass, and is ignored in the expansion.
- *      The 0 in the expansion corresponds to oc_pre_discovered, which is
- *      set at run-time during role-specific character initialization.
- */
 
 #ifndef OBJECTS_PASS_2_
-/* first pass -- object descriptive text */
 #define OBJ(name,desc)  name, desc
-#define OBJECT(obj,bits,prp,sym,prob,dly,wt, \
-               cost,sdam,ldam,oc1,oc2,nut,color)  { obj }
-#define None (char *) 0 /* less visual distraction for 'no description' */
-
+#define OBJECT(obj,bits,prp,sym,prob,dly,wt,cost,sdam,ldam,oc1,oc2,nut,color)  { obj }
+#define None (char *) 0 
 NEARDATA struct objdescr obj_descr[] =
 #else
-/* second pass -- object definitions */
-#define BITS(nmkn,mrg,uskn,ctnr,mgc,chrg,uniq,nwsh,big,tuf,dir,sub,mtrl) \
-  nmkn,mrg,uskn,0,mgc,chrg,uniq,nwsh,big,tuf,dir,mtrl,sub /*SCO cpp fodder*/
-#define OBJECT(obj,bits,prp,sym,prob,dly,wt,cost,sdam,ldam,oc1,oc2,nut,color) \
-  { 0, 0, (char *) 0, bits, prp, sym, dly, COLOR_FIELD(color) prob, wt, \
-    cost, sdam, ldam, oc1, oc2, nut }
+#define BITS(nmkn,mrg,uskn,ctnr,mgc,chrg,uniq,nwsh,big,tuf,dir,sub,mtrl) nmkn,mrg,uskn,0,mgc,chrg,uniq,nwsh,big,tuf,dir,mtrl,sub
+#define OBJECT(obj,bits,prp,sym,prob,dly,wt,cost,sdam,ldam,oc1,oc2,nut,color) { 0, 0, (char *) 0, bits, prp, sym, dly, COLOR_FIELD(color) prob, wt, cost, sdam, ldam, oc1, oc2, nut }
 #ifndef lint
 #define HARDGEM(n) (n >= 8)
 #else
 #define HARDGEM(n) (0)
 #endif
-
 NEARDATA struct objclass objects[] =
 #endif
+
+
 {
 /* dummy object[0] -- description [2nd arg] *must* be NULL */
 OBJECT(OBJ("strange object", None),

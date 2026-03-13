@@ -11,8 +11,8 @@ ad aerarium
 # take-offs and other famous engravings
 Owlbreath
 갈라드리엘
-Kilory 왔다 감.
-Frodo는 살아있다!
+킬로리 왔다 감.
+프로도는 살아있다!
 
 # Journey to the Center of the Earth
 A.S. ->
@@ -38,10 +38,10 @@ Madam, in Eden, I'm Adam.
 # Siskel & Ebert
 Two thumbs up!
 # The First C Program
-Hello, World!
+헬로, 월드!
 ^?MAIL
 # AOL
-You've got mail!
+새 메일이 있습니다!
 ^.
 # Clueless
 As if!
@@ -55,38 +55,38 @@ Arooo!  Werewolves of Yendor!
 Dig for Victory here
 
 # Pompeii
-Gaius Julius Primigenius was here.  Why are you late?
+가이우스 율리우스 프리미게니우스가 여기 다녀감. 왜 늦는가?
 
 # Helpful guiding
-Don't go this way
-Go left --->
-<--- Go right
+이 길로 가지 마시오
+왼쪽으로 가시오 --->
+<--- 오른쪽으로 가시오
 X marks the spot
 X <--- You are here.
 Here be dragons
-Save now, and do your homework!
-There was a hole here.  It's gone now.
+이제 저장하고 숙제를 하렴!
+여기 구멍이 있었는데요, 없었습니다.
 The Vibrating Square
-This is a pit!
+이것은 구덩이다!
 This is not the dungeon you are looking for.
-Watch out, there's a gnome with a wand of death behind that door!
+조심하세요. 저 문 너머에 죽음의 지팡이를 든 노움이 있어요!
 
 # Misc fun
-This square deliberately left blank.
+이 칸은 의도적으로 비워졌습니다.
 
 # Viking graffiti
 Haermund Hardaxe carved these runes
 
 # Advertising
 빛이 필요한가요? 광산마을에서 Izchak의 조명가게를 찾아주세요!
-Snakes on the Astral Plane - Soon in a dungeon near you
-You are the one millionth visitor to this place!  Please wait 200 turns for your wand of wishing.
+정령계의 뱀들 - 곧 여러분 근처의 던전으로 찾아갑니다
+백만 번째 방문자십니다! 200턴을 기다리시고 소원의 지팡이를 받아가세요.
 
 # DnD
 Warning, Exploding runes!
 
 # "Whispers Underground" Ben Aaronovitch
-If you can read these words then you are not only a nerd but probably dead.
+이걸 읽을 수 있다면 당신은 괴짜에다가 아마 죽었을 것이다.
 
 # Portal
 케이크는 거짓말이야.

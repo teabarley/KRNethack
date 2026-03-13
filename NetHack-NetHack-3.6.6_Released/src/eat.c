@@ -2161,14 +2161,14 @@ struct obj *otmp;
                         ? "bland."
                         : Hallucination ? "gnarly!" : "delicious!");
 #else
-            pline("이 %s은/는 %s", singular(otmp, xname),
-                otmp->cursed
-                ? (Hallucination ? "메스꺼워!" : "끔찍해!")
-                : (otmp->otyp == CRAM_RATION
-                    || otmp->otyp == K_RATION
-                    || otmp->otyp == C_RATION)
-                ? "무미건조해."
-                : Hallucination ? "끝내주네!" : "마시따!");
+       pline("이 %s %s", append_josa(singular(otmp, xname), "은"),
+             otmp->cursed 
+                    ? (Hallucination ? "메스꺼워!" : "끔찍해!")
+                    : (otmp->otyp == CRAM_RATION 
+                       || otmp->otyp == K_RATION
+                       || otmp->otyp == C_RATION)
+                       ? "무미건조해."
+                       : Hallucination ? "끝내주네!" : "마시따!");
 #endif
         }
         break; /* default */
@@ -3005,14 +3005,15 @@ doeat()
                 ? foodword(otmp)
                 : singular(otmp, xname));
 #else
-            pline("%s%s은/는 맛있다!",
-                (obj_is_pname(otmp)
-                    && otmp->oartifact < ART_ORB_OF_DETECTION)
-                ? ""
-                : "이 ",
-                (otmp->oclass == COIN_CLASS)
-                ? foodword(otmp)
-                : singular(otmp, xname));
+            const char *food_str = (otmp->oclass == COIN_CLASS)
+                                       ? foodword(otmp)
+                                       : singular(otmp, xname);
+            pline(
+                "%s%s 맛있다!",
+                (obj_is_pname(otmp) && otmp->oartifact < ART_ORB_OF_DETECTION)
+                    ? ""
+                    : "이 ",
+                append_josa(food_str, "는"));
 #endif
         }
         eatspecial();

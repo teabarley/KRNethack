@@ -2288,8 +2288,7 @@ E void FDECL(sellobj, (struct obj *, XCHAR_P, XCHAR_P));
 E int FDECL(doinvbill, (int));
 E struct monst *FDECL(shkcatch, (struct obj *, XCHAR_P, XCHAR_P));
 E void FDECL(add_damage, (XCHAR_P, XCHAR_P, long));
-E int FDECL(repair_damage, (struct monst *, struct damage *, int *,
-                            BOOLEAN_P));
+E int FDECL(repair_damage, (struct monst *, struct damage *, int *, BOOLEAN_P));
 E int FDECL(shk_move, (struct monst *));
 E void FDECL(after_shk_move, (struct monst *));
 E boolean FDECL(is_fshk, (struct monst *));
@@ -3005,6 +3004,12 @@ E void FDECL(destroy_item, (int, int));
 E int FDECL(destroy_mitem, (struct monst *, int, int));
 E int FDECL(resist, (struct monst *, CHAR_P, int, int));
 E void NDECL(makewish);
+
+/* ============ 여기에 추가합니다 ============ */
+/* ### korean.c ### */
+E int FDECL(get_jongseong, (const char *) );
+E const char *FDECL(append_josa, (const char *, const char *) );
+/* =========================================== */
 
 #endif /* !MAKEDEFS_C && !LEV_LEX_C */
 

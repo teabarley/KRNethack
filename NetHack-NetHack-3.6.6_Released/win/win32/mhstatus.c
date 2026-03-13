@@ -348,22 +348,31 @@ onWMPaint(HWND hWnd, WPARAM wParam, LPARAM lParam)
 
                 cached_font * fnt = mswin_get_font(NHW_STATUS, fntatr, hdc, FALSE);
 
-                BOOL useUnicode = fnt->supportsUnicode;
-
-                winos_ascii_to_wide_str(str, wbuf, SIZE(wbuf));
+/* ============ 여기서부터 수정 ============ */
+                /* 기존의 엉터리 ASCII 변환기를 버리고, UTF-8을 완벽하게
+                 * UTF-16으로 변환합니다. */
+                /* vlen(바이트 수)이 아닌 wlen(실제 유니코드 글자 수)을 구하는
+                 * 것이 핵심입니다. */
+                int wlen =
+                    MultiByteToWideChar(CP_ACP, 0, str, vlen, wbuf, BUFSZ);
 
                 nFg = (clr == NO_COLOR ? status_fg_color
-                    : ((clr >= 0 && clr < CLR_MAX) ? nhcolor_to_RGB(clr)
-                        : status_fg_color));
+                                       : ((clr >= 0 && clr < CLR_MAX)
+                                              ? nhcolor_to_RGB(clr)
+                                              : status_fg_color));
 
                 if (atr & HL_DIM) {
-                    /* make a dim representation - this can produce color shift */
+                    /* make a dim representation - this can produce color
+                     * shift */
                     float redReduction = 0.5f;
                     float greenReduction = 0.5f;
                     float blueReduction = 0.25f;
-                    uchar red = (uchar)(GetRValue(nFg) * (1.0f - redReduction));
-                    uchar green = (uchar)(GetGValue(nFg) * (1.0f - greenReduction));
-                    uchar blue = (uchar)(GetBValue(nFg) * (1.0f - blueReduction));
+                    uchar red =
+                        (uchar) (GetRValue(nFg) * (1.0f - redReduction));
+                    uchar green =
+                        (uchar) (GetGValue(nFg) * (1.0f - greenReduction));
+                    uchar blue =
+                        (uchar) (GetBValue(nFg) * (1.0f - blueReduction));
                     nFg = RGB(red, green, blue);
                 }
 
@@ -375,90 +384,57 @@ onWMPaint(HWND hWnd, WPARAM wParam, LPARAM lParam)
                 sz.cy = -1;
 
                 if (status_string->draw_bar && iflags.wc2_hitpointbar) {
-                    /* NOTE: we current don't support bar attributes */
-
-                    /* when we are drawing bar we need to look at the hp status
-                     * field to get the correct percentage and color */
-                    COLORREF bar_color = nhcolor_to_RGB(status_string->bar_color);
+                    COLORREF bar_color =
+                        nhcolor_to_RGB(status_string->bar_color);
                     HBRUSH back_brush = CreateSolidBrush(bar_color);
                     RECT barrect;
 
-                    /* prepare for drawing */
                     SelectObject(hdc, fnt->hFont);
                     SetBkMode(hdc, OPAQUE);
                     SetBkColor(hdc, status_bg_color);
                     SetTextColor(hdc, status_fg_color);
 
-                    if (useUnicode) {
-                        /* get bounding rectangle */
-                        GetTextExtentPoint32W(hdc, wbuf, vlen, &sz);
+                    /* 무조건 W(유니코드) 함수 사용, 길이는 vlen 대신 wlen
+                     * 사용! */
+                    GetTextExtentPoint32W(hdc, wbuf, wlen, &sz);
+                    DrawTextW(hdc, wbuf, wlen, &rt, DT_LEFT);
 
-                        /* first draw title normally */
-                        DrawTextW(hdc, wbuf, vlen, &rt, DT_LEFT);
-                    }
-                    else {
-                        /* get bounding rectangle */
-                        GetTextExtentPoint32A(hdc, str, vlen, &sz);
-
-                        /* first draw title normally */
-                        DrawTextA(hdc, str, vlen, &rt, DT_LEFT);
-                    }
                     int bar_percent = status_string->bar_percent;
                     if (bar_percent > 0) {
-                        /* calc bar length */
                         barrect.left = rt.left;
                         barrect.top = rt.top;
                         barrect.bottom = sz.cy;
-                        if (bar_percent > 0)
-                            barrect.right = (int)((bar_percent * sz.cx) / 100);
-                        /* else
-                            barrect.right = sz.cx; */
+                        barrect.right = (int) ((bar_percent * sz.cx) / 100);
 
-                            /* then draw hpbar on top of title */
                         FillRect(hdc, &barrect, back_brush);
                         SetBkMode(hdc, TRANSPARENT);
                         SetTextColor(hdc, nBg);
 
-                        if (useUnicode)
-                            DrawTextW(hdc, wbuf, vlen, &barrect, DT_LEFT);
-                        else
-                            DrawTextA(hdc, str, vlen, &barrect, DT_LEFT);
+                        DrawTextW(hdc, wbuf, wlen, &barrect, DT_LEFT);
                     }
                     DeleteObject(back_brush);
-                }
-                else {
+                } else {
                     if (atr & HL_INVERSE) {
                         COLORREF tmp = nFg;
                         nFg = nBg;
                         nBg = tmp;
                     }
 
-                    /* prepare for drawing */
                     SelectObject(hdc, fnt->hFont);
                     SetBkMode(hdc, OPAQUE);
                     SetBkColor(hdc, nBg);
                     SetTextColor(hdc, nFg);
 
-                    if (useUnicode) {
-                        /* get bounding rectangle */
-                        GetTextExtentPoint32W(hdc, wbuf, vlen, &sz);
-
-                        /* draw */
-                        DrawTextW(hdc, wbuf, vlen, &rt, DT_LEFT);
-                    }
-                    else {
-                        /* get bounding rectangle */
-                        GetTextExtentPoint32A(hdc, str, vlen, &sz);
-
-                        /* draw */
-                        DrawTextA(hdc, str, vlen, &rt, DT_LEFT);
-                    }
+                    /* 무조건 W(유니코드) 함수 사용, 길이는 vlen 대신 wlen
+                     * 사용! */
+                    GetTextExtentPoint32W(hdc, wbuf, wlen, &sz);
+                    DrawTextW(hdc, wbuf, wlen, &rt, DT_LEFT);
                 }
                 assert(sz.cy >= 0);
 
                 rt.left += sz.cx;
                 cy = max(cy, sz.cy);
-            }
+                /* ============ 여기까지 수정 ============ */            }
 
             rt.left = left;
             rt.top += cy;

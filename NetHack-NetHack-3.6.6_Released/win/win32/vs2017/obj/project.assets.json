@@ -1,0 +1,194 @@
+{
+  "version": 3,
+  "targets": {
+    "UAP,Version=v10.0.15063": {
+      "NetHackW/1.0.0": {
+        "type": "project",
+        "compile": {
+          "bin/placeholder/NetHackW.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/NetHackW.dll": {}
+        }
+      }
+    },
+    "UAP,Version=v10.0.15063/win10-arm": {
+      "NetHackW/1.0.0": {
+        "type": "project",
+        "compile": {
+          "bin/placeholder/NetHackW.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/NetHackW.dll": {}
+        }
+      }
+    },
+    "UAP,Version=v10.0.15063/win10-arm-aot": {
+      "NetHackW/1.0.0": {
+        "type": "project",
+        "compile": {
+          "bin/placeholder/NetHackW.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/NetHackW.dll": {}
+        }
+      }
+    },
+    "UAP,Version=v10.0.15063/win10-arm64-aot": {
+      "NetHackW/1.0.0": {
+        "type": "project",
+        "compile": {
+          "bin/placeholder/NetHackW.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/NetHackW.dll": {}
+        }
+      }
+    },
+    "UAP,Version=v10.0.15063/win10-x64": {
+      "NetHackW/1.0.0": {
+        "type": "project",
+        "compile": {
+          "bin/placeholder/NetHackW.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/NetHackW.dll": {}
+        }
+      }
+    },
+    "UAP,Version=v10.0.15063/win10-x64-aot": {
+      "NetHackW/1.0.0": {
+        "type": "project",
+        "compile": {
+          "bin/placeholder/NetHackW.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/NetHackW.dll": {}
+        }
+      }
+    },
+    "UAP,Version=v10.0.15063/win10-x86": {
+      "NetHackW/1.0.0": {
+        "type": "project",
+        "compile": {
+          "bin/placeholder/NetHackW.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/NetHackW.dll": {}
+        }
+      }
+    },
+    "UAP,Version=v10.0.15063/win10-x86-aot": {
+      "NetHackW/1.0.0": {
+        "type": "project",
+        "compile": {
+          "bin/placeholder/NetHackW.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/NetHackW.dll": {}
+        }
+      }
+    }
+  },
+  "libraries": {
+    "NetHackW/1.0.0": {
+      "type": "project",
+      "path": "NetHackW.vcxproj",
+      "msbuildProject": "NetHackW.vcxproj"
+    }
+  },
+  "projectFileDependencyGroups": {
+    "UAP,Version=v10.0.15063": [
+      "NetHackW >= 1.0.0"
+    ]
+  },
+  "packageFolders": {
+    "C:\\Users\\4492k\\.nuget\\packages\\": {},
+    "D:\\Microsoft VS Code\\NuGetPackages": {}
+  },
+  "project": {
+    "version": "1.0.0",
+    "restore": {
+      "projectUniqueName": "D:\\KRNethack-master\\NetHack-NetHack-3.6.6_Released\\win\\win32\\vs2017\\NetHackPackage.wapproj",
+      "projectName": "NetHackPackage",
+      "projectPath": "D:\\KRNethack-master\\NetHack-NetHack-3.6.6_Released\\win\\win32\\vs2017\\NetHackPackage.wapproj",
+      "packagesPath": "C:\\Users\\4492k\\.nuget\\packages\\",
+      "outputPath": "D:\\KRNethack-master\\NetHack-NetHack-3.6.6_Released\\win\\win32\\vs2017\\obj\\",
+      "projectStyle": "PackageReference",
+      "UsingMicrosoftNETSdk": false,
+      "fallbackFolders": [
+        "D:\\Microsoft VS Code\\NuGetPackages"
+      ],
+      "configFilePaths": [
+        "C:\\Users\\4492k\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
+        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+      ],
+      "originalTargetFrameworks": [
+        "net451"
+      ],
+      "sources": {
+        "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+        "https://api.nuget.org/v3/index.json": {}
+      },
+      "frameworks": {
+        "uap10.0.15063": {
+          "targetAlias": "net451",
+          "projectReferences": {
+            "D:\\KRNethack-master\\NetHack-NetHack-3.6.6_Released\\win\\win32\\vs2017\\NetHackW.vcxproj": {
+              "projectPath": "D:\\KRNethack-master\\NetHack-NetHack-3.6.6_Released\\win\\win32\\vs2017\\NetHackW.vcxproj"
+            }
+          }
+        }
+      },
+      "restoreAuditProperties": {
+        "enableAudit": "true",
+        "auditLevel": "low",
+        "auditMode": "direct"
+      },
+      "SdkAnalysisLevel": "10.0.200"
+    },
+    "frameworks": {
+      "uap10.0.15063": {
+        "targetAlias": "net451",
+        "imports": [
+          "netcoreapp3.1",
+          "netcoreapp3.0",
+          "netcoreapp2.0",
+          "net462",
+          "net47",
+          "net471",
+          "net472",
+          "net48",
+          "net481",
+          "net10.0-windows10.0.17763"
+        ],
+        "assetTargetFallback": true,
+        "warn": true
+      }
+    },
+    "runtimes": {
+      "win10-arm": {
+        "#import": []
+      },
+      "win10-arm-aot": {
+        "#import": []
+      },
+      "win10-arm64-aot": {
+        "#import": []
+      },
+      "win10-x64": {
+        "#import": []
+      },
+      "win10-x64-aot": {
+        "#import": []
+      },
+      "win10-x86": {
+        "#import": []
+      },
+      "win10-x86-aot": {
+        "#import": []
+      }
+    }
+  }
+}

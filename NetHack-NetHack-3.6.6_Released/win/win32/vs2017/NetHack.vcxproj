@@ -7,6 +7,18 @@
     <RootNamespace>NetHack</RootNamespace>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Label="Configuration" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <PlatformToolset>v145</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Label="Configuration" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <PlatformToolset>v145</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Label="Configuration" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <PlatformToolset>v145</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Label="Configuration" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <PlatformToolset>v145</PlatformToolset>
+  </PropertyGroup>
   <Import Project="default.props" />
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
@@ -184,6 +196,7 @@
     <ClCompile Condition="Exists('$(PDCURSES)')" Include="$(WinCursDir)cursmisc.c" />
     <ClCompile Condition="Exists('$(PDCURSES)')" Include="$(WinCursDir)cursstat.c" />
     <ClCompile Condition="Exists('$(PDCURSES)')" Include="$(WinCursDir)curswins.c" />
+    <ClCompile Include="..\..\..\korean\korean.c" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="$(IncDir)align.h" />

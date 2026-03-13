@@ -21,6 +21,7 @@
 #include "wintty.h"
 #include <sys\types.h>
 #include <sys\stat.h>
+#include <windows.h>
 
 extern boolean getreturn_enabled; /* from sys/share/pcsys.c */
 extern int redirect_stdout;
@@ -390,16 +391,17 @@ DWORD ctrltype;
     }
 }
 
-/* called by pcmain() and process_options() */
-void
-nttty_open(mode)
-int mode; // unused
+/* called by pcmain() and process_options() */ void
+    nttty_open(mode) int mode; // unused
 {
     DWORD cmode;
 
-    /* Initialize the function pointer that points to
-     * the kbhit() equivalent, in this TTY case nttty_kbhit()
-     */
+    /* [추가한 부분] 강제로 콘솔의 입력과 출력을 UTF-8(65001)로 맞춥니다. */
+    SetConsoleCP(CP_UTF8);
+    SetConsoleOutputCP(CP_UTF8);
+
+    /* Initialize the function pointer that points to     * the kbhit()
+     * equivalent, in this TTY case nttty_kbhit()     */
     nt_kbhit = nttty_kbhit;
 
     if (!SetConsoleCtrlHandler((PHANDLER_ROUTINE) CtrlHandler, TRUE)) {

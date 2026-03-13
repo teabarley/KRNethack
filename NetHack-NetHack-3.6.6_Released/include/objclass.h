@@ -42,6 +42,7 @@ enum obj_armor_types {
     ARM_CLOAK  = 5,
     ARM_SHIRT  = 6
 };
+                  
 
 struct objclass {
     short oc_name_idx;              /* index of actual name */
@@ -205,6 +206,10 @@ struct fruit {
 #define newfruit() (struct fruit *) alloc(sizeof(struct fruit))
 #define dealloc_fruit(rind) free((genericptr_t)(rind))
 
+
 #define OBJ_NAME(obj) (obj_descr[(obj).oc_name_idx].oc_name)
-#define OBJ_DESCR(obj) (obj_descr[(obj).oc_descr_idx].oc_descr)
+ 
+
+#define OBJ_DESCR(obj)(obj_descr[(obj).oc_descr_idx].oc_descr)
+
 #endif /* OBJCLASS_H */

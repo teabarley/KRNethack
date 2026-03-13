@@ -7,6 +7,18 @@
     <RootNamespace>PDCurses</RootNamespace>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Label="Configuration" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <PlatformToolset>v145</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Label="Configuration" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <PlatformToolset>v145</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Label="Configuration" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <PlatformToolset>v145</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Label="Configuration" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <PlatformToolset>v145</PlatformToolset>
+  </PropertyGroup>
   <Import Project="default_lib.props" />
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <Import Project="dirs.props" />
@@ -58,7 +70,7 @@
     <ClCompile Condition="Exists('$(PDCURSES)')" Include="$(PDCURSES)\wincon\pdcsetsc.c" />
     <ClCompile Condition="Exists('$(PDCURSES)')" Include="$(PDCURSES)\wincon\pdcutil.c" />
   </ItemGroup>
-  <PropertyGroup >
+  <PropertyGroup>
     <LinkIncremental>true</LinkIncremental>
     <IncludePath>$(PDCURSES);$(IncludePath)</IncludePath>
   </PropertyGroup>

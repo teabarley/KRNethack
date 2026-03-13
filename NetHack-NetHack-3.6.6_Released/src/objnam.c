@@ -5,6 +5,7 @@
 
 #include "hack.h"
 
+
 /* "an uncursed greased partly eaten guardian naga hatchling [corpse]" */
 #define PREFIX 80 /* (56) */
 #define SCHAR_LIM 127
@@ -860,7 +861,7 @@ unsigned cxn_flags; /* bitmask of CXN_xxx values */
             Sprintf(eos(buf), "%s라고 불리는 지팡이", un);
         else
             /*KR Sprintf(buf, "%s wand", dn); */
-            Strcat(buf, dn);
+            Sprintf(eos(buf), "%s 지팡이", dn);
         break;
     case SPBOOK_CLASS:
         if (typ == SPE_NOVEL) { /* 3.6 tribute */
@@ -891,7 +892,7 @@ unsigned cxn_flags; /* bitmask of CXN_xxx values */
             Sprintf(eos(buf), "%s라고 불리는 주문서", un);
         } else
             /*KR Sprintf(buf, "%s spellbook", dn); */
-            Sprintf(eos(buf), "%s", dn);
+            Sprintf(eos(buf), "%s 주문서", dn);
         break;
     case RING_CLASS:
         if (!dknown)
@@ -905,7 +906,7 @@ unsigned cxn_flags; /* bitmask of CXN_xxx values */
             Sprintf(eos(buf), "%s라고 불리는 반지", un);
         else
             /*KR Sprintf(buf, "%s ring", dn); */
-            Strcat(buf, dn);
+            Sprintf(eos(buf), "%s 반지", dn);
         break;
     case GEM_CLASS: {
         /*KR const char *rock = (ocl->oc_material == MINERAL) ? "stone" : "gem"; */
@@ -2036,10 +2037,9 @@ const char *str;
     return outbuf;
 }
 
-char *
-an(str)
-const char *str;
+char *an(str) const char *str;
 {
+#if 0 /*KR*/
     char *buf = nextobuf();
 
     if (!str || !*str) {
@@ -2048,26 +2048,41 @@ const char *str;
     }
     (void) just_an(buf, str);
     return strcat(buf, str);
+#else
+    /* 한국어는 부정관사(a/an)를 사용하지 않습니다. */
+    char *buf = nextobuf();
+    if (str)
+        Strcpy(buf, str);
+    else
+        buf[0] = '\0';
+    return buf;
+#endif
 }
 
-char *
-An(str)
-const char *str;
+char *An(str) const char *str;
 {
+#if 0 /*KR*/
     char *tmp = an(str);
 
     *tmp = highc(*tmp);
     return tmp;
+#else
+    char *buf = nextobuf();
+    if (str)
+        Strcpy(buf, str);
+    else
+        buf[0] = '\0';
+    return buf;
+#endif
 }
 
 /*
  * Prepend "the" if necessary; assumes str is a subject derived from xname.
  * Use type_is_pname() for monster names, not the().  the() is idempotent.
  */
-char *
-the(str)
-const char *str;
+char *the(str) const char *str;
 {
+#if 0 /*KR*/
     char *buf = nextobuf();
     boolean insert_the = FALSE;
 
@@ -2118,16 +2133,34 @@ const char *str;
     Strcat(buf, str);
 
     return buf;
+#else
+    /* 한국어는 정관사(the)를 사용하지 않습니다. */
+    char *buf = nextobuf();
+    if (str)
+        Strcpy(buf, str);
+    else
+        buf[0] = '\0';
+    return buf;
+#endif
 }
 
 char *
 The(str)
 const char *str;
 {
+#if 0 /*KR*/
     char *tmp = the(str);
 
     *tmp = highc(*tmp);
     return tmp;
+#else
+    char *buf = nextobuf();
+    if (str)
+        Strcpy(buf, str);
+    else
+        buf[0] = '\0';
+    return buf;
+#endif
 }
 
 /* returns "count cxname(otmp)" or just cxname(otmp) if count == 1 */
@@ -2672,10 +2705,9 @@ char *str;
  * Also misused by muse.c to convert 1st person present verbs to 2nd person.
  * 3.6.0: made case-insensitive.
  */
-char *
-makeplural(oldstr)
-const char *oldstr;
+char *makeplural(oldstr) const char *oldstr;
 {
+#if 0 /*KR*/
     register char *spot;
     char lo_c, *str = nextobuf();
     const char *excess = (char *) 0;
@@ -2837,6 +2869,15 @@ const char *oldstr;
     if (excess)
         Strcat(str, excess);
     return str;
+#else
+    /* 한국어는 복수형을 처리하지 않으므로 원본 문자열을 그대로 반환합니다. */
+    char *str = nextobuf();
+    if (oldstr)
+        Strcpy(str, oldstr);
+    else
+        str[0] = '\0';
+    return str;
+#endif
 }
 
 /*
@@ -3235,6 +3276,8 @@ int xtra_prob; /* to force 0% random generation items to also be considered */
      * "blank" would have 10/11 chance to yield a book even though
      * scrolls are supposed to be much more common than books.]
      */
+
+
     for (i = oclass ? bases[(int) oclass] : STRANGE_OBJECT + 1;
          i < NUM_OBJECTS && (!oclass || objects[i].oc_class == oclass);
          ++i) {
@@ -3250,6 +3293,7 @@ int xtra_prob; /* to force 0% random generation items to also be considered */
             maxprob += (objects[i].oc_prob + xtra_prob);
         }
     }
+
 
     if (n > 0 && maxprob) {
         prob = rn2(maxprob);

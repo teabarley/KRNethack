@@ -52,6 +52,7 @@ do_statusline1()
     register char *nb;
     register int i, j;
 
+#if 0 /*KR*/
     Strcpy(newbot1, plname);
     if ('a' <= newbot1[0] && newbot1[0] <= 'z')
         newbot1[0] += 'A' - 'a';
@@ -74,6 +75,31 @@ do_statusline1()
         Strcpy(nb = eos(nb), rank());
 
     Sprintf(nb = eos(nb), "  ");
+#else
+    /* 한국어 어순: [칭호] [이름] */
+    if (Upolyd) {
+        char mbot[BUFSZ];
+        int k = 0;
+
+        Strcpy(mbot, mons[u.umonnum].mname);
+        while (mbot[k] != 0) {
+            if ((k == 0 || (k > 0 && mbot[k - 1] == ' ')) && 'a' <= mbot[k]
+                && mbot[k] <= 'z')
+                mbot[k] += 'A' - 'a';
+            k++;
+        }
+        Sprintf(newbot1, "%s ", mbot);
+    } else {
+        Sprintf(newbot1, "%s ", rank());
+    }
+
+    nb = eos(newbot1);
+    Strcpy(nb, plname);
+    if ('a' <= nb[0] && nb[0] <= 'z')
+        nb[0] += 'A' - 'a';
+    /* 이름 뒤에 여백 2칸 추가 */
+    Sprintf(nb = eos(nb), "  ");
+#endif
     i = mrank_sz + 15;
     j = (int) ((nb + 2) - newbot1); /* strlen(newbot1) but less computation */
     if ((i - j) > 0)
@@ -589,6 +615,8 @@ bot_via_windowport()
     /*
      *  Player name and title.
      */
+
+#if 0 /*KR*/
     Strcpy(nb = buf, plname);
     nb[0] = highc(nb[0]);
     titl = !Upolyd ? rank() : mons[u.umonnum].mname;
@@ -608,6 +636,41 @@ bot_via_windowport()
                 nb[i] = highc(nb[i]);
     }
     Sprintf(blstats[idx][BL_TITLE].val, "%-30s", buf);
+#else
+    /* 한국어 어순: [칭호] [이름] */
+    titl = !Upolyd ? rank() : mons[u.umonnum].mname;
+
+    /* 칭호 복사 (폴리모프 상태면 첫 글자 대문자로 변환) */
+    Strcpy(nb = buf, titl);
+    if (Upolyd) {
+        for (i = 0; nb[i]; i++)
+            if (i == 0 || nb[i - 1] == ' ')
+                nb[i] = highc(nb[i]);
+    }
+
+    /* 띄어쓰기 후 이름 붙이기 */
+    Strcpy(nb = eos(nb), " ");
+
+    /* 이름 복사 전에 공간 계산 및 잘라내기 (한국어 환경에 맞춰 여유있게 계산)
+     */
+    i = (int) (strlen(buf) + strlen(plname));
+    if (i > 30) {
+        /* 너무 길면 이름의 일부만 남기도록 조절 */
+        int remain = 30 - strlen(buf);
+        char temp_plname[BUFSZ];
+        Strcpy(temp_plname, plname);
+        temp_plname[max(remain, 1)] = '\0';
+        Strcpy(nb = eos(nb), temp_plname);
+    } else {
+        Strcpy(nb = eos(nb), plname);
+    }
+
+    /* 이름 첫 글자 대문자화 */
+    nb = buf + strlen(titl) + 1; /* 이름이 시작되는 위치 */
+    nb[0] = highc(nb[0]);
+
+    Sprintf(blstats[idx][BL_TITLE].val, "%-30s", buf);
+#endif
     valset[BL_TITLE] = TRUE; /* indicate val already set */
 
     /* Strength */

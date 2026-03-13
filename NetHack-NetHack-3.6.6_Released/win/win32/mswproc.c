@@ -1773,6 +1773,7 @@ mswin_get_ext_cmd()
                 if (cmd[0])
                     mswin_putstr_ex(WIN_MESSAGE, ATR_BOLD, cmd,
                                     -(int) strlen(cmd));
+
                 if (c == VK_BACK) {
                     if (len > 0)
                         len--;

@@ -332,7 +332,8 @@ int truth; /* 1=true, -1=false, 0=either */
 int mechanism;
 {
     static const char fortune_msg[] =
-        "This cookie has a scrap of paper inside.";
+        /*KR "This cookie has a scrap of paper inside."; */
+        "이 쿠키에는 종이 쪽지가 들어 있다.";
     const char *line;
     char buf[BUFSZ];
     boolean reading = (mechanism == BY_COOKIE || mechanism == BY_PAPER);
@@ -344,20 +345,29 @@ int mechanism;
         else if (Blind) {
             if (mechanism == BY_COOKIE)
                 pline(fortune_msg);
-            pline("What a pity that you cannot read it!");
+            /*KR pline("What a pity that you cannot read it!"); */
+            pline("읽을 수 없다니 유감이다!");
             return;
         }
     }
     line = getrumor(truth, buf, reading ? FALSE : TRUE);
     if (!*line)
-        line = "NetHack rumors file closed for renovation.";
+        /*KR line = "NetHack rumors file closed for renovation."; */
+        line = "NetHack 소문 파일은 리모델링으로 잠시 문을 닫습니다.";
     switch (mechanism) {
     case BY_ORACLE:
         /* Oracle delivers the rumor */
+#if 0 /*KR:T*/
         pline("True to her word, the Oracle %ssays: ",
               (!rn2(4) ? "offhandedly "
                        : (!rn2(3) ? "casually "
                                   : (rn2(2) ? "nonchalantly " : ""))));
+#else
+        pline("약속대로, 신관은 %s말했다: ",
+              (!rn2(4) ? "아무렇게나 "
+                       : (!rn2(3) ? "무심하게 "
+                                  : (rn2(2) ? "무관심하게 " : ""))));
+#endif
         verbalize1(line);
         /* [WIS exercized by getrumor()] */
         return;
@@ -365,7 +375,8 @@ int mechanism;
         pline(fortune_msg);
     /* FALLTHRU */
     case BY_PAPER:
-        pline("It reads:");
+        /*KR pline("It reads:"); */
+        pline("그것을 읽었다:");
         break;
     }
     pline1(line);
@@ -460,10 +471,13 @@ boolean delphi;
         if (delphi)
             putstr(tmpwin, 0,
                    special
-                     ? "The Oracle scornfully takes all your money and says:"
-                     : "The Oracle meditates for a moment and then intones:");
+                /*KR ? "The Oracle scornfully takes all your money and says:"
+                     : "The Oracle meditates for a moment and then intones:"); */
+                     ? "신관은 경멸하듯이 당신의 모든 돈을 받아들고는 말했다:"
+                     : "현자는 잠시 명상하더니 이내 노래하듯이 말했다:");
         else
-            putstr(tmpwin, 0, "The message reads:");
+            /*KR putstr(tmpwin, 0, "The message reads:"); */
+            putstr(tmpwin, 0, "메시지는 이렇다:");
         putstr(tmpwin, 0, "");
 
         while (dlb_fgets(line, COLNO, oracles) && strcmp(line, "---\n")) {
@@ -494,17 +508,21 @@ struct monst *oracl;
     umoney = money_cnt(invent);
 
     if (!oracl) {
-        There("is no one here to consult.");
+        /*KR There("is no one here to consult."); */
+        pline("거기에는 신탁을 말해줄 사람이 없다.");
         return 0;
     } else if (!oracl->mpeaceful) {
-        pline("%s is in no mood for consultations.", Monnam(oracl));
+        /*KR pline("%s is in no mood for consultations.", Monnam(oracl)); */
+        pline("신관은 신탁을 알릴 기분이 아니다.");
         return 0;
     } else if (!umoney) {
-        You("have no money.");
+        /*KR You("have no money."); */
+        You("돈이 없다.");
         return 0;
     }
 
-    Sprintf(qbuf, "\"Wilt thou settle for a minor consultation?\" (%d %s)",
+    /*KR Sprintf(qbuf, "\"Wilt thou settle for a minor consultation?\" (%d %s)", */
+    Sprintf(qbuf, "\"그대, 사소한 신탁을 받겠는가?\" (%d %s)",
             minor_cost, currency((long) minor_cost));
     switch (ynq(qbuf)) {
     default:
@@ -512,7 +530,8 @@ struct monst *oracl;
         return 0;
     case 'y':
         if (umoney < (long) minor_cost) {
-            You("don't even have enough money for that!");
+            /*KR You("don't even have enough money for that!"); */
+            You("이것을 낼 만큼의 돈도 없다!");
             return 0;
         }
         u_pay = minor_cost;
@@ -521,7 +540,8 @@ struct monst *oracl;
         if (umoney <= (long) minor_cost /* don't even ask */
             || (oracle_cnt == 1 || oracle_flg < 0))
             return 0;
-        Sprintf(qbuf, "\"Then dost thou desire a major one?\" (%d %s)",
+        /*KR Sprintf(qbuf, "\"Then dost thou desire a major one?\" (%d %s)", */
+        Sprintf(qbuf, "\"그렇다면 그대, 중요한 신탁을 받겠는가?\" (%d %s)",
                 major_cost, currency((long) major_cost));
         if (yn(qbuf) != 'y')
             return 0;

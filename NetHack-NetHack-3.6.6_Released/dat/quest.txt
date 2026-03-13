@@ -52,22 +52,20 @@
 #	Archeologist
 #
 %Cc Arc 00001
-You are suddenly in familiar surroundings.  The buildings in the distance
-seem to be those of your old alma mater, but something is wrong.  It feels
-as if there has been a riot recently, or %H has
-been under siege.
+당신은 갑자기 낯익은 환경에 놓입니다. 멀리 보이는 건물들은
+당신의 모교인 것 같지만, 무언가 잘못되었습니다. 최근에 폭동이 있었거나
+%H(이)가 포위 공격을 받은 것 같은 느낌이 듭니다.
 
-All of the windows are boarded up, and there are objects scattered around
-the entrance.
+모든 창문은 판자로 막혀 있고, 입구 주변에는 물건들이 흩어져 있습니다.
 
-Strange forbidding shapes seem to be moving in the distance.
-%E [You arrive at %H, but all is not well.]
+멀리서 기분 나쁜 형상들이 움직이는 것 같습니다.
+%E [%H에 도착했지만, 상황이 좋지 않습니다.]
 %Cp Arc 00002
-Once again, you are back at %H.
+다시 한 번, 당신은 %H에 돌아왔습니다.
 %E
 %Cp Arc 00003
-You are back at %H.
-You have an odd feeling this may be the last time you ever come here.
+당신은 %H에 돌아왔습니다.
+어쩐지 이곳에 오는 것이 이번이 마지막이 될 것 같은 이상한 예감이 듭니다.
 %E
 %Cp Arc 00005
 "Did you see Lash LaRue in 'Song of Old Wyoming' the other night?"
@@ -3328,24 +3326,24 @@ experienced before, so be prepared!
 #	General
 #
 %Cc - 00001
-It is written in the Book of %d:
+%d의 서에 이렇게 기록되어 있다:
 
-    After the Creation, the cruel god Moloch rebelled
-    against the authority of Marduk the Creator.
-    Moloch stole from Marduk the most powerful of all
-    the artifacts of the gods, the Amulet of Yendor,
-    and he hid it in the dark cavities of Gehennom, the
-    Under World, where he now lurks, and bides his time.
+    창세 이후, 잔혹한 신 몰록은
+    창조주 마르두크의 권위에 반역하였다.
+    몰록은 마르두크로부터 신들의 유물 중 가장 강력한
+    옌더의 부적을 훔쳐 내었고, 그것을 지하 세계인 
+    게헨놈의 어두운 구덩이 속에 숨겨두었다. 
+    그리고 그는 그곳에 도사린 채 때를 기다리고 있다.
 
-Your %G %d seeks to possess the Amulet, and with it
-to gain deserved ascendance over the other gods.
+당신의 %G이신 %d께서는 그 부적을 손에 넣어 
+다른 신들 위로 마땅히 군림하고자 하십니다.
 
-You, a newly trained %r, have been heralded
-from birth as the instrument of %d.  You are destined
-to recover the Amulet for your deity, or die in the
-attempt.  Your hour of destiny has come.  For the sake
-of us all:  Go bravely with %d!
-%E [%dC has chosen you to recover the Amulet of Yendor for %dI.]
+이제 막 훈련을 마친 %r인 당신은, 
+태어날 때부터 %d의 도구로 예언되었습니다. 
+당신의 운명은 당신의 신을 위해 부적을 되찾거나, 
+그 여정 속에서 목숨을 바치는 것입니다. 당신의 운명의 시간이 다가왔습니다. 
+우리 모두를 위해, %d(와)과 함께 용감히 나아가십시오!
+%E [%dC(이)가 %dI를 위해 옌더의 부적을 되찾을 자로 당신을 선택했습니다.]
 %Cp - 00002
 You receive a faint telepathic message from %l:
 Your help is urgently needed at %H!

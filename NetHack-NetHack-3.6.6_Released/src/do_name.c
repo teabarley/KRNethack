@@ -1886,6 +1886,7 @@ boolean called;
     {
         char buf2[BUFSZ];
 
+#if 0 /*KR*/
         switch (article) {
         case ARTICLE_YOUR:
             Strcpy(buf2, "your ");
@@ -1903,6 +1904,22 @@ boolean called;
         default:
             return buf;
         }
+#else
+        switch (article) {
+        case ARTICLE_YOUR:
+            Strcpy(buf2, "당신의 ");
+            Strcat(buf2, buf);
+            Strcpy(buf, buf2);
+            return buf;
+        case ARTICLE_THE:
+        case ARTICLE_A:
+        case ARTICLE_NONE:
+        default:
+            /* 한국어는 The, A를 붙이지 않으므로 몬스터 이름 원본만
+             * 반환합니다. */
+            return buf;
+        }
+#endif
     }
 }
 
