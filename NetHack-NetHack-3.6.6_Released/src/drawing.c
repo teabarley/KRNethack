@@ -41,7 +41,8 @@ altinvisexplain[] = "보이지 않는 생명체"; /* for clairvoyance */
  */
 const struct class_sym def_oc_syms[MAXOCLASSES] = {
     { '\0', "", "" }, /* placeholder for the "random class" */
-    /*KR { ILLOBJ_SYM, "illegal objects", "strange object" },
+#if 0 /*KR 원본으로 돌아갈 때는 if 1로 바꾸기만 하면 됨 */
+    { ILLOBJ_SYM, "illegal objects", "strange object" },
     { WEAPON_SYM, "weapons", "weapon" },
     { ARMOR_SYM, "armor", "suit or piece of armor" },
     { RING_SYM, "rings", "ring" },
@@ -58,6 +59,7 @@ const struct class_sym def_oc_syms[MAXOCLASSES] = {
     { BALL_SYM, "iron balls", "iron ball" },
     { CHAIN_SYM, "chains", "iron chain" },
     { VENOM_SYM, "venoms", "splash of venom" } */
+#else
     { ILLOBJ_SYM, "이상한 물체", "이상한 물체" },
     { WEAPON_SYM, "무기", "무기" },
     { ARMOR_SYM, "갑옷", "의복 또는 갑옷류" },
@@ -75,12 +77,14 @@ const struct class_sym def_oc_syms[MAXOCLASSES] = {
     { BALL_SYM, "쇠공", "쇠공" },
     { CHAIN_SYM, "사슬", "쇠사슬" },
     { VENOM_SYM, "독", "독액" }
+#endif
 };
 
 /* Default monster class symbols.  See monsym.h. */
 const struct class_sym def_monsyms[MAXMCLASSES] = {
     { '\0', "", "" },
-    /*KR { DEF_ANT, "", "ant or other insect" },
+#if 0 /*KR 원본으로 돌아갈 때는 if 1로 바꾸기만 하면 됨 */
+    { DEF_ANT, "", "ant or other insect" },
     { DEF_BLOB, "", "blob" },
     { DEF_COCKATRICE, "", "cockatrice" },
     { DEF_DOG, "", "dog or other canine" },
@@ -140,6 +144,7 @@ const struct class_sym def_monsyms[MAXMCLASSES] = {
     { DEF_LIZARD, "", "lizard" },
     { DEF_WORM_TAIL, "", "long worm tail" },
     { DEF_MIMIC_DEF, "", "mimic" }, */
+#else
     { DEF_ANT, "", "개미 또는 다른 곤충" },
     { DEF_BLOB, "", "방울" },
     { DEF_COCKATRICE, "", "코카트리스" },
@@ -200,27 +205,37 @@ const struct class_sym def_monsyms[MAXMCLASSES] = {
     { DEF_LIZARD, "", "도마뱀" },
     { DEF_WORM_TAIL, "", "긴 지렁이 꼬리" },
     { DEF_MIMIC_DEF, "", "미믹" },
+#endif
 };
 
 const struct symdef def_warnsyms[WARNCOUNT] = {
+#if 0 /*KR 원본으로 돌아갈 때는 1로 바꾸기만 하면 됨 */
     /* white warning  */
-    /*KR { '0', "unknown creature causing you worry",    C(CLR_WHITE) }, */
-    { '0', "당신을 신경쓰이게 만드는 미지의 생명체",    C(CLR_WHITE) },
+    { '0', "unknown creature causing you worry",    C(CLR_WHITE) },
     /* pink warning   */
-    /*KR { '1', "unknown creature causing you concern",  C(CLR_RED) }, */
-    { '1', "당신을 걱정하게 만드는 미지의 생명체",  C(CLR_RED) },
+    { '1', "unknown creature causing you concern",  C(CLR_RED) },
     /* red warning    */
-    /*KR { '2', "unknown creature causing you anxiety",  C(CLR_RED) }, */
-    { '2', "당신을 불안하게 만드는 미지의 생명체",  C(CLR_RED) },
+    { '2', "unknown creature causing you anxiety",  C(CLR_RED) },
     /* ruby warning   */
-    /*KR { '3', "unknown creature causing you disquiet", C(CLR_RED) }, */
-    { '3', "당신을 동요하게 만드는 미지의 생명체", C(CLR_RED) },
+    { '3', "unknown creature causing you disquiet", C(CLR_RED) },
     /* purple warning */
-    /*KR { '4', "unknown creature causing you alarm",    C(CLR_MAGENTA) }, */
-    { '4', "당신을 두렵게 만드는 미지의 생명체",    C(CLR_MAGENTA) },
+    { '4', "unknown creature causing you alarm",    C(CLR_MAGENTA) },
     /* black warning  */
-    /*KR { '5', "unknown creature causing you dread",    C(CLR_BRIGHT_MAGENTA) }, */
+    { '5', "unknown creature causing you dread",    C(CLR_BRIGHT_MAGENTA) },
+#else
+    /* 흰색 경고 */
+    { '0', "당신을 신경쓰이게 만드는 미지의 생명체",    C(CLR_WHITE) },
+    /* 분홍색 경고 */
+    { '1', "당신을 걱정하게 만드는 미지의 생명체",  C(CLR_RED) },
+    /* 빨간색 경고 */
+    { '2', "당신을 불안하게 만드는 미지의 생명체",  C(CLR_RED) },
+    /* 루비색 경고 */
+    { '3', "당신을 동요하게 만드는 미지의 생명체", C(CLR_RED) },
+    /* 보라색 경고 */
+    { '4', "당신을 두렵게 만드는 미지의 생명체",    C(CLR_MAGENTA) },
+    /* 검은색 경고 */
     { '5', "당신을 무서워하게 만드는 미지의 생명체",    C(CLR_BRIGHT_MAGENTA) },
+#endif
 };
 
 /*

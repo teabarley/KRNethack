@@ -5,6 +5,44 @@
 
 #include "hack.h"
 
+/* --- KRNethack 번역 사전 시작 --- */
+#if 1
+#undef OBJ_NAME
+#undef OBJ_DESCR
+
+/* 번역 사전 함수 (여기에 단어를 계속 추가하시면 됩니다) */
+char *
+get_kr_name(const char *en_name)
+{
+    if (!en_name)
+        return (char *) en_name;
+
+    /* 무기 */
+    if (!strcmp(en_name, "long sword"))
+        return "롱 소드";
+    if (!strcmp(en_name, "dagger"))
+        return "단검";
+
+    /* 물약 색상 (a색 물약 문제 해결용) */
+    if (!strcmp(en_name, "ruby"))
+        return "루비";
+    if (!strcmp(en_name, "aquamarine"))
+        return "아쿠아마린";
+
+    /* 필요한 단어를 계속 추가하세요 */
+
+    return (char *) en_name; /* 사전에 없으면 원래 영어 반환 */
+}
+
+/* 엔진은 영어 원본을 기억하게 합니다 */
+#define RAW_OBJ_NAME(obj) (obj_descr[(obj).oc_name_idx].oc_name)
+#define RAW_OBJ_DESCR(obj) (obj_descr[(obj).oc_descr_idx].oc_descr)
+
+/* 화면에 뿌릴 때만 사전을 거쳐 한글로 냅니다 */
+#define OBJ_NAME(obj) get_kr_name(RAW_OBJ_NAME(obj))
+#define OBJ_DESCR(obj) get_kr_name(RAW_OBJ_DESCR(obj))
+#endif
+/* --- KRNethack 번역 사전 끝 --- */
 
 /* "an uncursed greased partly eaten guardian naga hatchling [corpse]" */
 #define PREFIX 80 /* (56) */
@@ -1596,10 +1634,12 @@ unsigned doname_flags;
         case WAND_CLASS:
         case COIN_CLASS:
         case GEM_CLASS:
-            Strcat(bp, " (in quiver pouch)");
+            /*KR Strcat(bp, " (in quiver pouch)"); */
+            Strcat(bp, " (탄주머니에 들어 있음)");
             break;
         default: /* odd things */
-            Strcat(bp, " (at the ready)");
+            /*KR Strcat(bp, " (at the ready)"); */
+            Strcat(bp, " (준비하고 있음)");
         }
     }
     /* treat 'restoring' like suppress_price because shopkeeper and
@@ -1611,22 +1651,41 @@ unsigned doname_flags;
     } else if (is_unpaid(obj)) { /* in inventory or in container in invent */
         long quotedprice = unpaid_cost(obj, TRUE);
 
+#if 0 /*KR:T*/
         Sprintf(eos(bp), " (%s, %s%ld %s)",
                 obj->unpaid ? "unpaid" : "contents",
                 globwt(obj, globbuf, &weightshown),
                 quotedprice, currency(quotedprice));
+#else
+        Sprintf(eos(bp), " (%s, %s%ld %s)",
+                obj->unpaid ? "미지불" : "내용물",
+                globwt(obj, globbuf, &weightshown), 
+                quotedprice, currency(quotedprice));
+#endif
     } else if (with_price) { /* on floor or in container on floor */
         int nochrg = 0;
         long price = get_cost_of_shop_item(obj, &nochrg);
 
         if (price > 0L)
+#if 0 /*KR:T*/
             Sprintf(eos(bp), " (%s, %s%ld %s)",
                     nochrg ? "contents" : "for sale",
                     globwt(obj, globbuf, &weightshown),
                     price, currency(price));
+#else
+            Sprintf(eos(bp), " (%s, %s%ld %s)", 
+                    nochrg ? "내용물" : "상품",
+                    globwt(obj, globbuf, &weightshown), 
+                    price, currency(price));
+#endif
         else if (nochrg > 0)
+#if 0 /*KR:T*/
             Sprintf(eos(bp), " (%sno charge)",
                     globwt(obj, globbuf, &weightshown));
+#else
+            Sprintf(eos(bp), " (%s무료)",
+                    globwt(obj, globbuf, &weightshown));
+#endif
     }
 #if 0 /*KR*//*한국어에서는 미사용*/
     if (!strncmp(prefix, "a ", 2)) {
@@ -1647,7 +1706,12 @@ unsigned doname_flags;
         if (!weightshown)
             Sprintf(eos(bp), " (%u aum)", obj->owt);
     }
+#if 0 /*KR*/
     bp = strprepend(bp, prefix);
+#else /*KR: '이름 붙인'을 되돌린다 */
+    Strcat(preprefix, prefix);
+    bp = strprepend(bp, preprefix);
+#endif
     return bp;
 }
 
@@ -1735,8 +1799,12 @@ unsigned cxn_flags; /* bitmask of CXN_xxx values */
     /* some callers [aobjnam()] rely on prefix area that xname() sets aside */
     char *nambuf = nextobuf() + PREFIX;
     int omndx = otmp->corpsenm;
+#if 0 /*KR*/
     boolean ignore_quan = (cxn_flags & CXN_SINGULAR) != 0,
             /* suppress "the" from "the unique monster corpse" */
+#else
+    boolean
+#endif
         no_prefix = (cxn_flags & CXN_NO_PFX) != 0,
             /* include "the" for "the woodchuck corpse */
         the_prefix = (cxn_flags & CXN_PFX_THE) != 0,
@@ -1751,12 +1819,14 @@ unsigned cxn_flags; /* bitmask of CXN_xxx values */
     if (glob) {
         mname = OBJ_NAME(objects[otmp->otyp]); /* "glob of <monster>" */
     } else if (omndx == NON_PM) { /* paranoia */
-        mname = "thing";
+        /*KR mname = "thing"; */
+        mname = "무언가";
         /* [Possible enhancement:  check whether corpse has monster traits
             attached in order to use priestname() for priests and minions.] */
     } else if (omndx == PM_ALIGNED_PRIEST) {
         /* avoid "aligned priest"; it just exposes internal details */
-        mname = "priest";
+        /*KR mname = "priest"; */
+        mname = "사제";
     } else {
         mname = mons[omndx].mname;
         if (the_unique_pm(&mons[omndx]) || type_is_pname(&mons[omndx])) {
@@ -1781,8 +1851,10 @@ unsigned cxn_flags; /* bitmask of CXN_xxx values */
        Name causes it to assume a personal name and return Name as-is;
        that's usually the behavior wanted, but here we need to force "the"
        to precede capitalized unique monsters (pnames are handled above) */
+#if 0 /*KR 한국어에서는 정관사가 불필요 */
     if (the_prefix)
         Strcat(nambuf, "the ");
+#endif
 
     if (!adjective || !*adjective) {
         /* normal case:  newt corpse */
@@ -1804,12 +1876,16 @@ unsigned cxn_flags; /* bitmask of CXN_xxx values */
     if (glob) {
         ; /* omit_corpse doesn't apply; quantity is always 1 */
     } else if (!omit_corpse) {
+#if 0 /*KR*/
         Strcat(nambuf, " corpse");
         /* makeplural(nambuf) => append "s" to "corpse" */
         if (otmp->quan > 1L && !ignore_quan) {
             Strcat(nambuf, "s");
             any_prefix = FALSE; /* avoid "a newt corpses" */
         }
+#else
+        Strcat(nambuf, "의 사체");
+#endif
     }
 
     /* it's safe to overwrite our nambuf after an() has copied
@@ -1890,13 +1966,16 @@ struct obj *obj;
            devnull tournament, suppress player supplied fruit names because
            those can be used to fake other objects and dungeon features */
         buf = nextobuf();
-        Sprintf(buf, "deadly slime mold%s", plur(obj->quan));
+        /*KR Sprintf(buf, "deadly slime mold%s", plur(obj->quan)); */
+        Strcpy(buf, "치명적인 점액질 곰팡이");
     } else {
         buf = xname(obj);
     }
     /* apply an article if appropriate; caller should always use KILLED_BY */
+#if 0 /*KR 한국어에서는 불필요 */
     if (obj->quan == 1L && !strstri(buf, "'s ") && !strstri(buf, "s' "))
         buf = (obj_is_pname(obj) || the_unique_obj(obj)) ? the(buf) : an(buf);
+#endif
 
     objects[obj->otyp].oc_name_known = save_ocknown;
     objects[obj->otyp].oc_uname = save_ocuname;
@@ -2015,6 +2094,7 @@ just_an(outbuf, str)
 char *outbuf;
 const char *str;
 {
+#if 0 /*KR 한국어에서는 부정관사는 불필요 */
     char c0;
 
     *outbuf = '\0';
@@ -2034,12 +2114,14 @@ const char *str;
         else
             Strcpy(outbuf, "a ");
     }
+#else
+    *outbuf = '\0';
+#endif
     return outbuf;
 }
 
 char *an(str) const char *str;
 {
-#if 0 /*KR*/
     char *buf = nextobuf();
 
     if (!str || !*str) {
@@ -2048,32 +2130,16 @@ char *an(str) const char *str;
     }
     (void) just_an(buf, str);
     return strcat(buf, str);
-#else
-    /* 한국어는 부정관사(a/an)를 사용하지 않습니다. */
-    char *buf = nextobuf();
-    if (str)
-        Strcpy(buf, str);
-    else
-        buf[0] = '\0';
-    return buf;
-#endif
 }
 
 char *An(str) const char *str;
 {
-#if 0 /*KR*/
     char *tmp = an(str);
 
+#if 0 /*KR 대문자화하지 않는다 */
     *tmp = highc(*tmp);
-    return tmp;
-#else
-    char *buf = nextobuf();
-    if (str)
-        Strcpy(buf, str);
-    else
-        buf[0] = '\0';
-    return buf;
 #endif
+    return tmp;
 }
 
 /*
@@ -3281,6 +3347,7 @@ int xtra_prob; /* to force 0% random generation items to also be considered */
     for (i = oclass ? bases[(int) oclass] : STRANGE_OBJECT + 1;
          i < NUM_OBJECTS && (!oclass || objects[i].oc_class == oclass);
          ++i) {
+#if 0 /*KR*/
         /* don't match extra descriptions (w/o real name) */
         if ((zn = OBJ_NAME(objects[i])) == 0)
             continue;
@@ -3292,6 +3359,27 @@ int xtra_prob; /* to force 0% random generation items to also be considered */
             validobjs[n++] = (short) i;
             maxprob += (objects[i].oc_prob + xtra_prob);
         }
+#else
+        const char *raw_zn;
+        /* don't match extra descriptions (w/o real name) */
+        if ((zn = OBJ_NAME(objects[i])) == 0)
+            continue;
+
+        raw_zn = RAW_OBJ_NAME(objects[i]); /* 영어 원본 이름 추출 */
+
+        /* 한글(zn)과 영어(raw_zn) 둘 다 검색을 허용! */
+        if (wishymatch(name, zn, TRUE)
+            || (raw_zn && wishymatch(name, raw_zn, TRUE))
+            || ((zn = OBJ_DESCR(objects[i])) != 0
+                && wishymatch(name, zn, FALSE))
+            || ((raw_zn = RAW_OBJ_DESCR(objects[i])) != 0
+                && wishymatch(name, raw_zn, FALSE))
+            || ((zn = objects[i].oc_uname) != 0
+                && wishymatch(name, zn, FALSE))) {
+            validobjs[n++] = (short) i;
+            maxprob += (objects[i].oc_prob + xtra_prob);
+        }
+#endif
     }
 
 
