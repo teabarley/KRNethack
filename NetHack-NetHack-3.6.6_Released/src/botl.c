@@ -105,14 +105,27 @@ do_statusline1()
     if ((i - j) > 0)
         Sprintf(nb = eos(nb), "%*s", i - j, " "); /* pad with spaces */
 
+#if 0 /*KR:T*/
     Sprintf(nb = eos(nb), "St:%s Dx:%-1d Co:%-1d In:%-1d Wi:%-1d Ch:%-1d",
             get_strength_str(),
             ACURR(A_DEX), ACURR(A_CON), ACURR(A_INT), ACURR(A_WIS),
             ACURR(A_CHA));
+#else
+    Sprintf(nb = eos(nb), "힘:%s 민첩:%-1d 건강:%-1d 지능:%-1d 지혜:%-1d 매력:%-1d",
+            get_strength_str(), ACURR(A_DEX), ACURR(A_CON), ACURR(A_INT),
+            ACURR(A_WIS), ACURR(A_CHA));
+#endif
+#if 0 /*KR:T*/
     Sprintf(nb = eos(nb),
             (u.ualign.type == A_CHAOTIC)
                 ? "  Chaotic"
                 : (u.ualign.type == A_NEUTRAL) ? "  Neutral" : "  Lawful");
+#else
+    Sprintf(nb = eos(nb), 
+            (u.ualign.type == A_CHAOTIC)   
+                ? "혼돈"
+                : (u.ualign.type == A_NEUTRAL) ? "중립" : "질서");
+#endif
 #ifdef SCORE_ON_BOTL
     if (flags.showscore)
         Sprintf(nb = eos(nb), " S:%ld", botl_score());
@@ -159,23 +172,32 @@ do_statusline2()
     hpmax = Upolyd ? u.mhmax : u.uhpmax;
     if (hp < 0)
         hp = 0;
+#if 0 /*KR:T*/
     Sprintf(hlth, "HP:%d(%d) Pw:%d(%d) AC:%-2d",
             min(hp, 9999), min(hpmax, 9999),
             min(u.uen, 9999), min(u.uenmax, 9999), u.uac);
+#else
+    Sprintf(hlth, "체력:%d(%d) 마력:%d(%d) AC:%-2d", 
+            min(hp, 9999), min(hpmax, 9999), 
+            min(u.uen, 9999), min(u.uenmax, 9999), u.uac);
+#endif
     hln = strlen(hlth);
 
     /* experience */
     if (Upolyd)
         Sprintf(expr, "HD:%d", mons[u.umonnum].mlevel);
     else if (flags.showexp)
-        Sprintf(expr, "Xp:%d/%-1ld", u.ulevel, u.uexp);
+        /*KR Sprintf(expr, "Xp:%d/%-1ld", u.ulevel, u.uexp); */
+        Sprintf(expr, "경험치:%d/%-1ld", u.ulevel, u.uexp);
     else
-        Sprintf(expr, "Exp:%d", u.ulevel);
+        /*KR Sprintf(expr, "Exp:%d", u.ulevel); */
+        Sprintf(expr, "경험치:%d", u.ulevel);
     xln = strlen(expr);
 
     /* time/move counter */
     if (flags.time)
-        Sprintf(tmmv, "T:%ld", moves);
+        /*KR Sprintf(tmmv, "T:%ld", moves); */
+        Sprintf(tmmv, "턴:%ld", moves);
     else
         tmmv[0] = '\0';
     tln = strlen(tmmv);
@@ -190,38 +212,51 @@ do_statusline2()
      * unusual for more than one of them to apply at a time.]
      */
     if (Stoned)
-        Strcpy(nb = eos(nb), " Stone");
+        /*KR Strcpy(nb = eos(nb), " Stone"); */
+        Strcpy(nb = eos(nb), " 석화");
     if (Slimed)
-        Strcpy(nb = eos(nb), " Slime");
+        /*KR Strcpy(nb = eos(nb), " Slime"); */
+        Strcpy(nb = eos(nb), " 슬라임");
     if (Strangled)
-        Strcpy(nb = eos(nb), " Strngl");
+        /*KR Strcpy(nb = eos(nb), " Strngl"); */
+        Strcpy(nb = eos(nb), " 질식");
     if (Sick) {
         if (u.usick_type & SICK_VOMITABLE)
-            Strcpy(nb = eos(nb), " FoodPois");
+            /*KR Strcpy(nb = eos(nb), " FoodPois"); */
+            Strcpy(nb = eos(nb), " 식중독");
         if (u.usick_type & SICK_NONVOMITABLE)
-            Strcpy(nb = eos(nb), " TermIll");
+            /*KR Strcpy(nb = eos(nb), " TermIll"); */
+            Strcpy(nb = eos(nb), " 질병");
     }
     if (u.uhs != NOT_HUNGRY)
         Sprintf(nb = eos(nb), " %s", hu_stat[u.uhs]);
     if ((cap = near_capacity()) > UNENCUMBERED)
         Sprintf(nb = eos(nb), " %s", enc_stat[cap]);
     if (Blind)
-        Strcpy(nb = eos(nb), " Blind");
+        /*KR Strcpy(nb = eos(nb), " Blind"); */
+        Strcpy(nb = eos(nb), " 실명");
     if (Deaf)
-        Strcpy(nb = eos(nb), " Deaf");
+        /*KR Strcpy(nb = eos(nb), " Deaf"); */
+        Strcpy(nb = eos(nb), " 귀멂");
     if (Stunned)
-        Strcpy(nb = eos(nb), " Stun");
+        /*KR Strcpy(nb = eos(nb), " Stun"); */
+        Strcpy(nb = eos(nb), " 기절");
     if (Confusion)
-        Strcpy(nb = eos(nb), " Conf");
+        /*KR Strcpy(nb = eos(nb), " Conf"); */
+        Strcpy(nb = eos(nb), " 혼란");
     if (Hallucination)
-        Strcpy(nb = eos(nb), " Hallu");
+        /*KR Strcpy(nb = eos(nb), " Hallu"); */
+        Strcpy(nb = eos(nb), " 환각");
     /* levitation and flying are mutually exclusive; riding is not */
     if (Levitation)
-        Strcpy(nb = eos(nb), " Lev");
+        /*KR Strcpy(nb = eos(nb), " Lev"); */
+        Strcpy(nb = eos(nb), " 부유");
     if (Flying)
-        Strcpy(nb = eos(nb), " Fly");
+        /*KR Strcpy(nb = eos(nb), " Fly"); */
+        Strcpy(nb = eos(nb), " 비행");
     if (u.usteed)
-        Strcpy(nb = eos(nb), " Ride");
+        /*KR Strcpy(nb = eos(nb), " Ride"); */
+        Strcpy(nb = eos(nb), " 탑승");
     cln = strlen(cond);
 
     /*
@@ -333,7 +368,8 @@ boolean female;
         return role->name.f;
     else if (role->name.m)
         return role->name.m;
-    return "Player";
+    /*KR return "Player"; */
+    return "플레이어";
 }
 
 STATIC_OVL const char *
@@ -418,15 +454,19 @@ char *buf;
     if (Is_knox(&u.uz)) {
         Sprintf(buf, "%s ", dungeons[u.uz.dnum].dname);
     } else if (In_quest(&u.uz)) {
-        Sprintf(buf, "Home %d ", dunlev(&u.uz));
+        /*KR Sprintf(buf, "Home %d ", dunlev(&u.uz)); */
+        Sprintf(buf, "고향 %d ", dunlev(&u.uz));
     } else if (In_endgame(&u.uz)) {
         /* [3.6.2: this used to be "Astral Plane" or generic "End Game"] */
         (void) endgamelevelname(buf, depth(&u.uz));
+#if 0 /*KR*/
         (void) strsubst(buf, "Plane of ", ""); /* just keep <element> */
+#endif
         Strcat(buf, " ");
     } else {
         /* ports with more room may expand this one */
-        Sprintf(buf, "Dlvl:%-2d ", depth(&u.uz));
+        /*KR Sprintf(buf, "Dlvl:%-2d ", depth(&u.uz)); */
+        Sprintf(buf, "지하:%-2d ", depth(&u.uz));
         ret = 0;
     }
     return ret;
@@ -541,25 +581,36 @@ STATIC_DCL boolean FDECL(status_hilite_menu_add, (int));
    involved isn't a direct 100*current/maximum calculation. */
 STATIC_VAR struct istat_s initblstats[MAXBLSTATS] = {
     INIT_BLSTAT("title", "%s", ANY_STR, MAXVALWIDTH, BL_TITLE),
-    INIT_BLSTAT("strength", " St:%s", ANY_INT, 10, BL_STR),
+/*KR INIT_BLSTAT("strength", " St:%s", ANY_INT, 10, BL_STR),
     INIT_BLSTAT("dexterity", " Dx:%s", ANY_INT,  10, BL_DX),
     INIT_BLSTAT("constitution", " Co:%s", ANY_INT, 10, BL_CO),
     INIT_BLSTAT("intelligence", " In:%s", ANY_INT, 10, BL_IN),
     INIT_BLSTAT("wisdom", " Wi:%s", ANY_INT, 10, BL_WI),
-    INIT_BLSTAT("charisma", " Ch:%s", ANY_INT, 10, BL_CH),
+    INIT_BLSTAT("charisma", " Ch:%s", ANY_INT, 10, BL_CH), */
+    INIT_BLSTAT("strength", " 힘:%s", ANY_INT, 10, BL_STR),
+    INIT_BLSTAT("dexterity", " 민첩:%s", ANY_INT,  10, BL_DX),
+    INIT_BLSTAT("constitution", " 건강:%s", ANY_INT, 10, BL_CO),
+    INIT_BLSTAT("intelligence", " 지능:%s", ANY_INT, 10, BL_IN),
+    INIT_BLSTAT("wisdom", " 지혜:%s", ANY_INT, 10, BL_WI),
+    INIT_BLSTAT("charisma", " 매력:%s", ANY_INT, 10, BL_CH),
     INIT_BLSTAT("alignment", " %s", ANY_STR, 40, BL_ALIGN),
     INIT_BLSTAT("score", " S:%s", ANY_LONG, 20, BL_SCORE),
     INIT_BLSTAT("carrying-capacity", " %s", ANY_INT, 20, BL_CAP),
     INIT_BLSTAT("gold", " %s", ANY_LONG, 30, BL_GOLD),
-    INIT_BLSTATP("power", " Pw:%s", ANY_INT, 10, BL_ENEMAX, BL_ENE),
+    /*KR INIT_BLSTATP("power", " Pw:%s", ANY_INT, 10, BL_ENEMAX, BL_ENE), */
+    INIT_BLSTATP("power", " 마력:%s", ANY_INT, 10, BL_ENEMAX, BL_ENE),
     INIT_BLSTAT("power-max", "(%s)", ANY_INT, 10, BL_ENEMAX),
-    INIT_BLSTATP("experience-level", " Xp:%s", ANY_INT, 10, BL_EXP, BL_XP),
+/*KR INIT_BLSTATP("experience-level", " Xp:%s", ANY_INT, 10, BL_EXP, BL_XP),
+    INIT_BLSTAT("armor-class", " AC:%s", ANY_INT, 10, BL_AC), */
+    INIT_BLSTATP("experience-level", " 경험:%s", ANY_INT, 10, BL_EXP, BL_XP),
     INIT_BLSTAT("armor-class", " AC:%s", ANY_INT, 10, BL_AC),
     INIT_BLSTAT("HD", " HD:%s", ANY_INT, 10, BL_HD),
-    INIT_BLSTAT("time", " T:%s", ANY_LONG, 20, BL_TIME),
+    /*KR INIT_BLSTAT("time", " T:%s", ANY_LONG, 20, BL_TIME), */
+    INIT_BLSTAT("time", " 턴:%s", ANY_LONG, 20, BL_TIME),
     /* hunger used to be 'ANY_UINT'; see note below in bot_via_windowport() */
     INIT_BLSTAT("hunger", " %s", ANY_INT, 40, BL_HUNGER),
-    INIT_BLSTATP("hitpoints", " HP:%s", ANY_INT, 10, BL_HPMAX, BL_HP),
+    /*KR INIT_BLSTATP("hitpoints", " HP:%s", ANY_INT, 10, BL_HPMAX, BL_HP), */
+    INIT_BLSTATP("hitpoints", " 체력:%s", ANY_INT, 10, BL_HPMAX, BL_HP),
     INIT_BLSTAT("hitpoints-max", "(%s)", ANY_INT, 10, BL_HPMAX),
     INIT_BLSTAT("dungeon-level", "%s", ANY_STR, MAXVALWIDTH, BL_LEVELDESC),
     INIT_BLSTATP("experience", "/%s", ANY_LONG, 20, BL_EXP, BL_EXP),
@@ -686,11 +737,19 @@ bot_via_windowport()
     blstats[idx][BL_CH].a.a_int = ACURR(A_CHA);
 
     /* Alignment */
+#if 0 /*KR:T*/
     Strcpy(blstats[idx][BL_ALIGN].val, (u.ualign.type == A_CHAOTIC)
                                           ? "Chaotic"
                                           : (u.ualign.type == A_NEUTRAL)
                                                ? "Neutral"
                                                : "Lawful");
+#else
+    Strcpy(blstats[idx][BL_ALIGN].val, (u.ualign.type == A_CHAOTIC)
+                                          ? "혼돈"
+                                          : (u.ualign.type == A_NEUTRAL)
+                                              ? "중립"
+                                              : "질서");
+#endif
 
     /* Score */
     blstats[idx][BL_SCORE].a.a_long =

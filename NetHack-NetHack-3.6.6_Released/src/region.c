@@ -871,15 +871,23 @@ genericptr_t p2;
 
     if (p2 == (genericptr_t) 0) { /* That means the player */
         if (!Blind)
+#if 0 /*KR*/
             You("bump into %s.  Ouch!",
                 Hallucination ? "an invisible tree"
                               : "some kind of invisible wall");
+#else
+            You("%s에 부딪혔다. 아야!",
+                Hallucination ? "보이지 않는 나무" 
+                              : "무언가 눈에 보이지 않는 벽");
+#endif
         else
-            pline("Ouch!");
+            /*KR pline("Ouch!"); */
+            pline("아야!");
     } else {
         mtmp = (struct monst *) p2;
         if (canseemon(mtmp))
-            pline("%s bumps into %s!", Monnam(mtmp), something);
+            /*KR pline("%s bumps into %s!", Monnam(mtmp), something); */
+            pline("%s이(가) %s에 부딪혔다!", Monnam(mtmp), something);
     }
     return FALSE;
 }
@@ -973,17 +981,25 @@ genericptr_t p2;
             || Underwater)
             return FALSE;
         if (!Blind) {
-            Your("%s sting.", makeplural(body_part(EYE)));
+            /*KR Your("%s sting.", makeplural(body_part(EYE))); */
+            Your("%s이 쿡쿡 쑤신다.", makeplural(body_part(EYE)));
             make_blinded(1L, FALSE);
         }
         if (!Poison_resistance) {
+#if 0 /*KR:T*/
             pline("%s is burning your %s!", Something,
                   makeplural(body_part(LUNG)));
-            You("cough and spit blood!");
-            losehp(Maybe_Half_Phys(rnd(dam) + 5), "gas cloud", KILLED_BY_AN);
+#else
+            pline("무언가 이상한 것을 들이마셨다!");
+#endif
+            /*KR You("cough and spit blood!"); */
+            You("기침하고 피를 토했다!");
+            /*KR losehp(Maybe_Half_Phys(rnd(dam) + 5), "gas cloud", KILLED_BY_AN); */
+            losehp(Maybe_Half_Phys(rnd(dam) + 5), "가스 구름으로", KILLED_BY_AN);
             return FALSE;
         } else {
-            You("cough!");
+            /*KR You("cough!"); */
+            You("기침했다!");
             return FALSE;
         }
     } else { /* A monster is inside the cloud */
@@ -1004,7 +1020,8 @@ genericptr_t p2;
             && !(attacktype_fordmg(mtmp->data, AT_BREA, AD_DRST)
                  || attacktype_fordmg(mtmp->data, AT_BREA, AD_RBRE))) {
             if (cansee(mtmp->mx, mtmp->my))
-                pline("%s coughs!", Monnam(mtmp));
+                /*KR pline("%s coughs!", Monnam(mtmp)); */
+                pline("%s이(가) 기침했다!", Monnam(mtmp));
             if (heros_fault(reg))
                 setmangry(mtmp, TRUE);
             if (haseyes(mtmp->data) && mtmp->mcansee) {
@@ -1018,7 +1035,8 @@ genericptr_t p2;
                 if (heros_fault(reg))
                     killed(mtmp);
                 else
-                    monkilled(mtmp, "gas cloud", AD_DRST);
+                    /*KR monkilled(mtmp, "gas cloud", AD_DRST); */
+                    monkilled(mtmp, "가스 구름", AD_DRST);
                 if (DEADMONSTER(mtmp)) { /* not lifesaved */
                     return TRUE;
                 }
@@ -1115,10 +1133,12 @@ region_safety()
         safe_teleds(FALSE);
     } else if (r) {
         remove_region(r);
-        pline_The("gas cloud enveloping you dissipates.");
+        /*KR pline_The("gas cloud enveloping you dissipates."); */
+        pline("당신을 둘러싸고 있던 가스 구름이 사라졌다.");
     } else {
         /* cloud dissipated on its own, so nothing needs to be done */
-        pline_The("gas cloud has dissipated.");
+        /*KR pline_The("gas cloud has dissipated."); */
+        pline("가스 구름이 사라졌다.");
     }
     /* maybe cure blindness too */
     if ((Blinded & TIMEOUT) == 1L)

@@ -547,7 +547,7 @@ unsigned cxn_flags; /* bitmask of CXN_xxx values */
 #if 1 /*KR*/
     if (has_oname(obj) && dknown) {
         Strcat(buf, ONAME(obj));
-        Strcat(buf, "(이)라 이름붙인");
+        Strcat(buf, " (이)라 이름붙인 ");
     }
 #endif
     switch (obj->oclass) {
