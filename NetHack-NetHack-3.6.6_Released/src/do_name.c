@@ -1746,6 +1746,10 @@ boolean called;
     boolean name_at_start, has_adjectives;
     char *bp;
 
+#if 1 /*KR: 몬스터 이름 한글 번역 사전 가로채기 */
+    pm_name = get_kr_name(pm_name);
+#endif
+
     if (program_state.gameover)
         suppress |= SUPPRESS_HALLUCINATION;
     if (article == ARTICLE_YOUR && !mtmp->mtame)

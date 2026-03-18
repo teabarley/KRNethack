@@ -5,14 +5,25 @@
 
 #include "hack.h"
 
+#if 0 /*KR 미사용 */
 static NEARDATA const char see_yourself[] = "see yourself";
+#endif
 static NEARDATA const char unknown_type[] = "Unknown type of %s (%d)";
+#if 0 /*KR:T*/
 static NEARDATA const char c_armor[] = "armor", c_suit[] = "suit",
                            c_shirt[] = "shirt", c_cloak[] = "cloak",
                            c_gloves[] = "gloves", c_boots[] = "boots",
                            c_helmet[] = "helmet", c_shield[] = "shield",
                            c_weapon[] = "weapon", c_sword[] = "sword",
                            c_axe[] = "axe", c_that_[] = "that";
+#else
+static NEARDATA const char c_armor[] = "갑옷", c_suit[] = "옷",
+                           c_shirt[] = "셔츠", c_cloak[] = "망토",
+                           c_gloves[] = "장갑", c_boots[] = "신발",
+                           c_helmet[] = "투구", c_shield[] = "방패",
+                           c_weapon[] = "무기", c_sword[] = "검",
+                           c_axe[] = "도끼", c_that_[] = "그것";
+#endif
 
 static NEARDATA const long takeoff_order[] = {
     WORN_BLINDF, W_WEP,      WORN_SHIELD, WORN_GLOVES, LEFT_RING,
@@ -41,7 +52,11 @@ STATIC_DCL int FDECL(menu_remarm, (int));
 STATIC_DCL void FDECL(count_worn_stuff, (struct obj **, BOOLEAN_P));
 STATIC_PTR int FDECL(armor_or_accessory_off, (struct obj *));
 STATIC_PTR int FDECL(accessory_or_armor_on, (struct obj *));
+#if 0 /*KR*/
 STATIC_DCL void FDECL(already_wearing, (const char *));
+#else
+STATIC_DCL void FDECL(already_wearing, (const char *, struct obj *));
+#endif
 STATIC_DCL void FDECL(already_wearing2, (const char *, const char *));
 
 /* plural "fingers" or optionally "gloves" */
@@ -107,13 +122,17 @@ boolean on;
 
         if (on) {
             if (!is_boots(obj))
-                You("move very quietly.");
+                /*KR You("move very quietly."); */
+                Your("조용히 움직이게 되었다.");
             else if (Levitation || Flying)
-                You("float imperceptibly.");
+                /*KR You("float imperceptibly."); */
+                You("어느샌가 공중에 떠 있었다.");
             else
-                You("walk very quietly.");
+                /*KR You("walk very quietly."); */
+                Your("발소리가 작아졌다.");
         } else {
-            You("sure are noisy.");
+            /*KR You("sure are noisy."); */
+            Your("발소리가 커졌다.");
         }
     }
 }
@@ -148,8 +167,13 @@ boolean on;
                 || Detect_monsters))) {
         makeknown(obj->otyp);
 
+#if 0 /*KR:T*/
         You_feel("that monsters%s have difficulty pinpointing your location.",
                  on ? "" : " no longer");
+#else
+        pline("괴물들이 당신의 위치를 확실히 알 %s 된 것 같다.",
+                 on ? "수 없게" : "수 있게");
+#endif
     }
 }
 
@@ -183,8 +207,13 @@ Boots_on(VOID_ARGS)
         /* though not better than potion speed */
         if (!oldprop && !(HFast & TIMEOUT)) {
             makeknown(uarmf->otyp);
+#if 0 /*KR:T*/
             You_feel("yourself speed up%s.",
                      (oldprop || HFast) ? " a bit more" : "");
+#else
+            You("%s빨라진 기분이 든다.",
+                     (oldprop || HFast) ? "훨씬 더 " : "");
+#endif
         }
         break;
     case ELVEN_BOOTS:
@@ -233,7 +262,8 @@ Boots_off(VOID_ARGS)
     case SPEED_BOOTS:
         if (!Very_fast && !context.takeoff.cancelled_don) {
             makeknown(otyp);
-            You_feel("yourself slow down%s.", Fast ? " a bit" : "");
+            /*KR You_feel("yourself slow down%s.", Fast ? " a bit" : ""); */
+            You("%s느려진 기분이 든다.", Fast ? "조금 " : "");
         }
         break;
     case WATER_WALKING_BOOTS:
@@ -303,8 +333,13 @@ Cloak_on(VOID_ARGS)
         /* Note: it's already being worn, so we have to cheat here. */
         if ((HInvis || EInvis) && !Blind) {
             newsym(u.ux, u.uy);
+#if 0 /*KR:T*/
             You("can %s!", See_invisible ? "no longer see through yourself"
                                          : see_yourself);
+#else
+            You("자기 자신이%s!", See_invisible ? " 보이지 않게 되었다"
+                                           : " 보이게 되었다");
+#endif
         }
         break;
     case CLOAK_OF_INVISIBILITY:
@@ -313,12 +348,18 @@ Cloak_on(VOID_ARGS)
         if (!oldprop && !HInvis && !Blind) {
             makeknown(uarmc->otyp);
             newsym(u.ux, u.uy);
+#if 0 /*KR:T*/
             pline("Suddenly you can%s yourself.",
                   See_invisible ? " see through" : "not see");
+#else
+            pline("갑자기 당신은 자기 자신이 %s.",
+                  See_invisible ? "보이게 되었다" : "보이지 않게 되었다");
+#endif
         }
         break;
     case OILSKIN_CLOAK:
-        pline("%s very tightly.", Tobjnam(uarmc, "fit"));
+        /*KR pline("%s very tightly.", Tobjnam(uarmc, "fit")); */
+        pline("%s은(는) 너무 딱 조인다.", xname(uarmc));
         break;
     /* Alchemy smock gives poison _and_ acid resistance */
     case ALCHEMY_SMOCK:
@@ -360,17 +401,28 @@ Cloak_off(VOID_ARGS)
     case MUMMY_WRAPPING:
         if (Invis && !Blind) {
             newsym(u.ux, u.uy);
+#if 0 /*KR:T*/
             You("can %s.", See_invisible ? "see through yourself"
                                          : "no longer see yourself");
+#else
+            You("can %s.", See_invisible ? "see through yourself"
+                                         : "no longer see yourself");
+#endif
         }
         break;
     case CLOAK_OF_INVISIBILITY:
         if (!oldprop && !HInvis && !Blind) {
             makeknown(CLOAK_OF_INVISIBILITY);
             newsym(u.ux, u.uy);
+#if 0 /*KR:T*/
             pline("Suddenly you can %s.",
                   See_invisible ? "no longer see through yourself"
                                 : see_yourself);
+#else
+            pline("갑자기, 당신은 자기 자신이 %s.",
+                  See_invisible ? "보이지 않게 되었다"
+                                : "보이게 되었다");
+#endif    
         }
         break;
     /* Alchemy smock gives poison _and_ acid resistance */
@@ -1658,12 +1710,54 @@ struct obj *otmp;
     return 1;
 }
 
+#if 0 /*KR*/
 STATIC_OVL void
 already_wearing(cc)
 const char *cc;
 {
     You("are already wearing %s%c", cc, (cc == c_that_) ? '!' : '.');
 }
+#else
+/* 한국어 맞춤형 장착 동사 반환 함수 */
+STATIC_OVL const char *
+kr_wear_verb(otmp)
+struct obj *otmp;
+{
+    if (!otmp)
+        return "장비하고";
+
+    /* 부위에 따라 알맞은 동사를 반환합니다 */
+    if (is_helmet(otmp))
+        return "쓰고";
+    if (is_boots(otmp))
+        return "신고";
+    if (is_gloves(otmp) || otmp->oclass == RING_CLASS
+        || otmp->otyp == MEAT_RING)
+        return "끼고";
+    if (is_shield(otmp) || is_sword(otmp) || is_weptool(otmp)
+        || otmp->oclass == WEAPON_CLASS)
+        return "들고";
+    if (is_suit(otmp) || is_shirt(otmp) || is_cloak(otmp))
+        return "입고";
+
+    /* 기본값 */
+    return "장비하고";
+}
+
+STATIC_OVL void already_wearing(cc, otmp) const char *cc;
+struct obj *otmp;
+{
+    const char *josa =
+        "(을)를"; /* 아직 완벽한 조사 처리기가 없다면 임시로 사용 */
+
+    /* "그것"인 경우 느낌표(!), 아니면 마침표(.)를 찍습니다. */
+    if (!strcmp(cc, "그것")) {
+        You("이미 %s%s %s 있습니다!", cc, josa, kr_wear_verb(otmp));
+    } else {
+        You("이미 %s%s %s 있습니다.", cc, josa, kr_wear_verb(otmp));
+    }
+}
+#endif
 
 STATIC_OVL void
 already_wearing2(cc1, cc2)
@@ -1712,7 +1806,11 @@ boolean noisy;
         return 0;
     } else if (otmp->owornmask & W_ARMOR) {
         if (noisy)
+#if 0 /*KR*/
             already_wearing(c_that_);
+#else
+            already_wearing(c_that_, otmp);
+#endif
         return 0;
     }
 
@@ -1726,7 +1824,11 @@ boolean noisy;
     if (is_helmet(otmp)) {
         if (uarmh) {
             if (noisy)
+#if 0 /*KR*/
                 already_wearing(an(helm_simple_name(uarmh)));
+#else
+                already_wearing(helm_simple_name(uarmh), uarmh);
+#endif           
             err++;
         } else if (Upolyd && has_horns(youmonst.data) && !is_flimsy(otmp)) {
             /* (flimsy exception matches polyself handling) */
@@ -1740,7 +1842,11 @@ boolean noisy;
     } else if (is_shield(otmp)) {
         if (uarms) {
             if (noisy)
+#if 0 /*KR*/
                 already_wearing(an(c_shield));
+#else
+                already_wearing(c_shield, uarms);
+#endif
             err++;
         } else if (uwep && bimanual(uwep)) {
             if (noisy)
@@ -1758,7 +1864,11 @@ boolean noisy;
     } else if (is_boots(otmp)) {
         if (uarmf) {
             if (noisy)
+#if 0 /*KR*/
                 already_wearing(c_boots);
+#else
+                already_wearing(c_boots, uarmf);
+#endif
             err++;
         } else if (Upolyd && slithy(youmonst.data)) {
             if (noisy)
@@ -1794,7 +1904,11 @@ boolean noisy;
     } else if (is_gloves(otmp)) {
         if (uarmg) {
             if (noisy)
+#if 0 /*KR*/
                 already_wearing(c_gloves);
+#else
+                already_wearing(c_gloves, uarmg);
+#endif
             err++;
         } else if (welded(uwep)) {
             if (noisy)
@@ -1814,7 +1928,11 @@ boolean noisy;
         if (uarm || uarmc || uarmu) {
             if (uarmu) {
                 if (noisy)
+#if 0 /*KR*/
                     already_wearing(an(c_shirt));
+#else
+                    already_wearing(c_shirt, uarmu);
+#endif
             } else {
                 if (noisy)
                     You_cant("wear that over your %s.",
@@ -1827,7 +1945,8 @@ boolean noisy;
     } else if (is_cloak(otmp)) {
         if (uarmc) {
             if (noisy)
-                already_wearing(an(cloak_simple_name(uarmc)));
+           /*KR already_wearing(an(cloak_simple_name(uarmc))); */
+                already_wearing(cloak_simple_name(uarmc), otmp);
             err++;
         } else
             *mask = W_ARMC;
@@ -1838,7 +1957,8 @@ boolean noisy;
             err++;
         } else if (uarm) {
             if (noisy)
-                already_wearing("some armor");
+                /*KR already_wearing("some armor"); */
+                already_wearing("갑옷", uarm);
             err++;
         } else
             *mask = W_ARM;
@@ -1869,7 +1989,11 @@ struct obj *obj;
     boolean armor, ring, eyewear;
 
     if (obj->owornmask & (W_ACCESSORY | W_ARMOR)) {
+#if 0 /*KR*/
         already_wearing(c_that_);
+#else
+        already_wearing(c_that_, obj);
+#endif
         return 0;
     }
     armor = (obj->oclass == ARMOR_CLASS);
@@ -1959,7 +2083,8 @@ struct obj *obj;
             }
         } else if (obj->oclass == AMULET_CLASS) {
             if (uamul) {
-                already_wearing("an amulet");
+                /*KR already_wearing("an amulet"); */
+                already_wearing("부적", uamul);
                 return 0;
             }
         } else if (eyewear) {
@@ -1969,16 +2094,30 @@ struct obj *obj;
                          body_part(FACE));
                 else if (ublindf->otyp == BLINDFOLD) {
                     if (obj->otyp == LENSES)
-                        already_wearing2("lenses", "a blindfold");
+                        /*KR already_wearing2("lenses", "a blindfold"); */
+                        already_wearing2("렌즈", "눈가리개");
                     else
+#if 0 /*KR*/
                         already_wearing("a blindfold");
+#else
+                        already_wearing("눈가리개", ublindf);
+#endif
                 } else if (ublindf->otyp == LENSES) {
                     if (obj->otyp == BLINDFOLD)
-                        already_wearing2("a blindfold", "some lenses");
+                        /*KR already_wearing2("a blindfold", "some lenses"); */
+                        already_wearing2("눈가리개", "렌즈");
                     else
+#if 0 /*KR*/
                         already_wearing("some lenses");
+#else
+                        already_wearing("렌즈", ublindf);
+#endif
                 } else {
+#if 0 /*KR*/
                     already_wearing(something); /* ??? */
+#else
+                    already_wearing("무언가", ublindf); /* ??? */
+#endif
                 }
                 return 0;
             }

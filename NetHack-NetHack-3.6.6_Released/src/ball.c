@@ -25,7 +25,8 @@ boolean showmsg;
 {
     if (carried(uball)) {
         if (showmsg)
-            pline("Startled, you drop the iron ball.");
+            /*KR pline("Startled, you drop the iron ball."); */
+            pline("±ôÂ¦ ³î¶ó¼­, ´ç½ÅÀº Ã¶°øÀ» ¶³¾î¶ß·È´Ù.");
         if (uwep == uball)
             setuwep((struct obj *) 0);
         if (uswapwep == uball)
@@ -51,16 +52,24 @@ ballfall()
     if (gets_hit) {
         int dmg = rn1(7, 25);
 
-        pline_The("iron ball falls on your %s.", body_part(HEAD));
+        /*KR pline_The("iron ball falls on your %s.", body_part(HEAD)); */
+        pline("Ã¶°øÀÌ ´ç½ÅÀÇ %s À§¿¡ ¶³¾îÁ³´Ù.", body_part(HEAD));
         if (uarmh) {
             if (is_metallic(uarmh)) {
-                pline("Fortunately, you are wearing a hard helmet.");
+                /*KR pline("Fortunately, you are wearing a hard helmet."); */
+                pline("´ÙÇàÈ÷µµ, ´ç½ÅÀº ´Ü´ÜÇÑ Åõ±¸¸¦ ¾²°í ÀÖ¾ú´Ù.");
                 dmg = 3;
             } else if (flags.verbose)
-                pline("%s does not protect you.", Yname2(uarmh));
+                /*KR pline("%s does not protect you.", Yname2(uarmh)); */
+                Your("%s(À¸)·Î´Â º¸È£¹ÞÀ» ¼ö ¾ø¾ú´Ù.", xname(uarmh));
         }
+#if 0 /*KR*/
         losehp(Maybe_Half_Phys(dmg), "crunched in the head by an iron ball",
                NO_KILLER_PREFIX);
+#else
+        losehp(Maybe_Half_Phys(dmg), "Ã¶°ø¿¡ ¸Ó¸®¸¦ ¸Â¾Æ À¸±úÁ³´Ù",
+               KILLED_BY);
+#endif
     }
 }
 
@@ -785,8 +794,13 @@ boolean allow_drag;
  drag:
 
     if (near_capacity() > SLT_ENCUMBER && dist2(x, y, u.ux, u.uy) <= 2) {
+#if 0 /*KR:T*/
         You("cannot %sdrag the heavy iron ball.",
             invent ? "carry all that and also " : "");
+#else
+        You("%s¹«°Å¿î Ã¶°øÀ» ²ø ¼ö´Â ¾ø´Ù.",
+            invent ? "±×¸¸ÇÑ ÁüÀ» µç Ã¤·Î " : "");
+#endif
         nomul(0);
         return FALSE;
     }
@@ -799,13 +813,15 @@ boolean allow_drag;
         || ((t = t_at(uchain->ox, uchain->oy))
             && (is_pit(t->ttyp) || is_hole(t->ttyp)))) {
         if (Levitation) {
-            You_feel("a tug from the iron ball.");
+            /*KR You_feel("a tug from the iron ball."); */
+            You("Ã¶°ø¿¡ ²ø·Á°¬´Ù.");
             if (t)
                 t->tseen = 1;
         } else {
             struct monst *victim;
 
-            You("are jerked back by the iron ball!");
+            /*KR You("are jerked back by the iron ball!"); */
+            You("Ã¶±¸¿¡ È´ ²ø·Á°¬´Ù!");
             if ((victim = m_at(uchain->ox, uchain->oy)) != 0) {
                 int tmp;
                 int dieroll = rnd(20);
@@ -901,6 +917,7 @@ xchar x, y;
     }
 
     if (x != u.ux || y != u.uy) {
+        /*KR static const char *pullmsg = "The ball pulls you out of the %s!"; */
         static const char *pullmsg = "The ball pulls you out of the %s!";
         struct trap *t;
         long side;

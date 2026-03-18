@@ -5,34 +5,10 @@
 
 #include "hack.h"
 
-/* --- KRNethack 번역 사전 시작 --- */
+/* --- KRNethack 번역 출력 가로채기 --- */
 #if 1
 #undef OBJ_NAME
 #undef OBJ_DESCR
-
-/* 번역 사전 함수 (여기에 단어를 계속 추가하시면 됩니다) */
-char *
-get_kr_name(const char *en_name)
-{
-    if (!en_name)
-        return (char *) en_name;
-
-    /* 무기 */
-    if (!strcmp(en_name, "long sword"))
-        return "롱 소드";
-    if (!strcmp(en_name, "dagger"))
-        return "단검";
-
-    /* 물약 색상 (a색 물약 문제 해결용) */
-    if (!strcmp(en_name, "ruby"))
-        return "루비";
-    if (!strcmp(en_name, "aquamarine"))
-        return "아쿠아마린";
-
-    /* 필요한 단어를 계속 추가하세요 */
-
-    return (char *) en_name; /* 사전에 없으면 원래 영어 반환 */
-}
 
 /* 엔진은 영어 원본을 기억하게 합니다 */
 #define RAW_OBJ_NAME(obj) (obj_descr[(obj).oc_name_idx].oc_name)
@@ -42,7 +18,7 @@ get_kr_name(const char *en_name)
 #define OBJ_NAME(obj) get_kr_name(RAW_OBJ_NAME(obj))
 #define OBJ_DESCR(obj) get_kr_name(RAW_OBJ_DESCR(obj))
 #endif
-/* --- KRNethack 번역 사전 끝 --- */
+/* --- KRNethack 번역 출력 가로채기 끝 --- */
 
 /* "an uncursed greased partly eaten guardian naga hatchling [corpse]" */
 #define PREFIX 80 /* (56) */
@@ -614,7 +590,7 @@ unsigned cxn_flags; /* bitmask of CXN_xxx values */
     case TOOL_CLASS:
 #if 1 /*KR*/
         if (typ == FIGURINE)
-            Sprintf(eos(buf), "%s의 ", mons[obj->corpsenm].mname);
+            Sprintf(eos(buf), "%s의 ", get_kr_name(mons[obj->corpsenm].mname));
 #endif
         if (typ == LENSES)
             /*KR Strcpy(buf, "pair of "); */
@@ -790,7 +766,7 @@ unsigned cxn_flags; /* bitmask of CXN_xxx values */
                 (Role_if(PM_ARCHEOLOGIST) && (obj->spe& STATUE_HISTORIC))
                 ? "역사적인"
                 : "",
-                mons[obj->corpsenm].mname, actualn);
+                get_kr_name(mons[obj->corpsenm].mname), actualn);
 #endif
         } else
 #if 0 /*KR*/
@@ -1828,10 +1804,20 @@ unsigned cxn_flags; /* bitmask of CXN_xxx values */
         /*KR mname = "priest"; */
         mname = "사제";
     } else {
+#if 0 /*KR*/
         mname = mons[omndx].mname;
         if (the_unique_pm(&mons[omndx]) || type_is_pname(&mons[omndx])) {
             mname = s_suffix(mname);
             possessive = TRUE;
+#else
+        /* 몬스터 이름을 한글로 변환합니다. */
+        mname = get_kr_name(mons[omndx].mname);
+        if (the_unique_pm(&mons[omndx]) || type_is_pname(&mons[omndx])) {
+            /* 한국어는 뒤에서 "의 사체"를 일괄적으로 붙일 것이므로
+             * s_suffix("~'s")를 씌우지 않으며, 어순을 꼬는 possessive도 쓰지
+             * 않습니다. */
+            possessive = FALSE;
+#endif
             /* don't precede personal name like "Medusa" with an article */
             if (type_is_pname(&mons[omndx]))
                 no_prefix = TRUE;
