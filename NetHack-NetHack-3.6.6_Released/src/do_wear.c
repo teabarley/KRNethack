@@ -1710,7 +1710,7 @@ struct obj *otmp;
     return 1;
 }
 
-#if 0 /*KR*/
+#if 0 /*KR: 원본 코드*/
 STATIC_OVL void
 already_wearing(cc)
 const char *cc;
@@ -1747,14 +1747,14 @@ struct obj *otmp;
 STATIC_OVL void already_wearing(cc, otmp) const char *cc;
 struct obj *otmp;
 {
-    const char *josa =
-        "(을)를"; /* 아직 완벽한 조사 처리기가 없다면 임시로 사용 */
-
-    /* "그것"인 경우 느낌표(!), 아니면 마침표(.)를 찍습니다. */
+    /* append_josa를 통해 cc("그것", "가죽 모자" 등)에 알맞은 을/를을
+     * 붙여줍니다! */
     if (!strcmp(cc, "그것")) {
-        You("이미 %s%s %s 있습니다!", cc, josa, kr_wear_verb(otmp));
+        You("이미 %s %s 있습니다!", append_josa(cc, "을"),
+            kr_wear_verb(otmp));
     } else {
-        You("이미 %s%s %s 있습니다.", cc, josa, kr_wear_verb(otmp));
+        You("이미 %s %s 있습니다.", append_josa(cc, "을"),
+            kr_wear_verb(otmp));
     }
 }
 #endif
@@ -1763,7 +1763,16 @@ STATIC_OVL void
 already_wearing2(cc1, cc2)
 const char *cc1, *cc2;
 {
+#if 0 /*KR: 원본*/
     You_cant("wear %s because you're wearing %s there already.", cc1, cc2);
+#else
+    /* 예: "이미 망토를 입고 있어서 갑옷을 입을 수 없다."
+     * cc2가 이미 입고 있는 것, cc1이 새로 입으려는 것입니다.
+     * You_cant는 "당신은 ~할 수 없다"로 번역되므로 pline으로 깔끔하게
+     * 처리합니다. */
+    pline("이미 %s 장비하고 있기 때문에 %s 장비할 수 없습니다.",
+          append_josa(cc2, "을"), append_josa(cc1, "을"));
+#endif
 }
 
 /*
@@ -1786,7 +1795,8 @@ boolean noisy;
        in case we get here via 'P' (doputon) */
     if (verysmall(youmonst.data) || nohands(youmonst.data)) {
         if (noisy)
-            You("can't wear any armor in your current form.");
+       /*KR You("can't wear any armor in your current form."); */
+            You("현재 모습으로는 방어구를 착용할 수 없다.");
         return 0;
     }
 
@@ -1802,7 +1812,8 @@ boolean noisy;
         && (which != c_cloak || youmonst.data->msize != MZ_SMALL)
         && (racial_exception(&youmonst, otmp) < 1)) {
         if (noisy)
-            pline_The("%s will not fit on your body.", which);
+       /*KR pline_The("%s will not fit on your body.", which); */
+            pline("%s 당신의 몸에 맞지 않는다.", append_josa(which, "은"));
         return 0;
     } else if (otmp->owornmask & W_ARMOR) {
         if (noisy)
@@ -1816,8 +1827,9 @@ boolean noisy;
 
     if (welded(uwep) && bimanual(uwep) && (is_suit(otmp) || is_shirt(otmp))) {
         if (noisy)
-            You("cannot do that while holding your %s.",
-                is_sword(uwep) ? c_sword : c_weapon);
+            /*KR You("cannot do that while holding your %s.", */
+            pline("%s 들고 있는 채로는 그것을 할 수 없다.",
+                append_josa((is_sword(uwep) ? c_sword : c_weapon), "을"));
         return 0;
     }
 
@@ -1833,9 +1845,14 @@ boolean noisy;
         } else if (Upolyd && has_horns(youmonst.data) && !is_flimsy(otmp)) {
             /* (flimsy exception matches polyself handling) */
             if (noisy)
+#if 0 /*KR:T*/
                 pline_The("%s won't fit over your horn%s.",
                           helm_simple_name(otmp),
                           plur(num_horns(youmonst.data)));
+#else
+                pline("뿔이 방해가 되서 %s 쓸 수 없다.",
+                      append_josa((helm_simple_name(otmp)), "을"));
+#endif
             err++;
         } else
             *mask = W_ARMH;

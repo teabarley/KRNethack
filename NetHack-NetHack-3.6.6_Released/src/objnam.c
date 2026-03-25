@@ -579,7 +579,7 @@ unsigned cxn_flags; /* bitmask of CXN_xxx values */
             Sprintf(buf, "%s라 불리는 부적", un);
         else
             /*KR Sprintf(buf, "%s amulet", dn); */
-            Sprintf(eos(buf), "%s", dn);
+            Sprintf(eos(buf), "%s 부적", dn);
         break;
     case WEAPON_CLASS:
         if (is_poisonable(obj) && obj->opoisoned)
@@ -784,170 +784,218 @@ unsigned cxn_flags; /* bitmask of CXN_xxx values */
                 (obj->owt > ocl->oc_weight) ? "엄청" : "");
 #endif
         break;
+
+#if 0 /*KR: 원본 코드 (영어) */
     case POTION_CLASS:
         if (dknown && obj->odiluted)
-       /*KR Strcpy(buf, "diluted "); */
-            Strcat(buf, "희석된 ");
+            Strcpy(buf, "diluted ");
         if (nn || un || !dknown) {
-#if 0 /*KR*/
             Strcat(buf, "potion");
             if (!dknown)
                 break;
-#else
-            if (!dknown) {
-                Strcat(buf, "물약");
-                break;
-            }
-#endif
             if (nn) {
-#if 0 /*KR*/
                 Strcat(buf, " of ");
-#endif
                 if (typ == POT_WATER && bknown
                     && (obj->blessed || obj->cursed)) {
-                    /*KR Strcat(buf, obj->blessed ? "holy " : "unholy "); */
-                    Strcat(buf, obj->blessed ? "신성한 " : "부정한 ");
+                    Strcat(buf, obj->blessed ? "holy " : "unholy ");
                 }
                 Strcat(buf, actualn);
             } else {
-#if 0 /*KR*/
                 Strcat(buf, " called ");
                 Strcat(buf, un);
-#else
-                Strcat(buf, un);
-                Strcat(buf, " (이)라고 불리는 물약");
-#endif
             }
         } else {
             Strcat(buf, dn);
-#if 0 /*KR*/ /*불확정 이름에 "물약"이 붙어있음*/
             Strcat(buf, " potion");
-#endif
         }
         break;
     case SCROLL_CLASS:
-#if 0 /*KR*/
         Strcpy(buf, "scroll");
         if (!dknown)
             break;
-#else
-        if (!dknown) {
-            Strcat(buf, "두루마리");
-            break;
-        }
-#endif
         if (nn) {
-#if 0 /*KR*/
             Strcat(buf, " of ");
-#endif
             Strcat(buf, actualn);
         } else if (un) {
-#if 0 /*KR*/
             Strcat(buf, " called ");
             Strcat(buf, un);
-#else
-            Strcat(buf, un);
-            Strcat(buf, " 라고 불리는 두루마리");
-#endif
         } else if (ocl->oc_magic) {
-#if 0 /*KR*/
             Strcat(buf, " labeled ");
-#endif
             Strcat(buf, dn);
         } else {
-#if 0 /*KR*/
             Strcpy(buf, dn);
             Strcat(buf, " scroll");
-#else
-            Strcat(buf, dn);
-#endif
         }
         break;
     case WAND_CLASS:
         if (!dknown)
-            /*KR Strcpy(buf, "wand"); */
-            Strcat(buf, "지팡이");
+            Strcpy(buf, "wand");
         else if (nn)
-            /*KR Sprintf(buf, "wand of %s", actualn); */
-            Strcat(buf, actualn);
+            Sprintf(buf, "wand of %s", actualn);
         else if (un)
-            /*KR Sprintf(buf, "wand called %s", un); */
-            Sprintf(eos(buf), "%s라고 불리는 지팡이", un);
+            Sprintf(buf, "wand called %s", un);
         else
-            /*KR Sprintf(buf, "%s wand", dn); */
-            Sprintf(eos(buf), "%s 지팡이", dn);
+            Sprintf(buf, "%s wand", dn);
         break;
     case SPBOOK_CLASS:
         if (typ == SPE_NOVEL) { /* 3.6 tribute */
             if (!dknown)
-                /*KR Strcpy(buf, "book"); */
-                Strcpy(buf, "책");
+                Strcpy(buf, "book");
             else if (nn)
                 Strcpy(buf, actualn);
             else if (un)
-                /*KR Sprintf(buf, "novel called %s", un); */
-                Sprintf(buf, "%s라고 불리는 소설", un);
+                Sprintf(buf, "novel called %s", un);
             else
-                /*KR Sprintf(buf, "%s book", dn); */
-                Sprintf(buf, "%s 책", dn);
+                Sprintf(buf, "%s book", dn);
             break;
             /* end of tribute */
         } else if (!dknown) {
-            /*KR Strcpy(buf, "spellbook"); */
-            Strcpy(buf, "주문서");
+            Strcpy(buf, "spellbook");
         } else if (nn) {
-#if 0 /*KR*/
             if (typ != SPE_BOOK_OF_THE_DEAD)
                 Strcpy(buf, "spellbook of ");
-#endif
             Strcat(buf, actualn);
         } else if (un) {
-            /*KR Sprintf(buf, "spellbook called %s", un); */
-            Sprintf(eos(buf), "%s라고 불리는 주문서", un);
+            Sprintf(buf, "spellbook called %s", un);
         } else
-            /*KR Sprintf(buf, "%s spellbook", dn); */
-            Sprintf(eos(buf), "%s 주문서", dn);
+            Sprintf(buf, "%s spellbook", dn);
         break;
     case RING_CLASS:
         if (!dknown)
-            /*KR Strcpy(buf, "ring"); */
-            Strcat(buf, "반지");
+            Strcpy(buf, "ring");
         else if (nn)
-            /*KR Sprintf(buf, "ring of %s", actualn); */
-            Strcat(buf, actualn);
+            Sprintf(buf, "ring of %s", actualn);
         else if (un)
-            /*KR Sprintf(buf, "ring called %s", un); */
-            Sprintf(eos(buf), "%s라고 불리는 반지", un);
+            Sprintf(buf, "ring called %s", un);
         else
-            /*KR Sprintf(buf, "%s ring", dn); */
-            Sprintf(eos(buf), "%s 반지", dn);
+            Sprintf(buf, "%s ring", dn);
         break;
     case GEM_CLASS: {
-        /*KR const char *rock = (ocl->oc_material == MINERAL) ? "stone" : "gem"; */
-        const char *rock = (ocl->oc_material == MINERAL) ? "돌" : "보석";
+        const char *rock = (ocl->oc_material == MINERAL) ? "stone" : "gem";
 
         if (!dknown) {
-#if 0 /*KR*/
             Strcpy(buf, rock);
-#else
-            Strcat(buf, rock);
-#endif
         } else if (!nn) {
             if (un)
-                /*KR Sprintf(buf, "%s called %s", rock, un); */
-                Sprintf(eos(buf), "%s라고 불리는 %s", un, rock);
+                Sprintf(buf, "%s called %s", rock, un);
             else
-                /*KR Sprintf(buf, "%s %s", dn, rock); */
-                Strcat(buf, dn);
+                Sprintf(buf, "%s %s", dn, rock);
         } else {
             Strcpy(buf, actualn);
-#if 0 /*KR*/
             if (GemStone(typ))
                 Strcat(buf, " stone");
-#endif
         }
         break;
     }
+#else /*KR: KRNethack 전용 (한국어 어순 및 단어 적용) */
+    case POTION_CLASS:
+        if (dknown && obj->odiluted)
+            Strcat(buf, "희석된 ");
+
+        if (!dknown) {
+            Strcat(buf, "물약");
+        } else if (nn) {
+            if (typ == POT_WATER && bknown && (obj->blessed || obj->cursed)) {
+                Strcat(buf, obj->blessed ? "신성한 " : "부정한 ");
+            }
+            /* 완전 식별되었을 때 (예: 치료 물약) */
+            Sprintf(eos(buf), "%s 물약", actualn);
+        } else if (un) {
+            /* 유저가 이름을 지어줬을 때 */
+            Sprintf(eos(buf), "%s(이)라고 불리는 물약", un);
+        } else {
+            /* 묘사만 알 때 (예: 루비 물약) */
+            Sprintf(eos(buf), "%s 물약", dn);
+        }
+        break;
+
+    case SCROLL_CLASS:
+        if (!dknown) {
+            Strcat(buf, "두루마리");
+        } else if (nn) {
+            Sprintf(eos(buf), "%s 두루마리", actualn);
+        } else if (un) {
+            Sprintf(eos(buf), "%s(이)라고 불리는 두루마리", un);
+        } else if (ocl->oc_magic) {
+            /* 마법 두루마리일 때 (예: "ZELGO MER"라고 적힌 두루마리) */
+            Sprintf(eos(buf), "\"%s\"라고 적힌 두루마리", dn);
+        } else {
+            Sprintf(eos(buf), "%s 두루마리", dn);
+        }
+        break;
+
+    case WAND_CLASS:
+        if (!dknown) {
+            Strcat(buf, "지팡이");
+        } else if (nn) {
+            Sprintf(eos(buf), "%s 지팡이", actualn);
+        } else if (un) {
+            Sprintf(eos(buf), "%s(이)라고 불리는 지팡이", un);
+        } else {
+#if 1 /*KR: tin(주석/통조림) 사전 충돌 예외 처리 */
+            const char *wand_desc = dn;
+            if (RAW_OBJ_DESCR(*ocl) && !strcmp(RAW_OBJ_DESCR(*ocl), "tin")) {
+                wand_desc =
+                    "주석"; /* 영어 원문이 tin이라면 주석으로 강제 고정 */
+            }
+            Sprintf(eos(buf), "%s 지팡이", wand_desc);
+#else
+            Sprintf(eos(buf), "%s 지팡이", dn);
+#endif
+        }
+        break;
+
+    case SPBOOK_CLASS:
+        if (typ == SPE_NOVEL) {
+            if (!dknown)
+                Strcpy(buf, "책");
+            else if (nn)
+                Sprintf(buf, "%s 소설", actualn);
+            else if (un)
+                Sprintf(buf, "%s(이)라고 불리는 소설", un);
+            else
+                Sprintf(buf, "%s 책", dn);
+        } else {
+            if (!dknown)
+                Strcpy(buf, "주문서");
+            else if (nn)
+                Sprintf(eos(buf), "%s 주문서", actualn);
+            else if (un)
+                Sprintf(eos(buf), "%s(이)라고 불리는 주문서", un);
+            else
+                Sprintf(eos(buf), "%s 주문서", dn);
+        }
+        break;
+
+    case RING_CLASS:
+        if (!dknown) {
+            Strcat(buf, "반지");
+        } else if (nn) {
+            Sprintf(eos(buf), "%s 반지", actualn);
+        } else if (un) {
+            Sprintf(eos(buf), "%s(이)라고 불리는 반지", un);
+        } else {
+            Sprintf(eos(buf), "%s 반지", dn);
+        }
+        break;
+
+    case GEM_CLASS: {
+        const char *rock = (ocl->oc_material == MINERAL) ? "돌" : "보석";
+
+        if (!dknown) {
+            Strcat(buf, rock);
+        } else if (nn) {
+            /* 보석은 보통 번역명 자체에 '보석'이나 '돌'이 포함되어 있으므로
+             * actualn만 붙입니다 */
+            Strcpy(buf, actualn);
+        } else if (un) {
+            Sprintf(eos(buf), "%s(이)라고 불리는 %s", un, rock);
+        } else {
+            Sprintf(eos(buf), "%s %s", dn, rock);
+        }
+        break;
+    }
+#endif
     default:
         Sprintf(buf, "glorkum %d %d %d", obj->oclass, typ, obj->spe);
     }

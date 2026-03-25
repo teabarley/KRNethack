@@ -62,9 +62,15 @@ static NEARDATA boolean abort_looting;
 #define Icebox (current_container->otyp == ICE_BOX)
 
 static const char
+#if 0 /*KR*/
         moderateloadmsg[] = "You have a little trouble lifting",
         nearloadmsg[] = "You have much trouble lifting",
         overloadmsg[] = "You have extreme difficulty lifting";
+#else
+        moderateloadmsg[] = "을(를) 들어 올리는 것은 약간 힘들다",
+        nearloadmsg[] = "을(를) 들어 올리는 것은 많이 힘들다",
+        overloadmsg[] = "을(를) 들어 올리는 것은 극도로 힘들다";
+#endif
 
 /* BUG: this lets you look at cockatrice corpses while blind without
    touching them */
@@ -191,8 +197,13 @@ int *menu_on_demand;
         oclasses[oclassct = 0] = '\0';
         *one_at_a_time = *everything = FALSE;
         not_everything = filtered = FALSE;
+#if 0 /*KR:T*/
         Sprintf(qbuf, "What kinds of thing do you want to %s? [%s]", action,
                 ilets);
+#else
+        Sprintf(qbuf, "어떤 종류의 물건을 %s? [%s]", action,
+                ilets);
+#endif
         getlin(qbuf, inbuf);
         if (*inbuf == '\033')
             return FALSE;
@@ -227,8 +238,14 @@ int *menu_on_demand;
                     oclasses[oclassct] = '\0';
                 } else {
                     if (!where)
+#if 0 /*KR:T*/
                         where = !strcmp(action, "pick up") ? "here"
                                 : !strcmp(action, "take out") ? "inside" : "";
+#else
+                        where = !strcmp(action, "주우시겠습니까") ? "여기"
+                                : !strcmp(action, "꺼내시겠습니까") ? "안" : ""; 
+                                                              
+#endif
                     if (*where)
                         There("are no %c's %s.", sym, where);
                     else
@@ -627,10 +644,17 @@ int what; /* should be a long */
             int via_menu = 0;
 
             There("are %s objects here.", (ct <= 10) ? "several" : "many");
+#if 0 /*KR:T*/
             if (!query_classes(oclasses, &selective, &all_of_a_type,
                                "pick up", *objchain_p,
                                (traverse_how & BY_NEXTHERE) ? TRUE : FALSE,
                                &via_menu)) {
+#else
+            if (!query_classes(oclasses, &selective, &all_of_a_type,
+                               "주우시겠습니까", *objchain_p,
+                               (traverse_how & BY_NEXTHERE) ? TRUE : FALSE,
+                               &via_menu)) {
+#endif
                 if (!via_menu)
                     goto pickupdone;
                 if (selective)
@@ -2764,12 +2788,14 @@ boolean put_in;
     int used = 0, menu_on_request = 0;
 
     if (put_in) {
-        action = "put in";
+        /*KR action = "put in"; */
+        action = "넣으시겠습니까";
         objlist = &invent;
         actionfunc = in_container;
         checkfunc = ck_bag;
     } else {
-        action = "take out";
+        /*KR action = "take out"; */
+        action = "꺼내시겠습니까";
         objlist = &(current_container->cobj);
         actionfunc = out_container;
         checkfunc = (int FDECL((*), (OBJ_P))) 0;

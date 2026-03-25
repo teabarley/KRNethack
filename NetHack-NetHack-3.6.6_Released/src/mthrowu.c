@@ -21,9 +21,15 @@ STATIC_DCL boolean FDECL(m_lined_up, (struct monst *, struct monst *));
  * Keep consistent with breath weapons in zap.c, and AD_* in monattk.h.
  */
 STATIC_OVL NEARDATA const char *breathwep[] = {
+#if 0 /*KR:T*/
     "fragments", "fire", "frost", "sleep gas", "a disintegration blast",
     "lightning", "poison gas", "acid", "strange breath #8",
     "strange breath #9"
+#else
+    "파편", "화염", "냉기", "수면 가스", "분해의 숨결",
+    "번개", "독가스", "산", "strange breath #8", 
+    "strange breath #9"
+#endif
 };
 
 extern boolean notonhead; /* for long worms */
@@ -51,11 +57,18 @@ const char *name; /* if null, then format `*objp' */
         kprefix = KILLED_BY; /* killer_name supplies "an" if warranted */
     } else {
         knm = name;
+#if 0 /*KR*/
         /* [perhaps ought to check for plural here to] */
         if (!strncmpi(name, "the ", 4) || !strncmpi(name, "an ", 3)
             || !strncmpi(name, "a ", 2))
             kprefix = KILLED_BY;
+#else /* 한국어로는 그대로 냅둔다 */
+        knm = strcpy(knmbuf, name);
+#endif
     }
+#if 1 /*KR*/
+    strcat(knmbuf, "에 맞아서");
+#endif
     onm = (obj && obj_is_pname(obj)) ? the(name)
           : (obj && obj->quan > 1L) ? name
             : an(name);
@@ -64,22 +77,28 @@ const char *name; /* if null, then format `*objp' */
     if (u.uac + tlev <= (dieroll = rnd(20))) {
         ++mesg_given;
         if (Blind || !flags.verbose) {
-            pline("It misses.");
+            /*KR pline("It misses."); */
+            pline("그것은 빗나갔다.");
         } else if (u.uac + tlev <= dieroll - 2) {
             if (onm != onmbuf)
                 Strcpy(onmbuf, onm); /* [modifiable buffer for upstart()] */
-            pline("%s %s you.", upstart(onmbuf), vtense(onmbuf, "miss"));
+            /*KR pline("%s %s you.", upstart(onmbuf), vtense(onmbuf, "miss")); */
+            pline("%s 공격이 빗나갔다.", append_josa(upstart(onmbuf), "의"));
         } else
-            You("are almost hit by %s.", onm);
+            /*KR You("are almost hit by %s.", onm); */
+            You("%s에 거의 맞을 뻔했다.", onm);
         return 0;
     } else {
         if (Blind || !flags.verbose)
-            You("are hit%s", exclam(dam));
+            /*KR You("are hit%s", exclam(dam)); */
+            pline("무언가가 당신에게 명중했다!");
         else
-            You("are hit by %s%s", onm, exclam(dam));
+            /*KR You("are hit by %s%s", onm, exclam(dam)); */
+            pline("%s 당신에게 명중했다!", append_josa(onm, "이"));
 
         if (is_acid && Acid_resistance) {
-            pline("It doesn't seem to hurt you.");
+            /*KR pline("It doesn't seem to hurt you."); */
+            pline("당신은 다치지 않았다.");
         } else if (obj && obj->oclass == POTION_CLASS) {
             /* an explosion which scatters objects might hit hero with one
                (potions deliberately thrown at hero are handled by m_throw) */
@@ -89,11 +108,13 @@ const char *name; /* if null, then format `*objp' */
             if (obj && objects[obj->otyp].oc_material == SILVER
                 && Hate_silver) {
                 /* extra damage already applied by dmgval() */
-                pline_The("silver sears your flesh!");
+                /*KR pline_The("silver sears your flesh!"); */
+                pline("은이 당신의 살갗을 불태운다!");
                 exercise(A_CON, FALSE);
             }
             if (is_acid)
-                pline("It burns!");
+                /*KR pline("It burns!"); */
+                pline("산성액에 살이 타들어간다!");
             losehp(dam, knm, kprefix); /* acid damage */
             exercise(A_STR, FALSE);
         }
@@ -132,7 +153,11 @@ int x, y;
         if (down_gate(x, y) != -1)
             objgone = ship_object(obj, x, y, FALSE);
         if (!objgone) {
+#if 0 /*KR:T*/
             if (!flooreffects(obj, x, y, "fall")) {
+#else
+            if (!flooreffects(obj, x, y, "떨어지는")) {
+#endif
                 place_object(obj, x, y);
                 if (!mtmp && x == u.ux && y == u.uy)
                     mtmp = &youmonst;
@@ -263,7 +288,12 @@ struct obj *otmp, *mwep;
         if (multishot > 1) {
             /* "N arrows"; multishot > 1 implies otmp->quan > 1, so
                xname()'s result will already be pluralized */
+#if 0 /*KR:T JNetHack에서는 numeral이라는 전용 함수 사용했었음 */
             Sprintf(onmbuf, "%d %s", multishot, xname(otmp));
+#else
+            /* 한국어에서는 복잡한 단위 대신 직관적이게 '개'로 통일하여 출력. */
+            Sprintf(onmbuf, "%d개의 %s", multishot, xname(otmp));
+#endif
             onm = onmbuf;
         } else {
             /* "an arrow" */
@@ -272,11 +302,22 @@ struct obj *otmp, *mwep;
         }
         m_shot.s = ammo_and_launcher(otmp, mwep) ? TRUE : FALSE;
         Strcpy(trgbuf, mtarg ? mon_nam(mtarg) : "");
+#if 0 /*KR 한국어에서는 mon_nam은 "누군가가"를 반환하기 때문에 변경할 필요 없음 */
         if (!strcmp(trgbuf, "it"))
             Strcpy(trgbuf, humanoid(mtmp->data) ? "someone" : something);
+#endif
+#if 0 /*KR: 원본 영어 코드*/
         pline("%s %s %s%s%s!", Monnam(mtmp),
               m_shot.s ? "shoots" : "throws", onm,
               mtarg ? " at " : "", trgbuf);
+#else /*KR: KRNethack 한국어 어순 및 조사 처리*/
+        pline("%s %s %s%s%s!",
+              append_josa(Monnam(mtmp), "이"), /* 1. 누가 (주어) */
+              append_josa(onm, "을"),          /* 2. 무엇을 (목적어) */
+              trgbuf,                          /* 3. 누구에게 (타겟 이름) */
+              mtarg ? "에게 " : "", /* 4. 타겟이 있으면 '에게 ' 붙임 */
+              m_shot.s ? "쐈다" : "던졌다"); /* 5. 동사 */
+#endif
         m_shot.o = otmp->otyp;
     } else {
         m_shot.o = STRANGE_OBJECT; /* don't give multishot feedback */
@@ -334,7 +375,8 @@ boolean verbose;    /* give message(s) even when you can't see what happened */
             if (vis)
                 miss(distant_name(otmp, mshot_xname), mtmp);
             else if (verbose && !target)
-                pline("It is missed.");
+                /*KR pline("It is missed."); */
+                pline("뭔가가 스쳐 지나갔다.");
         }
         if (!range) { /* Last position; object drops */
             (void) drop_throw(otmp, 0, mtmp->mx, mtmp->my);
@@ -363,25 +405,39 @@ boolean verbose;    /* give message(s) even when you can't see what happened */
         mtmp->msleeping = 0;
         if (vis) {
             if (otmp->otyp == EGG)
+#if 0 /*KR:T*/
                 pline("Splat!  %s is hit with %s egg!", Monnam(mtmp),
                       otmp->known ? an(mons[otmp->corpsenm].mname) : "an");
+#else
+                pline("철퍽! %s %s 알에 맞았다!", append_josa(Monnam(mtmp), "은"),
+                      otmp->known ? s_suffix(mons[otmp->corpsenm].mname) : "");
+#endif
             else
                 hit(distant_name(otmp, mshot_xname), mtmp, exclam(damage));
         } else if (verbose && !target)
+#if 0 /*KR: 원본*/
             pline("%s%s is hit%s", (otmp->otyp == EGG) ? "Splat!  " : "",
                   Monnam(mtmp), exclam(damage));
+#else /*KR: KRNethack 맞춤형 번역*/
+            /* exclam() 자체가 "!" 또는 "."를 반환하므로 그대로 사용합니다.
+             * 생물이 대상이므로 "에" 대신 "에게"를 붙여줍니다. */
+            pline("%s%s 명중했다%s", (otmp->otyp == EGG) ? "철퍽! " : "",
+                  append_josa(Monnam(mtmp), "에게"), exclam(damage));
+#endif
 
         if (otmp->opoisoned && is_poisonable(otmp)) {
             if (resists_poison(mtmp)) {
                 if (vis)
-                    pline_The("poison doesn't seem to affect %s.",
-                              mon_nam(mtmp));
+                    /*KR pline_The("poison doesn't seem to affect %s.", */
+                    pline("%s 독의 영향을 받지 않는 것 같다.",
+                              append_josa(mon_nam(mtmp), "은"));
             } else {
                 if (rn2(30)) {
                     damage += rnd(6);
                 } else {
                     if (vis)
-                        pline_The("poison was deadly...");
+                        /*KR pline_The("poison was deadly..."); */
+                        pline("독이 치사량이었다...");
                     damage = mtmp->mhp;
                 }
             }
@@ -395,22 +451,58 @@ boolean verbose;    /* give message(s) even when you can't see what happened */
             if (vis) {
                 char *m_name = mon_nam(mtmp);
 
+#if 0 /*KR: 원본*/
                 if (flesh) /* s_suffix returns a modifiable buffer */
                     m_name = strcat(s_suffix(m_name), " flesh");
                 pline_The("silver sears %s!", m_name);
+#else
+                /* KR: 한국어 어순에 맞게 s_suffix를 대체합니다 */
+                if (flesh) {
+                    char flesh_buf[BUFSZ];
+                    /* "고블린" -> "고블린의 살갗" */
+                    Sprintf(flesh_buf, "%s 살갗", append_josa(m_name, "의"));
+                    pline("%s 은에 타들어간다!",
+                          append_josa(flesh_buf, "이"));
+                } else {
+                    /* 유령 등 실체가 없는 경우: "유령이 은에 타들어간다!" */
+                    pline("%s 은에 타들어간다!", append_josa(m_name, "이"));
+                }
+#endif
             } else if (verbose && !target) {
+#if 0 /*KR: 원본*/
                 pline("%s is seared!", flesh ? "Its flesh" : "It");
+#else
+                pline("%s 은에 타들어간다!",
+                      flesh ? "누군가의 살갗이" : "무언가가");
+#endif
             }
         }
         if (otmp->otyp == ACID_VENOM && cansee(mtmp->mx, mtmp->my)) {
             if (resists_acid(mtmp)) {
+#if 0 /*KR: 원본*/
                 if (vis || (verbose && !target))
                     pline("%s is unaffected.", Monnam(mtmp));
+#else
+                if (vis || (verbose && !target))
+                    pline("%s 아무런 영향도 받지 않았다.",
+                          append_josa(Monnam(mtmp), "은"));
+#endif
             } else {
+#if 0 /*KR: 원본*/
                 if (vis)
                     pline_The("%s burns %s!", hliquid("acid"), mon_nam(mtmp));
                 else if (verbose && !target)
                     pline("It is burned!");
+#else
+                if (vis)
+                    /* hliquid("acid")는 사전에 의해 "산성액"으로 번역됩니다
+                     */
+                    pline("%s %s에 타들어간다!",
+                          append_josa(mon_nam(mtmp), "이"),
+                          hliquid("산성액"));
+                else if (verbose && !target)
+                    pline("무언가가 타들어간다!");
+#endif
             }
         }
         if (otmp->otyp == EGG && touch_petrifies(&mons[otmp->corpsenm])) {
@@ -424,9 +516,15 @@ boolean verbose;    /* give message(s) even when you can't see what happened */
             mtmp->mhp -= damage;
             if (DEADMONSTER(mtmp)) {
                 if (vis || (verbose && !target))
+#if 0 /*KR:T*/
                     pline("%s is %s!", Monnam(mtmp),
                           (nonliving(mtmp->data) || is_vampshifter(mtmp)
                            || !canspotmon(mtmp)) ? "destroyed" : "killed");
+#else
+                    pline("%s %s!", append_josa(Monnam(mtmp), "은"),
+                          (nonliving(mtmp->data) || is_vampshifter(mtmp)
+                           || !canspotmon(mtmp)) ? "쓰러졌다" : "죽었다");
+#endif
                 /* don't blame hero for unknown rolling boulder trap */
                 if (!context.mon_moving && (otmp->otyp != BOULDER
                                             || range >= 0 || otmp->otrapped))
@@ -444,7 +542,8 @@ boolean verbose;    /* give message(s) even when you can't see what happened */
                                                                 : AT_WEAP),
                         otmp)) {
             if (vis && mtmp->mcansee)
-                pline("%s is blinded by %s.", Monnam(mtmp), the(xname(otmp)));
+                /*KR pline("%s is blinded by %s.", Monnam(mtmp), the(xname(otmp))); */
+                pline("%s %s 때문에 눈이 보이지 않게 되었다.", append_josa(Monnam(mtmp), "은"), the(xname(otmp)));
             mtmp->mcansee = 0;
             tmp = (int) mtmp->mblinded + rnd(25) + 20;
             if (tmp > 127)
@@ -522,11 +621,25 @@ struct obj *obj;         /* missile (or stack providing it) */
 
     if ((singleobj->cursed || singleobj->greased) && (dx || dy) && !rn2(7)) {
         if (canseemon(mon) && flags.verbose) {
+#if 0 /*KR: 원본 영어 코드 및 JNetHack 코드*/
             if (is_ammo(singleobj))
                 pline("%s misfires!", Monnam(mon));
             else
                 pline("%s as %s throws it!", Tobjnam(singleobj, "slip"),
                       mon_nam(mon));
+#else /*KR: KRNethack 한국어 맞춤형 번역*/
+            if (is_ammo(singleobj)) {
+                /* 화살이나 볼트 등 발사체일 때 
+                (예: 고블린의 조준이 빗나갔다!) */
+                pline("%s 조준이 빗나갔다!", append_josa(Monnam(mon), "의"));
+            } else {
+                /* 단검, 다트 등 투척 무기일 때 
+                (예: 고블린이 던지려는 순간 단검이 미끄러졌다!) */
+                pline("%s 던지려는 순간 %s 미끄러졌다!",
+                      append_josa(mon_nam(mon), "이"),
+                      append_josa(xname(singleobj), "이"));
+            }
+#endif
         }
         dx = rn2(3) - 1;
         dy = rn2(3) - 1;

@@ -10,9 +10,15 @@
 
 extern const char *hu_stat[]; /* defined in eat.c */
 
+#if 0 /*KR:T*/
 const char *const enc_stat[] = { "",         "Burdened",  "Stressed",
                                  "Strained", "Overtaxed", "Overloaded" };
-
+#else /*옵션의 parse? pause? 파-스?로 영어판도 필요*/
+const char *const enc_stat[] = { "",         "Burdened",  "Stressed",
+                                 "Strained", "Overtaxed", "Overloaded" };
+const char *const enc_stat_opt[] = { "",     "부담됨",    "압박받음",
+                                 "긴장됨",   "너무 무거움", "과부하" };
+#endif
 STATIC_OVL NEARDATA int mrank_sz = 0; /* loaded by max_rank_sz (from u_init) */
 STATIC_DCL const char *NDECL(rank);
 STATIC_DCL void NDECL(bot_via_windowport);

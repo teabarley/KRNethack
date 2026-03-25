@@ -274,13 +274,24 @@ boolean devour;
            pet eats visible food. */
         if (sawpet || (seeobj && canspotmon(mtmp))) {
             if (tunnels(mtmp->data))
-                pline("%s digs in.", noit_Monnam(mtmp));
+                /*KR pline("%s digs in.", noit_Monnam(mtmp)); */
+                pline("%s 파고 있다.", append_josa(noit_Monnam(mtmp), "는"));
             else
+#if 0 /*KR:T*/
                 pline("%s %s %s.", noit_Monnam(mtmp),
                       devour ? "devours" : "eats", distant_name(obj, doname));
+#else
+                pline("%s %s %s 있다.", append_josa(noit_Monnam(mtmp), "는"),
+                      append_josa(distant_name(obj, doname), "를"), devour ? "집어삼키고" : "먹고");
+#endif
         } else if (seeobj)
+#if 0 /*KR:T*/
             pline("It %s %s.", devour ? "devours" : "eats",
                   distant_name(obj, doname));
+#else
+            pline("그것은 %s %s 있다.", append_josa(distant_name(obj, doname), "를"),
+                  devour ? "집어삼키고" : "먹고");
+#endif
     }
     if (obj->unpaid) {
         Strcpy(objnambuf, xname(obj));
@@ -302,8 +313,13 @@ boolean devour;
         obj->oerodeproof = 0;
         mtmp->mstun = 1;
         if (canseemon(mtmp) && flags.verbose) {
+#if 0 /*KR:T*/
             pline("%s spits %s out in disgust!", Monnam(mtmp),
                   distant_name(obj, doname));
+#else
+            pline("%s %s 웩 하고 토해냈다!", append_josa(Monnam(mtmp), "은"),
+                  append_josa(distant_name(obj, doname), "를"));
+#endif
         }
     } else if (obj == uball) {
         unpunish();
@@ -315,8 +331,12 @@ boolean devour;
             /* edible item owned by shop has been thrown or kicked
                by hero and caught by tame or food-tameable monst */
             oprice = unpaid_cost(obj, TRUE);
+#if 0 /*KR:T*/
             pline("That %s will cost you %ld %s.", objnambuf, oprice,
                   currency(oprice));
+#else
+            pline("그 %s %ld %s다.", append_josa(objnambuf, "은"), oprice, currency(oprice));
+#endif
             /* delobj->obfree will handle actual shop billing update */
         }
         delobj(obj);
@@ -373,22 +393,31 @@ struct edog *edog;
             if (DEADMONSTER(mtmp))
                 goto dog_died;
             if (cansee(mtmp->mx, mtmp->my))
-                pline("%s is confused from hunger.", Monnam(mtmp));
+           /*KR pline("%s is confused from hunger.", Monnam(mtmp)); */
+                pline("%s 배고파서 혼란에 빠져 있다.", append_josa(Monnam(mtmp), "는"));
             else if (couldsee(mtmp->mx, mtmp->my))
                 beg(mtmp);
             else
-                You_feel("worried about %s.", y_monnam(mtmp));
+           /*KR You_feel("worried about %s.", y_monnam(mtmp)); */
+                You("%s 걱정되기 시작했다.", append_josa(y_monnam(mtmp), "가"));
             stop_occupation();
         } else if (monstermoves > edog->hungrytime + 750
                    || DEADMONSTER(mtmp)) {
  dog_died:
             if (mtmp->mleashed && mtmp != u.usteed)
-                Your("leash goes slack.");
+           /*KR Your("leash goes slack."); */
+                Your("끈이 늘어졌다.");
             else if (cansee(mtmp->mx, mtmp->my))
-                pline("%s starves.", Monnam(mtmp));
+           /*KR pline("%s starves.", Monnam(mtmp)); */
+                pline("%s 굶어 죽었다.", append_josa(Monnam(mtmp), "는"));
             else
+#if 0 /*KR:T*/
                 You_feel("%s for a moment.",
                          Hallucination ? "bummed" : "sad");
+#else
+                You("잠시 %s 기분에 휩싸였다.",
+                    Hallucination ? "실망한" : "슬픈");
+#endif
             mondied(mtmp);
             return  TRUE;
         }
@@ -451,8 +480,13 @@ int udist;
                         if (carryamt != obj->quan)
                             otmp = splitobj(obj, carryamt);
                         if (cansee(omx, omy) && flags.verbose)
+#if 0 /*KR:T*/
                             pline("%s picks up %s.", Monnam(mtmp),
                                   distant_name(otmp, doname));
+#else
+                            pline("%s %s 주웠다.", append_josa(Monnam(mtmp), "는"),
+                                  append_josa(distant_name(obj, doname), "를"));
+#endif
                         obj_extract_self(otmp);
                         newsym(omx, omy);
                         (void) mpickobj(mtmp, otmp);
@@ -949,7 +983,8 @@ int after; /* this is extra fast monster movement */
     if (!Conflict && !mtmp->mconf
         && mtmp == u.ustuck && !sticks(youmonst.data)) {
         unstuck(mtmp); /* swallowed case handled above */
-        You("get released!");
+        /*KR You("get released!"); */
+        You("풀려났다!");
     }
 #endif
     if (!nohands(mtmp->data) && !verysmall(mtmp->data)) {
@@ -1188,8 +1223,13 @@ int after; /* this is extra fast monster movement */
 
         if (info[chi] & ALLOW_U) {
             if (mtmp->mleashed) { /* play it safe */
+#if 0 /*KR:T*/
                 pline("%s breaks loose of %s leash!", Monnam(mtmp),
                       mhis(mtmp));
+#else
+                pline("%s 자신에게 걸려있던 끈을 풀었다!", 
+                      append_josa(Monnam(mtmp), "는"));
+#endif
                 m_unleash(mtmp, FALSE);
             }
             (void) mattacku(mtmp);
@@ -1213,8 +1253,12 @@ int after; /* this is extra fast monster movement */
                                ? vobj_at(nix, niy) : 0;
             const char *what = o ? distant_name(o, doname) : something;
 
+#if 0 /*KR:T*/
             pline("%s %s reluctantly over %s.", noit_Monnam(mtmp),
                   vtense((char *) 0, locomotion(mtmp->data, "step")), what);
+#else
+            pline("%s %s 위에 주저하며 올라섰다.", append_josa(noit_Monnam(mtmp), "는"), what);
+#endif
         }
         for (j = MTSZ - 1; j > 0; j--)
             mtmp->mtrack[j] = mtmp->mtrack[j - 1];
@@ -1411,6 +1455,7 @@ struct monst *mtmp;
            (on the other hand, perhaps you're sensing a brief glimpse
            of its mind as it changes form) */
         newsym(mtmp->mx, mtmp->my);
+#if 0 /*KR:T*/
         You("%s %s %sappear%s where %s was!",
             cansee(mtmp->mx, mtmp->my) ? "see" : "sense that",
             (M_AP_TYPE(mtmp) == M_AP_FURNITURE)
@@ -1427,6 +1472,34 @@ struct monst *mtmp;
             cansee(mtmp->mx, mtmp->my) ? "" : "has ",
             cansee(mtmp->mx, mtmp->my) ? "" : "ed",
             buf);
+#else /*KR: KRNethack 한국어 맞춤 코드*/
+        /* JNetHack처럼 You()를 강제로 쓰면 "당신은 ~를 보았다"가 되어버릴
+         * 수 있으므로, 자연스러운 한글 출력을 위해 pline()으로 교체하는 것이
+         * 좋습니다. */
+        pline(
+            "당신은 %s 있던 자리에 %s 나타난 것을 %s!",
+            /* 1. 원래 몬스터 이름(buf)에 '이/가' 붙이기 */
+            append_josa(buf, "이"),
+
+            /* 2. 새로 변신한 모습에 번역기(get_kr_name)를 씌운 뒤 '이/가'
+               붙이기 */
+            append_josa(
+                (M_AP_TYPE(mtmp) == M_AP_FURNITURE)
+                    ? an(get_kr_name(defsyms[mtmp->mappearance].explanation))
+                : (M_AP_TYPE(mtmp) == M_AP_OBJECT
+                   && OBJ_DESCR(objects[mtmp->mappearance]))
+                    ? an(get_kr_name(OBJ_DESCR(objects[mtmp->mappearance])))
+                : (M_AP_TYPE(mtmp) == M_AP_OBJECT
+                   && OBJ_NAME(objects[mtmp->mappearance]))
+                    ? an(get_kr_name(OBJ_NAME(objects[mtmp->mappearance])))
+                : (M_AP_TYPE(mtmp) == M_AP_MONSTER)
+                    ? an(get_kr_name(mons[mtmp->mappearance].mname))
+                    : something,
+                "이"),
+
+            /* 3. 시야에 따라 동사 결정하기 */
+            cansee(mtmp->mx, mtmp->my) ? "보았다" : "느꼈다");
+#endif
         display_nhwindow(WIN_MAP, TRUE);
     }
 }

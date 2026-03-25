@@ -1032,19 +1032,1296 @@ get_kr_name(const char *en_name)
     if (!strcmp(en_name, "apprentice"))
         return "수습생";
 
-    /* 무기 */
-    if (!strcmp(en_name, "long sword"))
-        return "롱 소드";
+/* ========================================== *
+     * 무기 (Weapons) 번역 사전
+     * ========================================== */
+
+    /* [단검류 - Daggers] */
     if (!strcmp(en_name, "dagger"))
         return "단검";
+    if (!strcmp(en_name, "elven dagger"))
+        return "엘프제 단검";
+    if (!strcmp(en_name, "orcish dagger"))
+        return "오크제 단검";
+    if (!strcmp(en_name, "silver dagger"))
+        return "은 단검";
+    if (!strcmp(en_name, "athame"))
+        return "아테임";
+    if (!strcmp(en_name, "scalpel"))
+        return "메스";
 
-    /* 물약 색상 (a색 물약 문제 해결용) */
-    if (!strcmp(en_name, "ruby"))
-        return "루비";
-    if (!strcmp(en_name, "aquamarine"))
-        return "아쿠아마린";
+    /* [검류 - Swords] */
+    if (!strcmp(en_name, "short sword"))
+        return "짧은 검"; /* 숏 소드 */
+    if (!strcmp(en_name, "elven short sword"))
+        return "엘프제 짧은 검";
+    if (!strcmp(en_name, "orcish short sword"))
+        return "오크제 짧은 검";
+    if (!strcmp(en_name, "dwarvish short sword"))
+        return "드워프제 짧은 검";
+    if (!strcmp(en_name, "wakizashi"))
+        return "와키자시";
+    if (!strcmp(en_name, "broadsword"))
+        return "브로드소드";
+    if (!strcmp(en_name, "elven broadsword"))
+        return "엘프제 브로드소드";
+    if (!strcmp(en_name, "long sword"))
+        return "롱 소드";
+    if (!strcmp(en_name, "two-handed sword"))
+        return "양손검";
+    if (!strcmp(en_name, "katana"))
+        return "카타나";
+    if (!strcmp(en_name, "tsurugi"))
+        return "츠루기";
+    if (!strcmp(en_name, "runesword"))
+        return "룬소드";
 
-    /* 필요한 단어를 계속 추가하세요 */
+    /* [도끼류 - Axes] */
+    if (!strcmp(en_name, "axe"))
+        return "도끼";
+    if (!strcmp(en_name, "battle-axe"))
+        return "전투도끼";
+
+    /* [곡괭이류 - Pick-axes] */
+    if (!strcmp(en_name, "pick-axe"))
+        return "곡괭이";
+    if (!strcmp(en_name, "dwarvish mattock"))
+        return "드워프제 곡괭이";
+
+    /* [둔기/곤봉류 - Maces & Clubs] */
+    if (!strcmp(en_name, "club"))
+        return "곤봉";
+    if (!strcmp(en_name, "aklys"))
+        return "아클리스";
+    if (!strcmp(en_name, "mace"))
+        return "메이스";
+    if (!strcmp(en_name, "morning star"))
+        return "모닝스타";
+    if (!strcmp(en_name, "flail"))
+        return "도리깨";
+    if (!strcmp(en_name, "war hammer"))
+        return "워해머";
+    if (!strcmp(en_name, "quarterstaff"))
+        return "육척봉";
+
+    /* [장창/미늘창류 - Polearms] */
+    if (!strcmp(en_name, "partisan"))
+        return "파르티잔";
+    if (!strcmp(en_name, "ranseur"))
+        return "랜서";
+    if (!strcmp(en_name, "spetum"))
+        return "스페툼";
+    if (!strcmp(en_name, "glaive"))
+        return "글레이브";
+    if (!strcmp(en_name, "lance"))
+        return "랜스";
+    if (!strcmp(en_name, "halberd"))
+        return "할버드";
+    if (!strcmp(en_name, "bardiche"))
+        return "바디슈";
+    if (!strcmp(en_name, "voulge"))
+        return "불쥬";
+    if (!strcmp(en_name, "fauchard"))
+        return "포샤드";
+    if (!strcmp(en_name, "guisarme"))
+        return "기자름";
+    if (!strcmp(en_name, "bill-guisarme"))
+        return "빌기자름";
+    if (!strcmp(en_name, "lucern hammer"))
+        return "루체른 해머";
+    if (!strcmp(en_name, "bec de corbin"))
+        return "벡 드 코방";
+
+    /* [창/투창류 - Spears & Javelins] */
+    if (!strcmp(en_name, "spear"))
+        return "창";
+    if (!strcmp(en_name, "elven spear"))
+        return "엘프제 창";
+    if (!strcmp(en_name, "orcish spear"))
+        return "오크제 창";
+    if (!strcmp(en_name, "dwarvish spear"))
+        return "드워프제 창";
+    if (!strcmp(en_name, "silver spear"))
+        return "은 창";
+    if (!strcmp(en_name, "javelin"))
+        return "투창";
+    if (!strcmp(en_name, "trident"))
+        return "삼지창";
+
+    /* [활과 화살 - Bows & Arrows] */
+    if (!strcmp(en_name, "bow"))
+        return "활";
+    if (!strcmp(en_name, "elven bow"))
+        return "엘프제 활";
+    if (!strcmp(en_name, "orcish bow"))
+        return "오크제 활";
+    if (!strcmp(en_name, "yumi"))
+        return "유미";
+    if (!strcmp(en_name, "arrow"))
+        return "화살";
+    if (!strcmp(en_name, "elven arrow"))
+        return "엘프제 화살";
+    if (!strcmp(en_name, "orcish arrow"))
+        return "오크제 화살";
+    if (!strcmp(en_name, "silver arrow"))
+        return "은 화살";
+    if (!strcmp(en_name, "ya"))
+        return "야"; /* 일본식 화살 */
+
+    /* [투척 무기류 - Missiles] */
+    if (!strcmp(en_name, "sling"))
+        return "새총";
+    if (!strcmp(en_name, "crossbow"))
+        return "석궁";
+    if (!strcmp(en_name, "crossbow bolt"))
+        return "석궁 볼트";
+    if (!strcmp(en_name, "dart"))
+        return "다트";
+    if (!strcmp(en_name, "shuriken"))
+        return "수리검";
+    if (!strcmp(en_name, "boomerang"))
+        return "부메랑";
+
+    /* [기타 무기 - Whips etc.] */
+    if (!strcmp(en_name, "bullwhip"))
+        return "채찍";
+
+    /* ========================================== *
+     * 방어구 (Armor)
+     * ========================================== */
+    /* 셔츠 */
+    if (!strcmp(en_name, "Hawaiian shirt"))
+        return "하와이안 셔츠";
+    if (!strcmp(en_name, "T-shirt"))
+        return "티셔츠";
+
+    /* 갑옷 */
+    if (!strcmp(en_name, "leather armor"))
+        return "가죽 갑옷";
+    if (!strcmp(en_name, "orcish ring mail"))
+        return "오크제 링 메일";
+    if (!strcmp(en_name, "orcish chain mail"))
+        return "오크제 사슬 갑옷";
+    if (!strcmp(en_name, "studded leather armor"))
+        return "스터디드 레더 아머";
+    if (!strcmp(en_name, "ring mail"))
+        return "링 메일";
+    if (!strcmp(en_name, "scale mail"))
+        return "스케일 메일";
+    if (!strcmp(en_name, "plate mail"))
+        return "판금 갑옷";
+    if (!strcmp(en_name, "bronze plate mail"))
+        return "청동 판금 갑옷";
+    if (!strcmp(en_name, "splint mail"))
+        return "스플린트 메일";
+    if (!strcmp(en_name, "banded mail"))
+        return "밴디드 메일";
+    if (!strcmp(en_name, "dwarvish mithril-coat"))
+        return "드워프제 미스릴 코트";
+    if (!strcmp(en_name, "elven mithril-coat"))
+        return "엘프제 미스릴 코트";
+    if (!strcmp(en_name, "crystal plate mail"))
+        return "수정 판금 갑옷";
+
+    /* 용 비늘 & 용 비늘 갑옷 */
+    if (!strcmp(en_name, "gray dragon scales"))
+        return "회색 용 비늘";
+    if (!strcmp(en_name, "silver dragon scales"))
+        return "은색 용 비늘";
+    if (!strcmp(en_name, "shimmering dragon scales"))
+        return "일렁이는 용 비늘";
+    if (!strcmp(en_name, "red dragon scales"))
+        return "붉은 용 비늘";
+    if (!strcmp(en_name, "white dragon scales"))
+        return "하얀 용 비늘";
+    if (!strcmp(en_name, "orange dragon scales"))
+        return "주황색 용 비늘";
+    if (!strcmp(en_name, "black dragon scales"))
+        return "검은 용 비늘";
+    if (!strcmp(en_name, "blue dragon scales"))
+        return "푸른 용 비늘";
+    if (!strcmp(en_name, "green dragon scales"))
+        return "초록색 용 비늘";
+    if (!strcmp(en_name, "yellow dragon scales"))
+        return "노란색 용 비늘";
+    if (!strcmp(en_name, "gray dragon scale mail"))
+        return "회색 용 비늘 갑옷";
+    if (!strcmp(en_name, "silver dragon scale mail"))
+        return "은색 용 비늘 갑옷";
+    if (!strcmp(en_name, "shimmering dragon scale mail"))
+        return "일렁이는 용 비늘 갑옷";
+    if (!strcmp(en_name, "red dragon scale mail"))
+        return "붉은 용 비늘 갑옷";
+    if (!strcmp(en_name, "white dragon scale mail"))
+        return "하얀 용 비늘 갑옷";
+    if (!strcmp(en_name, "orange dragon scale mail"))
+        return "주황색 용 비늘 갑옷";
+    if (!strcmp(en_name, "black dragon scale mail"))
+        return "검은 용 비늘 갑옷";
+    if (!strcmp(en_name, "blue dragon scale mail"))
+        return "푸른 용 비늘 갑옷";
+    if (!strcmp(en_name, "green dragon scale mail"))
+        return "초록색 용 비늘 갑옷";
+    if (!strcmp(en_name, "yellow dragon scale mail"))
+        return "노란색 용 비늘 갑옷";
+
+    /* 망토 */
+    if (!strcmp(en_name, "mummy wrapping"))
+        return "미라의 붕대";
+    if (!strcmp(en_name, "elven cloak"))
+        return "엘프제 망토";
+    if (!strcmp(en_name, "orcish cloak"))
+        return "오크제 망토";
+    if (!strcmp(en_name, "dwarvish cloak"))
+        return "드워프제 망토";
+    if (!strcmp(en_name, "oilskin cloak"))
+        return "방수포 망토";
+    if (!strcmp(en_name, "robe"))
+        return "로브";
+    if (!strcmp(en_name, "alchemy smock"))
+        return "연금술사의 작업복";
+    if (!strcmp(en_name, "leather cloak"))
+        return "가죽 망토";
+    if (!strcmp(en_name, "cloak of protection"))
+        return "보호의 망토";
+    if (!strcmp(en_name, "cloak of invisibility"))
+        return "투명의 망토";
+    if (!strcmp(en_name, "cloak of magic resistance"))
+        return "마법 저항의 망토";
+    if (!strcmp(en_name, "cloak of displacement"))
+        return "잔상의 망토";
+
+    /* 투구 */
+    if (!strcmp(en_name, "elven leather helm"))
+        return "엘프제 가죽 투구";
+    if (!strcmp(en_name, "orcish helm"))
+        return "오크제 투구";
+    if (!strcmp(en_name, "dwarvish iron helm"))
+        return "드워프제 철 투구";
+    if (!strcmp(en_name, "fedora"))
+        return "페도라";
+    if (!strcmp(en_name, "cornuthaum"))
+        return "고깔모자";
+    if (!strcmp(en_name, "dunce cap"))
+        return "바보 모자";
+    if (!strcmp(en_name, "dented pot"))
+        return "찌그러진 냄비";
+    if (!strcmp(en_name, "helmet"))
+        return "투구";
+    if (!strcmp(en_name, "helm of brilliance"))
+        return "총명의 투구";
+    if (!strcmp(en_name, "helm of opposite alignment"))
+        return "반대 성향의 투구";
+    if (!strcmp(en_name, "helm of telepathy"))
+        return "텔레파시의 투구";
+
+    /* 장갑 */
+    if (!strcmp(en_name, "leather gloves"))
+        return "가죽 장갑";
+    if (!strcmp(en_name, "gauntlets of fumbling"))
+        return "실수의 건틀릿";
+    if (!strcmp(en_name, "gauntlets of power"))
+        return "힘의 건틀릿";
+    if (!strcmp(en_name, "gauntlets of dexterity"))
+        return "민첩의 건틀릿";
+
+    /* 방패 */
+    if (!strcmp(en_name, "small shield"))
+        return "작은 방패";
+    if (!strcmp(en_name, "elven shield"))
+        return "엘프제 방패";
+    if (!strcmp(en_name, "Uruk-hai shield"))
+        return "우르크하이 방패";
+    if (!strcmp(en_name, "orcish shield"))
+        return "오크제 방패";
+    if (!strcmp(en_name, "large shield"))
+        return "큰 방패";
+    if (!strcmp(en_name, "dwarvish roundshield"))
+        return "드워프제 둥근 방패";
+    if (!strcmp(en_name, "shield of reflection"))
+        return "반사의 방패";
+
+    /* 신발 */
+    if (!strcmp(en_name, "low boots"))
+        return "짧은 장화";
+    if (!strcmp(en_name, "iron shoes"))
+        return "철 신발";
+    if (!strcmp(en_name, "high boots"))
+        return "긴 장화";
+    if (!strcmp(en_name, "speed boots"))
+        return "가속의 부츠";
+    if (!strcmp(en_name, "water walking boots"))
+        return "수면 보행 부츠";
+    if (!strcmp(en_name, "jumping boots"))
+        return "도약의 부츠";
+    if (!strcmp(en_name, "elven boots"))
+        return "엘프제 부츠";
+    if (!strcmp(en_name, "kicking boots"))
+        return "발차기의 부츠";
+    if (!strcmp(en_name, "fumble boots"))
+        return "실수의 부츠";
+    if (!strcmp(en_name, "levitation boots"))
+        return "부유의 부츠";
+
+    /* ========================================== *
+     * 반지 (Rings)
+     * ========================================== */
+    if (!strcmp(en_name, "adornment"))
+        return "장식";
+    if (!strcmp(en_name, "hunger"))
+        return "허기";
+    if (!strcmp(en_name, "protection"))
+        return "보호";
+    if (!strcmp(en_name, "protection from shape changers"))
+        return "변신 방지";
+    if (!strcmp(en_name, "stealth"))
+        return "은밀";
+    if (!strcmp(en_name, "sustain ability"))
+        return "능력 유지";
+    if (!strcmp(en_name, "warning"))
+        return "경고";
+    if (!strcmp(en_name, "aggravate monster"))
+        return "몬스터 도발";
+    if (!strcmp(en_name, "cold resistance"))
+        return "냉기 저항";
+    if (!strcmp(en_name, "gain constitution"))
+        return "건강 증가";
+    if (!strcmp(en_name, "gain strength"))
+        return "힘 증가";
+    if (!strcmp(en_name, "increase accuracy"))
+        return "명중률 증가";
+    if (!strcmp(en_name, "increase damage"))
+        return "피해량 증가";
+    if (!strcmp(en_name, "slow digestion"))
+        return "소화 지연";
+    if (!strcmp(en_name, "invisibility"))
+        return "투명화";
+    if (!strcmp(en_name, "poison resistance"))
+        return "독 저항";
+    if (!strcmp(en_name, "see invisible"))
+        return "투명 감지";
+    if (!strcmp(en_name, "shock resistance"))
+        return "전격 저항";
+    if (!strcmp(en_name, "fire resistance"))
+        return "화염 저항";
+    if (!strcmp(en_name, "free action"))
+        return "행동의 자유";
+    if (!strcmp(en_name, "levitation"))
+        return "부유";
+    if (!strcmp(en_name, "regeneration"))
+        return "재생";
+    if (!strcmp(en_name, "searching"))
+        return "탐색";
+    if (!strcmp(en_name, "teleportation"))
+        return "순간이동";
+    if (!strcmp(en_name, "conflict"))
+        return "분쟁";
+    if (!strcmp(en_name, "polymorph"))
+        return "폴리모프";
+    if (!strcmp(en_name, "polymorph control"))
+        return "폴리모프 제어";
+    if (!strcmp(en_name, "teleport control"))
+        return "순간이동 제어";
+
+    /* ========================================== *
+     * 부적 (Amulets)
+     * ========================================== */
+    if (!strcmp(en_name, "amulet of change"))
+        return "변화의 부적";
+    if (!strcmp(en_name, "amulet of ESP"))
+        return "텔레파시의 부적";
+    if (!strcmp(en_name, "amulet of life saving"))
+        return "구명의 부적";
+    if (!strcmp(en_name, "amulet of magical breathing"))
+        return "마법 호흡의 부적";
+    if (!strcmp(en_name, "amulet of reflection"))
+        return "반사의 부적";
+    if (!strcmp(en_name, "amulet of restful sleep"))
+        return "숙면의 부적";
+    if (!strcmp(en_name, "amulet of strangulation"))
+        return "교살의 부적";
+    if (!strcmp(en_name, "amulet of unchanging"))
+        return "불변의 부적";
+    if (!strcmp(en_name, "amulet versus poison"))
+        return "독 저항의 부적";
+    if (!strcmp(en_name, "Amulet of Yendor"))
+        return "옌더의 부적";
+    if (!strcmp(en_name, "fake Amulet of Yendor"))
+        return "가짜 옌더의 부적";
+
+    /* ========================================== *
+     * 도구 (Tools)
+     * ========================================== */
+    if (!strcmp(en_name, "large box"))
+        return "커다란 상자";
+    if (!strcmp(en_name, "chest"))
+        return "상자";
+    if (!strcmp(en_name, "ice box"))
+        return "얼음 상자";
+    if (!strcmp(en_name, "sack"))
+        return "자루";
+    if (!strcmp(en_name, "oilskin sack"))
+        return "방수포 자루";
+    if (!strcmp(en_name, "bag of holding"))
+        return "보존의 배낭";
+    if (!strcmp(en_name, "bag of tricks"))
+        return "속임수의 배낭";
+    if (!strcmp(en_name, "skeleton key"))
+        return "만능 열쇠";
+    if (!strcmp(en_name, "lock pick"))
+        return "락픽";
+    if (!strcmp(en_name, "credit card"))
+        return "신용카드";
+    if (!strcmp(en_name, "tallow candle"))
+        return "양초(동물성)";
+    if (!strcmp(en_name, "wax candle"))
+        return "양초(밀랍)";
+    if (!strcmp(en_name, "brass lantern"))
+        return "황동 랜턴";
+    if (!strcmp(en_name, "oil lamp"))
+        return "기름 램프";
+    if (!strcmp(en_name, "magic lamp"))
+        return "마법의 램프";
+    if (!strcmp(en_name, "tin whistle"))
+        return "양철 호루라기";
+    if (!strcmp(en_name, "magic whistle"))
+        return "마법의 호루라기";
+    if (!strcmp(en_name, "wooden flute"))
+        return "나무 피리";
+    if (!strcmp(en_name, "magic flute"))
+        return "마법의 피리";
+    if (!strcmp(en_name, "tooled horn"))
+        return "세공된 뿔피리";
+    if (!strcmp(en_name, "frost horn"))
+        return "서리의 뿔피리";
+    if (!strcmp(en_name, "fire horn"))
+        return "화염의 뿔피리";
+    if (!strcmp(en_name, "horn of plenty"))
+        return "풍요의 뿔피리";
+    if (!strcmp(en_name, "wooden harp"))
+        return "나무 하프";
+    if (!strcmp(en_name, "magic harp"))
+        return "마법의 하프";
+    if (!strcmp(en_name, "bell"))
+        return "종";
+    if (!strcmp(en_name, "bugle"))
+        return "나팔";
+    if (!strcmp(en_name, "leather drum"))
+        return "가죽 북";
+    if (!strcmp(en_name, "drum of earthquake"))
+        return "지진의 북";
+    if (!strcmp(en_name, "pick-axe"))
+        return "곡괭이";
+    if (!strcmp(en_name, "grappling hook"))
+        return "갈고리 밧줄";
+    if (!strcmp(en_name, "unicorn horn"))
+        return "유니콘의 뿔";
+    if (!strcmp(en_name, "expensive camera"))
+        return "비싼 카메라";
+    if (!strcmp(en_name, "towel"))
+        return "수건";
+    if (!strcmp(en_name, "blindfold"))
+        return "눈가리개";
+    if (!strcmp(en_name, "lenses"))
+        return "렌즈";
+    if (!strcmp(en_name, "stethoscope"))
+        return "청진기";
+    if (!strcmp(en_name, "tinning kit"))
+        return "통조림 도구";
+    if (!strcmp(en_name, "tin opener"))
+        return "통조림 따개";
+    if (!strcmp(en_name, "leash"))
+        return "가죽끈";
+    if (!strcmp(en_name, "saddle"))
+        return "안장";
+    if (!strcmp(en_name, "magic marker"))
+        return "마법의 마커";
+    if (!strcmp(en_name, "land mine"))
+        return "지뢰";
+    if (!strcmp(en_name, "beartrap"))
+        return "곰덫";
+    if (!strcmp(en_name, "Candelabrum of Invocation"))
+        return "기원의 촛대";
+    if (!strcmp(en_name, "Bell of Opening"))
+        return "개방의 종";
+
+    /* ========================================== *
+     * 음식 (Food)
+     * ========================================== */
+    if (!strcmp(en_name, "tripe ration"))
+        return "내장 배급식";
+    if (!strcmp(en_name, "corpse"))
+        return "사체";
+    if (!strcmp(en_name, "egg"))
+        return "알";
+    if (!strcmp(en_name, "meat ring"))
+        return "고기 반지";
+    if (!strcmp(en_name, "meat stick"))
+        return "고기 막대기";
+    if (!strcmp(en_name, "meat chunk"))
+        return "고기 덩어리";
+    if (!strcmp(en_name, "huge chunk of meat"))
+        return "거대한 고기 덩어리";
+    if (!strcmp(en_name, "kelp frond"))
+        return "다시마 잎";
+    if (!strcmp(en_name, "eucalyptus leaf"))
+        return "유칼립투스 잎";
+    if (!strcmp(en_name, "apple"))
+        return "사과";
+    if (!strcmp(en_name, "orange"))
+        return "오렌지";
+    if (!strcmp(en_name, "pear"))
+        return "배";
+    if (!strcmp(en_name, "melon"))
+        return "멜론";
+    if (!strcmp(en_name, "banana"))
+        return "바나나";
+    if (!strcmp(en_name, "carrot"))
+        return "당근";
+    if (!strcmp(en_name, "sprig of wolfsbane"))
+        return "투구꽃 가지";
+    if (!strcmp(en_name, "clove of garlic"))
+        return "마늘 한 쪽";
+    if (!strcmp(en_name, "slime mold"))
+        return "점액질 곰팡이";
+    if (!strcmp(en_name, "lump of royal jelly"))
+        return "로열 젤리 덩어리";
+    if (!strcmp(en_name, "cream pie"))
+        return "크림 파이";
+    if (!strcmp(en_name, "candy melon"))
+        return "캔디 멜론";
+    if (!strcmp(en_name, "fortune cookie"))
+        return "포춘 쿠키";
+    if (!strcmp(en_name, "pancake"))
+        return "팬케이크";
+    if (!strcmp(en_name, "lembas wafer"))
+        return "렘바스 웨하스";
+    if (!strcmp(en_name, "cram ration"))
+        return "크램 배급식";
+    if (!strcmp(en_name, "food ration"))
+        return "식량 배급식";
+    if (!strcmp(en_name, "K-ration"))
+        return "K-레이션";
+    if (!strcmp(en_name, "C-ration"))
+        return "C-레이션";
+    if (!strcmp(en_name, "tin"))
+        return "통조림";
+
+    /* ========================================== *
+     * 마법 물품 Base Names
+     * (Potion/Scroll/Wand/Spellbook 공유 이름)
+     * ========================================== */
+    if (!strcmp(en_name, "booze"))
+        return "술";
+    if (!strcmp(en_name, "fruit juice"))
+        return "과일 주스";
+    if (!strcmp(en_name, "see invisible"))
+        return "투명 감지";
+    if (!strcmp(en_name, "sickness"))
+        return "질병";
+    if (!strcmp(en_name, "confusion"))
+        return "혼란";
+    if (!strcmp(en_name, "extra healing"))
+        return "추가 치료";
+    if (!strcmp(en_name, "hallucination"))
+        return "환각";
+    if (!strcmp(en_name, "healing"))
+        return "치료";
+    if (!strcmp(en_name, "restore ability"))
+        return "능력 복구";
+    if (!strcmp(en_name, "sleeping"))
+        return "수면";
+    if (!strcmp(en_name, "water"))
+        return "물";
+    if (!strcmp(en_name, "blindness"))
+        return "실명";
+    if (!strcmp(en_name, "paralysis"))
+        return "마비";
+    if (!strcmp(en_name, "speed"))
+        return "가속";
+    if (!strcmp(en_name, "monster detection"))
+        return "몬스터 감지";
+    if (!strcmp(en_name, "object detection"))
+        return "물건 감지";
+    if (!strcmp(en_name, "enlightenment"))
+        return "깨달음";
+    if (!strcmp(en_name, "full healing"))
+        return "완전 치료";
+    if (!strcmp(en_name, "mutability"))
+        return "돌연변이";
+    if (!strcmp(en_name, "acid"))
+        return "산성";
+    if (!strcmp(en_name, "oil"))
+        return "기름";
+    if (!strcmp(en_name, "amnesia"))
+        return "기억상실";
+    if (!strcmp(en_name, "mail"))
+        return "우편";
+    if (!strcmp(en_name, "enchant armor"))
+        return "방어구 강화";
+    if (!strcmp(en_name, "destroy armor"))
+        return "방어구 파괴";
+    if (!strcmp(en_name, "confuse monster"))
+        return "몬스터 혼란";
+    if (!strcmp(en_name, "scare monster"))
+        return "몬스터 공포";
+    if (!strcmp(en_name, "remove curse"))
+        return "저주 해제";
+    if (!strcmp(en_name, "enchant weapon"))
+        return "무기 강화";
+    if (!strcmp(en_name, "create monster"))
+        return "몬스터 소환";
+    if (!strcmp(en_name, "taming"))
+        return "몬스터 길들이기";
+    if (!strcmp(en_name, "genocide"))
+        return "학살";
+    if (!strcmp(en_name, "earth"))
+        return "대지";
+    if (!strcmp(en_name, "punishment"))
+        return "처벌";
+    if (!strcmp(en_name, "charging"))
+        return "충전";
+    if (!strcmp(en_name, "stinking cloud"))
+        return "냄새나는 구름";
+    if (!strcmp(en_name, "blank paper"))
+        return "백지";
+    if (!strcmp(en_name, "dig"))
+        return "파기";
+    if (!strcmp(en_name, "magic missile"))
+        return "매직 미사일";
+    if (!strcmp(en_name, "fireball"))
+        return "파이어볼";
+    if (!strcmp(en_name, "sleep"))
+        return "수면";
+    if (!strcmp(en_name, "cone of cold"))
+        return "냉기 원뿔";
+    if (!strcmp(en_name, "finger of death"))
+        return "죽음의 손가락";
+    if (!strcmp(en_name, "light"))
+        return "빛";
+    if (!strcmp(en_name, "detect monsters"))
+        return "몬스터 감지";
+    if (!strcmp(en_name, "knock"))
+        return "열기";
+    if (!strcmp(en_name, "force bolt"))
+        return "포스 볼트";
+    if (!strcmp(en_name, "cure blindness"))
+        return "실명 치료";
+    if (!strcmp(en_name, "drain life"))
+        return "생명력 흡수";
+    if (!strcmp(en_name, "slow monster"))
+        return "몬스터 둔화";
+    if (!strcmp(en_name, "wizard lock"))
+        return "마법 잠금";
+    if (!strcmp(en_name, "detect food"))
+        return "음식 감지";
+    if (!strcmp(en_name, "cause fear"))
+        return "공포 유발";
+    if (!strcmp(en_name, "clairvoyance"))
+        return "천리안";
+    if (!strcmp(en_name, "cure sickness"))
+        return "질병 치료";
+    if (!strcmp(en_name, "charm monster"))
+        return "몬스터 매혹";
+    if (!strcmp(en_name, "haste self"))
+        return "자기 가속";
+    if (!strcmp(en_name, "detect unseen"))
+        return "투명 감지";
+    if (!strcmp(en_name, "detect treasure"))
+        return "보물 감지";
+    if (!strcmp(en_name, "magic mapping"))
+        return "마법의 지도";
+    if (!strcmp(en_name, "identify"))
+        return "식별";
+    if (!strcmp(en_name, "turn undead"))
+        return "언데드 퇴치";
+    if (!strcmp(en_name, "teleport away"))
+        return "멀리 순간이동";
+    if (!strcmp(en_name, "create familiar"))
+        return "사역마 소환";
+    if (!strcmp(en_name, "cancellation"))
+        return "무효화";
+    if (!strcmp(en_name, "jumping"))
+        return "도약";
+    if (!strcmp(en_name, "stone to flesh"))
+        return "돌을 살로";
+    if (!strcmp(en_name, "Book of the Dead"))
+        return "사자의 서";
+    if (!strcmp(en_name, "secret door detection"))
+        return "비밀 문 감지";
+    if (!strcmp(en_name, "wishing"))
+        return "소원";
+    if (!strcmp(en_name, "nothing"))
+        return "아무것도 아님";
+    if (!strcmp(en_name, "striking"))
+        return "타격";
+    if (!strcmp(en_name, "make invisible"))
+        return "투명화 부여";
+    if (!strcmp(en_name, "speed monster"))
+        return "몬스터 가속";
+    if (!strcmp(en_name, "opening"))
+        return "열기";
+    if (!strcmp(en_name, "locking"))
+        return "잠그기";
+    if (!strcmp(en_name, "probing"))
+        return "탐지";
+    if (!strcmp(en_name, "digging"))
+        return "파기";
+    if (!strcmp(en_name, "cold"))
+        return "냉기";
+    if (!strcmp(en_name, "death"))
+        return "죽음";
+    if (!strcmp(en_name, "lightning"))
+        return "번개";
+
+    /* ========================================== *
+     * 보석 및 바위 (Gems & Rocks)
+     * ========================================== */
+    if (!strcmp(en_name, "dilithium crystal"))
+        return "다이리튬 크리스탈";
+    if (!strcmp(en_name, "diamond"))
+        return "다이아몬드";
+    /* ruby는 위에 정의됨 */
+    if (!strcmp(en_name, "jacinth"))
+        return "자신스";
+    if (!strcmp(en_name, "sapphire"))
+        return "사파이어";
+    if (!strcmp(en_name, "black opal"))
+        return "블랙 오팔";
+    if (!strcmp(en_name, "emerald"))
+        return "에메랄드";
+    if (!strcmp(en_name, "turquoise"))
+        return "터키석";
+    if (!strcmp(en_name, "citrine"))
+        return "황수정";
+    /* aquamarine은 위에 정의됨 */
+    if (!strcmp(en_name, "amber"))
+        return "호박석";
+    if (!strcmp(en_name, "topaz"))
+        return "토파즈";
+    if (!strcmp(en_name, "jet"))
+        return "흑옥";
+    if (!strcmp(en_name, "opal"))
+        return "오팔";
+    if (!strcmp(en_name, "chrysoberyl"))
+        return "금록석";
+    if (!strcmp(en_name, "garnet"))
+        return "가닛";
+    if (!strcmp(en_name, "amethyst"))
+        return "자수정";
+    if (!strcmp(en_name, "agate"))
+        return "마노";
+    if (!strcmp(en_name, "fluorite"))
+        return "형석";
+    if (!strcmp(en_name, "jade"))
+        return "옥";
+    if (!strcmp(en_name, "worthless piece of white glass"))
+        return "가치 없는 하얀 유리 조각";
+    if (!strcmp(en_name, "worthless piece of blue glass"))
+        return "가치 없는 푸른 유리 조각";
+    if (!strcmp(en_name, "worthless piece of red glass"))
+        return "가치 없는 붉은 유리 조각";
+    if (!strcmp(en_name, "worthless piece of yellowish brown glass"))
+        return "가치 없는 황갈색 유리 조각";
+    if (!strcmp(en_name, "worthless piece of orange glass"))
+        return "가치 없는 주황색 유리 조각";
+    if (!strcmp(en_name, "worthless piece of yellow glass"))
+        return "가치 없는 노란 유리 조각";
+    if (!strcmp(en_name, "worthless piece of black glass"))
+        return "가치 없는 검은 유리 조각";
+    if (!strcmp(en_name, "worthless piece of green glass"))
+        return "가치 없는 초록색 유리 조각";
+    if (!strcmp(en_name, "worthless piece of violet glass"))
+        return "가치 없는 보라색 유리 조각";
+    if (!strcmp(en_name, "luckstone"))
+        return "행운의 돌";
+    if (!strcmp(en_name, "loadstone"))
+        return "무거운 돌";
+    if (!strcmp(en_name, "touchstone"))
+        return "시금석";
+    if (!strcmp(en_name, "flint"))
+        return "부싯돌";
+    if (!strcmp(en_name, "rock"))
+        return "돌";
+    if (!strcmp(en_name, "boulder"))
+        return "바위";
+    if (!strcmp(en_name, "statue"))
+        return "조각상";
+    if (!strcmp(en_name, "heavy iron ball"))
+        return "무거운 쇠공";
+    if (!strcmp(en_name, "iron chain"))
+        return "쇠사슬";
+
+    /* ========================================== *
+     * 독 (Venoms)
+     * ========================================== */
+    if (!strcmp(en_name, "blinding venom"))
+        return "눈을 머는 독액";
+    if (!strcmp(en_name, "acid venom"))
+        return "산성 독액";
+
+/* ========================================== *
+     * 미식별 묘사 / 외형 (Descriptions)
+     * ========================================== */
+
+    /* [무기 외형] */
+    if (!strcmp(en_name, "runed arrow"))
+        return "룬이 새겨진 화살";
+    if (!strcmp(en_name, "crude arrow"))
+        return "조잡한 화살";
+    if (!strcmp(en_name, "bamboo arrow"))
+        return "대나무 화살";
+    if (!strcmp(en_name, "throwing star"))
+        return "표창";
+    if (!strcmp(en_name, "throwing spear"))
+        return "투창";
+    if (!strcmp(en_name, "runed spear"))
+        return "룬이 새겨진 창";
+    if (!strcmp(en_name, "crude spear"))
+        return "조잡한 창";
+    if (!strcmp(en_name, "stout spear"))
+        return "튼튼한 창";
+    if (!strcmp(en_name, "scimitar"))
+        return "곡도";
+    if (!strcmp(en_name, "runed dagger"))
+        return "룬이 새겨진 단검";
+    if (!strcmp(en_name, "crude dagger"))
+        return "조잡한 단검";
+    if (!strcmp(en_name, "double-headed axe"))
+        return "양날 도끼";
+    if (!strcmp(en_name, "runed short sword"))
+        return "룬이 새겨진 짧은 검";
+    if (!strcmp(en_name, "crude short sword"))
+        return "조잡한 짧은 검";
+    if (!strcmp(en_name, "broad short sword"))
+        return "넓고 짧은 검";
+    if (!strcmp(en_name, "curved sword"))
+        return "휘어진 검";
+    if (!strcmp(en_name, "runed broadsword"))
+        return "룬이 새겨진 브로드소드";
+    if (!strcmp(en_name, "samurai sword"))
+        return "사무라이 검";
+    if (!strcmp(en_name, "long samurai sword"))
+        return "긴 사무라이 검";
+    if (!strcmp(en_name, "vulgar polearm"))
+        return "조잡한 미늘창";
+    if (!strcmp(en_name, "hilted polearm"))
+        return "자루가 있는 미늘창";
+    if (!strcmp(en_name, "forked polearm"))
+        return "갈라진 미늘창";
+    if (!strcmp(en_name, "single-edged polearm"))
+        return "외날 미늘창";
+    if (!strcmp(en_name, "angled poleaxe"))
+        return "각진 폴액스";
+    if (!strcmp(en_name, "long poleaxe"))
+        return "긴 폴액스";
+    if (!strcmp(en_name, "pole cleaver"))
+        return "장대 고기칼";
+    if (!strcmp(en_name, "broad pick"))
+        return "넓은 곡괭이";
+    if (!strcmp(en_name, "pole sickle"))
+        return "장대 낫";
+    if (!strcmp(en_name, "pruning hook"))
+        return "전지용 갈고리";
+    if (!strcmp(en_name, "hooked polearm"))
+        return "갈고리 달린 미늘창";
+    if (!strcmp(en_name, "pronged polearm"))
+        return "갈래가 있는 미늘창";
+    if (!strcmp(en_name, "beaked polearm"))
+        return "부리 모양 미늘창";
+    if (!strcmp(en_name, "thonged club"))
+        return "가죽끈 달린 곤봉";
+    if (!strcmp(en_name, "runed bow"))
+        return "룬이 새겨진 활";
+    if (!strcmp(en_name, "crude bow"))
+        return "조잡한 활";
+    if (!strcmp(en_name, "long bow"))
+        return "장궁";
+    if (!strcmp(en_name, "staff"))
+        return "지팡이";
+    if (!strcmp(en_name, "iron hook"))
+        return "철 갈고리";
+
+    /* [방어구 외형] */
+    if (!strcmp(en_name, "leather hat"))
+        return "가죽 모자";
+    if (!strcmp(en_name, "iron skull cap"))
+        return "철제 둥근 모자";
+    if (!strcmp(en_name, "hard hat"))
+        return "단단한 모자";
+    if (!strcmp(en_name, "conical hat"))
+        return "원뿔형 모자";
+    if (!strcmp(en_name, "plumed helmet"))
+        return "깃장식 투구";
+    if (!strcmp(en_name, "etched helmet"))
+        return "식각된 투구";
+    if (!strcmp(en_name, "crested helmet"))
+        return "볏이 있는 투구";
+    if (!strcmp(en_name, "visored helmet"))
+        return "얼굴 가리개가 있는 투구";
+    if (!strcmp(en_name, "crude chain mail"))
+        return "조잡한 사슬 갑옷";
+    if (!strcmp(en_name, "chain mail"))
+        return "사슬 갑옷";
+    if (!strcmp(en_name, "crude ring mail"))
+        return "조잡한 고리 갑옷";
+    if (!strcmp(en_name, "faded pall"))
+        return "빛바랜 관의";
+    if (!strcmp(en_name, "coarse mantelet"))
+        return "거친 망토";
+    if (!strcmp(en_name, "hooded cloak"))
+        return "후드 달린 망토";
+    if (!strcmp(en_name, "slippery cloak"))
+        return "미끄러운 망토";
+    if (!strcmp(en_name, "apron"))
+        return "앞치마";
+    if (!strcmp(en_name, "tattered cape"))
+        return "너덜너덜한 망토";
+    if (!strcmp(en_name, "opera cloak"))
+        return "오페라 망토";
+    if (!strcmp(en_name, "ornamental cope"))
+        return "장식된 망토";
+    if (!strcmp(en_name, "piece of cloth"))
+        return "천 조각";
+    if (!strcmp(en_name, "blue and green shield"))
+        return "파랗고 초록색인 방패";
+    if (!strcmp(en_name, "white-handed shield"))
+        return "하얀 손이 그려진 방패";
+    if (!strcmp(en_name, "red-eyed shield"))
+        return "붉은 눈이 그려진 방패";
+    if (!strcmp(en_name, "large round shield"))
+        return "크고 둥근 방패";
+    if (!strcmp(en_name, "polished silver shield"))
+        return "광택나는 은 방패";
+    if (!strcmp(en_name, "old gloves"))
+        return "낡은 장갑";
+    if (!strcmp(en_name, "padded gloves"))
+        return "패딩 장갑";
+    if (!strcmp(en_name, "riding gloves"))
+        return "승마용 장갑";
+    if (!strcmp(en_name, "fencing gloves"))
+        return "펜싱 장갑";
+    if (!strcmp(en_name, "walking shoes"))
+        return "산책용 신발";
+    if (!strcmp(en_name, "hard shoes"))
+        return "단단한 신발";
+    if (!strcmp(en_name, "jackboots"))
+        return "가죽 장화";
+    if (!strcmp(en_name, "combat boots"))
+        return "전투화";
+    if (!strcmp(en_name, "jungle boots"))
+        return "정글 부츠";
+    if (!strcmp(en_name, "hiking boots"))
+        return "등산화";
+    if (!strcmp(en_name, "mud boots"))
+        return "진흙 장화";
+    if (!strcmp(en_name, "buckled boots"))
+        return "버클이 달린 장화";
+    if (!strcmp(en_name, "riding boots"))
+        return "승마 장화";
+    if (!strcmp(en_name, "snow boots"))
+        return "설원 장화";
+
+    /* [부적 외형] */
+    if (!strcmp(en_name, "circular"))
+        return "원형";
+    if (!strcmp(en_name, "spherical"))
+        return "구형";
+    if (!strcmp(en_name, "oval"))
+        return "타원형";
+    if (!strcmp(en_name, "triangular"))
+        return "삼각형";
+    if (!strcmp(en_name, "pyramidal"))
+        return "피라미드형";
+    if (!strcmp(en_name, "square"))
+        return "정사각형";
+    if (!strcmp(en_name, "concave"))
+        return "오목한";
+    if (!strcmp(en_name, "hexagonal"))
+        return "육각형";
+    if (!strcmp(en_name, "octagonal"))
+        return "팔각형";
+
+    /* [도구 외형] */
+    if (!strcmp(en_name, "bag"))
+        return "자루";
+    if (!strcmp(en_name, "key"))
+        return "열쇠";
+    if (!strcmp(en_name, "candle"))
+        return "양초";
+    if (!strcmp(en_name, "lamp"))
+        return "램프";
+    if (!strcmp(en_name, "looking glass"))
+        return "손거울";
+    if (!strcmp(en_name, "glass orb"))
+        return "유리 구슬";
+    if (!strcmp(en_name, "whistle"))
+        return "호루라기";
+    if (!strcmp(en_name, "flute"))
+        return "피리";
+    if (!strcmp(en_name, "horn"))
+        return "뿔피리";
+    if (!strcmp(en_name, "harp"))
+        return "하프";
+    if (!strcmp(en_name, "drum"))
+        return "북";
+    if (!strcmp(en_name, "candelabrum"))
+        return "촛대";
+    if (!strcmp(en_name, "silver bell"))
+        return "은 종";
+
+    /* [물약/보석/기타 색상 묘사] */
+    /* ruby, aquamarine은 이미 추가하셨으므로 생략 */
+    if (!strcmp(en_name, "pink"))
+        return "분홍색";
+    if (!strcmp(en_name, "orange"))
+        return "주황색";
+    if (!strcmp(en_name, "yellow"))
+        return "노란색";
+    if (!strcmp(en_name, "emerald"))
+        return "에메랄드";
+    if (!strcmp(en_name, "dark green"))
+        return "진초록색";
+    if (!strcmp(en_name, "cyan"))
+        return "청록색";
+    if (!strcmp(en_name, "sky blue"))
+        return "하늘색";
+    if (!strcmp(en_name, "brilliant blue"))
+        return "선명한 파란색";
+    if (!strcmp(en_name, "magenta"))
+        return "자홍색";
+    if (!strcmp(en_name, "purple-red"))
+        return "적자색";
+    if (!strcmp(en_name, "puce"))
+        return "암갈색";
+    if (!strcmp(en_name, "milky"))
+        return "우윳빛";
+    if (!strcmp(en_name, "swirly"))
+        return "소용돌이치는";
+    if (!strcmp(en_name, "bubbly"))
+        return "거품이 나는";
+    if (!strcmp(en_name, "smoky"))
+        return "연기가 나는";
+    if (!strcmp(en_name, "cloudy"))
+        return "구름 낀";
+    if (!strcmp(en_name, "effervescent"))
+        return "거품이 끓어오르는";
+    if (!strcmp(en_name, "black"))
+        return "검은색";
+    if (!strcmp(en_name, "golden"))
+        return "황금색";
+    if (!strcmp(en_name, "brown"))
+        return "갈색";
+    if (!strcmp(en_name, "fizzy"))
+        return "탄산이 있는";
+    if (!strcmp(en_name, "dark"))
+        return "어두운색";
+    if (!strcmp(en_name, "white"))
+        return "하얀색";
+    if (!strcmp(en_name, "murky"))
+        return "탁한";
+    if (!strcmp(en_name, "clear"))
+        return "투명한";
+    if (!strcmp(en_name, "yellowish brown"))
+        return "황갈색";
+    if (!strcmp(en_name, "gray"))
+        return "회색";
+
+    /* [마법서 외형] */
+    if (!strcmp(en_name, "parchment"))
+        return "양피지";
+    if (!strcmp(en_name, "vellum"))
+        return "피지";
+    if (!strcmp(en_name, "ragged"))
+        return "너덜너덜한";
+    if (!strcmp(en_name, "dog eared"))
+        return "모서리가 접힌";
+    if (!strcmp(en_name, "mottled"))
+        return "얼룩덜룩한";
+    if (!strcmp(en_name, "stained"))
+        return "때묻은";
+    if (!strcmp(en_name, "cloth"))
+        return "천";
+    if (!strcmp(en_name, "leathery"))
+        return "가죽 같은";
+    if (!strcmp(en_name, "velvet"))
+        return "벨벳";
+    if (!strcmp(en_name, "light green"))
+        return "연초록색";
+    if (!strcmp(en_name, "turquoise"))
+        return "청록색";
+    if (!strcmp(en_name, "light blue"))
+        return "연파란색";
+    if (!strcmp(en_name, "dark blue"))
+        return "진파란색";
+    if (!strcmp(en_name, "indigo"))
+        return "남색";
+    if (!strcmp(en_name, "purple"))
+        return "보라색";
+    if (!strcmp(en_name, "violet"))
+        return "청자색";
+    if (!strcmp(en_name, "tan"))
+        return "황갈색";
+    if (!strcmp(en_name, "plaid"))
+        return "격자무늬";
+    if (!strcmp(en_name, "light brown"))
+        return "연갈색";
+    if (!strcmp(en_name, "dark brown"))
+        return "진갈색";
+    if (!strcmp(en_name, "wrinkled"))
+        return "구겨진";
+    if (!strcmp(en_name, "dusty"))
+        return "먼지 쌓인";
+    if (!strcmp(en_name, "bronze"))
+        return "청동";
+    if (!strcmp(en_name, "copper"))
+        return "구리";
+    if (!strcmp(en_name, "silver"))
+        return "은";
+    if (!strcmp(en_name, "gold"))
+        return "금";
+    if (!strcmp(en_name, "glittering"))
+        return "반짝이는";
+    if (!strcmp(en_name, "shining"))
+        return "빛나는";
+    if (!strcmp(en_name, "dull"))
+        return "탁한";
+    if (!strcmp(en_name, "thin"))
+        return "얇은";
+    if (!strcmp(en_name, "thick"))
+        return "두꺼운";
+    if (!strcmp(en_name, "canvas"))
+        return "캔버스";
+    if (!strcmp(en_name, "hardcover"))
+        return "양장본";
+    if (!strcmp(en_name, "plain"))
+        return "평범한";
+    if (!strcmp(en_name, "paperback"))
+        return "문고판";
+    if (!strcmp(en_name, "papyrus"))
+        return "파피루스";
+
+    /* [지팡이 재질] */
+    if (!strcmp(en_name, "glass"))
+        return "유리";
+    if (!strcmp(en_name, "balsa"))
+        return "발사나무";
+    if (!strcmp(en_name, "crystal"))
+        return "수정";
+    if (!strcmp(en_name, "maple"))
+        return "단풍나무";
+    if (!strcmp(en_name, "pine"))
+        return "소나무";
+    if (!strcmp(en_name, "oak"))
+        return "참나무";
+    if (!strcmp(en_name, "ebony"))
+        return "흑단나무";
+    if (!strcmp(en_name, "marble"))
+        return "대리석";
+    if (!strcmp(en_name, "tin"))
+        return "주석";
+    if (!strcmp(en_name, "platinum"))
+        return "백금";
+    if (!strcmp(en_name, "iridium"))
+        return "이리듐";
+    if (!strcmp(en_name, "zinc"))
+        return "아연";
+    if (!strcmp(en_name, "aluminum"))
+        return "알루미늄";
+    if (!strcmp(en_name, "uranium"))
+        return "우라늄";
+    if (!strcmp(en_name, "iron"))
+        return "철";
+    if (!strcmp(en_name, "steel"))
+        return "강철";
+    if (!strcmp(en_name, "short"))
+        return "짧은";
+    if (!strcmp(en_name, "long"))
+        return "긴";
+    if (!strcmp(en_name, "curved"))
+        return "휘어진";
+    if (!strcmp(en_name, "forked"))
+        return "갈라진";
+    if (!strcmp(en_name, "spiked"))
+        return "가시 돋친";
+    if (!strcmp(en_name, "jeweled"))
+        return "보석이 박힌";
+
+    /* [반지 재질] */
+    if (!strcmp(en_name, "wooden"))
+        return "나무";
+    if (!strcmp(en_name, "granite"))
+        return "화강암";
+    if (!strcmp(en_name, "clay"))
+        return "점토";
+    if (!strcmp(en_name, "coral"))
+        return "산호";
+    if (!strcmp(en_name, "black onyx"))
+        return "블랙 오닉스";
+    if (!strcmp(en_name, "moonstone"))
+        return "문스톤";
+    if (!strcmp(en_name, "tiger eye"))
+        return "호안석";
+    if (!strcmp(en_name, "jade"))
+        return "옥";
+    if (!strcmp(en_name, "agate"))
+        return "마노";
+    if (!strcmp(en_name, "topaz"))
+        return "토파즈";
+    if (!strcmp(en_name, "sapphire"))
+        return "사파이어";
+    if (!strcmp(en_name, "diamond"))
+        return "다이아몬드";
+    if (!strcmp(en_name, "pearl"))
+        return "진주";
+    if (!strcmp(en_name, "twisted"))
+        return "꼬인";
+    if (!strcmp(en_name, "ivory"))
+        return "상아";
+    if (!strcmp(en_name, "wire"))
+        return "철사";
+    if (!strcmp(en_name, "engagement"))
+        return "약혼";
+    if (!strcmp(en_name, "shiny"))
+        return "빛나는";
+
+    /* [두루마리 글자 (Gibberish)]
+     * (마법 두루마리 글자는 대개 기호처럼 쓰여 번역하지 않는 경우가 많지만
+     * "stamped" 등 상태를 나타내는 단어는 번역해야 합니다.) */
+    if (!strcmp(en_name, "stamped"))
+        return "우표가 붙은";
+    if (!strcmp(en_name, "unlabeled"))
+        return "아무것도 안 적힌";
+
+    /* [기타 외형/특수 아이템] */
+    if (!strcmp(en_name, "splash of venom"))
+        return "독액 방울";
+    if (!strcmp(en_name, "cheap plastic imitation of the Amulet of Yendor"))
+        return "옌더의 부적의 싸구려 플라스틱 모조품";
+
+    /* 빼먹은 것 */
+    if (!strcmp(en_name, "knife"))
+        return "칼";
+    if (!strcmp(en_name, "stiletto"))
+        return "스틸레토";
+    if (!strcmp(en_name, "leather jacket"))
+        return "가죽 재킷";
+    if (!strcmp(en_name, "can of grease"))
+        return "윤활유 캔";
+    if (!strcmp(en_name, "figurine"))
+        return "작은 조각상";
+    if (!strcmp(en_name, "glob of gray ooze"))
+        return "회색 점액의 방울";
+    if (!strcmp(en_name, "glob of brown pudding"))
+        return "갈색 푸딩의 방울";
+    if (!strcmp(en_name, "glob of green slime"))
+        return "초록 슬라임의 방울";
+    if (!strcmp(en_name, "glob of black pudding"))
+        return "검은 푸딩의 방울";
+    if (!strcmp(en_name, "gain ability"))
+        return "능력 획득";
+    if (!strcmp(en_name, "gain energy"))
+        return "에너지 획득";
 
     return (char *) en_name; /* 사전에 없으면 원래 영어 반환 */
 }
