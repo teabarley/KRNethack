@@ -413,7 +413,7 @@ register struct obj *obj;
     if (u.usteed && u.dz > 0) {
         if (interference) {
             /*KR pline("%s interferes.", Monnam(u.ustuck)); */
-            pline("%s이/가 방해한다.", Monnam(u.ustuck));
+            pline("%s 방해한다.", append_josa(Monnam(u.ustuck), "이"));
             mstatusline(u.ustuck);
         } else
             mstatusline(u.usteed);
@@ -423,7 +423,7 @@ register struct obj *obj;
         return res;
     } else if (u.uswallow && interference) {
         /*KR pline("%s interferes.", Monnam(u.ustuck)); */
-        pline("%s이/가 방해한다.", Monnam(u.ustuck));
+        pline("%s 방해한다.", append_josa(Monnam(u.ustuck), "이"));
         mstatusline(u.ustuck);
         return res;
     } else if (u.dz) {
@@ -698,7 +698,7 @@ boolean feedback;
     if (feedback) {
         if (canseemon(mtmp))
             /*KR pline("%s pulls free of %s leash!", Monnam(mtmp), mhis(mtmp)); */
-            pline("%s이/가 줄을 잡아당겨 도망갔다!", Monnam(mtmp));
+            pline("%s 줄을 잡아당겨 도망갔다!", append_josa(Monnam(mtmp), "이"));
         else
             /*KR Your("leash falls slack."); */
             Your("끈이 느슨해져서 떨어졌다.");
@@ -1111,10 +1111,15 @@ struct obj *obj;
     }
     if (u.dz) {
         if (useeit)
-            /*KR You("reflect the %s.", */
-            You("%을/를 비췄다.",
+#if 0 /*KR:T*/
+            You("reflect the %s.",
                 (u.dz > 0) ? surface(u.ux, u.uy) : ceiling(u.ux, u.uy));
         return 1;
+#else            
+            You("%s 비췄다.",
+                append_josa((u.dz > 0) ? surface(u.ux, u.uy) : ceiling(u.ux, u.uy), "를"));
+        return 1;
+#endif
     }
     mtmp = bhit(u.dx, u.dy, COLNO, INVIS_BEAM,
                 (int FDECL((*), (MONST_P, OBJ_P))) 0,
@@ -1195,7 +1200,7 @@ struct obj *obj;
             pline("%s은/는 자신의 모습을 감탄하며 바라보고 있다.", Monnam(mtmp));
 #endif
             /*KR pline("%s takes it!", upstart(strcpy(buf, mhe(mtmp)))); */
-            pline("%s이/가 그것을 채갔다!", upstart(strcpy(buf, mhe(mtmp))));
+            pline("%s 그것을 채갔다!", append_josa(upstart(strcpy(buf, mhe(mtmp))), "이"));
         } else
             /*KR pline("It steals your %s!", mirror); */
             pline("누군가가 당신의 %s을 훔친다!", mirror);
@@ -1282,10 +1287,10 @@ struct obj **optr;
             && (mtmp = makemon(mkclass(S_NYMPH, 0), u.ux, u.uy, NO_MINVENT))
                    != 0) {
             /*KR You("summon %s!", a_monnam(mtmp)); */
-            You("%s을/를 소환했다!", a_monnam(mtmp));
+            You("%s 소환했다!", append_josa(a_monnam(mtmp), "을"));
             if (!obj_resists(obj, 93, 100)) {
                 /*KR pline("%s shattered!", Tobjnam(obj, "have")); */
-                pline("%s은 산산조각이 났다!", xname(obj));
+                pline("%s 산산조각이 났다!", append_josa(xname(obj), "은"));
                 useup(obj);
                 *optr = 0;
             } else
@@ -1793,7 +1798,7 @@ struct obj **optr;
         obj_extract_self(obj); /* free from inv */
         obj->nomerge = 1;
         /*KR obj = hold_another_object(obj, "You drop %s!", doname(obj), */
-        obj = hold_another_object(obj, "당신은 %을/를 떨어트렸다!", doname(obj),
+        obj = hold_another_object(obj, "당신은 %s 떨어트렸다!", append_josa(doname(obj), "을"),
                                   (const char *) 0);
         if (obj)
             obj->nomerge = 0;
@@ -2252,23 +2257,23 @@ struct obj *obj;
             You("tin %s without wearing gloves.",
                 an(mons[corpse->corpsenm].mname));
 #else
-            You("장갑을 끼지 않고 %s을/를 통조림으로 만들려고 했다.",
-                mons[corpse->corpsenm].mname);
+            You("장갑을 끼지 않고 %s 통조림으로 만들려고 했다.",
+                append_josa(mons[corpse->corpsenm].mname, "을"));
 #endif
         else {
 #if 0 /*KR:T*/
             pline("Tinning %s without wearing gloves is a fatal mistake...",
                   an(mons[corpse->corpsenm].mname));
 #else
-            pline("장갑을 끼지 않고 %s을/를 통조림으로 만드는 건 아주 치명적인 실수다...",
-                mons[corpse->corpsenm].mname);
+            pline("장갑을 끼지 않고 %s 통조림으로 만드는 건 아주 치명적인 실수다...",
+                append_josa(mons[corpse->corpsenm].mname, "을"));
 #endif
 #if 0 /*KR:T*/
             Sprintf(kbuf, "trying to tin %s without gloves",
                     mons[corpse->corpsenm].mname));
 #else 
-            Sprintf(kbuf, "장갑 없이 %s을/를 통조림으로 만들려고 하다가",
-                mons[corpse->corpsenm].mname);
+            Sprintf(kbuf, "장갑 없이 %s 통조림으로 만들려고 하다가",
+                append_josa(mons[corpse->corpsenm].mname, "을"));
 #endif
         }
         instapetrify(kbuf);
@@ -2313,8 +2318,8 @@ struct obj *obj;
         (void) hold_another_object(can, "You make, but cannot pick up, %s.",
                                    doname(can), (const char *) 0);
 #else
-        (void)hold_another_object(can, "통조림으로 만들었지만, %s을/를 집어들 수는 없었다.",
-                                   doname(can), (const char*)0);
+        (void)hold_another_object(can, "통조림으로 만들었지만, %s 집어들 수는 없었다.",
+                                   append_josa(doname(can), "을"), (const char*)0);
 #endif
     } else
         impossible("Tinning failed.");
@@ -2585,23 +2590,21 @@ long timeout;
                 You_feel("%s %s from your pack!", something,
                          locomotion(mtmp->data, "drop"));
 #else
-                You_feel("%s이/가 당신의 가방에서 %s 것 같다!", something,
+                You_feel("%s 당신의 가방에서 %s 것 같다!", append_josa(something, "이"),
                     locomotion(mtmp->data, "떨어진"));
 #endif
             else
              /*KR   You_see("%s %s out of your pack%s!", monnambuf,
                         locomotion(mtmp->data, "drop"), and_vanish); */
-                You_see("%s이/가 당신의 가방에서 %s 것을 보았다!", monnambuf,
+                You_see("%s 당신의 가방에서 %s 것을 보았다!", append_josa(monnambuf, "이"),
                     locomotion(mtmp->data, "떨어지는"));
-            /* jpast(locomotion(mtmp->data, "떨어지는 것을"))); */
-            /* jpast - extern.h 에서 선언한 특수 함수. 수정필요 */
             break;
 
         case OBJ_FLOOR:
             if (cansee_spot && !silent) {
                 if (suppress_see)
                     /*KR pline("%s suddenly vanishes!", an(xname(figurine))); */
-                    pline("%s이/가 갑자기 사라졌다!", xname(figurine));
+                    pline("%s 갑자기 사라졌다!", append_josa(xname(figurine), "이"));
                 else
 #if 0 /*KR*/
                     You_see("a figurine transform into %s%s!", monnambuf,
@@ -2634,7 +2637,7 @@ long timeout;
                         locomotion(mtmp->data, "drop"), carriedby,
                         and_vanish);
 #else
-                You("%s이/가 %s에서 %s 것을 본다!", monnambuf,
+                You("%s %s에서 %s 것을 본다!", append_josa(monnambuf, "이"),
                     carriedby, locomotion(mtmp->data, "떨어지는"));
 #endif                    
             }
@@ -2768,7 +2771,7 @@ struct obj *obj;
         pline("%s from your %s.", Tobjnam(obj, "slip"),
               fingers_or_gloves(FALSE));
 #else
-        pline("%s이/가 당신의 %s에서 미끄러져 떨어졌다.", xname(obj),
+        pline("%s 당신의 %s에서 미끄러져 떨어졌다.", append_josa(xname(obj), "이"),
             fingers_or_gloves(FALSE));
 #endif
         dropx(obj);
@@ -2785,7 +2788,7 @@ struct obj *obj;
             pline("%s from your %s.", Tobjnam(obj, "slip"),
                   fingers_or_gloves(FALSE));
 #else
-            pline("%s이/가 당신의 %s에서 미끄러져 떨어졌다.", xname(obj),
+            pline("%s 당신의 %s에서 미끄러져 떨어졌다.", append_josa(xname(obj), "이"),
                 fingers_or_gloves(FALSE));
 #endif
             dropx(obj);
@@ -2857,7 +2860,7 @@ struct obj *tstone;
 
     if (obj == tstone && obj->quan == 1L) {
         /*KR You_cant("rub %s on itself.", the(xname(obj))); */
-        You("%s을/를 그 자체에 문지를 수는 없다.", the(xname(obj)));
+        You("%s 그 자체에 문지를 수는 없다.", append_josa(the(xname(obj)), "을"));
         return;
     }
 
@@ -3098,9 +3101,13 @@ struct obj *otmp;
     }
     ttyp = (otmp->otyp == LAND_MINE) ? LANDMINE : BEAR_TRAP;
     if (otmp == trapinfo.tobj && u.ux == trapinfo.tx && u.uy == trapinfo.ty) {
-        /*KR You("resume setting %s%s.", shk_your(buf, otmp), */
-        You("%s을/를 다시 설치하기 시작했다.",
-            defsyms[trap_to_defsym(what_trap(ttyp, rn2))].explanation);
+#if 0 /*KR:T*/
+        You("resume setting %s%s.", shk_your(buf, otmp),
+            append_josa(defsyms[trap_to_defsym(what_trap(ttyp, rn2))].explanation));
+#else
+        You("%s 다시 설치하기 시작했다.",
+            append_josa(defsyms[trap_to_defsym(what_trap(ttyp, rn2))].explanation, "을"));
+#endif
         set_occupation(set_trap, occutext, 0);
         return;
     }
@@ -3139,9 +3146,9 @@ struct obj *otmp;
                 case BEAR_TRAP: /* drop it without arming it */
                     reset_trapset();
                     /*KR You("drop %s!", */
-                    You("%s을/를 떨어뜨렸다!",
-                        the(defsyms[trap_to_defsym(what_trap(ttyp, rn2))]
-                                .explanation));
+                    You("%s 떨어뜨렸다!",
+                        append_josa(the(defsyms[trap_to_defsym(what_trap(ttyp, rn2))]
+                                .explanation), "을"));
                     dropx(otmp);
                     return;
                 }
@@ -3152,8 +3159,8 @@ struct obj *otmp;
         }
     }
     /*KR You("begin setting %s%s.", shk_your(buf, otmp), */
-    You("%s%s을/를 설치하기 시작했다.", shk_your(buf, otmp),
-        defsyms[trap_to_defsym(what_trap(ttyp, rn2))].explanation);
+    You("%s%s 설치하기 시작했다.", shk_your(buf, otmp),
+        append_josa(defsyms[trap_to_defsym(what_trap(ttyp, rn2))].explanation, "을"));
     set_occupation(set_trap, occutext, 0);
     return;
 }
@@ -3186,8 +3193,8 @@ set_trap()
         }
         if (!trapinfo.force_bungle)
             /*KR You("finish arming %s.", */
-            You("%s을/를 설치하는 것을 마쳤다.",
-                the(defsyms[trap_to_defsym(what_trap(ttyp, rn2))].explanation));
+            You("%s 설치하는 것을 마쳤다.",
+                append_josa(the(defsyms[trap_to_defsym(what_trap(ttyp, rn2))].explanation), "을"));
         if (((otmp->cursed || Fumbling) && (rnl(10) > 5))
             || trapinfo.force_bungle)
             dotrap(ttmp,
@@ -3274,7 +3281,7 @@ struct obj *obj;
         /* Sometimes you hit your steed by mistake */
         if (u.usteed && !rn2(proficient + 2)) {
             /*KR You("whip %s!", mon_nam(u.usteed)); */
-            You("%s을/를 채찍질했다!", mon_nam(u.usteed));
+            You("%s 채찍질했다!", append_josa(mon_nam(u.usteed), "을"));
             kick_steed();
             return 1;
         }
@@ -3451,7 +3458,7 @@ struct obj *obj;
 #endif /* 0 */
                     /* right into your inventory */
                     /*KR You("snatch %s!", yname(otmp)); */
-                    You("%s을/를 빼앗았다!", xname(otmp));
+                    You("%s 빼앗았다!", append_josa(xname(otmp), "을"));
                     if (otmp->otyp == CORPSE
                         && touch_petrifies(&mons[otmp->corpsenm]) && !uarmg
                         && !Stone_resistance
@@ -3503,7 +3510,7 @@ struct obj *obj;
                 stumble_onto_mimic(mtmp);
             else
                 /*KR You("flick your bullwhip towards %s.", mon_nam(mtmp)); */
-                You("%s을/를 향해서 채찍질했다.", mon_nam(mtmp));
+                You("%s 향해 채찍질했다.", append_josa(mon_nam(mtmp), "을"));
             if (proficient) {
                 if (attack(mtmp))
                     return 1;
@@ -3909,7 +3916,7 @@ struct obj *obj;
             flags.confirm = save_confirm;
             check_caitiff(mtmp); /* despite fact there's no damage */
             /*KR You("pull in %s!", mon_nam(mtmp)); */
-            You("%s을/를 잡아당겼다!", mon_nam(mtmp));
+            You("%s 잡아당겼다!", append_josa(mon_nam(mtmp), "을"));
             mtmp->mundetected = 0;
             rloc_to(mtmp, cc.x, cc.y);
             return 1;
@@ -3926,7 +3933,7 @@ struct obj *obj;
     case 3: /* Surface */
         if (IS_AIR(levl[cc.x][cc.y].typ) || is_pool(cc.x, cc.y))
             /*KR pline_The("hook slices through the %s.", surface(cc.x, cc.y)); */
-            pline("갈고리가 %s을/를 갈랐다.", surface(cc.x, cc.y));
+            pline("갈고리가 %s 갈랐다.", append_josa(surface(cc.x, cc.y), "을"));
         else {
             /*KR You("are yanked toward the %s!", surface(cc.x, cc.y)); */
             You("%s로 휙 끌려갔다!", surface(cc.x, cc.y));
@@ -4358,10 +4365,14 @@ doapply()
             /* sometimes the blessing will be worn off */
             if (!rn2(49)) {
                 if (!Blind) {
-                    /*KR pline("%s %s.", Yobjnam2(obj, "glow"), hcolor("brown")); */
-                    /*JP pline("%s이/가 %s 빛났다.", xname(obj), jconj_adj(hcolor("갈색으로"))); */
-                    /* jconj_adj: extern.h에서 선언한 특수 함수. 수정필요 */
-                    pline("%s이/가 %s.", Yobjnam2(obj, "빛났다"), hcolor("갈색으로"));
+#if 0 /*KR:T*/
+                    pline("%s %s.", Yobjnam2(obj, "glow"), hcolor("brown"));
+#else /*KR: KRNethack 맞춤 번역*/
+                    /* Yname2는 "당신의 유칼립투스 잎" 까지만 가져옵니다.
+                     * hcolor("brown")은 번역 파일에서 "갈색"을 가져옵니다. */
+                    pline("%s %s 빛으로 빛났다.",
+                          append_josa(Yname2(obj), "이"), hcolor("brown"));
+#endif
                     set_bknown(obj, 1);
                 }
                 unbless(obj);

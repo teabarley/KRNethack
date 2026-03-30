@@ -44,52 +44,78 @@ struct attack *mattk;
             !Blind ? "smiles at" : !Deaf ? "talks to" : "touches",
             (compat == 2) ? "engagingly" : "seductively");
 #else
-        pline("%s이/가 당신%s %s.", Monst_name,
+        pline("%s 당신%s %s.", append_josa(Monst_name, "이"),
             (compat == 2) ? "을 끌어당기듯이" : "을 유혹하는 듯이",
-            !Blind ? "미소지었다" : !Deaf ? "이야기했다" : "만졌다");
+            !Blind ? "미소지었다" : (!Deaf ? "이야기했다" : "만졌다"));
 #endif
     } else {
         switch (mattk->aatyp) {
         case AT_BITE:
-            /*KR pfmt = "%s bites!"; */
-            pfmt = "%s이/가 문다!";
+#if 0 /*KR:T*/
+            pfmt = "%s bites!";
+#else
+            Monst_name = (char *) append_josa(Monst_name, "이");
+            pfmt = "%s 문다!";
+#endif
             break;
         case AT_KICK:
 #if 0 /*KR:T*/
             pline("%s kicks%c", Monst_name,
                 thick_skinned(youmonst.data) ? '.' : '!');
 #else
-            pline("%s은/는 걷어찬다%s", Monnam(mtmp),
+            pline("%s 걷어찬다%s", append_josa(Monst_name, "은"),
                 thick_skinned(youmonst.data) ? "." : "!");
 #endif
             break;
         case AT_STNG:
-            /*KR pfmt = "%s stings!"; */
-            pfmt = "%s이/가 쏜다!";
+#if 0 /*KR:T*/
+            pfmt = "%s stings!";
+#else
+            Monst_name = (char *) append_josa(Monst_name, "이");
+            pfmt = "%s 쏜다!";
+#endif
             break;
         case AT_BUTT:
-            /*KR pfmt = "%s butts!"; */
-            pfmt = "%s이/가 박치기한다!";
+#if 0 /*KR:T*/
+            pfmt = "%s butts!";            
+#else
+            Monst_name = (char *) append_josa(Monst_name, "이");
+            pfmt = "%s 박치기한다!";
+#endif
             break;
         case AT_TUCH:
-            /*KR pfmt = "%s touches you!"; */
-            pfmt = "%s이/가 당신을 만진다!";
+#if 0 /*KR:T*/ 
+            pfmt = "%s touches you!";
+#else
+            Monst_name = (char *) append_josa(Monst_name, "이");
+            pfmt = "%s 당신을 만진다!";
+#endif
             break;
         case AT_TENT:
-            /*KR pfmt = "%s tentacles suck you!"; */
-            pfmt = "%s의 촉수가 당신을 빨아들인다!";
-#if 0 /*KR*/
+#if 0 /*KR:T*/            
+            pfmt = "%s tentacles suck you!";
             Monst_name = s_suffix(Monst_name);
-#endif
+#else
+            Monst_name = (char *) append_josa(Monst_name, "의");
+            pfmt = "%s 촉수가 당신을 빨아들인다!";
+#endif            
             break;
         case AT_EXPL:
         case AT_BOOM:
-            /*KR pfmt = "%s explodes!"; */
-            pfmt = "%s이 폭발한다!";
+#if 0 /*KR:T*/
+            pfmt = "%s explodes!";
+#else
+            Monst_name = (char *) append_josa(Monst_name, "이");
+            pfmt = "%s 폭발한다!";
+#endif
             break;
         default:
-            /*KR pfmt = "%s hits!"; */
-            pfmt = "%s이/가 공격한다!";
+#if 0 /*KR:T*/
+            pfmt = "%s hits!";
+#else
+            Monst_name = (char *) append_josa(Monst_name, "이");
+            pfmt = "%s 공격한다!";
+#endif
         }
         if (pfmt)
             pline(pfmt, Monst_name);
@@ -108,13 +134,13 @@ struct attack *mattk;
 
     if (could_seduce(mtmp, &youmonst, mattk) && !mtmp->mcan)
         /*KR pline("%s pretends to be friendly.", Monnam(mtmp)); */
-        pline("%s이/가 친한 척을 한다.", Monnam(mtmp));
+        pline("%s 친한 척을 한다.", append_josa(Monnam(mtmp), "이"));
     else
 #if 0 /*KR:T*/
         pline("%s %smisses!", Monnam(mtmp),
               (nearmiss && flags.verbose) ? "just " : "");
 #else
-        pline("%s이/가 %s빗맞힌다!", Monnam(mtmp),
+        pline("%s %s빗맞힌다!", append_josa(Monnam(mtmp), "이"),
             (nearmiss && flags.verbose) ? "아깝게 " : "");
 #endif
 
@@ -133,8 +159,8 @@ struct obj *otemp;
             (objects[otemp->otyp].oc_dir & PIERCE) ? "thrusts" : "swings",
             (otemp->quan > 1L) ? "one of " : "", mhis(mtmp), xname(otemp));
 #else
-        pline("%s이/가 %s(으)로 %s.", Monnam(mtmp),
-            xname(otemp),
+        pline("%s %s %s.", append_josa(Monnam(mtmp), "이"),
+            append_josa(xname(otemp), "로"),
             (objects[otemp->otyp].oc_dir & PIERCE) ? "찌른다" : "휘두른다");
 #endif
     }
@@ -219,12 +245,12 @@ struct attack *mattk;
 
         if (compat)
             /*KR pline("%s tries to touch you and misses!", Monst_name); */
-            pline("%s이/가 당신을 만지려고 했지만 실패했다!", Monst_name);
+            pline("%s 당신을 만지려고 했지만 실패했다!", append_josa(Monst_name, "이"));
         else
             switch (rn2(3)) {
             case 0:
                 /*KR pline("%s %s wildly and misses!", Monst_name, swings); */
-                pline("%s이/가 거칠게 %s지만 빗나갔다!", Monst_name, swings);
+                pline("%s 거칠게 %s지만 빗나갔다!", append_josa(Monst_name, "이"), swings);
                 break;
             case 1:
                 /*KR pline("%s attacks a spot beside you.", Monst_name); */
@@ -237,7 +263,7 @@ struct attack *mattk;
                         ? "empty water"
                         : "thin air");
 #else
-                pline("%s은/는 %s을 공격했다!", Monst_name,
+                pline("%s %s을 공격했다!", append_josa(Monst_name, "은"),
                     (levl[mtmp->mux][mtmp->muy].typ == WATER)
                     ? "물"
                     : "아무것도 없는 공간");
@@ -256,7 +282,7 @@ struct attack *mattk;
                 (compat == 2) ? "engagingly" : "seductively",
                 Invis ? "invisible " : "");
 #else
-            pline("%s이/가 %s 당신의 비친 모습에 %s 웃는다...", Monst_name,
+            pline("%s %s 당신의 비친 모습에 %s 웃는다...", append_josa(Monst_name, "이"),
                 Invis ? "투명한" : "",
                 (compat == 2) ? "매력적으로" : "유혹적으로");
 #endif
@@ -268,8 +294,8 @@ struct attack *mattk;
                  * image, since the displaced image is also invisible. */
                 Monst_name, Invis ? "invisible " : "");
 #else
-            pline("%s이/가 %s 당신의 비친 모습에 공격했지만, 빗나갔다!",
-                Monst_name, Invis ? "투명한" : "");
+            pline("%s %s 당신의 비친 모습에 공격했지만, 빗나갔다!",
+                append_josa(Monst_name, "이"), Invis ? "투명한" : "");
 #endif
 
     } else if (Underwater) {
@@ -277,11 +303,11 @@ struct attack *mattk;
            bubbles shake the player here and there */
         if (compat)
             /*KR pline("%s reaches towards your distorted image.", Monst_name); */
-            pline("%s이/가 당신의 일그러진 환영 쪽으로 향했다.", Monst_name);
+            pline("%s 당신의 일그러진 환영 쪽으로 향했다.", append_josa(Monst_name, "이"));
         else
             /*KR pline("%s is fooled by water reflections and misses!", */
-            pline("%s이/가 물에 반사된 모습에 속아서, 빗나갔다!",
-                  Monst_name);
+            pline("%s 물에 반사된 모습에 속아서, 빗나갔다!",
+                  append_josa(Monst_name, "이"));
 
     } else
         impossible("%s attacks you without knowing your location?",
@@ -524,7 +550,7 @@ register struct monst *mtmp;
                 place_monster(mtmp, mtmp->mx, mtmp->my); /* put back */
                 newsym(u.ux, u.uy); /* u.uundetected was toggled */
                 /*KR pline("%s draws back as you drop!", Monnam(mtmp)); */
-                pline("당신이 떨어지자, %s이/가 물러났다!", Monnam(mtmp));
+                pline("당신이 떨어지자, %s 물러났다!", append_josa(Monnam(mtmp), "이"));
                 return 0;
             }
 
@@ -556,15 +582,23 @@ register struct monst *mtmp;
 #endif
             } else {
                 if (3 + find_mac(mtmp) <= rnd(20)) {
-                    /*KR pline("%s is hit by a falling piercer (you)!", */
-                    pline("%s은/는 떨어지는 피어서(당신)에 맞았다!",
+#if 0 /*KR:T*/
+                    pline("%s is hit by a falling piercer (you)!",
                           Monnam(mtmp));
+#else
+                    pline("%s 떨어지는 피어서(당신)에 맞았다!",
+                          append_josa(Monnam(mtmp), "은"));
+#endif
                     if ((mtmp->mhp -= d(3, 6)) < 1)
                         killed(mtmp);
                 } else
-                    /*KR pline("%s is almost hit by a falling piercer (you)!", */
-                    pline("%s은/는 하마터면 떨어지는 피어서(당신)에게 맞을 뻔했다!",
+#if 0 /*KR:T*/
+                    pline("%s is almost hit by a falling piercer (you)!",
                           Monnam(mtmp));
+#else
+                    pline("%s 하마터면 떨어지는 피어서(당신)에게 맞을 뻔했다!",
+                          append_josa(Monnam(mtmp), "은"));
+#endif
             }
 
         } else {
@@ -592,28 +626,30 @@ register struct monst *mtmp;
                             obj->spe = 0;
                     }
                     /* note that m_monnam() overrides hallucination, which is
-                       what we want when message is from mtmp's perspective */
+                                           what we want when message is from
+                       mtmp's perspective */
                     if (youmonst.data->mlet == S_EEL
-                        || u.umonnum == PM_TRAPPER)
-                        pline(
-#if 0 /*KR:T*/
-                            "Wait, %s!  There's a hidden %s named %s there!",
-                            m_monnam(mtmp), youmonst.data->mname, plname);
-#else
-                        "기다려, %s! %s(이)라 불리는 %s가 거기에 숨어 있어!",
-                        m_monnam(mtmp), plname, youmonst.data->mname);
+                        || u.umonnum == PM_TRAPPER) {
+#if 0 /*KR: 원본*/
+                        pline("Wait, %s!  There's a hidden %s named %s there!",
+                              m_monnam(mtmp), youmonst.data->mname, plname);
+#else /*KR: 한국어 맞춤 번역 (조사 자동 처리)*/
+                        pline("기다려, %s! %s 불리는 %s 거기에 숨어 있어!",
+                              m_monnam(mtmp), append_josa(plname, "이라"),
+                              append_josa(youmonst.data->mname, "가"));
 #endif
-                    else
-                        pline(
-#if 0 /*KR:T*/
-                        "Wait, %s!  There's a %s named %s hiding under %s!",
-                        m_monnam(mtmp), youmonst.data->mname, plname,
-                        doname(level.objects[u.ux][u.uy]));
-#else
-                        "기다려, %s! %s(이)라 불리는 %s가 %s 아래에 숨어 있어!",
-                        m_monnam(mtmp), plname, youmonst.data->mname,
-                        doname(level.objects[u.ux][u.uy]));
+                    } else {
+#if 0 /*KR: 원본*/
+                        pline("Wait, %s!  There's a %s named %s hiding under %s!",
+                              m_monnam(mtmp), youmonst.data->mname, plname,
+                              doname(level.objects[u.ux][u.uy]));
+#else /*KR: 한국어 맞춤 번역 (조사 자동 처리)*/
+                        pline("기다려, %s! %s 불리는 %s %s 아래에 숨어 있어!",
+                              m_monnam(mtmp), append_josa(plname, "이라"),
+                              append_josa(youmonst.data->mname, "가"),
+                              doname(level.objects[u.ux][u.uy]));
 #endif
+                    }
                     if (obj)
                         obj->spe = save_spe;
                 } else
@@ -639,8 +675,9 @@ register struct monst *mtmp;
             pline("Wait, %s!  That's a %s named %s!", m_monnam(mtmp),
                 youmonst.data->mname, plname);
 #else
-            pline("待て，%s!それは%sという名の%sだ!", m_monnam(mtmp),
-                plname, youmonst.data->mname);
+            pline("기다려, %s! 그건 %s 이름의 %s!", m_monnam(mtmp),
+                  append_josa(plname, "이라는"),
+                  append_josa(youmonst.data->mname, "야"));
 #endif
         if (sticky)
             u.ustuck = mtmp;
@@ -661,7 +698,7 @@ register struct monst *mtmp;
                 ? "tries to pick you up"
                 : "disturbs you");
 #else
-            pline("%s이/가 %s!", Something, (likes_gold(mtmp->data)
+            pline("%s %s!", append_josa(Something, "이"), (likes_gold(mtmp->data)
                 && youmonst.mappearance == GOLD_PIECE)
                 ? "당신을 집어들려고 한다"
                 : "당신을 건드린다");
@@ -672,9 +709,10 @@ register struct monst *mtmp;
                 mimic_obj_name(&youmonst), an(mons[u.umonnum].mname),
                 plname);
 #else
-            pline("기다려, %s! 그 %s는 진짜로 %s라 불리는 %s야!", m_monnam(mtmp),
-                mimic_obj_name(&youmonst), plname,
-                mons[u.umonnum].mname);
+            pline("기다려, %s! 그 %s 진짜로 %s 불리는 %s!", m_monnam(mtmp),
+                append_josa(mimic_obj_name(&youmonst), "은"), 
+                append_josa(plname, "라"),
+                append_josa(mons[u.umonnum].mname, "야"));
 #endif
         if (multi < 0) { /* this should always be the case */
             char buf[BUFSZ];
@@ -685,8 +723,8 @@ register struct monst *mtmp;
                 : (const char*)"yourself");
 #else
             Sprintf(buf, "당신은 다시 %s이 되었다.",
-                Upolyd ? (const char*)youmonst.data->mname
-                : (const char*)"자기 자신");
+                append_josa(Upolyd ? (const char*)youmonst.data->mname
+                : (const char*)"자기 자신", "이"));
 #endif
             unmul(buf); /* immediately stop mimicking */
         }
@@ -1657,8 +1695,8 @@ register struct attack *mattk;
                     pline("%s tries to %s away with %s.", Monnam(mtmp),
                         locomotion(mtmp->data, "run"), buf);
 #else
-                    pline("%s이/가 %s을/를 가지고 도망가려 한다.", Monnam(mtmp),
-                        buf);
+                    pline("%s %s 가지고 도망가려 한다.", append_josa(Monnam(mtmp), "이"),
+                        append_josa(buf, "을"));
 #endif
             }
             monflee(mtmp, 0, FALSE, FALSE);

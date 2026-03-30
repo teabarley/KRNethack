@@ -155,11 +155,11 @@ static const struct {
 #else
 } tintxts[] = { { "썩은", -50, 0, 0 },  /* ROTTEN_TIN = 0 */
                 { "수제", 50, 1, 0 }, /* HOMEMADE_TIN = 1 */
-                { "의 수프", 20, 1, 0 },
-                { "의 튀김", 40, 0, 1 },
+                { "수프", 20, 1, 0 },
+                { "튀김", 40, 0, 1 },
                 { "절임", 40, 1, 0 },
                 { "삶은", 50, 1, 0 },
-                { "의 훈제", 50, 1, 0 },
+                { "훈제", 50, 1, 0 },
                 { "건조", 55, 1, 0 },
                 { "튀김", 60, 0, 1 },
                 { "사천풍", 70, 1, 0 },
@@ -167,7 +167,7 @@ static const struct {
                 { "볶음", 80, 0, 1 },
                 { "볶음", 95, 0, 0 },
                 { "설탕 조림", 100, 1, 0 }, /*맛탕은 일본식 표현*/
-                { "의 퓨레", 500, 1, 0 },
+                { "퓨레", 500, 1, 0 },
                 { "", 0, 0, 0 } };
 #endif
 #define TTSZ SIZE(tintxts)
@@ -497,7 +497,7 @@ boolean message;
         nomovemsg = 0;
     } else if (message)
         /*KR You("finish eating %s.", food_xname(piece, TRUE)); */
-        You("%s을/를 다 먹었다.", food_xname(piece, TRUE));
+        You("%s 다 먹었다.", append_josa(food_xname(piece, TRUE), "을"));
 
     if (piece->otyp == CORPSE || piece->globby)
         cpostfx(piece->corpsenm);
@@ -570,7 +570,7 @@ int *dmg_p; /* for dishing out extra damage in lieu of Int loss */
                mind flayers don't have those capabilities */
             if (visflag && canseemon(magr))
                 /*KR pline("%s turns to stone!", Monnam(magr)); */
-                pline("%s이/가 돌로 변했다!", Monnam(magr));
+                pline("%s 돌로 변했다!", append_josa(Monnam(magr), "이"));
             monstone(magr);
             if (!DEADMONSTER(magr)) {
                 /* life-saved; don't continue eating the brains */
@@ -668,7 +668,7 @@ int *dmg_p; /* for dishing out extra damage in lieu of Int loss */
         if (mindless(pd)) {
             if (visflag && canspotmon(mdef))
                 /*KR pline("%s doesn't notice.", Monnam(mdef)); */
-                pline("%s은/는 눈치채지 못한다.", Monnam(mdef));
+                pline("%s 눈치채지 못한다.", append_josa(Monnam(mdef), "은"));
             return MM_MISS;
         } else if (is_rider(pd)) {
             mondied(magr);
@@ -767,7 +767,7 @@ register int pm;
         /* cannibals are allowed to eat domestic animals without penalty */
         if (!CANNIBAL_ALLOWED()) {
             /*KR You_feel("that eating the %s was a bad idea.", mons[pm].mname); */
-            pline("%s을/를 먹는 것은 나쁜 생각이었다.", mons[pm].mname);
+            pline("%s 먹는 것은 나쁜 생각이었다.", append_josa(mons[pm].mname, "을"));
             HAggravate_monster |= FROMOUTSIDE;
         }
         break;
@@ -1341,12 +1341,18 @@ char *buf;
     int r = tin_variety(obj, TRUE);
 
     if (obj && buf) {
+#if 0 /*KR:T*/
         if (r == SPINACH_TIN)
-            /*KR Strcat(buf, " of spinach"); */
-            Strcat(buf, "시금치");
+            Strcat(buf, " of spinach");
         else if (mnum == NON_PM)
-            /*KR Strcpy(buf, "empty tin"); */
-            Strcat(buf, "텅 빈 통조림");
+            Strcpy(buf, "empty tin");
+#else /* (뒤에 '통조림'이 붙을 것을 대비한 \ 띄어쓰기) */
+        if (r == SPINACH_TIN)
+            Strcpy(buf,
+                   "시금치 "); /* Strcat이 아닌 Strcpy로 덮어쓰고 공백 추가 */
+        else if (mnum == NON_PM)
+            Strcpy(buf, "텅 빈 "); /* Strcpy로 덮어쓰고 공백 추가 */
+#endif
         else {
 #if 0 /*KR*/ /*한국어에서는 뒤로 보냄*/
             if ((obj->cknown || iflags.override_ID) && obj->spe < 0) {
@@ -1362,22 +1368,24 @@ char *buf;
                 Strcpy(eos(buf), " of ");
             }
 #endif
-#if 1 /*KR*/ /* '~의'로 시작하면 후치, 이외에는 전치. 솔직히 뭔소린지 모름*/
-            if (strstr(tintxts[r].txt, "의") != tintxts[r].txt) {
-                Strcpy(eos(buf), tintxts[r].txt);
-            }
-#endif
+#if 0 /*KR:T*/
             if (vegetarian(&mons[mnum]))
-                /*KR Sprintf(eos(buf), "%s", mons[mnum].mname); 똑같은내용인데 왜있지?*/
                 Sprintf(eos(buf), "%s", mons[mnum].mname);
             else
-                /*KR Sprintf(eos(buf), "%s meat", mons[mnum].mname); */
-                Sprintf(eos(buf), "%s의 고기", mons[mnum].mname);
-#if 1 /*KR*/ /* '~의'로 시작하면 후치, 이외에는 전치. 뭔소리여*/
-            if (strstr(tintxts[r].txt, "의") == tintxts[r].txt) {
-                Strcpy(eos(buf), tintxts[r].txt);
+                Sprintf(eos(buf), "%s meat", mons[mnum].mname);
+#else /*KR: KRNethack 맞춤 번역 (의 제거 및 띄어쓰기 나열)*/
+            /* objnam.c에서 이 문자열 뒤에 '통조림'을 조립할 것을 대비해
+             * 명사만 깔끔하게 나열합니다. */
+            if ((obj->cknown || iflags.override_ID) && obj->spe < 0) {
+                Sprintf(eos(buf), "%s ", tintxts[r].txt);
             }
-            Strcpy(eos(buf), "의");
+
+            if (vegetarian(&mons[mnum])) {
+                Sprintf(eos(buf), "%s ", mons[mnum].mname);
+            } else {
+                Sprintf(eos(buf), "%s 고기 ",
+                        mons[mnum].mname); /* 예: "newt 고기 " */
+            }
 #endif
         }
     }
@@ -1507,12 +1515,13 @@ const char *mesg;
 
 #if 0 /*KR*/
         You("consume %s %s.", tintxts[r].txt, mons[mnum].mname);
-#else
-        if (strstr(tintxts[r].txt, "의") == tintxts[r].txt) {
-            You("%s %s의 통조림을 먹어치웠다.", mons[mnum].mname, tintxts[r].txt);
-        }
-        else {
-            You("%s %s의 통조림을 먹어치웠다.", tintxts[r].txt, mons[mnum].mname);
+#else /*KR: KRNethack 맞춤 번역*/
+        if (vegetarian(&mons[mnum])) {
+            You("%s %s 통조림을 먹어치웠다.", tintxts[r].txt,
+                mons[mnum].mname);
+        } else {
+            You("%s %s 고기 통조림을 먹어치웠다.", tintxts[r].txt,
+                mons[mnum].mname);
         }
 #endif
         eating_conducts(&mons[mnum]);
@@ -1719,7 +1728,7 @@ no_opener:
         context.tin.reqtime = tmp;
         context.tin.usedtime = 0;
         /*KR set_occupation(opentin, "opening the tin", 0); */
-        set_occupation(opentin, "통조림을 연다", 0);
+        set_occupation(opentin, "통조림 열기", 0);
     }
     return;
 }
@@ -1962,7 +1971,7 @@ struct obj *otmp;
                 ? (yummy ? ((u.umonnum == PM_TIGER) ? "좋았어!" : "별로 안 좋다")
                          : palatable ? "그저 그렇다" : "메스껍다")
                 : (yummy ? "엄청 맛있다" : palatable ? "그저 그렇다" : "끔찍한 맛이다"),
-              (yummy || !palatable) ? "！" : ".");
+              (yummy || !palatable) ? "!" : ".");
 #endif
     }
 
@@ -2023,7 +2032,7 @@ boolean already_partly_eaten;
     }
 
     /*KR Sprintf(msgbuf, "eating %s", food_xname(otmp, TRUE)); */
-    Sprintf(msgbuf, "%s을/를 섭취", food_xname(otmp, TRUE));
+    Sprintf(msgbuf, "%s 섭취", append_josa(food_xname(otmp, TRUE), "를"));
     set_occupation(eatfood, msgbuf, 0);
 }
 
@@ -2391,7 +2400,7 @@ eatspecial()
 
     /* lesshungry wants an occupation to handle choke messages correctly */
     /*KR set_occupation(eatfood, "eating non-food", 0); */
-    set_occupation(eatfood, "먹는다", 0);
+    set_occupation(eatfood, "먹기", 0);
     lesshungry(context.victual.nmod);
     occupation = 0;
     context.victual.piece = (struct obj *) 0;
@@ -2686,7 +2695,7 @@ struct obj *otmp;
         Sprintf(buf, "%s like %s could be tainted!  %s", foodsmell, it_or_they,
                 eat_it_anyway);
 #else
-        Sprintf(buf, "%s은/는 오염된 듯한 냄새가 난다! %s", foodsmell, eat_it_anyway);
+        Sprintf(buf, "%s 오염된 듯한 냄새가 난다! %s", append_josa(foodsmell, "은"), eat_it_anyway);
 #endif
         if (yn_function(buf, ynchars, 'n') == 'n')
             return 1;
@@ -2698,8 +2707,8 @@ struct obj *otmp;
         Sprintf(buf, "%s like %s could be something very dangerous!  %s",
                 foodsmell, it_or_they, eat_it_anyway);
 #else
-        Sprintf(buf, "%s은/는 왠지 엄청 위험한 냄새가 난다! %s",
-                foodsmell, eat_it_anyway);
+        Sprintf(buf, "%s 왠지 엄청 위험한 냄새가 난다! %s",
+                append_josa(foodsmell, "은"), eat_it_anyway);
 #endif
         if (yn_function(buf, ynchars, 'n') == 'n')
             return 1;
@@ -2712,7 +2721,7 @@ struct obj *otmp;
         Sprintf(buf, "%s like %s could be rotten! %s", foodsmell, it_or_they,
             eat_it_anyway);
 #else
-        Sprintf(buf, "%s은/는 썩은 냄새가 난다! %s", foodsmell,
+        Sprintf(buf, "%s 썩은 냄새가 난다! %s", append_josa(foodsmell, "은"),
             eat_it_anyway);
 #endif
         if (yn_function(buf, ynchars, 'n') == 'n')
@@ -3567,9 +3576,6 @@ int corpsecheck; /* 0, no check, 1, corpses, 2, tinnable corpses */
     boolean feeding = !strcmp(verb, "eat"),    /* corpsecheck==0 */
         offering = !strcmp(verb, "sacrifice"); /* corpsecheck==1 */
 
-    /* JNethack에서는 #if 1 const char* jverb = trans_verb(verb)->jp; #endif 가 삽입됨.
-    jlib.c (japanese)와 decl.h(include) 파일에 적혀있음. 수정필요 */
-
     /* if we can't touch floor objects then use invent food only */
     if (iflags.menu_requested /* command was preceded by 'm' prefix */
         || !can_reach_floor(TRUE) || (feeding && u.usteed)
@@ -3646,15 +3652,43 @@ int corpsecheck; /* 0, no check, 1, corpses, 2, tinnable corpses */
             }
             /* "There is <an object> here; <verb> it?" or
                "There are <N objects> here; <verb> one?" */
+#if 0 /*KR:T*/
             Sprintf(qbuf, "There %s ", otense(otmp, "are"));
             Sprintf(qsfx, " here; %s %s?", verb, one ? "it" : "one"); 
-                  /* jverb 함수 사용. 수정필요 - one ? "" : "하나", jverb); */
             (void) safe_qbuf(qbuf, qbuf, qsfx, otmp, doname, ansimpleoname,
                              one ? something : (const char *) "things");
             if ((c = yn_function(qbuf, ynqchars, 'n')) == 'y')
                 return  otmp;
             else if (c == 'q')
                 return (struct obj *) 0;
+#else /*KR: KRNethack 맞춤 번역 (완벽한 조사 처리 및 어순 변경)*/
+            {
+                /* 영어 verb를 한국어 문맥에 맞게 바로 매핑합니다 */
+                const char *kr_verb =
+                    !strcmp(verb, "eat")         ? "먹겠습니까"
+                    : !strcmp(verb, "sacrifice") ? "제물로 바치겠습니까"
+                    : !strcmp(verb, "tin")       ? "통조림으로 만들겠습니까"
+                                                 : "사용하겠습니까";
+
+                char temp_name[BUFSZ];
+
+                /* 1. safe_qbuf를 이용해 안전하게 아이템 이름만 temp_name에
+                 * 뽑아냅니다. */
+                (void) safe_qbuf(temp_name, "", "", otmp, doname,
+                                 ansimpleoname,
+                                 one ? something : (const char *) "things");
+
+                /* 2. 완벽한 조사를 붙여서 최종 문장을 완성합니다. */
+                Sprintf(qbuf, "여기에 %s 있습니다. %s %s?",
+                        append_josa(temp_name, "이"),
+                        one ? "이것을" : "하나를", kr_verb);
+
+                if ((c = yn_function(qbuf, ynqchars, 'n')) == 'y')
+                    return otmp;
+                else if (c == 'q')
+                    return (struct obj *) 0;
+            }
+#endif
         }
     }
 
@@ -3666,8 +3700,20 @@ int corpsecheck; /* 0, no check, 1, corpses, 2, tinnable corpses */
                   verb);
     if (corpsecheck && otmp && !(offering && otmp->oclass == AMULET_CLASS))
         if (otmp->otyp != CORPSE || (corpsecheck == 2 && !tinnable(otmp))) {
-            /*KR You_cant("%s that!", verb); -> jverb 함수 사용. 수정필요 */
+#if 0 /*KR:T*/
             You_cant("%s that!", verb);
+#else /*KR: KRNethack 맞춤 번역*/
+            {
+                /* You_cant는 "할 수 없다"로 끝나므로 관형형으로 번역해줍니다
+                 */
+                const char *kr_cant_verb =
+                    !strcmp(verb, "eat")         ? "먹을"
+                    : !strcmp(verb, "sacrifice") ? "바칠"
+                    : !strcmp(verb, "tin")       ? "통조림으로 만들"
+                                                 : "사용할";
+                You_cant("그것을 %s 수 없다!", kr_cant_verb);
+            }
+#endif
             return (struct obj *) 0;
         }
     return otmp;

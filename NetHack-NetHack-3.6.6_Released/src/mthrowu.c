@@ -288,7 +288,7 @@ struct obj *otmp, *mwep;
         if (multishot > 1) {
             /* "N arrows"; multishot > 1 implies otmp->quan > 1, so
                xname()'s result will already be pluralized */
-#if 0 /*KR:T JNetHack에서는 numeral이라는 전용 함수 사용했었음 */
+#if 0 /*KR:T*/
             Sprintf(onmbuf, "%d %s", multishot, xname(otmp));
 #else
             /* 한국어에서는 복잡한 단위 대신 직관적이게 '개'로 통일하여 출력. */

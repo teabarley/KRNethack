@@ -619,7 +619,9 @@ doengrave()
     if (jello) {
         /*KR You("tickle %s with %s.", mon_nam(u.ustuck), writer); 
         Your("message dissolves..."); */
-        You("%s(으)로 %s을/를 간지럽혔다.", writer, mon_nam(u.ustuck));
+        You("%s %s 간지럽혔다.", 
+            append_josa(writer, "로"), 
+            append_josa(mon_nam(u.ustuck), "을"));
         Your("메시지가 녹아내렸다...");
         return 0;
     }
@@ -629,7 +631,7 @@ doengrave()
     }
     if (IS_ALTAR(levl[u.ux][u.uy].typ)) {
         /*KR You("make a motion towards the altar with %s.", writer); */
-        You("%s을/를 사용해서 제단에 쓰려고 했다.", writer);
+        You("%s 사용해서 제단에 쓰려고 했다.", append_josa(writer, "을"));
         altar_wrath(u.ux, u.uy);
         return 0;
     }
@@ -688,7 +690,7 @@ doengrave()
         pline("%s would get %s.", Yname2(otmp),
             is_ice(u.ux, u.uy) ? "all frosty" : "too dirty");
 #else
-        Your("%s은/는 %s.", xname(otmp),
+        Your("%s %s.", append_josa(xname(otmp), "은"),
             is_ice(u.ux, u.uy) ? "서리로 뒤덮였다" : "더러워졌다");
 #endif
         ptext = FALSE;
@@ -956,8 +958,8 @@ doengrave()
                         pline("%s %s.", Yobjnam2(otmp, "get"),
                               is_ice(u.ux, u.uy) ? "frosty" : "dusty");
 #else
-                        pline("%s은/는 %s이/가 되었다.", xname(otmp),
-                            is_ice(u.ux, u.uy) ? "서리 투성이" : "먼지 범벅");
+                        pline("%s %s 되었다.", append_josa(xname(otmp), "은"),
+                            append_josa(is_ice(u.ux, u.uy) ? "서리 투성이" : "먼지 범벅", "이"));
 #endif
                     dengr = TRUE;
                 } else
@@ -1032,7 +1034,7 @@ doengrave()
         pline("%s %sturns to dust.", The(xname(otmp)),
               Blind ? "" : "glows violently, then ");
 #else
-        pline("%s이/가 %s가루로 변했다.", The(xname(otmp)),
+        pline("%s %s가루로 변했다.", append_josa(The(xname(otmp)), "이"),
             Blind ? "" : "막 빛나더니, ");
 #endif
         if (!IS_GRAVE(levl[u.ux][u.uy].typ))
@@ -1263,7 +1265,7 @@ doengrave()
              * However, you can engrave "Elb", then "ere", then "th".
              */
             /*KR pline("%s dull.", Yobjnam2(otmp, "get")); */
-            Your("%s이/가 무뎌졌다.", xname(otmp));
+            Your("%s 무뎌졌다.", append_josa(xname(otmp), "이"));
             costly_alteration(otmp, COST_DEGRD);
             if (len > maxelen) {
                 multi = -maxelen;
@@ -1319,16 +1321,27 @@ doengrave()
         for (sp = ebuf; maxelen && *sp; sp++)
             if (*sp == ' ')
                 maxelen--;
+#if 0 /*KR:T*/
         if (!maxelen && *sp) {
-            /*JP 한자의 1바이트분 만이 남지 않도록 */
-            /* is_kanji2 함수. 수정필요*/
             *sp = '\0';
             if (multi)
-                /*KR nomovemsg = "You cannot write any more.";
-            You("are only able to write \"%s\".", ebuf); */
-                nomovemsg = "당신은 더 이상 쓸 수 없다.";
+                nomovemsg = "You cannot write any more.";
+            You("are only able to write \"%s\".", ebuf);
+        }
+#else /*KR: KRNethack 한글 깨짐 방지 로직 (UTF-8 기준)*/
+        if (!maxelen && *sp) {
+            /* 자르려는 위치(sp)가 다바이트 문자(한글)의 중간일 경우,
+               온전한 글자의 첫 바이트가 나올 때까지 포인터를 뒤로 무릅니다.
+             */
+            while (sp > ebuf && (*sp & 0xC0) == 0x80) {
+                sp--;
+            }
+            *sp = '\0';
+            if (multi)
+                nomovemsg = "더 이상 쓸 수 없다.";
             You("\"%s\"(이)라고만 쓸 수 있었다.", ebuf);
         }
+#endif
     }
 
     if (oep) /* add to existing engraving */

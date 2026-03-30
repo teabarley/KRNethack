@@ -61,15 +61,11 @@ static NEARDATA struct obj *current_container;
 static NEARDATA boolean abort_looting;
 #define Icebox (current_container->otyp == ICE_BOX)
 
-static const char
 #if 0 /*KR*/
+static const char
         moderateloadmsg[] = "You have a little trouble lifting",
         nearloadmsg[] = "You have much trouble lifting",
         overloadmsg[] = "You have extreme difficulty lifting";
-#else
-        moderateloadmsg[] = "을(를) 들어 올리는 것은 약간 힘들다",
-        nearloadmsg[] = "을(를) 들어 올리는 것은 많이 힘들다",
-        overloadmsg[] = "을(를) 들어 올리는 것은 극도로 힘들다";
 #endif
 
 /* BUG: this lets you look at cockatrice corpses while blind without
@@ -1471,6 +1467,7 @@ boolean telekinesis;
                 long savequan = obj->quan;
 
                 obj->quan = *cnt_p;
+#if 0 /*KR:T*/
                 Strcpy(qbuf, (next_encumbr > HVY_ENCUMBER)
                                  ? overloadmsg
                                  : (next_encumbr > MOD_ENCUMBER)
@@ -1481,6 +1478,26 @@ boolean telekinesis;
                 Strcat(qbuf, " ");
                 (void) safe_qbuf(qbuf, qbuf, ".  Continue?", obj, doname,
                                  ansimpleoname, something);
+#else /*KR: KRNethack 맞춤 번역 (완벽한 조사 처리 및 어순 변경)*/
+                {
+                    char temp_name[BUFSZ];
+                    const char *loadmsg =
+                        (next_encumbr > HVY_ENCUMBER)   ? "극도로"
+                        : (next_encumbr > MOD_ENCUMBER) ? "많이"
+                                                        : "약간";
+
+                    /* 1. safe_qbuf를 이용해 안전하게 길이를 맞춘 '아이템
+                     * 이름'만 temp_name에 뽑아냅니다. */
+                    (void) safe_qbuf(temp_name, "", "", obj, doname,
+                                     ansimpleoname, something);
+
+                    /* 2. 뽑아낸 이름에 완벽한 조사를 붙이고 나머지 문장을
+                     * 한국어 어순으로 조립합니다. */
+                    Sprintf(qbuf, "%s %s 것은 %s 힘들다. 계속하시겠습니까?",
+                            append_josa(temp_name, "을"),
+                            container ? "꺼내는" : "들어 올리는", loadmsg);
+                }
+#endif
                 obj->quan = savequan;
                 switch (ynq(qbuf)) {
                 case 'q':
@@ -1568,9 +1585,20 @@ boolean telekinesis; /* not picking it up directly by hand */
 
     if (uwep && uwep == obj)
         mrg_to_wielded = TRUE;
+#if 0 /*KR:T*/
     nearload = near_capacity();
     prinv(nearload == SLT_ENCUMBER ? moderateloadmsg : (char *) 0, obj,
           count);
+#else /*KR: KRNethack 맞춤 번역*/
+    nearload = near_capacity();
+    /* 1. 아이템 습득 로그를 먼저 평범하게 띄웁니다 (예: s - 두루마리) */
+    prinv((char *) 0, obj, count);
+
+    /* 2. 무게가 무거울 경우 다음 줄에 경고를 자연스럽게 띄워줍니다 */
+    if (nearload == SLT_ENCUMBER) {
+        pline("짐이 무거워 들어 올리기가 약간 버겁다.");
+    }
+#endif
     mrg_to_wielded = FALSE;
     return 1;
 }
@@ -2361,11 +2389,19 @@ register struct obj *obj;
 
     otmp = addinv(obj);
     loadlev = near_capacity();
+#if 0 /*KR:T*/
     prinv(loadlev ? ((loadlev < MOD_ENCUMBER)
                         ? "You have a little trouble removing"
                         : "You have much trouble removing")
                   : (char *) 0,
           otmp, count);
+#else /*KR: KRNethack 맞춤 번역*/
+    prinv((char *) 0, otmp, count);
+    if (loadlev) {
+        pline("짐이 무거워 꺼내기가 %s 버겁다.",
+              (loadlev < MOD_ENCUMBER) ? "약간" : "많이");
+    }
+#endif
 
     if (is_gold) {
         bot(); /* update character's gold piece count immediately */

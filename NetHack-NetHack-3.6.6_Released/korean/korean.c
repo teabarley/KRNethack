@@ -76,10 +76,18 @@ append_josa(const char *word, const char *josa)
         j = has_jong ? "을" : "를";
     else if (strstr(josa, "과") || strstr(josa, "와"))
         j = has_jong ? "과" : "와";
+    /* '으로/로'는 특이하게 'ㄹ' 받침일 때는 받침이 없는 것과 똑같이
+     * '로'를 씁니다. (예: 칼로, 검으로) */
     else if (strstr(josa, "으로") || strstr(josa, "로"))
-        /* '으로/로'는 특이하게 'ㄹ' 받침일 때는 받침이 없는 것과 똑같이
-         * '로'를 씁니다. (예: 칼로, 검으로) */
         j = (has_jong && !is_rieul) ? "으로" : "로";
+    else if (strstr(josa, "이라고") || strstr(josa, "라고"))
+        j = has_jong ? "이라고" : "라고";
+    else if (strstr(josa, "이라는") || strstr(josa, "라는"))
+        j = has_jong ? "이라는" : "라는";
+    else if (strstr(josa, "이라") || strstr(josa, "라"))
+        j = has_jong ? "이라" : "라";
+    else if (strstr(josa, "이야") || strstr(josa, "야"))
+        j = has_jong ? "이야" : "야";
     else
         j = josa; /* 알 수 없는 조사면 그냥 그대로 붙임 */
 
@@ -1781,7 +1789,8 @@ get_kr_name(const char *en_name)
         return "다이리튬 크리스탈";
     if (!strcmp(en_name, "diamond"))
         return "다이아몬드";
-    /* ruby는 위에 정의됨 */
+    if (!strcmp(en_name, "ruby"))
+        return "루비";
     if (!strcmp(en_name, "jacinth"))
         return "자신스";
     if (!strcmp(en_name, "sapphire"))
@@ -1794,7 +1803,8 @@ get_kr_name(const char *en_name)
         return "터키석";
     if (!strcmp(en_name, "citrine"))
         return "황수정";
-    /* aquamarine은 위에 정의됨 */
+    if (!strcmp(en_name, "aquamarine"))
+        return "아쿠아마린";
     if (!strcmp(en_name, "amber"))
         return "호박석";
     if (!strcmp(en_name, "topaz"))

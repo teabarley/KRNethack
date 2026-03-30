@@ -213,10 +213,13 @@ boolean isyou;
                 if (is_watch(mtmp->data) && couldsee(mtmp->mx, mtmp->my)
                     && mtmp->mpeaceful) {
                     if (!Deaf) {
-                        /*KR pline("%s yells:", Amonnam(mtmp));
-                        verbalize("Hey, stop using that fountain!"); */
+#if 0 /*KR*/
+                        pline("%s yells:", Amonnam(mtmp));
+                        verbalize("Hey, stop using that fountain!");
+#else
                         pline("%s가 소리쳤다:", Amonnam(mtmp));
                         verbalize("이봐, 당장 그 분수 사용을 그만둬!");
+#endif
                     } else {
 #if 0 /*KR:T*/
                         pline("%s earnestly %s %s %s!",
@@ -227,11 +230,11 @@ boolean isyou;
                                       ? mbodypart(mtmp, HEAD)
                                       : makeplural(mbodypart(mtmp, ARM)));
 #else
-                        pline("%s은/는 진지하게 %s을/를 흔들었다!",
-                            Amonnam(mtmp),
-                            nolimbs(mtmp->data)
+                        pline("%s 진지하게 %s 흔들었다!",
+                            append_josa(Amonnam(mtmp), "은"),
+                            append_josa(nolimbs(mtmp->data)
                                     ? mbodypart(mtmp, HEAD)
-                                    : makeplural(mbodypart(mtmp, ARM)));
+                                    : makeplural(mbodypart(mtmp, ARM)), "을"));
 #endif
                     }
                     break;

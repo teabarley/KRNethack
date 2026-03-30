@@ -213,7 +213,7 @@ const char *verb;
                                         || is_vampshifter(mtmp))
                                     ? "destroyed" : "killed");
 #else
-                                pline("%s이/가 %s!", Monnam(mtmp),
+                                pline("%s %s!", append_josa(Monnam(mtmp), "이"),
                                     (nonliving(mtmp->data)
                                      || is_vampshifter(mtmp))
                                     ? "쓰러졌다" : "죽었다");
@@ -345,8 +345,8 @@ register struct obj *obj;
               an(hcolor(obj->blessed ? NH_AMBER : NH_BLACK)), doname(obj),
               otense(obj, "hit"));
 #else
-        pline("%s이/가 제단에 닿자 %s 빛이 난다.",
-            doname(obj), an(hcolor(obj->blessed ? NH_AMBER : NH_BLACK)));
+        pline("%s 제단에 닿자 %s 빛이 난다.",
+            append_josa(doname(obj), "이"), an(hcolor(obj->blessed ? NH_AMBER : NH_BLACK)));
 #endif
         if (!Hallucination)
             obj->bknown = 1; /* ok to bypass set_bknown() */
@@ -467,12 +467,12 @@ register struct obj *obj;
     boolean nosink = FALSE;
 
     /*KR You("drop %s down the drain.", doname(obj)); */
-    You("%s을/를 개수구에 떨어뜨렸다.", doname(obj));
+    You("%s 개수구에 떨어뜨렸다.", append_josa(doname(obj), "을"));
     obj->in_use = TRUE;  /* block free identification via interrupt */
     switch (obj->otyp) { /* effects that can be noticed without eyes */
     case RIN_SEARCHING:
    /*KR You("thought %s got lost in the sink, but there it is!", yname(obj)); */
-        You("%s을/를 잃어버렸다고 생각했지만, 다시 찾아냈다!", yname(obj));
+        You("%s 잃어버렸다고 생각했지만, 다시 찾아냈다!", append_josa(yname(obj), "을"));
         goto giveback;
     case RIN_SLOW_DIGESTION:
    /*KR pline_The("ring is regurgitated!"); */
@@ -564,7 +564,7 @@ register struct obj *obj;
                     pline("Suddenly, %s %s from the sink!", doname(otmp),
                         otense(otmp, "vanish"));
 #else
-                    pline("갑자기, %s이/가 싱크대에서 사라졌다!", doname(otmp));
+                    pline("갑자기, %s 싱크대에서 사라졌다!", append_josa(doname(otmp), "이"));
 #endif
                     ideed = TRUE;
                 }
@@ -777,7 +777,7 @@ register struct obj *obj;
             You("drop %s into %s %s.", onam_p, monbuf,
                 mbodypart(u.ustuck, STOMACH));
 #else
-            You("%s을/를 %s %s에 버렸다.", onam_p, monbuf,
+            You("%s %s %s에 떨어뜨렸다.", append_josa(onam_p, "을"), monbuf,
                 mbodypart(u.ustuck, STOMACH));
 #endif
         }
@@ -797,7 +797,7 @@ register struct obj *obj;
                 ELevitation = W_ART; /* other than W_ARTI */
             if (flags.verbose)
                 /*KR You("drop %s.", doname(obj)); */
-                You("%s을/를 버렸다.", doname(obj));
+                You("%s 떨어뜨렸다.", append_josa(doname(obj), "을"));
             /* Ensure update when we drop gold objects */
             if (obj->oclass == COIN_CLASS)
                 context.botl = 1;
@@ -809,7 +809,7 @@ register struct obj *obj;
         }
         if (!IS_ALTAR(levl[u.ux][u.uy].typ) && flags.verbose)
             /*KR You("drop %s.", doname(obj)); */
-            You("%s을/를 버렸다.", doname(obj));
+            You("%s 떨어뜨렸다.", append_josa(doname(obj), "을"));
     }
     dropx(obj);
     return 1;
@@ -2102,7 +2102,7 @@ struct obj *corpse;
         case OBJ_INVENT:
             if (is_uwep)
            /*KR pline_The("%s writhes out of your grasp!", cname); */
-                pline_The("%s이/가 발버둥친다!", cname);
+                pline_The("%s 발버둥친다!", append_josa(cname, "이"));
             else
            /*KR You_feel("squirming in your backpack!"); */
                 pline("가방 속에서 뭔가가 꿈틀대는 것이 느껴진다!");
@@ -2149,7 +2149,7 @@ struct obj *corpse;
             if (container_where == OBJ_MINVENT && cansee(mtmp->mx, mtmp->my)
                 && mcarry && canseemon(mcarry) && container) {
                 /*KR pline("%s writhes out of %s!", Amonnam(mtmp), */
-                pline("%s이/가 %s에서 빠져나오려고 한다!", Amonnam(mtmp),
+                pline("%s %s에서 빠져나오려고 한다!", append_josa(Amonnam(mtmp), "이"),
                       yname(container));
             } else if (container_where == OBJ_INVENT && container) {
                 Strcpy(sackname, an(xname(container)));
@@ -2166,7 +2166,7 @@ struct obj *corpse;
                        && cansee(mtmp->mx, mtmp->my)) {
                 Strcpy(sackname, an(xname(container)));
                 /*KR pline("%s escapes from %s!", Amonnam(mtmp), sackname); */
-                pline("%s이/가 %s에서 빠져나왔다!", Amonnam(mtmp), sackname);
+                pline("%s %s에서 빠져나왔다!", append_josa(Amonnam(mtmp), "이"), sackname);
             }
             break;
         }
@@ -2202,18 +2202,18 @@ long timeout UNUSED;
         if (rloc(mtmp, TRUE)) {
             if (notice_it && !canseemon(mtmp))
                 /*KR pline("%s vanishes.", monname); */
-                pline("%s이/가 사라졌다.", monname);
+                pline("%s 사라졌다.", append_josa(monname, "이"));
             else if (!notice_it && canseemon(mtmp))
 #if 0 /*KR:T*/
                 pline("%s appears.", Monnam(mtmp)); /* not pre-rloc monname */
 #else
-                pline("%s이/가 나타났다.", Monnam(mtmp)); /* not pre-rloc monname */
+                pline("%s 나타났다.", append_josa(Monnam(mtmp), "이")); /* not pre-rloc monname */
 #endif
             else if (notice_it && dist2(mtmp->mx, mtmp->my, x, y) > 2)
 #if 0 /*KR:T*/
                 pline("%s teleports.", monname); /* saw it and still see it */
 #else
-                pline("%s이/가 순간이동했다.", monname); /* 봤고, 여전히 볼 수 있음 */
+                pline("%s 순간이동했다.", append_josa(monname, "이")); /* 봤고, 여전히 볼 수 있음 */
 #endif
         }
     }

@@ -213,11 +213,11 @@ xchar x, y;
                 /* doesn't matter whether it would have hit or missed,
                    and shades have no passive counterattack */
                 /*KR Your("%s %s.", kick_passes_thru, mon_nam(mon)); */
-                You("%sÀ»/¸¦ Ã¡Áö¸¸, %s.", mon_nam(mon), kick_passes_thru);
+                You("%s Ã¡Áö¸¸, %s.", append_josa(mon_nam(mon), "À»"), kick_passes_thru);
                 break; /* skip any additional kicks */
             } else if (tmp > kickdieroll) {
                 /*KR You("kick %s.", mon_nam(mon)); */
-                You("%sÀ»/¸¦ Ã¡´Ù.", mon_nam(mon));
+                You("%s Ã¡´Ù.", append_josa(mon_nam(mon), "À»"));
                 sum = damageum(mon, uattk, specialdmg);
                 (void) passive(mon, uarmf, (boolean) (sum > 0),
                                (sum != 2), AT_KICK, FALSE);
@@ -256,7 +256,7 @@ xchar x, y;
         clumsy = TRUE;
 doit:
     /*KR You("kick %s.", mon_nam(mon)); */
-    You("%sÀ»/¸¦ Ã¡´Ù.", mon_nam(mon));
+    You("%s Ã¡´Ù.", append_josa(mon_nam(mon), "À»"));
     if (!rn2(clumsy ? 3 : 4) && (clumsy || !bigmonst(mon->data))
         && mon->mcansee && !mon->mtrapped && !thick_skinned(mon->data)
         && mon->data->mlet != S_EEL && haseyes(mon->data) && mon->mcanmove

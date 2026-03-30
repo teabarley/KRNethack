@@ -539,8 +539,13 @@ stop_occupation()
 {
     if (occupation) {
         if (!maybe_finished_meal(TRUE))
-            /*KR You("stop %s.", occtxt); */
-            You("%s하는 것을 중단했다.", occtxt);
+#if 0 /*KR:T*/
+            You("stop %s.", occtxt);
+#else /*KR: 한국어 맞춤 번역*/
+            /* occtxt가 "탐색", "통조림 열기" 같은 명사형이라고 가정하고
+             * '을/를'을 붙입니다 */
+            pline("%s 중단했다.", append_josa(occtxt, "을"));
+#endif
         occupation = 0;
         context.botl = TRUE; /* in case u.uhs changed */
         nomul(0);

@@ -684,8 +684,11 @@ boolean verbosely;
     }
     /* obj_no_longer_held(obj); -- done by place_object */
     if (verbosely && cansee(omx, omy))
-        pline("%s drops %s.", Monnam(mon), distant_name(obj, doname));
-    if (!flooreffects(obj, omx, omy, "fall")) {
+        /*KR pline("%s drops %s.", Monnam(mon), distant_name(obj, doname)); */
+        pline("%s %s ¶³¾î¶ß·È´Ù.", append_josa(Monnam(mon), "ÀÌ"),
+              append_josa(distant_name(obj, doname), "¸¦"));
+   /*KR if (!flooreffects(obj, omx, omy, "fall")) { */
+    if (!flooreffects(obj, omx, omy, "¶³¾îÁø´Ù")) {
         place_object(obj, omx, omy);
         stackobj(obj);
     }
