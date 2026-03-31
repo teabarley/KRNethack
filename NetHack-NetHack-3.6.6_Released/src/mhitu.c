@@ -270,7 +270,8 @@ struct attack *mattk;
 #endif
                 break;
             default:
-                pline("%s이/가 거칠게 %s다!", Monst_name, swings);
+                /*KR pline("%s %s wildly!", Monst_name, swings); */
+                pline("%s 거칠게 %s다!", append_josa(Monst_name, "이"), swings);
                 break;
             }
 
@@ -778,7 +779,7 @@ register struct monst *mtmp;
             numhelp = were_summon(mdat, FALSE, &numseen, genericwere);
             if (youseeit) {
                 /*KR pline("%s summons help!", Monnam(mtmp)); */
-                pline("%s이/가 지원군을 소환했다!", Monnam(mtmp));
+                pline("%s 지원군을 불렀다!", append_josa(Monnam(mtmp), "이"));
                 if (numhelp > 0) {
                     if (numseen == 0)
                         /*KR You_feel("hemmed in."); */
@@ -809,8 +810,8 @@ register struct monst *mtmp;
                                 makeplural(genericwere));
                         pline("%s%s!", upstart(buf), from_nowhere);
 #else
-                        pline("%s이/가 %s 나타났다!",
-                            genericwere, from_nowhere);
+                        pline("%s %s 나타났다!",
+                              append_josa(genericwere, "이"), from_nowhere);
 #endif
                     }
                 } /* else no help came; but you didn't know it tried */
@@ -822,7 +823,7 @@ register struct monst *mtmp;
         /* monsters won't attack you */
         if (mtmp == u.ustuck) {
             /*KR plinheme("%s loosens its grip slightly.", Monnam(mtmp)); */
-            pline("%s은/는 긴장이 조금 풀렸다.", Monnam(mtmp));
+            pline("%s 긴장이 조금 풀렸다.", append_josa(Monnam(mtmp), "은"));
         } else if (!range2) {
             if (youseeit || sensemon(mtmp))
                 /*KR pline("%s starts to attack you, but pulls back.", */

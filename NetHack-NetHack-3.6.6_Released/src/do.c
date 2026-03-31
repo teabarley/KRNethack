@@ -158,12 +158,9 @@ struct obj *obj;
 int x, y;
 const char *verb;
 {
-    /*KR JNethack에서는 #if 1 *JP* *trap.c* 
-    extern const char *set_you[2]; 라고 추가함 */
     struct trap *t;
     struct monst *mtmp;
     struct obj *otmp;
-    /*KR JNethack에서는 밑의 두 줄을 미사용 처리(if 0 endif)시킴 */
     boolean tseen;
     int ttyp = NO_TRAP;
 
@@ -177,18 +174,26 @@ const char *verb;
         return TRUE;
     } else if (obj->otyp == BOULDER && (t = t_at(x, y)) != 0
                && (is_pit(t->ttyp) || is_hole(t->ttyp))) {
-        /*KR JNethack에서는 밑의 두 줄을 미사용 처리(if 0 endif)시킴 */
         ttyp = t->ttyp;
         tseen = t->tseen ? TRUE : FALSE;
         if (((mtmp = m_at(x, y)) && mtmp->mtrapped)
             || (u.utrap && u.ux == x && u.uy == y)) {
+#if 0 /*KR:T*/
             if (*verb && (cansee(x, y) || distu(x, y) == 0))
-                /*KR jpast(verb) 사용. 수정필요. */
-                /*KR dbridge.c 1032줄 flooreffects, do.c 159줄 verb */
                 pline("%s boulder %s into the pit%s.",
                       Blind ? "A" : "The",
                       vtense((const char *) 0, verb),
                       mtmp ? "" : " with you");
+#else
+            if (*verb && (cansee(x, y) || distu(x, y) == 0)) {
+                /* vtense 없이 verb를 그대로 가져옵니다.
+                   단, '버리다(drop)'가 넘어왔을 때는 어색하므로 자연스럽게
+                   보정합니다. */
+                pline("바위가 %s구덩이 안으로 %s.",
+                      mtmp ? "" : "당신과 함께 ",
+                      !strcmp(verb, "버리다") ? "떨어졌다" : verb);
+            }
+#endif
             if (mtmp) {
                 if (!passes_walls(mtmp->data) && !throws_rocks(mtmp->data)) {
                     /* dieroll was rnd(20); 1: maximum chance to hit
@@ -255,7 +260,8 @@ const char *verb;
                     : (ttyp == HOLE) ? "plugs a hole"
                     : "fills a pit");
 #else
-                pline_The("바위가 %s%s.", t->tseen ? "" : "함정으로 작동되어 ",
+                pline("바위가 %s%s.", 
+                    t->tseen ? "" : "함정으로 작동되어 ",
                     t->ttyp == TRAPDOOR ? "함정문을 메웠다" :
                     t->ttyp == HOLE ? "구멍을 메웠다" :
                     "구덩이를 메웠다");
@@ -302,14 +308,16 @@ const char *verb;
        /*KR You_hear("%s tumble downwards.", the(xname(obj))); */
             You_hear("%s가 아래로 굴러 떨어지는 소리를 듣는다.", xname(obj));
         else
-            /*KR pline("%s %s into %s %s.", The(xname(obj)),
+#if 0 /*KR:T*/
+            pline("%s %s into %s %s.", The(xname(obj)),
                 otense(obj, "tumble"), the_your[t->madeby_u],
-                is_pit(t->ttyp) ? "pit" : "hole"); */
-            /*KR pline("%s가 %s구멍으로 굴러 떨어졌다.", xname(obj), 
-                       the_your[t->madeby_u] ? "당신이 만든" : ""); 
-             테스트용 문장. 자작이므로 추후 올바른 방법을 찾으면 삭제하기 */
-            pline("%s가 %s구멍으로 굴러 떨어졌다.", xname(obj),
-                the_your[t->madeby_u] ? "당신이 만든" : "");
+                is_pit(t->ttyp) ? "pit" : "hole");
+#else
+            pline("%s %s %s으로 굴러 떨어졌다.",
+                  append_josa(The(xname(obj)), "가"),
+                  t->madeby_u ? "당신이 만든" : "어떤",
+                  is_pit(t->ttyp) ? "구덩이" : "구멍");
+#endif
     } else if (obj->globby) {
         /* Globby things like puddings might stick together */
         while (obj && (otmp = obj_nexto_xy(obj, x, y, TRUE)) != 0) {
@@ -2116,7 +2124,7 @@ struct obj *corpse;
                              : Monnam(mtmp));
 #else
                 pline("%s이/가 되살아났다!",
-                    chewed ? Adjmonnam(mtmp, "물린 자국이 있음")
+                    chewed ? Adjmonnam(mtmp, "물린 자국이 있는")
                            : Monnam(mtmp));
 #endif
             break;
@@ -2128,8 +2136,8 @@ struct obj *corpse;
                     pline("Startled, %s drops %s as it revives!",
                           mon_nam(mcarry), an(cname));
 #else
-                    pline("%s가 되살아난 것에 놀라서, %s은/는 %s을/를 떨어뜨렸다!",
-                          cname, mon_nam(mcarry), cname);
+                    pline("%s 되살아난 것에 놀라서, %s %s 떨어뜨렸다!",
+                          append_josa(cname, "이"), append_josa(mon_nam(mcarry), "은"), append_josa(cname, "을"));
 #endif
                 else
 #if 0 /*KR:T*/

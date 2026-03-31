@@ -121,6 +121,7 @@ moverock()
         if (Levitation || Is_airlevel(&u.uz)) {
             if (Blind)
                 feel_location(sx, sy);
+            /*KR You("don't have enough leverage to push %s.", the(xname(otmp))); */
             You("don't have enough leverage to push %s.", the(xname(otmp)));
             /* Give them a chance to climb over it? */
             return -1;
@@ -128,6 +129,7 @@ moverock()
         if (verysmall(youmonst.data) && !u.usteed) {
             if (Blind)
                 feel_location(sx, sy);
+            /*KR pline("You're too small to push that %s.", xname(otmp)); */
             pline("You're too small to push that %s.", xname(otmp));
             goto cannot_push;
         }
@@ -142,11 +144,13 @@ moverock()
             if (Sokoban && u.dx && u.dy) {
                 if (Blind)
                     feel_location(sx, sy);
+                /*KR pline("%s won't roll diagonally on this %s.", */
                 pline("%s won't roll diagonally on this %s.",
                       The(xname(otmp)), surface(sx, sy));
                 goto cannot_push;
             }
 
+            /*KR if (revive_nasty(rx, ry, "You sense movement on the other side.")) */
             if (revive_nasty(rx, ry, "You sense movement on the other side."))
                 return -1;
 
@@ -158,10 +162,12 @@ moverock()
                 if (Blind)
                     feel_location(sx, sy);
                 if (canspotmon(mtmp)) {
+                    /*KR pline("There's %s on the other side.", a_monnam(mtmp)); */
                     pline("There's %s on the other side.", a_monnam(mtmp));
                     deliver_part1 = TRUE;
                 } else {
-                    You_hear("a monster behind %s.", the(xname(otmp)));
+                    /*KR You_hear("a monster behind %s.", the(xname(otmp))); */
+                    pline("a monster behind %s.", the(xname(otmp)));
                     if (!Deaf)
                         deliver_part1 = TRUE;
                     map_invisible(rx, ry);
@@ -169,8 +175,14 @@ moverock()
                 if (flags.verbose) {
                     char you_or_steed[BUFSZ];
 
+#if 0 /*KR:T*/
                     Strcpy(you_or_steed,
                            u.usteed ? y_monnam(u.usteed) : "you");
+#else
+                    Strcpy(you_or_steed,
+                           u.usteed ? y_monnam(u.usteed) : "당신");
+#endif
+#if 0 /*KR:T*/
                     pline("%s%s cannot move %s.",
                           deliver_part1
                               ? "Perhaps that's why "
@@ -181,6 +193,21 @@ moverock()
                           deliver_part1
                               ? "it"
                               : the(xname(otmp)));
+#else
+                    /* JNethack에서 번역 테스트를 위해 원본 텍스트를 남겨놓은 것 */
+                    /* "Perhaps that's why (you_or_steed) cannot move it."*/
+                    /* "(You_or_steed) cannot move (otmp)."*/
+                    if (deliver_part1) {
+                        /* 반대편에 몬스터가 있다는 걸 눈치챈 직후 */
+                        pline("어쩐지 %s 아무리 밀어도 꿈쩍하지 않더라니.",
+                              append_josa(you_or_steed, "이"));
+                    } else {
+                        /* 몬스터가 있는지 모르고 그냥 안 밀릴 때 */
+                        pline("%s %s 밀어보려 했지만 헛수고였다.",
+                              append_josa(you_or_steed, "은"),
+                              append_josa(the(xname(otmp)), "을"));
+                    }
+#endif
                 }
                 goto cannot_push;
             }
@@ -196,9 +223,15 @@ moverock()
                         obj_extract_self(otmp);
                         place_object(otmp, rx, ry);
                         newsym(sx, sy);
+#if 0 /*KR:T*/
                         pline("KAABLAMM!!!  %s %s land mine.",
                               Tobjnam(otmp, "trigger"),
                               ttmp->madeby_u ? "your" : "a");
+#else
+                        pline("쿠과광!!! %s %s 지뢰를 건드려 터뜨렸다.",
+                              append_josa(xname(otmp), "가"),
+                              ttmp->madeby_u ? "당신이 설치한" : "어떤");
+#endif
                         blow_up_landmine(ttmp);
                         /* if the boulder remains, it should fill the pit */
                         fill_pit(u.ux, u.uy);
@@ -215,7 +248,8 @@ moverock()
                        if this is one among multiple boulders */
                     if (!Blind)
                         viz_array[ry][rx] |= IN_SIGHT;
-                    if (!flooreffects(otmp, rx, ry, "fall")) {
+                    /*KR if (!flooreffects(otmp, rx, ry, "fall")) { */
+                    if (!flooreffects(otmp, rx, ry, "떨어졌다")) {
                         place_object(otmp, rx, ry);
                     }
                     if (mtmp && !Blind)
@@ -224,9 +258,11 @@ moverock()
                 case HOLE:
                 case TRAPDOOR:
                     if (Blind)
+                        /*KR pline("Kerplunk!  You no longer feel %s.", */
                         pline("Kerplunk!  You no longer feel %s.",
                               the(xname(otmp)));
                     else
+#if 0 /*KR:T*/
                         pline("%s%s and %s a %s in the %s!",
                               Tobjnam(otmp, (ttmp->ttyp == TRAPDOOR)
                                                 ? "trigger"
@@ -235,6 +271,11 @@ moverock()
                               otense(otmp, "plug"),
                               (ttmp->ttyp == TRAPDOOR) ? "trap door" : "hole",
                               surface(rx, ry));
+#else
+                        pline("%s 떨어져서 %s의 %s을 메꿨다!", append_josa(xname(otmp), "가"),
+                              surface(rx, ry),
+                              (ttmp->ttyp == TRAPDOOR) ? "함정문" : "구멍");
+#endif
                     deltrap(ttmp);
                     delobj(otmp);
                     bury_objs(rx, ry);
@@ -255,9 +296,11 @@ moverock()
                             goto dopush;
                     }
                     if (u.usteed)
+                        /*KR pline("%s pushes %s and suddenly it disappears!", */
                         pline("%s pushes %s and suddenly it disappears!",
                               upstart(y_monnam(u.usteed)), the(xname(otmp)));
                     else
+                        /*KR You("push %s and suddenly it disappears!", */
                         You("push %s and suddenly it disappears!",
                             the(xname(otmp)));
                     if (ttmp->ttyp == TELEP_TRAP) {
@@ -302,14 +345,27 @@ moverock()
  dopush:
                 if (!u.usteed) {
                     if (moves > lastmovetime + 2 || moves < lastmovetime)
+#if 0 /*KR:T*/
                         pline("With %s effort you move %s.",
                               throws_rocks(youmonst.data) ? "little"
                                                           : "great",
                               the(xname(otmp)));
+#else
+                        pline("%s %s 밀어냈다.",
+                              throws_rocks(youmonst.data) ? "가볍게"
+                                                          : "온 힘을 다해",
+                              append_josa(the(xname(otmp)), "을"));
+#endif
                     exercise(A_STR, TRUE);
                 } else
+#if 0 /*KR:T*/
                     pline("%s moves %s.", upstart(y_monnam(u.usteed)),
                           the(xname(otmp)));
+#else
+                    pline("%s %s 밀어냈다.",
+                          append_josa(upstart(y_monnam(u.usteed)), "이"),
+                          append_josa(xname(otmp), "를"));
+#endif
                 lastmovetime = moves;
             }
 
@@ -326,10 +382,17 @@ moverock()
         } else {
  nopushmsg:
             if (u.usteed)
+#if 0 /*KR:T*/
                 pline("%s tries to move %s, but cannot.",
                       upstart(y_monnam(u.usteed)), the(xname(otmp)));
+#else
+                pline("%s %s 움직이려 했지만, 그럴 수 없었다.",
+                      append_josa(upstart(y_monnam(u.usteed)), "은"), 
+                      append_josa(the(xname(otmp)), "를"));
+#endif
             else
-                You("try to move %s, but in vain.", the(xname(otmp)));
+                /*KR You("try to move %s, but in vain.", the(xname(otmp))); */
+                You("%s 움직이려 했지만, 헛된 일이었다.", append_josa(the(xname(otmp)), "를"));
             if (Blind)
                 feel_location(sx, sy);
  cannot_push:
@@ -2634,7 +2697,8 @@ pickup_checks()
             pline_The("stairs are solidly fixed to the %s.",
                       surface(u.ux, u.uy));
         else
-            There("is nothing here to pick up.");
+            /*KR There("is nothing here to pick up."); */
+            pline("여기에는 주울 것이 아무 것도 없다.");
         return 0;
     }
     if (!can_reach_floor(TRUE)) {

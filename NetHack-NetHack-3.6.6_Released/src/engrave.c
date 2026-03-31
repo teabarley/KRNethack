@@ -970,8 +970,8 @@ doengrave()
                 pline("%s %s.", Yobjnam2(otmp, "get"),
                       is_ice(u.ux, u.uy) ? "frosty" : "dusty");
 #else
-                pline("%s은/는 %s이/가 되었다.", xname(otmp),
-                    is_ice(u.ux, u.uy) ? "서리 투성이" : "먼지 범벅");
+                pline("%s %s 되었다.", append_josa(xname(otmp), "은"),
+                      append_josa(is_ice(u.ux, u.uy) ? "서리 투성이" : "먼지 범벅"), "를");
 #endif
             break;
         default:
@@ -1204,7 +1204,8 @@ doengrave()
                 pline("%s, then %s.", Tobjnam(otmp, "glow"),
                       otense(otmp, "fade"));
 #else
-                pline("%s이/가 빛났지만, 이내 사라졌다.", xname(otmp));
+                pline("%s 빛났지만, 이내 사라졌다.",
+                      append_josa(xname(otmp), "이"));
 #endif
             return 1;
         } else {

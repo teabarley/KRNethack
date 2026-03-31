@@ -655,9 +655,9 @@ drinksink()
                     (Blind || !canspotmon(mtmp)) ? "something squirmy"
                     : a_monnam(mtmp));
 #else
-                pline("²¥¾Ç! °³¼ö±¸¿¡ %sÀÌ/°¡ ÀÖ¾î!",
-                    (Blind || !canspotmon(mtmp)) ? "¹º°¡ ²ÞÆ²´ë´Â °Í"
-                    : a_monnam(mtmp));
+                pline("²¥¾Ç! °³¼ö±¸¿¡ %s ÀÖ¾î!",
+                    append_josa((Blind || !canspotmon(mtmp)) ? "¹º°¡ ²ÞÆ²´ë´Â °Í"
+                                : a_monnam(mtmp), "¸¦"));
 #endif
         }
         break;
