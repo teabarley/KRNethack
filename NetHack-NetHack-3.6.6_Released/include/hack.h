@@ -538,11 +538,6 @@ enum bodypart_types {
 #define DEVTEAM_EMAIL "devteam@nethack.org"
 #define DEVTEAM_URL "https://www.nethack.org/"
 
-#endif /* HACK_H */
+#include "korean.h" /* KR: KRNethack 한국어 지원 모듈 통합 */
 
-/* KRNethack 한국어 지원 함수 선언 */
-extern int get_jongseong(const char *str);
-extern const char *append_josa(const char *word, const char *josa);
-extern int utf8_char_bytes(unsigned char c);
-extern int korean_strwidth(const char *str);
-extern char *get_kr_name(const char *en_name);
+#endif /* HACK_H */

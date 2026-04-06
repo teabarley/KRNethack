@@ -1,7 +1,6 @@
 #include "hack.h"
 #include <windows.h>
 #include <stdio.h>
-#include "korean.h"
 
 /* 1. 문자열의 마지막 글자 '받침(종성)' 코드를 알아내는 함수 */
 int
@@ -89,6 +88,8 @@ append_josa(const char *word, const char *josa)
         j = has_jong ? "이라" : "라";
     else if (strstr(josa, "이야") || strstr(josa, "야"))
         j = has_jong ? "이야" : "야";
+    else if (strstr(josa, "이다") || strstr(josa, "다"))
+        j = has_jong ? "이다" : "다";
     else
         j = josa; /* 알 수 없는 조사면 그냥 그대로 붙임 */
 
@@ -2357,6 +2358,7 @@ static const struct {
     { "remove", "어떤 것을 빼시겠습니까?", "뺄" },
     { "rub", "어디에 문지르시겠습니까?", "문지를" },
     { "write on", "어디에 쓰시겠습니까?", "글을 쓸" },
+    { "write with", "무엇으로 쓰시겠습니까?", "글을 쓸" },
     { "look at", "무엇을 살펴보시겠습니까?", "살펴볼" },
     { "use or apply", "어떤 것을 사용하시겠습니까?", "사용할" },
     { "throw", "무엇을 던지시겠습니까?", "던질" },

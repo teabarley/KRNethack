@@ -4,7 +4,6 @@
 /* NetHack may be freely redistributed.  See license for details. */
 
 #include "hack.h"
-#include "korean.h"
 
 #ifndef C /* same as cmd.c */
 #define C(c) (0x1f & (c))

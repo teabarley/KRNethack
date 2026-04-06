@@ -1340,7 +1340,7 @@ doengrave()
             *sp = '\0';
             if (multi)
                 nomovemsg = "더 이상 쓸 수 없다.";
-            You("\"%s\"(이)라고만 쓸 수 있었다.", ebuf);
+            You("\"%s\"고만 쓸 수 있었다.", append_josa(ebuf, "이라"));
         }
 #endif
     }

@@ -1758,7 +1758,7 @@ rottenfood(obj)
 struct obj *obj;
 {
     /*KR pline("Blecch!  Rotten %s!", foodword(obj)); */
-    pline("¿°! Ω‚¿∫ %s(¿Ã)¥Ÿ!", foodword(obj));
+    pline("¿°! Ω‚¿∫ %s!", append_josa(foodword(obj), "¿Ã¥Ÿ"));
     if (!rn2(4)) {
         if (Hallucination)
             /*KR You_feel("rather trippy."); */

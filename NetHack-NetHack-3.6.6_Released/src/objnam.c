@@ -5,21 +5,6 @@
 
 #include "hack.h"
 
-/* --- KRNethack 번역 출력 가로채기 --- */
-#if 1
-#undef OBJ_NAME
-#undef OBJ_DESCR
-
-/* 엔진은 영어 원본을 기억하게 합니다 */
-#define RAW_OBJ_NAME(obj) (obj_descr[(obj).oc_name_idx].oc_name)
-#define RAW_OBJ_DESCR(obj) (obj_descr[(obj).oc_descr_idx].oc_descr)
-
-/* 화면에 뿌릴 때만 사전을 거쳐 한글로 냅니다 */
-#define OBJ_NAME(obj) get_kr_name(RAW_OBJ_NAME(obj))
-#define OBJ_DESCR(obj) get_kr_name(RAW_OBJ_DESCR(obj))
-#endif
-/* --- KRNethack 번역 출력 가로채기 끝 --- */
-
 /* "an uncursed greased partly eaten guardian naga hatchling [corpse]" */
 #define PREFIX 80 /* (56) */
 #define SCHAR_LIM 127
@@ -147,10 +132,6 @@ register int otyp;
 
     if (Role_if(PM_SAMURAI) && Japanese_item_name(otyp))
         actualn = Japanese_item_name(otyp);
-#if 1 /*KR*/
-    if (un)
-        Sprintf(buf, "%s라고 불리다", un);
-#endif
     switch (ocl->oc_class) {
     case COIN_CLASS:
         /*KR Strcpy(buf, "coin"); */
@@ -257,6 +238,12 @@ register int otyp;
     if (dn)
         /*KR Sprintf(eos(buf), " (%s)", dn); */
         Sprintf(eos(buf), "(%s)", dn);
+
+#if 1 /*KR:T (유저가 지어준 이름 복구) */
+    if (un)
+        Sprintf(eos(buf), " [%s(이)라고 불림]", un);
+#endif
+
     return buf;
 }
 
@@ -560,8 +547,12 @@ unsigned cxn_flags; /* bitmask of CXN_xxx values */
 #endif
 #if 1 /*KR*/
     if (has_oname(obj) && dknown) {
-        Strcat(buf, ONAME(obj));
-        Strcat(buf, " (이)라 이름붙인 ");
+        /* 사체(CORPSE)일 때는 여기서 이름을 붙이지 않고,
+           doname_base에서 자연스럽게 조립하도록 미룹니다. */
+        if (obj->otyp != CORPSE) {
+            Strcat(buf, ONAME(obj));
+            Strcat(buf, " (이)라 이름붙인 ");
+        }
     }
 #endif
     switch (obj->oclass) {
@@ -1261,8 +1252,10 @@ unsigned doname_flags;
                                 end (Strcat is used on the end) */
 #endif
     register char *bp = xname(obj);
-#if 1 /*KR*/ /*순서를 바꿔가며 사용*/
+#if 1 /*KR: KRNethack 맞춤 번역 (어순 조립용 변수)*/
+    /* 수식어를 앞으로 빼내기 위한 버퍼 */
     char preprefix[PREFIX];
+    preprefix[0] = '\0';
 #endif
 
     if (iflags.override_ID) {
@@ -1285,47 +1278,60 @@ unsigned doname_flags;
     if (!strncmp(bp, "poisoned ", 9) && obj->opoisoned) {
         bp += 9;
         ispoisoned = TRUE;
+    }
 #else
-    if (!strncmp(bp, "독이 발린 ", 12) && obj->opoisoned) {
-        bp += 12;
-        ispoisoned = TRUE;
+    {
+        /* 숫자 12 미사용. strlen을 사용해 인코딩 버그 차단. */
+        int p_len = strlen("독이 발린 ");
+        if (!strncmp(bp, "독이 발린 ", p_len) && obj->opoisoned) {
+            bp += p_len;
+            ispoisoned = TRUE;
+        }
     }
 #endif
-#if 1 /*KR*/ 
-    /* "새끼 고양이의 타마라고 불리는 시체"보다 
-    "타마로 불리는 새끼 고양이의 시체"가 자연스러움*/
+
+#if 1 /*KR:T*/
+    /* xname()에서 이미 "타마(이)라고 불리는 새끼 고양이의 사체"처럼 넘어올
+       경우, "타마(이)라고 불리는 " 부분만 안전하게 잘라내어 preprefix에
+       보관하고, bp(본체 이름)는 그 뒤부터 시작하도록 포인터를 옮겨줍니다. */
     {
         char *tp;
-        preprefix[0] = '\0';
-        if ((tp = strstri(bp, "불리는")) != NULL) {
-            tp += 12; /*"불리는"*/
-            strncpy(preprefix, bp, tp - bp);
-            preprefix[tp - bp] = '\0';
-            bp = tp;
+        /* 하드코딩된 숫자 12 대신 strlen을 사용. */
+        const char *keyword = "불리는 ";
+        if ((tp = strstr(bp, keyword)) != NULL) {
+            /* (tp - bp)는 타마(이)라고" 까지의 길이입니다. */
+            int split_len = (tp - bp) + strlen(keyword);
+
+            /* [안전장치] 배열 크기를 넘지 않도록 제한 */
+            if (split_len >= PREFIX)
+                split_len = PREFIX - 1;
+
+            strncpy(preprefix, bp, split_len);
+            preprefix[split_len] = '\0';
+            bp += split_len;
         }
-        Strcpy(prefix, "");
     }
-#endif */
+#endif
+
     if (obj->quan != 1L) {
         if (dknown || !vague_quan)
-            /*JP Sprintf(prefix, "%ld%s의 ", obj->quan, numeral(obj)); */
-            /*extern.h와 jlib.c에서 정의된 numeral 함수. 수정필요 */
-            Sprintf(prefix, "%ld ", obj->quan);
+            /*KR Sprintf(prefix, "%ld ", obj->quan); */
+            Sprintf(prefix, "%ld개의 ", obj->quan);
         else
-            /*KR Strcpy(prefix, "some ");  일본어에서는 '몇 개인가의(이쿠츠카노)' */
+            /*KR Strcpy(prefix, "some "); */
             Strcpy(prefix, "얼마간의 ");
     } else if (obj->otyp == CORPSE) {
         /* skip article prefix for corpses [else corpse_xname()
            would have to be taught how to strip it off again] */
         *prefix = '\0';
-#if 0 /*KR*/ /* 관사(the) 미사용 */
+#if 0 /*KR 관사(the) 미사용. prefix의 초기화 */
     } else if (obj_is_pname(obj) || the_unique_obj(obj)) {
         if (!strncmpi(bp, "the ", 4))
             bp += 4;
         Strcpy(prefix, "the ");
     } else {
         Strcpy(prefix, "a ");
-#else /*prefix의 초기화*/
+#else
     } else {
         Strcpy(prefix, "");
 #endif
@@ -1555,7 +1561,13 @@ unsigned doname_flags;
 #if 0 /*KR*/
             Sprintf(prefix, "%s ", cxstr);
 #else
-            Sprintf(prefix, "%s의 ", cxstr);
+            if (has_oname(obj) && dknown) {
+                /* 예: Zaz(이)라는 이름의 저주받은 언덕 오크 */
+                Sprintf(prefix, "%s(이)라는 이름의 %s ", ONAME(obj), cxstr);
+            } else {
+                /* 예: 저주받은 언덕 오크의 */
+                Sprintf(prefix, "%s의 ", cxstr);
+            }
 #endif
             /* avoid having doname(corpse) consume an extra obuf */
             releaseobuf(cxstr);

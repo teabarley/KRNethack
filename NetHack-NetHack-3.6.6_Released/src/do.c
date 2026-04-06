@@ -707,28 +707,37 @@ canletgo(obj, word)
 struct obj *obj;
 const char *word;
 {
+#if 1 /*KR:T (사전 모듈 활용) */
+    const char *kr_action = "";
+    const char *kr_prompt = "";
+    char fallback_act[QBUFSZ], fallback_prm[QBUFSZ];
+
+    if (word && *word) {
+        /* word(예: "drop")를 넣어서 kr_action(예: "버릴")을 뽑아옵니다 */
+        get_kr_strings(word, &kr_action, &kr_prompt, 
+                       fallback_act, fallback_prm);
+    }
+#endif
+
     if (obj->owornmask & (W_ARMOR | W_ACCESSORY)) {
         if (*word)
             /*KR Norep("You cannot %s %s you are wearing.", word, something); */
-            Norep("당신이 착용하고 있는 것을 %s 할 수는 없다.", word);
+            Norep("착용하고 있는 것을 %s 수는 없다.", kr_action);
         return FALSE;
     }
     if (obj->otyp == LOADSTONE && obj->cursed) {
         /* getobj() kludge sets corpsenm to user's specified count
            when refusing to split a stack of cursed loadstones */
         if (*word) {
-#if 0 /*KR 한국어에서는 불필요 */
             /* getobj() ignores a count for throwing since that is
                implicitly forced to be 1; replicate its kludge... */
             if (!strcmp(word, "throw") && obj->quan > 1L)
                 obj->corpsenm = 1;
-#endif
-#if 0 /*KR:T*/
+#if 0 /*KR:T (kr_action 적용) */
             pline("For some reason, you cannot %s%s the stone%s!", word,
                   obj->corpsenm ? " any of" : "", plur(obj->quan));
 #else
-            pline("무슨 이유에서인지, 당신은 돌을 %s 할 수 없다!",
-                  word);
+            pline("무슨 이유에서인지, 돌을 %s 수 없다!", kr_action);
 #endif
         }
         obj->corpsenm = 0; /* reset */
@@ -738,13 +747,13 @@ const char *word;
     if (obj->otyp == LEASH && obj->leashmon != 0) {
         if (*word)
        /*KR pline_The("leash is tied around your %s.", body_part(HAND)); */
-            pline("당신의 %s에 줄이 감겨 있다.", body_part(HAND));
+            pline("%s에 가죽끈이 감겨 있다.", body_part(HAND));
         return FALSE;
     }
     if (obj->owornmask & W_SADDLE) {
         if (*word)
        /*KR You("cannot %s %s you are sitting on.", word, something); */
-            You("타고 있는 동안에는 %s 할 수 없다.", word);
+            You("타고 있는 동안에는 %s 수 없다.", kr_action);
         return FALSE;
     }
     return TRUE;
