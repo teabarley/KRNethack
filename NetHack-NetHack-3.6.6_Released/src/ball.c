@@ -26,7 +26,7 @@ boolean showmsg;
     if (carried(uball)) {
         if (showmsg)
             /*KR pline("Startled, you drop the iron ball."); */
-            pline("±ôÂ¦ ³î¶ó¼­, ´ç½ÅÀº Ã¶°øÀ» ¶³¾î¶ß·È´Ù.");
+            pline("±ôÂ¦ ³î¶ó¼­, ´ç½ÅÀº Ã¶±¸¸¦ ¶³¾î¶ß·È´Ù.");
         if (uwep == uball)
             setuwep((struct obj *) 0);
         if (uswapwep == uball)
@@ -53,7 +53,7 @@ ballfall()
         int dmg = rn1(7, 25);
 
         /*KR pline_The("iron ball falls on your %s.", body_part(HEAD)); */
-        pline("Ã¶°øÀÌ ´ç½ÅÀÇ %s À§¿¡ ¶³¾îÁ³´Ù.", body_part(HEAD));
+        pline("Ã¶±¸¸¦ ´ç½ÅÀÇ %s À§¿¡ ¶³¾îÁ³´Ù.", body_part(HEAD));
         if (uarmh) {
             if (is_metallic(uarmh)) {
                 /*KR pline("Fortunately, you are wearing a hard helmet."); */
@@ -67,7 +67,7 @@ ballfall()
         losehp(Maybe_Half_Phys(dmg), "crunched in the head by an iron ball",
                NO_KILLER_PREFIX);
 #else
-        losehp(Maybe_Half_Phys(dmg), "Ã¶°ø¿¡ ¸Ó¸®¸¦ ¸Â¾Æ À¸±úÁ³´Ù",
+        losehp(Maybe_Half_Phys(dmg), "Ã¶±¸¿¡ ¸Ó¸®¸¦ ¸Â¾Æ À¸±úÁ³´Ù",
                KILLED_BY);
 #endif
     }
@@ -798,7 +798,7 @@ boolean allow_drag;
         You("cannot %sdrag the heavy iron ball.",
             invent ? "carry all that and also " : "");
 #else
-        You("%s¹«°Å¿î Ã¶°øÀ» ²ø ¼ö´Â ¾ø´Ù.",
+        You("%s¹«°Å¿î Ã¶±¸¸¦ ²ø ¼ö´Â ¾ø´Ù.",
             invent ? "±×¸¸ÇÑ ÁüÀ» µç Ã¤·Î " : "");
 #endif
         nomul(0);
@@ -814,7 +814,7 @@ boolean allow_drag;
             && (is_pit(t->ttyp) || is_hole(t->ttyp)))) {
         if (Levitation) {
             /*KR You_feel("a tug from the iron ball."); */
-            You("Ã¶°ø¿¡ ²ø·Á°¬´Ù.");
+            You("Ã¶±¸¿¡ ²ø·Á°¬´Ù.");
             if (t)
                 t->tseen = 1;
         } else {

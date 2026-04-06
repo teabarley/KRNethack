@@ -214,6 +214,7 @@
     <ClInclude Include="$(WinWin32Dir)mhstatus.h" />
     <ClInclude Include="$(WinWin32Dir)mhtext.h" />
     <ClInclude Include="$(WinWin32Dir)winMS.h" />
+    <ClInclude Include="..\..\..\include\korean.h" />
     <ClInclude Include="..\resource.h" />
   </ItemGroup>
   <ItemGroup>

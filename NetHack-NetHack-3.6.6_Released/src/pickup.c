@@ -1589,7 +1589,7 @@ boolean telekinesis; /* not picking it up directly by hand */
     nearload = near_capacity();
     prinv(nearload == SLT_ENCUMBER ? moderateloadmsg : (char *) 0, obj,
           count);
-#else /*KR: KRNethack 맞춤 번역*/
+#else
     nearload = near_capacity();
     /* 1. 아이템 습득 로그를 먼저 평범하게 띄웁니다 (예: s - 두루마리) */
     prinv((char *) 0, obj, count);

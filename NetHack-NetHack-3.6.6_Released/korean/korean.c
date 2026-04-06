@@ -1,6 +1,7 @@
 #include "hack.h"
 #include <windows.h>
 #include <stdio.h>
+#include "korean.h"
 
 /* 1. 문자열의 마지막 글자 '받침(종성)' 코드를 알아내는 함수 */
 int
@@ -1858,7 +1859,7 @@ get_kr_name(const char *en_name)
     if (!strcmp(en_name, "statue"))
         return "조각상";
     if (!strcmp(en_name, "heavy iron ball"))
-        return "무거운 쇠공";
+        return "무거운 철구";
     if (!strcmp(en_name, "iron chain"))
         return "쇠사슬";
 
@@ -1866,7 +1867,7 @@ get_kr_name(const char *en_name)
      * 독 (Venoms)
      * ========================================== */
     if (!strcmp(en_name, "blinding venom"))
-        return "눈을 머는 독액";
+        return "실명 독액";
     if (!strcmp(en_name, "acid venom"))
         return "산성 독액";
 
@@ -2137,7 +2138,7 @@ get_kr_name(const char *en_name)
     if (!strcmp(en_name, "gray"))
         return "회색";
 
-    /* [마법서 외형] */
+    /* [주문서 외형] */
     if (!strcmp(en_name, "parchment"))
         return "양피지";
     if (!strcmp(en_name, "vellum"))
@@ -2336,3 +2337,71 @@ get_kr_name(const char *en_name)
     return (char *) en_name; /* 사전에 없으면 원래 영어 반환 */
 }
 /* --- KRNethack 번역 사전 끝 --- */
+
+/* ========================================== *
+ * getobj / ggetobj 용 한국어 동사 매핑
+ * ========================================== */
+static const struct {
+    const char *en_verb;
+    const char *kr_prompt;
+    const char *kr_action;
+} kr_verb_map[] = {
+    { "eat", "무엇을 먹겠습니까?", "먹을" },
+    { "drop", "어떤 것을 버리시겠습니까?", "버릴" },
+    { "drink", "무엇을 마시겠습니까?", "마실" },
+    { "read", "어떤 것을 읽으시겠습니까?", "읽을" },
+    { "wield", "어떤 것을 무기로 쥐겠습니까?", "무기로 쥘" },
+    { "wear", "무엇을 입으시겠습니까?", "입을" },
+    { "take off", "무엇을 벗으시겠습니까?", "벗을" },
+    { "put on", "어떤 것을 착용하시겠습니까?", "착용할" },
+    { "remove", "어떤 것을 빼시겠습니까?", "뺄" },
+    { "rub", "어디에 문지르시겠습니까?", "문지를" },
+    { "write on", "어디에 쓰시겠습니까?", "글을 쓸" },
+    { "look at", "무엇을 살펴보시겠습니까?", "살펴볼" },
+    { "use or apply", "어떤 것을 사용하시겠습니까?", "사용할" },
+    { "throw", "무엇을 던지시겠습니까?", "던질" },
+    { "fire", "무엇을 쏘시겠습니까?", "쏠" },
+    { "dip", "무엇을 담그시겠습니까?", "담글" },
+    { "untrap", "어떤 것으로 함정을 해제하시겠습니까?", "함정을 해제할" },
+    { "offer", "무엇을 제물로 바치시겠습니까?", "제물로 바칠" },
+    { "sacrifice", "무엇을 제물로 바치시겠습니까?", "제물로 바칠" },
+    { "invoke", "어떤 것의 힘을 끌어내시겠습니까?", "힘을 끌어낼" },
+    { "open", "무엇을 여시겠습니까?", "열" },
+    { "close", "무엇을 닫으시겠습니까?", "닫을" },
+    { "loot", "무엇을 뒤지시겠습니까?", "뒤질" },
+    { "tin", "무엇을 통조림으로 만드시겠습니까?", "통조림으로 만들" },
+    { "charge", "무엇을 충전하시겠습니까?", "충전할" },
+    { "call", "무엇에 이름을 붙이시겠습니까?", "이름을 붙일" },
+    { "adjust", "무엇을 조정하시겠습니까?", "조정할" },
+    { "rub on the stone", "돌에 무엇을 문지르시겠습니까?", "문지를" },
+    { "identify", "어떤 종류의 물건을 감정하시겠습니까?", "감정할" },
+    { 0, 0, 0 }
+};
+
+/* 배열을 검색해서 포인터에 값을 넣어주는 메인 함수 */
+void get_kr_strings(word, action_ptr, prompt_ptr, fallback_act,
+                    fallback_prm) const char *word;
+const char **action_ptr;
+const char **prompt_ptr;
+char *fallback_act;
+char *fallback_prm;
+{
+    int k;
+    *action_ptr = (const char *) 0;
+    *prompt_ptr = (const char *) 0;
+
+    for (k = 0; kr_verb_map[k].en_verb; k++) {
+        if (!strcmp(word, kr_verb_map[k].en_verb)) {
+            *prompt_ptr = kr_verb_map[k].kr_prompt;
+            *action_ptr = kr_verb_map[k].kr_action;
+            break;
+        }
+    }
+
+    if (!*prompt_ptr) {
+        Sprintf(fallback_prm, "어떤 것을 %s 하시겠습니까?", word);
+        *prompt_ptr = fallback_prm;
+        Sprintf(fallback_act, "%s 할", word);
+        *action_ptr = fallback_act;
+    }
+}

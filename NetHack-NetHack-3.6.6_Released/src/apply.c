@@ -757,12 +757,24 @@ struct obj *obj;
                     : "unleash anything from inside %s."),
                  noit_mon_nam(u.ustuck));
 #else
-        You_cant((!obj->leashmon
-            ? "안쪽에서 %s에 줄을 묶을 수는 없다."
-            : (obj->leashmon == (int)u.ustuck->m_id)
-            ? "안쪽에서 %s을/를 풀어줄 수는 없다."
-            : "%s의 안에서는 아무것도 풀어줄 수 없다."),
-            noit_mon_nam(u.ustuck));
+        {
+            const char *stuck_mon = noit_mon_nam(u.ustuck);
+
+            if (!obj->leashmon) {
+                /* 줄이 비어있을 때: 삼킨 몬스터에게 줄을 묶으려 함 */
+                pline("안쪽에서 %s 줄로 묶을 수는 없다.",
+                      append_josa(stuck_mon, "을"));
+            } else if (obj->leashmon == (int) u.ustuck->m_id) {
+                /* 삼킨 몬스터가 이미 줄에 묶여있을 때: 안에서 풀어주려 함 */
+                pline("안쪽에서 %s 풀어줄 수는 없다.",
+                      append_josa(stuck_mon, "을"));
+            } else {
+                /* 다른 몬스터가 줄에 묶여있을 때: 삼켜진 상태에선 아무것도
+                 * 못함 */
+                pline("%s 안에서는 아무것도 풀어줄 수 없다.",
+                      append_josa(stuck_mon, "의"));
+            }
+        }
 #endif
         return 0;
     }
@@ -3482,8 +3494,8 @@ struct obj *obj;
                     (void) hold_another_object(otmp, "You drop %s!",
                                                doname(otmp), (const char *) 0);
 #else
-                    (void) hold_another_object(otmp, "%s을/를 떨어뜨렸다!",
-                                               doname(otmp), (const char *) 0);
+                    (void) hold_another_object(otmp, "%s 떨어뜨렸다!",
+                        append_josa(doname(otmp), "을"), (const char *) 0);
 #endif
                     break;
                 default:
@@ -3492,7 +3504,8 @@ struct obj *obj;
                     You("yank %s from %s %s!", the(onambuf),
                         s_suffix(mon_nam(mtmp)), mon_hand);
 #else
-                    You("%s를 %s의 %s에서 홱 끌어당겼다!", the(xname(otmp)),
+                    You("%s %s의 %s에서 홱 끌어당겼다!",
+                        append_josa(the(onambuf), "를"), 
                         mon_nam(mtmp), mon_hand);
 #endif
                     obj_no_longer_held(otmp);

@@ -942,12 +942,14 @@ register struct obj *obj;
                 pline("%s catches %s%s", Monnam(mtmp), the(xname(obj)),
                       !big_corpse ? "." : ", or vice versa!");
 #else
-                pline("%s은/는 %s을/를 잡았다", Monnam(mtmp), xname(obj),
+                pline("%s %s 잡았다",
+                      append_josa(Monnam(mtmp), "은"),
+                      append_josa(xname(obj), "를"),
                     !big_corpse ? "." : "...라기보단 그 반대였다!");
 #endif
             } else if (cansee(mtmp->mx, mtmp->my))
                 /*KR pline("%s.", Tobjnam(obj, "stop")); */
-                pline("%s은/는 멈췄다.",xname(obj));
+                pline("%s 멈췄다.", append_josa(xname(obj), "은"));
             /* dog_eat expects a floor object */
             place_object(obj, mtmp->mx, mtmp->my);
             (void) dog_eat(mtmp, obj, mtmp->mx, mtmp->my, FALSE);

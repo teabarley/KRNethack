@@ -74,7 +74,7 @@ const struct class_sym def_oc_syms[MAXOCLASSES] = {
     { GOLD_SYM, "금화", "금화 더미" },
     { GEM_SYM, "돌", "보석 또는 돌" },
     { ROCK_SYM, "큰 돌", "바위 또는 조각상" },
-    { BALL_SYM, "쇠공", "쇠공" },
+    { BALL_SYM, "철구", "철구" },
     { CHAIN_SYM, "사슬", "쇠사슬" },
     { VENOM_SYM, "독", "독액" }
 #endif

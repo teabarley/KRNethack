@@ -1137,13 +1137,20 @@ int pm;
             nomul(-tmp);
             /*KR multi_reason = "pretending to be a pile of gold"; */
             multi_reason = "금화 더미를 흉내내고 있을 때";
+#if 0 /*KR:T*/
             Sprintf(buf,
                     Hallucination
-                /*KR   ? "You suddenly dread being peeled and mimic %s again!"
-                       : "You now prefer mimicking %s again.", */
-                       ? "당신은 갑자기 알몸뚱이가 된 것이 무서워서 다시 %s을/를 흉내낸다!"
-                       : "이제 다시 %s을/를 흉내내고 싶어졌다.",
+                       ? "You suddenly dread being peeled and mimic %s again!"
+                       : "You now prefer mimicking %s again.",
                     an(Upolyd ? youmonst.data->mname : urace.noun));
+#else
+            Sprintf(buf,
+                    Hallucination ? "당신은 갑자기 껍질이 벗겨질까 무서워져 "
+                                    "다시 %s 흉내 낸다!"
+                                  : "이제 다시 %s 흉내 내고 싶어졌다.",
+                    append_josa(Upolyd ? youmonst.data->mname : urace.noun,
+                                "을"));
+#endif
             eatmbuf = dupstr(buf);
             nomovemsg = eatmbuf;
             afternmv = eatmdone;
@@ -2912,13 +2919,13 @@ doeat()
         if (welded(otmp) || (otmp->cursed && (otmp->owornmask & W_RING))) {
             set_bknown(otmp, 1); /* for ring; welded() does this for weapon */
             /*KR You("spit out %s.", the(xname(otmp))); */
-            You("%s을/를 뱉어냈다.", xname(otmp));
+            You("%s 뱉어냈다.", append_josa(xname(otmp), "를"));
         } else {
 #if 0 /*KR:T*/
             You("spit %s out onto the %s.", the(xname(otmp)),
                 surface(u.ux, u.uy));
 #else
-            You("%s을/를 %s에 뱉어냈다.", the(xname(otmp)),
+            You("%s %s에 뱉어냈다.", append_josa(the(xname(otmp)), "를"),
                 surface(u.ux, u.uy));
 #endif
             if (carried(otmp)) {
@@ -3127,8 +3134,8 @@ doeat()
                 (context.victual.reqtime == 1) ? "eat" : "begin eating",
                 doname(otmp));
 #else
-            You("%s을/를 %s.",
-                doname(otmp),
+            You("%s %s.", 
+                append_josa(doname(otmp), "를"),
                 (context.victual.reqtime == 1) ? "먹었다" : "먹기 시작했다");
 #endif
         }
@@ -3187,11 +3194,23 @@ struct obj *obj;
 #if 0 /*KR:T*/
             if (ynq(safe_qbuf(qbuf, "Really wield ", "?",
                 obj, doname, thesimpleoname, "that")) != 'y')
-#else
-            if (ynq(safe_qbuf(qbuf, "정말로", "을/를 장착하시겠습니까?",
-                obj, doname, thesimpleoname, "그것")) != 'y')
-#endif
                 return 0;
+#else
+            {
+                char temp_name[BUFSZ];
+                /* 1. safe_qbuf를 이용해 아이템 이름만 안전하게 빼옵니다
+                 * (fallback: "이 무기") */
+                (void) safe_qbuf(temp_name, "", "", obj, doname,
+                                 thesimpleoname, "이 무기");
+
+                /* 2. 조사를 완벽하게 붙여서 최종 질문을 만듭니다 */
+                Sprintf(qbuf, "정말로 %s 장착하시겠습니까?",
+                        append_josa(temp_name, "을"));
+
+                if (ynq(qbuf) != 'y')
+                    return 0;
+            }
+#endif
         }
         if (!wield_tool(obj, "use"))
             return 0;
@@ -3637,7 +3656,9 @@ int corpsecheck; /* 0, no check, 1, corpses, 2, tinnable corpses */
                    && (corpsecheck == 1 || tinnable(otmp)))
                 : feeding ? (otmp->oclass != COIN_CLASS && is_edible(otmp))
                           : otmp->oclass == FOOD_CLASS) {
+#if 0 /*KR 한글로 번역하면서 안쓰게되서 묶어놨음 */
             char qsfx[QBUFSZ];
+#endif
             boolean one = (otmp->quan == 1L);
 
             /* if blind and without gloves, attempting to eat (or tin or

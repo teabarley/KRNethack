@@ -780,7 +780,7 @@ unsigned cxn_flags; /* bitmask of CXN_xxx values */
         Sprintf(buf, "%sheavy iron ball",
                 (obj->owt > ocl->oc_weight) ? "very " : "");
 #else
-        Sprintf(eos(buf), "%s 公芭款 艰傍",
+        Sprintf(eos(buf), "%s 公芭款 枚备",
                 (obj->owt > ocl->oc_weight) ? "决没" : "");
 #endif
         break;

@@ -1472,17 +1472,13 @@ struct monst *mtmp;
             cansee(mtmp->mx, mtmp->my) ? "" : "has ",
             cansee(mtmp->mx, mtmp->my) ? "" : "ed",
             buf);
-#else /*KR: KRNethack 한국어 맞춤 코드*/
-        /* JNetHack처럼 You()를 강제로 쓰면 "당신은 ~를 보았다"가 되어버릴
-         * 수 있으므로, 자연스러운 한글 출력을 위해 pline()으로 교체하는 것이
-         * 좋습니다. */
+#else
         pline(
             "당신은 %s 있던 자리에 %s 나타난 것을 %s!",
             /* 1. 원래 몬스터 이름(buf)에 '이/가' 붙이기 */
             append_josa(buf, "이"),
 
-            /* 2. 새로 변신한 모습에 번역기(get_kr_name)를 씌운 뒤 '이/가'
-               붙이기 */
+            /* 2. 새로 변신한 모습에 번역기(get_kr_name) 씌우고 '이/가' 붙이기 */
             append_josa(
                 (M_AP_TYPE(mtmp) == M_AP_FURNITURE)
                     ? an(get_kr_name(defsyms[mtmp->mappearance].explanation))

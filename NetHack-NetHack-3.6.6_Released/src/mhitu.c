@@ -827,8 +827,8 @@ register struct monst *mtmp;
         } else if (!range2) {
             if (youseeit || sensemon(mtmp))
                 /*KR pline("%s starts to attack you, but pulls back.", */
-                pline("%s이/가 당신을 공격하기 시작했지만, 도로 물러났다.",
-                      Monnam(mtmp));
+                pline("%s 당신을 공격하기 시작했지만, 도로 물러났다.",
+                      append_josa(Monnam(mtmp), "이"));
             else
                 /*KR You_feel("%s move nearby.", something); */
                 pline("무언가가 당신 근처를 지나친 것 같은 기분이 든다.");
@@ -910,11 +910,11 @@ register struct monst *mtmp;
                     }
                 } else if (is_animal(mtmp->data)) {
                     /*KR pline("%s gulps some air!", Monnam(mtmp)); */
-                    pline("%s이/가 숨을 들이쉬었다!", Monnam(mtmp));
+                    pline("%s 숨을 들이쉬었다!", append_josa(Monnam(mtmp), "이"));
                 } else {
                     if (youseeit)
                         /*KR pline("%s lunges forward and recoils!", Monnam(mtmp)); */
-                        pline("%s이/가 앞으로 돌진했다가 돌아온다!", Monnam(mtmp));
+                        pline("%s 앞으로 돌진했다가 돌아온다!", append_josa(Monnam(mtmp), "이"));
                     else
 #if 0 /*KR:T*/
                         You_hear("a %s nearby.",
@@ -1048,13 +1048,25 @@ struct attack *mattk;
             ? xname(obj)
             : cloak_simple_name(obj));
 #else
-        pline("%s이/가 %s %s%s!", Monnam(mtmp),
-            obj->greased ? "기름이 칠해진" : "미끄러운",
-            (obj->greased || objects[obj->otyp].oc_name_known)
-              ? xname(obj)
-              : cloak_simple_name(obj),
-            (mattk->adtyp == AD_WRAP) ? " 때문에 미끄러졌다"
-                                      : "을/를 붙잡으려 했지만 실패했다");
+        {
+            /* 1. 공통으로 쓰이는 형용사와 아이템 이름을 미리 빼둡니다 */
+            const char *cloak_adj = obj->greased ? "기름칠한" : "미끄러운";
+            const char *cloak_nm =
+                (obj->greased || objects[obj->otyp].oc_name_known)
+                    ? xname(obj)
+                    : cloak_simple_name(obj);
+
+            /* 2. 공격 타입에 따라 문장을 다르게 출력합니다 */
+            if (mattk->adtyp == AD_WRAP) {
+                /* AD_WRAP (감싸기/조르기 공격일 때) */
+                pline("%s 당신의 %s %s에서 미끄러졌다!",
+                      append_josa(Monnam(mtmp), "가"), cloak_adj, cloak_nm);
+            } else {
+                /* 일반 붙잡기 공격일 때 */
+                pline("%s 당신을 붙잡았지만, %s %s 때문에 놓치고 말았다!",
+                      append_josa(Monnam(mtmp), "가"), cloak_adj, cloak_nm);
+            }
+        }
 #endif
 
         if (obj->greased && !rn2(2)) {
@@ -1159,11 +1171,11 @@ register struct attack *mattk;
                 pline("%s was hidden under %s!", Amonnam(mtmp), what);
 #else
                 if (Blind && !obj->dknown)
-                    pline("%s이/가 무언가의 밑에 숨어 있다!", Amonnam(mtmp));
+                    pline("%s 무언가의 밑에 숨어 있다!", append_josa(Amonnam(mtmp), "이"));
                 else if (is_pool(mtmp->mx, mtmp->my) && !Underwater)
-                    pline("%s이/가 물 속에 숨어 있다!", Amonnam(mtmp));
+                    pline("%s 물 속에 숨어 있다!", append_josa(Amonnam(mtmp), "이"));
                 else
-                    pline("%s이/가 %s의 밑에 숨어 있다!", Amonnam(mtmp), doname(obj));
+                    pline("%s %s의 밑에 숨어 있다!", append_josa(Amonnam(mtmp), "이"), doname(obj));
 #endif
             }
             newsym(mtmp->mx, mtmp->my);
@@ -1193,7 +1205,7 @@ register struct attack *mattk;
                 } else {
                     u.ustuck = mtmp;
                     /*KR pline("%s grabs you!", Monnam(mtmp)); */
-                    pline("%s이/가 당신을 붙잡는다!", Monnam(mtmp));
+                    pline("%s 당신을 붙잡는다!", append_josa(Monnam(mtmp), "이"));
                 }
             } else if (u.ustuck == mtmp) {
                 exercise(A_STR, FALSE);
@@ -1221,7 +1233,7 @@ register struct attack *mattk;
                     pline("%s hits you with the %s corpse.", Monnam(mtmp),
                         mons[otmp->corpsenm].mname);
 #else
-                    pline("%s이/가 당신을 %s의 시체로 공격했다.", Monnam(mtmp),
+                    pline("%s 당신을 %s의 시체로 공격했다.", append_josa(Monnam(mtmp), "이"),
                         mons[otmp->corpsenm].mname);
 #endif
                     if (!Stoned)
@@ -1460,15 +1472,19 @@ register struct attack *mattk;
          * still _can_ attack you when you're flying or mounted.
          */
         if ((u.usteed || Levitation || Flying) && !is_flyer(mtmp->data)) {
-            /*KR pline("%s tries to reach your %s %s!", Monst_name, sidestr, leg); */
-            pline("%s이/가 당신의 %s %s를 공격하려 한다!", Monst_name, sidestr, leg);
+#if 0 /*KR:T*/
+            pline("%s tries to reach your %s %s!", Monst_name, sidestr, leg);
+#else
+            pline("%s 당신의 %s %s 공격하려 한다!",
+                  append_josa(Monst_name, "이"), sidestr, append_josa(leg, "를"));
+#endif
             dmg = 0;
         } else if (mtmp->mcan) {
 #if 0 /*KR:T*/
             pline("%s nuzzles against your %s %s!", Monnam(mtmp),
                 sidestr, leg);
 #else
-            pline("%s이/가 당신의 %s %s에 코를 비볐다!", Monnam(mtmp),
+            pline("%s 당신의 %s %s에 코를 비볐다!", append_josa(Monnam(mtmp), "이"),
                 sidestr, leg);
 #endif
             dmg = 0;
@@ -1480,8 +1496,8 @@ register struct attack *mattk;
                     pline("%s pricks the exposed part of your %s %s!",
                         Monst_name, sidestr, leg);
 #else
-                    pline("%s이/가 당신의 노출된 %s %s를 콕 찔렀다!",
-                        Monst_name, sidestr, leg);
+                    pline("%s 당신의 노출된 %s %s 콕 찔렀다!",
+                          append_josa(Monst_name, "이"), sidestr, append_josa(leg, "를"));
 #endif
                 }
                 else if (!rn2(5)) {
@@ -1489,7 +1505,7 @@ register struct attack *mattk;
                     pline("%s pricks through your %s boot!", Monst_name,
                         sidestr);
 #else
-                    pline("%s이/가 당신의 %s 신발을 뚫고 콕 찌른다!", Monst_name,
+                    pline("%s 당신의 %s 신발을 뚫고 콕 찌른다!", append_josa(Monst_name, "이"),
                         sidestr);
 #endif
                 } else {
@@ -1497,15 +1513,19 @@ register struct attack *mattk;
                     pline("%s scratches your %s boot!", Monst_name,
                         sidestr);
 #else
-                    pline("%s이/가 당신의 %s 신발을 긁어댄다!", Monst_name,
+                    pline("%s 당신의 %s 신발을 긁어댄다!", append_josa(Monst_name, "이"),
                         sidestr);
 #endif
                     dmg = 0;
                     break;
                 }
             } else
-                /*KR pline("%s pricks your %s %s!", Monst_name, sidestr, leg); */
-                pline("%s이/가 당신의 %s %s를 콕 찌른다!", Monst_name, sidestr, leg);
+#if 0 /*KR:T*/
+                pline("%s pricks your %s %s!", Monst_name, sidestr, leg);
+#else
+                pline("%s 당신의 %s %s 콕 찌른다!",
+                      append_josa(Monst_name, "이"), sidestr, append_josa(leg, "를"));
+#endif
 
             set_wounded_legs(side, rnd(60 - ACURR(A_DEX)));
             exercise(A_STR, FALSE);
@@ -1519,12 +1539,12 @@ register struct attack *mattk;
             if (mtmp->mcan) {
                 if (!Deaf)
                     /*KR You_hear("a cough from %s!", mon_nam(mtmp)); */
-                    You_hear("%s이/가 콜록콜록 하는 소리를 듣는다!", mon_nam(mtmp));
+                    You_hear("%s 콜록콜록 하는 소리를 듣는다!", append_josa(mon_nam(mtmp), "이"));
             }
             else {
                 if (!Deaf)
                     /*KR You_hear("%s hissing!", s_suffix(mon_nam(mtmp))); */
-                    You_hear("%s이/가 쉬익 하는 소리를 듣는다!", mon_nam(mtmp));
+                    You_hear("%s 쉬익 하는 소리를 듣는다!", append_josa(mon_nam(mtmp), "이"));
                 if (!rn2(10)
                     || (flags.moonphase == NEW_MOON && !have_lizard())) {
                 do_stone:
@@ -1560,7 +1580,7 @@ register struct attack *mattk;
                 }
                 else {
                     /*KR pline("%s swings itself around you!", Monnam(mtmp)); */
-                    pline("%s이/가 당신의 몸을 휘감았다!", Monnam(mtmp));
+                    pline("%s 당신의 몸을 휘감았다!", append_josa(Monnam(mtmp), "이"));
                     u.ustuck = mtmp;
                 }
             }
@@ -1596,8 +1616,8 @@ register struct attack *mattk;
                     pline("%s brushes against your %s.", Monnam(mtmp),
                         body_part(LEG));
 #else
-                    pline("%s이/가 당신의 %s를 스쳤다.", Monnam(mtmp),
-                        body_part(LEG));
+                    pline("%s 당신의 %s 스쳤다.", append_josa(Monnam(mtmp), "이"),
+                          append_josa(body_part(LEG), "를"));
 #endif
             }
         }
@@ -1651,7 +1671,7 @@ register struct attack *mattk;
                 ? "brags about the goods some dungeon explorer provided"
                 : "makes some remarks about how difficult theft is lately");
 #else
-            pline("%s이/가 %s.", Monnam(mtmp),
+            pline("%s %s.", append_josa(Monnam(mtmp), "이"),
                 Deaf ? "무언가를 말하지만 들리지 않는다"
                 : mtmp->minvent
                 ? "한 미궁 탐험가가 '주고 간' 물건에 대해 자랑했다"
@@ -1669,10 +1689,11 @@ register struct attack *mattk;
                     flags.female ? "charm" : "seduce",
                     flags.female ? "unaffected" : "uninterested");
 #else
-                pline("%s이/가 당신을 %s하려고 했지만, 당신은 %s.",
-                    Adjmonnam(mtmp, "순진한"),
-                    flags.female ? "매혹" : "유혹",
-                    flags.female ? "영향받지 않아 보인다" : "관심이 없어 보인다");
+                pline("%s 당신을 %s하려 했지만, 당신은 %s.",
+                      append_josa(Adjmonnam(mtmp, "평범한"), "이"),
+                      flags.female ? "매혹" : "유혹",
+                      flags.female ? "아무런 영향도 받지 않은 것 같다"
+                                   : "조금도 관심이 없는 것 같다");
 #endif
             if (rn2(3)) {
                 if (!tele_restrict(mtmp))
@@ -1872,7 +1893,7 @@ register struct attack *mattk;
                     /*KR
                                         pline("%s chuckles.", Monnam(mtmp));
                     */
-                    pline("%s이/가 키득키득 웃었다.", Monnam(mtmp));
+                    pline("%s 키득키득 웃었다.", append_josa(Monnam(mtmp), "이"));
             }
             if (u.umonnum == PM_CLAY_GOLEM) {
                 /*KR
@@ -1949,7 +1970,7 @@ register struct attack *mattk;
         /*KR
                 pline("%s reaches out with its deadly touch.", Monnam(mtmp));
         */
-        pline("%s이/가 죽음의 손길을 뻗었다.", Monnam(mtmp));
+        pline("%s 죽음의 손길을 뻗었다.", append_josa(Monnam(mtmp), "이"));
         if (is_undead(youmonst.data)) {
             /* Still does normal damage */
 /*KR
@@ -1999,14 +2020,14 @@ register struct attack *mattk;
         /*KR
                 pline("%s reaches out, and you feel fever and chills.", Monnam(mtmp));
         */
-        pline("%s이/가 팔을 뻗었다. 당신은 오한을 느꼈다.", Monnam(mtmp));
+        pline("%s 팔을 뻗었다. 당신은 오한을 느꼈다.", append_josa(Monnam(mtmp), "이"));
         (void)diseasemu(mdat); /* plus the normal damage */
         break;
     case AD_FAMN:
         /*KR
                 pline("%s reaches out, and your body shrivels.", Monnam(mtmp));
         */
-        pline("%s이/가 팔을 뻗었다. 당신의 몸은 쪼그라들었다.", Monnam(mtmp));
+        pline("%s 팔을 뻗었다. 당신의 몸은 쪼그라들었다.", append_josa(Monnam(mtmp), "이"));
         exercise(A_CON, FALSE);
         if (!is_fainted())
             morehungry(rn1(40, 40));
@@ -2213,16 +2234,14 @@ struct attack* mattk;
             pline("%s lunges forward and plucks you off %s!", Monnam(mtmp),
                 buf);
 #else
-            pline("%s이/가 돌진해서 당신을 %s에서 끌어내렸다!", Monnam(mtmp),
+            pline("%s 돌진해서 당신을 %s에서 끌어내렸다!", append_josa(Monnam(mtmp), "이"),
                 buf);
 #endif
             dismount_steed(DISMOUNT_ENGULFED);
         }
         else
-            /*KR
-                        pline("%s engulfs you!", Monnam(mtmp));
-            */
-            pline("%s이/가 당신을 집어삼켰다!", Monnam(mtmp));
+            /*KR pline("%s engulfs you!", Monnam(mtmp)); */
+            pline("%s 당신을 집어삼켰다!", append_josa(Monnam(mtmp), "이"));
         stop_occupation();
         reset_occupations(); /* behave as if you had moved */
 
@@ -2313,10 +2332,8 @@ struct attack* mattk;
             tmp = 0;
         }
         else if (u.uswldtim == 0) {
-            /*KR
-                        pline("%s totally digests you!", Monnam(mtmp));
-            */
-            pline("%s이/가 당신을 완전히 소화했다!", Monnam(mtmp));
+            /*KR pline("%s totally digests you!", Monnam(mtmp)); */
+            pline("%s 당신을 완전히 소화했다!", append_josa(Monnam(mtmp), "이"));
             tmp = u.uhp;
             if (Half_physical_damage)
                 tmp *= 2; /* sorry */
@@ -2327,7 +2344,7 @@ struct attack* mattk;
                 (u.uswldtim == 2) ? " thoroughly"
                 : (u.uswldtim == 1) ? " utterly" : "");
 #else
-            pline("%이/가 당신을 %s 소화한다!", Monnam(mtmp),
+            pline("%s 당신을 %s 소화한다!", append_josa(Monnam(mtmp), "이"),
                 (u.uswldtim == 2) ? "완전히"
                 : (u.uswldtim == 1) ? "철저하게" : "");
 #endif
@@ -2499,7 +2516,7 @@ struct attack* mattk;
         pline("%s very hurriedly %s you!", Monnam(mtmp),
             is_animal(mtmp->data) ? "regurgitates" : "expels");
 #else
-        pline("%s이/가 황급히 당신을 %s다!", Monnam(mtmp),
+        pline("%s 황급히 당신을 %s다!", append_josa(Monnam(mtmp), "이"),
             is_animal(mtmp->data) ? "토해냈" : "방출했");
 #endif
         expels(mtmp, mtmp->data, FALSE);
@@ -2802,7 +2819,7 @@ struct attack* mattk;
                 /*KR
                                 pline("%s stares piercingly at you!", Monnam(mtmp));
                 */
-                pline("%s이/가 당신을 뚫어지게 바라본다!", Monnam(mtmp));
+                pline("%s 당신을 뚫어지게 바라본다!", append_josa(Monnam(mtmp), "이"));
                 make_stunned((HStun & TIMEOUT) + (long)stun, TRUE);
                 stop_occupation();
             }
@@ -2856,7 +2873,7 @@ struct attack* mattk;
                 /*KR
                                 pline("%s attacks you with a fiery gaze!", Monnam(mtmp));
                 */
-                pline("%s이/가 불같은 시선으로 공격했다!", Monnam(mtmp));
+                pline("%s 불같은 시선으로 공격했다!", append_josa(Monnam(mtmp), "이"));
                 stop_occupation();
                 if (Fire_resistance) {
                     /*KR
@@ -3428,15 +3445,15 @@ struct monst* mon;
         pline("%s demands that you pay %s, but you refuse...",
             noit_Monnam(mon), noit_mhim(mon));
 #else
-        pline("%s이/가 당신에게 돈을 내라고 요구했지만, 당신은 거절했다...",
-            noit_Monnam(mon));
+        pline("%s 당신에게 돈을 내라고 요구했지만, 당신은 거절했다...",
+              append_josa(noit_Monnam(mon), "이"));
 #endif
     }
     else if (u.umonnum == PM_LEPRECHAUN) {
         /*KR
                 pline("%s tries to take your money, but fails...", noit_Monnam(mon));
         */
-        pline("%s이/가 당신의 돈을 뺏으려 했지만, 실패했다...", noit_Monnam(mon));
+        pline("%s 당신의 돈을 뺏으려 했지만, 실패했다...", append_josa(noit_Monnam(mon), "이"));
     }
     else {
         long cost;
@@ -3495,14 +3512,14 @@ const char* str;
     /* being deaf overrides confirmation prompt for high charisma */
     if (Deaf) {
         /*KR pline("%s takes off your %s.", seducer, str); */
-        pline("%s이/가 당신의 %s을/를 벗겼다.", seducer, str);
+        pline("%s 당신의 %s 벗겼다.", append_josa(seducer, "이"), append_josa(str, "를"));
     }
     else if (rn2(20) < ACURR(A_CHA)) {
 #if 0 /*KR:T*/
         Sprintf(qbuf, "\"Shall I remove your %s, %s?\"", str,
             (!rn2(2) ? "lover" : !rn2(2) ? "dear" : "sweetheart"));
 #else
-        Sprintf(qbuf, "\"%s을/를 벗겨도 될까, %s?\"", str,
+        Sprintf(qbuf, "\"%s 벗겨도 될까, %s?\"", append_josa(str, "를"),
             (!rn2(2) ? "내 사랑" : flags.female ? "자기" : "달링"));
 #endif
         if (yn(qbuf) == 'n')
@@ -3639,7 +3656,7 @@ struct attack* mattk;
             /*KR
                         pline("%s turns to stone!", Monnam(mtmp));
             */
-            pline("%s이/가 돌로 변했다!", Monnam(mtmp));
+            pline("%s 돌로 변했다!", append_josa(Monnam(mtmp), "이"));
             stoned = 1;
             xkilled(mtmp, XKILL_NOMSG);
             if (!DEADMONSTER(mtmp))
@@ -3723,7 +3740,7 @@ struct attack* mattk;
             /*KR
                         pline("%s is suddenly very cold!", Monnam(mtmp));
             */
-            pline("%s이/가 갑자기 매우 차가워졌다!", Monnam(mtmp));
+            pline("%s 갑자기 매우 차가워졌다!", append_josa(Monnam(mtmp), "이"));
             u.mh += tmp / 2;
             if (u.mhmax < u.mh)
                 u.mhmax = u.mh;
@@ -3733,9 +3750,8 @@ struct attack* mattk;
         case AD_STUN: /* Yellow mold */
             if (!mtmp->mstun) {
                 mtmp->mstun = 1;
-                /*JP 수정필요 pline("%s이/가 %s.", Monnam(mtmp),
-                    jpast(stagger(mtmp->data, "비틀거렸다"))); */
-                pline("%s이/가 %s.", Monnam(mtmp), stagger(mtmp->data, "비틀거렸다"));
+                /*KR pline("%s %s.", Monnam(mtmp), stagger(mtmp->data, "staggers")); */
+                pline("%s %s.", append_josa(Monnam(mtmp), "이"), stagger(mtmp->data, "비틀거렸다"));
             }
             tmp = 0;
             break;
@@ -3745,7 +3761,7 @@ struct attack* mattk;
 #if 0 /*KR:T*/
                 pline("%s is mildly warm.", Monnam(mtmp));
 #else
-                pline("%s은/는 약간 따뜻하다.", Monnam(mtmp));
+                pline("%s 약간 따뜻하다.", append_josa(Monnam(mtmp), "은"));
 #endif
                 golemeffects(mtmp, AD_FIRE, tmp);
                 tmp = 0;
@@ -3754,7 +3770,7 @@ struct attack* mattk;
 #if 0 /*KR:T*/
             pline("%s is suddenly very hot!", Monnam(mtmp));
 #else
-            pline("%s이/가 갑자기 매우 뜨거워졌다!", Monnam(mtmp));
+            pline("%s 갑자기 매우 뜨거워졌다!", append_josa(Monnam(mtmp), "이"));
 #endif
             break;
         case AD_ELEC:
@@ -3763,7 +3779,7 @@ struct attack* mattk;
 #if 0 /*KR:T*/
                 pline("%s is slightly tingled.", Monnam(mtmp));
 #else
-                pline("%s은/는 약간 따끔했다.", Monnam(mtmp));
+                pline("%s 약간 따끔했다.", append_josa(Monnam(mtmp), "은"));
 #endif
                 golemeffects(mtmp, AD_ELEC, tmp);
                 tmp = 0;
@@ -3772,7 +3788,7 @@ struct attack* mattk;
 #if 0 /*KR:T*/
             pline("%s is jolted with your electricity!", Monnam(mtmp));
 #else
-            pline("%s은/는 당신의 전기에 감전당했다!", Monnam(mtmp));
+            pline("%s 당신의 전기에 감전당했다!", append_josa(Monnam(mtmp), "은"));
 #endif
             break;
         default:

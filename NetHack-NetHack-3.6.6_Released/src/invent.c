@@ -4,6 +4,7 @@
 /* NetHack may be freely redistributed.  See license for details. */
 
 #include "hack.h"
+#include "korean.h"
 
 #ifndef C /* same as cmd.c */
 #define C(c) (0x1f & (c))
@@ -1248,6 +1249,7 @@ register int type;
  * http://concord.wikia.com/wiki/List_of_Fictional_Currencies
  */
 static const char *const currencies[] = {
+#if 0 /*KR:T*/
     "Altarian Dollar",       /* The Hitchhiker's Guide to the Galaxy */
     "Ankh-Morpork Dollar",   /* Discworld */
     "auric",                 /* The Domination of Draka */
@@ -1269,6 +1271,29 @@ static const char *const currencies[] = {
     "Triganic Pu",           /* The Hitchhiker's Guide to the Galaxy */
     "woolong",               /* Cowboy Bebop */
     "zorkmid",               /* Zork, NetHack */
+#else
+    "알타리아 달러",      /* 은하수를 여행하는 히치하이커를 위한 안내서 */
+    "앙크모포크 달러",    /* 디스크월드 */
+    "오릭",               /* 드라카의 지배 */
+    "버카조이드",         /* 스페이스 퀘스트 */
+    "서보조이드",         /* 스타슬립 */
+    "크레딧 칩",          /* 데우스 엑스 */
+    "큐빗",               /* 배틀스타 갤럭티카 */
+    "플라니아 포블 비즈", /* 은하수를 여행하는 히치하이커를 위한 안내서 */
+    "프레처",             /* 쥘 베른 */
+    "제국 크레딧",        /* 스타워즈 */
+    "홍콩 루나 달러",     /* 달은 무자비한 밤의 여왕 */
+    "콩벅",               /* 스노우 크래시 */
+    "나나이트",           /* 시스템 쇼크 2 */
+    "쿼틀루",             /* 스타트렉, 심시티 */
+    "시몰레온",           /* 심시티 */
+    "솔라리",             /* 스페이스볼 (듄의 패러디) */
+    "스페이스벅",         /* 스페이스볼 */
+    "스포어벅",           /* 스포어 */
+    "트리가닉 푸",        /* 은하수를 여행하는 히치하이커를 위한 안내서 */
+    "우렁",               /* 카우보이 비밥 */
+    "조크미드",           /* 조크, 넷핵 */
+#endif
 };
 
 const char *
@@ -1277,9 +1302,13 @@ long amount;
 {
     const char *res;
 
+#if 0 /*KR:T*/
     res = Hallucination ? currencies[rn2(SIZE(currencies))] : "zorkmid";
     if (amount != 1L)
         res = makeplural(res);
+#else
+    res = Hallucination ? currencies[rn2(SIZE(currencies))] : "조크미드";
+#endif
     return res;
 }
 
@@ -1443,6 +1472,17 @@ register const char *let, *word;
     boolean oneloop = FALSE;
     long dummymask;
     Loot *sortedinvent, *srtinv;
+
+#if 1 /* KR: KRNethack 맞춤 번역 (모듈화 적용) */      
+    const char *kr_prompt;
+    const char *kr_action;
+    char fallback_prompt[QBUFSZ];
+    char fallback_action[QBUFSZ];
+
+    /* korean.c의 함수를 호출해서 위 변수들을 한 방에 세팅합니다 */
+    get_kr_strings(word, &kr_action, &kr_prompt, fallback_action,
+                   fallback_prompt);
+#endif
 
     if (*let == ALLOW_COUNT)
         let++, allowcnt = 1;
@@ -1639,10 +1679,19 @@ register const char *let, *word;
         compactify(bp);
     *ap = '\0';
 
+#if 0 /*KR:T*/
     if (!foo && !allowall && !allownone) {
         You("don't have anything %sto %s.", foox ? "else " : "", word);
         return (struct obj *) 0;
-    } else if (!strcmp(word, "write on")) { /* ugly check for magic marker */
+    }
+#else 
+    if (!foo && !allowall && !allownone) {
+        You("%s%s 만한 것이 없다.", foox ? "더 이상 " : "", kr_action);
+        return (struct obj *) 0;
+    }
+#endif 
+    else if (!strcmp(word, "write on")) { /* ugly check for magic marker \
+                                              */
         /* we wanted all scrolls and books in altlets[], but that came with
            'allowall' which we don't want since it prevents "silly thing"
            result if anything other than scroll or spellbook is chosen */
@@ -1651,7 +1700,11 @@ register const char *let, *word;
     for (;;) {
         cnt = 0;
         cntgiven = FALSE;
+#if 0 /*KR:T*/
         Sprintf(qbuf, "What do you want to %s?", word);
+#else 
+        Strcpy(qbuf, kr_prompt);
+#endif
         if (in_doagain)
             ilet = readchar();
         else if (iflags.force_invmenu) {
@@ -1673,7 +1726,8 @@ register const char *let, *word;
             long tmpcnt = 0;
 
             if (!allowcnt) {
-                pline("No count allowed with this command.");
+                /*KR pline("No count allowed with this command."); */
+                pline("%s", "이 명령어에는 숫자를 쓸 수 없습니다.");
                 continue;
             }
             ilet = get_count(NULL, ilet, LARGEST_INT, &tmpcnt, TRUE);
@@ -1689,6 +1743,7 @@ register const char *let, *word;
         }
         if (ilet == HANDS_SYM) { /* '-' */
             if (!allownone) {
+#if 0 /*KR:T*/
                 char *suf = (char *) 0;
 
                 strcpy(buf, word);
@@ -1704,6 +1759,9 @@ register const char *let, *word;
                     bp = buf;
                 You("mime %s something%s%s.", ing_suffix(bp), suf ? " " : "",
                     suf ? suf : "");
+#else
+                You("무언가를 %s 시늉을 했다.", kr_action);
+#endif
             }
             return (allownone ? (struct obj *) &zeroobj : (struct obj *) 0);
         }
@@ -1716,6 +1774,7 @@ register const char *let, *word;
             char menuquery[QBUFSZ];
 
             menuquery[0] = qbuf[0] = '\0';
+#if 0 /*KR:T*/
             if (iflags.force_invmenu)
                 Sprintf(menuquery, "What do you want to %s?", word);
             if (!strcmp(word, "grease"))
@@ -1729,6 +1788,24 @@ register const char *let, *word;
             else if (!strcmp(word, "ready"))
                 Sprintf(qbuf, "empty quiver%s",
                         !uquiver ? " (nothing readied)" : "");
+#else /*KR: KRNethack 맞춤 번역 (복수형 제거 및 자연스러운 띄어쓰기)*/
+            /* 한국어에서는 '손들(hands)'처럼 굳이 복수형을 쓰면 어색하므로
+               makeplural()을 제거하고 단수형으로 깔끔하게 맞춥니다. */
+            if (iflags.force_invmenu)
+                Strcpy(menuquery, kr_prompt);
+            if (!strcmp(word, "grease"))
+                Sprintf(qbuf, "당신의 %s", fingers_or_gloves(FALSE));
+            else if (!strcmp(word, "write with"))
+                Sprintf(qbuf, "당신의 %s", body_part(FINGERTIP));
+            else if (!strcmp(word, "wield"))
+                /* "장갑 낀 손", "맨손", "맨촉수" 등이 자연스럽게 출력되도록
+                 * 조합 */
+                Sprintf(qbuf, "당신의 %s%s%s", uarmg ? "장갑 낀 " : "맨",
+                        body_part(HAND), !uwep ? " (장착됨)" : "");
+            else if (!strcmp(word, "ready"))
+                Sprintf(qbuf, "빈 화살통%s",
+                        !uquiver ? " (준비된 것 없음)" : "");
+#endif
 
             if (ilet == '?' && !*lets && *altlets)
                 allowed_choices = altlets;
@@ -1762,7 +1839,8 @@ register const char *let, *word;
                than one invent slot of gold and picking the non-'$' one */
             || (otmp && otmp->oclass == COIN_CLASS)) {
             if (!usegold) {
-                You("cannot %s gold.", word);
+                /*KR You("cannot %s gold.", word); */
+                You("금화를 %s 수는 없다.", kr_action);
                 return (struct obj *) 0;
             }
             /* Historic note: early Nethack had a bug which was
@@ -1774,7 +1852,8 @@ register const char *let, *word;
             if (cntgiven && cnt <= 0) {
                 if (cnt < 0)
                     pline_The(
-                  "LRS would be very interested to know you have that much.");
+             /*KR "LRS would be very interested to know you have that much."); */
+                  "그 기술은 어느 게임의 카지노에서 쓸 수 있었지만, 이제는 더 이상 쓸 수 없게 됐어.");
                 return (struct obj *) 0;
             }
         }
@@ -1786,7 +1865,8 @@ register const char *let, *word;
                 return (struct obj *) 0;
             if (cnt > 1 && (ilet != def_oc_syms[COIN_CLASS].sym
                 && !(otmp && otmp->oclass == COIN_CLASS))) {
-                You("can only throw one item at a time.");
+                /*KR You("can only throw one item at a time."); */
+                You("동시에 많은 것을 던질 수 없다.");
                 continue;
             }
         }
@@ -1796,12 +1876,14 @@ register const char *let, *word;
            that's been moved above so that otmp can be checked earlier] */
         /* verify the chosen object */
         if (!otmp) {
+            /*KR You("don't have that object."); */
             You("don't have that object.");
             if (in_doagain)
                 return (struct obj *) 0;
             continue;
         } else if (cnt < 0 || otmp->quan < cnt) {
-            You("don't have that many!  You have only %ld.", otmp->quan);
+            /*KR You("don't have that many!  You have only %ld.", otmp->quan); */
+            You("그렇게 많이는 없다! 고작 %ld개 가지고 있을 뿐이다.", otmp->quan);
             if (in_doagain)
                 return (struct obj *) 0;
             continue;
@@ -1810,7 +1892,11 @@ register const char *let, *word;
     }
     if (!allowall && let && !index(let, otmp->oclass)
         && !(usegold && otmp->oclass == COIN_CLASS)) {
+#if 0 /*KR:T (관형사형 텍스트 전달) */
         silly_thing(word, otmp);
+#else 
+        silly_thing(kr_action, otmp);
+#endif
         return (struct obj *) 0;
     }
     if (cntgiven) {
@@ -1860,7 +1946,11 @@ struct obj *otmp;
               !(is_plural(otmp) || pair_of(otmp)) ? "that" : "those", s3);
     else
 #endif
+#if 0 /*KR:T 넘어온 word(kr_action)를 문장에 결합 */
         pline(silly_thing_to, word);
+#else 
+        pline("그것을 %s 생각은 어리석은 짓이다.", word);
+#endif
 }
 
 STATIC_PTR int
@@ -1941,12 +2031,33 @@ unsigned *resultflags;
     char extra_removeables[3 + 1]; /* uwep,uswapwep,uquiver */
     char buf[BUFSZ] = DUMMY, qbuf[QBUFSZ];
 
+#if 1 /* KR: KRNethack 맞춤 번역 (모듈화 적용) */
+    const char *kr_prompt;
+    const char *kr_action;
+    char fallback_prompt[QBUFSZ];
+    char fallback_action[QBUFSZ];
+
+    /* korean.c의 함수를 호출해서 위 변수들을 한 방에 세팅합니다 */
+    get_kr_strings(word, &kr_action, &kr_prompt, fallback_action,
+                   fallback_prompt);
+#endif
+
+#if 0 /*KR:T*/
     if (!invent) {
         You("have nothing to %s.", word);
         if (resultflags)
             *resultflags = ALL_FINISHED;
         return 0;
     }
+#else
+    if (!invent) {
+        You("가진 것 중에 %s 만한 것이 없다.", kr_action);
+        if (resultflags)
+            *resultflags = ALL_FINISHED;
+        return 0;
+    }
+#endif
+
     if (resultflags)
         *resultflags = 0;
     takeoff = ident = allflag = m_seen = FALSE;
@@ -1984,8 +2095,12 @@ unsigned *resultflags;
     ilets[iletct] = '\0';
 
     for (;;) {
+#if 0 /*KR:T*/
         Sprintf(qbuf, "What kinds of thing do you want to %s? [%s]",
                 word, ilets);
+#else 
+        Sprintf(qbuf, "%s [%s]", kr_prompt, ilets);
+#endif
         getlin(qbuf, buf);
         if (buf[0] == '\033')
             return 0;
@@ -2028,23 +2143,28 @@ unsigned *resultflags;
             if (index(extra_removeables, oc_of_sym)) {
                 ; /* skip rest of takeoff checks */
             } else if (!index(removeables, oc_of_sym)) {
-                pline("Not applicable.");
+                /*KR pline("Not applicable."); */
+                pline("그럴 수는 없다.");
                 return 0;
             } else if (oc_of_sym == ARMOR_CLASS && !wearing_armor()) {
                 noarmor(FALSE);
                 return 0;
             } else if (oc_of_sym == WEAPON_CLASS && !uwep && !uswapwep
                        && !uquiver) {
-                You("are not wielding anything.");
+                /*KR You("are not wielding anything."); */
+                You("아무것도 장비하고 있지 않다.");
                 return 0;
             } else if (oc_of_sym == RING_CLASS && !uright && !uleft) {
-                You("are not wearing rings.");
+                /*KR You("are not wearing rings."); */
+                You("반지를 끼고 있지 않다.");
                 return 0;
             } else if (oc_of_sym == AMULET_CLASS && !uamul) {
-                You("are not wearing an amulet.");
+                /*KR You("are not wearing an amulet."); */
+                You("부적을 차고 있지 않다.");
                 return 0;
             } else if (oc_of_sym == TOOL_CLASS && !ublindf) {
-                You("are not wearing a blindfold.");
+                /*KR You("are not wearing a blindfold."); */
+                You("눈가리개를 하고 있지 않다.");
                 return 0;
             }
         }
@@ -2064,7 +2184,8 @@ unsigned *resultflags;
         } else if (sym == 'm') {
             m_seen = TRUE;
         } else if (oc_of_sym == MAXOCLASSES) {
-            You("don't have any %c's.", sym);
+            /*KR You("don't have any %c's.", sym); */
+            You("%c에 속하는 물건을 가지고 있지 않다.", sym);
         } else if (oc_of_sym != VENOM_CLASS) { /* suppress venom */
             if (!index(olets, oc_of_sym)) {
                 add_valid_menu_class(oc_of_sym);
@@ -2188,10 +2309,17 @@ int FDECL((*fn), (OBJ_P)), FDECL((*ckfn), (OBJ_P));
                     Sprintf(qpfx, "%s: ", word), *qpfx = highc(*qpfx);
                 first = FALSE;
             }
+#if 0 /*KR:T*/
             (void) safe_qbuf(qbuf, qpfx, "?", otmp,
                              ininv ? safeq_xprname : doname,
                              ininv ? safeq_shortxprname : ansimpleoname,
                              "item");
+#else
+            (void) safe_qbuf(qbuf, qpfx, "?", otmp, 
+                             ininv ? safeq_xprname : doname,
+                             ininv ? safeq_shortxprname : ansimpleoname, 
+                             "아이템");
+#endif
             sym = (takeoff || ident || otmp->quan < 2L) ? nyaq(qbuf)
                                                         : nyNaq(qbuf);
         } else
@@ -2249,9 +2377,11 @@ int FDECL((*fn), (OBJ_P)), FDECL((*ckfn), (OBJ_P));
         goto nextclass;
 
     if (!takeoff && (dud || cnt))
-        pline("That was all.");
+        /*KR pline("That was all."); */
+        pline("이게 다야.");
     else if (!dud && !cnt)
-        pline("No applicable objects.");
+        /*KR pline("No applicable objects."); */
+        pline("그럴 수는 없다.");
  ret:
     unsortloot(&sortedchn);
     bypass_objlist(*objchn, FALSE);
@@ -2298,8 +2428,12 @@ int id_limit;
     /* assumptions:  id_limit > 0 and at least one unID'd item is present */
 
     while (id_limit) {
+#if 0 /*KR:T*/
         Sprintf(buf, "What would you like to identify %s?",
                 first ? "first" : "next");
+#else
+        Sprintf(buf, "%s 무엇을 식별하시겠습니까?", first ? "처음으로" : "다음으로");
+#endif
         n = query_objlist(buf, &invent, (SIGNAL_NOMENU | SIGNAL_ESCAPE
                                          | USE_INVLET | INVORDER_SORT),
                           &pick_list, PICK_ANY, not_fully_identified);
@@ -2315,13 +2449,15 @@ int id_limit;
         } else if (n == -2) { /* player used ESC to quit menu */
             break;
         } else if (n == -1) { /* no eligible items found */
-            pline("That was all.");
+            /*KR pline("That was all."); */
+            pline("그게 다야.");
             break;
         } else if (!--tryct) { /* stop re-prompting */
             pline1(thats_enough_tries);
             break;
         } else { /* try again */
-            pline("Choose an item; use ESC to decline.");
+            /*KR pline("Choose an item; use ESC to decline."); */
+            pline("아이템을 선택해 주세요; 그만두시려면 ESC를 눌러주세요.");
         }
     }
 }
@@ -2349,8 +2485,13 @@ boolean learning_id; /* true if we just read unknown identify scroll */
     int n, unid_cnt = count_unidentified(invent);
 
     if (!unid_cnt) {
+#if 0 /*KR:T*/
         You("have already identified all %sof your possessions.",
             learning_id ? "the rest " : "");
+#else
+        You("이미 %s모든 소지품을 식별했습니다.",
+            learning_id ? "남은 " : "");
+#endif
     } else if (!id_limit || id_limit >= unid_cnt) {
         /* identify everything */
         /* TODO:  use fully_identify_obj and cornline/menu/whatever here */
@@ -2444,8 +2585,15 @@ long quan;
 {
     if (!prefix)
         prefix = "";
+#if 0 /*KR:T (원본 어순 복구 및 라벨형 로그 권장) */
     pline("%s%s%s", prefix, *prefix ? " " : "",
           xprname(obj, (char *) 0, obj_to_let(obj), TRUE, 0L, quan));
+#else
+    /* 원본의 [Prefix] [Item] 어순을 유지합니다.
+       호출하는 쪽의 prefix를 "이동:", "착용 완료:" 형태로 번역하세요. */
+    pline("%s%s%s", prefix, *prefix ? " " : "",
+          xprname(obj, (char *) 0, obj_to_let(obj), TRUE, 0L, quan));
+#endif
 }
 
 char *
@@ -2562,7 +2710,8 @@ const char *query;
 boolean want_reply;
 long *out_cnt;
 {
-    static const char not_carrying_anything[] = "Not carrying anything";
+    /*KR static const char not_carrying_anything[] = "Not carrying anything"; */
+    static const char not_carrying_anything[] = "아무것도 가지고 있지 않음";
     struct obj *otmp, wizid_fakeobj;
     char ilet, ret;
     char *invlet = flags.inv_order;
@@ -2733,11 +2882,21 @@ long *out_cnt;
     }
     if (iflags.force_invmenu && lets && want_reply) {
         any = zeroany;
+#if 0 /*KR:T*/
         add_menu(win, NO_GLYPH, &any, 0, 0, iflags.menu_headings,
                  "Special", MENU_UNSELECTED);
+#else 
+        add_menu(win, NO_GLYPH, &any, 0, 0, iflags.menu_headings, 
+                 "특수", MENU_UNSELECTED);
+#endif
         any.a_char = '*';
+#if 0 /*KR:T*/
         add_menu(win, NO_GLYPH, &any, '*', 0, ATR_NONE,
                  "(list everything)", MENU_UNSELECTED);
+#else 
+        add_menu(win, NO_GLYPH, &any, '*', 0, ATR_NONE, 
+                 "(모두 보기)", MENU_UNSELECTED);
+#endif
         gotsomething = TRUE;
     }
     unsortloot(&sortedinvent);
@@ -3078,7 +3237,8 @@ dounpaid()
                     char contbuf[BUFSZ];
 
                     /* Shopkeeper knows what to charge for contents */
-                    Sprintf(contbuf, "%s contents", s_suffix(xname(otmp)));
+                    /*KR Sprintf(contbuf, "%s contents", s_suffix(xname(otmp))); */
+                    Sprintf(contbuf, "%s의 내용물", xname(otmp));
                     putstr(win, 0,
                            xprname((struct obj *) 0, contbuf, CONTAINED_SYM,
                                    TRUE, contcost, 0L));
@@ -3088,8 +3248,13 @@ dounpaid()
     }
 
     putstr(win, 0, "");
+#if 0 /*KR:T*/
     putstr(win, 0,
            xprname((struct obj *) 0, "Total:", '*', FALSE, totcost, 0L));
+#else
+    putstr(win, 0,
+           xprname((struct obj *) 0, "합계:", '*', FALSE, totcost, 0L));
+#endif
     display_nhwindow(win, FALSE);
     destroy_nhwindow(win);
 }
@@ -3141,10 +3306,12 @@ dotypeinv()
     boolean billx = *u.ushops && doinvbill(0);
     menu_item *pick_list;
     boolean traditional = TRUE;
-    const char *prompt = "What type of object do you want an inventory of?";
+    /*KR const char *prompt = "What type of object do you want an inventory of?"; */
+    const char *prompt = "어떤 종류의 소지품을 보시겠습니까?";
 
     if (!invent && !billx) {
-        You("aren't carrying anything.");
+        /*KR You("aren't carrying anything."); */
+        You("그 종류의 물건을 아무것도 가지고 있지 않다.");
         return 0;
     }
     unpaid_count = count_unpaid(invent);
@@ -3237,15 +3404,21 @@ dotypeinv()
         if (billx)
             (void) doinvbill(1);
         else
+#if 0 /*KR:T*/
             pline("No used-up objects%s.",
                   unpaid_count ? " on your shopping bill" : "");
+#else
+            pline("다 쓴 물건은 %s없다.",
+                  unpaid_count ? "청구서에 " : "");
+#endif
         return 0;
     }
     if (c == 'u' || (c == 'U' && unpaid_count && !ucnt)) {
         if (unpaid_count)
             dounpaid();
         else
-            You("are not carrying any unpaid objects.");
+            /*KR You("are not carrying any unpaid objects."); */
+            You("미지불된 아이템을 하나도 가지고 있지 않다.");
         return 0;
     }
     if (traditional) {
@@ -3262,16 +3435,20 @@ dotypeinv()
 
             switch (c) {
             case 'B':
-                before = "known to be blessed ";
+                /*KR before = "known to be blessed "; */
+                before = "축복받았다고 판명된 ";
                 break;
             case 'U':
-                before = "known to be uncursed ";
+                /*KR before = "known to be uncursed "; */
+                before = "저주받지 않았다고 판명된 ";
                 break;
             case 'C':
-                before = "known to be cursed ";
+                /*KR before = "known to be cursed "; */
+                before = "저주받았다고 판명된 ";
                 break;
             case 'X':
-                after = " whose blessed/uncursed/cursed status is unknown";
+                /*KR after = " whose blessed/uncursed/cursed status is unknown"; */
+                after = "축복/저주 여부를 모르는 ";
                 break; /* better phrasing is desirable */
             default:
                 /* 'c' is an object class, because we've already handled
@@ -3280,10 +3457,12 @@ dotypeinv()
                    to somewhere above so that we can access it here (via
                    lcase(strcpy(classnamebuf, names[(int) c]))), but the
                    game-play value of doing so is low... */
-                before = "such ";
+                /*KR before = "such "; */
+                before = "그러한 ";
                 break;
             }
-            You("have no %sobjects%s.", before, after);
+            /*KR You("have no %sobjects%s.", before, after); */
+            You("%s%s물건은 아무것도 없다.", before, after);
             return 0;
         }
         this_type = oclass;
@@ -3317,7 +3496,8 @@ char *buf;
             cmap = S_vodoor;
             break; /* "open door" */
         case D_BROKEN:
-            dfeature = "broken door";
+            /*KR dfeature = "broken door"; */
+            dfeature = "부서진 문";
             break;
         default:
             cmap = S_vcdoor;
@@ -3325,7 +3505,8 @@ char *buf;
         }
         /* override door description for open drawbridge */
         if (is_drawbridge_wall(x, y) >= 0)
-            dfeature = "open drawbridge portcullis", cmap = -1;
+            /*KR dfeature = "open drawbridge portcullis", cmap = -1; */
+            dfeature = "내려가 있는 도개교", cmap = -1;
     } else if (IS_FOUNTAIN(ltyp))
         cmap = S_fountain; /* "fountain" */
     else if (IS_THRONE(ltyp))
@@ -3335,10 +3516,12 @@ char *buf;
     else if (is_ice(x, y))
         cmap = S_ice; /* "ice" */
     else if (is_pool(x, y))
-        dfeature = "pool of water";
+        /*KR dfeature = "pool of water"; */
+        dfeature = "물웅덩이";
     else if (IS_SINK(ltyp))
         cmap = S_sink; /* "sink" */
     else if (IS_ALTAR(ltyp)) {
+#if 0 /*KR:T*/
         Sprintf(altbuf, "%saltar to %s (%s)",
                 ((lev->altarmask & AM_SHRINE)
                  && (Is_astralevel(&u.uz) || Is_sanctum(&u.uz)))
@@ -3346,6 +3529,15 @@ char *buf;
                     : "",
                 a_gname(),
                 align_str(Amask2align(lev->altarmask & ~AM_SHRINE)));
+#else
+        Sprintf(altbuf, "%s%s의 제단 (%s)",
+                ((lev->altarmask & AM_SHRINE)
+                 && (Is_astralevel(&u.uz) || Is_sanctum(&u.uz)))
+                    ? "고위의 "
+                    : "",
+                a_gname(),
+                align_str(Amask2align(lev->altarmask & ~AM_SHRINE)));
+#endif
         dfeature = altbuf;
     } else if ((x == xupstair && y == yupstair)
                || (x == sstairs.sx && y == sstairs.sy && sstairs.up))
@@ -3366,7 +3558,8 @@ char *buf;
     else if (ltyp == TREE)
         cmap = S_tree; /* "tree" */
     else if (ltyp == IRONBARS)
-        dfeature = "set of iron bars";
+        /*KR dfeature = "set of iron bars"; */
+        dfeature = "철창";
 
     if (cmap >= 0)
         dfeature = defsyms[cmap].explanation;
@@ -3384,7 +3577,11 @@ boolean picked_some;
 {
     struct obj *otmp;
     struct trap *trap;
+#if 0 /*KR: 원본*/
     const char *verb = Blind ? "feel" : "see";
+#else /*KR: KRNethack 맞춤 번역*/
+    const char *verb = Blind ? "느꼈다" : "보았다";
+#endif
     const char *dfeature = (char *) 0;
     char fbuf[BUFSZ], fbuf2[BUFSZ];
     winid tmpwin;
@@ -3411,11 +3608,21 @@ boolean picked_some;
          *  something along the lines of "because it's worn on the outside
          *  so is unreachable from in here...").
          */
+#if 0 /*KR:T*/
         Sprintf(fbuf, "Contents of %s %s", s_suffix(mon_nam(mtmp)),
                 mbodypart(mtmp, STOMACH));
         /* Skip "Contents of " by using fbuf index 12 */
         You("%s to %s what is lying in %s.", Blind ? "try" : "look around",
             verb, &fbuf[12]);
+#else
+        Sprintf(fbuf, "%s의 %s의 내용물", mon_nam(mtmp),
+                mbodypart(mtmp, STOMACH));
+        /* Skip "Contents of " by using fbuf index 12 */
+        /* 행동 묘사 (fbuf[12] 같은 위험한 인덱스 접근 대신 직접 출력) */
+        You("%s의 %s 안에 무엇이 있는지 %s.", mon_nam(mtmp),
+            mbodypart(mtmp, STOMACH),
+            Blind ? "더듬어 보았다" : "주위를 둘러보았다");
+#endif
         otmp = mtmp->minvent;
         if (otmp) {
             for (; otmp; otmp = otmp->nobj) {
@@ -3424,31 +3631,45 @@ boolean picked_some;
                 if (otmp->otyp == CORPSE)
                     feel_cockatrice(otmp, FALSE);
             }
+#if 0 /*KR: 원본*/
             if (Blind)
                 Strcpy(fbuf, "You feel");
             Strcat(fbuf, ":");
+#else 
+            Sprintf(fbuf, "여기에 있는 %s:", Blind ? "것 같은 것들" : "것들");
+#endif
             (void) display_minventory(mtmp, MINV_ALL | PICK_NONE, fbuf);
         } else {
-            You("%s no objects here.", verb);
+            /*KR You("%s no objects here.", verb); */
+            You("여기에는 %s 물건이 없다.", Blind ? "만져지는" : "보이는");
         }
         return !!Blind;
     }
     if (!skip_objects && (trap = t_at(u.ux, u.uy)) && trap->tseen)
+#if 0 /*KR: 원본*/
         There("is %s here.",
               an(defsyms[trap_to_defsym(trap->ttyp)].explanation));
+#else /*KR: KRNethack 맞춤 번역*/
+        pline("여기에 %s 있다.",
+              append_josa(defsyms[trap_to_defsym(trap->ttyp)].explanation, "이"));
+#endif
 
     otmp = level.objects[u.ux][u.uy];
     dfeature = dfeature_at(u.ux, u.uy, fbuf2);
-    if (dfeature && !strcmp(dfeature, "pool of water") && Underwater)
+    /*KR if (dfeature && !strcmp(dfeature, "pool of water") && Underwater) */
+    if (dfeature && !strcmp(dfeature, "물웅덩이") && Underwater)
         dfeature = 0;
 
     if (Blind) {
         boolean drift = Is_airlevel(&u.uz) || Is_waterlevel(&u.uz);
 
-        if (dfeature && !strncmp(dfeature, "altar ", 6)) {
+        /*KR if (dfeature && !strncmp(dfeature, "altar ", 6)) { */
+        if (dfeature && strstr(dfeature, "제단")) {
             /* don't say "altar" twice, dfeature has more info */
-            You("try to feel what is here.");
+            /*KR You("try to feel what is here."); */
+            You("여기에 무엇이 있는지 만져보려 했다.");
         } else {
+#if 0 /*KR: 원본*/
             const char *where = (Blind && !can_reach_floor(TRUE))
                                     ? "lying beneath you"
                                     : "lying here on the ",
@@ -3458,25 +3679,42 @@ boolean picked_some;
 
             You("try to feel what is %s%s.", drift ? "floating here" : where,
                 drift ? "" : onwhat);
+#else 
+            if (drift) {
+                You("무엇이 떠다니는지 만져보려 했다.");
+            } else if (Blind && !can_reach_floor(TRUE)) {
+                You("발밑에 무엇이 있는지 만져보려 했다.");
+            } else {
+                You("%s 위에 무엇이 있는지 만져보려 했다.",
+                    surface(u.ux, u.uy));
+            }
+#endif
         }
         if (dfeature && !drift && !strcmp(dfeature, surface(u.ux, u.uy)))
             dfeature = 0; /* ice already identified */
         if (!can_reach_floor(TRUE)) {
-            pline("But you can't reach it!");
+            /*KR pline("But you can't reach it!"); */
+            pline("하지만 닿지 않는다!");
             return 0;
         }
     }
 
     if (dfeature)
-        Sprintf(fbuf, "There is %s here.", an(dfeature));
+        /*KR Sprintf(fbuf, "There is %s here.", an(dfeature)); */
+        Sprintf(fbuf, "여기에 %s 있다.", append_josa(dfeature, "이"));
 
     if (!otmp || is_lava(u.ux, u.uy)
         || (is_pool(u.ux, u.uy) && !Underwater)) {
         if (dfeature)
             pline1(fbuf);
         read_engr_at(u.ux, u.uy); /* Eric Backus */
+#if 0 /*KR: 원본*/
         if (!skip_objects && (Blind || !dfeature))
             You("%s no objects here.", verb);
+#else 
+        if (!skip_objects && (Blind || !dfeature))
+            You("여기에는 %s 물건이 없다.", Blind ? "만져지는" : "보이는");
+#endif
         return !!Blind;
     }
     /* we know there is something here */
@@ -3486,6 +3724,7 @@ boolean picked_some;
             pline1(fbuf);
         read_engr_at(u.ux, u.uy); /* Eric Backus */
         if (obj_cnt == 1 && otmp->quan == 1L)
+#if 0 /*KR: 원본*/
             There("is %s object here.", picked_some ? "another" : "an");
         else
             There("are %s%s objects here.",
@@ -3495,8 +3734,18 @@ boolean picked_some;
                           ? "several"
                           : "many",
                   picked_some ? " more" : "");
+#else /*KR: KRNethack 맞춤 번역*/
+            pline("여기에 %s물건이 하나 있다.",
+                  picked_some ? "또 다른 " : "");
+        else
+            pline("여기에 %s물건이 %s 있다.", picked_some ? "추가로 " : "",
+                  (obj_cnt < 5)    ? "몇 개"
+                  : (obj_cnt < 10) ? "여러 개"
+                                   : "많이");
+#endif
         for (; otmp; otmp = otmp->nexthere)
             if (otmp->otyp == CORPSE && will_feel_cockatrice(otmp, FALSE)) {
+#if 0 /*KR: 원본*/
                 pline("%s %s%s.",
                       (obj_cnt > 1)
                           ? "Including"
@@ -3507,6 +3756,12 @@ boolean picked_some;
                       poly_when_stoned(youmonst.data)
                           ? ""
                           : ", unfortunately");
+#else /*KR: KRNethack 맞춤 번역*/
+                pline("%s%s%s.",
+                      poly_when_stoned(youmonst.data) ? "" : "불행히도, ",
+                      append_josa(corpse_xname(otmp, (const char *) 0, CXN_ARTICLE), "가"),
+                      (obj_cnt > 1) ? " 포함되어 있다" : " 있다");
+#endif
                 feel_cockatrice(otmp, FALSE);
                 break;
             }
@@ -3515,7 +3770,11 @@ boolean picked_some;
         if (dfeature)
             pline1(fbuf);
         read_engr_at(u.ux, u.uy); /* Eric Backus */
+#if 0 /*KR: 원본 (조사 자동 부착) */
         You("%s here %s.", verb, doname_with_price(otmp));
+#else 
+        You("여기서 %s %s.", append_josa(doname_with_price(otmp), "를"), verb);
+#endif
         iflags.last_msg = PLNMSG_ONE_ITEM_HERE;
         if (otmp->otyp == CORPSE)
             feel_cockatrice(otmp, FALSE);
@@ -3528,9 +3787,15 @@ boolean picked_some;
             putstr(tmpwin, 0, fbuf);
             putstr(tmpwin, 0, "");
         }
+#if 0 /*KR: 원본*/
         Sprintf(buf, "%s that %s here:",
                 picked_some ? "Other things" : "Things",
                 Blind ? "you feel" : "are");
+#else /*KR: KRNethack 맞춤 번역*/
+        Sprintf(buf, "여기에 %s %s 것들:", 
+                picked_some ? "더" : "",
+                Blind ? "만져지는" : "있는");
+#endif
         putstr(tmpwin, 0, buf);
         for (; otmp; otmp = otmp->nexthere) {
             if (otmp->otyp == CORPSE && will_feel_cockatrice(otmp, FALSE)) {
@@ -3589,12 +3854,18 @@ boolean force_touch;
         Strcpy(kbuf, corpse_xname(otmp, (const char *) 0, CXN_PFX_THE));
 
         if (poly_when_stoned(youmonst.data))
+#if 0 /*KR:T*/
             You("touched %s with your bare %s.", kbuf,
                 makeplural(body_part(HAND)));
+#else
+            You("%s의 사체에 맨%s 손을 댔다.", kbuf, append_josa(body_part(HAND), "으로"));
+#endif
         else
-            pline("Touching %s is a fatal mistake...", kbuf);
+            /*KR pline("Touching %s is a fatal mistake...", kbuf); */
+            pline("%s의 사체에 손대는 것은 치명적인 실수다...", kbuf);
         /* normalize body shape here; hand, not body_part(HAND) */
-        Sprintf(kbuf, "touching %s bare-handed", killer_xname(otmp));
+        /*KR Sprintf(kbuf, "touching %s bare-handed", killer_xname(otmp)); */
+        Sprintf(kbuf, "%s의 사체에 손대서", killer_xname(otmp));
         /* will call polymon() for the poly_when_stoned() case */
         instapetrify(kbuf);
     }
@@ -3715,9 +3986,11 @@ doprgold()
     long umoney = money_cnt(invent);
 
     if (!umoney)
-        Your("wallet is empty.");
+        /*KR Your("wallet is empty."); */
+        Your("지갑이 비었다.");
     else
-        Your("wallet contains %ld %s.", umoney, currency(umoney));
+        /*KR Your("wallet contains %ld %s.", umoney, currency(umoney)); */
+        Your("지갑에는 %ld %s 들어 있다.", umoney, append_josa(currency(umoney), "가"));
     shopper_financial_report();
     return 0;
 }
@@ -3727,7 +4000,8 @@ int
 doprwep()
 {
     if (!uwep) {
-        You("are empty %s.", body_part(HANDED));
+        /*KR You("are empty %s.", body_part(HANDED)); */
+        You("%s에 아무 무기도 쥐고 있지 않다.", body_part(HAND));
     } else {
         prinv((char *) 0, uwep, 0L);
         if (u.twoweap)
@@ -3742,13 +4016,15 @@ noarmor(report_uskin)
 boolean report_uskin;
 {
     if (!uskin || !report_uskin) {
-        You("are not wearing any armor.");
+        /*KR You("are not wearing any armor."); */
+        You("아무 갑옷도 입고 있지 않다.");
     } else {
         char *p, *uskinname, buf[BUFSZ];
 
         uskinname = strcpy(buf, simpleonames(uskin));
         /* shorten "set of <color> dragon scales" to "<color> scales"
            and "<color> dragon scale mail" to "<color> scale mail" */
+#if 0 /*KR: 원본*/
         if (!strncmpi(uskinname, "set of ", 7))
             uskinname += 7;
         if ((p = strstri(uskinname, " dragon ")) != 0)
@@ -3757,6 +4033,20 @@ boolean report_uskin;
 
         You("are not wearing armor but have %s embedded in your skin.",
             uskinname);
+#else /*KR: KRNethack 맞춤 번역 (UTF-8 바이트 시프트 및 조사 처리)*/
+        /* "회색 용 비늘"에서 " 용 "을 " "(공백 1칸)으로 축약하여 "회색
+         * 비늘"로 만듭니다. */
+        if ((p = strstr(uskinname, " 용 ")) != 0) {
+            /* UTF-8 인코딩에서 " 용 "은 총 5바이트(공백1 + 용3 +
+               공백1)입니다. p[0]인 공백 하나만 남기고, 뒤쪽
+               문자열(p[5]부터)을 4칸 앞으로 끌어옵니다. */
+            while ((p[1] = p[5]) != '\0')
+                ++p;
+        }
+
+        You("갑옷은 입고 있지 않지만, %s 피부에 박혀 있다.",
+            append_josa(uskinname, "이"));
+#endif
     }
 }
 
@@ -3800,7 +4090,8 @@ int
 doprring()
 {
     if (!uleft && !uright)
-        You("are not wearing any rings.");
+        /*KR You("are not wearing any rings."); */
+        You("아무 반지도 끼고 있지 않다.");
     else {
         char lets[3];
         register int ct = 0;
@@ -3820,7 +4111,8 @@ int
 dopramulet()
 {
     if (!uamul)
-        You("are not wearing an amulet.");
+        /*KR You("are not wearing an amulet."); */
+        You("아무 부적도 차고 있지 않다.");
     else
         prinv((char *) 0, uamul, 0L);
     return 0;
@@ -3851,7 +4143,8 @@ doprtool()
             lets[ct++] = obj_to_let(otmp);
     lets[ct] = '\0';
     if (!ct)
-        You("are not using any tools.");
+        /*KR You("are not using any tools."); */
+        You("쓸 수 있는 도구를 가지고 있지 않다.");
     else
         (void) display_inventory(lets, FALSE);
     return 0;
@@ -3871,7 +4164,8 @@ doprinuse()
             lets[ct++] = obj_to_let(otmp);
     lets[ct] = '\0';
     if (!ct)
-        You("are not wearing or wielding anything.");
+        /*KR You("are not wearing or wielding anything."); */
+        You("아무 것도 입고 있거나 장비하고 있지 않다.");
     else
         (void) display_inventory(lets, FALSE);
     return 0;
@@ -3910,12 +4204,19 @@ long numused;
  * This must match the object class order.
  */
 STATIC_VAR NEARDATA const char *names[] = {
+#if 0 /*KR:T*/
     0, "Illegal objects", "Weapons", "Armor", "Rings", "Amulets", "Tools",
     "Comestibles", "Potions", "Scrolls", "Spellbooks", "Wands", "Coins",
     "Gems/Stones", "Boulders/Statues", "Iron balls", "Chains", "Venoms"
+#else
+    0, "이상한 물체", "무기", "갑옷", "반지", "부적", "도구",
+    "식량", "물약", "두루마리", "주문서", "지팡이", "금화",
+    "보석", "바위 또는 조각상", "철구", "사슬", "독"
+#endif
 };
 STATIC_VAR NEARDATA const char oth_symbols[] = { CONTAINED_SYM, '\0' };
-STATIC_VAR NEARDATA const char *oth_names[] = { "Bagged/Boxed items" };
+/*KR STATIC_VAR NEARDATA const char *oth_names[] = { "Bagged/Boxed items" }; */
+STATIC_VAR NEARDATA const char *oth_names[] = { "가방/상자 안의 물건" };
 
 STATIC_VAR NEARDATA char *invbuf = (char *) 0;
 STATIC_VAR NEARDATA unsigned invbufsiz = 0;
@@ -3939,7 +4240,8 @@ boolean unpaid, showsym;
     else
         class_name = names[0];
 
-    len = strlen(class_name) + (unpaid ? sizeof "unpaid_" : sizeof "")
+    /*KR len = strlen(class_name) + (unpaid ? sizeof "unpaid_" : sizeof "") */
+    len = strlen(class_name) + (unpaid ? sizeof "미지불된 " : sizeof "")
           + (oclass ? (strlen(ocsymfmt) + invbuf_sympadding) : 0);
     if (len > invbufsiz) {
         if (invbuf)
@@ -3948,12 +4250,17 @@ boolean unpaid, showsym;
         invbuf = (char *) alloc(invbufsiz);
     }
     if (unpaid)
-        Strcat(strcpy(invbuf, "Unpaid "), class_name);
+        /*KR Strcat(strcpy(invbuf, "Unpaid "), class_name); */
+        Strcat(strcpy(invbuf, "미지불된 "), class_name);
     else
         Strcpy(invbuf, class_name);
     if ((oclass != 0) && showsym) {
         char *bp = eos(invbuf);
+#if 0 /*KR: 원본*/
         int mlen = invbuf_sympadding - strlen(class_name);
+#else /*KR (한글 글자 폭 보정) */
+        int mlen = invbuf_sympadding - korean_strwidth(class_name);
+#endif
         while (--mlen > 0) {
             *bp = ' ';
             bp++;
@@ -4067,8 +4374,13 @@ doorganize() /* inventory organizer by Del Lamb */
     /* when no invent, or just gold in '$' slot, there's nothing to adjust */
     if (!invent || (invent->oclass == COIN_CLASS
                     && invent->invlet == GOLD_SYM && !invent->nobj)) {
+#if 0 /*KR: 원본*/
         You("aren't carrying anything %s.",
             !invent ? "to adjust" : "adjustable");
+#else /*KR: KRNethack 맞춤 번역*/
+        You("%s 아무것도 가지고 있지 않다.",
+            !invent ? "조정할 물건을" : "조정 가능한 물건을");
+#endif
         return 0;
     }
 
@@ -4141,8 +4453,13 @@ doorganize() /* inventory organizer by Del Lamb */
         compactify(lets);
 
     /* get 'to' slot to use as destination */
+#if 0 /*KR: 원본*/
     Sprintf(qbuf, "Adjust letter to what [%s]%s?", lets,
             invent ? " (? see used letters)" : "");
+#else /*KR: KRNethack 맞춤 번역*/
+    Sprintf(qbuf, "어떤 문자로 조정하시겠습니까 [%s]%s?", lets,
+            invent ? " (? 사용 중인 문자 보기)" : "");
+#endif
     for (trycnt = 1; ; ++trycnt) {
         let = yn_function(qbuf, (char *) 0, '\0');
         if (let == '?' || let == '*') {
@@ -4164,8 +4481,13 @@ doorganize() /* inventory organizer by Del Lamb */
                 pline1(Never_mind);
             return 0;
         } else if (let == GOLD_SYM && obj->oclass != COIN_CLASS) {
+#if 0 /*KR:T*/
             pline("Only gold coins may be moved into the '%c' slot.",
                   GOLD_SYM);
+#else
+            pline("'%c' 슬롯에는 금화만 넣을 수 있습니다.",
+                  GOLD_SYM);
+#endif
             ever_mind = TRUE;
             goto noadjust;
         }
@@ -4176,12 +4498,17 @@ doorganize() /* inventory organizer by Del Lamb */
             break; /* got one */
         if (trycnt == 5)
             goto noadjust;
+#if 0 /*KR:T*/
         pline("Select an inventory slot letter."); /* else try again */
+#else
+        pline("소지품의 문자를 선택해 주세요.");
+#endif
     }
 
     collect = (let == obj->invlet);
     /* change the inventory and print the resulting item */
-    adj_type = collect ? "Collecting" : !splitting ? "Moving:" : "Splitting:";
+    /*KR adj_type = collect ? "Collecting" : !splitting ? "Moving:" : "Splitting:"; */
+    adj_type = collect ? "수집:" : !splitting ? "이동:" : "분할:";
 
     /*
      * don't use freeinv/addinv to avoid double-touching artifacts,
@@ -4204,7 +4531,8 @@ doorganize() /* inventory organizer by Del Lamb */
             otmpname = has_oname(otmp) ? ONAME(otmp) : (char *) 0;
             if ((!otmpname || (objname && !strcmp(objname, otmpname)))
                 && merged(&otmp, &obj)) {
-                adj_type = "Merging:";
+                /*KR adj_type = "Merging:"; */
+                adj_type = "병합:";
                 obj = otmp;
                 otmp = otmp->nobj;
                 extract_nobj(obj, &invent);
@@ -4215,7 +4543,8 @@ doorganize() /* inventory organizer by Del Lamb */
                Found 'otmp' in destination slot; merge if compatible,
                otherwise bump whatever is there to an open slot. */
             if (!splitting) {
-                adj_type = "Swapping:";
+                /*KR adj_type = "Swapping:"; */
+                adj_type = "교환:";
                 otmp->invlet = obj->invlet;
             } else {
                 /* strip 'from' name if it has one */
@@ -4232,13 +4561,15 @@ doorganize() /* inventory organizer by Del Lamb */
                 }
 
                 if (merged(&otmp, &obj)) {
-                    adj_type = "Splitting and merging:";
+                    /*KR adj_type = "Splitting and merging:"; */
+                    adj_type = "분할 및 병합:";
                     obj = otmp;
                     extract_nobj(obj, &invent);
                 } else if (inv_cnt(FALSE) >= 52) {
                     (void) merged(&splitting, &obj); /* undo split */
                     /* "knapsack cannot accommodate any more items" */
-                    Your("pack is too full.");
+                    /*KR Your("pack is too full."); */
+                    Your("가방이 너무 꽉 찼다.");
                     return 0;
                 } else {
                     bumped = otmp;
@@ -4270,7 +4601,8 @@ doorganize() /* inventory organizer by Del Lamb */
     /* messages deferred until inventory has been fully reestablished */
     prinv(adj_type, obj, 0L);
     if (bumped)
-        prinv("Moving:", bumped, 0L);
+        /*KR prinv("Moving:", bumped, 0L); */
+        prinv("이동:", bumped, 0L);
     if (splitting)
         clear_splitobjs(); /* reset splitobj context */
     update_inventory();
@@ -4349,8 +4681,13 @@ char *title;
         have_inv = (mon->minvent != 0), have_any = (have_inv || incl_hero),
         pickings = (dflags & MINV_PICKMASK);
 
+#if 0 /*KR: 원본*/
     Sprintf(tmp, "%s %s:", s_suffix(noit_Monnam(mon)),
             do_all ? "possessions" : "armament");
+#else /*KR: KRNethack 맞춤 번역*/
+    Sprintf(tmp, "%s의 %s:", noit_Monnam(mon), 
+            do_all ? "소지품" : "무장");
+#endif
 
     if (do_all ? have_any : (mon->misc_worn_check || MON_WEP(mon))) {
         /* Fool the 'weapon in hand' routine into
@@ -4369,7 +4706,8 @@ char *title;
         /* was 'set_uasmon();' but that potentially has side-effects */
         youmonst.data = &mons[u.umonnum]; /* most basic part of set_uasmon */
     } else {
-        invdisp_nothing(title ? title : tmp, "(none)");
+        /*KR invdisp_nothing(title ? title : tmp, "(none)"); */
+        invdisp_nothing(title ? title : tmp, "(없음)");
         n = 0;
     }
 
@@ -4394,14 +4732,20 @@ register struct obj *obj;
     int n;
     menu_item *selected = 0;
 
+#if 0 /*KR: 원본*/
     (void) safe_qbuf(qbuf, "Contents of ", ":", obj, doname, ansimpleoname,
                      "that");
+#else /*KR <가방>의 내용물: (이름이 너무 길면 "그것의 내용물:"로 대체) */    
+    (void) safe_qbuf(qbuf, "", "의 내용물:", obj, doname, ansimpleoname,
+                     "그것");
+#endif
 
     if (obj->cobj) {
         n = query_objlist(qbuf, &(obj->cobj), INVORDER_SORT,
                           &selected, PICK_NONE, allow_all);
     } else {
-        invdisp_nothing(qbuf, "(empty)");
+        /*KR invdisp_nothing(qbuf, "(empty)"); */
+        invdisp_nothing(qbuf, "(비어 있음)");
         n = 0;
     }
     if (n > 0) {
@@ -4449,7 +4793,8 @@ boolean as_if_seen;
     if (n) {
         only.x = x;
         only.y = y;
-        if (query_objlist("Things that are buried here:",
+        /*KR if (query_objlist("Things that are buried here:", */
+        if (query_objlist("이곳에 묻혀 있는 것들:",
                           &level.buriedobjlist, INVORDER_SORT,
                           &selected, PICK_NONE, only_here) > 0)
             free((genericptr_t) selected);

@@ -887,7 +887,7 @@ genericptr_t p2;
         mtmp = (struct monst *) p2;
         if (canseemon(mtmp))
             /*KR pline("%s bumps into %s!", Monnam(mtmp), something); */
-            pline("%s이(가) %s에 부딪혔다!", Monnam(mtmp), something);
+            pline("%s %s에 부딪혔다!", append_josa(Monnam(mtmp), "이"), something);
     }
     return FALSE;
 }
@@ -1021,7 +1021,7 @@ genericptr_t p2;
                  || attacktype_fordmg(mtmp->data, AT_BREA, AD_RBRE))) {
             if (cansee(mtmp->mx, mtmp->my))
                 /*KR pline("%s coughs!", Monnam(mtmp)); */
-                pline("%s이(가) 기침했다!", Monnam(mtmp));
+                pline("%s 기침했다!", append_josa(Monnam(mtmp), "이"));
             if (heros_fault(reg))
                 setmangry(mtmp, TRUE);
             if (haseyes(mtmp->data) && mtmp->mcansee) {

@@ -359,7 +359,7 @@ Cloak_on(VOID_ARGS)
         break;
     case OILSKIN_CLOAK:
         /*KR pline("%s very tightly.", Tobjnam(uarmc, "fit")); */
-        pline("%s은(는) 너무 딱 조인다.", xname(uarmc));
+        pline("%s 너무 딱 조인다.", append_josa(xname(uarmc), "은"));
         break;
     /* Alchemy smock gives poison _and_ acid resistance */
     case ALCHEMY_SMOCK:
@@ -1767,9 +1767,7 @@ const char *cc1, *cc2;
     You_cant("wear %s because you're wearing %s there already.", cc1, cc2);
 #else
     /* 예: "이미 망토를 입고 있어서 갑옷을 입을 수 없다."
-     * cc2가 이미 입고 있는 것, cc1이 새로 입으려는 것입니다.
-     * You_cant는 "당신은 ~할 수 없다"로 번역되므로 pline으로 깔끔하게
-     * 처리합니다. */
+     * cc2가 이미 입고 있는 것, cc1이 새로 입으려는 것입니다. */
     pline("이미 %s 장비하고 있기 때문에 %s 장비할 수 없습니다.",
           append_josa(cc2, "을"), append_josa(cc1, "을"));
 #endif

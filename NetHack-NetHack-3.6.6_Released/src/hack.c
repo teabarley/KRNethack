@@ -1677,6 +1677,7 @@ domove_core()
                 stumble_onto_mimic(mtmp);
             else if (mtmp->mpeaceful && !Hallucination)
                 /* m_monnam(): "dog" or "Fido", no "invisible dog" or "it" */
+                /*KR pline("Pardon me, %s.", m_monnam(mtmp)); */
                 pline("Pardon me, %s.", m_monnam(mtmp));
             else
                 You("move right into %s.", mon_nam(mtmp));
@@ -2534,17 +2535,20 @@ register boolean newlev;
          * but everything else gives a message only the first time */
         switch (rt) {
         case ZOO:
-            pline("Welcome to David's treasure zoo!");
+            /*KR pline("Welcome to David's treasure zoo!"); */
+            pline("데이비드의 보물 동물원에 어서오세요!");
             break;
         case SWAMP:
             pline("It %s rather %s down here.", Blind ? "feels" : "looks",
                   Blind ? "humid" : "muddy");
             break;
         case COURT:
-            You("enter an opulent throne room!");
+            /*KR You("enter an opulent throne room!"); */
+            You("화려한 왕좌의 방에 들어섰다!");
             break;
         case LEPREHALL:
-            You("enter a leprechaun hall!");
+            /*KR You("enter a leprechaun hall!"); */
+            You("레프리콘 홀에 들어섰다!");
             break;
         case MORGUE:
             if (midnight()) {
@@ -3029,8 +3033,13 @@ maybe_wail()
         const char *who;
         int i, powercnt;
 
+#if 0 /*KR:T*/
         who = (Role_if(PM_WIZARD) || Role_if(PM_VALKYRIE)) ? urole.name.m
                                                            : "Elf";
+#else
+        who = (Role_if(PM_WIZARD) || Role_if(PM_VALKYRIE)) ? urole.name.m
+                                                           : "엘프";
+#endif
         if (u.uhp == 1) {
             pline("%s is about to die.", who);
         } else {
@@ -3043,8 +3052,13 @@ maybe_wail()
                   who);
         }
     } else {
+#if 0 /*KR*/
         You_hear(u.uhp == 1 ? "the wailing of the Banshee..."
                             : "the howling of the CwnAnnwn...");
+#else
+        You_hear(u.uhp == 1 ? "the wailing of the Banshee..."
+                            : "the howling of the 쿤 아눈...");
+#endif
     }
 }
 

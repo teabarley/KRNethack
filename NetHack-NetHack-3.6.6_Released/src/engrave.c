@@ -971,7 +971,7 @@ doengrave()
                       is_ice(u.ux, u.uy) ? "frosty" : "dusty");
 #else
                 pline("%s %s 되었다.", append_josa(xname(otmp), "은"),
-                      append_josa(is_ice(u.ux, u.uy) ? "서리 투성이" : "먼지 범벅"), "를");
+                      is_ice(u.ux, u.uy) ? "서리투성이가" : "먼지투성이가");
 #endif
             break;
         default:

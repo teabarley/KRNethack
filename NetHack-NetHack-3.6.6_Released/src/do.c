@@ -85,8 +85,8 @@ boolean pushing;
                 pline("%s %s %s into the %s.", upstart(whobuf),
                       vtense(whobuf, "push"), the(xname(otmp)), what);
 #else
-                pline("%s은/는 %s을/를 %s 안으로 밀어넣었다.", whobuf,
-                    xname(otmp), what);
+                pline("%s %s %s 안으로 밀어넣었다.", append_josa(whobuf, "은"),
+                      append_josa(xname(otmp), "를"), what);
 #endif
                 if (flags.verbose && !Blind)
                     /*KR pline("Now you can cross it!"); */
@@ -360,7 +360,7 @@ register struct obj *obj;
             obj->bknown = 1; /* ok to bypass set_bknown() */
     } else {
    /*KR pline("%s %s on the altar.", Doname2(obj), otense(obj, "land")); */
-        pline("%s을/를 제단 위에 놓았다.", Doname2(obj));
+        pline("%s 제단 위에 놓았다.", append_josa(Doname2(obj), "를"));
         if (obj->oclass != COIN_CLASS)
             obj->bknown = 1; /* ok to bypass set_bknown() */
     }
@@ -2123,9 +2123,9 @@ struct obj *corpse;
                       chewed ? Adjmonnam(mtmp, "bite-covered")
                              : Monnam(mtmp));
 #else
-                pline("%s이/가 되살아났다!",
-                    chewed ? Adjmonnam(mtmp, "물린 자국이 있는")
-                           : Monnam(mtmp));
+                pline("%s 되살아났다!",
+                      append_josa(chewed ? Adjmonnam(mtmp, "물린 자국이 있는")
+                                         : Monnam(mtmp), "이"));
 #endif
             break;
 
@@ -2145,9 +2145,9 @@ struct obj *corpse;
                           chewed ? Adjmonnam(mtmp, "bite-covered")
                                  : Monnam(mtmp));
 #else
-                    pline("%s이/가 갑자기 나타났다!",
-                        chewed ? Adjmonnam(mtmp, "물린 자국이 있음")
-                               : Monnam(mtmp));
+                    pline("%s 갑자기 나타났다!",
+                          append_josa(chewed ? Adjmonnam(mtmp, "물린 자국이 있는")
+                                             : Monnam(mtmp), "이"));
 #endif
             }
             break;
@@ -2166,9 +2166,9 @@ struct obj *corpse;
                       Blind ? Something : Amonnam(mtmp),
                       locomotion(mtmp->data, "writhes"), sackname);
 #else
-                pline("%s이/가 당신의 배낭 속 %s에서 빠져나오려고 한다!",
-                    Blind ? Something : Amonnam(mtmp),
-                    sackname);
+                pline("%s 당신의 배낭 속 %s에서 빠져나오려고 한다!",
+                      append_josa(Blind ? Something : Amonnam(mtmp), "이"),
+                      sackname);
 #endif
             } else if (container_where == OBJ_FLOOR && container
                        && cansee(mtmp->mx, mtmp->my)) {
