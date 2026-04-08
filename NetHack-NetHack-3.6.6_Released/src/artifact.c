@@ -690,13 +690,15 @@ struct monst *mon;
 
         if (!yours)
             return 0;
-        You("are blasted by %s power!", s_suffix(the(xname(obj))));
+        /*KR You("are blasted by %s power!", s_suffix(the(xname(obj)))); */
+        You("%s의 힘에 맞았다!", xname(obj));
         touch_blasted = TRUE;
         dmg = d((Antimagic ? 2 : 4), (self_willed ? 10 : 4));
         /* add half (maybe quarter) of the usual silver damage bonus */
         if (objects[obj->otyp].oc_material == SILVER && Hate_silver)
             tmp = rnd(10), dmg += Maybe_Half_Phys(tmp);
-        Sprintf(buf, "touching %s", oart->name);
+        /*KR Sprintf(buf, "touching %s", oart->name); */
+        Sprintf(buf, "%s에 닿아서", oart->name);
         losehp(dmg, buf, KILLED_BY); /* magic damage, not physical */
         exercise(A_WIS, FALSE);
     }
@@ -705,9 +707,11 @@ struct monst *mon;
     if (badclass && badalign && self_willed) {
         if (yours) {
             if (!carried(obj))
-                pline("%s your grasp!", Tobjnam(obj, "evade"));
+                /*KR pline("%s your grasp!", Tobjnam(obj, "evade")); */
+                pline("%s 당신의 손길을 피했다!", append_josa(xname(obj), "이"));
             else
-                pline("%s beyond your control!", Tobjnam(obj, "are"));
+                /*KR pline("%s beyond your control!", Tobjnam(obj, "are")); */
+                pline("%s 당신의 통제를 벗어났다!", append_josa(xname(obj), "은"));
         }
         return 0;
     }
@@ -912,7 +916,8 @@ winid tmpwin; /* supplied by dodiscover() */
             continue; /* for WIN_ERR, we just count */
 
         if (i == 0)
-            putstr(tmpwin, iflags.menu_headings, "Artifacts");
+            /*KR putstr(tmpwin, iflags.menu_headings, "Artifacts"); */
+            putstr(tmpwin, iflags.menu_headings, "아티팩트");
         m = artidisco[i];
         otyp = artilist[m].otyp;
         Sprintf(buf, "  %s [%s %s]", artiname(m),
@@ -954,8 +959,13 @@ enum mb_effect_indices {
 
 #define MB_MAX_DIEROLL 8 /* rolls above this aren't magical */
 static const char *const mb_verb[2][NUM_MB_INDICES] = {
+#if 0 /*KR 완전한 과거형으로 작성 (한국어는 불규칙 활용 심함) */
     { "probe", "stun", "scare", "cancel" },
     { "prod", "amaze", "tickle", "purge" },
+#else    
+    { "조사했다", "기절시켰다", "겁을 주었다", "무효화했다" },
+    { "찔렀다", "놀라게 했다", "간지럽혔다", "정화했다" },
+#endif
 };
 
 /* called when someone is being hit by Magicbane */
@@ -972,7 +982,11 @@ char *hittee;              /* target's name: "you" or mon_nam(mdef) */
     const char *verb;
     boolean youattack = (magr == &youmonst), youdefend = (mdef == &youmonst),
             resisted = FALSE, do_stun, do_confuse, result;
+#if 0 /*KR*/
     int attack_indx, fakeidx, scare_dieroll = MB_MAX_DIEROLL / 2;
+#else
+    int attack_indx, scare_dieroll = MB_MAX_DIEROLL / 2;
+#endif
 
     result = FALSE; /* no message given yet */
     /* the most severe effects are less likely at higher enchantment */
@@ -1015,8 +1029,13 @@ char *hittee;              /* target's name: "you" or mon_nam(mdef) */
     verb = mb_verb[!!Hallucination][attack_indx];
     if (youattack || youdefend || vis) {
         result = TRUE;
+#if 0 /*KR: 원본*/
         pline_The("magic-absorbing blade %s %s!",
                   vtense((const char *) 0, verb), hittee);
+#else 
+        pline("마력을 흡수하는 칼날이 %s %s!", 
+              append_josa(hittee, "을"), verb);
+#endif
         /* assume probing has some sort of noticeable feedback
            even if it is being done by one monster to another */
         if (attack_indx == MB_INDEX_PROBE && !canspotmon(mdef))
@@ -1043,7 +1062,8 @@ char *hittee;              /* target's name: "you" or mon_nam(mdef) */
                     if (u.uen > 0)
                         u.uen--;
                     context.botl = TRUE;
-                    You("lose magical energy!");
+                    /*KR You("lose magical energy!"); */
+                    You("마법 에너지를 잃었다!");
                 }
             } else {
                 if (mdef->data == &mons[PM_CLAY_GOLEM])
@@ -1052,7 +1072,8 @@ char *hittee;              /* target's name: "you" or mon_nam(mdef) */
                     u.uenmax++;
                     u.uen++;
                     context.botl = TRUE;
-                    You("absorb magical energy!");
+                    /*KR You("absorb magical energy!"); */
+                    You("마법 에너지를 흡수했다!");
                 }
             }
         }
@@ -1064,11 +1085,14 @@ char *hittee;              /* target's name: "you" or mon_nam(mdef) */
                 resisted = TRUE;
             } else {
                 nomul(-3);
-                multi_reason = "being scared stiff";
+                /*KR multi_reason = "being scared stiff"; */
+                multi_reason = "겁에 질려 굳어있는 동안";
                 nomovemsg = "";
                 if (magr && magr == u.ustuck && sticks(youmonst.data)) {
                     u.ustuck = (struct monst *) 0;
-                    You("release %s!", mon_nam(magr));
+                    /*KR You("release %s!", mon_nam(magr)); */
+                    You("깜짝 놀라 %s 놓아버렸다!",
+                        append_josa(mon_nam(magr), "을"));
                 }
             }
         } else {
@@ -1087,7 +1111,8 @@ char *hittee;              /* target's name: "you" or mon_nam(mdef) */
 
     case MB_INDEX_PROBE:
         if (youattack && (mb->spe == 0 || !rn2(3 * abs(mb->spe)))) {
-            pline_The("%s is insightful.", verb);
+            /*KR pline_The("%s is insightful.", verb); */
+            pline("상대의 상태를 꿰뚫어 보았다.");
             /* pre-damage status */
             probe_monster(mdef);
         }
@@ -1114,11 +1139,14 @@ char *hittee;              /* target's name: "you" or mon_nam(mdef) */
 
     /* now give message(s) describing side-effects; Use fakename
        so vtense() won't be fooled by assigned name ending in 's' */
+#if 0 /*KR*/
     fakeidx = youdefend ? 1 : 0;
+#endif
     if (youattack || youdefend || vis) {
         (void) upstart(hittee); /* capitalize */
         if (resisted) {
-            pline("%s %s!", hittee, vtense(fakename[fakeidx], "resist"));
+            /*KR pline("%s %s!", hittee, vtense(fakename[fakeidx], "resist")); */
+            pline("%s 저항했다!", append_josa(hittee, "은"));
             shieldeff(youdefend ? u.ux : mdef->mx,
                       youdefend ? u.uy : mdef->my);
         }
@@ -1126,6 +1154,7 @@ char *hittee;              /* target's name: "you" or mon_nam(mdef) */
             char buf[BUFSZ];
 
             buf[0] = '\0';
+#if 0 /*KR: 원본*/
             if (do_stun)
                 Strcat(buf, "stunned");
             if (do_stun && do_confuse)
@@ -1134,6 +1163,17 @@ char *hittee;              /* target's name: "you" or mon_nam(mdef) */
                 Strcat(buf, "confused");
             pline("%s %s %s%c", hittee, vtense(fakename[fakeidx], "are"), buf,
                   (do_stun && do_confuse) ? '!' : '.');
+#else /*KR: (한국어 호흡에 맞게 3가지 경우의 수로 분리) */
+            if (do_stun && do_confuse)
+                Strcat(buf, "비틀거리며 혼란스러워한다");
+            else if (do_stun)
+                Strcat(buf, "비틀거린다");
+            else if (do_confuse)
+                Strcat(buf, "혼란스러워한다");
+
+            pline("%s %s%s", append_josa(hittee, "은"), buf,
+                  (do_stun && do_confuse) ? "!" : ".");
+#endif
         }
     }
 
@@ -1162,7 +1202,8 @@ int dieroll; /* needed for Magicbane and vorpal blades */
                   || (youattack && u.uswallow && mdef == u.ustuck && !Blind);
     boolean realizes_damage;
     const char *wepdesc;
-    static const char you[] = "you";
+    /*KR static const char you[] = "you"; */
+    static const char you[] = "당신";
     char hittee[BUFSZ];
 
     Strcpy(hittee, youdefend ? you : mon_nam(mdef));
@@ -1185,6 +1226,7 @@ int dieroll; /* needed for Magicbane and vorpal blades */
     /* the four basic attacks: fire, cold, shock and missiles */
     if (attacks(AD_FIRE, otmp)) {
         if (realizes_damage)
+#if 0 /*KR: 원본*/
             pline_The("fiery blade %s %s%c",
                       !spec_dbon_applies
                           ? "hits"
@@ -1192,6 +1234,19 @@ int dieroll; /* needed for Magicbane and vorpal blades */
                                 ? "vaporizes part of"
                                 : "burns",
                       hittee, !spec_dbon_applies ? '.' : '!');
+#else       /* 타겟(hittee)이 물 원소이거나 불태워질 때는 '~을/를'이 필요하고,
+             * 그냥 명중했을 때는 '~에'가 필요합니다. */
+            if (!spec_dbon_applies) {
+                pline("불타는 칼날이 %s 명중했다.",
+                      append_josa(hittee, "에"));
+            } else if (mdef->data == &mons[PM_WATER_ELEMENTAL]) {
+                pline("불타는 칼날이 %s 일부를 증발시켰다!",
+                      append_josa(hittee, "의"));
+            } else {
+                pline("불타는 칼날이 %s 불태웠다!",
+                      append_josa(hittee, "을"));
+            }
+#endif
         if (!rn2(4))
             (void) destroy_mitem(mdef, POTION_CLASS, AD_FIRE);
         if (!rn2(4))
@@ -1204,18 +1259,38 @@ int dieroll; /* needed for Magicbane and vorpal blades */
     }
     if (attacks(AD_COLD, otmp)) {
         if (realizes_damage)
+#if 0 /*KR: 원본 (냉기 속성) */
             pline_The("ice-cold blade %s %s%c",
                       !spec_dbon_applies ? "hits" : "freezes", hittee,
                       !spec_dbon_applies ? '.' : '!');
+#else
+            if (!spec_dbon_applies) {
+                pline("얼음처럼 차가운 칼날이 %s 명중했다.",
+                      append_josa(hittee, "에"));
+            } else {
+                pline("얼음처럼 차가운 칼날이 %s 꽁꽁 얼려버렸다!",
+                      append_josa(hittee, "을"));
+            }
+#endif
         if (!rn2(4))
             (void) destroy_mitem(mdef, POTION_CLASS, AD_COLD);
         return realizes_damage;
     }
     if (attacks(AD_ELEC, otmp)) {
         if (realizes_damage)
+#if 0 /*KR: 원본 (전격 속성) */
             pline_The("massive hammer hits%s %s%c",
                       !spec_dbon_applies ? "" : "!  Lightning strikes",
                       hittee, !spec_dbon_applies ? '.' : '!');
+#else
+            if (!spec_dbon_applies) {
+                pline("거대한 망치가 %s 명중했다.",
+                      append_josa(hittee, "에"));
+            } else {
+                pline("거대한 망치가 %s 명중했다! 번개가 내리쳤다!",
+                      append_josa(hittee, "에"));
+            }
+#endif
         if (spec_dbon_applies)
             wake_nearto(mdef->mx, mdef->my, 4 * 4);
         if (!rn2(5))
@@ -1226,11 +1301,18 @@ int dieroll; /* needed for Magicbane and vorpal blades */
     }
     if (attacks(AD_MAGM, otmp)) {
         if (realizes_damage)
+#if 0 /*KR*/
             pline_The("imaginary widget hits%s %s%c",
                       !spec_dbon_applies
                           ? ""
                           : "!  A hail of magic missiles strikes",
                       hittee, !spec_dbon_applies ? '.' : '!');
+#else
+            pline("실체가 없는 물체가 %s 공격했다%s",
+                  append_josa(hittee, "를"),
+                  !spec_dbon_applies ? "."
+                                     : "! 매직 미사일이 우박처럼 몰아쳤다!");
+#endif
         return realizes_damage;
     }
 
@@ -1249,10 +1331,12 @@ int dieroll; /* needed for Magicbane and vorpal blades */
     /* reverse from AD&D. */
     if (spec_ability(otmp, SPFX_BEHEAD)) {
         if (otmp->oartifact == ART_TSURUGI_OF_MURAMASA && dieroll == 1) {
-            wepdesc = "The razor-sharp blade";
+            /*KR wepdesc = "The razor-sharp blade"; */
+            wepdesc = "예리한 칼날";
             /* not really beheading, but so close, why add another SPFX */
             if (youattack && u.uswallow && mdef == u.ustuck) {
-                You("slice %s wide open!", mon_nam(mdef));
+                /*KR You("slice %s wide open!", mon_nam(mdef)); */
+                You("%s 크게 베어버렸다!", append_josa(mon_nam(mdef), "을"));
                 *dmgptr = 2 * mdef->mhp + FATAL_DAMAGE_MODIFIER;
                 return TRUE;
             }
@@ -1263,21 +1347,38 @@ int dieroll; /* needed for Magicbane and vorpal blades */
 
                 if (bigmonst(mdef->data)) {
                     if (youattack)
-                        You("slice deeply into %s!", mon_nam(mdef));
+                        /*KR You("slice deeply into %s!", mon_nam(mdef)); */
+                        You("%s 깊숙이 베었다!", append_josa(mon_nam(mdef), "을"));
                     else if (vis)
+#if 0 /*KR*/
                         pline("%s cuts deeply into %s!", Monnam(magr),
                               hittee);
+#else
+                        pline("%s %s 깊숙이 베었다!",
+                              append_josa(Monnam(magr), "이"),
+                              append_josa(hittee, "을"));
+#endif
                     *dmgptr *= 2;
                     return TRUE;
                 }
                 *dmgptr = 2 * mdef->mhp + FATAL_DAMAGE_MODIFIER;
+#if 0 /*KR: 원본*/
                 pline("%s cuts %s in half!", wepdesc, mon_nam(mdef));
+#else
+                pline("%s %s 반토막 내버렸다!", append_josa(wepdesc, "이"),
+                      append_josa(mon_nam(mdef), "을"));
+#endif
                 otmp->dknown = TRUE;
                 return TRUE;
             } else {
                 if (bigmonst(youmonst.data)) {
+#if 0 /*KR: 원본*/
                     pline("%s cuts deeply into you!",
                           magr ? Monnam(magr) : wepdesc);
+#else
+                    pline("%s 당신을 깊숙이 베었다!",
+                          append_josa(magr ? Monnam(magr) : wepdesc, "이"));
+#endif
                     *dmgptr *= 2;
                     return TRUE;
                 }
@@ -1288,53 +1389,93 @@ int dieroll; /* needed for Magicbane and vorpal blades */
                  * damage does not prevent death.
                  */
                 *dmgptr = 2 * (Upolyd ? u.mh : u.uhp) + FATAL_DAMAGE_MODIFIER;
-                pline("%s cuts you in half!", wepdesc);
+                /*KR pline("%s cuts you in half!", wepdesc); */
+                pline("%s 당신을 반으로 쪼갰다!", append_josa(wepdesc, "이"));
                 otmp->dknown = TRUE;
                 return TRUE;
             }
         } else if (otmp->oartifact == ART_VORPAL_BLADE
                    && (dieroll == 1 || mdef->data == &mons[PM_JABBERWOCK])) {
+#if 0 /*KR*/
             static const char *const behead_msg[2] = { "%s beheads %s!",
                                                        "%s decapitates %s!" };
+#else
+            static const char *const behead_msg[2] = { "%s %s 목을 베어버렸다!",
+                                                       "%s %s 머리를 날려버렸다!"
+            };
+#endif
 
             if (youattack && u.uswallow && mdef == u.ustuck)
                 return FALSE;
             wepdesc = artilist[ART_VORPAL_BLADE].name;
             if (!youdefend) {
                 if (!has_head(mdef->data) || notonhead || u.uswallow) {
+#if 0 /*KR: 원본*/
                     if (youattack)
                         pline("Somehow, you miss %s wildly.", mon_nam(mdef));
                     else if (vis)
                         pline("Somehow, %s misses wildly.", mon_nam(magr));
+#else 
+                    if (youattack)
+                        pline("왠지 모르게, 당신의 공격이 %s 크게 빗나갔다.",
+                              append_josa(mon_nam(mdef), "을"));
+                    else if (vis)
+                        pline("왠지 모르게, %s 공격이 크게 빗나갔다.",
+                              append_josa(mon_nam(magr), "의"));
+#endif
                     *dmgptr = 0;
                     return (boolean) (youattack || vis);
                 }
                 if (noncorporeal(mdef->data) || amorphous(mdef->data)) {
+#if 0 /*KR*/
                     pline("%s slices through %s %s.", wepdesc,
                           s_suffix(mon_nam(mdef)), mbodypart(mdef, NECK));
+#else
+                    pline("%s %s의 %s 가르고 지나갔다.",
+                          append_josa(wepdesc, "이"), mon_nam(mdef),
+                          append_josa(mbodypart(mdef, NECK), "을"));
+#endif
                     return TRUE;
                 }
                 *dmgptr = 2 * mdef->mhp + FATAL_DAMAGE_MODIFIER;
+#if 0 /*KR: 원본 (조사 처리) */
                 pline(behead_msg[rn2(SIZE(behead_msg))], wepdesc,
                       mon_nam(mdef));
+#else 
+                pline(behead_msg[rn2(SIZE(behead_msg))],
+                      append_josa(wepdesc, "이"),
+                      append_josa(mon_nam(mdef), "의"));
+#endif
                 if (Hallucination && !flags.female)
-                    pline("Good job Henry, but that wasn't Anne.");
+                    /*KR pline("Good job Henry, but that wasn't Anne."); */
+                    pline("잘했어 헨리, 하지만 그건 앤이 아니야.");
                 otmp->dknown = TRUE;
                 return TRUE;
             } else {
                 if (!has_head(youmonst.data)) {
-                    pline("Somehow, %s misses you wildly.",
-                          magr ? mon_nam(magr) : wepdesc);
+#if 0 /*KR: 원본*/
+                pline("Somehow, %s misses you wildly.",
+                      magr ? mon_nam(magr) : wepdesc);
+#else 
+                pline("왠지 모르게, %s 당신을 크게 빗나갔다.",
+                      append_josa(magr ? mon_nam(magr) : wepdesc, "이"));
+#endif
                     *dmgptr = 0;
                     return TRUE;
                 }
                 if (noncorporeal(youmonst.data) || amorphous(youmonst.data)) {
-                    pline("%s slices through your %s.", wepdesc,
-                          body_part(NECK));
+#if 0 /*KR: 원본*/
+                pline("%s slices through your %s.", wepdesc,
+                      body_part(NECK));
+#else 
+                pline("%s 당신의 %s 가르고 지나갔다.", append_josa(wepdesc, "이"),
+                      append_josa(body_part(NECK), "을"));
+#endif
                     return TRUE;
                 }
                 *dmgptr = 2 * (Upolyd ? u.mh : u.uhp) + FATAL_DAMAGE_MODIFIER;
-                pline(behead_msg[rn2(SIZE(behead_msg))], wepdesc, "you");
+                /*KR pline(behead_msg[rn2(SIZE(behead_msg))], wepdesc, "you"); */
+                pline(behead_msg[rn2(SIZE(behead_msg))], wepdesc, "당신");
                 otmp->dknown = TRUE;
                 /* Should amulets fall off? */
                 return TRUE;
@@ -1344,17 +1485,29 @@ int dieroll; /* needed for Magicbane and vorpal blades */
     if (spec_ability(otmp, SPFX_DRLI)) {
         /* some non-living creatures (golems, vortices) are
            vulnerable to life drain effects */
-        const char *life = nonliving(mdef->data) ? "animating force" : "life";
+        /*KR const char *life = nonliving(mdef->data) ? "animating force" : "life"; */
+        const char *life = nonliving(mdef->data) ? "원동력" : "생명력";
 
         if (!youdefend) {
             if (vis) {
                 if (otmp->oartifact == ART_STORMBRINGER)
+#if 0 /*KR: 원본*/
                     pline_The("%s blade draws the %s from %s!",
                               hcolor(NH_BLACK), life, mon_nam(mdef));
                 else
                     pline("%s draws the %s from %s!",
                           The(distant_name(otmp, xname)), life,
                           mon_nam(mdef));
+#else 
+                    /* hcolor(NH_BLACK) = 번역 사전 '검은색' */
+                    pline("%s 칼날이 %s의 %s 흡수했다!", hcolor(NH_BLACK),
+                          mon_nam(mdef), append_josa(life, "을"));
+                else
+                    pline("%s %s의 %s 흡수했다!",
+                          append_josa(The(distant_name(otmp, xname)), "이"),
+                          mon_nam(mdef), append_josa(life, "을"));
+#endif
+
             }
             if (mdef->m_lev == 0) {
                 *dmgptr = 2 * mdef->mhp + FATAL_DAMAGE_MODIFIER;
@@ -1373,17 +1526,32 @@ int dieroll; /* needed for Magicbane and vorpal blades */
             int oldhpmax = u.uhpmax;
 
             if (Blind)
+#if 0 /*KR: 원본*/
                 You_feel("an %s drain your %s!",
                          (otmp->oartifact == ART_STORMBRINGER)
-                            ? "unholy blade"
-                            : "object",
-                         life);
+                            ? "unholy blade" : "object", life);
+#else
+                You_feel("어떤 %s 당신의 %s 흡수하는 것을 느꼈다!",
+                         append_josa((otmp->oartifact == ART_STORMBRINGER)
+                                       ? "불경스러운 칼날" : "물체", "이"),
+                         append_josa(life, "을"));
+#endif
             else if (otmp->oartifact == ART_STORMBRINGER)
+#if 0 /*KR: 원본*/
                 pline_The("%s blade drains your %s!", hcolor(NH_BLACK), life);
             else
-                pline("%s drains your %s!", The(distant_name(otmp, xname)),
-                      life);
+                pline("%s drains your %s!", The(distant_name(otmp, xname)), life);
             losexp("life drainage");
+#else 
+                pline("%s 칼날이 당신의 %s 흡수했다!", hcolor(NH_BLACK),
+                      append_josa(life, "을"));
+            else
+                pline("%s 당신의 %s 흡수했다!",
+                      append_josa(The(distant_name(otmp, xname)), "이"),
+                      append_josa(life, "을"));
+            losexp("생명력을 흡수당해서"); /* 유언장에 "~(으)로 죽었다"로 연결됨 */
+#endif
+
             if (magr && magr->mhp < magr->mhpmax) {
                 magr->mhp += (oldhpmax - u.uhpmax) / 2;
                 if (magr->mhp > magr->mhpmax)
@@ -1434,8 +1602,13 @@ struct obj *obj;
         /* It's a special power, not "just" a property */
         if (obj->age > monstermoves) {
             /* the artifact is tired :-) */
+#if 0 /*KR:T*/
             You_feel("that %s %s ignoring you.", the(xname(obj)),
                      otense(obj, "are"));
+#else
+            You_feel("%s 무시하고 있는 기분이 들었다.",
+                     append_josa(xname(obj), "이"));
+#endif
             /* and just got more so; patience is essential... */
             obj->age += (long) d(3, 10);
             return 1;
@@ -1459,7 +1632,8 @@ struct obj *obj;
             if (Upolyd)
                 healamt = (u.mhmax + 1 - u.mh) / 2;
             if (healamt || Sick || Slimed || Blinded > creamed)
-                You_feel("better.");
+                /*KR You_feel("better."); */
+                You_feel("기분이 나아졌다.");
             else
                 goto nothing_special;
             if (healamt > 0) {
@@ -1487,7 +1661,8 @@ struct obj *obj;
             if (epboost) {
                 u.uen += epboost;
                 context.botl = TRUE;
-                You_feel("re-energized.");
+                /*KR You_feel("re-energized."); */
+                You_feel("에너지를 되찾은 기분이 든다.");
             } else
                 goto nothing_special;
             break;
@@ -1535,7 +1710,8 @@ struct obj *obj;
                 num_ok_dungeons++;
                 last_ok_dungeon = i;
             }
-            end_menu(tmpwin, "Open a portal to which dungeon?");
+            /*KR end_menu(tmpwin, "Open a portal to which dungeon?"); */
+            end_menu(tmpwin, "어느 던전으로 향하는 포탈을 여시겠습니까?");
             if (num_ok_dungeons > 1) {
                 /* more than one entry; display menu for choices */
                 menu_item *selected;
@@ -1566,12 +1742,15 @@ struct obj *obj;
 
             if (u.uhave.amulet || In_endgame(&u.uz) || In_endgame(&newlev)
                 || newlev.dnum == u.uz.dnum || !next_to_u()) {
-                You_feel("very disoriented for a moment.");
+                /*KR You_feel("very disoriented for a moment."); */
+                You_feel("잠시 방향 감각을 크게 잃은 기분이 든다.");
             } else {
                 if (!Blind)
-                    You("are surrounded by a shimmering sphere!");
+                    /*KR You("are surrounded by a shimmering sphere!"); */
+                    You("어른거리는 구체에 둘러싸였다!");
                 else
-                    You_feel("weightless for a moment.");
+                    /*KR You_feel("weightless for a moment."); */
+                    You_feel("잠시 몸이 붕 뜨는 기분이 든다.");
                 goto_level(&newlev, FALSE, FALSE, FALSE);
             }
             break;
@@ -1597,8 +1776,14 @@ struct obj *obj;
             } else
                 otmp->quan += rnd(5);
             otmp->owt = weight(otmp);
+#if 0 /*KR: 원본*/
             otmp = hold_another_object(otmp, "Suddenly %s out.",
                                        aobjnam(otmp, "fall"), (char *) 0);
+#else
+            otmp = hold_another_object(otmp, "갑자기 %s 떨어졌다.",
+                                       append_josa(xname(otmp), "이"),
+                                       (const char *) 0);
+#endif
             nhUse(otmp);
             break;
         }
@@ -1611,8 +1796,13 @@ struct obj *obj;
         if (on && obj->age > monstermoves) {
             /* the artifact is tired :-) */
             u.uprops[oart->inv_prop].extrinsic ^= W_ARTI;
+#if 0 /*KR: 원본*/
             You_feel("that %s %s ignoring you.", the(xname(obj)),
                      otense(obj, "are"));
+#else
+            You_feel("%s 당신을 무시하는 것 같은 기분이 든다.",
+                     append_josa(xname(obj), "이"));
+#endif
             /* can't just keep repeatedly trying */
             obj->age += (long) d(3, 10);
             return 1;
@@ -1626,15 +1816,18 @@ struct obj *obj;
  nothing_special:
             /* you had the property from some other source too */
             if (carried(obj))
-                You_feel("a surge of power, but nothing seems to happen.");
+                /*KR You_feel("a surge of power, but nothing seems to happen."); */
+                You_feel("힘이 솟구치는 것을 느꼈지만, 아무 일도 일어나지 않은 것 같다.");
             return 1;
         }
         switch (oart->inv_prop) {
         case CONFLICT:
             if (on)
-                You_feel("like a rabble-rouser.");
+                /*KR You_feel("like a rabble-rouser."); */
+                You_feel("선동가가 된 것 같은 기분이 든다.");
             else
-                You_feel("the tension decrease around you.");
+                /*KR You_feel("the tension decrease around you.");*/
+                You_feel("주변의 긴장감이 줄어든 것을 느낀다.");
             break;
         case LEVITATION:
             if (on) {
@@ -1648,11 +1841,19 @@ struct obj *obj;
                 goto nothing_special;
             newsym(u.ux, u.uy);
             if (on)
+#if 0 /*KR: 원본*/
                 Your("body takes on a %s transparency...",
                      Hallucination ? "normal" : "strange");
             else
                 Your("body seems to unfade...");
             break;
+#else
+                pline("당신의 몸이 %s 투명해진다...",
+                      Hallucination ? "평범하게" : "이상하게");
+            else
+                pline("당신의 몸이 다시 불투명해지는 것 같다...");
+            break;
+#endif
         }
     }
 
@@ -1710,8 +1911,10 @@ struct obj *obj;
 
     line = getrumor(bcsign(obj), buf, TRUE);
     if (!*line)
-        line = "NetHack rumors file closed for renovation.";
-    pline("%s:", Tobjnam(obj, "whisper"));
+        /*KR line = "NetHack rumors file closed for renovation."; */
+        line = "넷핵 소문 파일은 새단장을 위해 잠시 문을 닫습니다.";
+    /*KR pline("%s:", Tobjnam(obj, "whisper")); */
+    pline("%s 속삭였다:", append_josa(xname(obj), "이"));
     verbalize1(line);
     return;
 }
@@ -1850,14 +2053,21 @@ glow_color(arti_indx)
 int arti_indx;
 {
     int colornum = artilist[arti_indx].acolor;
+#if 0 /*KR: 원본*/
     const char *colorstr = clr2colorname(colornum);
 
     return hcolor(colorstr);
+#else /* hcolor() 대신 get_kr_name()을 통해 색상을 한국어로 바꿉니다. */
+    const char *colorstr = clr2colorname(colornum);
+    
+    return get_kr_name(colorstr);
+#endif
 }
 
 /* glow verb; [0] holds the value used when blind */
 static const char *glow_verbs[] = {
-    "quiver", "flicker", "glimmer", "gleam"
+    /*KR "quiver", "flicker", "glimmer", "gleam" */
+    "떨림", "깜빡임", "작은 빛", "강한 빛"
 };
 
 /* relative strength that Sting is glowing (0..3), to select verb */
@@ -1881,8 +2091,10 @@ boolean ingsfx;
     Strcpy(resbuf, glow_verbs[glow_strength(count)]);
     /* ing_suffix() will double the last consonant for all the words
        we're using and none of them should have that, so bypass it */
+#if 0 /*KR: 원본 (영어 진행형 접미사 ing). 한국어에는 불필요 */
     if (ingsfx)
         Strcat(resbuf, "ing");
+#endif
     return resbuf;
 }
 
@@ -1901,22 +2113,44 @@ int orc_count; /* new count (warn_obj_cnt is old count); -1 is a flag value */
         if (orc_count == -1 && warn_obj_cnt > 0) {
             /* -1 means that blindness has just been toggled; give a
                'continue' message that eventual 'stop' message will match */
+#if 0 /*KR: 원본*/
             pline("%s is %s.", bare_artifactname(uwep),
                   glow_verb(Blind ? 0 : warn_obj_cnt, TRUE));
+#else /*KR: KRNethack 맞춤 번역*/
+            pline("%s에서 %s이 느껴진다.", bare_artifactname(uwep),
+                  glow_verb(Blind ? 0 : warn_obj_cnt, TRUE));
+#endif
         } else if (newstr > 0 && newstr != oldstr) {
             /* 'start' message */
             if (!Blind)
+#if 0 /*KR: 원본*/
                 pline("%s %s %s%c", bare_artifactname(uwep),
                       otense(uwep, glow_verb(orc_count, FALSE)),
                       glow_color(uwep->oartifact),
                       (newstr > oldstr) ? '!' : '.');
+#else /*KR: KRNethack 맞춤 번역*/
+                pline("%s %s %s이 뿜어져 나온다%s",
+                      append_josa(bare_artifactname(uwep), "에서"),
+                      glow_color(uwep->oartifact), /* 예: "파란색" */
+                      glow_verb(orc_count, FALSE), /* 예: "강한 빛" */
+                      (newstr > oldstr) ? "!" : ".");
+#endif
             else if (oldstr == 0) /* quivers */
+#if 0 /*KR: 원본*/
                 pline("%s %s slightly.", bare_artifactname(uwep),
                       otense(uwep, glow_verb(0, FALSE)));
         } else if (orc_count == 0 && warn_obj_cnt > 0) {
             /* 'stop' message */
             pline("%s stops %s.", bare_artifactname(uwep),
                   glow_verb(Blind ? 0 : warn_obj_cnt, TRUE));
+#else                             
+                pline("%s 미세하게 떨린다.",
+                      append_josa(bare_artifactname(uwep), "이"));
+        } else if (orc_count == 0 && warn_obj_cnt > 0) {
+            /* 'stop' message */
+            pline("%s의 %s이 멈췄다.", bare_artifactname(uwep),
+                  glow_verb(Blind ? 0 : warn_obj_cnt, TRUE));
+#endif
         }
     }
 }
@@ -1943,8 +2177,13 @@ boolean loseit;    /* whether to drop it if hero can longer touch it */
 
         /* hero can't handle this object, but didn't get touch_artifact()'s
            "<obj> evades your grasp|control" message; give an alternate one */
+#if 0 /*KR*/
         You_cant("handle %s%s!", yname(obj),
                  obj->owornmask ? " anymore" : "");
+#else
+        You_cant("%s%s 다룰 수 없다!", obj->owornmask ? "더 이상 " : "",
+                 append_josa(yname(obj), "를"));
+#endif
         /* also inflict damage unless touch_artifact() already did so */
         if (!touch_blasted) {
             /* damage is somewhat arbitrary; half the usual 1d20 physical
@@ -1953,7 +2192,8 @@ boolean loseit;    /* whether to drop it if hero can longer touch it */
                 tmp = rnd(10), dmg += Maybe_Half_Phys(tmp);
             if (bane)
                 dmg += rnd(10);
-            Sprintf(buf, "handling %s", killer_xname(obj));
+            /*KR Sprintf(buf, "handling %s", killer_xname(obj)); */
+            Sprintf(buf, "%s 다루다가", append_josa(killer_xname(obj), "를"));
             losehp(dmg, buf, KILLED_BY);
             exercise(A_CON, FALSE);
         }
@@ -1981,8 +2221,13 @@ boolean loseit;    /* whether to drop it if hero can longer touch it */
         } else {
             /* dropx gives a message iff item lands on an altar */
             if (!IS_ALTAR(levl[u.ux][u.uy].typ))
+#if 0 /*KR*/
                 pline("%s to the %s.", Tobjnam(obj, "fall"),
                       surface(u.ux, u.uy));
+#else
+                pline("%s %s에 떨어졌다.", append_josa(xname(obj), "이"),
+                      surface(u.ux, u.uy));
+#endif
             dropx(obj);
         }
         *objp = obj = 0; /* no longer in inventory */
@@ -2095,7 +2340,8 @@ int dropflag; /* 0==don't drop, 1==drop all, 2==drop weapon */
     if (had_rings != (!!uleft + !!uright) && uarmg && uarmg->cursed)
         uncurse(uarmg); /* temporary? hack for ring removal plausibility */
     if (had_gloves && !uarmg)
-        selftouch("After losing your gloves, you");
+        /*KR selftouch("After losing your gloves, you"); */
+        selftouch("장갑을 잃어버린 후, 당신은");
 
     if (!--nesting)
         clear_bypasses(); /* reset upon final exit */
@@ -2152,17 +2398,25 @@ int x, y;
 void
 mkot_trap_warn()
 {
+#if 0 /*KR*/
     static const char *const heat[7] = {
         "cool", "slightly warm", "warm", "very warm",
         "hot", "very hot", "like fire"
     };
+#else
+    static const char *const heat[7] = { 
+        "싸늘하게", "살짝 따뜻하게", "따뜻하게", "매우 따뜻하게",
+        "뜨겁게", "매우 뜨겁게", "불타는 것처럼" 
+    };
+#endif
 
     if (!uarmg && uwep && uwep->oartifact == ART_MASTER_KEY_OF_THIEVERY) {
         int idx, ntraps = count_surround_traps(u.ux, u.uy);
 
         if (ntraps != mkot_trap_warn_count) {
             idx = min(ntraps, SIZE(heat) - 1);
-            pline_The("Key feels %s%c", heat[idx], (ntraps > 3) ? '!' : '.');
+            /*KR pline_The("Key feels %s%c", heat[idx], (ntraps > 3) ? '!' : '.'); */
+            pline("열쇠가 %s 느껴진다%s", heat[idx], (ntraps > 3) ? '!' : '.');
         }
         mkot_trap_warn_count = ntraps;
     } else

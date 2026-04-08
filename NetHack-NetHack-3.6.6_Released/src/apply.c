@@ -104,7 +104,7 @@ struct obj *obj;
 
     if (!freehand()) {
         /*KR You("have no free %s!", body_part(HAND)); */
-        You("have no free %s!", body_part(HAND));
+        You("빈 %s(이)가 없다!", body_part(HAND));
         return 0;
     } else if (obj == ublindf) {
         /*KR You("cannot use it while you're wearing it!"); */
@@ -135,7 +135,7 @@ struct obj *obj;
                 pline("Yecch!  Your %s %s gunk on it!", body_part(FACE),
                       (old ? "has more" : "now has"));
 #else
-                pline("왝! 당신의 %s가 %s 끈적끈적해졌다!", body_part(FACE),
+                pline("왝! 당신의 %s %s 끈적끈적해졌다!", append_josa(body_part(FACE), "이"),
                       (old ? "조금 더" : ""));
 #endif
                 make_blinded(Blinded + (long) u.ucreamed - old, TRUE);
@@ -151,20 +151,20 @@ struct obj *obj;
                 what = (ublindf->otyp == LENSES)
                            ? "렌즈"
                            : (obj->otyp == ublindf->otyp) ? "수건"
-                                                          : "눈가림";
+                                                          : "눈가리개";
 #endif
                 if (ublindf->cursed) {
 #if 0 /*KR:T*/
                     You("push your %s %s.", what,
                         rn2(2) ? "cock-eyed" : "crooked");
 #else
-                    pline("%s가 %s.", what,
+                    pline("%s %s.", append_josa(what, "이"),
                         rn2(2) ? "어긋났다" : "비뚤어졌다");
 #endif
                 } else {
                     struct obj *saved_ublindf = ublindf;
                     /*KR You("push your %s off.", what); */
-                    pline("%s가 툭 떨어졌다.", what);
+                    pline("%s 툭 떨어졌다.", append_josa(what, "이"));
                     Blindf_off(ublindf);
                     dropx(saved_ublindf);
                 }
@@ -183,8 +183,7 @@ struct obj *obj;
         You("wipe off your %s.",
             !uarmg ? makeplural(body_part(HAND)) : gloves_simple_name(uarmg));
 #else
-        You("%s를 닦았다.",
-            !uarmg ? makeplural(body_part(HAND)) : gloves_simple_name(uarmg));
+        You("%s 닦았다.", append_josa(!uarmg ? makeplural(body_part(HAND)) : gloves_simple_name(uarmg), "를"));
 #endif
         if (is_wet_towel(obj))
             dry_a_towel(obj, -1, drying_feedback);
@@ -201,7 +200,7 @@ struct obj *obj;
             }
         } else {
             /*KR Your("%s feels clean now.", body_part(FACE)); */
-            pline("%s이 깨끗해졌다.", body_part(FACE));
+            pline("%s 깨끗해졌다.", append_josa(body_part(FACE), "이"));
         }
         if (is_wet_towel(obj))
             dry_a_towel(obj, -1, drying_feedback);
@@ -212,8 +211,8 @@ struct obj *obj;
     Your("%s and %s are already clean.", body_part(FACE),
          makeplural(body_part(HAND)));
 #else
-    Your("%s과 %s는 이미 깨끗하다.", body_part(FACE),
-        makeplural(body_part(HAND)));
+    Your("%s %s 이미 깨끗하다.", append_josa(body_part(FACE), "와"),
+         append_josa(makeplural(body_part(HAND)), "은"));
 #endif
     return 0;
 }
@@ -258,7 +257,7 @@ int rx, ry, *resp;
             /* it's a statue */
             /*KR Strcpy(buf, "You're both stoned"); */
             Strcpy(buf, "둘 다 돌머리야");
-#if 0 /*KR*/ /*대명사 처리는 하실 필요 없습니다*/
+#if 0 /*KR*/ /*대명사 처리 할 필요 없음 */
         } else if (corpse->quan == 1L && !more_corpses) {
             int gndr = 2; /* neuter: "it" */
             struct monst *mtmp = get_mtraits(corpse, FALSE);
@@ -318,16 +317,16 @@ int rx, ry, *resp;
             one ? (here ? "this" : "that") : (here ? "these" : "those"),
             one ? "" : "s", one ? "is" : "are", reviver ? " mostly" : "");
 #else
-        You("%s 불행한 생명체가 %s 죽었다고 확진했다.",
+        You("%s 불행한 생명체가 %s죽었다고 확진했다.",
             here ? "이" : "저",
-            reviver ? "거의" : "");
+            reviver ? "거의 " : "");
 #endif
         return TRUE;
 
     } else { /* statue */
         const char *what, *how;
 
-#if 0 /*KR*/
+#if 0 /*KR 번역 사전 통과시키기 */
         mptr = &mons[statue->corpsenm];
         if (Blind) { /* ignore statue->dknown; it'll always be set */
             Sprintf(buf, "%s %s",
@@ -339,12 +338,11 @@ int rx, ry, *resp;
             if (!type_is_pname(mptr))
                 what = The(what);
         }
-#else /*KR 한국어로는 간단하게 */
-        if (Blind) { /* ignore statue->dknown; it'll always be set */
+#else 
+if (Blind) { /* ignore statue->dknown; it'll always be set */
             what = (rx == u.ux && ry == u.uy) ? "이것" : "저것";
-        }
-        else {
-            what = mons[statue->corpsenm].mname;
+        } else {
+            what = get_kr_name(mons[statue->corpsenm].mname);
         }
 #endif
         /*KR how = "fine"; */
@@ -361,7 +359,7 @@ int rx, ry, *resp;
         }
 
         /*KR pline("%s is in %s health for a statue.", what, how); */
-        pline("%s는 조각상 치고는 상태가 %s.", what, how);
+        pline("%s 조각상 치고는 상태가 %s.", append_josa(what, "는"), how);
         return TRUE;
     }
     return FALSE; /* no corpse or statue */
@@ -397,7 +395,7 @@ register struct obj *obj;
         return 0;
     } else if (!freehand()) {
         /*KR You("have no free %s.", body_part(HAND)); */
-        You("빈 %s이 없다.", body_part(HAND));
+        You("빈 %s 없다.", append_josa(body_part(HAND), "이"));
         return 0;
     }
     if (!getdir((char *) 0))
@@ -439,7 +437,7 @@ register struct obj *obj;
             You_hear("지옥불이 타닥타닥 타오르는 소리를 듣는다.");
         else
             /*KR pline_The("%s seems healthy enough.", surface(u.ux, u.uy)); */
-            pline("%s는 충분히 건강해 보인다.", surface(u.ux, u.uy));
+            pline("%s 충분히 건강해 보인다.", append_josa(surface(u.ux, u.uy), "은"));
         return res;
     } else if (obj->cursed && !rn2(2)) {
         /*KR You_hear("your heart beat."); */
@@ -470,7 +468,7 @@ register struct obj *obj;
         if (mtmp->mundetected) {
             if (!canspotmon(mtmp))
                 /*KR There("is %s hidden there.", mnm); */
-                pline("이 곳에 %s가 숨겨져 있다.", mnm);
+                pline("이 곳에 %s 숨겨져 있다.", append_josa(mnm, "이"));
             mtmp->mundetected = 0;
             newsym(mtmp->mx, mtmp->my);
         } else if (mtmp->mappearance) {
@@ -515,11 +513,12 @@ register struct obj *obj;
                   use_plural ? "Those" : "That", what,
                   use_plural ? "are" : "is", mnm);
 #else
-            pline("이 %s는 사실 %s다.", what, mnm);
+            pline("이 %s 사실 %s.", append_josa(what, "은"),
+                                    append_josa(mnm, "이다"));
 #endif
         } else if (flags.verbose && !canspotmon(mtmp)) {
             /*KR There("is %s there.", mnm); */
-            pline("여기에는 %s가 있다.", mnm);
+            pline("여기에는 %s 있다.", append_josa(mnm, "이"));
         }
 
         mstatusline(mtmp);
@@ -562,8 +561,7 @@ static const char whistle_str[] = "produce a %s whistling sound.",
                   alt_whistle_str[] = "produce a %s, sharp vibration.";
 #else
 static const char whistle_str[] = "호루라기를 불어 %s 소리를 낸다.",
-                  /*KR:TODO:소리와 진동을 일치시킴*/
-                  alt_whistle_str[] = "호루라기를 불어 진동을 일으켰다.";
+                  alt_whistle_str[] = "호루라기에서 %s 날카로운 진동이 느껴진다.";
 #endif
 STATIC_OVL void
 use_whistle(obj)
@@ -574,11 +572,11 @@ struct obj *obj;
         You("호루라기를 사용할 능력이 없다.");
     } else if (Underwater) {
         /*KR You("blow bubbles through %s.", yname(obj)); */
-        You("%s를 통해 방울을 불었다.", yname(obj));
+        You("%s 통해 방울을 불었다.", append_josa(yname(obj), "를"));
     } else {
         if (Deaf)
             /*KR You_feel("rushing air tickle your %s.", body_part(NOSE)); */
-            You_feel("공기의 흐름이 %s를 간질인다.", body_part(NOSE));
+            You_feel("공기의 흐름이 %s 간질인다.", append_josa(body_part(NOSE), "를"));
         else
             /*KR You(whistle_str, obj->cursed ? "shrill" : "high"); */
             You(whistle_str, obj->cursed ? "날카로운" : "새된");
@@ -617,7 +615,7 @@ struct obj *obj;
               : "strange");
 #else
         You(Deaf ? alt_whistle_str : whistle_str,
-            Hallucination ? "호루라기처럼"
+            Hallucination ? "평범한"
             : (Underwater && !Deaf) ? "이상하고 아주 높은"
             : "이상한");
 #endif
@@ -698,10 +696,10 @@ boolean feedback;
     if (feedback) {
         if (canseemon(mtmp))
             /*KR pline("%s pulls free of %s leash!", Monnam(mtmp), mhis(mtmp)); */
-            pline("%s 줄을 잡아당겨 도망갔다!", append_josa(Monnam(mtmp), "이"));
+            pline("%s 가죽끈을 잡아당겨 도망갔다!", append_josa(Monnam(mtmp), "이"));
         else
             /*KR Your("leash falls slack."); */
-            Your("끈이 느슨해져서 떨어졌다.");
+            Your("가죽끈이 느슨해져서 떨어졌다.");
     }
     for (otmp = invent; otmp; otmp = otmp->nobj)
         if (otmp->otyp == LEASH && otmp->leashmon == (int) mtmp->m_id)
@@ -780,7 +778,7 @@ struct obj *obj;
     }
     if (!obj->leashmon && number_leashed() >= MAXLEASHED) {
         /*KR You("cannot leash any more pets."); */
-        You("이 이상으로 애완동물을 줄에 맬 수는 없다.");
+        You("이 이상으로 애완동물을 가죽끈에 맬 수는 없다.");
         return 0;
     }
 
@@ -794,7 +792,7 @@ struct obj *obj;
             goto got_target;
         }
         /*KR pline("Leash yourself?  Very funny..."); */
-        pline("자신을 묶는다고? 아주 재미있군...");
+        pline("자신을 묶는다고? 아주 재미있네...");
         return 0;
     }
 
@@ -825,7 +823,7 @@ struct obj *obj;
         pline("%s %s leashed!", Monnam(mtmp),
               (!obj->leashmon) ? "cannot be" : "is not");
 #else
-        pline("%s은/는 줄로 %s!", Monnam(mtmp),
+        pline("%s 가죽끈으로 %s!", append_josa(Monnam(mtmp), "은"),
             (!obj->leashmon) ? "묶을 수 없다" : "묶여있지 않다");
 #endif
     } else if (!obj->leashmon) {
@@ -835,30 +833,30 @@ struct obj *obj;
             pline("This %s is already leashed.",
                   spotmon ? l_monnam(mtmp) : "creature");
 #else
-            pline("이 %s는 이미 줄에 묶여 있다.",
-                spotmon ? l_monnam(mtmp) : "생물");
+            pline("이 %s 이미 가죽끈에 묶여 있다.",
+                  append_josa(spotmon ? l_monnam(mtmp) : "생물", "은"));
 #endif
         } else if (unsolid(mtmp->data)) {
             /*KR pline("The leash would just fall off."); */
-            pline("줄은 그 자리에 떨어졌다.");
+            pline("가죽끈은 그 자리에 떨어졌다.");
         } else if (nolimbs(mtmp->data) && !has_head(mtmp->data)) {
             /*KR pline("%s has no extremities the leash would fit.", */
-            pline("%s는 줄을 맬 손발이 없다.",
-                  Monnam(mtmp));
+            pline("%s 가죽끈을 맬 손발이 없다.",
+                  append_josa(Monnam(mtmp), "은"));
         } else if (!leashable(mtmp)) {
 #if 0 /*KR:T*/
             pline("The leash won't fit onto %s%s.", spotmon ? "your " : "",
                   l_monnam(mtmp));
 #else
-            pline("%s는 줄이 맞지 않는다",
-                l_monnam(mtmp));
+            pline("%s 가죽끈이 맞지 않는다.",
+                  append_josa(l_monnam(mtmp), "은"));
 #endif
         } else {
 #if 0 /*KR:T*/
             You("slip the leash around %s%s.", spotmon ? "your " : "",
                 l_monnam(mtmp));
 #else
-            You("%s에 줄을 감았다.",
+            You("%s에 가죽끈을 감았다.",
                 l_monnam(mtmp));
 #endif
             mtmp->mleashed = 1;
@@ -869,10 +867,10 @@ struct obj *obj;
         /* applying a leash which is currently in use */
         if (obj->leashmon != (int) mtmp->m_id) {
             /*KR pline("This leash is not attached to that creature."); */
-            pline("이 줄은 저 생명체에 연결되어 있지 않다.");
+            pline("이 가죽끈은 저 생명체에 연결되어 있지 않다.");
         } else if (obj->cursed) {
             /*KR pline_The("leash would not come off!"); */
-            pline("줄이 떨어지지 않는다!");
+            pline("가죽끈이 떨어지지 않는다!");
             set_bknown(obj, 1);
         } else {
             mtmp->mleashed = 0;
@@ -881,7 +879,7 @@ struct obj *obj;
             You("remove the leash from %s%s.",
                 spotmon ? "your " : "", l_monnam(mtmp));
 #else
-            You("%s에서 줄을 떼어냈다.",
+            You("%s에서 가죽끈을 떼어냈다.",
                 l_monnam(mtmp));
 #endif
         }
@@ -972,7 +970,7 @@ register xchar x, y;
                     long save_pacifism = u.uconduct.killer;
 
                     /*KR Your("leash chokes %s to death!", mon_nam(mtmp)); */
-                    pline("%s는 줄에 목이 졸려 죽었다!", mon_nam(mtmp));
+                    pline("%s 가죽끈에 목이 졸려 죽었다!", append_josa(mon_nam(mtmp), "은"));
                     /* hero might not have intended to kill pet, but
                        that's the result of his actions; gain experience,
                        lose pacifism, take alignment and luck hit, make
@@ -983,7 +981,7 @@ register xchar x, y;
                         u.uconduct.killer = save_pacifism;
                 } else {
                     /*KR pline("%s is choked by the leash!", Monnam(mtmp)); */
-                    pline("%s는 줄에 목이 졸렸다!", Monnam(mtmp));
+                    pline("%s 줄에 목이 졸렸다!", append_josa(Monnam(mtmp), "은"));
                     /* tameness eventually drops to 1 here (never 0) */
                     if (mtmp->mtame && rn2(mtmp->mtame))
                         mtmp->mtame--;
@@ -1058,7 +1056,8 @@ struct obj *obj;
     if (!u.dx && !u.dy && !u.dz) {
         if (!useeit) {
             /*KR You_cant("see your %s %s.", uvisage, body_part(FACE)); */
-            You_cant("자신의 %s %s를 볼 수가 없다.", uvisage, body_part(FACE));
+            You_cant("자신의 %s %s 볼 수가 없다.", uvisage,
+                     append_josa(body_part(FACE), "를"));
         } else {
             if (u.umonnum == PM_FLOATING_EYE) {
                 if (Free_action) {
@@ -1067,7 +1066,8 @@ struct obj *obj;
                 } else {
                     if (Hallucination)
                         /*KR pline("Yow!  The %s stares back!", mirror); */
-                        pline("이크! %s가 당신을 마주 째려본다!", mirror);
+                        pline("이크! %s 당신을 마주 째려본다!",
+                              append_josa(mirror, "이"));
                     else
                         /*KR pline("Yikes!  You've frozen yourself!"); */
                         pline("으윽! 당신은 스스로를 얼어붙게 만들었다!");
@@ -1095,7 +1095,7 @@ struct obj *obj;
                 You(look_str, "영양 결핍처럼");
             else
                 /*KR You("look as %s as ever.", uvisage); */
-                You("변함없이 % 보인다.", uvisage);
+                You("변함없이 %s 보인다.", uvisage);
         }
         return 1;
     }
@@ -1105,8 +1105,8 @@ struct obj *obj;
             You("reflect %s %s.", s_suffix(mon_nam(u.ustuck)),
                 mbodypart(u.ustuck, STOMACH));
 #else
-            You("%s의 %s를 비췄다.", s_suffix(mon_nam(u.ustuck)),
-                mbodypart(u.ustuck, STOMACH));
+            You("%s의 %s 비췄다.", mon_nam(u.ustuck),
+                append_josa(mbodypart(u.ustuck, STOMACH), "를"));
 #endif
         return 1;
     }
@@ -1152,16 +1152,17 @@ struct obj *obj;
     if (mtmp->msleeping) {
         if (vis)
             /*KR pline("%s is too tired to look at your %s.", Monnam(mtmp), */
-            pline("%s은/는 당신의 %s을 쳐다보기에는 너무 지쳐 있다.", Monnam(mtmp),
-                  mirror);
+            pline("%s 당신의 %s 쳐다보기에는 너무 지쳐 있다.",
+                  append_josa(Monnam(mtmp), "은"), append_josa(mirror, "를"));
     } else if (!mtmp->mcansee) {
         if (vis)
             /*KR pline("%s can't see anything right now.", Monnam(mtmp)); */
-            pline("%s은/는 지금 아무것도 볼 수 없다.", Monnam(mtmp));
+            pline("%s 지금 아무것도 볼 수 없다.", append_josa(Monnam(mtmp), "은"));
     } else if (invis_mirror && !perceives(mtmp->data)) {
         if (vis)
             /*KR pline("%s fails to notice your %s.", Monnam(mtmp), mirror); */
-            pline("%s은/는 당신의 %s을 눈치채지 못했다.", Monnam(mtmp), mirror);
+            pline("%s 당신의 %s 눈치채지 못했다.",
+                  append_josa(Monnam(mtmp), "은"), append_josa(mirror, "를"));
         /* infravision doesn't produce an image in the mirror */
     } else if ((how_seen & SEENMON) == MONSEEN_INFRAVIS) {
         if (vis) /* (redundant) */
@@ -1169,20 +1170,22 @@ struct obj *obj;
             pline("%s is too far away to see %sself in the dark.",
                   Monnam(mtmp), mhim(mtmp));
 #else
-            pline("%s은/는 어둠 속에서 자기 자신을 보기에는 너무 멀리 있다.", Monnam(mtmp));
+            pline("%s 어둠 속에서 자기 자신을 보기에는 너무 멀리 있다.",
+                  append_josa(Monnam(mtmp), "은"));
 #endif
         /* some monsters do special things */
     } else if (mlet == S_VAMPIRE || mlet == S_GHOST || is_vampshifter(mtmp)) {
         if (vis)
             /*KR pline("%s doesn't have a reflection.", Monnam(mtmp)); */
-            pline("%s은/는 %s에 비치지 않는다.", Monnam(mtmp), mirror);
+            pline("%s %s에 비치지 않는다.",
+                  append_josa(Monnam(mtmp), "은"), mirror);
     } else if (monable && mtmp->data == &mons[PM_MEDUSA]) {
         /*KR if (mon_reflects(mtmp, "The gaze is reflected away by %s %s!")) */
         if (mon_reflects(mtmp, "눈빛이 %s의 %s에 반사되었다!"))
             return 1;
         if (vis)
             /*KR pline("%s is turned to stone!", Monnam(mtmp)); */
-            pline("%s은/는 돌로 변해버렸다!", Monnam(mtmp));
+            pline("%s 돌로 변해버렸다!", append_josa(Monnam(mtmp), "은"));
         stoned = TRUE;
         killed(mtmp);
     } else if (monable && mtmp->data == &mons[PM_FLOATING_EYE]) {
@@ -1191,7 +1194,8 @@ struct obj *obj;
             tmp = 120;
         if (vis)
             /*KR pline("%s is frozen by its reflection.", Monnam(mtmp)); */
-            pline("%s은/는 자신의 비친 모습을 보고는 얼어붙었다.", Monnam(mtmp));
+            pline("%s 자신의 비친 모습을 보고는 얼어붙었다.",
+                  append_josa(Monnam(mtmp), "은"));
         else
             /*KR You_hear("%s stop moving.", something); */
             You_hear("무언가가 움직임을 멈추었다.");
@@ -1199,7 +1203,8 @@ struct obj *obj;
     } else if (monable && mtmp->data == &mons[PM_UMBER_HULK]) {
         if (vis)
             /*KR pline("%s confuses itself!", Monnam(mtmp)); */
-            pline("%s은/는 스스로 혼란에 빠졌다!", Monnam(mtmp));
+            pline("%s 스스로 혼란에 빠졌다!",
+                  append_josa(Monnam(mtmp), "은"));
         mtmp->mconf = 1;
     } else if (monable && (mlet == S_NYMPH || mtmp->data == &mons[PM_SUCCUBUS]
                            || mtmp->data == &mons[PM_INCUBUS])) {
@@ -1209,13 +1214,14 @@ struct obj *obj;
             pline("%s admires %sself in your %s.", Monnam(mtmp), mhim(mtmp),
                   mirror);
 #else
-            pline("%s은/는 자신의 모습을 감탄하며 바라보고 있다.", Monnam(mtmp));
+            pline("%s 자신의 모습을 감탄하며 바라보고 있다.",
+                  append_josa(Monnam(mtmp), "은"));
 #endif
             /*KR pline("%s takes it!", upstart(strcpy(buf, mhe(mtmp)))); */
             pline("%s 그것을 채갔다!", append_josa(upstart(strcpy(buf, mhe(mtmp))), "이"));
         } else
             /*KR pline("It steals your %s!", mirror); */
-            pline("누군가가 당신의 %s을 훔친다!", mirror);
+            pline("누군가가 당신의 %s 훔친다!", append_josa(mirror, "를"));
         setnotworn(obj); /* in case mirror was wielded */
         freeinv(obj);
         (void) mpickobj(mtmp, obj);
@@ -1228,7 +1234,8 @@ struct obj *obj;
         if (mtmp->mfrozen) {
             if (vis)
                 /*KR You("discern no obvious reaction from %s.", mon_nam(mtmp)); */
-                You("%s(으)로부터 별다른 반응을 찾아보지 못한다.", mon_nam(mtmp));
+                You("%s부터 별다른 반응을 찾아보지 못한다.",
+                    append_josa(mon_nam(mtmp), "로"));
             else
                 /*KR You_feel("a bit silly gesturing the mirror in that direction."); */
                 You_feel("거울을 그 방향으로 향하는 것은 조금 우습다고 느낀다.");
@@ -1237,7 +1244,8 @@ struct obj *obj;
         if (do_react) {
             if (vis)
                 /*KR pline("%s is frightened by its reflection.", Monnam(mtmp)); */
-                pline("%s은/는 자신의 비친 모습을 보고 겁에 질렸다.", Monnam(mtmp));
+                pline("%s 자신의 비친 모습을 보고 겁에 질렸다.",
+                      append_josa(Monnam(mtmp), "은"));
             monflee(mtmp, d(2, 4), FALSE, FALSE);
         }
     } else if (!Blind) {
@@ -1250,11 +1258,13 @@ struct obj *obj;
             pline("%s doesn't seem to notice %s reflection.", Monnam(mtmp),
                 mhis(mtmp));
 #else
-            pline("%s은/는 비친 자신의 모습을 알아채지 못한 것 같다.", Monnam(mtmp));
+            pline("%s 비친 자신의 모습을 알아채지 못한 것 같다.",
+                  append_josa(Monnam(mtmp), "은"));
 #endif
         else
            /*KR pline("%s ignores %s reflection.", Monnam(mtmp), mhis(mtmp)); */
-            pline("%s은/는 비친 자신의 모습을 무시했다.", Monnam(mtmp));
+            pline("%s 비친 자신의 모습을 무시했다.",
+                  append_josa(Monnam(mtmp), "은"));
     }
     return 1;
 }
@@ -1272,7 +1282,7 @@ struct obj **optr;
                  && !On_stairs(u.ux, u.uy));
 
     /*KR You("ring %s.", the(xname(obj))); */
-    You("%s을 울렸다.", the(xname(obj)));
+    You("%s 울렸다.", append_josa(the(xname(obj)), "를"));
 
     if (Underwater || (u.uswallow && ordinary)) {
 #ifdef AMIGA
@@ -1341,7 +1351,8 @@ struct obj **optr;
 
         } else if (invoking) {
             /* pline("%s an unsettling shrill sound...", Tobjnam(obj, "issue")); */
-            pline("%s은 불안하게 만드는 날카로운 소리를 냈다...", xname(obj));
+            pline("%s 불안하게 만드는 날카로운 소리를 냈다...",
+                  append_josa(xname(obj), "은"));
 #ifdef AMIGA
             amii_speaker(obj, "aefeaefeaefeaefeaefe", AMII_LOUDER_VOLUME);
 #endif
@@ -1415,7 +1426,7 @@ register struct obj *obj;
     }
     if (obj->spe <= 0) {
         /*KR pline("This %s has no %s.", xname(obj), s); */
-        pline("이 %s는 불이 켜져 있지 않다.", xname(obj));
+        pline("이 %s 불이 켜져 있지 않다.", append_josa(xname(obj), "은"));
         return;
     }
     if (Underwater) {
@@ -1624,7 +1635,7 @@ struct obj *obj;
             (void) get_obj_location(obj, &x, &y, 0);
             if (obj->where == OBJ_MINVENT ? cansee(x, y) : !Blind)
                 /*KR pline("%s %s out!", Yname2(obj), otense(obj, "go")); */
-                pline("%s이 꺼졌다!", Yname2(obj));
+                pline("%s 꺼졌다!", append_josa(Yname2(obj), "이"));
             end_burn(obj, TRUE);
             return TRUE;
         }
@@ -1690,7 +1701,7 @@ struct obj *obj;
             pline("%s 램프의 불이 꺼졌다.", Shk_Your(buf, obj));
         else
             /*KR You("snuff out %s.", yname(obj)); */
-            You("%s를 불어 꺼트렸다.", xname(obj));
+            You("%s 불어 꺼트렸다.", append_josa(xname(obj), "를"));
         end_burn(obj, TRUE);
         return;
     }
@@ -1721,7 +1732,8 @@ struct obj *obj;
             pline("%s for a moment, then %s.", Tobjnam(obj, "flicker"),
                 otense(obj, "die"));
 #else
-            pline("%s가 잠시 깜빡거리다가 꺼졌다.", xname(obj));
+            pline("%s 잠시 깜빡거리다가 꺼졌다.",
+                  append_josa(xname(obj), "이"));
 #endif
     } else {
         if (obj->otyp == OIL_LAMP || obj->otyp == MAGIC_LAMP
@@ -1734,7 +1746,8 @@ struct obj *obj;
             pline("%s flame%s %s%s", s_suffix(Yname2(obj)), plur(obj->quan),
                   otense(obj, "burn"), Blind ? "." : " brightly!");
 #else
-            pline("%s가 %s 타오른다!", xname(obj), Blind ? "" : "밝게");
+            pline("%s %s 타오른다!", append_josa(xname(obj), "이"),
+                                     Blind ? "" : "밝게");
 #endif
             if (obj->unpaid && costly_spot(u.ux, u.uy)
                 && obj->age == 20L * (long) objects[obj->otyp].oc_cost) {
@@ -2115,7 +2128,8 @@ int magic; /* 0=Physical, otherwise skill level */
             bp = makeplural(bp);
         if (u.usteed)
             /*KR pline("%s is in no shape for jumping.", Monnam(u.usteed)); */
-            pline("%s은/는 뛸 수 있는 상태가 아니다.", Monnam(u.usteed));
+            pline("%s 뛸 수 있는 상태가 아니다.",
+                  append_josa(Monnam(u.usteed), "은"));
         else
 #if 0 /*KR:T*/            
             Your("%s%s %s in no shape for jumping.",
@@ -2130,7 +2144,8 @@ int magic; /* 0=Physical, otherwise skill level */
         return 0;
     } else if (u.usteed && u.utrap) {
         /*KR pline("%s is stuck in a trap.", Monnam(u.usteed)); */
-        pline("%s은/는 함정에 갇혀 있다.", Monnam(u.usteed));
+        pline("%s 함정에 갇혀 있다.",
+              append_josa(Monnam(u.usteed), "은"));
         return 0;
     }
 
@@ -2185,8 +2200,8 @@ int magic; /* 0=Physical, otherwise skill level */
                         ? "stuck in the floor"
                         : "attached to the buried ball");
 #else
-                You("%s를 당겼지만, 당신은 아직 %s.",
-                    makeplural(body_part(LEG)),
+                You("%s 당겼지만, 당신은 아직 %s.",
+                    append_josa(makeplural(body_part(LEG)), "를"),
                     (u.utraptype == TT_INFLOOR)
                     ? "바닥에 끼어 있다"
                     : "파묻힌 공에 연결되어 있다");
@@ -2270,7 +2285,7 @@ struct obj *obj;
                 an(mons[corpse->corpsenm].mname));
 #else
             You("장갑을 끼지 않고 %s 통조림으로 만들려고 했다.",
-                append_josa(mons[corpse->corpsenm].mname, "을"));
+                append_josa(get_kr_name(mons[corpse->corpsenm].mname), "을"));
 #endif
         else {
 #if 0 /*KR:T*/
@@ -2278,14 +2293,14 @@ struct obj *obj;
                   an(mons[corpse->corpsenm].mname));
 #else
             pline("장갑을 끼지 않고 %s 통조림으로 만드는 건 아주 치명적인 실수다...",
-                append_josa(mons[corpse->corpsenm].mname, "을"));
+                append_josa(get_kr_name(mons[corpse->corpsenm].mname), "을"));
 #endif
 #if 0 /*KR:T*/
             Sprintf(kbuf, "trying to tin %s without gloves",
                     mons[corpse->corpsenm].mname));
 #else 
             Sprintf(kbuf, "장갑 없이 %s 통조림으로 만들려고 하다가",
-                append_josa(mons[corpse->corpsenm].mname, "을"));
+                append_josa(get_kr_name(mons[corpse->corpsenm].mname), "을"));
 #endif
         }
         instapetrify(kbuf);
@@ -2293,7 +2308,7 @@ struct obj *obj;
     if (is_rider(&mons[corpse->corpsenm])) {
         if (revive_corpse(corpse))
             /*KR verbalize("Yes...  But War does not preserve its enemies..."); */
-            verbalize("그래... 하지만 <전쟁>한테는 적을 살려보낸다는 게 없지...");
+            verbalize("그래... 하지만 <전쟁>은 적을 살려보낸다는 말을 모르지...");
         else
             /*KR pline_The("corpse evades your grasp."); */
             pline("시체가 당신의 손길을 피했다.");
@@ -2577,7 +2592,7 @@ long timeout;
 
         /* [m_monnam() yields accurate mon type, overriding hallucination] */
         Sprintf(monnambuf, "%s", an(m_monnam(mtmp)));
-        /*KR: and_vanish를 처리하지 않음*/
+
         and_vanish[0] = '\0';
         if ((mtmp->minvis && !See_invisible)
             || (mtmp->data->mlet == S_MIMIC
@@ -2586,13 +2601,19 @@ long timeout;
 
         if (mtmp->mundetected) {
             if (hides_under(mtmp->data) && mshelter) {
+#if 0 /*KR:T*/
                 Sprintf(and_vanish, " and %s under %s",
                         locomotion(mtmp->data, "crawl"), doname(mshelter));
+#else
+                Sprintf(and_vanish, " 그리고는 %s 밑으로 %s.",
+                        doname(mshelter), locomotion(mtmp->data, "기어갔다"));
+#endif
             } else if (mtmp->data->mlet == S_MIMIC
                        || mtmp->data->mlet == S_EEL) {
                 suppress_see = TRUE;
             } else
-                Strcpy(and_vanish, " and vanish");
+                /*KR Strcpy(and_vanish, " and vanish"); */ 
+                Strcpy(and_vanish, " 그리고는 순식간에 사라졌다.");
         }
 
         switch (figurine->where) {
@@ -2601,28 +2622,32 @@ long timeout;
 #if 0 /*KR:T*/
                 You_feel("%s %s from your pack!", something,
                          locomotion(mtmp->data, "drop"));
+            else
+                You_see("%s %s out of your pack%s!", monnambuf,
+                        locomotion(mtmp->data, "drop"), and_vanish);
 #else
                 You_feel("%s 당신의 가방에서 %s 것 같다!", append_josa(something, "이"),
                     locomotion(mtmp->data, "떨어진"));
-#endif
             else
-             /*KR   You_see("%s %s out of your pack%s!", monnambuf,
-                        locomotion(mtmp->data, "drop"), and_vanish); */
                 You_see("%s 당신의 가방에서 %s 것을 보았다!", append_josa(monnambuf, "이"),
-                    locomotion(mtmp->data, "떨어지는"));
+                        locomotion(mtmp->data, "떨어지는"));
+
+#endif
             break;
 
         case OBJ_FLOOR:
             if (cansee_spot && !silent) {
                 if (suppress_see)
-                    /*KR pline("%s suddenly vanishes!", an(xname(figurine))); */
-                    pline("%s 갑자기 사라졌다!", append_josa(xname(figurine), "이"));
+#if 0 /*KR:T*/
+                    pline("%s suddenly vanishes!", an(xname(figurine)));
                 else
-#if 0 /*KR*/
                     You_see("a figurine transform into %s%s!", monnambuf,
                             and_vanish);
 #else
-                    You("모형이 %s%s로 변했다!", monnambuf);
+                    pline("%s 갑자기 사라졌다!", append_josa(xname(figurine), "이"));
+                else
+                    You("모형이 %s 변했다!%s", append_josa(monnambuf, "로"),
+                        and_vanish);
 #endif
                 redraw = TRUE; /* update figurine's map location */
             }
@@ -2636,21 +2661,25 @@ long timeout;
                 /* figurine carrying monster might be invisible */
                 if (canseemon(figurine->ocarry)
                     && (!mon->wormno || cansee(mon->mx, mon->my)))
-                    /*KR Sprintf(carriedby, "%s pack", s_suffix(a_monnam(mon))); */
-                    Sprintf(carriedby, "%s의 가방", a_monnam(mon));
-                else if (is_pool(mon->mx, mon->my))
-                    /*KR Strcpy(carriedby, "empty water"); */
-                    Strcpy(carriedby, "텅 빈 물속");
-                else
-                    /*KR Strcpy(carriedby, "thin air"); */
-                    Strcpy(carriedby, "텅 빈 공중");
+
 #if 0 /*KR*/
+                    Sprintf(carriedby, "%s pack", s_suffix(a_monnam(mon)));
+                else if (is_pool(mon->mx, mon->my))
+                    Strcpy(carriedby, "empty water");
+                else
+                    Strcpy(carriedby, "thin air");
                 You_see("%s %s out of %s%s!", monnambuf,
                         locomotion(mtmp->data, "drop"), carriedby,
                         and_vanish);
 #else
-                You("%s %s에서 %s 것을 본다!", append_josa(monnambuf, "이"),
-                    carriedby, locomotion(mtmp->data, "떨어지는"));
+                    Sprintf(carriedby, "%s의 가방", a_monnam(mon));
+                else if (is_pool(mon->mx, mon->my))
+                    Strcpy(carriedby, "텅 빈 물속");
+                else
+                    Strcpy(carriedby, "텅 빈 공중");
+                You("%s %s에서 %s 것을 본다!%s", append_josa(monnambuf, "이"),
+                    carriedby, locomotion(mtmp->data, "떨어지는"),
+                    and_vanish);
 #endif                    
             }
             break;
@@ -2833,10 +2862,10 @@ struct obj *obj;
     } else {
         if (obj->known)
             /*KR pline("%s empty.", Tobjnam(obj, "are")); */
-            pline("%s는 텅 비었다.", xname(obj));
+            pline("%s 텅 비었다.", append_josa(xname(obj), "은"));
         else
             /*KR pline("%s to be empty.", Tobjnam(obj, "seem")); */
-            pline("%s는 텅 빈 것 같다.", xname(obj));
+            pline("%s 텅 빈 것 같다.", append_josa(xname(obj), "은"));
     }
     update_inventory();
 }
@@ -2948,7 +2977,8 @@ struct obj *tstone;
 #if 0 /*KR:T*/
             pline("%s a little more polished now.", Tobjnam(tstone, "look"));
 #else
-            pline("%s이 조금 더 윤이 나게 되었다.", xname(tstone));
+            pline("%s 조금 더 윤이 나게 되었다.",
+                  append_josa(xname(tstone), "이"));
 #endif
             return;
         case LIQUID:
@@ -2962,7 +2992,7 @@ struct obj *tstone;
 #if 0 /*KR:T*/
                 pline("%s a little wetter now.", Tobjnam(tstone, "are"));
 #else
-                pline("%s은 조금 젖었다.", xname(tstone));
+                pline("%s 조금 젖었다.", append_josa(xname(tstone), "은"));
 #endif
             return;
         case WAX:
@@ -3144,10 +3174,16 @@ struct obj *otmp;
             chance = (rnl(10) > 5);
         /*KR You("aren't very skilled at reaching from %s.", mon_nam(u.usteed)); */
         pline("%s의 위에서는 잘 다루지 못할 수도 있다.", mon_nam(u.usteed));
-        /*KR Sprintf(buf, "Continue your attempt to set %s?", */
+#if 0 /*KR:T*/
+        Sprintf(buf, "Continue your attempt to set %s?",
+                the(defsyms[trap_to_defsym(what_trap(ttyp, rn2))]
+                    .explanation));
+#else
         Sprintf(buf, "%s을 계속 설치하시겠습니까?",
                 the(defsyms[trap_to_defsym(what_trap(ttyp, rn2))]
                     .explanation));
+#endif
+
         if (yn(buf) == 'y') {
             if (chance) {
                 switch (ttyp) {
@@ -3322,7 +3358,8 @@ struct obj *obj;
         if (dam <= 0)
             dam = 1;
         /*KR You("hit your %s with your bullwhip.", body_part(FOOT)); */
-        You("자신의 %s을 채찍으로 내리쳤다.", body_part(FOOT));
+        You("자신의 %s 채찍으로 내리쳤다.",
+            append_josa(body_part(FOOT), "를"));
 #if 0 /*KR*/
         Sprintf(buf, "killed %sself with %s bullwhip", uhim(), uhis());
         losehp(Maybe_Half_Phys(dam), buf, NO_KILLER_PREFIX);
@@ -3424,8 +3461,8 @@ struct obj *obj;
                       (otmp->quan == 1L) ? "It is" : "They are", mhis(mtmp),
                       mon_hand, !otmp->bknown ? '!' : '.');
 #else
-                pline("%s는 %s의 %s에 붙어 있는 %s",
-                    onambuf, mon_nam(mtmp), mon_hand, 
+                pline("%s %s의 %s에 단단히 붙어 있다%s",
+                      append_josa(onambuf, "은"), mon_nam(mtmp), mon_hand, 
                     !otmp->bknown ? "!" : ".");
 #endif
                 set_bknown(otmp, 1);
@@ -3440,8 +3477,9 @@ struct obj *obj;
                 case 2:
                     /* to floor near you */
                     /*KR You("yank %s to the %s!", yname(otmp), */
-                    You("%s를 %s로 끌어내렸다!", xname(otmp),
-                        surface(u.ux, u.uy));
+                    You("%s %s 끌어내렸다!",
+                        append_josa(xname(otmp), "를"),
+                        append_josa(surface(u.ux, u.uy), "로"));
                     place_object(otmp, u.ux, u.uy);
                     stackobj(otmp);
                     break;
@@ -3776,9 +3814,9 @@ struct obj *obj;
               several ? "one of " : "",
               several ? makeplural(the(xname(obj))) : the(xname(obj)));
 #else
-        pline("%s %s에 %s를 담궜다.",
-            xname(obj),
-            several ? "하나" : "", body_part(FACE));
+        pline("%s %s에 %s 담궜다.",
+            xname(obj), several ? "하나" : "",
+              append_josa(body_part(FACE), "를"));
 #endif
     if (can_blnd((struct monst *) 0, &youmonst, AT_WEAP, obj)) {
         int blindinc = rnd(25);
@@ -3909,7 +3947,8 @@ struct obj *obj;
     case 1: /* Object */
         if ((otmp = level.objects[cc.x][cc.y]) != 0) {
             /*KR You("snag an object from the %s!", surface(cc.x, cc.y)); */
-            You("%s로부터 물체를 낚아챘다!", surface(cc.x, cc.y));
+            You("%s부터 물체를 낚아챘다!",
+                append_josa(surface(cc.x, cc.y), "로"));
             (void) pickup_object(otmp, 1L, FALSE);
             /* If pickup fails, leave itgoop alone */
             newsym(cc.x, cc.y);
@@ -3949,7 +3988,7 @@ struct obj *obj;
             pline("갈고리가 %s 갈랐다.", append_josa(surface(cc.x, cc.y), "을"));
         else {
             /*KR You("are yanked toward the %s!", surface(cc.x, cc.y)); */
-            You("%s로 휙 끌려갔다!", surface(cc.x, cc.y));
+            You("%s 휙 끌려갔다!", append_josa(surface(cc.x, cc.y), "로"));
             hurtle(sgn(cc.x - u.ux), sgn(cc.y - u.uy), 1, FALSE);
             spoteffects(TRUE);
         }
@@ -4004,19 +4043,20 @@ struct obj *obj;
 
     if (nohands(youmonst.data)) {
         /*KR You_cant("break %s without hands!", yname(obj)); */
-        You_cant("손이 없이는 %s를 부러뜨릴 수 없다!", xname(obj));
+        You_cant("손이 없이는 %s 부러뜨릴 수 없다!",
+                 append_josa(xname(obj), "를"));
         return 0;
     } else if (ACURR(A_STR) < (is_fragile ? 5 : 10)) {
         /*KR You("don't have the strength to break %s!", yname(obj)); */
-        You("%s를 부러뜨릴 힘이 없다!", yname(obj));
+        You("%s 부러뜨릴 힘이 없다!", append_josa(yname(obj), "를"));
         return 0;
     }
 #if 0 /*KR:T*/
     pline("Raising %s high above your %s, you %s it in two!", yname(obj),
         body_part(HEAD), is_fragile ? "snap" : "break");
 #else
-    pline("%s를 %s 위로 높이 들어올려서, 반으로 부러뜨렸다!", yname(obj),
-        body_part(HEAD));
+    pline("%s %s 위로 높이 들어올려서, 반으로 부러뜨렸다!",
+          append_josa(yname(obj), "를"), body_part(HEAD));
 #endif
 
     /* [ALI] Do this first so that wand is removed from bill. Otherwise,
@@ -4191,7 +4231,7 @@ struct obj *obj;
                 Sprintf(buf, "killed %sself by breaking a wand", uhim());
                 losehp(Maybe_Half_Phys(damage), buf, NO_KILLER_PREFIX);
 #else
-                Sprintf(buf, "지팡이를 부서뜨려서 자살함");
+                Sprintf(buf, "지팡이를 부러뜨려서 자살함");
                 losehp(Maybe_Half_Phys(damage), buf, KILLED_BY);
 #endif
             }

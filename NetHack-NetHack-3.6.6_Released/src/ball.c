@@ -61,13 +61,14 @@ ballfall()
                 dmg = 3;
             } else if (flags.verbose)
                 /*KR pline("%s does not protect you.", Yname2(uarmh)); */
-                Your("%s(으)로는 보호받을 수 없었다.", xname(uarmh));
+                Your("%s 당신을 지켜주지 못했다.",
+                     append_josa(xname(uarmh), "은"));
         }
 #if 0 /*KR*/
         losehp(Maybe_Half_Phys(dmg), "crunched in the head by an iron ball",
                NO_KILLER_PREFIX);
 #else
-        losehp(Maybe_Half_Phys(dmg), "철구에 머리를 맞아 으깨졌다",
+        losehp(Maybe_Half_Phys(dmg), "철구에 머리를 맞아서",
                KILLED_BY);
 #endif
     }
@@ -814,7 +815,7 @@ boolean allow_drag;
             && (is_pit(t->ttyp) || is_hole(t->ttyp)))) {
         if (Levitation) {
             /*KR You_feel("a tug from the iron ball."); */
-            You("철구에 끌려갔다.");
+            You("철구에 끌려당겨졌다.");
             if (t)
                 t->tseen = 1;
         } else {
@@ -918,7 +919,7 @@ xchar x, y;
 
     if (x != u.ux || y != u.uy) {
         /*KR static const char *pullmsg = "The ball pulls you out of the %s!"; */
-        static const char *pullmsg = "The ball pulls you out of the %s!";
+        static const char *pullmsg = "철구가 당신을 %s에서 끌어냈다!";
         struct trap *t;
         long side;
 
@@ -926,27 +927,43 @@ xchar x, y;
             && u.utraptype != TT_INFLOOR && u.utraptype != TT_BURIEDBALL) {
             switch (u.utraptype) {
             case TT_PIT:
-                pline(pullmsg, "pit");
+                /*KR pline(pullmsg, "pit"); */
+                pline(pullmsg, "구덩이");
                 break;
             case TT_WEB:
+#if 0 /*KR: 원본*/
                 pline(pullmsg, "web");
                 pline_The("web is destroyed!");
+#else
+                pline(pullmsg, "거미줄");
+                pline("거미줄이 망가졌다!");
+#endif
                 deltrap(t_at(u.ux, u.uy));
                 break;
             case TT_LAVA:
-                pline(pullmsg, hliquid("lava"));
+                /*KR pline(pullmsg, hliquid("lava")); */
+                pline(pullmsg, hliquid("용암"));
                 break;
             case TT_BEARTRAP:
                 side = rn2(3) ? LEFT_SIDE : RIGHT_SIDE;
-                pline(pullmsg, "bear trap");
+                /*KR pline(pullmsg, "bear trap"); */
+                pline(pullmsg, "곰덫");
                 set_wounded_legs(side, rn1(1000, 500));
                 if (!u.usteed) {
+#if 0 /*KR: 원본*/
                     Your("%s %s is severely damaged.",
                          (side == LEFT_SIDE) ? "left" : "right",
                          body_part(LEG));
                     losehp(Maybe_Half_Phys(2),
                            "leg damage from being pulled out of a bear trap",
                            KILLED_BY);
+#else 
+                    Your("%s %s 심하게 다쳤다.",
+                         (side == LEFT_SIDE) ? "왼쪽" : "오른쪽",
+                         append_josa(body_part(LEG), "가"));
+                    losehp(Maybe_Half_Phys(2),
+                           "곰덫에서 빠져나오다 다리를 다쳐서", KILLED_BY);
+#endif
                 }
                 break;
             }
@@ -1000,9 +1017,14 @@ litter()
         nextobj = otmp->nobj;
         if ((otmp != uball) && (rnd(capacity) <= (int) otmp->owt)) {
             if (canletgo(otmp, "")) {
+#if 0 /*KR: 원본 (불필요한 영어 수일치 로직 제거) */
                 You("drop %s and %s %s down the stairs with you.",
                     yname(otmp), (otmp->quan == 1L) ? "it" : "they",
                     otense(otmp, "fall"));
+#else 
+                You("%s 떨어뜨렸고, 그것은 당신과 함께 계단 아래로 굴러떨어졌다.",
+                    append_josa(yname(otmp), "을"));
+#endif
                 dropx(otmp);
                 encumber_msg(); /* drop[xyz]() probably ought to to this... */
             }
@@ -1027,30 +1049,49 @@ drag_down()
     forward = carried(uball) && (uwep == uball || !uwep || !rn2(3));
 
     if (carried(uball))
-        You("lose your grip on the iron ball.");
+        /*KR You("lose your grip on the iron ball."); */
+        You("손에서 철구를 놓치고 말았다.");
 
     cls();  /* previous level is still displayed although you
                went down the stairs. Avoids bug C343-20 */
 
     if (forward) {
         if (rn2(6)) {
+#if 0 /*KR: 원본*/
             pline_The("iron ball drags you downstairs!");
             losehp(Maybe_Half_Phys(rnd(6)),
                    "dragged downstairs by an iron ball", NO_KILLER_PREFIX);
+#else 
+            pline("철구에 이끌려 계단 아래로 굴러떨어졌다!");
+            losehp(Maybe_Half_Phys(rnd(6)),
+                   "철구에 이끌려 계단에서 굴러떨어져서", KILLED_BY);
+#endif
             litter();
         }
     } else {
         if (rn2(2)) {
+#if 0 /*KR: 원본*/
             pline_The("iron ball smacks into you!");
             losehp(Maybe_Half_Phys(rnd(20)), "iron ball collision",
                    KILLED_BY_AN);
+#else 
+            pline("철구가 당신에게 세게 부딪혔다!");
+            losehp(Maybe_Half_Phys(rnd(20)), "철구와 충돌해서", 
+                   KILLED_BY_AN);
+#endif
             exercise(A_STR, FALSE);
             dragchance -= 2;
         }
         if ((int) dragchance >= rnd(6)) {
+#if 0 /*KR: 원본*/
             pline_The("iron ball drags you downstairs!");
             losehp(Maybe_Half_Phys(rnd(3)),
                    "dragged downstairs by an iron ball", NO_KILLER_PREFIX);
+#else 
+            pline("철구에 이끌려 계단 아래로 굴러떨어졌다!");
+            losehp(Maybe_Half_Phys(rnd(3)),
+                   "철구에 이끌려 계단에서 굴러떨어져서", KILLED_BY);
+#endif
             exercise(A_STR, FALSE);
             litter();
         }

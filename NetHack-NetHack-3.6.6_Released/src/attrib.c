@@ -53,7 +53,7 @@ static const struct innate {
                  { 0, 0, 0, 0 } },
 
   /*KR cav_abil[] = { { 7, &(HFast), "quick", "slow" }, */
-  cav_abil[] = { { 7, &(HFast), "빨리졌다", "느려졌다" },
+  cav_abil[] = { { 7, &(HFast), "빨라졌다", "느려졌다" },
             /*KR { 15, &(HWarning), "sensitive", "" }, */
                  { 15, &(HWarning), "민감해졌다", "둔감해졌다" },
                  { 0, 0, 0, 0 } },
@@ -167,7 +167,7 @@ int msgflg; /* positive => no message, zero => message, and */
     if ((ndx == A_INT || ndx == A_WIS) && uarmh && uarmh->otyp == DUNCE_CAP) {
         if (msgflg == 0)
             /*KR Your("cap constricts briefly, then relaxes again."); */
-            Your("cap constricts briefly, then relaxes again.");
+            Your("모자가 잠시 꽉 조여졌다가 다시 느슨해졌다.");
         return FALSE;
     }
 
@@ -228,8 +228,8 @@ int msgflg; /* positive => no message, zero => message, and */
                 Your("innate %s has %s.", attrname[ndx],
                      (incr > 0) ? "improved" : "declined");
 #else
-                Your("내재적인 %s가 %s.", attrname[ndx],
-                    (incr > 0) ? "향상되었다" : "저하되었다");
+                Your("내재적인 %s %s.", append_josa(attrname[ndx], "이"),
+                     (incr > 0) ? "향상되었다" : "저하되었다");
 #endif
             }
         }
@@ -238,7 +238,7 @@ int msgflg; /* positive => no message, zero => message, and */
 
     if (msgflg <= 0)
         /*KR You_feel("%s%s!", (incr > 1 || incr < -1) ? "very " : "", attrstr); */
-        You_feel("%s%s!", (incr > 1 || incr < -1) ? "very " : "", attrstr);
+        You_feel("%s%s!", (incr > 1 || incr < -1) ? "매우 " : "", attrstr);
     context.botl = TRUE;
     if (program_state.in_moveloop && (ndx == A_STR || ndx == A_CON))
         (void) encumber_msg();
@@ -377,11 +377,12 @@ boolean thrown_weapon; /* thrown weapons are less deadly */
               isupper((uchar) *reason) ? "" : "The ", reason,
               plural ? "were" : "was");
 #else
-        pline("%s은/는 유독했다!", reason);
+        pline("%s 유독했다!", append_josa(reason, "은"));
 #endif
     }
     if (Poison_resistance) {
-        if (!strcmp(reason, "blast"))
+        /*KR if (!strcmp(reason, "blast")) */
+        if (!strcmp(reason, "폭발"))
             shieldeff(u.ux, u.uy);
         /*KR pline_The("poison doesn't seem to affect you."); */
         pline("당신에게는 독이 듣지 않는 것 같다.");
@@ -622,11 +623,11 @@ static NEARDATA const char *const exertext[A_MAX][2] = {
     { "leading a healthy life-style", "watching your health" },   /* Con */
     { 0, 0 },                                                     /* Cha */
 #else
-    { "열심히 운동하고 있었음", "건성건성 운동하고 있었음" },            /* Str */
+    { "열심히 운동한 것", "건성건성 운동한 것" },            /* Str */
     { 0, 0 },                                                            /* Int */
-    { "신중하게 행동하고 있었음", "주의를 기울이지 않았음" },            /* Wis */
-    { "반사신경을 단련하고 있었음", "최근 반사신경을 단련하지 않았음" }, /* Dex */
-    { "건강한 생활습관을 가지고 있었음", "건강관리를 소홀히 했음" },     /* Con */
+    { "신중하게 행동한 것", "주의를 기울이지 않은 것" },            /* Wis */
+    { "반사신경을 단련한 것", "최근 반사신경을 단련하지 않은 것" }, /* Dex */
+    { "건강한 생활습관을 가진 것", "건강관리를 소홀히 한 것" },     /* Con */
     { 0, 0 },                                                            /* Cha */
 #endif
 };
@@ -1102,14 +1103,14 @@ int oldlevel, newlevel;
             if (!(*(abil->ability) & INTRINSIC & ~mask)) {
                 if (*(abil->gainstr))
                /*KR You_feel("%s!", abil->gainstr); */
-                    You("%s한 기분이 든다!", abil->gainstr);
+                    You("%s!", abil->gainstr);
             }
         } else if (oldlevel >= abil->ulevel && newlevel < abil->ulevel) {
             *(abil->ability) &= ~mask;
             if (!(*(abil->ability) & INTRINSIC)) {
                 if (*(abil->losestr))
                /*KR You_feel("%s!", abil->losestr); */
-                    You("%s한 기분이 든다!", abil->losestr);
+                    You("%s!", abil->losestr);
                /*KR 이 조건은 만족되지 않을 것임 */
                 else if (*(abil->gainstr))
                     You_feel("less %s!", abil->gainstr);
@@ -1321,7 +1322,7 @@ int reason; /* 0==conversion, 1==helm-of-OA on, 2==helm-of-OA off */
                                     ? "much of a muchness"
                                     : "back in sync with your body");
 #else
-            Your("생각이 %s.", Hallucination
+            Your("마음이 %s.", Hallucination
                                     ? "매우 비슷해졌다"
                                     : "다시 몸과 일치하게 되었다");
 #endif
