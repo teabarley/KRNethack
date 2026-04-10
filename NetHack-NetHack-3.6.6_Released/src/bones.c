@@ -374,11 +374,13 @@ struct obj *corpse;
     if (fd >= 0) {
         (void) nhclose(fd);
         if (wizard) {
-            if (yn("Bones file already exists.  Replace it?") == 'y') {
+            /*KR if (yn("Bones file already exists.  Replace it?") == 'y') { */
+            if (yn("뼈 파일이 이미 존재합니다. 교체하시겠습니까?") == 'y') {
                 if (delete_bonesfile(&u.uz))
                     goto make_bones;
                 else
-                    pline("Cannot unlink old bones.");
+                    /*KR pline("Cannot unlink old bones."); */
+                    pline("이전 뼈 파일을 삭제할 수 없었습니다.");
             }
         }
         /* compression can change the file's name, so must
@@ -553,7 +555,8 @@ struct obj *corpse;
         bflush(fd);
         if (bytes_counted > freediskspace(bones)) { /* not enough room */
             if (wizard)
-                pline("Insufficient space to create bones file.");
+                /*KR pline("Insufficient space to create bones file."); */
+                pline("뼈 파일을 생성할 공간이 부족합니다.");
             (void) nhclose(fd);
             cancel_bonesfile();
             return;
@@ -598,12 +601,14 @@ getbones()
 
     if (validate(fd, bones) != 0) {
         if (!wizard)
-            pline("Discarding unusable bones; no need to panic...");
+            /*KR pline("Discarding unusable bones; no need to panic..."); */
+            pline("사용할 수 없는 뼈 파일을 버립니다; 당황하지 마세요...");
         ok = FALSE;
     } else {
         ok = TRUE;
         if (wizard) {
-            if (yn("Get bones?") == 'n') {
+            /*KR if (yn("Get bones?") == 'n') { */
+            if (yn("뼈 파일을 불러오시겠습니까?") == 'n') {
                 (void) nhclose(fd);
                 compress_bonesfile();
                 return 0;
@@ -622,7 +627,8 @@ getbones()
                 || strcmp(bonesid + 2, oldbonesid) != 0)) {
             char errbuf[BUFSZ];
 
-            Sprintf(errbuf, "This is bones level '%s', not '%s'!", oldbonesid,
+            /*KR Sprintf(errbuf, "This is bones level '%s', not '%s'!", oldbonesid, */
+            Sprintf(errbuf, "이 뼈 파일은 '%s' 레벨입니다. '%s'가 아닙니다!", oldbonesid,
                     bonesid);
             if (wizard) {
                 pline1(errbuf);
@@ -663,7 +669,8 @@ getbones()
     u.uroleplay.numbones++;
 
     if (wizard) {
-        if (yn("Unlink bones?") == 'n') {
+        /*KR if (yn("Unlink bones?") == 'n') { */
+        if (yn("뼈 파일을 삭제하시겠습니까?") == 'n') {
             compress_bonesfile();
             return ok;
         }

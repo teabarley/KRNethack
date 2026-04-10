@@ -815,7 +815,7 @@ boolean allow_drag;
             && (is_pit(t->ttyp) || is_hole(t->ttyp)))) {
         if (Levitation) {
             /*KR You_feel("a tug from the iron ball."); */
-            You("Ã¶±¸¿¡ ²ø·Á´ç°ÜÁ³´Ù.");
+            You("Ã¶±¸¿¡ ²ø·Á°¬´Ù.");
             if (t)
                 t->tseen = 1;
         } else {

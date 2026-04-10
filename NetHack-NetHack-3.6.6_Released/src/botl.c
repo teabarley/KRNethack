@@ -13,7 +13,7 @@ extern const char *hu_stat[]; /* defined in eat.c */
 #if 0 /*KR:T*/
 const char *const enc_stat[] = { "",         "Burdened",  "Stressed",
                                  "Strained", "Overtaxed", "Overloaded" };
-#else /*옵션의 parse? pause? 파-스?로 영어판도 필요*/
+#else /* .nethackrc 설정 파일 parsing 때문에 영어판도 필요*/
 const char *const enc_stat[] = { "",         "Burdened",  "Stressed",
                                  "Strained", "Overtaxed", "Overloaded" };
 const char *const enc_stat_opt[] = { "",     "부담됨",    "압박받음",
@@ -587,18 +587,21 @@ STATIC_DCL boolean FDECL(status_hilite_menu_add, (int));
    involved isn't a direct 100*current/maximum calculation. */
 STATIC_VAR struct istat_s initblstats[MAXBLSTATS] = {
     INIT_BLSTAT("title", "%s", ANY_STR, MAXVALWIDTH, BL_TITLE),
-/*KR INIT_BLSTAT("strength", " St:%s", ANY_INT, 10, BL_STR),
+#if 0 /*KR:T*/
+    INIT_BLSTAT("strength", " St:%s", ANY_INT, 10, BL_STR),
     INIT_BLSTAT("dexterity", " Dx:%s", ANY_INT,  10, BL_DX),
     INIT_BLSTAT("constitution", " Co:%s", ANY_INT, 10, BL_CO),
     INIT_BLSTAT("intelligence", " In:%s", ANY_INT, 10, BL_IN),
     INIT_BLSTAT("wisdom", " Wi:%s", ANY_INT, 10, BL_WI),
-    INIT_BLSTAT("charisma", " Ch:%s", ANY_INT, 10, BL_CH), */
+    INIT_BLSTAT("charisma", " Ch:%s", ANY_INT, 10, BL_CH),
+#else
     INIT_BLSTAT("strength", " 힘:%s", ANY_INT, 10, BL_STR),
     INIT_BLSTAT("dexterity", " 민첩:%s", ANY_INT,  10, BL_DX),
     INIT_BLSTAT("constitution", " 건강:%s", ANY_INT, 10, BL_CO),
     INIT_BLSTAT("intelligence", " 지능:%s", ANY_INT, 10, BL_IN),
     INIT_BLSTAT("wisdom", " 지혜:%s", ANY_INT, 10, BL_WI),
     INIT_BLSTAT("charisma", " 매력:%s", ANY_INT, 10, BL_CH),
+#endif
     INIT_BLSTAT("alignment", " %s", ANY_STR, 40, BL_ALIGN),
     INIT_BLSTAT("score", " S:%s", ANY_LONG, 20, BL_SCORE),
     INIT_BLSTAT("carrying-capacity", " %s", ANY_INT, 20, BL_CAP),
@@ -606,10 +609,13 @@ STATIC_VAR struct istat_s initblstats[MAXBLSTATS] = {
     /*KR INIT_BLSTATP("power", " Pw:%s", ANY_INT, 10, BL_ENEMAX, BL_ENE), */
     INIT_BLSTATP("power", " 마력:%s", ANY_INT, 10, BL_ENEMAX, BL_ENE),
     INIT_BLSTAT("power-max", "(%s)", ANY_INT, 10, BL_ENEMAX),
-/*KR INIT_BLSTATP("experience-level", " Xp:%s", ANY_INT, 10, BL_EXP, BL_XP),
+#if 0 /*KR:T*/
+    INIT_BLSTATP("experience-level", " Xp:%s", ANY_INT, 10, BL_EXP, BL_XP),
     INIT_BLSTAT("armor-class", " AC:%s", ANY_INT, 10, BL_AC), */
+#else
     INIT_BLSTATP("experience-level", " 경험:%s", ANY_INT, 10, BL_EXP, BL_XP),
     INIT_BLSTAT("armor-class", " AC:%s", ANY_INT, 10, BL_AC),
+#endif
     INIT_BLSTAT("HD", " HD:%s", ANY_INT, 10, BL_HD),
     /*KR INIT_BLSTAT("time", " T:%s", ANY_LONG, 20, BL_TIME), */
     INIT_BLSTAT("time", " 턴:%s", ANY_LONG, 20, BL_TIME),
@@ -1562,8 +1568,14 @@ static struct fieldid_t {
 };
 
 /* format arguments */
+#if 0 /*KR: 원본*/
 static const char threshold_value[] = "hilite_status threshold ",
                   is_out_of_range[] = " is out of range";
+#else
+/* "상태창 강조(hilite_status) 임계값 '<10'이(가) 범위를 벗어났습니다" */
+static const char threshold_value[] = "상태창 강조(hilite_status) 임계값 ",
+                  is_out_of_range[] = "이(가) 범위를 벗어났습니다";
+#endif
 
 
 /* field name to bottom line index */
@@ -2230,10 +2242,16 @@ boolean from_configfile;
                 up = TRUE;
             changed = TRUE;
         } else if (fld == BL_CAP
+#if 0 /*KR*/
                    && is_fld_arrayvalues(s[sidx], enc_stat,
                                          SLT_ENCUMBER, OVERLOADED + 1,
                                          &kidx)) {
             txt = enc_stat[kidx];
+#else
+                   && is_fld_arrayvalues(s[sidx], enc_stat_opt, SLT_ENCUMBER,
+                                         OVERLOADED + 1, &kidx)) {
+            txt = enc_stat_opt[kidx];
+#endif
             txtval = TRUE;
         } else if (fld == BL_ALIGN
                    && is_fld_arrayvalues(s[sidx], aligntxt, 0, 3, &kidx)) {
@@ -2242,7 +2260,12 @@ boolean from_configfile;
         } else if (fld == BL_HUNGER
                    && is_fld_arrayvalues(s[sidx], hutxt,
                                          SATIATED, STARVED + 1, &kidx)) {
+#if 0 /*KR*/
             txt = hu_stat[kidx];   /* store hu_stat[] val, not hutxt[] */
+#else
+            /*KR hu_stat은 번역되어 있기 때문에 hutxt를 사용한다 */
+            txt = hutxt[kidx];
+#endif
             txtval = TRUE;
         } else if (!strcmpi(s[sidx], "changed")) {
             changed = TRUE;
@@ -3082,7 +3105,8 @@ int fld;
     if (fld != BL_CONDITION) {
         any = zeroany;
         any.a_int = onlybeh = BL_TH_ALWAYS_HILITE;
-        Sprintf(buf, "Always highlight %s", initblstats[fld].fldname);
+        /*KR Sprintf(buf, "Always highlight %s", initblstats[fld].fldname); */
+        Sprintf(buf, "%s 항상 강조하기", initblstats[fld].fldname);
         add_menu(tmpwin, NO_GLYPH, &any, 'a', 0, ATR_NONE,
                  buf, MENU_UNSELECTED);
         nopts++;
@@ -3092,14 +3116,16 @@ int fld;
         any = zeroany;
         any.a_int = onlybeh = BL_TH_CONDITION;
         add_menu(tmpwin, NO_GLYPH, &any, 'b', 0, ATR_NONE,
-                 "Bitmask of conditions", MENU_UNSELECTED);
+                 /*KR "Bitmask of conditions", MENU_UNSELECTED); */
+                 "조건의 비트마스크", MENU_UNSELECTED);
         nopts++;
     }
 
     if (fld != BL_CONDITION) {
         any = zeroany;
         any.a_int = onlybeh = BL_TH_UPDOWN;
-        Sprintf(buf, "%s value changes", initblstats[fld].fldname);
+        /*KR Sprintf(buf, "%s value changes", initblstats[fld].fldname); */
+        Sprintf(buf, "%s 값 변경 시", initblstats[fld].fldname);
         add_menu(tmpwin, NO_GLYPH, &any, 'c', 0, ATR_NONE,
                  buf, MENU_UNSELECTED);
         nopts++;
@@ -3110,7 +3136,8 @@ int fld;
         any = zeroany;
         any.a_int = onlybeh = BL_TH_VAL_ABSOLUTE;
         add_menu(tmpwin, NO_GLYPH, &any, 'n', 0, ATR_NONE,
-                 "Number threshold", MENU_UNSELECTED);
+                 /*KR "Number threshold", MENU_UNSELECTED); */
+                 "숫자 임계값", MENU_UNSELECTED);
         nopts++;
     }
 
@@ -3118,7 +3145,8 @@ int fld;
         any = zeroany;
         any.a_int = onlybeh = BL_TH_VAL_PERCENTAGE;
         add_menu(tmpwin, NO_GLYPH, &any, 'p', 0, ATR_NONE,
-                 "Percentage threshold", MENU_UNSELECTED);
+            /*KR "Percentage threshold", MENU_UNSELECTED); */
+                 "백분율 임계값", MENU_UNSELECTED);
         nopts++;
     }
 
@@ -3126,13 +3154,15 @@ int fld;
         || fld == BL_CAP || fld == BL_HUNGER) {
         any = zeroany;
         any.a_int = onlybeh = BL_TH_TEXTMATCH;
-        Sprintf(buf, "%s text match", initblstats[fld].fldname);
+        /*KR Sprintf(buf, "%s text match", initblstats[fld].fldname); */
+        Sprintf(buf, "%s 텍스트 일치", initblstats[fld].fldname);
         add_menu(tmpwin, NO_GLYPH, &any, 't', 0, ATR_NONE,
                  buf, MENU_UNSELECTED);
         nopts++;
     }
 
-    Sprintf(buf, "Select %s field hilite behavior:", initblstats[fld].fldname);
+    /*KR Sprintf(buf, "Select %s field hilite behavior:", initblstats[fld].fldname); */
+    Sprintf(buf, "%s 필드 강조 동작 선택:", initblstats[fld].fldname);
     end_menu(tmpwin, buf);
 
     if (nopts > 1) {
@@ -3168,18 +3198,29 @@ boolean ltok, gtok;
 
     if (ltok) {
         if (str)
+#if 0 /*KR*/
             Sprintf(buf, "%s than %s",
                     (fld == BL_AC) ? "Better (lower)" : "Less", str);
+#else
+            Sprintf(buf, "%s보다 %s", str,
+                    (fld == BL_AC) ? "좋은(낮은)" : "작은");
+#endif
         else
-            Sprintf(buf, "Value goes down");
+            /*KR Sprintf(buf, "Value goes down"); */
+            Sprintf(buf, "값이 내려갈 때");
         any = zeroany;
         any.a_int = 10 + LT_VALUE;
         add_menu(tmpwin, NO_GLYPH, &any, 0, 0, ATR_NONE,
                  buf, MENU_UNSELECTED);
 
         if (str) {
+#if 0 /*KR*/
             Sprintf(buf, "%s or %s",
                     str, (fld == BL_AC) ? "better (lower)" : "less");
+#else
+            Sprintf(buf, "%s %s", str,
+                    (fld == BL_AC) ? "이하(더 좋음)" : "이하");
+#endif
             any = zeroany;
             any.a_int = 10 + LE_VALUE;
             add_menu(tmpwin, NO_GLYPH, &any, 0, 0, ATR_NONE,
@@ -3188,9 +3229,11 @@ boolean ltok, gtok;
     }
 
     if (str)
-        Sprintf(buf, "Exactly %s", str);
+        /*KR Sprintf(buf, "Exactly %s", str); */
+        Sprintf(buf, "정확히 %s", str);
     else
-        Sprintf(buf, "Value changes");
+        /*KR Sprintf(buf, "Value changes"); */
+        Sprintf(buf, "값이 바뀔 때");
     any = zeroany;
     any.a_int = 10 + EQ_VALUE;
     add_menu(tmpwin, NO_GLYPH, &any, 0, 0, ATR_NONE,
@@ -3198,8 +3241,13 @@ boolean ltok, gtok;
 
     if (gtok) {
         if (str) {
+#if 0 /*KR*/
             Sprintf(buf, "%s or %s",
                     str, (fld == BL_AC) ? "worse (higher)" : "more");
+#else
+            Sprintf(buf, "%s %s", str,
+                    (fld == BL_AC) ? "이상(더 나쁨)" : "이상");
+#endif
             any = zeroany;
             any.a_int = 10 + GE_VALUE;
             add_menu(tmpwin, NO_GLYPH, &any, 0, 0, ATR_NONE,
@@ -3207,16 +3255,23 @@ boolean ltok, gtok;
         }
 
         if (str)
+#if 0 /*KR*/
             Sprintf(buf, "%s than %s",
                     (fld == BL_AC) ? "Worse (higher)" : "More", str);
+#else
+            Sprintf(buf, "%s보다 %s", str,
+                    (fld == BL_AC) ? "나쁜(높은)" : "큰");
+#endif
         else
-            Sprintf(buf, "Value goes up");
+            /*KR Sprintf(buf, "Value goes up"); */
+            Sprintf(buf, "값이 올라갈 때");
         any = zeroany;
         any.a_int = 10 + GT_VALUE;
         add_menu(tmpwin, NO_GLYPH, &any, 0, 0, ATR_NONE,
              buf, MENU_UNSELECTED);
     }
-    Sprintf(buf, "Select field %s value:", initblstats[fld].fldname);
+    /*KR Sprintf(buf, "Select field %s value:", initblstats[fld].fldname); */
+    Sprintf(buf, "%s 필드의 값 선택:", initblstats[fld].fldname);
     end_menu(tmpwin, buf);
 
     res = select_menu(tmpwin, PICK_ONE, &picks);
@@ -3287,9 +3342,15 @@ choose_value:
 
         lt_gt_eq = NO_LTEQGT; /* not set up yet */
         inbuf[0] = '\0';
+#if 0 /*KR*/
         Sprintf(buf, "Enter %svalue for %s threshold:",
                 percent ? "percentage " : "",
                 initblstats[fld].fldname);
+#else
+        Sprintf(buf,
+                "%s 필드의 %s 임계값을 입력하세요:", initblstats[fld].fldname,
+                percent ? "백분율" : "값");
+#endif
         getlin(buf, inbuf);
         if (inbuf[0] == '\0' || inbuf[0] == '\033')
             goto choose_behavior;
@@ -3323,17 +3384,20 @@ choose_value:
         }
         if (*inp == '%') {
             if (!percent) {
-                pline("Not expecting a percentage.");
+                /*KR pline("Not expecting a percentage."); */
+                pline("백분율 값은 입력할 수 없습니다.");
                 goto choose_behavior;
             }
             *inp = '\0'; /* strip '%' [this accepts trailing junk!] */
         } else if (*inp) {
             /* some random characters */
-            pline("\"%s\" is not a recognized number.", inp);
+            /*KR pline("\"%s\" is not a recognized number.", inp); */
+            pline("\"%s\"은(는) 인식할 수 없는 숫자입니다.", inp);
             goto choose_value;
         }
         if (!gotnum) {
-            pline("Is that an invisible number?");
+            /*KR pline("Is that an invisible number?"); */
+            pline("보이지 않는 숫자인가요?");
             goto choose_value;
         }
         op = (lt_gt_eq == LT_VALUE) ? "<"
@@ -3350,7 +3414,8 @@ choose_value:
         if (percent) {
             val = aval.a_int;
             if (initblstats[fld].idxmax == -1) {
-                pline("Field '%s' does not support percentage values.",
+                /*KR pline("Field '%s' does not support percentage values.", */
+                pline("'%s' 필드는 백분율 값을 지원하지 않습니다.",
                       initblstats[fld].fldname);
                 behavior = BL_TH_VAL_ABSOLUTE;
                 goto choose_value;
@@ -3364,7 +3429,8 @@ choose_value:
                 || (val == 0 && lt_gt_eq == LT_VALUE)
                 || (val == 100 && lt_gt_eq == GT_VALUE)
                 || (val > 100 && (val != 101 || lt_gt_eq != LT_VALUE))) {
-                pline("'%s%d%%' is not a valid percent value.", op, val);
+                /*KR pline("'%s%d%%' is not a valid percent value.", op, val); */
+                pline("'%s%d%%'은(는) 유효한 백분율 값이 아닙니다.", op, val);
                 goto choose_value;
             }
             /* restore suffix for use in color and attribute prompts */
@@ -3399,6 +3465,7 @@ choose_value:
                 goto choose_value;
         }
 
+#if 0 /*KR*/
         Sprintf(colorqry, "Choose a color for when %s is %s%s%s:",
                 initblstats[fld].fldname,
                 (lt_gt_eq == LT_VALUE) ? "less than "
@@ -3408,6 +3475,17 @@ choose_value:
                 (lt_gt_eq == LE_VALUE) ? " or less"
                   : (lt_gt_eq == GE_VALUE) ? " or more"
                     : "");
+#else
+        Sprintf(colorqry,
+                "%s 필드가 %s %s 경우의 색상을 선택하세요:", 
+                initblstats[fld].fldname, numstart,
+                (lt_gt_eq == LT_VALUE)   ? "미만인"
+                : (lt_gt_eq == GT_VALUE) ? "초과인"
+                : (lt_gt_eq == LE_VALUE) ? "이하인"
+                : (lt_gt_eq == GE_VALUE) ? "이상인"
+                                         : "인");
+#endif
+#if 0 /*KR: 원본*/
         Sprintf(attrqry, "Choose attribute for when %s is %s%s%s:",
                 initblstats[fld].fldname,
                 (lt_gt_eq == LT_VALUE) ? "less than "
@@ -3417,6 +3495,15 @@ choose_value:
                 (lt_gt_eq == LE_VALUE) ? " or less"
                   : (lt_gt_eq == GE_VALUE) ? " or more"
                     : "");
+#else 
+        Sprintf(attrqry, "%s 필드가 %s %s 경우의 속성을 선택하세요:",
+                initblstats[fld].fldname, numstart,
+                (lt_gt_eq == LT_VALUE)   ? "미만인"
+                : (lt_gt_eq == GT_VALUE) ? "초과인"
+                : (lt_gt_eq == LE_VALUE) ? "이하인"
+                : (lt_gt_eq == GE_VALUE) ? "이상인"
+                                         : "인");
+#endif
 
         hilite.rel = lt_gt_eq;
         hilite.value = aval;
@@ -3437,16 +3524,32 @@ choose_value:
                single choice, skip it altogether and just use 'changed' */
             lt_gt_eq = EQ_VALUE;
         }
+#if 0 /*KR: 원본*/
         Sprintf(colorqry, "Choose a color for when %s %s:",
                 initblstats[fld].fldname,
                 (lt_gt_eq == EQ_VALUE) ? "changes"
                   : (lt_gt_eq == LT_VALUE) ? "decreases"
                     : "increases");
+#else /*KR: KRNethack 맞춤 번역 (어순 최적화)*/
+        Sprintf(colorqry,
+                "%s 필드가 %s 색상을 선택하세요:", initblstats[fld].fldname,
+                (lt_gt_eq == EQ_VALUE)   ? "변경되었을 때의"
+                : (lt_gt_eq == LT_VALUE) ? "감소했을 때의"
+                                         : "증가했을 때의");
+#endif
+#if 0 /*KR: 원본*/
         Sprintf(attrqry, "Choose attribute for when %s %s:",
                 initblstats[fld].fldname,
                 (lt_gt_eq == EQ_VALUE) ? "changes"
                   : (lt_gt_eq == LT_VALUE) ? "decreases"
                     : "increases");
+#else /*KR: KRNethack 맞춤 번역*/
+        Sprintf(attrqry,
+                "%s 필드가 %s 속성을 선택하세요:", initblstats[fld].fldname,
+                (lt_gt_eq == EQ_VALUE)   ? "변경되었을 때의"
+                : (lt_gt_eq == LT_VALUE) ? "감소했을 때의"
+                                         : "증가했을 때의");
+#endif
         hilite.rel = lt_gt_eq;
     } else if (behavior == BL_TH_CONDITION) {
         cond = query_conditions();
@@ -3455,23 +3558,38 @@ choose_value:
                 goto choose_field;
             return FALSE;
         }
-        Sprintf(colorqry, "Choose a color for conditions %s:",
+        /*KR Sprintf(colorqry, "Choose a color for conditions %s:", */
+        Sprintf(colorqry, "조건 %s에 대한 색상을 선택하세요:",
                 conditionbitmask2str(cond));
-        Sprintf(attrqry, "Choose attribute for conditions %s:",
+        /*KR Sprintf(attrqry, "Choose attribute for conditions %s:", */
+        Sprintf(attrqry, "조건 %s에 대한 속성을 선택하세요:",
                 conditionbitmask2str(cond));
     } else if (behavior == BL_TH_TEXTMATCH) {
         char qry_buf[BUFSZ];
 
+#if 0 /*KR: 원본*/
         Sprintf(qry_buf, "%s %s text value to match:",
                 (fld == BL_CAP
                  || fld == BL_ALIGN
                  || fld == BL_HUNGER
                  || fld == BL_TITLE) ? "Choose" : "Enter",
                 initblstats[fld].fldname);
+#else
+        Sprintf(qry_buf, "%s 필드와 일치시킬 텍스트 값을 %s:",
+                initblstats[fld].fldname,
+                (fld == BL_CAP || fld == BL_ALIGN || fld == BL_HUNGER
+                 || fld == BL_TITLE) ? "선택하세요"
+                                     : "입력하세요");
+#endif
         if (fld == BL_CAP) {
+#if 0 /*KR*/
             int rv = query_arrayvalue(qry_buf,
                                       enc_stat,
                                       SLT_ENCUMBER, OVERLOADED + 1);
+#else
+            int rv = query_arrayvalue(qry_buf, enc_stat_opt, SLT_ENCUMBER,
+                                      OVERLOADED + 1);
+#endif
 
             if (rv < SLT_ENCUMBER)
                 goto choose_behavior;
@@ -3479,7 +3597,8 @@ choose_value:
             hilite.rel = TXT_VALUE;
             Strcpy(hilite.textmatch, enc_stat[rv]);
         } else if (fld == BL_ALIGN) {
-            static const char *aligntxt[] = { "chaotic", "neutral", "lawful" };
+            /*KR static const char *aligntxt[] = { "chaotic", "neutral", "lawful" }; */
+            static const char *aligntxt[] = { "혼돈", "중립", "질서" };
             int rv = query_arrayvalue(qry_buf,
                                       aligntxt, 0, 2 + 1);
 
@@ -3489,9 +3608,15 @@ choose_value:
             hilite.rel = TXT_VALUE;
             Strcpy(hilite.textmatch, aligntxt[rv]);
         } else if (fld == BL_HUNGER) {
+#if 0 /*KR: 원본*/
             static const char *hutxt[] = { "Satiated", (char *) 0, "Hungry",
                                            "Weak", "Fainting", "Fainted",
                                            "Starved" };
+#else
+            static const char *hutxt[] = { "배부름",   (char *) 0,  "배고픔",
+                                           "허기짐",   "기절 직전", "기절함",
+                                           "굶어 죽음" };
+#endif
             int rv = query_arrayvalue(qry_buf,
                                       hutxt,
                                       SATIATED, STARVED + 1);
@@ -3530,7 +3655,8 @@ choose_value:
                         rolelist[j++] = dupstr(obuf);
                 }
             }
-            rolelist[j++] = dupstr("\"none of the above (polymorphed)\"");
+            /*KR rolelist[j++] = dupstr("\"none of the above (polymorphed)\""); */
+            rolelist[j++] = dupstr("\"위 항목에 없음 (폴리모프 상태)\"");
 
             rv = query_arrayvalue(qry_buf, rolelist, 0, j);
             if (rv >= 0) {
@@ -3555,6 +3681,7 @@ choose_value:
             else
                 return FALSE;
         }
+#if 0 /*KR: 원본*/
         Sprintf(colorqry, "Choose a color for when %s is '%s':",
                 initblstats[fld].fldname, hilite.textmatch);
         Sprintf(attrqry, "Choose attribute for when %s is '%s':",
@@ -3564,6 +3691,17 @@ choose_value:
                 initblstats[fld].fldname);
         Sprintf(attrqry, "Choose attribute to always hilite %s:",
                 initblstats[fld].fldname);
+#else
+        Sprintf(colorqry, "%s이(가) '%s'일 때의 색상을 선택하세요:",
+                initblstats[fld].fldname, hilite.textmatch);
+        Sprintf(attrqry, "%s이(가) '%s'일 때의 속성을 선택하세요:",
+                initblstats[fld].fldname, hilite.textmatch);
+    } else if (behavior == BL_TH_ALWAYS_HILITE) {
+        Sprintf(colorqry, "%s을(를) 항상 강조할 색상을 선택하세요:",
+                initblstats[fld].fldname);
+        Sprintf(attrqry, "%s을(를) 항상 강조할 속성을 선택하세요:",
+                initblstats[fld].fldname);
+#endif
     }
 
 choose_color:
@@ -3605,7 +3743,8 @@ choose_color:
         tmpattr = hlattr2attrname(atr, attrbuf, BUFSZ);
         if (tmpattr)
             Sprintf(eos(clrbuf), "&%s", tmpattr);
-        pline("Added hilite condition/%s/%s",
+        /*KR pline("Added hilite condition/%s/%s", */
+        pline("강조 규칙 condition/%s/%s 추가됨",
               conditionbitmask2str(cond), clrbuf);
     } else {
         char *p, *q;
@@ -3619,7 +3758,8 @@ choose_color:
             *p = '\0'; /* chop off " or female-rank" */
             /* new rule for male-rank */
             status_hilite_add_threshold(fld, &hilite);
-            pline("Added hilite %s", status_hilite2str(&hilite));
+            /*KR pline("Added hilite %s", status_hilite2str(&hilite)); */
+            pline("강조 규칙 %s 추가됨", status_hilite2str(&hilite));
             /* transfer female-rank to start of hilite.textmatch buffer */
             p += sizeof " or " - sizeof "";
             q = hilite.textmatch;
@@ -3628,7 +3768,8 @@ choose_color:
             /* proceed with normal addition of new rule */
         }
         status_hilite_add_threshold(fld, &hilite);
-        pline("Added hilite %s", status_hilite2str(&hilite));
+        /*KR pline("Added hilite %s", status_hilite2str(&hilite)); */
+        pline("강조 규칙 %s 추가됨", status_hilite2str(&hilite));
     }
     reset_status_hilites();
     return TRUE;
@@ -3722,7 +3863,8 @@ int fld;
         }
     } else {
         any = zeroany;
-        Sprintf(buf, "No current hilites for %s", initblstats[fld].fldname);
+        /*KR Sprintf(buf, "No current hilites for %s", initblstats[fld].fldname); */
+        Sprintf(buf, "현재 %s에 대한 강조 규칙이 없습니다", initblstats[fld].fldname);
         add_menu(tmpwin, NO_GLYPH, &any, 0, 0, ATR_NONE, buf, MENU_UNSELECTED);
     }
 
@@ -3734,7 +3876,8 @@ int fld;
         any = zeroany;
         any.a_int = -1;
         add_menu(tmpwin, NO_GLYPH, &any, 'X', 0, ATR_NONE,
-                 "Remove selected hilites", MENU_UNSELECTED);
+            /*KR "Remove selected hilites", MENU_UNSELECTED); */
+                 "선택한 강조 규칙 제거", MENU_UNSELECTED);
     }
 
 #ifndef SCORE_ON_BOTL
@@ -3750,10 +3893,12 @@ int fld;
         any = zeroany;
         any.a_int = -2;
         add_menu(tmpwin, NO_GLYPH, &any, 'Z', 0, ATR_NONE,
-                 "Add a new hilite", MENU_UNSELECTED);
+            /*KR "Add a new hilite", MENU_UNSELECTED); */
+                 "새 강조 규칙 추가", MENU_UNSELECTED);
     }
 
-    Sprintf(buf, "Current %s hilites:", initblstats[fld].fldname);
+    /*KR Sprintf(buf, "Current %s hilites:", initblstats[fld].fldname); */
+    Sprintf(buf, "현재 %s 강조 규칙:", initblstats[fld].fldname);
     end_menu(tmpwin, buf);
 
     if ((res = select_menu(tmpwin, PICK_ANY, &picks)) > 0) {
@@ -3846,7 +3991,8 @@ shlmenu_redo:
         any = zeroany;
         any.a_int = -1;
         add_menu(tmpwin, NO_GLYPH, &any, 0, 0, ATR_NONE,
-                 "View all hilites in config format", MENU_UNSELECTED);
+                 /*KR "View all hilites in config format", MENU_UNSELECTED); */
+                 "설정 파일 형식으로 모든 강조 규칙 보기", MENU_UNSELECTED);
 
         any = zeroany;
         add_menu(tmpwin, NO_GLYPH, &any, 0, 0, ATR_NONE, "", MENU_UNSELECTED);
@@ -3868,12 +4014,14 @@ shlmenu_redo:
         any.a_int = i + 1;
         Sprintf(buf, "%-18s", initblstats[i].fldname);
         if (count)
-            Sprintf(eos(buf), " (%d defined)", count);
+            /*KR Sprintf(eos(buf), " (%d defined)", count); */
+            Sprintf(eos(buf), " (%d개 정의됨)", count);
         add_menu(tmpwin, NO_GLYPH, &any, 0, 0, ATR_NONE,
                  buf, MENU_UNSELECTED);
     }
 
-    end_menu(tmpwin, "Status hilites:");
+    /*KR end_menu(tmpwin, "Status hilites:"); */
+    end_menu(tmpwin, "상태창 강조:");
     if ((res = select_menu(tmpwin, PICK_ONE, &picks)) > 0) {
         i = picks->item.a_int - 1;
         if (i < 0)
@@ -3896,7 +4044,8 @@ shlmenu_redo:
        and also when non-zero it is the flag to enable highlighting */
     if (countall > 0 && !iflags.hilite_delta)
         pline(
- "To have highlights become active, set 'statushilites' option to non-zero.");
+ /*KR "To have highlights become active, set 'statushilites' option to non-zero."); */
+ "강조 기능을 활성화하려면 'statushilites' 옵션을 0이 아닌 값으로 설정하세요.");
 
     return TRUE;
 }
