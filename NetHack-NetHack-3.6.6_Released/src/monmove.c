@@ -1358,9 +1358,11 @@ register int after;
                             if (observeit)
                                 pline("%s opens a door.", Monnam(mtmp));
                             else if (canseeit)
-                                You_see("a door open.");
+                                /*KR You_see("a door open."); */
+                                You_see("문이 열리는 것을 보았다.");
                             else if (!Deaf)
-                                You_hear("a door open.");
+                                /*KR You_hear("a door open."); */
+                                You_hear("문이 열리는 소리를 들었다.");
                         }
                         here->doormask = D_ISOPEN;
                         /* newsym(mtmp->mx, mtmp->my); */  /* done below */

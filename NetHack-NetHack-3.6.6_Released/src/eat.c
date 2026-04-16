@@ -2123,9 +2123,9 @@ struct obj *otmp;
                   Hallucination ? "primo" : "yummy",
                   singular(otmp, xname));
 #else
-            pline("이야~, 정말 %s %s!",
-                Hallucination ? "고오급스런" : "맛인걸",
-                singular(otmp, xname));
+            pline("이야~, 정말 %s %s인걸!",
+                  Hallucination ? "고오급스런" : "맛있는",
+                  singular(otmp, xname));
 #endif
         } else if (otmp->otyp == APPLE && otmp->cursed && !Sleep_resistance) {
             ; /* skip core joke; feedback deferred til fpostfx() */

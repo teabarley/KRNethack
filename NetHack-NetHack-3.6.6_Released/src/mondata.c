@@ -674,6 +674,12 @@ int
 name_to_mon(in_str)
 const char *in_str;
 {
+#if 1 /*KR*/
+    extern char *get_kr_name(const char *);
+    if (in_str) {
+        in_str = get_kr_name(in_str);
+    }
+#endif
     /* Be careful.  We must check the entire string in case it was
      * something such as "ettin zombie corpse".  The calling routine
      * doesn't know about the "corpse" until the monster name has

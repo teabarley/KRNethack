@@ -207,9 +207,11 @@ STATIC_DCL boolean FDECL(help_dir, (CHAR_P, int, const char *));
 static const char *readchar_queue = "";
 static coord clicklook_cc;
 /* for rejecting attempts to use wizard mode commands */
-static const char unavailcmd[] = "Unavailable command '%s'.";
+/*KR static const char unavailcmd[] = "Unavailable command '%s'."; */
+static const char unavailcmd[] = "'%s' 명렁어는 사용할 수 없습니다.";
 /* for rejecting #if !SHELL, !SUSPEND */
-static const char cmdnotavail[] = "'%s' command not available.";
+/*KR static const char cmdnotavail[] = "'%s' command not available."; */
+static const char cmdnotavail[] = "'%s' 명령어를 사용할 수 없습니다.";
 
 STATIC_PTR int
 doprev_message(VOID_ARGS)
@@ -351,13 +353,20 @@ doextcmd(VOID_ARGS)
 
         func = extcmdlist[idx].ef_funct;
         if (!wizard && (extcmdlist[idx].flags & WIZMODECMD)) {
-            You("can't do that.");
+            /*KR You("can't do that."); */
+            pline("그럴 수는 없습니다.");
             return 0;
         }
         if (iflags.menu_requested && !accept_menu_prefix(func)) {
+#if 0 /*KR:T*/
             pline("'%s' prefix has no effect for the %s command.",
                   visctrl(Cmd.spkeys[NHKF_REQMENU]),
                   extcmdlist[idx].ef_txt);
+#else
+            pline("'%s' 접두사는 %s 명령어에 대해 유효하지 않습니다.",
+                  visctrl(Cmd.spkeys[NHKF_REQMENU]), 
+                  extcmdlist[idx].ef_txt);
+#endif
             iflags.menu_requested = FALSE;
         }
         retval = (*func)();
@@ -379,8 +388,13 @@ doextlist(VOID_ARGS)
     int n, pass;
     int menumode = 0, menushown[2], onelist = 0;
     boolean redisplay = TRUE, search = FALSE;
+#if 0 /*KR:T*/
     static const char *headings[] = { "Extended commands",
                                       "Debugging Extended Commands" };
+#else
+    static const char *headings[] = { "확장 명령어",
+                                      "디버깅 확장 명령어" };
+#endif
 
     searchbuf[0] = '\0';
     menuwin = create_nhwindow(NHW_MENU);
@@ -389,15 +403,26 @@ doextlist(VOID_ARGS)
         redisplay = FALSE;
         any = zeroany;
         start_menu(menuwin);
+#if 0 /*KR:T*/
         add_menu(menuwin, NO_GLYPH, &any, 0, 0, ATR_NONE,
                  "Extended Commands List", MENU_UNSELECTED);
+#else
+        add_menu(menuwin, NO_GLYPH, &any, 0, 0, ATR_NONE, 
+                 "확장 명령어 목록", MENU_UNSELECTED);
+#endif
         add_menu(menuwin, NO_GLYPH, &any, 0, 0, ATR_NONE,
                  "", MENU_UNSELECTED);
 
+#if 0 /*JP:T*/
         Strcpy(buf, menumode ? "Show" : "Hide");
         Strcat(buf, " commands that don't autocomplete");
         if (!menumode)
             Strcat(buf, " (those not marked with [A])");
+#else
+        Strcpy(buf, "자동 완성되지 않는 명령어를");
+        Strcat(buf, menumode ? " 표시"
+                             : " 표시하지 않음(이것들은[A] 표시가 붙지 않음)");
+#endif
         any.a_int = 1;
         add_menu(menuwin, NO_GLYPH, &any, 'a', 0, ATR_NONE, buf,
                  MENU_UNSELECTED);
@@ -409,10 +434,16 @@ doextlist(VOID_ARGS)
                actual list of extended commands shown via separator lines;
                having ':' as an explicit selector overrides the default
                menu behavior for it; we retain 's' as a group accelerator */
+#if 0 /*JP:T*/
             add_menu(menuwin, NO_GLYPH, &any, ':', 's', ATR_NONE,
                      "Search extended commands", MENU_UNSELECTED);
+#else
+            add_menu(menuwin, NO_GLYPH, &any, ':', 's', ATR_NONE,
+                     "확장 명령어를 검색한다", MENU_UNSELECTED);
+#endif
         } else {
-            Strcpy(buf, "Show all, clear search");
+            /*KR Strcpy(buf, "Show all, clear search"); */
+            Strcpy(buf, "전부 표시, 검색 초기화");
             if (strlen(buf) + strlen(searchbuf) + strlen(" (\"\")") < QBUFSZ)
                 Sprintf(eos(buf), " (\"%s\")", searchbuf);
             any.a_int = 3;
@@ -426,10 +457,17 @@ doextlist(VOID_ARGS)
         }
         if (wizard) {
             any.a_int = 4;
+#if 0 /*KR:T*/
             add_menu(menuwin, NO_GLYPH, &any, 'z', 0, ATR_NONE,
                      onelist ? "Show debugging commands in separate section"
                      : "Show all alphabetically, including debugging commands",
                      MENU_UNSELECTED);
+#else
+            add_menu(menuwin, NO_GLYPH, &any, 'z', 0, ATR_NONE,
+                     onelist ? "디버깅 명령어를 별도의 섹션에 표시"
+                             : "디버깅 명령어를 포함한 모든 명령어를 알파벳 순으로 표시",
+                     MENU_UNSELECTED);
+#endif
         }
         any = zeroany;
         add_menu(menuwin, NO_GLYPH, &any, 0, 0, ATR_NONE,
@@ -491,8 +529,13 @@ doextlist(VOID_ARGS)
                          "", MENU_UNSELECTED);
         }
         if (*searchbuf && !n)
+#if 0 /*KR:T*/
             add_menu(menuwin, NO_GLYPH, &any, 0, 0, ATR_NONE,
                      "no matches", MENU_UNSELECTED);
+#else
+            add_menu(menuwin, NO_GLYPH, &any, 0, 0, ATR_NONE, 
+                     "일치하는 항목 없음", MENU_UNSELECTED);
+#endif
 
         end_menu(menuwin, (char *) 0);
         n = select_menu(menuwin, PICK_ONE, &selected);
@@ -523,8 +566,12 @@ doextlist(VOID_ARGS)
             searchbuf[0] = '\0';
         }
         if (search) {
+#if 0 /*KR:T*/
             Strcpy(promptbuf, "Extended command list search phrase");
             Strcat(promptbuf, "?");
+#else
+            Strcpy(promptbuf, "확장 명령어 검색 문자열은?");
+#endif
             getlin(promptbuf, searchbuf);
             (void) mungspaces(searchbuf);
             if (searchbuf[0] == '\033')
@@ -637,13 +684,22 @@ extcmd_via_menu()
             }
             prevaccelerator = accelerator;
             if (!acount || one_per_line) {
+#if 0 /*KR:T*/
                 Sprintf(prompt, "%s%s [%s]", wastoolong ? "or " : "",
                         choices[i]->ef_txt, choices[i]->ef_desc);
             } else if (acount == 1) {
                 Sprintf(prompt, "%s%s or %s", wastoolong ? "or " : "",
                         choices[i - 1]->ef_txt, choices[i]->ef_txt);
+#else
+                Sprintf(prompt, "%s%s [%s]", wastoolong ? "또는 " : "",
+                        choices[i]->ef_txt, choices[i]->ef_desc);
+            } else if (acount == 1) {
+                Sprintf(prompt, "%s%s 또는 %s", wastoolong ? "또는 " : "",
+                        choices[i - 1]->ef_txt, choices[i]->ef_txt);
+#endif
             } else {
-                Strcat(prompt, " or ");
+                /*KR Strcat(prompt, " or "); */
+                Strcat(prompt, " 또는 ");
                 Strcat(prompt, choices[i]->ef_txt);
             }
             ++acount;
@@ -655,7 +711,8 @@ extcmd_via_menu()
             add_menu(win, NO_GLYPH, &any, any.a_char, 0, ATR_NONE, buf,
                      FALSE);
         }
-        Sprintf(prompt, "Extended Command: %s", cbuf);
+        /*KR Sprintf(prompt, "Extended Command: %s", cbuf); */
+        Sprintf(prompt, "확장 명령어: %s", cbuf);
         end_menu(win, prompt);
         n = select_menu(win, PICK_ONE, &pick_list);
         destroy_nhwindow(win);
@@ -709,22 +766,27 @@ domonability(VOID_ARGS)
             if (split_mon(&youmonst, (struct monst *) 0))
                 dryup(u.ux, u.uy, TRUE);
         } else
-            There("is no fountain here.");
+            /*KR There("is no fountain here."); */
+            pline("여기에는 분수가 없다.");
     } else if (is_unicorn(youmonst.data)) {
         use_unicorn_horn((struct obj *) 0);
         return 1;
     } else if (youmonst.data->msound == MS_SHRIEK) {
-        You("shriek.");
+        /*KR You("shriek."); */
+        You("비명을 질렀다.");
         if (u.uburied)
-            pline("Unfortunately sound does not carry well through rock.");
+            /*KR pline("Unfortunately sound does not carry well through rock."); */
+            pline("불행히도 소리는 바위를 잘 통과하지 못한다.");
         else
             aggravate();
     } else if (youmonst.data->mlet == S_VAMPIRE)
         return dopoly();
     else if (Upolyd)
-        pline("Any special ability you may have is purely reflexive.");
+        /*KR pline("Any special ability you may have is purely reflexive."); */
+        pline("당신이 가진 특수 능력은 모두 반사적으로만 발동된다.");
     else
-        You("don't have a special ability in your normal form!");
+        /*KR You("don't have a special ability in your normal form!"); */
+        pline("원래 모습으로는 특수 능력이 없다!");
     return 0;
 }
 
@@ -732,29 +794,36 @@ int
 enter_explore_mode(VOID_ARGS)
 {
     if (wizard) {
-        You("are in debug mode.");
+        /*KR You("are in debug mode."); */
+        You("디버그 모드입니다.");
     } else if (discover) {
-        You("are already in explore mode.");
+        /*KR You("are already in explore mode."); */
+        You("이미 탐험 모드입니다.");
     } else {
 #ifdef SYSCF
 #if defined(UNIX)
         if (!sysopt.explorers || !sysopt.explorers[0]
             || !check_user_string(sysopt.explorers)) {
-            You("cannot access explore mode.");
+            /*KR You("cannot access explore mode."); */
+            You("탐험 모드에 접근할 수 없습니다.");
             return 0;
         }
 #endif
 #endif
         pline(
-        "Beware!  From explore mode there will be no return to normal game.");
+        /*KR "Beware!  From explore mode there will be no return to normal game."); */
+        "경고! 탐험 모드에 진입하면 일반 게임으로 돌아갈 수 없습니다.");
         if (paranoid_query(ParanoidQuit,
-                           "Do you want to enter explore mode?")) {
+                      /*KR "Do you want to enter explore mode?")) { */
+                           "탐험 모드에 진입하시겠습니까?")) {
             clear_nhwindow(WIN_MESSAGE);
-            You("are now in non-scoring explore mode.");
+            /*KR You("are now in non-scoring explore mode."); */
+            You("이제 점수가 기록되지 않는 탐험 모드입니다.");
             discover = TRUE;
         } else {
             clear_nhwindow(WIN_MESSAGE);
-            pline("Resuming normal game.");
+            /*KR pline("Resuming normal game."); */
+            pline("일반 게임을 계속합니다.");
         }
     }
     return 0;
@@ -957,7 +1026,8 @@ wiz_level_change(VOID_ARGS)
     int newlevel = 0;
     int ret;
 
-    getlin("To what experience level do you want to be set?", buf);
+    /*KR getlin("To what experience level do you want to be set?", buf); */
+    getlin("경험 레벨을 몇으로 설정하시겠습니까?", buf);
     (void) mungspaces(buf);
     if (buf[0] == '\033' || buf[0] == '\0')
         ret = 0;
@@ -969,19 +1039,23 @@ wiz_level_change(VOID_ARGS)
         return 0;
     }
     if (newlevel == u.ulevel) {
-        You("are already that experienced.");
+        /*KR You("are already that experienced."); */
+        You("이미 그 경험 레벨입니다.");
     } else if (newlevel < u.ulevel) {
         if (u.ulevel == 1) {
-            You("are already as inexperienced as you can get.");
+            /*KR You("are already as inexperienced as you can get."); */
+            You("이미 가능한 한 가장 낮은 경험 레벨입니다.");
             return 0;
         }
         if (newlevel < 1)
             newlevel = 1;
         while (u.ulevel > newlevel)
-            losexp("#levelchange");
+            /*KR losexp("#levelchange"); */
+            losexp("#levelchange 명령어로");
     } else {
         if (u.ulevel >= MAXULEV) {
-            You("are already as experienced as you can get.");
+            /*KR You("are already as experienced as you can get."); */
+            You("이미 가능한 한 가장 높은 경험 레벨입니다.");
             return 0;
         }
         if (newlevel > MAXULEV)
@@ -1002,8 +1076,13 @@ wiz_panic(VOID_ARGS)
         u.uen = u.uenmax = 1000;
         return 0;
     }
+#if 0 /*KR:T*/
     if (paranoid_query(ParanoidQuit,
                        "Do you want to call panic() and end your game?"))
+#else
+    if (paranoid_query(ParanoidQuit,
+                       "panic() 함수를 호출하여 게임을 종료하시겠습니까?"))
+#endif
         panic("Crash test.");
     return 0;
 }
@@ -1544,20 +1623,24 @@ doterrain(VOID_ARGS)
     any = zeroany;
     any.a_int = 1;
     add_menu(men, NO_GLYPH, &any, 0, 0, ATR_NONE,
-             "known map without monsters, objects, and traps",
+        /*KR "known map without monsters, objects, and traps", */
+             "알려진 지도 (몬스터, 아이템, 함정 없음)",
              MENU_SELECTED);
     any.a_int = 2;
     add_menu(men, NO_GLYPH, &any, 0, 0, ATR_NONE,
-             "known map without monsters and objects",
+        /*KR "known map without monsters and objects", */
+             "알려진 지도 (몬스터, 아이템 없음)",
              MENU_UNSELECTED);
     any.a_int = 3;
     add_menu(men, NO_GLYPH, &any, 0, 0, ATR_NONE,
-             "known map without monsters",
+        /*KR "known map without monsters", */
+             "알려진 지도 (몬스터 없음)",
              MENU_UNSELECTED);
     if (discover || wizard) {
         any.a_int = 4;
         add_menu(men, NO_GLYPH, &any, 0, 0, ATR_NONE,
-                 "full map without monsters, objects, and traps",
+            /*KR "full map without monsters, objects, and traps", */
+                 "전체 지도 (몬스터, 아이템, 함정 없음)",
                  MENU_UNSELECTED);
         if (wizard) {
             any.a_int = 5;
@@ -1570,7 +1653,8 @@ doterrain(VOID_ARGS)
                      MENU_UNSELECTED);
         }
     }
-    end_menu(men, "View which?");
+    /*KR end_menu(men, "View which?"); */
+    end_menu(men, "어떤 것을 보시겠습니까?");
 
     n = select_menu(men, PICK_ONE, &sel);
     destroy_nhwindow(men);
@@ -1614,22 +1698,48 @@ doterrain(VOID_ARGS)
 /* -enlightenment and conduct- */
 static winid en_win = WIN_ERR;
 static boolean en_via_menu = FALSE;
+#if 0 /*KR: 원본*/
 static const char You_[] = "You ", are[] = "are ", were[] = "were ",
                   have[] = "have ", had[] = "had ", can[] = "can ",
                   could[] = "could ";
+#else /*KR: KRNethack 맞춤 번역 (SOV 어순을 위한 조사/어미 세팅)*/
+static const char You_[] = "당신은 ", are[] = "이다", were[] = "이었다",
+                  have[] = "을(를) 가지고 있다",
+                  had[] = "을(를) 가지고 있었다", can[] = "할 수 있다",
+                  could[] = "할 수 있었다", iru[] = "있다", ita[] = "있었다";
+#endif
+#if 0 /*KR: 미사용 */
 static const char have_been[] = "have been ", have_never[] = "have never ",
                   never[] = "never ";
+#endif
 
+#if 0 /*KR: 원본*/
 #define enl_msg(prefix, present, past, suffix, ps) \
     enlght_line(prefix, final ? past : present, suffix, ps)
+#else /*KR: 문장 구조를 [주어] + [목적어/보어] + [동사] 순서로 재배치*/
+#define enl_msg(prefix, present, past, suffix, ps) \
+    enlght_line(prefix, ps, suffix, final ? past : present)
+#endif
 #define you_are(attr, ps) enl_msg(You_, are, were, attr, ps)
 #define you_have(attr, ps) enl_msg(You_, have, had, attr, ps)
 #define you_can(attr, ps) enl_msg(You_, can, could, attr, ps)
-#define you_have_been(goodthing) enl_msg(You_, have_been, were, goodthing, "")
+/*KR #define you_have_been(goodthing) enl_msg(You_, have_been, were, goodthing, "") */
+#define you_have_been(goodthing) enl_msg(You_, are, were, goodthing, "")
+#if 0 /*KR: 원본*/
 #define you_have_never(badthing) \
     enl_msg(You_, have_never, never, badthing, "")
 #define you_have_X(something) \
     enl_msg(You_, have, (const char *) "", something, "")
+#else /*KR: KRNethack 맞춤 번역 (~한 적이 있다/없다 패턴)*/
+#define you_have_never(badthing) \
+    enl_msg(badthing, "적이 없다", "적이 없었다", "", "")
+#define you_have_X(something) \
+    enl_msg(something, "적이 있다", "적이 있었다", "", "")
+#endif
+#if 1 /*KR ~ing도 자연스럽게 출력하기 위함 */
+#define you_are_ing(goodthing, ps) enl_msg(You_, iru, ita, goodthing, ps)
+#endif
+
 
 static void
 enlght_out(buf)
@@ -1662,13 +1772,16 @@ int incamt, final;
 char *outbuf;
 {
     const char *modif, *bonus;
+#if 0 /*KR: 원본 (한국어 어순에서는 사용하지 않음)*/
     boolean invrt;
+#endif
     int absamt;
 
     absamt = abs(incamt);
     /* Protection amount is typically larger than damage or to-hit;
        reduce magnitude by a third in order to stretch modifier ranges
        (small:1..5, moderate:6..10, large:11..19, huge:20+) */
+#if 0 /*KR: 원본*/
     if (!strcmp(inctyp, "defense"))
         absamt = (absamt * 2) / 3;
 
@@ -1688,6 +1801,25 @@ char *outbuf;
 
     Sprintf(outbuf, "%s %s %s", modif, invrt ? inctyp : bonus,
             invrt ? bonus : inctyp);
+#else /*KR: KRNethack 맞춤 번역 (복잡한 영어 어순 로직 제거 및 한국어화)*/
+    /* 이 함수를 호출할 때 "방어"라는 문자열을 넘겨줄 것임 */
+    if (!strcmp(inctyp, "방어"))
+        absamt = (absamt * 2) / 3;
+
+    if (absamt <= 3)
+        modif = "약간의";
+    else if (absamt <= 6)
+        modif = "적당한";
+    else if (absamt <= 12)
+        modif = "큰";
+    else
+        modif = "엄청난";
+
+    bonus = (incamt > 0) ? "보너스" : "페널티";
+
+    /* 한국어 어순: [능력치]에 [수식어] [보너스/페널티] */
+    Sprintf(outbuf, "%s에 %s %s", inctyp, modif, bonus);
+#endif
     if (final || wizard)
         Sprintf(eos(outbuf), " (%s%d)", (incamt > 0) ? "+" : "", incamt);
 
@@ -1705,18 +1837,27 @@ int final;
 
     switch (category) {
     case HALF_PHDAM:
-        category_name = "physical";
+        /*KR category_name = "physical"; */
+        category_name = "물리";
         break;
     case HALF_SPDAM:
-        category_name = "spell";
+        /*KR category_name = "spell"; */
+        category_name = "주문";
         break;
     default:
-        category_name = "unknown";
+        /*KR category_name = "unknown"; */
+        category_name = "불명";
         break;
     }
+#if 0 /*KR: 원본*/
     Sprintf(buf, " %s %s damage", (final || wizard) ? "half" : "reduced",
             category_name);
     enl_msg(You_, "take", "took", buf, from_what(category));
+#else /*KR: KRNethack 맞춤 번역 */
+    Sprintf(buf, "%s 데미지를 %s하여 ", category_name,
+            (final || wizard) ? "반감" : "감소");
+    enl_msg(You_, "받는다", "받았다", buf, from_what(category));
+#endif
 }
 
 /* is hero actively using water walking capability on water (or lava)? */
@@ -1782,10 +1923,18 @@ int final; /* ENL_GAMEINPROGRESS:0, ENL_GAMEOVERALIVE, ENL_GAMEOVERDEAD */
     *tmpbuf = highc(*tmpbuf); /* same adjustment as bottom line */
     /* as in background_enlightenment, when poly'd we need to use the saved
        gender in u.mfemale rather than the current you-as-monster gender */
+#if 0 /*KR: 원본*/
     Sprintf(buf, "%s the %s's attributes:", tmpbuf,
             ((Upolyd ? u.mfemale : flags.female) && urole.name.f)
                 ? urole.name.f
                 : urole.name.m);
+#else /*KR: KRNethack 맞춤 번역 (어순 변경: 직업 + 이름) */
+    Sprintf(buf, "%s %s의 능력치:",
+            ((Upolyd ? u.mfemale : flags.female) && urole.name.f)
+                ? urole.name.f
+                : urole.name.m,
+            tmpbuf);
+#endif
 
     /* title */
     enlght_out(buf); /* "Conan the Archeologist's attributes:" */
@@ -1843,7 +1992,8 @@ int final;
     rank_titl = rank_of(u.ulevel, Role_switch, innategend);
 
     enlght_out(""); /* separator after title */
-    enlght_out("Background:");
+    /*KR enlght_out("Background:"); */
+    enlght_out("배경 정보:");
 
     /* if polymorphed, report current shape before underlying role;
        will be repeated as first status: "you are transformed" and also
@@ -1857,10 +2007,22 @@ int final;
         tmpbuf[0] = '\0';
         /* here we always use current gender, not saved role gender */
         if (!is_male(uasmon) && !is_female(uasmon) && !is_neuter(uasmon))
+#if 0 /*KR: 원본*/
             Sprintf(tmpbuf, "%s ", genders[flags.female ? 1 : 0].adj);
         Sprintf(buf, "%sin %s%s form", !final ? "currently " : "", tmpbuf,
                 uasmon->mname);
         you_are(buf, "");
+#else /*KR: KRNethack 맞춤 번역*/
+            Sprintf(tmpbuf, "%s ", genders[flags.female ? 1 : 0].adj);
+        {
+            /* 몬스터 이름을 한글로 가져오기 위한 사전 함수 선언 (C89 에러
+             * 방지를 위해 중괄호로 묶음) */
+            extern char *get_kr_name(const char *);
+            Sprintf(buf, "%s%s%s의 모습", !final ? "현재 " : "", tmpbuf,
+                    get_kr_name(uasmon->mname));
+            you_are(buf, "");
+        }
+#endif
     }
 
     /* report role; omit gender if it's redundant (eg, "female priestess") */
@@ -1871,20 +2033,35 @@ int final;
         Sprintf(tmpbuf, "%s ", genders[innategend].adj);
     buf[0] = '\0';
     if (Upolyd)
+#if 0 /*KR:T*/
         Strcpy(buf, "actually "); /* "You are actually a ..." */
+#else
+        Strcpy(buf, "실제로는"); /* "당신은 실제로는 ..." */
+#endif
     if (!strcmpi(rank_titl, role_titl)) {
         /* omit role when rank title matches it */
+#if 0 /*KR:T (랭크와 직업이 다를 때) */
         Sprintf(eos(buf), "%s, level %d %s%s", an(rank_titl), u.ulevel,
                 tmpbuf, urace.noun);
     } else {
         Sprintf(eos(buf), "%s, a level %d %s%s %s", an(rank_titl), u.ulevel,
                 tmpbuf, urace.adj, role_titl);
+#else
+        /* 예: 레벨 5의 여성 인간 기사 */
+        Sprintf(eos(buf), "레벨 %d의 %s%s %s", u.ulevel, tmpbuf, urace.adj,
+                role_titl);
+    } else {
+        /* 예: 레벨 5의 여성 엘프 레인저인 탐색꾼 */
+        Sprintf(eos(buf), "레벨 %d의 %s%s %s인 %s", u.ulevel, tmpbuf,
+                urace.adj, role_titl, rank_titl);
+#endif
     }
     you_are(buf, "");
 
     /* report alignment (bypass you_are() in order to omit ending period);
        adverb is used to distinguish between temporary change (helm of opp.
        alignment), permanent change (one-time conversion), and original */
+#if 0 /*KR: 원본*/
     Sprintf(buf, " %s%s%s, %son a mission for %s",
             You_, !final ? are : were,
             align_str(u.ualign.type),
@@ -1905,10 +2082,25 @@ int final;
                      /* lastly, normal case */
                      : "",
             u_gname());
+#else /*KR: KRNethack 맞춤 번역*/
+    Sprintf(buf, "당신은 %s이며, %s%s 위한 임무를 수행하고 %s.",
+            align_str(u.ualign.type),
+            /* helm of opposite alignment (반대 성향의 투구 착용 시) */
+            (u.ualign.type != u.ualignbase[A_CURRENT]) ? "일시적으로 "
+            /* permanent conversion (영구적인 성향 전환 시) */
+            : (u.ualign.type != u.ualignbase[A_ORIGINAL]) ? "현재 "
+            /* atheist (무신론자 - 극초반엔 무시됨) */
+            : (!u.uconduct.gnostic && moves > 1000L)
+                ? "명목상 "
+                /* lastly, normal case (기본 상태) */
+                : "",
+            append_josa(u_gname(), "을"), !final ? iru : ita);
+#endif
     enlght_out(buf);
     /* show the rest of this game's pantheon (finishes previous sentence)
        [appending "also Moloch" at the end would allow for straightforward
        trailing "and" on all three aligned entries but looks too verbose] */
+#if 0 /*KR:T*/
     Sprintf(buf, " who %s opposed by", !final ? "is" : "was");
     if (u.ualign.type != A_LAWFUL)
         Sprintf(eos(buf), " %s (%s) and", align_gname(A_LAWFUL),
@@ -1921,6 +2113,21 @@ int final;
         Sprintf(eos(buf), " %s (%s)", align_gname(A_CHAOTIC),
                 align_str(A_CHAOTIC));
     Strcat(buf, "."); /* terminate sentence */
+#else /* (새로운 문장으로 분리) */
+    Strcpy(buf, "당신은 ");
+    if (u.ualign.type != A_LAWFUL)
+        Sprintf(eos(buf), "%s(%s) 및 ", align_gname(A_LAWFUL),
+                align_str(A_LAWFUL));
+    if (u.ualign.type != A_NEUTRAL)
+        Sprintf(eos(buf), "%s(%s)%s", align_gname(A_NEUTRAL),
+                align_str(A_NEUTRAL),
+                (u.ualign.type != A_CHAOTIC) ? " 및 " : "");
+    if (u.ualign.type != A_CHAOTIC)
+        Sprintf(eos(buf), "%s(%s)", align_gname(A_CHAOTIC),
+                align_str(A_CHAOTIC));
+    /* 항상 2명의 적대 신이 존재하므로 "신들과" 로 묶어서 마무리 */
+    Sprintf(eos(buf), " 신들과 대립하고 %s.", !final ? iru : ita);
+#endif
     enlght_out(buf);
 
     /* show original alignment,gender,race,role if any have been changed;
@@ -1932,15 +2139,27 @@ int final;
                + ((u.ualignbase[A_CURRENT] != u.ualignbase[A_ORIGINAL])
                   ? 2 : 0));
     if (difalgn & 1) { /* have temporary alignment so report permanent one */
-        Sprintf(buf, "actually %s", align_str(u.ualignbase[A_CURRENT]));
+        /*KR Sprintf(buf, "actually %s", align_str(u.ualignbase[A_CURRENT])); */
+        Sprintf(buf, "실제로는 %s", align_str(u.ualignbase[A_CURRENT]));
+#if 0 /*KR: 원본*/
         you_are(buf, "");
+#else /* (상태/과거 시제 분리) */
+        enl_msg(buf, "이다", "이었다", "", "");
+#endif
         difalgn &= ~1; /* suppress helm from "started out <foo>" message */
     }
     if (difgend || difalgn) { /* sex change or perm align change or both */
+#if 0 /*KR: 원본*/
         Sprintf(buf, " You started out %s%s%s.",
                 difgend ? genders[flags.initgend].adj : "",
                 (difgend && difalgn) ? " and " : "",
                 difalgn ? align_str(u.ualignbase[A_ORIGINAL]) : "");
+#else /*KR: KRNethack 맞춤 번역*/
+        Sprintf(buf, "당신은 처음에는 %s%s%s 상태로 시작했다.",
+                difgend ? genders[flags.initgend].adj : "",
+                (difgend && difalgn) ? "이고 " : "",
+                difalgn ? align_str(u.ualignbase[A_ORIGINAL]) : "");
+#endif
         enlght_out(buf);
     }
 
@@ -1954,30 +2173,55 @@ int final;
         int egdepth = observable_depth(&u.uz);
 
         (void) endgamelevelname(tmpbuf, egdepth);
+#if 0 /*KR: 원본*/
         Sprintf(buf, "in the endgame, on the %s%s",
                 !strncmp(tmpbuf, "Plane", 5) ? "Elemental " : "", tmpbuf);
+#else /*KR: KRNethack 맞춤 번역*/
+        Sprintf(buf, "최종 시련의 %s에", tmpbuf);
+#endif
     } else if (Is_knox(&u.uz)) {
         /* this gives away the fact that the knox branch is only 1 level */
-        Sprintf(buf, "on the %s level", dungeons[u.uz.dnum].dname);
+        /*KR Sprintf(buf, "on the %s level", dungeons[u.uz.dnum].dname); */
+        Sprintf(buf, "%s에", dungeons[u.uz.dnum].dname);
         /* TODO? maybe phrase it differently when actually inside the fort,
            if we're able to determine that (not trivial) */
     } else {
         char dgnbuf[QBUFSZ];
 
         Strcpy(dgnbuf, dungeons[u.uz.dnum].dname);
+#if 0 /*KR: 원본 (The ~ dgnbuf는 그냥 없는 처리) */
         if (!strncmpi(dgnbuf, "The ", 4))
             *dgnbuf = lowc(*dgnbuf);
         Sprintf(tmpbuf, "level %d",
                 In_quest(&u.uz) ? dunlev(&u.uz) : depth(&u.uz));
+#else /*KR: KRNethack 맞춤 번역 (층수/계층 구분)*/
+        if (In_quest(&u.uz)) {
+            Sprintf(tmpbuf, "제%d계층", dunlev(&u.uz));
+        } else {
+            Sprintf(tmpbuf, "지하 %d층", depth(&u.uz));
+        }
+#endif
         /* TODO? maybe extend this bit to include various other automatic
            annotations from the dungeon overview code */
+#if 0 /*KR: 원본*/
         if (Is_rogue_level(&u.uz))
             Strcat(tmpbuf, ", a primitive area");
         else if (Is_bigroom(&u.uz) && !Blind)
             Strcat(tmpbuf, ", a very big room");
         Sprintf(buf, "in %s, on %s", dgnbuf, tmpbuf);
+#else
+        if (Is_rogue_level(&u.uz))
+            Strcat(tmpbuf, ", 원시적인 구역");
+        else if (Is_bigroom(&u.uz) && !Blind)
+            Strcat(tmpbuf, ", 아주 거대한 방");
+        Sprintf(buf, "%s %s에", dgnbuf, tmpbuf);
+#endif
     }
+#if 0 /*KR: 원본*/
     you_are(buf, "");
+#else /*KR: ("~에 있다" 로 마무리) */
+    enl_msg(You_, "있다", "있었다", buf, "");
+#endif
 
     /* this is shown even if the 'time' option is off */
     if (moves == 1L) {
@@ -2023,12 +2267,22 @@ int final;
            the start of the session and it might be past midnight (or
            days later if the game has been paused without save/restore),
            so phrase this similar to the start up message */
+#if 0 /*KR:T*/
         Sprintf(buf, " Bad things %s on Friday the 13th.",
                 !final ? "can happen"
                 : (final == ENL_GAMEOVERALIVE) ? "could have happened"
                   /* there's no may to tell whether -1 Luck made a
                      difference but hero has died... */
                   : "happened");
+#else
+        Sprintf(buf, "13일의 금요일에는 좋지 않은 일이 %s．",
+                !final ? "일어날 수 있습니다"
+                : (final == ENL_GAMEOVERALIVE)
+                    ? "일어났을 수도 있습니다"
+                    /* there's no may to tell whether -1 Luck made a
+                       difference but hero has died... */
+                    : "일어났습니다");
+#endif
         enlght_out(buf);
     }
 
@@ -3353,6 +3607,7 @@ int final;
 
 /* ordered by command name */
 struct ext_func_tab extcmdlist[] = {
+#if 0 /*KR: 원본*/
     { '#', "#", "perform an extended command",
             doextcmd, IFBURIED | GENERALCMD },
     { M('?'), "?", "list all extended commands",
@@ -3544,6 +3799,193 @@ struct ext_func_tab extcmdlist[] = {
     { '\0', "wmode", "show wall modes",
             wiz_show_wmodes, IFBURIED | AUTOCOMPLETE | WIZMODECMD },
     { 'z', "zap", "zap a wand", dozap },
+#else /*KR: KRNethack 맞춤 번역*/
+    { '#', "#", "확장 명령어를 실행한다", doextcmd, IFBURIED | GENERALCMD },
+    { M('?'), "?", "모든 확장 명령어 목록을 본다", doextlist,
+      IFBURIED | AUTOCOMPLETE | GENERALCMD },
+    { M('a'), "adjust", "소지품의 단축키 알파벳을 조정한다", doorganize,
+      IFBURIED | AUTOCOMPLETE },
+    { M('A'), "annotate", "현재 층에 이름을 붙인다", donamelevel,
+      IFBURIED | AUTOCOMPLETE },
+    { 'a', "apply", "도구를 사용한다 (곡괭이, 열쇠, 램프 등)", doapply },
+    { C('x'), "attributes", "당신의 능력치를 본다", doattributes, IFBURIED },
+    { '@', "autopickup", "자동 줍기 옵션을 켜거나 끈다", dotogglepickup,
+      IFBURIED },
+    { 'C', "call", "무언가에 이름을 붙인다", docallcmd, IFBURIED },
+    { 'Z', "cast", "마법을 시전한다", docast, IFBURIED },
+    { M('c'), "chat", "누군가와 대화한다", dotalk, IFBURIED | AUTOCOMPLETE },
+    { 'c', "close", "문을 닫는다", doclose },
+    { M('C'), "conduct", "현재 유지 중인 자발적 도전 과제 목록을 본다",
+      doconduct, IFBURIED | AUTOCOMPLETE },
+    { M('d'), "dip", "무언가에 물건을 담근다", dodip, AUTOCOMPLETE },
+    { '>', "down", "계단을 내려간다", dodown },
+    { 'd', "drop", "물건을 내려놓는다", dodrop },
+    { 'D', "droptype", "특정 종류의 물건들을 내려놓는다", doddrop },
+    { 'e', "eat", "무언가를 먹는다", doeat },
+    { 'E', "engrave", "바닥에 글씨를 새긴다", doengrave },
+    { M('e'), "enhance", "무기 및 마법 숙련도를 확인하거나 올린다",
+      enhance_weapon_skill, IFBURIED | AUTOCOMPLETE },
+    { '\0', "exploremode", "탐험(발견) 모드로 진입한다", enter_explore_mode,
+      IFBURIED },
+    { 'f', "fire", "화살통에 장전된 탄약을 발사한다", dofire },
+    { M('f'), "force", "억지로 잠금을 푼다", doforce, AUTOCOMPLETE },
+    { ';', "glance", "지도의 기호가 어떤 사물에 해당하는지 확인한다",
+      doquickwhatis, IFBURIED | GENERALCMD },
+    { '?', "help", "도움말을 본다", dohelp, IFBURIED | GENERALCMD },
+    { '\0', "herecmdmenu", "현재 위치에서 할 수 있는 행동 메뉴를 띄운다",
+      doherecmdmenu, IFBURIED },
+    { 'V', "history", "상세 버전 및 게임 기록을 본다", dohistory,
+      IFBURIED | GENERALCMD },
+    { 'i', "inventory", "소지품을 본다", ddoinv, IFBURIED },
+    { 'I', "inventtype", "특정 종류의 소지품만 본다", dotypeinv, IFBURIED },
+    { M('i'), "invoke", "물건의 특수 능력을 기원(발동)한다", doinvoke,
+      IFBURIED | AUTOCOMPLETE },
+    { M('j'), "jump", "다른 위치로 도약한다", dojump, AUTOCOMPLETE },
+    { C('d'), "kick", "무언가를 발로 찬다", dokick },
+    { '\\', "known", "지금까지 발견한 물건의 종류들을 본다", dodiscovered,
+      IFBURIED | GENERALCMD },
+    { '`', "knownclass", "특정 종류 중 발견한 물건들을 본다", doclassdisco,
+      IFBURIED | GENERALCMD },
+    { '\0', "levelchange", "경험치 레벨을 변경한다", wiz_level_change,
+      IFBURIED | AUTOCOMPLETE | WIZMODECMD },
+    { '\0', "lightsources", "이동하는 광원을 확인한다", wiz_light_sources,
+      IFBURIED | AUTOCOMPLETE | WIZMODECMD },
+    { ':', "look", "이곳에 무엇이 있는지 살핀다", dolook, IFBURIED },
+    { M('l'), "loot", "바닥에 있는 용기에서 물건을 꺼낸다(루팅)", doloot,
+      AUTOCOMPLETE },
+#ifdef DEBUG_MIGRATING_MONS
+    { '\0', "migratemons", "무작위 몬스터 N마리를 이주시킨다",
+      wiz_migrate_mons, IFBURIED | AUTOCOMPLETE | WIZMODECMD },
+#endif
+    { M('m'), "monster", "몬스터의 특수 능력을 사용한다", domonability,
+      IFBURIED | AUTOCOMPLETE },
+    { 'N', "name", "몬스터나 물건에 이름을 붙인다", docallcmd,
+      IFBURIED | AUTOCOMPLETE },
+    { M('o'), "offer", "신에게 제물을 바친다", dosacrifice, AUTOCOMPLETE },
+    { 'o', "open", "문을 연다", doopen },
+    { 'O', "options", "옵션 설정을 보고 변경한다", doset,
+      IFBURIED | GENERALCMD },
+    { C('o'), "overview", "탐험한 미궁의 개요를 본다", dooverview,
+      IFBURIED | AUTOCOMPLETE },
+    { '\0', "panic", "패닉 루틴을 테스트한다 (게임에 치명적임)", wiz_panic,
+      IFBURIED | AUTOCOMPLETE | WIZMODECMD },
+    { 'p', "pay", "상점의 청구서를 지불한다", dopay },
+    { ',', "pickup", "현재 위치에 있는 물건들을 줍는다", dopickup },
+    { '\0', "polyself", "자신을 폴리모프(변신)한다", wiz_polyself,
+      IFBURIED | AUTOCOMPLETE | WIZMODECMD },
+    { M('p'), "pray", "신에게 도움을 기도한다", dopray,
+      IFBURIED | AUTOCOMPLETE },
+    { C('p'), "prevmsg", "최근 게임 메시지를 다시 본다", doprev_message,
+      IFBURIED | GENERALCMD },
+    { 'P', "puton", "장신구를 착용한다 (반지, 목걸이 등)", doputon },
+    { 'q', "quaff", "무언가를 마신다", dodrink },
+    { M('q'), "quit", "저장하지 않고 게임을 종료한다", done2,
+      IFBURIED | AUTOCOMPLETE | GENERALCMD },
+    { 'Q', "quiver", "화살통에 넣을 탄약을 선택한다", dowieldquiver },
+    { 'r', "read", "두루마리나 마법서를 읽는다", doread },
+    { C('r'), "redraw", "화면을 다시 그린다", doredraw,
+      IFBURIED | GENERALCMD },
+    { 'R', "remove", "장신구를 벗는다 (반지, 목걸이 등)", doremring },
+    { M('R'), "ride", "안장이 얹힌 탈것에 타거나 내린다", doride,
+      AUTOCOMPLETE },
+    { M('r'), "rub", "램프나 돌을 문지른다", dorub, AUTOCOMPLETE },
+    { 'S', "save", "게임을 저장하고 종료한다", dosave,
+      IFBURIED | GENERALCMD },
+    { 's', "search", "함정과 숨겨진 문을 찾는다", dosearch, IFBURIED,
+      "탐색하는" },
+    { '*', "seeall", "사용 중인 모든 장비를 본다", doprinuse, IFBURIED },
+    { AMULET_SYM, "seeamulet", "착용 중인 목걸이를 본다", dopramulet,
+      IFBURIED },
+    { ARMOR_SYM, "seearmor", "착용 중인 방어구를 본다", doprarm, IFBURIED },
+    { GOLD_SYM, "seegold", "가진 금화의 수를 센다", doprgold, IFBURIED },
+    { '\0', "seenv", "시야 벡터를 본다", wiz_show_seenv,
+      IFBURIED | AUTOCOMPLETE | WIZMODECMD },
+    { RING_SYM, "seerings", "착용 중인 반지를 본다", doprring, IFBURIED },
+    { SPBOOK_SYM, "seespells", "아는 마법 목록을 보고 재배열한다", dovspell,
+      IFBURIED },
+    { TOOL_SYM, "seetools", "사용 중인 도구를 본다", doprtool, IFBURIED },
+    { '^', "seetrap", "인접한 함정의 종류를 본다", doidtrap, IFBURIED },
+    { WEAPON_SYM, "seeweapon", "장비한 무기를 본다", doprwep, IFBURIED },
+    { '!', "shell", "쉘(Shell)로 빠져나간다", dosh_core,
+      IFBURIED | GENERALCMD
+#ifndef SHELL
+          | CMD_NOT_AVAILABLE
+#endif /* SHELL */
+    },
+    { M('s'), "sit", "자리에 앉는다", dosit, AUTOCOMPLETE },
+    { '\0', "stats", "메모리 통계를 본다", wiz_show_stats,
+      IFBURIED | AUTOCOMPLETE | WIZMODECMD },
+    { C('z'), "suspend", "게임을 일시 중지한다", dosuspend_core,
+      IFBURIED | GENERALCMD
+#ifndef SUSPEND
+          | CMD_NOT_AVAILABLE
+#endif /* SUSPEND */
+    },
+    { 'x', "swap", "주 무기와 보조 무기를 바꾼다", doswapweapon },
+    { 'T', "takeoff", "방어구를 하나 벗는다", dotakeoff },
+    { 'A', "takeoffall", "모든 방어구를 벗는다", doddoremarm },
+    { C('t'), "teleport", "현재 층 내에서 순간이동한다", dotelecmd,
+      IFBURIED },
+    { '\0', "terrain", "방해물 없이 지도를 본다", doterrain,
+      IFBURIED | AUTOCOMPLETE },
+    { '\0', "therecmdmenu", "인접한 칸에 대해 할 수 있는 명령 메뉴를 띄운다",
+      dotherecmdmenu },
+    { 't', "throw", "무언가를 던진다", dothrow },
+    { '\0', "timeout", "시간 제한 큐와 시간제 능력치를 본다",
+      wiz_timeout_queue, IFBURIED | AUTOCOMPLETE | WIZMODECMD },
+    { M('T'), "tip", "용기를 비운다", dotip, AUTOCOMPLETE },
+    { '_', "travel", "지도의 특정 위치로 이동한다", dotravel },
+    { M('t'), "turn", "언데드를 퇴치한다", doturn, IFBURIED | AUTOCOMPLETE },
+    { 'X', "twoweapon", "쌍수 무기 전투를 켜거나 끈다", dotwoweapon,
+      AUTOCOMPLETE },
+    { M('u'), "untrap", "함정을 해제한다", dountrap, AUTOCOMPLETE },
+    { '<', "up", "계단을 올라간다", doup },
+    { '\0', "vanquished", "물리친 몬스터 목록을 본다", dovanquished,
+      IFBURIED | AUTOCOMPLETE | WIZMODECMD },
+    { M('v'), "version", "넷핵의 컴파일 옵션을 본다", doextversion,
+      IFBURIED | AUTOCOMPLETE | GENERALCMD },
+    { 'v', "versionshort", "버전을 본다", doversion, IFBURIED | GENERALCMD },
+    { '\0', "vision", "시야 배열을 본다", wiz_show_vision,
+      IFBURIED | AUTOCOMPLETE | WIZMODECMD },
+    { '.', "wait", "한 턴 동안 아무것도 하지 않고 쉰다", donull, IFBURIED,
+      "쉬는" },
+    { 'W', "wear", "방어구를 입는다", dowear },
+    { '&', "whatdoes", "명령어가 어떤 역할을 하는지 확인한다", dowhatdoes,
+      IFBURIED },
+    { '/', "whatis", "기호가 어떤 사물에 해당하는지 확인한다", dowhatis,
+      IFBURIED | GENERALCMD },
+    { 'w', "wield", "무기를 장비한다", dowield },
+    { M('w'), "wipe", "얼굴을 닦는다", dowipe, AUTOCOMPLETE },
+#ifdef DEBUG
+    { '\0', "wizbury", "발밑과 주변의 물건들을 파묻는다", wiz_debug_cmd_bury,
+      IFBURIED | AUTOCOMPLETE | WIZMODECMD },
+#endif
+    { C('e'), "wizdetect", "좁은 반경 내의 숨겨진 것들을 드러낸다",
+      wiz_detect, IFBURIED | AUTOCOMPLETE | WIZMODECMD },
+    { C('g'), "wizgenesis", "몬스터를 생성한다", wiz_genesis,
+      IFBURIED | AUTOCOMPLETE | WIZMODECMD },
+    { C('i'), "wizidentify", "소지품의 모든 물건을 감정한다", wiz_identify,
+      IFBURIED | AUTOCOMPLETE | WIZMODECMD },
+    { '\0', "wizintrinsic", "내재적 능력을 설정한다", wiz_intrinsic,
+      IFBURIED | AUTOCOMPLETE | WIZMODECMD },
+    { C('v'), "wizlevelport", "다른 층으로 순간이동한다", wiz_level_tele,
+      IFBURIED | AUTOCOMPLETE | WIZMODECMD },
+    { '\0', "wizmakemap", "현재 층을 다시 만든다", wiz_makemap,
+      IFBURIED | WIZMODECMD },
+    { C('f'), "wizmap", "층의 지도를 밝힌다", wiz_map,
+      IFBURIED | AUTOCOMPLETE | WIZMODECMD },
+    { '\0', "wizrumorcheck", "소문의 경계를 검증한다", wiz_rumor_check,
+      IFBURIED | AUTOCOMPLETE | WIZMODECMD },
+    { '\0', "wizsmell", "몬스터의 냄새를 맡는다", wiz_smell,
+      IFBURIED | AUTOCOMPLETE | WIZMODECMD },
+    { '\0', "wizwhere", "특수 층들의 위치를 본다", wiz_where,
+      IFBURIED | AUTOCOMPLETE | WIZMODECMD },
+    { C('w'), "wizwish", "무언가를 소원한다", wiz_wish,
+      IFBURIED | AUTOCOMPLETE | WIZMODECMD },
+    { '\0', "wmode", "벽 모드를 본다", wiz_show_wmodes,
+      IFBURIED | AUTOCOMPLETE | WIZMODECMD },
+    { 'z', "zap", "지팡이를 휘두른다", dozap },
+#endif
     { '\0', (char *) 0, (char *) 0, donull, 0, (char *) 0 } /* sentinel */
 };
 
@@ -5381,24 +5823,40 @@ int x, y;
         int dm = levl[x][y].doormask;
 
         if ((dm & (D_CLOSED | D_LOCKED))) {
-            add_herecmd_menuitem(win, doopen, "Open the door"), ++K;
+            /*KR add_herecmd_menuitem(win, doopen, "Open the door"), ++K; */
+            add_herecmd_menuitem(win, doopen, "문을 연다"), ++K;
             /* unfortunately there's no lknown flag for doors to
                remember the locked/unlocked state */
             key_or_pick = (carrying(SKELETON_KEY) || carrying(LOCK_PICK));
             card = (carrying(CREDIT_CARD) != 0);
             if (key_or_pick || card) {
+#if 0 /*KR: 원본*/
                 Sprintf(buf, "%sunlock the door",
                         key_or_pick ? "lock or " : "");
                 add_herecmd_menuitem(win, doapply, upstart(buf)), ++K;
+#else 
+                Sprintf(buf, "문을 %s",
+                        key_or_pick ? "잠그거나 딴다" : "딴다");
+                add_herecmd_menuitem(win, doapply, buf), ++K;
+#endif
             }
             /* unfortunately there's no tknown flag for doors (or chests)
                to remember whether a trap had been found */
+#if 0 /*KR: 원본*/
             add_herecmd_menuitem(win, dountrap,
                                  "Search the door for a trap"), ++K;
             /* [what about #force?] */
             add_herecmd_menuitem(win, dokick, "Kick the door"), ++K;
         } else if ((dm & D_ISOPEN)) {
             add_herecmd_menuitem(win, doclose, "Close the door"), ++K;
+#else
+            add_herecmd_menuitem(win, dountrap,
+                                 "문에 함정이 있는지 조사한다"), ++K;
+            /* [what about #force?] */
+            add_herecmd_menuitem(win, dokick, "문을 발로 찬다"), ++K;
+        } else if ((dm & D_ISOPEN)) {
+            add_herecmd_menuitem(win, doclose, "문을 닫는다"), ++K;
+#endif
         }
     }
 
@@ -6054,7 +6512,9 @@ const char *prompt;
     if (be_paranoid) {
         char pbuf[BUFSZ], qbuf[QBUFSZ], ans[BUFSZ];
         const char *promptprefix = "",
-                *responsetype = ParanoidConfirm ? "(yes|no)" : "(yes) [no]";
+           /*KR *responsetype = ParanoidConfirm ? "(yes|no)" : "(yes) [no]"; */
+                       *responsetype =
+                           ParanoidConfirm ? "(yes|no로 입력)" : "(yes) [no]";
         int k, trylimit = 6; /* 1 normal, 5 more with "Yes or No:" prefix */
 
         copynchars(pbuf, prompt, BUFSZ - 1);
@@ -6078,7 +6538,8 @@ const char *prompt;
             confirmed_ok = !strcmpi(ans, "yes");
             if (confirmed_ok || *ans == '\033')
                 break;
-            promptprefix = "\"Yes\" or \"No\": ";
+            /*KR promptprefix = "\"Yes\" or \"No\": "; */
+            promptprefix = "\"yes\" 또는 \"no\"로 입력하세요: ";
         } while (ParanoidConfirm && strcmpi(ans, "no") && --trylimit);
     } else
         confirmed_ok = (yn(prompt) == 'y');

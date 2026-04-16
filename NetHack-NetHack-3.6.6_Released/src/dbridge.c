@@ -367,7 +367,8 @@ STATIC_OVL const char *
 e_nam(etmp)
 struct entity *etmp;
 {
-    return is_u(etmp) ? "you" : mon_nam(etmp->emon);
+    /*KR return is_u(etmp) ? "you" : mon_nam(etmp->emon); */
+    return is_u(etmp) ? "당신" : mon_nam(etmp->emon);
 }
 
 /*
@@ -381,6 +382,7 @@ const char *verb;
 {
     static char wholebuf[80];
 
+#if 0 /*KR*/
     Strcpy(wholebuf, is_u(etmp) ? "You" : Monnam(etmp->emon));
     if (!verb || !*verb)
         return wholebuf;
@@ -390,6 +392,10 @@ const char *verb;
     else
         Strcat(wholebuf, vtense((char *) 0, verb));
     return wholebuf;
+#else
+    Strcpy(wholebuf, is_u(etmp) ? "당신" : Monnam(etmp->emon));
+    return wholebuf;
+#endif
 }
 
 /*
@@ -437,14 +443,20 @@ int xkill_flags, how;
             /* use more specific killer if specified */
             if (!killer.name[0]) {
                 killer.format = KILLED_BY_AN;
-                Strcpy(killer.name, "falling drawbridge");
+                /*KR Strcpy(killer.name, "falling drawbridge"); */
+                Strcpy(killer.name, "내려오는 도개교로");
             }
             done(how);
             /* So, you didn't die */
             if (!e_survives_at(etmp, etmp->ex, etmp->ey)) {
                 if (enexto(&xy, etmp->ex, etmp->ey, etmp->edata)) {
+#if 0 /*KR:T*/
                     pline("A %s force teleports you away...",
                           Hallucination ? "normal" : "strange");
+#else
+                    pline("%s 힘이 당신을 멀리 데려갔다...",
+                          Hallucination ? "평범한" : "이상한");
+#endif
                     teleds(xy.x, xy.y, FALSE);
                 }
                 /* otherwise on top of the drawbridge is the
@@ -574,16 +586,23 @@ struct entity *etmp;
 
     if (automiss(etmp) && e_survives_at(etmp, oldx, oldy)) {
         if (e_inview && (at_portcullis || IS_DRAWBRIDGE(crm->typ)))
+#if 0 /*KR:T*/
             pline_The("%s passes through %s!",
                       at_portcullis ? "portcullis" : "drawbridge",
                       e_nam(etmp));
+#else
+            pline_The("%s %s 통과했다!",
+                      append_josa(at_portcullis ? "내리닫이 쇠창살문" : "도개교", "이"), 
+                      append_josa(e_nam(etmp), "을"));
+#endif
         if (is_u(etmp))
             spoteffects(FALSE);
         return;
     }
     if (e_missed(etmp, FALSE)) {
         if (at_portcullis) {
-            pline_The("portcullis misses %s!", e_nam(etmp));
+            /*KR pline_The("portcullis misses %s!", e_nam(etmp)); */
+            pline("내리닫이 쇠창살문이 %s 놓쳤다!", append_josa(e_nam(etmp), "을"));
         } else {
             debugpline1("The drawbridge misses %s!", e_nam(etmp));
         }
@@ -599,10 +618,16 @@ struct entity *etmp;
     } else {
         if (crm->typ == DRAWBRIDGE_DOWN) {
             if (is_u(etmp)) {
+#if 0 /*KR*/
                 killer.format = NO_KILLER_PREFIX;
                 Strcpy(killer.name,
                        "crushed to death underneath a drawbridge");
+#else
+                killer.format = KILLED_BY;
+                Strcpy(killer.name, "도개교 밑에 깔려 죽음");
+#endif
             }
+            /*KR pline("%s crushed underneath the drawbridge.", */
             pline("%s crushed underneath the drawbridge.",
                   E_phrase(etmp, "are"));             /* no jump */
             e_died(etmp,
@@ -619,9 +644,11 @@ struct entity *etmp;
                 debugpline0("Jump succeeds!");
             } else {
                 if (e_inview)
+                    /*KR pline("%s crushed by the falling portcullis!", */
                     pline("%s crushed by the falling portcullis!",
                           E_phrase(etmp, "are"));
                 else if (!Deaf)
+                    /*KR You_hear("a crushing sound."); */
                     You_hear("a crushing sound.");
                 e_died(etmp,
                        XKILL_NOCORPSE | (e_inview ? XKILL_GIVEMSG
@@ -707,18 +734,27 @@ struct entity *etmp;
 #endif
         if (e_inview) {
             if (is_u(etmp)) {
-                You("tumble towards the closed portcullis!");
+                /*KR You("tumble towards the closed portcullis!"); */
+                pline("닫힌 내리닫이 쇠창살문을 향해 굴러갔다!");
                 if (automiss(etmp))
-                    You("pass through it!");
+                    /*KR You("pass through it!"); */
+                    pline("당신은 그것을 통과했다!");
                 else
-                    pline_The("drawbridge closes in...");
+                    /*KR pline_The("drawbridge closes in..."); */
+                    pline("도개교가 닫히고 있다...");
             } else
+#if 0 /*KR: 원본*/
                 pline("%s behind the drawbridge.",
                       E_phrase(etmp, "disappear"));
+#else
+                pline("%s 도개교 뒤로 사라졌다.", 
+                      E_phrase(etmp, ""));
+#endif
         }
         if (!e_survives_at(etmp, etmp->ex, etmp->ey)) {
             killer.format = KILLED_BY_AN;
-            Strcpy(killer.name, "closing drawbridge");
+            /*KR Strcpy(killer.name, "closing drawbridge"); */
+            Strcpy(killer.name, "닫히는 도개교");
             e_died(etmp, XKILL_NOMSG, CRUSHING);
             return;
         }
@@ -727,11 +763,16 @@ struct entity *etmp;
         debugpline1("%s on drawbridge square", E_phrase(etmp, "are"));
         if (is_pool(etmp->ex, etmp->ey) && !e_inview)
             if (!Deaf)
+                /*KR You_hear("a splash."); */
                 You_hear("a splash.");
         if (e_survives_at(etmp, etmp->ex, etmp->ey)) {
             if (e_inview && !is_flyer(etmp->edata)
                 && !is_floater(etmp->edata))
+#if 0 /*KR: 원본*/
                 pline("%s from the bridge.", E_phrase(etmp, "fall"));
+#else
+                pline("%s 다리에서 떨어졌다.", E_phrase(etmp, ""));
+#endif
             return;
         }
         debugpline1("%s cannot survive on the drawbridge square",
@@ -742,14 +783,29 @@ struct entity *etmp;
                 boolean lava = is_lava(etmp->ex, etmp->ey);
 
                 if (Hallucination)
+#if 0 /*KR: 원본*/
                     pline("%s the %s and disappears.",
                           E_phrase(etmp, "drink"), lava ? "lava" : "moat");
                 else
                     pline("%s into the %s.", E_phrase(etmp, "fall"),
                           lava ? hliquid("lava") : "moat");
+#else /*KR: KRNethack 맞춤 번역*/
+                    pline("%s %s 들이켜고는 사라졌다.",
+                          append_josa(E_phrase(etmp, ""), "는"),
+                          lava ? "용암을" : "해자의 물을");
+                else
+                    pline("%s %s 빠졌다.",
+                          append_josa(E_phrase(etmp, ""), "는"),
+                          lava ? hliquid("용암에") : "해자에");
+#endif
             }
+#if 0 /*KR:T*/
         killer.format = NO_KILLER_PREFIX;
         Strcpy(killer.name, "fell from a drawbridge");
+#else
+        killer.format = KILLED_BY;
+        Strcpy(killer.name, "도개교에서 떨어져서");
+#endif
         e_died(etmp, /* CRUSHING is arbitrary */
                XKILL_NOCORPSE | (e_inview ? XKILL_GIVEMSG : XKILL_NOMSG),
                is_pool(etmp->ex, etmp->ey) ? DROWNING
@@ -780,13 +836,18 @@ int x, y;
     y2 = y;
     get_wall_for_db(&x2, &y2);
     if (cansee(x, y) || cansee(x2, y2))
+#if 0 /*JP*/
         You_see("a drawbridge %s up!",
                 (((u.ux == x || u.uy == y) && !Underwater)
                  || distu(x2, y2) < distu(x, y))
                     ? "coming"
                     : "going");
+#else
+        pline("도개교가 올라가는 것이 보였다!");
+#endif
     else /* "5 gears turn" for castle drawbridge tune */
-        You_hear("chains rattling and gears turning.");
+        /*KR You_hear("chains rattling and gears turning."); */
+        You_hear("사슬이 짤그랑거리고 톱니바퀴가 돌아가는 소리를 들었다.");
     lev1->typ = DRAWBRIDGE_UP;
     lev2 = &levl[x2][y2];
     lev2->typ = DBWALL;
@@ -807,7 +868,8 @@ int x, y;
     set_entity(x2, y2, &(occupants[1])); /* do_entity for worm tail */
     do_entity(&(occupants[1]));
     if (OBJ_AT(x, y) && !Deaf)
-        You_hear("smashing and crushing.");
+        /*KR You_hear("smashing and crushing."); */
+        You_hear("무언가 부서지고 으스러지는 소리를 들었다.");
     (void) revive_nasty(x, y, (char *) 0);
     (void) revive_nasty(x2, y2, (char *) 0);
     delallobj(x, y);
@@ -842,10 +904,15 @@ int x, y;
     y2 = y;
     get_wall_for_db(&x2, &y2);
     if (cansee(x, y) || cansee(x2, y2))
+#if 0 /*KR*/
         You_see("a drawbridge %s down!",
                 (distu(x2, y2) < distu(x, y)) ? "going" : "coming");
+#else
+        pline("도개교가 내려오는 것이 보였다!");
+#endif
     else /* "5 gears turn" for castle drawbridge tune */
-        You_hear("gears turning and chains rattling.");
+        /*KR You_hear("gears turning and chains rattling."); */
+        You_hear("톱니바퀴가 돌아가고 사슬이 짤그랑거리는 소리를 들었다.");
     lev1->typ = DRAWBRIDGE_DOWN;
     lev2 = &levl[x2][y2];
     lev2->typ = DOOR;
@@ -899,28 +966,43 @@ int x, y;
 
         if (lev1->typ == DRAWBRIDGE_UP) {
             if (cansee(x2, y2))
+#if 0 /*KR: 원본*/
                 pline_The("portcullis of the drawbridge falls into the %s!",
                           lava ? hliquid("lava") : "moat");
+#else /*KR: KRNethack 맞춤 번역*/
+                pline("도개교의 내리닫이 쇠창살문이 %s 떨어졌다!",
+                      lava ? hliquid("용암으로") : "해자로");
+#endif
             else if (!Deaf)
-                You_hear("a loud *SPLASH*!");
+                /*KR You_hear("a loud *SPLASH*!"); */
+                You_hear("크게 *첨벙* 하는 소리를 들었다!");
         } else {
             if (cansee(x, y))
+#if 0 /*KR: 원본*/
                 pline_The("drawbridge collapses into the %s!",
                           lava ? hliquid("lava") : "moat");
+#else
+                pline("도개교가 %s 무너져 내렸다!",
+                      lava ? hliquid("용암으로") : "해자로");
+#endif
             else if (!Deaf)
-                You_hear("a loud *SPLASH*!");
+                /*KR You_hear("a loud *SPLASH*!"); */
+                You_hear("크게 *첨벙* 하는 소리를 들었다!");
         }
         lev1->typ = lava ? LAVAPOOL : MOAT;
         lev1->drawbridgemask = 0;
         if ((otmp2 = sobj_at(BOULDER, x, y)) != 0) {
             obj_extract_self(otmp2);
+            /*KR (void) flooreffects(otmp2, x, y, "fall"); */
             (void) flooreffects(otmp2, x, y, "fall");
         }
     } else {
         if (cansee(x, y))
-            pline_The("drawbridge disintegrates!");
+            /*KR pline_The("drawbridge disintegrates!"); */
+            pline("도개교가 산산조각났다!");
         else
-            You_hear("a loud *CRASH*!");
+            /*KR You_hear("a loud *CRASH*!"); */
+            You_hear("크게 *쾅* 하는 소리를 들었다!");
         lev1->typ = ((lev1->drawbridgemask & DB_ICE) ? ICE : ROOM);
         lev1->icedpool = ((lev1->drawbridgemask & DB_ICE) ? ICED_MOAT : 0);
     }
@@ -955,10 +1037,16 @@ int x, y;
         e_inview = e_canseemon(etmp2);
         if (!automiss(etmp2)) {
             if (e_inview)
+#if 0 /*KR: 원본*/
                 pline("%s blown apart by flying debris.",
                       E_phrase(etmp2, "are"));
+#else
+                pline("%s 날아온 파편에 맞아 산산조각났다.",
+                      E_phrase(etmp2, ""));
+#endif
             killer.format = KILLED_BY_AN;
-            Strcpy(killer.name, "exploding drawbridge");
+            /*KR Strcpy(killer.name, "exploding drawbridge"); */
+            Strcpy(killer.name, "폭발하는 도개교");
             e_died(etmp2,
                    XKILL_NOCORPSE | (e_inview ? XKILL_GIVEMSG : XKILL_NOMSG),
                    CRUSHING); /*no corpse*/
@@ -977,20 +1065,30 @@ int x, y;
         } else {
             if (e_inview) {
                 if (!is_u(etmp1) && Hallucination)
+#if 0 /*KR: 원본*/
                     pline("%s into some heavy metal!",
                           E_phrase(etmp1, "get"));
                 else
                     pline("%s hit by a huge chunk of metal!",
                           E_phrase(etmp1, "are"));
+#else
+                    pline("%s 헤비 메탈에 빠져버렸다!", 
+                          E_phrase(etmp1, ""));
+                else
+                    pline("%s 거대한 금속 파편에 맞았다!",
+                          E_phrase(etmp1, ""));
+#endif
             } else {
                 if (!Deaf && !is_u(etmp1) && !is_pool(x, y)) {
-                    You_hear("a crushing sound.");
+                    /*KR You_hear("a crushing sound."); */
+                    You_hear("무언가 으스러지는 소리를 들었다.");
                 } else {
                     debugpline1("%s from shrapnel", E_phrase(etmp1, "die"));
                 }
             }
             killer.format = KILLED_BY_AN;
-            Strcpy(killer.name, "collapsing drawbridge");
+            /*KR Strcpy(killer.name, "collapsing drawbridge"); */
+            Strcpy(killer.name, "무너지는 도개교");
             e_died(etmp1,
                    XKILL_NOCORPSE | (e_inview ? XKILL_GIVEMSG : XKILL_NOMSG),
                    CRUSHING); /*no corpse*/

@@ -1195,6 +1195,14 @@ get_kr_name(const char *en_name)
     /* [기타 무기 - Whips etc.] */
     if (!strcmp(en_name, "bullwhip"))
         return "채찍";
+    if (!strcmp(en_name, "silver saber"))
+        return "은 사벨";
+    if (!strcmp(en_name, "worm tooth"))
+        return "벌레의 이빨";
+    if (!strcmp(en_name, "crysknife"))
+        return "크리스나이프";
+    if (!strcmp(en_name, "rubber hose"))
+        return "고무 호스";
 
     /* ========================================== *
      * 방어구 (Armor)
@@ -1554,6 +1562,10 @@ get_kr_name(const char *en_name)
         return "기원의 촛대";
     if (!strcmp(en_name, "Bell of Opening"))
         return "개방의 종";
+    if (!strcmp(en_name, "mirror"))
+        return "거울";
+    if (!strcmp(en_name, "crystal ball"))
+        return "수정 구슬";
 
     /* ========================================== *
      * 음식 (Food)
@@ -1564,6 +1576,8 @@ get_kr_name(const char *en_name)
         return "사체";
     if (!strcmp(en_name, "egg"))
         return "알";
+    if (!strcmp(en_name, "meatball"))
+        return "고기 완자";
     if (!strcmp(en_name, "meat ring"))
         return "고기 반지";
     if (!strcmp(en_name, "meat stick"))
@@ -1598,8 +1612,8 @@ get_kr_name(const char *en_name)
         return "로열 젤리 덩어리";
     if (!strcmp(en_name, "cream pie"))
         return "크림 파이";
-    if (!strcmp(en_name, "candy melon"))
-        return "캔디 멜론";
+    if (!strcmp(en_name, "candy bar"))
+        return "캔디 바";
     if (!strcmp(en_name, "fortune cookie"))
         return "포춘 쿠키";
     if (!strcmp(en_name, "pancake"))
@@ -1639,6 +1653,8 @@ get_kr_name(const char *en_name)
         return "치료";
     if (!strcmp(en_name, "restore ability"))
         return "능력 복구";
+    if (!strcmp(en_name, "gain level"))
+        return "레벨 상승";
     if (!strcmp(en_name, "sleeping"))
         return "수면";
     if (!strcmp(en_name, "water"))
@@ -1783,6 +1799,13 @@ get_kr_name(const char *en_name)
         return "죽음";
     if (!strcmp(en_name, "lightning"))
         return "번개";
+    if (!strcmp(en_name, "gold detection"))
+        return "금 감지";
+    /* (주문/두루마리는 turn undead | 지팡이는 undead turning) */
+    if (!strcmp(en_name, "undead turning"))
+        return "언데드 퇴치"; 
+    if (!strcmp(en_name, "novel"))
+        return "소설책";
 
     /* ========================================== *
      * 보석 및 바위 (Gems & Rocks)
@@ -2334,6 +2357,8 @@ get_kr_name(const char *en_name)
         return "능력 획득";
     if (!strcmp(en_name, "gain energy"))
         return "에너지 획득";
+    if (!strcmp(en_name, "gold piece"))
+        return "금화";
 
     return (char *) en_name; /* 사전에 없으면 원래 영어 반환 */
 }
@@ -2377,6 +2402,13 @@ static const struct {
     { "adjust", "무엇을 조정하시겠습니까?", "조정할" },
     { "rub on the stone", "돌에 무엇을 문지르시겠습니까?", "문지를" },
     { "identify", "어떤 종류의 물건을 감정하시겠습니까?", "감정할" },
+    { "pay", "무엇에 대한 값을 지불하시겠습니까?", "값을 지불할" },
+    { "take", "어떤 것을 꺼내시겠습니까?", "꺼낼" },
+    { "put in", "어떤 것을 넣으시겠습니까?", "넣을" },
+    /* "name"은 아이템 | "call"은 몬스터 이름 붙이기 */
+    { "name", "무엇에 이름을 붙이시겠습니까?", "이름을 붙일" }, 
+    { "cast", "어떤 마법을 시전하시겠습니까?", "시전할" },
+    { "pay for", "어떤 물건의 값을 지불하시겠습니까?", "값을 지불할" },
     { 0, 0, 0 }
 };
 

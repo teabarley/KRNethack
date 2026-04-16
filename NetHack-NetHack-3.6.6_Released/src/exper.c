@@ -212,7 +212,11 @@ const char *drainer; /* cause of death, if drain should be fatal */
         return;
 
     if (u.ulevel > 1) {
+#if 0 /*KR: 원본*/
         pline("%s level %d.", Goodbye(), u.ulevel--);
+#else /*KR: KRNethack 맞춤 번역*/
+        pline("잘 가, 레벨 %d.", u.ulevel--);
+#endif
         /* remove intrinsic abilities */
         adjabil(u.ulevel + 1, u.ulevel);
         reset_rndmonst(NON_PM); /* new monster selection */
@@ -280,7 +284,8 @@ boolean incr; /* true iff via incremental experience growth */
     int hpinc, eninc;
 
     if (!incr)
-        You_feel("more experienced.");
+        /*KR You_feel("more experienced."); */
+        pline("경험을 더 쌓은 기분이 든다.");
 
     /* increase hit points (when polymorphed, do monster form first
        in order to retain normal human/whatever increase for later) */
@@ -309,9 +314,14 @@ boolean incr; /* true iff via incremental experience growth */
             u.uexp = newuexp(u.ulevel);
         }
         ++u.ulevel;
+#if 0 /*KR: 원본*/
         pline("Welcome %sto experience level %d.",
               (u.ulevelmax < u.ulevel) ? "" : "back ",
               u.ulevel);
+#else /*KR: KRNethack 맞춤 번역*/
+        pline("%s경험 레벨 %d에 도달했습니다!",
+              (u.ulevelmax < u.ulevel) ? "" : "다시 ", u.ulevel);
+#endif
         if (u.ulevelmax < u.ulevel)
             u.ulevelmax = u.ulevel;
         adjabil(u.ulevel - 1, u.ulevel); /* give new intrinsics */

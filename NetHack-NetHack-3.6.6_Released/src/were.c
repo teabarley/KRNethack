@@ -22,17 +22,21 @@ register struct monst *mon;
 
                 switch (monsndx(mon->data)) {
                 case PM_WEREWOLF:
-                    howler = "wolf";
+                    /*KR howler = "wolf"; */
+                    howler = "늑대";
                     break;
                 case PM_WEREJACKAL:
-                    howler = "jackal";
+                    /*KR howler = "jackal"; */
+                    howler = "자칼";
                     break;
                 default:
                     howler = (char *) 0;
                     break;
                 }
                 if (howler)
-                    You_hear("a %s howling at the moon.", howler);
+               /*KR You_hear("a %s howling at the moon.", howler); */
+                    You_hear("달을 향해 %s 울부짖는 소리를 들었다.",
+                             append_josa(howler, "가"));
             }
         }
     } else if (!rn2(30) || Protection_from_shape_changers) {
@@ -96,6 +100,9 @@ new_were(mon)
 register struct monst *mon;
 {
     register int pm;
+#if 1 /*KR: get_kr_name 사용을 위한 외부 선언*/
+    extern char *get_kr_name(const char *);
+#endif    
 
     pm = counter_were(monsndx(mon->data));
     if (pm < LOW_PM) {
@@ -104,8 +111,16 @@ register struct monst *mon;
     }
 
     if (canseemon(mon) && !Hallucination)
+#if 0 /*KR: 원본*/
         pline("%s changes into a %s.", Monnam(mon),
               is_human(&mons[pm]) ? "human" : mons[pm].mname + 4);
+#else /*KR: KRNethack 맞춤 번역 (beastname 꼼수 대신 get_kr_name 활용)*/
+        pline("%s %s의 모습으로 변했다.", append_josa(Monnam(mon), "는"),
+              is_human(&mons[pm]) ? "인간" : get_kr_name(mons[pm].mname + 4));
+    /* 영어 원본의 mname + 4는 "werewolf"에서 "were"를 날리고 "wolf"를
+       던집니다. 이 "wolf"를 get_kr_name에 통과시키면 완벽하게 "늑대"가
+       튀어나옵니다! */
+#endif
 
     set_mon_data(mon, &mons[pm]);
     if (mon->msleeping || !mon->mcanmove) {
@@ -143,19 +158,22 @@ char *genbuf;
             typ = rn2(3) ? PM_SEWER_RAT
                          : rn2(3) ? PM_GIANT_RAT : PM_RABID_RAT;
             if (genbuf)
-                Strcpy(genbuf, "rat");
+                /*KR Strcpy(genbuf, "rat"); */
+                Strcpy(genbuf, "쥐");
             break;
         case PM_WEREJACKAL:
         case PM_HUMAN_WEREJACKAL:
             typ = rn2(7) ? PM_JACKAL : rn2(3) ? PM_COYOTE : PM_FOX;
             if (genbuf)
-                Strcpy(genbuf, "jackal");
+                /*KR Strcpy(genbuf, "jackal"); */
+                Strcpy(genbuf, "자칼");
             break;
         case PM_WEREWOLF:
         case PM_HUMAN_WEREWOLF:
             typ = rn2(5) ? PM_WOLF : rn2(2) ? PM_WARG : PM_WINTER_WOLF;
             if (genbuf)
-                Strcpy(genbuf, "wolf");
+                /*KR Strcpy(genbuf, "wolf"); */
+                Strcpy(genbuf, "늑대");
             break;
         default:
             continue;
@@ -177,13 +195,21 @@ you_were()
 {
     char qbuf[QBUFSZ];
     boolean controllable_poly = Polymorph_control && !(Stunned || Unaware);
+#if 1 /*KR: get_kr_name 사용을 위한 외부 선언*/
+    extern char *get_kr_name(const char *);
+#endif 
 
     if (Unchanging || u.umonnum == u.ulycn)
         return;
     if (controllable_poly) {
+#if 0 /*KR: 원본*/
         /* `+4' => skip "were" prefix to get name of beast */
         Sprintf(qbuf, "Do you want to change into %s?",
                 an(mons[u.ulycn].mname + 4));
+#else /*KR: KRNethack 맞춤 번역*/
+        Sprintf(qbuf, "%s(으)로 변신하시겠습니까?",
+                get_kr_name(mons[u.ulycn].mname + 4));
+#endif
         if (!paranoid_query(ParanoidWerechange, qbuf))
             return;
     }
@@ -197,12 +223,14 @@ boolean purify;
     boolean controllable_poly = Polymorph_control && !(Stunned || Unaware);
 
     if (purify) {
-        You_feel("purified.");
+        /*KR You_feel("purified."); */
+        pline("정화되는 기분이 든다.");
         set_ulycn(NON_PM); /* cure lycanthropy */
     }
     if (!Unchanging && is_were(youmonst.data)
         && (!controllable_poly
-            || !paranoid_query(ParanoidWerechange, "Remain in beast form?")))
+            /*KR || !paranoid_query(ParanoidWerechange, "Remain in beast form?"))) */
+            || !paranoid_query(ParanoidWerechange, "짐승의 모습으로 남아있겠습니까?")))
         rehumanize();
     else if (is_were(youmonst.data) && !u.mtimedone)
         u.mtimedone = rn1(200, 200); /* 40% of initial were change */

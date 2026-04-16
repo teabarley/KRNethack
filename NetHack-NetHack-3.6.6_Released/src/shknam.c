@@ -203,7 +203,8 @@ static const char *const shkhealthfoods[] = {
  * (by testing the sign) whether to use mkobj() or mksobj().
  */
 const struct shclass shtypes[] = {
-    { "general store",
+    /*KR { "general store", */
+    { "잡화점",
       RANDOM_CLASS,
       42,
       D_SHOP,
@@ -214,7 +215,8 @@ const struct shclass shtypes[] = {
         { 0, 0 },
         { 0, 0 } },
       shkgeneral },
-    { "used armor dealership",
+    /*KR { "used armor dealership", */
+    { "중고 방어구점",
       ARMOR_CLASS,
       14,
       D_SHOP,
@@ -225,7 +227,8 @@ const struct shclass shtypes[] = {
         { 0, 0 },
         { 0, 0 } },
       shkarmors },
-    { "second-hand bookstore",
+    /*KR { "second-hand bookstore", */
+    { "중고 서점",
       SCROLL_CLASS,
       10,
       D_SHOP,
@@ -236,7 +239,8 @@ const struct shclass shtypes[] = {
         { 0, 0 },
         { 0, 0 } },
       shkbooks },
-    { "liquor emporium",
+    /*KR { "liquor emporium", */
+    { "주류 전문점",
       POTION_CLASS,
       10,
       D_SHOP,
@@ -247,7 +251,8 @@ const struct shclass shtypes[] = {
         { 0, 0 },
         { 0, 0 } },
       shkliquors },
-    { "antique weapons outlet",
+    /*KR { "antique weapons outlet", */
+    { "골동품 무기점",
       WEAPON_CLASS,
       5,
       D_SHOP,
@@ -258,7 +263,8 @@ const struct shclass shtypes[] = {
         { 0, 0 },
         { 0, 0 } },
       shkweapons },
-    { "delicatessen",
+    /*KR { "delicatessen", */
+    { "식료품점",
       FOOD_CLASS,
       5,
       D_SHOP,
@@ -269,7 +275,8 @@ const struct shclass shtypes[] = {
         { 3, -ICE_BOX },
         { 0, 0 } },
       shkfoods },
-    { "jewelers",
+    /*KR { "jewelers", */
+    { "보석상",
       RING_CLASS,
       3,
       D_SHOP,
@@ -280,7 +287,8 @@ const struct shclass shtypes[] = {
         { 0, 0 },
         { 0, 0 } },
       shkrings },
-    { "quality apparel and accessories",
+    /*KR { "quality apparel and accessories", */
+    { "고급 의류 및 장신구점",
       WAND_CLASS,
       3,
       D_SHOP,
@@ -289,7 +297,8 @@ const struct shclass shtypes[] = {
         { 5, -ELVEN_CLOAK },
         { 0, 0 } },
       shkwands },
-    { "hardware store",
+    /*KR { "hardware store",*/
+    { "철물점",
       TOOL_CLASS,
       3,
       D_SHOP,
@@ -300,7 +309,8 @@ const struct shclass shtypes[] = {
         { 0, 0 },
         { 0, 0 } },
       shktools },
-    { "rare books",
+    /*KR { "rare books", */
+    { "희귀 서적상",
       SPBOOK_CLASS,
       3,
       D_SHOP,
@@ -311,7 +321,8 @@ const struct shclass shtypes[] = {
         { 0, 0 },
         { 0, 0 } },
       shkbooks },
-    { "health food store",
+    /*KR { "health food store", */
+    { "건강식품점",
       FOOD_CLASS,
       2,
       D_SHOP,
@@ -326,7 +337,8 @@ const struct shclass shtypes[] = {
      * probability of zero.  They are only created via the special level
      * loader.
      */
-    { "lighting store",
+    /*KR { "lighting store", */
+    { "조명기구점",
       TOOL_CLASS,
       0,
       D_SHOP,
@@ -458,8 +470,15 @@ boolean mkspecl;
     int atype;
 
     /* 3.6 tribute */
+#if 0 /*KR: 원본*/
     if (mkspecl && (!strcmp(shp->name, "rare books")
                     || !strcmp(shp->name, "second-hand bookstore"))) {
+#else /*KR: KRNethack 맞춤 번역 (위 배열에서 설정한 한글 이름과 완벽히 \
+         동일해야 함)*/
+    if (mkspecl
+        && (!strcmp(shp->name, "희귀 서적상")
+            || !strcmp(shp->name, "중고 서점"))) {
+#endif
         struct obj *novel = mksobj_at(SPE_NOVEL, sx, sy, FALSE, FALSE);
 
         if (novel)
@@ -744,7 +763,8 @@ register struct mkroom *sroom;
             n--;
         else if (inside_shop(sx, sy - 1))
             n++;
-        Sprintf(buf, "Closed for inventory");
+        /*KR Sprintf(buf, "Closed for inventory"); */
+        Sprintf(buf, "재고 정리로 휴업 중");
         make_engr_at(m, n, buf, 0L, DUST);
     }
 

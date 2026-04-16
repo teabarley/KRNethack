@@ -271,8 +271,13 @@ coord *startp; /* starting position (read only) */
 }
 
 /* Let the mail daemon have a larger vocabulary. */
+#if 0 /*KR: 원본*/
 static NEARDATA const char *mail_text[] = { "Gangway!", "Look out!",
                                             "Pardon me!" };
+#else /*KR: KRNethack 맞춤 번역*/
+static NEARDATA const char *mail_text[] = { "길을 비켜라!", "조심해!",
+                                            "실례 좀 하지!" };
+#endif
 #define md_exclamations() (mail_text[rn2(3)])
 
 /*
@@ -334,7 +339,8 @@ register int tx, ty; /* destination of mail daemon */
         if ((mon = m_at(fx, fy)) != 0) /* save monster at this position */
             verbalize1(md_exclamations());
         else if (fx == u.ux && fy == u.uy)
-            verbalize("Excuse me.");
+            /*KR verbalize("Excuse me."); */
+            verbalize("잠시 실례.");
 
         if (mon)
             remove_monster(fx, fy);
@@ -362,7 +368,8 @@ register int tx, ty; /* destination of mail daemon */
         remove_monster(fx, fy);
         place_monster(md, fx, fy); /* display md with text below */
         newsym(fx, fy);
-        verbalize("This place's too crowded.  I'm outta here.");
+        /*KR verbalize("This place's too crowded.  I'm outta here."); */
+        verbalize("여긴 너무 붐비는군. 난 이만 가야겠어.");
         remove_monster(fx, fy);
 
         if ((mon->mx != fx) || (mon->my != fy)) /* put mon back */
@@ -403,7 +410,11 @@ struct mail_info *info;
         goto go_back;
 
     message_seen = TRUE;
+#if 0 /*KR: 원본*/
     verbalize("%s, %s!  %s.", Hello(md), plname, info->display_txt);
+#else /*KR: KRNethack 맞춤 번역 (자연스러운 호흡으로 플레이어 이름은 생략)*/
+    verbalize("%s! %s", Hello(md), info->display_txt);
+#endif
 
     if (info->message_typ) {
         struct obj *obj = mksobj(SCR_MAIL, FALSE, FALSE);
@@ -414,10 +425,16 @@ struct mail_info *info;
             new_omailcmd(obj, info->response_cmd);
 
         if (distu(md->mx, md->my) > 2)
-            verbalize("Catch!");
+            /*KR verbalize("Catch!"); */
+            verbalize("받아라!");
         display_nhwindow(WIN_MESSAGE, FALSE);
+#if 0 /*KR: 원본*/
         obj = hold_another_object(obj, "Oops!", (const char *) 0,
                                   (const char *) 0);
+#else
+        obj = hold_another_object(obj, "이런!", (const char *) 0,
+                                  (const char *) 0);
+#endif
         nhUse(obj);
     }
 
@@ -430,8 +447,9 @@ struct mail_info *info;
  give_up:
     /* deliver some classes of messages even if no daemon ever shows up */
     if (!message_seen && info->message_typ == MSG_OTHER)
-        pline("Hark!  \"%s.\"", info->display_txt);
-}
+        /*KR pline("Hark!  \"%s.\"", info->display_txt); */
+        pline("들어보시게! \"%s\"", info->display_txt);
+ }
 
 #if !defined(UNIX) && !defined(VMS)
 
@@ -448,7 +466,8 @@ ckmailstatus()
     }
     if (--mustgetmail <= 0) {
         static struct mail_info deliver = {
-            MSG_MAIL, "I have some mail for you", 0, 0
+            /*KR MSG_MAIL, "I have some mail for you", 0, 0 */
+            MSG_MAIL, "당신에게 전할 편지가 있다.", 0, 0
         };
         newmail(&deliver);
         mustgetmail = -1;
@@ -461,13 +480,20 @@ readmail(otmp)
 struct obj *otmp UNUSED;
 {
     static const char *junk[] = {
+#if 0                                  /*KR: 원본*/
         "Report bugs to <%s>.", /*** must be first entry ***/
         "Please disregard previous letter.",
         "Welcome to NetHack.",
+#else                                  /*KR: KRNethack 맞춤 번역*/
+        "버그는 <%s>로 제보하십시오.", /*** must be first entry ***/
+        "이전 편지는 무시해 주십시오.", 
+        "넷핵에 오신 것을 환영합니다!",
+#endif
 #ifdef AMIGA
         "Only Amiga makes it possible.",
         "CATS have all the answers.",
 #endif
+#if 0 /*KR:T*/
         "This mail complies with the Yendorian Anti-Spam Act (YASA)",
         "Please find enclosed a small token to represent your Owlbear",
         "**FR33 P0T10N 0F FULL H34L1NG**",
@@ -483,6 +509,23 @@ struct obj *otmp UNUSED;
            mistaken for part of the URL (unfortunately that is still followed
            by a closing quote--in the pline below, not the data here) */
         "Invitation: Visit the NetHack web site at %s"
+#else
+        "이 편지는 옌더 스팸 방지법(YASA)을 준수합니다.",
+        "당신의 아울베어를 위한 작은 선물을 동봉했습니다.",
+        "?완전$$회복?물약☜☜100%증정￥",
+        "반송 요망 (발송자: 아스모데우스)",
+        /* when enclosed by "It reads:  \"...\"", this is too long
+           for an ordinary 80-column display so wraps to a second line
+           (suboptimal but works correctly);
+           dollar sign and fractional zorkmids are inappropriate within
+           nethack but are suitable for typical dysfunctional spam mail */
+        "레벨 상승 물약이 단돈 29,900원! 축복 보장!",
+        /* DEVTEAM_URL will be substituted for "%s"; terminating punctuation
+           (formerly "!") has deliberately been omitted so that it can't be
+           mistaken for part of the URL (unfortunately that is still followed
+           by a closing quote--in the pline below, not the data here) */
+        "초대장: 넷핵 웹사이트 %s 에 방문하세요!"
+#endif        
     };
 
     /* XXX replace with more general substitution code and add local
@@ -521,9 +564,11 @@ struct obj *otmp UNUSED;
         }
     }
     if (Blind) {
-        pline("Unfortunately you cannot see what it says.");
+        /*KR pline("Unfortunately you cannot see what it says."); */
+        pline("안타깝게도 뭐라고 적혀 있는지 볼 수 없다.");
     } else
-        pline("It reads:  \"%s\"", junk[rn2(SIZE(junk))]);
+        /*KR pline("It reads:  \"%s\"", junk[rn2(SIZE(junk))]); */
+        pline("이렇게 적혀 있다: \"%s\"", junk[rn2(SIZE(junk))]);
 }
 
 #endif /* !UNIX && !VMS */
@@ -554,10 +599,12 @@ ckmailstatus()
         if (nmstat.st_size) {
             static struct mail_info deliver = {
 #ifndef NO_MAILREADER
-                MSG_MAIL, "I have some mail for you",
+                /*KR MSG_MAIL, "I have some mail for you", */
+                MSG_MAIL, "당신에게 전할 편지가 있다.",
 #else
                 /* suppress creation and delivery of scroll of mail */
-                MSG_OTHER, "You have some mail in the outside world",
+                /*KR MSG_OTHER, "You have some mail in the outside world", */
+                MSG_OTHER, "바깥 세상에서 당신에게 온 편지가 있다.",
 #endif
                 0, 0
             };
@@ -580,8 +627,13 @@ boolean adminmsg;
     struct flock fl = { 0 };
 #endif
     const char *msgfrom = adminmsg
+#if 0 /*KR: 원본*/
         ? "The voice of %s booms through the caverns:"
         : "This message is from '%s'.";
+#else
+                              ? "%s의 목소리가 동굴 전체에 울려 퍼졌다:"
+                              : "이것은 '%s'에게서 온 메시지다.";
+#endif
 
     if (!mb)
         goto bail;
@@ -608,8 +660,13 @@ boolean adminmsg;
             fl.l_type = F_UNLCK;
             fcntl (fileno(mb), F_UNLCK, &fl);
 #endif
+#if 0 /*KR: 원본*/
             pline("There is a%s message on this scroll.",
                   seen_one_already ? "nother" : "");
+#else
+            pline("이 두루마리에는 %s메시지가 적혀 있다.",
+                  seen_one_already ? "또 다른 " : "");
+#endif
         }
         msg = strchr(curline, ':');
 
@@ -624,7 +681,8 @@ boolean adminmsg;
         if (adminmsg)
             verbalize(msg);
         else
-            pline("It reads: \"%s\".", msg);
+            /*KR pline("It reads: \"%s\".", msg); */
+            pline("이렇게 적혀 있다: \"%s\"", msg);
 
         seen_one_already = TRUE;
 #ifdef SIMPLE_MAIL
@@ -651,7 +709,8 @@ boolean adminmsg;
  bail:
     /* bail out _professionally_ */
     if (!adminmsg)
-        pline("It appears to be all gibberish.");
+        /*KR pline("It appears to be all gibberish."); */
+        pline("완전 횡설수설하는 말 같다.");
 }
 #endif /* SIMPLE_MAIL */
 

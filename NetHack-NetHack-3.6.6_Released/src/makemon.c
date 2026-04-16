@@ -1862,13 +1862,21 @@ struct monst *mtmp, *victim;
 
         if (mvitals[newtype].mvflags & G_GENOD) { /* allow G_EXTINCT */
             if (canspotmon(mtmp))
+#if 0 /*KR: 원본*/
                 pline("As %s grows up into %s, %s %s!", mon_nam(mtmp),
                       an(ptr->mname), mhe(mtmp),
                       nonliving(ptr) ? "expires" : "dies");
+#else /*KR: KRNethack 맞춤 번역 (조사 처리 포함)*/
+                pline("%s 성장하여 %s 되려다 %s버렸다!",
+                      append_josa(mon_nam(mtmp), "이"),
+                      append_josa(ptr->mname, "이"),
+                      nonliving(ptr) ? "소멸해" : "죽어");
+#endif
             set_mon_data(mtmp, ptr); /* keep mvitals[] accurate */
             mondied(mtmp);
             return (struct permonst *) 0;
         } else if (canspotmon(mtmp)) {
+#if 0 /*KR: 원본*/
             char buf[BUFSZ];
 
             /* 3.6.1:
@@ -1887,6 +1895,20 @@ struct monst *mtmp, *victim;
                                         : humanoid(ptr) ? "becomes"
                                                         : "grows up into",
                   an(buf));
+#else /*KR: KRNethack 맞춤 번역 (성별 변화 및 성장 디테일 살림)*/
+            char buf[BUFSZ];
+
+            Sprintf(buf, "%s%s",
+                    (mtmp->female && !fem)   ? "수컷 "
+                    : (fem && !mtmp->female) ? "암컷 "
+                                             : "",
+                    ptr->mname);
+            pline("%s %s %s.", upstart(y_monnam(mtmp)),
+                  append_josa(buf, "으"),
+                  (fem != mtmp->female) ? "로 모습이 변했다"
+                  : humanoid(ptr)       ? "로 되었다"
+                                        : "로 성장했다");
+#endif
         }
         set_mon_data(mtmp, ptr);
         newsym(mtmp->mx, mtmp->my);    /* color may change */
@@ -2283,7 +2305,8 @@ int *seencount;  /* secondary output */
         impossible("bad bag o' tricks");
     } else if (bag->spe < 1) {
         /* if tipping known empty bag, give normal empty container message */
-        pline1((tipping && bag->cknown) ? "It's empty." : nothing_happens);
+        /*KR pline1((tipping && bag->cknown) ? "It's empty." : nothing_happens); */
+        pline1((tipping && bag->cknown) ? "그것은 비어 있다." : nothing_happens);
         /* now known to be empty if sufficiently discovered */
         if (bag->dknown && objects[bag->otyp].oc_name_known)
             bag->cknown = 1;
@@ -2309,7 +2332,8 @@ int *seencount;  /* secondary output */
             if (bag->dknown)
                 makeknown(BAG_OF_TRICKS);
         } else if (!tipping) {
-            pline1(!moncount ? nothing_happens : "Nothing seems to happen.");
+            /*KR pline1(!moncount ? nothing_happens : "Nothing seems to happen."); */
+            pline1(!moncount ? nothing_happens : "아무 일도 일어나지 않은 것 같다.");
         }
     }
     return moncount;

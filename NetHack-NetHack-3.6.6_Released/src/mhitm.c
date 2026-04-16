@@ -49,9 +49,15 @@ register struct attack *mattk;
     if (!Deaf && (farq != far_noise || moves - noisetime > 10)) {
         far_noise = farq;
         noisetime = moves;
+#if 0 /*KR:T*/
         You_hear("%s%s.",
                  (mattk->aatyp == AT_EXPL) ? "an explosion" : "some noises",
                  farq ? " in the distance" : "");
+#else
+        You("%s%s 들었다.",
+            farq ? "멀리서 " : "",
+            (mattk->aatyp == AT_EXPL) ? "폭발하는 소리를" : "어떤 소리를");
+#endif
     }
 }
 

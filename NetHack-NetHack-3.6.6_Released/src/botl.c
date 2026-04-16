@@ -237,7 +237,11 @@ do_statusline2()
     if (u.uhs != NOT_HUNGRY)
         Sprintf(nb = eos(nb), " %s", hu_stat[u.uhs]);
     if ((cap = near_capacity()) > UNENCUMBERED)
+#if 0 /*KR: 원본*/
         Sprintf(nb = eos(nb), " %s", enc_stat[cap]);
+#else /*KR: KRNethack 맞춤 번역 (상태창에 한국어 출력)*/
+        Sprintf(nb = eos(nb), " %s", enc_stat_opt[cap]);
+#endif
     if (Blind)
         /*KR Strcpy(nb = eos(nb), " Blind"); */
         Strcpy(nb = eos(nb), " 실명");
@@ -837,8 +841,13 @@ bot_via_windowport()
     /* Carrying capacity */
     cap = near_capacity();
     blstats[idx][BL_CAP].a.a_int = cap;
+#if 0 /*KR: 원본*/
     Strcpy(blstats[idx][BL_CAP].val,
            (cap > UNENCUMBERED) ? enc_stat[cap] : "");
+#else /*KR: KRNethack 맞춤 번역 (상태창에 한국어 출력)*/
+    Strcpy(blstats[idx][BL_CAP].val,
+           (cap > UNENCUMBERED) ? enc_stat_opt[cap] : "");
+#endif
     valset[BL_CAP] = TRUE;
 
     /* Conditions */
@@ -2241,17 +2250,12 @@ boolean from_configfile;
             else
                 up = TRUE;
             changed = TRUE;
+#if 0 /*KR: 원본*/
         } else if (fld == BL_CAP
-#if 0 /*KR*/
                    && is_fld_arrayvalues(s[sidx], enc_stat,
                                          SLT_ENCUMBER, OVERLOADED + 1,
                                          &kidx)) {
             txt = enc_stat[kidx];
-#else
-                   && is_fld_arrayvalues(s[sidx], enc_stat_opt, SLT_ENCUMBER,
-                                         OVERLOADED + 1, &kidx)) {
-            txt = enc_stat_opt[kidx];
-#endif
             txtval = TRUE;
         } else if (fld == BL_ALIGN
                    && is_fld_arrayvalues(s[sidx], aligntxt, 0, 3, &kidx)) {
@@ -2260,13 +2264,37 @@ boolean from_configfile;
         } else if (fld == BL_HUNGER
                    && is_fld_arrayvalues(s[sidx], hutxt,
                                          SATIATED, STARVED + 1, &kidx)) {
-#if 0 /*KR*/
             txt = hu_stat[kidx];   /* store hu_stat[] val, not hutxt[] */
-#else
-            /*KR hu_stat은 번역되어 있기 때문에 hutxt를 사용한다 */
-            txt = hutxt[kidx];
-#endif
             txtval = TRUE;
+#else /*KR: KRNethack 맞춤 번역 (설정 파일의 '영어'를 읽어서 '한국어'로 \
+         저장)*/
+        } else if (fld == BL_CAP
+                   && is_fld_arrayvalues(s[sidx], enc_stat, SLT_ENCUMBER,
+                                         OVERLOADED + 1, &kidx)) {
+            /* 영어로 파싱하고, 한국어로 메모리에 저장 */
+            txt = enc_stat_opt[kidx];
+            txtval = TRUE;
+        } else if (fld == BL_ALIGN) {
+            static const char *aligntxt_eng[] = { "chaotic", "neutral",
+                                                  "lawful" };
+            static const char *aligntxt_kor[] = { "혼돈", "중립", "질서" };
+            if (is_fld_arrayvalues(s[sidx], aligntxt_eng, 0, 3, &kidx)) {
+                /* 영어로 파싱하고, 한국어로 메모리에 저장 */
+                txt = aligntxt_kor[kidx];
+                txtval = TRUE;
+            }
+        } else if (fld == BL_HUNGER) {
+            static const char *hutxt_eng[] = { "Satiated", "",
+                                               "Hungry",   "Weak",
+                                               "Fainting", "Fainted",
+                                               "Starved" };
+            if (is_fld_arrayvalues(s[sidx], hutxt_eng, SATIATED, STARVED + 1,
+                                   &kidx)) {
+                /* 영어로 파싱하고, 한국어(hu_stat)로 메모리에 저장 */
+                txt = hu_stat[kidx];
+                txtval = TRUE;
+            }
+#endif
         } else if (!strcmpi(s[sidx], "changed")) {
             changed = TRUE;
         } else if (is_ltgt_percentnumber(s[sidx])) {

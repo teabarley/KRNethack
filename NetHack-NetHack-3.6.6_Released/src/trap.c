@@ -3906,7 +3906,8 @@ int n;
         if (n > u.uenmax || n > u.ulevel)
             n = rnd(n);
 
-        You_feel("your magical energy drain away%c", (n > u.uen) ? '!' : '.');
+        /*KR You_feel("your magical energy drain away%c", (n > u.uen) ? '!' : '.'); */
+        You("마력이 빠져나가는 것을 느꼈다%c", (n > u.uen) ? '!' : '.');
         u.uen -= n;
         if (u.uen < 0) {
             u.uenmax -= rnd(-u.uen);

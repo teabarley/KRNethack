@@ -1103,7 +1103,7 @@ int oldlevel, newlevel;
             if (!(*(abil->ability) & INTRINSIC & ~mask)) {
                 if (*(abil->gainstr))
                /*KR You_feel("%s!", abil->gainstr); */
-                    You("%s!", abil->gainstr);
+                    pline("%s!", abil->gainstr);
             }
         } else if (oldlevel >= abil->ulevel && newlevel < abil->ulevel) {
             *(abil->ability) &= ~mask;

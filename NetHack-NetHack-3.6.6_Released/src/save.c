@@ -80,13 +80,15 @@ dosave()
     if (iflags.debug_fuzzer)
         return 0;
     clear_nhwindow(WIN_MESSAGE);
-    if (yn("Really save?") == 'n') {
+    /*KR if (yn("Really save?") == 'n') { */
+    if (yn("정말로 저장하시겠습니까?") == 'n') {
         clear_nhwindow(WIN_MESSAGE);
         if (multi > 0)
             nomul(0);
     } else {
         clear_nhwindow(WIN_MESSAGE);
-        pline("Saving...");
+        /*KR pline("Saving..."); */
+        pline("저장중...");
 #if defined(UNIX) || defined(VMS) || defined(__EMX__)
         program_state.done_hup = 0;
 #endif
@@ -94,7 +96,8 @@ dosave()
             u.uhp = -1; /* universal game's over indicator */
             /* make sure they see the Saving message */
             display_nhwindow(WIN_MESSAGE, TRUE);
-            exit_nhwindows("Be seeing you...");
+            /*KR exit_nhwindows("Be seeing you..."); */
+            exit_nhwindows("다음에 또 만나요...");
             nh_terminate(EXIT_SUCCESS);
         } else
             (void) doredraw();
@@ -145,8 +148,13 @@ dosave0()
         if (fd > 0) {
             (void) nhclose(fd);
             clear_nhwindow(WIN_MESSAGE);
+#if 0 /*KR:T*/
             There("seems to be an old save file.");
             if (yn("Overwrite the old file?") == 'n') {
+#else
+            pline("이전에 저장한 파일이 있습니다.");
+            if (yn("오래된 파일에 덮어쓰시겠습니까?") == 'n') {
+#endif
                 nh_compress(fq_save);
                 return 0;
             }

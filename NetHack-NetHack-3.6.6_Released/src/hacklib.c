@@ -309,6 +309,7 @@ const char *s;
     Static char buf[BUFSZ];
 
     Strcpy(buf, s);
+#if 0 /*KR: 원본 (영어 소유격 문법)*/
     if (!strcmpi(buf, "it")) /* it -> its */
         Strcat(buf, "s");
     else if (!strcmpi(buf, "you")) /* you -> your */
@@ -317,6 +318,9 @@ const char *s;
         Strcat(buf, "'");
     else /* X -> X's */
         Strcat(buf, "'s");
+#else /*KR: KRNethack 맞춤 번역 (한국어 소유격)*/
+    Strcat(buf, "의");
+#endif
     return buf;
 }
 
