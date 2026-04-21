@@ -15,19 +15,19 @@ extern boolean known; /* from read.c */
 
 STATIC_DCL boolean NDECL(unconstrain_map);
 STATIC_DCL void NDECL(reconstrain_map);
-STATIC_DCL void FDECL(browse_map, (int, const char *));
+STATIC_DCL void FDECL(browse_map, (int, const char *) );
 STATIC_DCL void FDECL(map_monst, (struct monst *, BOOLEAN_P));
-STATIC_DCL void FDECL(do_dknown_of, (struct obj *));
-STATIC_DCL boolean FDECL(check_map_spot, (int, int, CHAR_P, unsigned));
-STATIC_DCL boolean FDECL(clear_stale_map, (CHAR_P, unsigned));
-STATIC_DCL void FDECL(sense_trap, (struct trap *, XCHAR_P, XCHAR_P, int));
-STATIC_DCL int FDECL(detect_obj_traps, (struct obj *, BOOLEAN_P, int));
-STATIC_DCL void FDECL(show_map_spot, (int, int));
+STATIC_DCL void FDECL(do_dknown_of, (struct obj *) );
+STATIC_DCL boolean FDECL(check_map_spot, (int, int, CHAR_P, unsigned) );
+STATIC_DCL boolean FDECL(clear_stale_map, (CHAR_P, unsigned) );
+STATIC_DCL void FDECL(sense_trap, (struct trap *, XCHAR_P, XCHAR_P, int) );
+STATIC_DCL int FDECL(detect_obj_traps, (struct obj *, BOOLEAN_P, int) );
+STATIC_DCL void FDECL(show_map_spot, (int, int) );
 STATIC_PTR void FDECL(findone, (int, int, genericptr_t));
 STATIC_PTR void FDECL(openone, (int, int, genericptr_t));
 STATIC_DCL int FDECL(mfind0, (struct monst *, BOOLEAN_P));
-STATIC_DCL int FDECL(reveal_terrain_getglyph, (int, int, int,
-                                               unsigned, int, int));
+STATIC_DCL int FDECL(reveal_terrain_getglyph,
+                     (int, int, int, unsigned, int, int) );
 
 /* bring hero out from underwater or underground or being engulfed;
    return True iff any change occurred */
@@ -38,7 +38,7 @@ unconstrain_map()
 
     /* bring Underwater, buried, or swallowed hero to normal map */
     iflags.save_uinwater = u.uinwater, u.uinwater = 0;
-    iflags.save_uburied  = u.uburied,  u.uburied  = 0;
+    iflags.save_uburied = u.uburied, u.uburied = 0;
     iflags.save_uswallow = u.uswallow, u.uswallow = 0;
 
     return res;
@@ -49,14 +49,12 @@ STATIC_OVL void
 reconstrain_map()
 {
     u.uinwater = iflags.save_uinwater, iflags.save_uinwater = 0;
-    u.uburied  = iflags.save_uburied,  iflags.save_uburied  = 0;
+    u.uburied = iflags.save_uburied, iflags.save_uburied = 0;
     u.uswallow = iflags.save_uswallow, iflags.save_uswallow = 0;
 }
 
 /* use getpos()'s 'autodescribe' to view whatever is currently shown on map */
-STATIC_DCL void
-browse_map(ter_typ, ter_explain)
-int ter_typ;
+STATIC_DCL void browse_map(ter_typ, ter_explain) int ter_typ;
 const char *ter_explain;
 {
     coord dummy_pos; /* don't care whether player actually picks a spot */
@@ -72,18 +70,16 @@ const char *ter_explain;
 }
 
 /* extracted from monster_detection() so can be shared by do_vicinity_map() */
-STATIC_DCL void
-map_monst(mtmp, showtail)
-struct monst *mtmp;
+STATIC_DCL void map_monst(mtmp, showtail) struct monst *mtmp;
 boolean showtail;
 {
     if (def_monsyms[(int) mtmp->data->mlet].sym == ' ')
         show_glyph(mtmp->mx, mtmp->my,
                    detected_mon_to_glyph(mtmp, newsym_rn2));
     else
-        show_glyph(mtmp->mx, mtmp->my, mtmp->mtame
-                   ? pet_to_glyph(mtmp, newsym_rn2)
-                   : mon_to_glyph(mtmp, newsym_rn2));
+        show_glyph(mtmp->mx, mtmp->my,
+                   mtmp->mtame ? pet_to_glyph(mtmp, newsym_rn2)
+                               : mon_to_glyph(mtmp, newsym_rn2));
 
     if (showtail && mtmp->data == &mons[PM_LONG_WORM])
         detect_wsegs(mtmp, 0);
@@ -151,7 +147,7 @@ int x, y;
     if (!IS_DOOR(lev->typ))
         return FALSE;
     if ((lev->doormask & (D_NODOOR | D_BROKEN | D_ISOPEN)) != 0
-         && trapped_chest_at(ttyp, x, y))
+        && trapped_chest_at(ttyp, x, y))
         return FALSE;
     return TRUE;
 }
@@ -209,9 +205,7 @@ unsigned material;
     return (struct obj *) 0;
 }
 
-STATIC_OVL void
-do_dknown_of(obj)
-struct obj *obj;
+STATIC_OVL void do_dknown_of(obj) struct obj *obj;
 {
     struct obj *otmp;
 
@@ -237,12 +231,14 @@ unsigned material;
     if (glyph_is_object(glyph)) {
         /* there's some object shown here */
         if (oclass == ALL_CLASSES) {
-            return (boolean) !(level.objects[x][y] /* stale if nothing here */
-                               || ((mtmp = m_at(x, y)) != 0 && mtmp->minvent));
+            return (boolean) !(
+                level.objects[x][y] /* stale if nothing here */
+                || ((mtmp = m_at(x, y)) != 0 && mtmp->minvent));
         } else {
             if (material
                 && objects[glyph_to_obj(glyph)].oc_material == material) {
-                /* object shown here is of interest because material matches */
+                /* object shown here is of interest because material matches
+                 */
                 for (otmp = level.objects[x][y]; otmp; otmp = otmp->nexthere)
                     if (o_material(otmp, GOLD))
                         return FALSE;
@@ -309,8 +305,8 @@ register struct obj *sobj;
     boolean stale, ugold = FALSE, steedgold = FALSE;
     int ter_typ = TER_DETECT | TER_OBJ;
 
-    known = stale = clear_stale_map(COIN_CLASS,
-                                    (unsigned) (sobj->blessed ? GOLD : 0));
+    known = stale =
+        clear_stale_map(COIN_CLASS, (unsigned) (sobj->blessed ? GOLD : 0));
 
     /* look for gold carried by monsters (might be in a container) */
     for (mtmp = fmon; mtmp; mtmp = mtmp->nmon) {
@@ -357,19 +353,31 @@ register struct obj *sobj;
             char buf[BUFSZ];
 
             if (youmonst.data == &mons[PM_GOLD_GOLEM])
-                Sprintf(buf, "You feel like a million %s!", currency(2L));
+                /*KR Sprintf(buf, "You feel like a million %s!",
+                 * currency(2L)); */
+                Sprintf(buf, "백만 %s를 쥔 듯한 기분이 든다!", currency(2L));
             else if (money_cnt(invent) || hidden_gold())
-                Strcpy(buf,
-                   "You feel worried about your future financial situation.");
+                /*KR Strcpy(buf, "You feel worried about your future financial
+                 * situation."); */
+                Strcpy(buf, "앞으로의 재정 상태가 걱정스러워진다.");
             else if (steedgold)
+#if 0 /*KR: 원본*/
                 Sprintf(buf, "You feel interested in %s financial situation.",
                         s_suffix(x_monnam(u.usteed,
                                           u.usteed->mtame ? ARTICLE_YOUR
                                                           : ARTICLE_THE,
                                           (char *) 0,
                                           SUPPRESS_SADDLE, FALSE)));
+#else
+                Sprintf(buf, "%s 재정 상태에 흥미가 느껴진다.",
+                        s_suffix(x_monnam(
+                            u.usteed,
+                            u.usteed->mtame ? ARTICLE_YOUR : ARTICLE_THE,
+                            (char *) 0, SUPPRESS_SADDLE, FALSE)));
+#endif
             else
-                Strcpy(buf, "You feel materially poor.");
+                /*KR Strcpy(buf, "You feel materially poor."); */
+                Strcpy(buf, "물질적으로 가난해진 기분이 든다.");
 
             strange_feeling(sobj, buf);
         }
@@ -378,10 +386,15 @@ register struct obj *sobj;
     /* only under me - no separate display required */
     if (stale)
         docrt();
+#if 0 /*KR: 원본*/
     You("notice some gold between your %s.", makeplural(body_part(FOOT)));
+#else
+    You("당신의 %s 사이에 금화가 있는 것을 눈치챘다.",
+        makeplural(body_part(FOOT)));
+#endif
     return 0;
 
- outgoldmap:
+outgoldmap:
     cls();
 
     (void) unconstrain_map();
@@ -436,10 +449,15 @@ register struct obj *sobj;
         newsym(u.ux, u.uy);
         ter_typ |= TER_MON; /* so autodescribe will recognize hero */
     }
-    You_feel("very greedy, and sense gold!");
+    /*KR You_feel("very greedy, and sense gold!"); */
+    You_feel("엄청난 탐욕과 함께 금화의 기운을 감지했다!");
     exercise(A_WIS, TRUE);
 
+#if 0 /*KR: JNetHack에서 찾은 누락 파라미터*/
     browse_map(ter_typ, "gold");
+#else
+    browse_map(ter_typ, "금화");
+#endif
 
     reconstrain_map();
     docrt();
@@ -460,7 +478,9 @@ register struct obj *sobj;
     register int ct = 0, ctu = 0;
     boolean confused = (Confusion || (sobj && sobj->cursed)), stale;
     char oclass = confused ? POTION_CLASS : FOOD_CLASS;
-    const char *what = confused ? something : "food";
+    /*KR: JNetHack의 "ハラヘリ(배고픔)" 변경은 무시, 원래 의미 "something"
+     * 유지*/
+    const char *what = confused ? "무언가" : "식량";
 
     stale = clear_stale_map(oclass, 0);
     if (u.usteed) /* some situations leave steed with stale coordinates */
@@ -489,19 +509,32 @@ register struct obj *sobj;
         known = stale && !confused;
         if (stale) {
             docrt();
+#if 0 /*KR: 원본*/
             You("sense a lack of %s nearby.", what);
+#else
+            You("근처에 %s 부족하다는 것을 감지했다.",
+                append_josa(what, "이"));
+#endif
             if (sobj && sobj->blessed) {
                 if (!u.uedibility)
-                    Your("%s starts to tingle.", body_part(NOSE));
+                    /*KR Your("%s starts to tingle.", body_part(NOSE)); */
+                    Your("%s이 찌릿거리기 시작했다.", body_part(NOSE));
                 u.uedibility = 1;
             }
         } else if (sobj) {
             char buf[BUFSZ];
 
+#if 0 /*KR: 원본*/
             Sprintf(buf, "Your %s twitches%s.", body_part(NOSE),
                     (sobj->blessed && !u.uedibility)
                         ? " then starts to tingle"
                         : "");
+#else
+            Sprintf(buf, "당신의 %s이 씰룩거렸다%s.", body_part(NOSE),
+                    (sobj->blessed && !u.uedibility)
+                        ? ", 그리고 찌릿거리기 시작했다"
+                        : "");
+#endif
             if (sobj->blessed && !u.uedibility) {
                 boolean savebeginner = flags.beginner;
 
@@ -515,10 +548,16 @@ register struct obj *sobj;
         return !stale;
     } else if (!ct) {
         known = TRUE;
+#if 0 /*KR: 원본*/
         You("%s %s nearby.", sobj ? "smell" : "sense", what);
+#else
+        You("근처에서 %s %s.", append_josa(what, "을"),
+            sobj ? "냄새 맡았다" : "감지했다");
+#endif
         if (sobj && sobj->blessed) {
             if (!u.uedibility)
-                pline("Your %s starts to tingle.", body_part(NOSE));
+                /*KR pline("Your %s starts to tingle.", body_part(NOSE)); */
+                pline("당신의 %s이 찌릿거리기 시작했다.", body_part(NOSE));
             u.uedibility = 1;
         }
     } else {
@@ -551,16 +590,31 @@ register struct obj *sobj;
         }
         if (sobj) {
             if (sobj->blessed) {
+#if 0 /*KR: 원본*/
                 Your("%s %s to tingle and you smell %s.", body_part(NOSE),
                      u.uedibility ? "continues" : "starts", what);
+#else
+                Your("%s이 %s 찌릿거리고, %s 냄새를 맡았다.", body_part(NOSE),
+                     u.uedibility ? "계속" : "막", append_josa(what, "의"));
+#endif
                 u.uedibility = 1;
             } else
+#if 0 /*KR: 원본*/
                 Your("%s tingles and you smell %s.", body_part(NOSE), what);
+#else
+                Your("%s이 찌릿거렸고, %s 냄새를 맡았다.", body_part(NOSE),
+                     append_josa(what, "의"));
+#endif
         } else
-            You("sense %s.", what);
+            /*KR You("sense %s.", what); */
+            You("%s 감지했다.", append_josa(what, "을"));
         exercise(A_WIS, TRUE);
 
+#if 0 /*KR: JNetHack에서 찾은 누락 파라미터*/
         browse_map(ter_typ, "food");
+#else
+        browse_map(ter_typ, "식량");
+#endif
 
         reconstrain_map();
         docrt();
@@ -575,19 +629,19 @@ register struct obj *sobj;
 /*
  * Used for scrolls, potions, spells, and crystal balls.  Returns:
  *
- *      1 - nothing was detected
- *      0 - something was detected
+ * 1 - nothing was detected
+ * 0 - something was detected
  */
-int
-object_detect(detector, class)
-struct obj *detector; /* object doing the detecting */
-int class;            /* an object class, 0 for all */
+int object_detect(
+    detector, class) struct obj *detector; /* object doing the detecting */
+int class;                                 /* an object class, 0 for all */
 {
     register int x, y;
     char stuff[BUFSZ];
     int is_cursed = (detector && detector->cursed);
-    int do_dknown = (detector && (detector->oclass == POTION_CLASS
-                                  || detector->oclass == SPBOOK_CLASS)
+    int do_dknown = (detector
+                     && (detector->oclass == POTION_CLASS
+                         || detector->oclass == SPBOOK_CLASS)
                      && detector->blessed);
     int ct = 0, ctu = 0;
     register struct obj *obj, *otmp = (struct obj *) 0;
@@ -606,15 +660,19 @@ int class;            /* an object class, 0 for all */
      * We can exclude checking the buried obj chain for boulders below.
      */
     sym = class ? def_oc_syms[class].sym : 0;
-    if (sym && showsyms[SYM_BOULDER + SYM_OFF_X] && sym == showsyms[SYM_BOULDER + SYM_OFF_X])
+    if (sym && showsyms[SYM_BOULDER + SYM_OFF_X]
+        && sym == showsyms[SYM_BOULDER + SYM_OFF_X])
         boulder = ROCK_CLASS;
 
     if (Hallucination || (Confusion && class == SCROLL_CLASS))
-        Strcpy(stuff, something);
+        /*KR Strcpy(stuff, something); */
+        Strcpy(stuff, "무언가");
     else
-        Strcpy(stuff, class ? def_oc_syms[class].name : "objects");
+        /*KR Strcpy(stuff, class ? def_oc_syms[class].name : "objects"); */
+        Strcpy(stuff, class ? def_oc_syms[class].name : "물건들");
     if (boulder && class != ROCK_CLASS)
-        Strcat(stuff, " and/or large stones");
+        /*KR Strcat(stuff, " and/or large stones"); */
+        Strcat(stuff, " 그리고(또는) 커다란 돌들");
 
     if (do_dknown)
         for (obj = invent; obj; obj = obj->nobj)
@@ -666,11 +724,18 @@ int class;            /* an object class, 0 for all */
     if (!clear_stale_map(!class ? ALL_CLASSES : class, 0) && !ct) {
         if (!ctu) {
             if (detector)
-                strange_feeling(detector, "You feel a lack of something.");
+                /*KR strange_feeling(detector, "You feel a lack of
+                 * something."); */
+                strange_feeling(detector,
+                                "당신은 무언가 부족하다는 느낌을 받는다.");
             return 1;
         }
 
+#if 0 /*KR: 원본*/
         You("sense %s nearby.", stuff);
+#else
+        You("근처에서 %s 감지했다.", append_josa(stuff, "을"));
+#endif
         return 0;
     }
 
@@ -678,7 +743,7 @@ int class;            /* an object class, 0 for all */
 
     (void) unconstrain_map();
     /*
-     *  Map all buried objects first.
+     * Map all buried objects first.
      */
     for (obj = level.buriedobjlist; obj; obj = obj->nobj)
         if (!class || (otmp = o_in(obj, class)) != 0) {
@@ -757,12 +822,21 @@ int class;            /* an object class, 0 for all */
         newsym(u.ux, u.uy);
         ter_typ |= TER_MON;
     }
+#if 0 /*KR: 원본*/
     You("detect the %s of %s.", ct ? "presence" : "absence", stuff);
+#else
+    You("%s %s 것을 감지했다.", append_josa(stuff, "이"),
+        ct ? "존재하는" : "존재하지 않는");
+#endif
 
     if (!ct)
         display_nhwindow(WIN_MAP, TRUE);
     else
+#if 0 /*KR: JNetHack에서 찾은 누락 파라미터*/
         browse_map(ter_typ, "object");
+#else
+        browse_map(ter_typ, "물건");
+#endif
 
     reconstrain_map();
     docrt(); /* this will correctly reset vision */
@@ -801,8 +875,10 @@ int mclass;                /* monster class, 0 for all */
     if (!mcnt) {
         if (otmp)
             strange_feeling(otmp, Hallucination
-                                      ? "You get the heebie jeebies."
-                                      : "You feel threatened.");
+                                      /*KR ? "You get the heebie jeebies." */
+                                      ? "소름이 쫙 돋았다."
+                                      /*KR : "You feel threatened."); */
+                                      : "위협을 느꼈다.");
         return 1;
     } else {
         boolean unconstrained, woken = FALSE;
@@ -827,9 +903,11 @@ int mclass;                /* monster class, 0 for all */
         }
         if (!swallowed)
             display_self();
-        You("sense the presence of monsters.");
+        /*KR You("sense the presence of monsters."); */
+        You("몬스터들의 기척을 감지했다.");
         if (woken)
-            pline("Monsters sense the presence of you.");
+            /*KR pline("Monsters sense the presence of you."); */
+            pline("몬스터들이 당신의 기척을 감지했다.");
 
         if ((otmp && otmp->blessed) && !unconstrained) {
             /* persistent detection--just show updated map */
@@ -838,7 +916,11 @@ int mclass;                /* monster class, 0 for all */
             /* one-shot detection--allow player to move cursor around and
                get autodescribe feedback */
             EDetect_monsters |= I_SPECIAL;
+#if 0 /*KR: JNetHack에서 찾은 누락 파라미터*/
             browse_map(TER_DETECT | TER_MON, "monster of interest");
+#else
+            browse_map(TER_DETECT | TER_MON, "관심 있는 몬스터");
+#endif
             EDetect_monsters &= ~I_SPECIAL;
         }
 
@@ -852,9 +934,7 @@ int mclass;                /* monster class, 0 for all */
     return 0;
 }
 
-STATIC_OVL void
-sense_trap(trap, x, y, src_cursed)
-struct trap *trap;
+STATIC_OVL void sense_trap(trap, x, y, src_cursed) struct trap *trap;
 xchar x, y;
 int src_cursed;
 {
@@ -870,14 +950,15 @@ int src_cursed;
             obj.oy = y;
         }
         obj.otyp = !Hallucination ? GOLD_PIECE : random_object(rn2);
-        obj.quan = (long) ((obj.otyp == GOLD_PIECE) ? rnd(10)
-                           : objects[obj.otyp].oc_merge ? rnd(2) : 1);
+        obj.quan = (long) ((obj.otyp == GOLD_PIECE)     ? rnd(10)
+                           : objects[obj.otyp].oc_merge ? rnd(2)
+                                                        : 1);
         obj.corpsenm = random_monster(rn2); /* if otyp == CORPSE */
         map_object(&obj, 1);
     } else if (trap) {
         map_trap(trap, 1);
         trap->tseen = 1;
-    } else { /* trapped door or trapped chest */
+    } else {                   /* trapped door or trapped chest */
         struct trap temp_trap; /* fake trap */
 
         (void) memset((genericptr_t) &temp_trap, 0, sizeof temp_trap);
@@ -956,7 +1037,8 @@ struct obj *sobj; /* null if crystal ball, *scroll if gold detection scroll */
         else
             found = TRUE;
     }
-    if ((tr = detect_obj_traps(level.buriedobjlist, FALSE, 0)) != OTRAP_NONE) {
+    if ((tr = detect_obj_traps(level.buriedobjlist, FALSE, 0))
+        != OTRAP_NONE) {
         if (tr & OTRAP_THERE)
             goto outtrapmap;
         else
@@ -987,15 +1069,19 @@ struct obj *sobj; /* null if crystal ball, *scroll if gold detection scroll */
     if (!found) {
         char buf[BUFSZ];
 
-        Sprintf(buf, "Your %s stop itching.", makeplural(body_part(TOE)));
+        /*KR Sprintf(buf, "Your %s stop itching.",
+         * makeplural(body_part(TOE))); */
+        Sprintf(buf, "당신의 %s이 더 이상 가렵지 않다.",
+                makeplural(body_part(TOE)));
         strange_feeling(sobj, buf);
         return 1;
     }
     /* traps exist, but only under me - no separate display required */
-    Your("%s itch.", makeplural(body_part(TOE)));
+    /*KR Your("%s itch.", makeplural(body_part(TOE))); */
+    Your("%s이 가렵다.", makeplural(body_part(TOE)));
     return 0;
 
- outtrapmap:
+outtrapmap:
     cls();
 
     (void) unconstrain_map();
@@ -1025,9 +1111,17 @@ struct obj *sobj; /* null if crystal ball, *scroll if gold detection scroll */
         newsym(u.ux, u.uy);
         ter_typ |= TER_MON; /* for autodescribe at <u.ux,u.uy> */
     }
+#if 0 /*KR: 원본*/
     You_feel("%s.", cursed_src ? "very greedy" : "entrapped");
+#else
+    You_feel("%s.", cursed_src ? "큰 탐욕을 느꼈다" : "함정에 빠진 것 같다");
+#endif
 
+#if 0 /*KR: JNetHack에서 찾은 누락 파라미터*/
     browse_map(ter_typ, "trap of interest");
+#else
+    browse_map(ter_typ, "관심 있는 함정");
+#endif
 
     reconstrain_map();
     docrt(); /* redraw the screen to remove unseen traps from the map */
@@ -1048,39 +1142,54 @@ d_level *where;
     if (ll < 0) {
         if (ll < (-8 - rn2(3)))
             if (!indun)
-                return "far away";
+                /*KR return "far away"; */
+                return "아주 멀리에";
             else
-                return "far below";
+                /*KR return "far below"; */
+                return "아주 멀리 밑에";
         else if (ll < -1)
             if (!indun)
-                return "away below you";
+                /*KR return "away below you"; */
+                return "아래쪽 멀리에";
             else
-                return "below you";
+                /*KR return "below you"; */
+                return "당신의 아래에";
         else if (!indun)
-            return "in the distance";
+            /*KR return "in the distance"; */
+            return "저 멀리에";
         else
-            return "just below";
+            /*KR return "just below"; */
+            return "바로 아래에";
     } else if (ll > 0) {
         if (ll > (8 + rn2(3)))
             if (!indun)
-                return "far away";
+                /*KR return "far away"; */
+                return "아주 멀리에";
             else
-                return "far above";
+                /*KR return "far above"; */
+                return "아주 멀리 위에";
         else if (ll > 1)
             if (!indun)
-                return "away above you";
+                /*KR return "away above you"; */
+                return "위쪽 멀리에";
             else
-                return "above you";
+                /*KR return "above you"; */
+                return "당신의 위에";
         else if (!indun)
-            return "in the distance";
+            /*KR return "in the distance"; */
+            return "저 멀리에";
         else
-            return "just above";
+            /*KR return "just above"; */
+            return "바로 위에";
     } else if (!indun)
-        return "in the distance";
+        /*KR return "in the distance"; */
+        return "저 멀리에";
     else
-        return "near you";
+        /*KR return "near you"; */
+        return "당신의 근처에";
 }
 
+#if 0 /*KR: 원본*/
 static const struct {
     const char *what;
     d_level *where;
@@ -1090,52 +1199,101 @@ static const struct {
     { "a castle", &stronghold_level },
     { "the Wizard of Yendor's tower", &wiz1_level },
 };
+#else
+static const struct {
+    const char *what;
+    d_level *where;
+} level_detects[] = {
+    { "델파이 신전", &oracle_level },
+    { "메두사의 은신처", &medusa_level },
+    { "성", &stronghold_level },
+    { "옌더의 마법사의 탑", &wiz1_level },
+};
+#endif
 
-void
-use_crystal_ball(optr)
-struct obj **optr;
+void use_crystal_ball(optr) struct obj **optr;
 {
     char ch;
     int oops;
     struct obj *obj = *optr;
 
     if (Blind) {
+#if 0 /*KR: 원본*/
         pline("Too bad you can't see %s.", the(xname(obj)));
+#else
+        pline("유감스럽게도 %s 볼 수 없다.",
+              append_josa(the(xname(obj)), "을"));
+#endif
         return;
     }
     oops = (rnd(20) > ACURR(A_INT) || obj->cursed);
     if (oops && (obj->spe > 0)) {
         switch (rnd(obj->oartifact ? 4 : 5)) {
         case 1:
+#if 0 /*KR: 원본*/
             pline("%s too much to comprehend!", Tobjnam(obj, "are"));
+#else
+            pline("%s 너무 많은 것을 이해하려 한다!",
+                  append_josa(xname(obj), "은"));
+#endif
             break;
         case 2:
+#if 0 /*KR: 원본*/
             pline("%s you!", Tobjnam(obj, "confuse"));
+#else
+            pline("%s 당신을 혼란스럽게 한다!",
+                  append_josa(xname(obj), "은"));
+#endif
             make_confused((HConfusion & TIMEOUT) + (long) rnd(100), FALSE);
             break;
         case 3:
             if (!resists_blnd(&youmonst)) {
+#if 0 /*KR: 원본*/
                 pline("%s your vision!", Tobjnam(obj, "damage"));
+#else
+                pline("%s 당신의 시력을 손상시켰다!",
+                      append_josa(xname(obj), "은"));
+#endif
                 make_blinded((Blinded & TIMEOUT) + (long) rnd(100), FALSE);
                 if (!Blind)
                     Your1(vision_clears);
             } else {
+#if 0 /*KR: 원본*/
                 pline("%s your vision.", Tobjnam(obj, "assault"));
-                You("are unaffected!");
+#else
+                pline("%s 당신의 시력을 공격한다.",
+                      append_josa(xname(obj), "은"));
+#endif
+                /*KR You("are unaffected!"); */
+                You("아무런 영향을 받지 않았다!");
             }
             break;
         case 4:
+#if 0 /*KR: 원본*/
             pline("%s your mind!", Tobjnam(obj, "zap"));
+#else
+            pline("%s 당신의 정신을 날려버렸다!",
+                  append_josa(xname(obj), "은"));
+#endif
             (void) make_hallucinated(
                 (HHallucination & TIMEOUT) + (long) rnd(100), FALSE, 0L);
             break;
         case 5:
+#if 0 /*KR: 원본*/
             pline("%s!", Tobjnam(obj, "explode"));
+#else
+            pline("%s 폭발했다!", append_josa(xname(obj), "이"));
+#endif
             useup(obj);
             *optr = obj = 0; /* it's gone */
             /* physical damage cause by the shards and force */
+#if 0 /*KR: 원본*/
             losehp(Maybe_Half_Phys(rnd(30)), "exploding crystal ball",
                    KILLED_BY_AN);
+#else
+            losehp(Maybe_Half_Phys(rnd(30)), "폭발하는 수정 구슬",
+                   KILLED_BY_AN);
+#endif
             break;
         }
         if (obj)
@@ -1145,29 +1303,48 @@ struct obj **optr;
 
     if (Hallucination) {
         if (!obj->spe) {
+#if 0 /*KR: 원본*/
             pline("All you see is funky %s haze.", hcolor((char *) 0));
+#else
+            pline("당신의 눈에 보이는 것은 구린 %s 안개뿐이다.",
+                  hcolor((char *) 0));
+#endif
         } else {
             switch (rnd(6)) {
             case 1:
-                You("grok some groovy globs of incandescent lava.");
+                /*KR You("grok some groovy globs of incandescent lava."); */
+                You("백열의 용암 덩어리들이 아주 멋지게 보인다.");
                 break;
             case 2:
+#if 0 /*KR: 원본*/
                 pline("Whoa!  Psychedelic colors, %s!",
                       poly_gender() == 1 ? "babe" : "dude");
+#else
+                pline("우와! 아주 환각적인 색깔인데, 안 그래 %s!",
+                      poly_gender() == 1 ? "언니" : "형제");
+#endif
                 break;
             case 3:
+#if 0 /*KR: 원본*/
                 pline_The("crystal pulses with sinister %s light!",
                           hcolor((char *) 0));
+#else
+                pline("수정 구슬이 불길한 %s 빛으로 맥동한다!",
+                      hcolor((char *) 0));
+#endif
                 break;
             case 4:
-                You_see("goldfish swimming above fluorescent rocks.");
+                /*KR You_see("goldfish swimming above fluorescent rocks."); */
+                You_see("형광색 바위 위에서 금붕어들이 헤엄치고 있다.");
                 break;
             case 5:
-                You_see(
-                    "tiny snowflakes spinning around a miniature farmhouse.");
+                /*KR You_see("tiny snowflakes spinning around a miniature
+                 * farmhouse."); */
+                You_see("소형 농가 위로 작은 눈송이들이 맴돌고 있다.");
                 break;
             default:
-                pline("Oh wow... like a kaleidoscope!");
+                /*KR pline("Oh wow... like a kaleidoscope!"); */
+                pline("우와... 마치 만화경 같아!");
                 break;
             }
             consume_obj_charge(obj, TRUE);
@@ -1177,20 +1354,28 @@ struct obj **optr;
 
     /* read a single character */
     if (flags.verbose)
-        You("may look for an object or monster symbol.");
-    ch = yn_function("What do you look for?", (char *) 0, '\0');
+        /*KR You("may look for an object or monster symbol."); */
+        You("물건이나 몬스터의 기호를 찾아볼 수 있습니다.");
+    /*KR ch = yn_function("What do you look for?", (char *) 0, '\0'); */
+    ch = yn_function("무엇을 찾아보겠습니까?", (char *) 0, '\0');
     /* Don't filter out ' ' here; it has a use */
     if ((ch != def_monsyms[S_GHOST].sym) && index(quitchars, ch)) {
         if (flags.verbose)
             pline1(Never_mind);
         return;
     }
+#if 0 /*KR: 원본*/
     You("peer into %s...", the(xname(obj)));
+#else
+    You("%s 응시한다...", append_josa(the(xname(obj)), "을"));
+#endif
     nomul(-rnd(10));
-    multi_reason = "gazing into a crystal ball";
+    /*KR multi_reason = "gazing into a crystal ball"; */
+    multi_reason = "수정 구슬을 들여다보고 있는 중";
     nomovemsg = "";
     if (obj->spe <= 0) {
-        pline_The("vision is unclear.");
+        /*KR pline_The("vision is unclear."); */
+        pline_The("환상이 선명하지 않다.");
     } else {
         int class, i;
         int ret = 0;
@@ -1218,25 +1403,31 @@ struct obj **optr;
                 break;
             default:
                 i = rn2(SIZE(level_detects));
+#if 0 /*KR: 원본*/
                 You_see("%s, %s.", level_detects[i].what,
                         level_distance(level_detects[i].where));
+#else
+                You_see("%s %s 있는 것을 보았다.", level_detects[i].what,
+                        append_josa(level_distance(level_detects[i].where),
+                                    "이"));
+#endif
                 ret = 0;
                 break;
             }
 
         if (ret) {
             if (!rn2(100)) /* make them nervous */
-                You_see("the Wizard of Yendor gazing out at you.");
+                /*KR You_see("the Wizard of Yendor gazing out at you."); */
+                You_see("당신을 노려보는 옌더의 마법사가 보인다.");
             else
-                pline_The("vision is unclear.");
+                /*KR pline_The("vision is unclear."); */
+                pline_The("환상이 선명하지 않다.");
         }
     }
     return;
 }
 
-STATIC_OVL void
-show_map_spot(x, y)
-register int x, y;
+STATIC_OVL void show_map_spot(x, y) register int x, y;
 {
     struct rm *lev;
     struct trap *t;
@@ -1291,10 +1482,14 @@ do_mapping()
             show_map_spot(zx, zy);
 
     if (!level.flags.hero_memory || unconstrained) {
-        flush_screen(1);                 /* flush temp screen */
+        flush_screen(1); /* flush temp screen */
         /* browse_map() instead of display_nhwindow(WIN_MAP, TRUE) */
+#if 0 /*KR: JNetHack에서 찾은 누락 파라미터*/
         browse_map(TER_DETECT | TER_MAP | TER_TRP | TER_OBJ,
                    "anything of interest");
+#else
+        browse_map(TER_DETECT | TER_MAP | TER_TRP | TER_OBJ, "흥미로운 것");
+#endif
         docrt();
     }
     reconstrain_map();
@@ -1302,21 +1497,20 @@ do_mapping()
 }
 
 /* clairvoyance */
-void
-do_vicinity_map(sobj)
-struct obj *sobj; /* scroll--actually fake spellbook--object */
+void do_vicinity_map(
+    sobj) struct obj *sobj; /* scroll--actually fake spellbook--object */
 {
     register int zx, zy;
     struct monst *mtmp;
     struct obj *otmp;
     long save_EDetect_mons;
     char save_viz_uyux;
-    boolean unconstrained, refresh = FALSE,
-            mdetected = FALSE, odetected = FALSE,
-            /* fake spellbook 'sobj' implies hero has cast the spell;
-               when book is blessed, casting is skilled or expert level;
-               if already clairvoyant, non-skilled spell acts like skilled */
-            extended = (sobj && (sobj->blessed || Clairvoyant));
+    boolean unconstrained,
+        refresh = FALSE, mdetected = FALSE, odetected = FALSE,
+        /* fake spellbook 'sobj' implies hero has cast the spell;
+           when book is blessed, casting is skilled or expert level;
+           if already clairvoyant, non-skilled spell acts like skilled */
+        extended = (sobj && (sobj->blessed || Clairvoyant));
     int newglyph, oldglyph,
         lo_y = ((u.uy - 5 < 0) ? 0 : u.uy - 5),
         hi_y = ((u.uy + 6 >= ROWNO) ? ROWNO - 1 : u.uy + 6),
@@ -1374,14 +1568,14 @@ struct obj *sobj; /* scroll--actually fake spellbook--object */
             }
             /* if there is a monster here, see or detect it,
                possibly as "remembered, unseen monster" */
-            if ((mtmp = m_at(zx, zy)) != 0
-                && mtmp->mx == zx && mtmp->my == zy) { /* skip worm tails */
+            if ((mtmp = m_at(zx, zy)) != 0 && mtmp->mx == zx
+                && mtmp->my == zy) { /* skip worm tails */
                 /* if we're going to offer browse_map()/getpos() scanning of
                    the map and we're not doing extended/blessed clairvoyance
                    (hence must be swallowed or underwater), show "unseen
                    creature" unless map already displayed a monster here */
-                if ((unconstrained || !level.flags.hero_memory)
-                    && !extended && (zx != u.ux || zy != u.uy)
+                if ((unconstrained || !level.flags.hero_memory) && !extended
+                    && (zx != u.ux || zy != u.uy)
                     && !glyph_is_monster(oldglyph))
                     map_invisible(zx, zy);
                 else
@@ -1394,14 +1588,16 @@ struct obj *sobj; /* scroll--actually fake spellbook--object */
         }
 
     if (!level.flags.hero_memory || unconstrained || mdetected || odetected) {
-        flush_screen(1);                 /* flush temp screen */
+        flush_screen(1); /* flush temp screen */
         /* the getpos() prompt from browse_map() is only shown when
            flags.verbose is set, but make this unconditional so that
            not-verbose users become aware of the prompting situation */
-        You("sense your surroundings.");
+        /*KR You("sense your surroundings."); */
+        You("주변 상황을 감지했다.");
         if (extended || glyph_is_monster(glyph_at(u.ux, u.uy)))
             ter_typ |= TER_MON;
-        browse_map(ter_typ, "anything of interest");
+        /*KR browse_map(ter_typ, "anything of interest"); */
+        browse_map(ter_typ, "흥미로운 것");
         refresh = TRUE;
     }
     reconstrain_map();
@@ -1431,9 +1627,7 @@ struct obj *sobj; /* scroll--actually fake spellbook--object */
 }
 
 /* convert a secret door into a normal door */
-void
-cvt_sdoor_to_door(lev)
-struct rm *lev;
+void cvt_sdoor_to_door(lev) struct rm *lev;
 {
     int newmask = lev->doormask & ~WM_MASK;
 
@@ -1443,7 +1637,7 @@ struct rm *lev;
     else
         /* newly exposed door is closed */
         if (!(newmask & D_LOCKED))
-        newmask |= D_CLOSED;
+            newmask |= D_CLOSED;
 
     lev->typ = DOOR;
     lev->doormask = newmask;
@@ -1451,9 +1645,7 @@ struct rm *lev;
 
 /* find something at one location; it should find all somethings there
    since it is used for magical detection rather than physical searching */
-STATIC_PTR void
-findone(zx, zy, num)
-int zx, zy;
+STATIC_PTR void findone(zx, zy, num) int zx, zy;
 genericptr_t num;
 {
     register struct trap *ttmp;
@@ -1479,7 +1671,8 @@ genericptr_t num;
         (*(int *) num)++;
     }
 
-    if ((ttmp = t_at(zx, zy)) != 0 && !ttmp->tseen
+    if ((ttmp = t_at(zx, zy)) != 0
+        && !ttmp->tseen
         /* [shouldn't successful 'find' reveal and activate statue traps?] */
         && ttmp->ttyp != STATUE_TRAP) {
         ttmp->tseen = 1;
@@ -1493,9 +1686,9 @@ genericptr_t num;
         if (M_AP_TYPE(mtmp)) {
             seemimic(mtmp);
             (*(int *) num)++;
-        } else if (mtmp->mundetected && (is_hider(mtmp->data)
-                                         || hides_under(mtmp->data)
-                                         || mtmp->data->mlet == S_EEL)) {
+        } else if (mtmp->mundetected
+                   && (is_hider(mtmp->data) || hides_under(mtmp->data)
+                       || mtmp->data->mlet == S_EEL)) {
             mtmp->mundetected = 0;
             newsym(zx, zy);
             (*(int *) num)++;
@@ -1507,9 +1700,7 @@ genericptr_t num;
     }
 }
 
-STATIC_PTR void
-openone(zx, zy, num)
-int zx, zy;
+STATIC_PTR void openone(zx, zy, num) int zx, zy;
 genericptr_t num;
 {
     register struct trap *ttmp;
@@ -1532,11 +1723,21 @@ genericptr_t num;
             cvt_sdoor_to_door(&levl[zx][zy]); /* .typ = DOOR */
         if (levl[zx][zy].doormask & D_TRAPPED) {
             if (distu(zx, zy) < 3)
+#if 0 /*KR: JNetHack에서 찾은 누락 파라미터*/
                 b_trapped("door", 0);
+#else
+                b_trapped("문", 0);
+#endif
             else
+#if 0 /*KR: 원본*/
                 Norep("You %s an explosion!",
                       cansee(zx, zy) ? "see" : (!Deaf ? "hear"
                                                       : "feel the shock of"));
+#else
+                Norep("당신은 폭발을 %s!",
+                      cansee(zx, zy) ? "보았다"
+                                     : (!Deaf ? "들었다" : "몸으로 느꼈다"));
+#endif
             wake_nearto(zx, zy, 11 * 11);
             levl[zx][zy].doormask = D_NODOOR;
         } else
@@ -1590,9 +1791,14 @@ openit()
     if (u.uswallow) {
         if (is_animal(u.ustuck->data)) {
             if (Blind)
-                pline("Its mouth opens!");
+                /*KR pline("Its mouth opens!"); */
+                pline("그것의 입이 열렸다!");
             else
+#if 0 /*KR: 원본*/
                 pline("%s opens its mouth!", Monnam(u.ustuck));
+#else
+                pline("%s 입을 열었다!", append_josa(Monnam(u.ustuck), "이"));
+#endif
         }
         expels(u.ustuck, u.ustuck->data, TRUE);
         return -1;
@@ -1603,16 +1809,12 @@ openit()
 }
 
 /* callback hack for overriding vision in do_clear_area() */
-boolean
-detecting(func)
-void FDECL((*func), (int, int, genericptr_t));
+boolean detecting(func) void FDECL((*func), (int, int, genericptr_t));
 {
     return (func == findone || func == openone);
 }
 
-void
-find_trap(trap)
-struct trap *trap;
+void find_trap(trap) struct trap *trap;
 {
     int tt = what_trap(trap->ttyp, rn2);
     boolean cleared = FALSE;
@@ -1624,9 +1826,9 @@ struct trap *trap;
     /* The "Hallucination ||" is to preserve 3.6.1 behaviour, but this
        behaviour might need a rework in the hallucination case
        (e.g. to not prompt if any trap glyph appears on the square). */
-    if (Hallucination ||
-        levl[trap->tx][trap->ty].glyph !=
-        trap_to_glyph(trap, rn2_on_display_rng)) {
+    if (Hallucination
+        || levl[trap->tx][trap->ty].glyph
+               != trap_to_glyph(trap, rn2_on_display_rng)) {
         /* There's too much clutter to see your find otherwise */
         cls();
         map_trap(trap, 1);
@@ -1634,7 +1836,11 @@ struct trap *trap;
         cleared = TRUE;
     }
 
+#if 0 /*KR: 원본*/
     You("find %s.", an(defsyms[trap_to_defsym(tt)].explanation));
+#else
+    You("%s(을)를 발견했다.", defsyms[trap_to_defsym(tt)].explanation);
+#endif
 
     if (cleared) {
         display_nhwindow(WIN_MAP, TRUE); /* wait */
@@ -1660,12 +1866,17 @@ boolean via_warning;
         /* this used to only be executed if a !canspotmon() test passed
            but that failed to bring sensed monsters out of hiding */
         found_something = !canspotmon(mtmp);
-        if (mtmp->mundetected && (is_hider(mtmp->data)
-                                  || hides_under(mtmp->data)
-                                  || mtmp->data->mlet == S_EEL)) {
+        if (mtmp->mundetected
+            && (is_hider(mtmp->data) || hides_under(mtmp->data)
+                || mtmp->data->mlet == S_EEL)) {
             if (via_warning) {
+#if 0 /*KR: 원본*/
                 Your("warning senses cause you to take a second %s.",
                      Blind ? "to check nearby" : "look close by");
+#else
+                Your("경고 감각이 근처를 %s 만들었다.",
+                     Blind ? "다시 확인하게" : "다시 살펴보게");
+#endif
                 display_nhwindow(WIN_MESSAGE, FALSE); /* flush messages */
             }
             mtmp->mundetected = 0;
@@ -1683,9 +1894,16 @@ boolean via_warning;
         exercise(A_WIS, TRUE);
         if (!canspotmon(mtmp)) {
             map_invisible(x, y);
-            You_feel("an unseen monster!");
+            /*KR You_feel("an unseen monster!"); */
+            You_feel("보이지 않는 몬스터의 기운을 느꼈다!");
         } else if (!sensemon(mtmp)) {
+#if 0 /*KR: 원본*/
             You("find %s.", mtmp->mtame ? y_monnam(mtmp) : a_monnam(mtmp));
+#else
+            You("%s 발견했다.",
+                append_josa(mtmp->mtame ? y_monnam(mtmp) : a_monnam(mtmp),
+                            "을"));
+#endif
         }
         return 1;
     }
@@ -1711,10 +1929,13 @@ register int aflag; /* intrinsic autosearch vs explicit searching */
 
     if (u.uswallow) {
         if (!aflag)
-            pline("What are you looking for?  The exit?");
+            /*KR pline("What are you looking for?  The exit?"); */
+            pline("무엇을 찾고 있는 거지? 출구?");
     } else {
-        int fund = (uwep && uwep->oartifact
-                    && spec_ability(uwep, SPFX_SEARCH)) ? uwep->spe : 0;
+        int fund =
+            (uwep && uwep->oartifact && spec_ability(uwep, SPFX_SEARCH))
+                ? uwep->spe
+                : 0;
 
         if (ublindf && ublindf->otyp == LENSES && !Blind)
             fund += 2; /* JDS: lenses help searching */
@@ -1736,7 +1957,8 @@ register int aflag; /* intrinsic autosearch vs explicit searching */
                     exercise(A_WIS, TRUE);
                     nomul(0);
                     feel_location(x, y); /* make sure it shows up */
-                    You("find a hidden door.");
+                    /*KR You("find a hidden door."); */
+                    You("숨겨진 문을 찾았다.");
                 } else if (levl[x][y].typ == SCORR) {
                     if (rnl(7 - fund))
                         continue;
@@ -1745,7 +1967,8 @@ register int aflag; /* intrinsic autosearch vs explicit searching */
                     exercise(A_WIS, TRUE);
                     nomul(0);
                     feel_newsym(x, y); /* make sure it shows up */
-                    You("find a hidden passage.");
+                    /*KR You("find a hidden passage."); */
+                    You("숨겨진 통로를 찾았다.");
                 } else {
                     /* Be careful not to find anything in an SCORR or SDOOR */
                     if ((mtmp = m_at(x, y)) != 0 && !aflag) {
@@ -1796,8 +2019,8 @@ warnreveal()
         for (y = u.uy - 1; y <= u.uy + 1; y++) {
             if (!isok(x, y) || (x == u.ux && y == u.uy))
                 continue;
-            if ((mtmp = m_at(x, y)) != 0
-                && warning_of(mtmp) && mtmp->mundetected)
+            if ((mtmp = m_at(x, y)) != 0 && warning_of(mtmp)
+                && mtmp->mundetected)
                 (void) mfind0(mtmp, 1); /* via_warning */
         }
 }
@@ -1838,7 +2061,7 @@ int default_glyph, which_subset;
 {
     int glyph, levl_glyph;
     uchar seenv;
-    boolean keep_traps = (which_subset & TER_TRP) !=0,
+    boolean keep_traps = (which_subset & TER_TRP) != 0,
             keep_objs = (which_subset & TER_OBJ) != 0,
             keep_mons = (which_subset & TER_MON) != 0;
     struct monst *mtmp;
@@ -1847,16 +2070,17 @@ int default_glyph, which_subset;
     /* for 'full', show the actual terrain for the entire level,
        otherwise what the hero remembers for seen locations with
        monsters, objects, and/or traps removed as caller dictates */
-    seenv = (full || level.flags.hero_memory)
-              ? levl[x][y].seenv : cansee(x, y) ? SVALL : 0;
+    seenv = (full || level.flags.hero_memory) ? levl[x][y].seenv
+            : cansee(x, y)                    ? SVALL
+                                              : 0;
     if (full) {
         levl[x][y].seenv = SVALL;
         glyph = back_to_glyph(x, y);
         levl[x][y].seenv = seenv;
     } else {
-        levl_glyph = level.flags.hero_memory
-              ? levl[x][y].glyph
-              : seenv ? back_to_glyph(x, y): default_glyph;
+        levl_glyph = level.flags.hero_memory ? levl[x][y].glyph
+                     : seenv                 ? back_to_glyph(x, y)
+                                             : default_glyph;
         /* glyph_at() returns the displayed glyph, which might
            be a monster.  levl[][].glyph contains the remembered
            glyph, which will never be a monster (unless it is
@@ -1865,8 +2089,8 @@ int default_glyph, which_subset;
         glyph = !swallowed ? glyph_at(x, y) : levl_glyph;
         if (keep_mons && x == u.ux && y == u.uy && swallowed)
             glyph = mon_to_glyph(u.ustuck, rn2_on_display_rng);
-        else if (((glyph_is_monster(glyph)
-                   || glyph_is_warning(glyph)) && !keep_mons)
+        else if (((glyph_is_monster(glyph) || glyph_is_warning(glyph))
+                  && !keep_mons)
                  || glyph_is_swallow(glyph))
             glyph = levl_glyph;
         if (((glyph_is_object(glyph) && !keep_objs)
@@ -1916,7 +2140,8 @@ dump_map()
 {
     int x, y, glyph, skippedrows, lastnonblank;
     int subset = TER_MAP | TER_TRP | TER_OBJ | TER_MON;
-    int default_glyph = cmap_to_glyph(level.flags.arboreal ? S_tree : S_stone);
+    int default_glyph =
+        cmap_to_glyph(level.flags.arboreal ? S_tree : S_stone);
     char buf[BUFSZ];
     boolean blankrow, toprow;
 
@@ -1931,7 +2156,7 @@ dump_map()
     skippedrows = 0;
     toprow = TRUE;
     for (y = 0; y < ROWNO; y++) {
-        blankrow = TRUE; /* assume blank until we discover otherwise */
+        blankrow = TRUE;   /* assume blank until we discover otherwise */
         lastnonblank = -1; /* buf[] index rather than map's x */
         for (x = 1; x < COLNO; x++) {
             int ch, color;
@@ -1967,29 +2192,31 @@ dump_map()
 
 /* idea from crawl; show known portion of map without any monsters,
    objects, or traps occluding the view of the underlying terrain */
-void
-reveal_terrain(full, which_subset)
-int full; /* wizard|explore modes allow player to request full map */
+void reveal_terrain(full,
+                    which_subset) int full; /* wizard|explore modes allow
+                                               player to request full map */
 int which_subset; /* when not full, whether to suppress objs and/or traps */
 {
     if ((Hallucination || Stunned || Confusion) && !full) {
-        You("are too disoriented for this.");
+        /*KR You("are too disoriented for this."); */
+        You("이것을 하기엔 방향 감각을 너무 상실했다.");
     } else {
         int x, y, glyph, default_glyph;
         char buf[BUFSZ];
         /* there is a TER_MAP bit too; we always show map regardless of it */
-        boolean keep_traps = (which_subset & TER_TRP) !=0,
+        boolean keep_traps = (which_subset & TER_TRP) != 0,
                 keep_objs = (which_subset & TER_OBJ) != 0,
                 keep_mons = (which_subset & TER_MON) != 0; /* not used */
         unsigned swallowed = u.uswallow; /* before unconstrain_map() */
 
         if (unconstrain_map())
             docrt();
-        default_glyph = cmap_to_glyph(level.flags.arboreal ? S_tree : S_stone);
+        default_glyph =
+            cmap_to_glyph(level.flags.arboreal ? S_tree : S_stone);
 
         for (x = 1; x < COLNO; x++)
             for (y = 0; y < ROWNO; y++) {
-                glyph = reveal_terrain_getglyph(x,y, full, swallowed,
+                glyph = reveal_terrain_getglyph(x, y, full, swallowed,
                                                 default_glyph, which_subset);
                 show_glyph(x, y, glyph);
             }
@@ -1998,26 +2225,49 @@ int which_subset; /* when not full, whether to suppress objs and/or traps */
            cursor there, and after moving it anywhere '@' moves it back */
         flush_screen(1);
         if (full) {
-            Strcpy(buf, "underlying terrain");
+            /*KR Strcpy(buf, "underlying terrain"); */
+            Strcpy(buf, "기저 지형");
         } else {
-            Strcpy(buf, "known terrain");
+            /*KR Strcpy(buf, "known terrain"); */
+            Strcpy(buf, "알려진 지형");
             if (keep_traps)
+#if 0 /*KR: 원본*/
                 Sprintf(eos(buf), "%s traps",
                         (keep_objs || keep_mons) ? "," : " and");
+#else /*KR: KRNethack 맞춤 번역 (어순 변경으로 쉼표/and 위치 조정)*/
+                Sprintf(eos(buf), "%s 함정",
+                        (keep_objs || keep_mons) ? "," : " 및");
+#endif
             if (keep_objs)
+#if 0 /*KR: 원본*/
                 Sprintf(eos(buf), "%s%s objects",
                         (keep_traps || keep_mons) ? "," : "",
                         keep_mons ? "" : " and");
+#else
+                Sprintf(eos(buf), "%s%s 아이템",
+                        (keep_traps || keep_mons) ? "," : "",
+                        keep_mons ? "" : " 및");
+#endif
             if (keep_mons)
+#if 0 /*KR: 원본*/
                 Sprintf(eos(buf), "%s and monsters",
                         (keep_traps || keep_objs) ? "," : "");
+#else
+                Sprintf(eos(buf), "%s 및 몬스터",
+                        (keep_traps || keep_objs) ? "," : "");
+#endif
         }
+#if 0 /*KR: 원본*/
         pline("Showing %s only...", buf);
+#else
+        pline("%s 정보만 표시중...", buf);
+#endif
 
         /* allow player to move cursor around and get autodescribe feedback
            based on what is visible now rather than what is on 'real' map */
         which_subset |= TER_MAP; /* guarantee non-zero */
-        browse_map(which_subset, "anything of interest");
+        /*KR browse_map(which_subset, "anything of interest"); */
+        browse_map(which_subset, "흥미로운 것");
 
         reconstrain_map();
         docrt(); /* redraw the screen, restoring regular map */

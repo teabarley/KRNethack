@@ -1429,14 +1429,19 @@ wiz_smell(VOID_ARGS)
     cc.y = u.uy;
     mndx = 0; /* gcc -Wall lint */
     if (!olfaction(youmonst.data)) {
-        You("are incapable of detecting odors in your present form.");
+        /*KR You("are incapable of detecting odors in your present form."); */
+        You("현재 모습으로는 냄새를 맡을 수 없습니다.");
         return 0;
     }
 
-    pline("You can move the cursor to a monster that you want to smell.");
+    /*KR pline("You can move the cursor to a monster that you want to
+     * smell."); */
+    pline("커서를 이동하여 냄새를 맡을 몬스터를 선택할 수 있습니다.");
     do {
-        pline("Pick a monster to smell.");
-        ans = getpos(&cc, TRUE, "a monster");
+        /*KR pline("Pick a monster to smell."); */
+        pline("냄새를 맡을 몬스터를 선택하십시오.");
+        /*KR ans = getpos(&cc, TRUE, "a monster"); */
+        ans = getpos(&cc, TRUE, "몬스터");
         if (ans < 0 || cc.x < 0) {
             return 0; /* done */
         }
@@ -1449,9 +1454,11 @@ wiz_smell(VOID_ARGS)
         /* Is it a monster? */
         if (mndx) {
             if (!usmellmon(&mons[mndx]))
-                pline("That monster seems to give off no smell.");
+                /*KR pline("That monster seems to give off no smell."); */
+                pline("그 몬스터는 아무런 냄새도 풍기지 않는 것 같다.");
         } else
-            pline("That is not a monster.");
+            /*KR pline("That is not a monster."); */
+            pline("그것은 몬스터가 아닙니다.");
     } while (TRUE);
     return 0;
 }
@@ -1499,7 +1506,8 @@ wiz_intrinsic(VOID_ARGS)
                 Sprintf(buf, "%s", propname);
             add_menu(win, NO_GLYPH, &any, 0, 0, ATR_NONE, buf, FALSE);
         }
-        end_menu(win, "Which intrinsics?");
+        /*KR end_menu(win, "Which intrinsics?"); */
+        end_menu(win, "어떤 내재적 능력을 설정하시겠습니까?");
         n = select_menu(win, PICK_ANY, &pick_list);
         destroy_nhwindow(win);
 
@@ -1539,20 +1547,35 @@ wiz_intrinsic(VOID_ARGS)
                 make_sick(newtimeout, wizintrinsic, TRUE, typ);
                 break;
             case SLIMED:
+#if 0 /*KR: 원본*/
                 Sprintf(buf, fmt,
                         !Slimed ? "" : " still", "turning into slime");
+#else /*KR: KRNethack 맞춤 번역 (영어 fmt 구조 무시)*/
+                Sprintf(buf, "당신은%s 슬라임이 되어가고 있다.",
+                        !Slimed ? "" : " 여전히");
+#endif
                 make_slimed(newtimeout, buf);
                 break;
             case STONED:
+#if 0 /*KR: 원본*/
                 Sprintf(buf, fmt,
                         !Stoned ? "" : " still", "turning into stone");
+#else
+                Sprintf(buf, "당신은%s 돌이 되어가고 있다.",
+                        !Stoned ? "" : " 여전히");
+#endif
                 make_stoned(newtimeout, buf, KILLED_BY, wizintrinsic);
                 break;
             case STUNNED:
                 make_stunned(newtimeout, TRUE);
                 break;
             case VOMITING:
+#if 0 /*KR: 원본*/
                 Sprintf(buf, fmt, !Vomiting ? "" : " still", "vomiting");
+#else
+                Sprintf(buf, "당신은%s 구역질을 하고 있다.",
+                        !Vomiting ? "" : " 여전히");
+#endif
                 make_vomiting(newtimeout, FALSE);
                 pline1(buf);
                 break;
@@ -1574,8 +1597,14 @@ wiz_intrinsic(VOID_ARGS)
                 /*FALLTHRU*/
             default:
  def_feedback:
+#if 0 /*KR: 원본*/
                 pline("Timeout for %s %s %d.", propertynames[i].prop_name,
                       oldtimeout ? "increased by" : "set to", amt);
+#else /*KR: KRNethack 맞춤 번역*/
+                pline("%s의 제한 시간이 %d만큼 %s.",
+                      propertynames[i].prop_name, amt,
+                      oldtimeout ? "증가했습니다" : "설정되었습니다");
+#endif
                 if (p != GLIB)
                     incr_itimeout(&u.uprops[p].intrinsic, amt);
                 break;
@@ -1738,6 +1767,10 @@ static const char have_been[] = "have been ", have_never[] = "have never ",
 #endif
 #if 1 /*KR ~ing도 자연스럽게 출력하기 위함 */
 #define you_are_ing(goodthing, ps) enl_msg(You_, iru, ita, goodthing, ps)
+/*KR: 코드 작성 가독성을 위해 어순을 [주어, 목적어/수식어, 부가설명, 현재동사,
+ * 과거동사]로 맞춘 래퍼 매크로 */
+#define enl_msg_kr(prefix, suffix, ps, present, past) \
+    enl_msg(prefix, present, past, suffix, ps)
 #endif
 
 
@@ -2225,21 +2258,37 @@ int final;
 
     /* this is shown even if the 'time' option is off */
     if (moves == 1L) {
+#if 0 /*KR*/
         you_have("just started your adventure", "");
+#else
+        enlght_line(You_, "", "모험을 시작한 지 얼마 되지 않았다", "");
+#endif
     } else {
         /* 'turns' grates on the nerves in this context... */
-        Sprintf(buf, "the dungeon %ld turn%s ago", moves, plur(moves));
+        /*KR Sprintf(buf, "the dungeon %ld turn%s ago", moves, plur(moves)); */
+        Sprintf(buf, "%ld턴 전에 미궁에 들어섰다", moves);
         /* same phrasing for current and final: "entered" is unconditional */
+#if 0 /*KR*/
         enlght_line(You_, "entered ", buf, "");
+#else
+        enlght_line(You_, "", buf, "");
+#endif
     }
 
     /* for gameover, these have been obtained in really_done() so that they
        won't vary if user leaves a disclosure prompt or --More-- unanswered
        long enough for the dynamic value to change between then and now */
+#if 0 /*KR:T*/
     if (final ? iflags.at_midnight : midnight()) {
         enl_msg("It ", "is ", "was ", "the midnight hour", "");
     } else if (final ? iflags.at_night : night()) {
         enl_msg("It ", "is ", "was ", "nighttime", "");
+#else
+    if (final ? iflags.at_midnight : midnight()) {
+        enl_msg("시간대는 깊은 밤", "이다", "이었다", "", "");
+    } else if (final ? iflags.at_night : night()) {
+        enl_msg("시간대는 밤", "이다", "이었다", "", "");
+#endif
     }
     /* other environmental factors */
     if (flags.moonphase == FULL_MOON || flags.moonphase == NEW_MOON) {
@@ -2249,6 +2298,7 @@ int final;
            have dragged on for an arbitrary amount of time.  We want to
            report the values that currently affect play--or affected
            play when game ended--rather than actual outside situation.] */
+#if 0 /*KR:T*/
         Sprintf(buf, "a %s moon in effect%s",
                 (flags.moonphase == FULL_MOON) ? "full"
                 : (flags.moonphase == NEW_MOON) ? "new"
@@ -2260,6 +2310,19 @@ int final;
                    vs died--so settle for general platitude */
                 final ? " when your adventure ended" : "");
         enl_msg("There ", "is ", "was ", buf, "");
+#else /* (모험을 끝냈을 때) 하늘에는 (보름~하현)달이 떠 있다(있었다) */
+        Sprintf(buf, "%s%s달",
+                /* we don't have access to 'how' here--aside from survived
+                   vs died--so settle for general platitude */
+                final ? "모험을 끝냈을 때 하늘에는 " : "하늘에는 ",
+                (flags.moonphase == FULL_MOON)  ? "보름"
+                : (flags.moonphase == NEW_MOON) ? "그믐"
+                /* showing these would probably just lead to confusion
+                   since they have no effect on game play... */
+                : (flags.moonphase < FULL_MOON) ? "상현"
+                                                : "하현");
+        enl_msg(buf, "이 떠 있다", "이 떠 있었다", "", "");
+#endif
     }
     if (flags.friday13) {
         /* let player know that friday13 penalty is/was in effect;
@@ -2291,14 +2354,15 @@ int final;
         /* [flags.showexp currently does not matter; should it?] */
 
         /* experience level is already shown above */
+#if 0 /*KR: 원본*/
         Sprintf(buf, "%-1ld experience point%s", u.uexp, plur(u.uexp));
         /* TODO?
-         *  Remove wizard-mode restriction since patient players can
-         *  determine the numbers needed without resorting to spoilers
-         *  (even before this started being disclosed for 'final';
-         *  just enable 'showexp' and look at normal status lines
-         *  after drinking gain level potions or eating wraith corpses
-         *  or being level-drained by vampires).
+         * Remove wizard-mode restriction since patient players can
+         * determine the numbers needed without resorting to spoilers
+         * (even before this started being disclosed for 'final';
+         * just enable 'showexp' and look at normal status lines
+         * after drinking gain level potions or eating wraith corpses
+         * or being level-drained by vampires).
          */
         if (ulvl < 30 && (final || wizard)) {
             long nxtlvl = newuexp(ulvl), delta = nxtlvl - u.uexp;
@@ -2311,14 +2375,31 @@ int final;
                     (ulvl < 18) ? "to attain" : "for", (ulvl + 1));
         }
         you_have(buf, "");
+#else /*KR: KRNethack 맞춤 번역 (복잡한 영어 조건문 제거)*/
+        Sprintf(buf, "경험치 %-1ld 포인트", u.uexp);
+        if (ulvl < 30 && (final || wizard)) {
+            long nxtlvl = newuexp(ulvl), delta = nxtlvl - u.uexp;
+            Sprintf(eos(buf), " (레벨 %d까지 %ld 포인트 %s)", (ulvl + 1),
+                    delta, !final ? "남음" : "남았었음");
+        }
+        you_have(buf, "");
+        /* 결과: "당신은 경험치 150 포인트 (레벨 5까지 20 포인트 남음)을(를)
+         * 가지고 있다." */
+#endif
     }
 #ifdef SCORE_ON_BOTL
     if (flags.showscore) {
         /* describes what's shown on status line, which is an approximation;
            only show it here if player has the 'showscore' option enabled */
+#if 0 /*KR: 원본*/
         Sprintf(buf, "%ld%s", botl_score(),
                 !final ? "" : " before end-of-game adjustments");
         enl_msg("Your score ", "is ", "was ", buf, "");
+#else /*KR: 결과: "당신의 점수는 게임 종료 조정 전 5000점이었다." */
+        Sprintf(buf, "%s%ld점", !final ? "" : "게임 종료 조정 전 ",
+                botl_score());
+        enl_msg("당신의 점수는 ", "이다", "이었다", buf, "");
+#endif
     }
 #endif
 }
@@ -2331,79 +2412,122 @@ basics_enlightenment(mode, final)
 int mode UNUSED;
 int final;
 {
+#if 0 /*KR: 원본 (한국어에서는 사용하지 않음)*/
     static char Power[] = "energy points (spell power)";
+#endif
     char buf[BUFSZ];
     int pw = u.uen, hp = (Upolyd ? u.mh : u.uhp),
         pwmax = u.uenmax, hpmax = (Upolyd ? u.mhmax : u.uhpmax);
 
     enlght_out(""); /* separator after background */
-    enlght_out("Basics:");
+    /*KR enlght_out("Basics:"); */
+    enlght_out("기본 정보:");
 
     if (hp < 0)
         hp = 0;
     /* "1 out of 1" rather than "all" if max is only 1; should never happen */
+#if 0 /*KR: 원본*/
     if (hp == hpmax && hpmax > 1)
         Sprintf(buf, "all %d hit points", hpmax);
     else
         Sprintf(buf, "%d out of %d hit point%s", hp, hpmax, plur(hpmax));
+#else /*KR: KRNethack 맞춤 번역 (영어의 단복수/상태 조건문 단순화)*/
+    Sprintf(buf, "%d 히트 포인트 (최대: %d)", hp, hpmax);
+#endif
     you_have(buf, "");
 
     /* low max energy is feasible, so handle couple of extra special cases */
+#if 0 /*KR: 원본*/
     if (pwmax == 0 || (pw == pwmax && pwmax == 2)) /* both: "all 2" is silly */
         Sprintf(buf, "%s %s", !pwmax ? "no" : "both", Power);
     else if (pw == pwmax && pwmax > 2)
         Sprintf(buf, "all %d %s", pwmax, Power);
     else
         Sprintf(buf, "%d out of %d %s", pw, pwmax, Power);
+#else /*KR: KRNethack 맞춤 번역*/
+    Sprintf(buf, "%d 마력 (최대: %d)", pw, pwmax);
+#endif
     you_have(buf, "");
 
     if (Upolyd) {
         switch (mons[u.umonnum].mlevel) {
         case 0:
             /* status line currently being explained shows "HD:0" */
-            Strcpy(buf, "0 hit dice (actually 1/2)");
+            /*KR Strcpy(buf, "0 hit dice (actually 1/2)"); */
+            Strcpy(buf, "HD0 (실제로는 1/2)");
             break;
         case 1:
-            Strcpy(buf, "1 hit die");
+            /*KR Strcpy(buf, "1 hit die"); */
+            Strcpy(buf, "HD1");
             break;
         default:
-            Sprintf(buf, "%d hit dice", mons[u.umonnum].mlevel);
+            /*KR Sprintf(buf, "%d hit dice", mons[u.umonnum].mlevel); */
+            Sprintf(buf, "HD%d", mons[u.umonnum].mlevel);
             break;
         }
         you_have(buf, "");
     }
 
     Sprintf(buf, "%d", u.uac);
-    enl_msg("Your armor class ", "is ", "was ", buf, "");
+    /*KR enl_msg("Your armor class ", "is ", "was ", buf, ""); */
+    enl_msg("당신의 아머 클래스는 ", "이다", "이었다", buf, "");
 
     /* gold; similar to doprgold(#seegold) but without shop billing info;
        same amount as shown on status line which ignores container contents */
     {
-        static const char Your_wallet[] = "Your wallet ";
+        /*KR static const char Your_wallet[] = "Your wallet "; */
+        static const char Your_wallet[] = "당신의 지갑";
         long umoney = money_cnt(invent);
 
+#if 0 /*KR: 원본*/
         if (!umoney) {
             enl_msg(Your_wallet, "is ", "was ", "empty", "");
         } else {
             Sprintf(buf, "%ld %s", umoney, currency(umoney));
             enl_msg(Your_wallet, "contains ", "contained ", buf, "");
+#else /*KR 텅 비어 (있다) or 지갑에는 150금화(이)가 들어 (있다) */
+        if (!umoney) {
+            enl_msg(Your_wallet, "있다", "있었다", "은 텅 비어 ", "");
+        } else {
+            Sprintf(buf, "에는 %ld%s(이)가 ", umoney, currency(umoney));
+            enl_msg(Your_wallet, "들어 있다", "들어 있었다", buf, "");
+#endif
         }
     }
 
     if (flags.pickup) {
         char ocl[MAXOCLASSES + 1];
 
+#if 0 /*KR: 원본 (ON 출력을 뒤로 미룸)*/
         Strcpy(buf, "on");
+#endif
         oc_to_str(flags.pickup_types, ocl);
+#if 0 /*KR: 원본*/
         Sprintf(eos(buf), " for %s%s%s",
                 *ocl ? "'" : "", *ocl ? ocl : "all types", *ocl ? "'" : "");
+#else /*KR: KRNethack 맞춤 번역*/
+        Sprintf(buf, "%s%s%s", *ocl ? "'" : "", *ocl ? ocl : "모든 종류",
+                *ocl ? "'" : "");
+#endif
         if (flags.pickup_thrown && *ocl) /* *ocl: don't show if 'all types' */
-            Strcat(buf, " plus thrown");
+            /*KR Strcat(buf, " plus thrown"); */
+            Strcat(buf, " 및 던진 물건");
         if (apelist)
-            Strcat(buf, ", with exceptions");
-    } else
-        Strcpy(buf, "off");
+            /*KR Strcat(buf, ", with exceptions"); */
+            Strcat(buf, "(예외 있음)");
+#if 1 /*KR: 뒤로 미뤘던 ON(켜짐) 텍스트를 이제서야 출력*/
+        Strcat(buf, "에 대해 켜져 ");
+#endif
+    } else {
+        /*KR Strcpy(buf, "off"); */
+        Strcpy(buf, "꺼져 ");
+    }
+#if 0 /*KR: 원본*/
     enl_msg("Autopickup ", "is ", "was ", buf, "");
+#else /*KR: KRNethack 맞춤 번역 (enl_msg_kr 사용)*/
+    /* 결과 예시: "자동 줍기 설정은 모든 종류에 대해 켜져 있다." */
+    enl_msg_kr("자동 줍기 설정은 ", buf, "", "있다", "있었다");
+#endif
 }
 
 /* characteristics: expanded version of bottom line strength, dexterity, &c */
@@ -2415,7 +2539,8 @@ int final;
     char buf[BUFSZ];
 
     enlght_out("");
-    Sprintf(buf, "%s Characteristics:", !final ? "Current" : "Final");
+    /*KR Sprintf(buf, "%s Characteristics:", !final ? "Current" : "Final"); */
+    Sprintf(buf, "%s 특성:", !final ? "현재" : "최종");
     enlght_out(buf);
 
     /* bottom line order */
@@ -2481,7 +2606,8 @@ int mode, final, attrindx;
 
     acurrent = ACURR(attrindx);
     (void) attrval(attrindx, acurrent, valubuf); /* Sprintf(valubuf,"%d",) */
-    Sprintf(subjbuf, "Your %s ", attrname[attrindx]);
+    /*KR Sprintf(subjbuf, "Your %s ", attrname[attrindx]); */
+    Sprintf(subjbuf, "당신의 %s ", append_josa(attrname[attrindx], "은"));
 
     if (!hide_innate_value) {
         /* show abase, amax, and/or attrmax if acurr doesn't match abase
@@ -2498,28 +2624,51 @@ int mode, final, attrindx;
         interesting_alimit =
             final ? TRUE /* was originally `(abase != alimit)' */
                   : (alimit != (attrindx != A_STR ? 18 : STR18(100)));
-        paren_pfx = final ? " (" : " (current; ";
+        /*KR paren_pfx = final ? " (" : " (current; "; */
+        paren_pfx = final ? " (" : " (현재; ";
         if (acurrent != abase) {
+#if 0 /*KR: 원본*/
             Sprintf(eos(valubuf), "%sbase:%s", paren_pfx,
                     attrval(attrindx, abase, valstring));
+#else
+            Sprintf(eos(valubuf), "%s기본: %s", paren_pfx,
+                    attrval(attrindx, abase, valstring));
+#endif
             paren_pfx = ", ";
         }
         if (abase != apeak) {
+#if 0 /*KR: 원본*/
             Sprintf(eos(valubuf), "%speak:%s", paren_pfx,
                     attrval(attrindx, apeak, valstring));
+#else
+            Sprintf(eos(valubuf), "%s최대: %s", paren_pfx,
+                    attrval(attrindx, apeak, valstring));
+#endif
             paren_pfx = ", ";
         }
         if (interesting_alimit) {
+#if 0 /*KR: 원본*/
             Sprintf(eos(valubuf), "%s%slimit:%s", paren_pfx,
                     /* more verbose if exceeding 'limit' due to magic bonus */
                     (acurrent > alimit) ? "innate " : "",
                     attrval(attrindx, alimit, valstring));
+#else
+            Sprintf(
+                eos(valubuf), "%s%s상한: %s", paren_pfx,
+                /* 마법 보너스 등으로 한도를 초과했을 때 '본래의' 한도 표시 */
+                (acurrent > alimit) ? "본래의 " : "",
+                attrval(attrindx, alimit, valstring));
+#endif
             /* paren_pfx = ", "; */
         }
         if (acurrent != abase || abase != apeak || interesting_alimit)
             Strcat(valubuf, ")");
     }
+#if 0 /*KR: 원본*/
     enl_msg(subjbuf, "is ", "was ", valubuf, "");
+#else /*KR: KRNethack 맞춤 번역 (가독성을 위한 래퍼 매크로 활용) */
+    enl_msg_kr(subjbuf, valubuf, "", "이다", "이었다");
+#endif
 }
 
 /* status: selected obvious capabilities, assorted troubles */
@@ -2535,7 +2684,8 @@ int final;
                       /* if hero dies while dismounting, u.usteed will still
                          be set; we want to ignore steed in that situation */
                       && !(final == ENL_GAMEOVERDEAD
-                           && !strcmp(killer.name, "riding accident")));
+                          /*KR && !strcmp(killer.name, "riding accident"))); */
+                           && !strcmp(killer.name, "승마 사고로")));
     const char *steedname = (!Riding ? (char *) 0
                       : x_monnam(u.usteed,
                                  u.usteed->mtame ? ARTICLE_YOUR : ARTICLE_THE,
@@ -2548,45 +2698,86 @@ int final;
      *     should be discernible to the hero hence to the player)
     \*/
     enlght_out(""); /* separator after title or characteristics */
-    enlght_out(final ? "Final Status:" : "Current Status:");
+    /*KR enlght_out(final ? "Final Status:" : "Current Status:"); */
+    enlght_out(final ? "최종 상태:" : "현재 상태:");
 
     Strcpy(youtoo, You_);
     /* not a traditional status but inherently obvious to player; more
        detail given below (attributes section) for magic enlightenment */
     if (Upolyd) {
+#if 0 /*KR: 원본*/
         Strcpy(buf, "transformed");
         if (ugenocided())
             Sprintf(eos(buf), " and %s %s inside",
                     final ? "felt" : "feel", udeadinside());
         you_are(buf, "");
+#else
+        Strcpy(buf, "변신한 상태");
+        if (ugenocided())
+            
+            Sprintf(eos(buf), "이며, 속이 %s 느낌", udeadinside());
+        enl_msg_kr(You_, buf, "", "이다", "이었다");
+#endif
     }
     /* not a trouble, but we want to display riding status before maybe
        reporting steed as trapped or hero stuck to cursed saddle */
     if (Riding) {
+#if 0 /*KR: 원본*/
         Sprintf(buf, "riding %s", steedname);
         you_are(buf, "");
         Sprintf(eos(youtoo), "and %s ", steedname);
+#else /*KR: KRNethack 맞춤 번역*/
+        Sprintf(buf, "%s(을)를 타고 ", steedname);
+        enl_msg_kr(You_, buf, "", "있다", "있었다");
+        Sprintf(youtoo, "당신과 %s(은)는 ", steedname);
+#endif
     }
     /* other movement situations that hero should always know */
     if (Levitation) {
         if (Lev_at_will && magic)
+#if 0 /*KR: 원본*/
             you_are("levitating, at will", "");
         else
             enl_msg(youtoo, are, were, "levitating", from_what(LEVITATION));
+#else /*KR: KRNethack 맞춤 번역*/
+            enl_msg_kr(youtoo, "자유자재로 부유하고 ", "", "있다", "있었다");
+        else
+            enl_msg_kr(youtoo, "부유하고 ", from_what(LEVITATION), "있다",
+                       "있었다");
+#endif
     } else if (Flying) { /* can only fly when not levitating */
+#if 0                    /*KR: 원본*/
         enl_msg(youtoo, are, were, "flying", from_what(FLYING));
+#else
+        enl_msg_kr(youtoo, "날고 ", from_what(FLYING), "있다", "있었다");
+#endif
     }
     if (Underwater) {
+#if 0 /*KR: 원본*/
         you_are("underwater", "");
     } else if (u.uinwater) {
         you_are(Swimming ? "swimming" : "in water", from_what(SWIMMING));
+#else
+        enl_msg_kr(You_, "물속에 ", "", "있다", "있었다");
+    } else if (u.uinwater) {
+        enl_msg_kr(You_, Swimming ? "수영하고 " : "물에 빠져 ",
+                   from_what(SWIMMING), "있다", "있었다");
+#endif
     } else if (walking_on_water()) {
         /* show active Wwalking here, potential Wwalking elsewhere */
+#if 0 /*KR: 원본*/
         Sprintf(buf, "walking on %s",
                 is_pool(u.ux, u.uy) ? "water"
                 : is_lava(u.ux, u.uy) ? "lava"
                   : surface(u.ux, u.uy)); /* catchall; shouldn't happen */
         you_are(buf, from_what(WWALKING));
+#else
+        Sprintf(buf, "%s 위를 걷고 ",
+                is_pool(u.ux, u.uy) ? "물"
+                : is_lava(u.ux, u.uy) ? "용암"
+                    : surface(u.ux, u.uy)); /* catchall; shouldn't happen */
+        enl_msg_kr(You_, buf, from_what(WWALKING), "있다", "있었다");
+#endif
     }
     if (Upolyd && (u.uundetected || U_AP_TYPE != M_AP_NOTHING))
         youhiding(TRUE, final);
@@ -2594,27 +2785,52 @@ int final;
     /* internal troubles, mostly in the order that prayer ranks them */
     if (Stoned) {
         if (final && (Stoned & I_SPECIAL))
+#if 0 /*KR: 원본*/
             enlght_out(" You turned into stone.");
         else
             you_are("turning to stone", "");
+#else /*KR: KRNethack 맞춤 번역*/
+            enlght_out(" 당신은 돌이 되었다.");
+        else
+            enl_msg_kr(You_, "돌이 되어가고 ", "", "있다", "있었다");
+#endif
     }
     if (Slimed) {
         if (final && (Slimed & I_SPECIAL))
+#if 0 /*KR: 원본*/
             enlght_out(" You turned into slime.");
         else
             you_are("turning into slime", "");
+#else /*KR: KRNethack 맞춤 번역*/
+            enlght_out(" 당신은 슬라임이 되었다.");
+        else
+            enl_msg_kr(You_, "슬라임이 되어가고 ", "", "있다", "있었다");
+#endif
     }
     if (Strangled) {
         if (u.uburied) {
+#if 0 /*KR: 원본*/
             you_are("buried", "");
+#else /*KR: KRNethack 맞춤 번역*/
+            enl_msg_kr(You_, "파묻혀 ", "", "있다", "있었다");
+#endif
         } else {
             if (final && (Strangled & I_SPECIAL)) {
-                enlght_out(" You died from strangulation.");
+                /*KR enlght_out(" You died from strangulation."); */
+                enlght_out(" 당신은 질식사했다.");
             } else {
+#if 0 /*KR: 원본*/
                 Strcpy(buf, "being strangled");
                 if (wizard)
                     Sprintf(eos(buf), " (%ld)", (Strangled & TIMEOUT));
                 you_are(buf, from_what(STRANGLED));
+#else /*KR: KRNethack 맞춤 번역*/
+                Strcpy(buf, "목이 졸리고");
+                if (wizard)
+                    Sprintf(eos(buf), " (%ld)", (Strangled & TIMEOUT));
+                Strcat(buf, " ");
+                enl_msg_kr(You_, buf, from_what(STRANGLED), "있다", "있었다");
+#endif
             }
         }
     }
@@ -2624,36 +2840,76 @@ int final;
            puts TermIll before FoodPois and death due to timeout reports
            terminal illness if both are in effect, so do the same here */
         if (final && (Sick & I_SPECIAL)) {
+#if 0 /*KR: 원본*/
             Sprintf(buf, " %sdied from %s.", You_, /* has trailing space */
                     (u.usick_type & SICK_NONVOMITABLE)
                     ? "terminal illness" : "food poisoning");
+#else /*KR: KRNethack 맞춤 번역*/
+            /* You_ 변수 안에 이미 "당신은 "이라는 공백이 포함됨 */
+            Sprintf(buf, " %s%s 죽었다.", You_,
+                    (u.usick_type & SICK_NONVOMITABLE) ? "불치병으로"
+                                                       : "식중독으로");
+#endif
             enlght_out(buf);
         } else {
             /* unlike death due to sickness, report the two cases separately
                because it is possible to cure one without curing the other */
             if (u.usick_type & SICK_NONVOMITABLE)
+#if 0 /*KR: 원본*/
                 you_are("terminally sick from illness", "");
+#else
+                enl_msg_kr(You_, "불치병에 걸려 ", "", "있다", "있었다");
+#endif
             if (u.usick_type & SICK_VOMITABLE)
+#if 0 /*KR: 원본*/
                 you_are("terminally sick from food poisoning", "");
+#else
+                enl_msg_kr(You_, "식중독에 걸려 ", "", "있다", "있었다");
+#endif
         }
     }
     if (Vomiting)
+#if 0 /*KR: 원본*/
         you_are("nauseated", "");
+#else
+        enl_msg_kr(You_, "구역질이 ", "", "난다", "났다");
+#endif
     if (Stunned)
+#if 0 /*KR: 원본*/
         you_are("stunned", "");
+#else
+        enl_msg_kr(You_, "어질어질한 상태", "", "이다", "이었다");
+#endif
     if (Confusion)
+#if 0 /*KR: 원본*/
         you_are("confused", "");
+#else
+        enl_msg_kr(You_, "혼란스러운 상태", "", "이다", "이었다");
+#endif
     if (Hallucination)
+#if 0 /*KR: 원본*/
         you_are("hallucinating", "");
+#else
+        enl_msg_kr(You_, "환각 상태", "", "이다", "이었다");
+#endif
     if (Blind) {
         /* from_what() (currently wizard-mode only) checks !haseyes()
            before u.uroleplay.blind, so we should too */
+#if 0 /*KR: 원본*/
         Sprintf(buf, "%s blind",
                 !haseyes(youmonst.data) ? "innately"
                 : u.uroleplay.blind ? "permanently"
                   /* better phrasing desperately wanted... */
                   : Blindfolded_only ? "deliberately"
                     : "temporarily");
+#else /*KR: KRNethack 맞춤 번역*/
+        Sprintf(buf, "%s 눈이 먼 상태",
+                !haseyes(youmonst.data) ? "선천적으로"
+                : u.uroleplay.blind     ? "영구적으로"
+                /* better phrasing desperately wanted... */
+                : Blindfolded_only ? "고의적으로"
+                                   : "일시적으로");
+#endif
         if (wizard && (Blinded & TIMEOUT) != 0L
             && !u.uroleplay.blind && haseyes(youmonst.data))
             Sprintf(eos(buf), " (%ld)", (Blinded & TIMEOUT));
@@ -2661,17 +2917,34 @@ int final;
         you_are(buf, !haseyes(youmonst.data) ? "" : from_what(BLINDED));
     }
     if (Deaf)
+#if 0 /*KR: 원본*/
         you_are("deaf", from_what(DEAF));
+#else /*KR: KRNethack 맞춤 번역*/
+        enl_msg_kr(You_, "귀가 들리지 않는 상태", from_what(DEAF), "이다",
+                   "이었다");
+#endif
 
     /* external troubles, more or less */
     if (Punished) {
         if (uball) {
+#if 0 /*KR: 원본*/
             Sprintf(buf, "chained to %s", ansimpleoname(uball));
+#else
+            Sprintf(buf, "%s에 사슬로 묶여 ", ansimpleoname(uball));
+#endif
         } else {
             impossible("Punished without uball?");
+#if 0 /*KR: 원본*/
             Strcpy(buf, "punished");
+#else
+            Strcpy(buf, "벌을 받고 ");
+#endif
         }
+#if 0 /*KR: 원본*/
         you_are(buf, "");
+#else
+        enl_msg_kr(You_, buf, "", "있다", "있었다");
+#endif
     }
     if (u.utrap) {
         char predicament[BUFSZ];
@@ -2679,41 +2952,88 @@ int final;
         boolean anchored = (u.utraptype == TT_BURIEDBALL);
 
         if (anchored) {
+#if 0 /*KR: 원본*/
             Strcpy(predicament, "tethered to something buried");
+#else
+            Strcpy(predicament, "파묻힌 무언가에 묶여 ");
+#endif
         } else if (u.utraptype == TT_INFLOOR || u.utraptype == TT_LAVA) {
+#if 0 /*KR: 원본*/
             Sprintf(predicament, "stuck in %s", the(surface(u.ux, u.uy)));
+#else
+            Sprintf(predicament, "%s에 빠져 ", surface(u.ux, u.uy));
+#endif
         } else {
+#if 0 /*KR: 원본*/
             Strcpy(predicament, "trapped");
             if ((t = t_at(u.ux, u.uy)) != 0)
                 Sprintf(eos(predicament), " in %s",
                         an(defsyms[trap_to_defsym(t->ttyp)].explanation));
+#else
+            predicament[0] = '\0';
+            if ((t = t_at(u.ux, u.uy)) != 0)
+                Sprintf(predicament, "%s에 ",
+                        defsyms[trap_to_defsym(t->ttyp)].explanation);
+            Strcat(predicament, "걸려 ");
+#endif
         }
         if (u.usteed) { /* not `Riding' here */
+#if 0                   /*KR: 원본*/
             Sprintf(buf, "%s%s ", anchored ? "you and " : "", steedname);
             *buf = highc(*buf);
             enl_msg(buf, (anchored ? "are " : "is "),
                     (anchored ? "were " : "was "), predicament, "");
+#else
+            /* 말과 함께 함정/무거운 쇠구슬에 걸렸을 때의 주어 처리 */
+            Sprintf(buf, "%s%s(은)는 ", anchored ? "당신과 " : "", steedname);
+            enl_msg_kr(buf, predicament, "", "있다", "있었다");
+#endif
         } else
+#if 0 /*KR: 원본*/
             you_are(predicament, "");
+#else
+            enl_msg_kr(You_, predicament, "", "있다", "있었다");
+#endif
     } /* (u.utrap) */
     if (u.uswallow) {
+#if 0 /*KR: 원본*/
         Sprintf(buf, "swallowed by %s", a_monnam(u.ustuck));
         if (wizard)
             Sprintf(eos(buf), " (%u)", u.uswldtim);
         you_are(buf, "");
+#else
+        Sprintf(buf, "%s에게 삼켜져 ", a_monnam(u.ustuck));
+        if (wizard)
+            Sprintf(eos(buf), " (%u)", u.uswldtim);
+        enl_msg_kr(You_, buf, "", "있다", "있었다");
+#endif
     } else if (u.ustuck) {
+#if 0 /*KR: 원본*/
         Sprintf(buf, "%s %s",
                 (Upolyd && sticks(youmonst.data)) ? "holding" : "held by",
                 a_monnam(u.ustuck));
         you_are(buf, "");
+#else
+        /* 내가 몬스터를 붙잡고 있는지, 몬스터에게 붙잡힌 건지 구분 */
+        Sprintf(buf, "%s%s ", a_monnam(u.ustuck),
+                (Upolyd && sticks(youmonst.data)) ? "(을)를 붙잡고"
+                                                  : "에게 붙잡혀");
+        enl_msg_kr(You_, buf, "", "있다", "있었다");
+#endif
     }
     if (Riding) {
         struct obj *saddle = which_armor(u.usteed, W_SADDLE);
 
         if (saddle && saddle->cursed) {
+#if 0 /*KR: 원본*/
             Sprintf(buf, "stuck to %s %s", s_suffix(steedname),
                     simpleonames(saddle));
             you_are(buf, "");
+#else
+            Sprintf(buf, "%s의 %s에 들러붙어 ", steedname,
+                    simpleonames(saddle));
+            enl_msg_kr(You_, buf, "", "있다", "있었다");
+#endif
         }
     }
     if (Wounded_legs) {
@@ -2723,37 +3043,71 @@ int final;
             if (wizard && steedname) {
                 Strcpy(buf, steedname);
                 *buf = highc(*buf);
+#if 0 /*KR: 원본*/
                 enl_msg(buf, " has", " had", " wounded legs", "");
+#else /*KR: KRNethack 맞춤 번역*/
+                enl_msg_kr(buf, " 다리를 다친 상태", "", "이다", "이었다");
+#endif
             }
         } else {
+#if 0 /*KR: 원본*/
             Sprintf(buf, "wounded %s", makeplural(body_part(LEG)));
             you_have(buf, "");
+#else
+            Sprintf(buf, "다친 %s(을)를", makeplural(body_part(LEG)));
+            enl_msg_kr(You_, buf, "", "가지고 있다", "가지고 있었다");
+#endif
         }
     }
     if (Glib) {
+#if 0 /*KR: 원본*/
         Sprintf(buf, "slippery %s", fingers_or_gloves(TRUE));
         if (wizard)
             Sprintf(eos(buf), " (%ld)", (Glib & TIMEOUT));
         you_have(buf, "");
+#else
+        Sprintf(buf, "미끄러운 %s(을)를", fingers_or_gloves(TRUE));
+        if (wizard)
+            Sprintf(eos(buf), " (%ld)", (Glib & TIMEOUT));
+        enl_msg_kr(You_, buf, "", "가지고 있다", "가지고 있었다");
+#endif
     }
     if (Fumbling) {
         if (magic || cause_known(FUMBLING))
+#if 0 /*KR: 원본*/
             enl_msg(You_, "fumble", "fumbled", "", from_what(FUMBLING));
+#else
+            enl_msg_kr(You_, "어설프게 ", from_what(FUMBLING), "행동한다",
+                       "행동했다");
+#endif
     }
     if (Sleepy) {
         if (magic || cause_known(SLEEPY)) {
+#if 0 /*KR: 원본*/
             Strcpy(buf, from_what(SLEEPY));
             if (wizard)
                 Sprintf(eos(buf), " (%ld)", (HSleepy & TIMEOUT));
             enl_msg("You ", "fall", "fell", " asleep uncontrollably", buf);
+#else
+            Strcpy(buf, "통제할 수 없이 ");
+            if (wizard)
+                Sprintf(eos(buf), " (%ld) ", (HSleepy & TIMEOUT));
+            enl_msg_kr(You_, buf, from_what(SLEEPY), "잠든다", "잠들었다");
+#endif
         }
     }
     /* hunger/nutrition */
     if (Hunger) {
         if (magic || cause_known(HUNGER))
+#if 0 /*KR: 원본*/
             enl_msg(You_, "hunger", "hungered", " rapidly",
                     from_what(HUNGER));
+#else
+            enl_msg_kr(You_, "매우 빠르게 ", from_what(HUNGER), "배고파진다",
+                       "배고파졌다");
+#endif
     }
+#if 0 /*KR: 원본*/
     Strcpy(buf, hu_stat[u.uhs]); /* hunger status; omitted if "normal" */
     mungspaces(buf);             /* strip trailing spaces */
     if (*buf) {
@@ -2764,8 +3118,23 @@ int final;
             Strcat(buf, " due to starvation");
         you_are(buf, "");
     }
+#else
+    /* hunger status; omitted if "normal" */
+    /* hu_stat(배고픔 상태창 문자열)이 이미 번역되었다고 가정 */
+    Strcpy(buf, hu_stat[u.uhs]);
+    mungspaces(buf);
+    if (*buf) {
+        if (!strcmp(buf, "허약"))
+            Strcat(buf, " (심각한 굶주림으로 인해)");
+        else if (!strncmp(buf, "기절", 6)) /* 기절 직전, 기절함 등 */
+            Strcat(buf, " (아사 직전이므로)");
+        enl_msg_kr(You_, buf, "", "이다", "이었다");
+    }
+#endif
+
     /* encumbrance */
     if ((cap = near_capacity()) > UNENCUMBERED) {
+#if 0 /*KR: 원본*/
         const char *adj = "?_?"; /* (should always get overridden) */
 
         Strcpy(buf, enc_stat[cap]);
@@ -2790,15 +3159,46 @@ int final;
         Sprintf(eos(buf), "; movement %s %s%s", !final ? "is" : "was", adj,
                 (cap < OVERLOADED) ? " slowed" : "");
         you_are(buf, "");
+#else
+        const char *adj = "?_?";
+
+        /* enc_stat(무게 상태창 문자열)이 이미 번역되었다고 가정 */
+        Strcpy(buf, enc_stat[cap]);
+        switch (cap) {
+        case SLT_ENCUMBER:
+            adj = "약간";
+            break; /* 무거움 */
+        case MOD_ENCUMBER:
+            adj = "적당히";
+            break; /* 힘겨움 */
+        case HVY_ENCUMBER:
+            adj = "매우";
+            break; /* 벅참 */
+        case EXT_ENCUMBER:
+            adj = "극도로";
+            break; /* 짓눌림 */
+        case OVERLOADED:
+            adj = "불가능";
+            break;
+        }
+        Sprintf(eos(buf), " 상태 (이동이 %s %s)", adj,
+                (cap < OVERLOADED) ? "느려짐" : "함");
+        enl_msg_kr(You_, buf, "", "이다", "이었다");
+#endif
     } else {
         /* last resort entry, guarantees Status section is non-empty
            (no longer needed for that purpose since weapon status added;
            still useful though) */
+#if 0 /*KR: 원본*/
         you_are("unencumbered", "");
+#else
+        enl_msg_kr(You_, "짐이 가벼운 상태", "", "이다", "이었다");
+#endif
     }
 
     /* report being weaponless; distinguish whether gloves are worn */
     if (!uwep) {
+#if 0 /*KR: 원본*/
         you_are(uarmg ? "empty handed" /* gloves imply hands */
                       : humanoid(youmonst.data)
                          /* hands but no weapon and no gloves */
@@ -2806,14 +3206,26 @@ int final;
                          /* alternate phrasing for paws or lack of hands */
                          : "not wielding anything",
                 "");
-    /* two-weaponing implies hands (can't be polymorphed) and
-       a weapon or wep-tool (not other odd stuff) in each hand */
+#else
+        enl_msg_kr(You_,
+                   uarmg                     ? "맨손 상태"
+                   : humanoid(youmonst.data) ? "맨주먹 상태"
+                                             : "아무것도 쥐고 있지 않은 상태",
+                   "", "이다", "이었다");
+#endif
+        /* two-weaponing implies hands (can't be polymorphed) and
+           a weapon or wep-tool (not other odd stuff) in each hand */
     } else if (u.twoweap) {
+#if 0 /*KR: 원본*/
         you_are("wielding two weapons at once", "");
-    /* report most weapons by their skill class (so a katana will be
-       described as a long sword, for instance; mattock and hook are
-       exceptions), or wielded non-weapon item by its object class */
+#else
+        enl_msg_kr(You_, "두 개의 무기를 동시에 쥐고 ", "", "있다", "있었다");
+#endif
+        /* report most weapons by their skill class (so a katana will be
+           described as a long sword, for instance; mattock and hook are
+           exceptions), or wielded non-weapon item by its object class */
     } else {
+#if 0 /*KR: 원본*/
         const char *what = weapon_descr(uwep);
 
         if (!strcmpi(what, "armor") || !strcmpi(what, "food")
@@ -2823,6 +3235,15 @@ int final;
             Sprintf(buf, "wielding %s",
                     (uwep->quan == 1L) ? an(what) : makeplural(what));
         you_are(buf, "");
+#else
+        /* get_kr_name을 사용해 무기 묘사를 한글로 받아옵니다. */
+        extern char *get_kr_name(const char *);
+        const char *what = get_kr_name(weapon_descr(uwep));
+
+        /* 한국어는 복수형을 강제하지 않으므로 단순화 가능 */
+        Sprintf(buf, "%s(을)를 장비하고 ", what);
+        enl_msg_kr(You_, buf, "", "있다", "있었다");
+#endif
     }
     /*
      * Skill with current weapon.  Might help players who've never
@@ -2835,6 +3256,7 @@ int final;
         int sklvl = P_SKILL(wtype);
         boolean hav = (sklvl != P_UNSKILLED && sklvl != P_SKILLED);
 
+#if 0 /*KR: 원본*/
         if (sklvl == P_ISRESTRICTED)
             Strcpy(sklvlbuf, "no");
         else
@@ -2850,13 +3272,42 @@ int final;
             you_have(buf, "");
         else
             you_are(buf, "");
+#else
+        if (sklvl == P_ISRESTRICTED)
+            Strcpy(sklvlbuf, "제한됨");
+        else
+            (void) lcase(skill_level_name(wtype, sklvlbuf));
+
+        /* skill_name 한글화 가설 */
+        extern char *get_kr_name(const char *);
+        Sprintf(buf, "%s 숙련도가 %s 상태", get_kr_name(skill_name(wtype)),
+                sklvlbuf);
+
+        if (can_advance(wtype, FALSE))
+            Sprintf(eos(buf), "이며 %s",
+                    !final ? "숙련도를 올릴 수 있다"
+                           : "숙련도를 올릴 수 있었다");
+        else
+            Sprintf(eos(buf), "%s", !final ? "이다" : "이었다");
+
+        /* "당신은 단검 숙련도가 기본 상태이며 숙련도를 올릴 수 있다" */
+        enl_msg_kr(You_, buf, "", "", ""); /* 이미 buf 안에 동사가 포함됨 */
+#endif
     }
     /* report 'nudity' */
     if (!uarm && !uarmu && !uarmc && !uarms && !uarmg && !uarmf && !uarmh) {
+#if 0 /*KR: 원본*/
         if (u.uroleplay.nudist)
             enl_msg(You_, "do", "did", " not wear any armor", "");
         else
             you_are("not wearing any armor", "");
+#else
+        if (u.uroleplay.nudist)
+            enl_msg_kr(You_, "어떤 방어구도 입지 ", "", "않는다", "않았다");
+        else
+            enl_msg_kr(You_, "어떤 방어구도 입고 있지 ", "", "않다",
+                       "않았다");
+#endif
     }
 }
 
@@ -2866,88 +3317,197 @@ attributes_enlightenment(unused_mode, final)
 int unused_mode UNUSED;
 int final;
 {
+#if 0 /*KR: 원본 (한국어에서는 사용하지 않음)*/
     static NEARDATA const char if_surroundings_permitted[] =
         " if surroundings permitted";
+#endif
     int ltmp, armpro;
     char buf[BUFSZ];
 
     /*\
-     *  Attributes
+     * Attributes
     \*/
     enlght_out("");
+#if 0 /*KR: 원본*/
     enlght_out(final ? "Final Attributes:" : "Current Attributes:");
+#else /*KR: KRNethack 맞춤 번역*/
+    enlght_out(final ? "최종 능력치:" : "현재 능력치:");
+#endif
 
     if (u.uevent.uhand_of_elbereth) {
+#if 0 /*KR: 원본*/
         static const char *const hofe_titles[3] = { "the Hand of Elbereth",
                                                     "the Envoy of Balance",
                                                     "the Glory of Arioch" };
+#else /*KR: KRNethack 맞춤 번역*/
+        static const char *const hofe_titles[3] = { "엘베레스의 수호자",
+                                                    "조화의 사자",
+                                                    "아리오치의 영광" };
+#endif
         you_are(hofe_titles[u.uevent.uhand_of_elbereth - 1], "");
     }
 
+#if 0 /*KR: 원본*/
     Sprintf(buf, "%s", piousness(TRUE, "aligned"));
+#else
+    Sprintf(buf, "%s", piousness(TRUE, "신앙심"));
+#endif
     if (u.ualign.record >= 0)
         you_are(buf, "");
     else
         you_have(buf, "");
 
     if (wizard) {
+#if 0 /*KR: 원본*/
         Sprintf(buf, " %d", u.ualign.record);
         enl_msg("Your alignment ", "is", "was", buf, "");
+#else
+        Sprintf(buf, "당신의 성향치는 %d", u.ualign.record);
+        enl_msg_kr(buf, "", "", "이다", "이었다");
+#endif
     }
 
     /*** Resistances to troubles ***/
     if (Invulnerable)
+#if 0 /*KR: 원본*/
         you_are("invulnerable", from_what(INVULNERABLE));
+#else
+        you_are("무적", from_what(INVULNERABLE));
+#endif
     if (Antimagic)
+#if 0 /*KR: 원본*/
         you_are("magic-protected", from_what(ANTIMAGIC));
+#else
+        you_have("마법 방어 능력", from_what(ANTIMAGIC));
+#endif
     if (Fire_resistance)
+#if 0 /*KR: 원본*/
         you_are("fire resistant", from_what(FIRE_RES));
+#else
+        you_have("불에 대한 내성", from_what(FIRE_RES));
+#endif
     if (Cold_resistance)
+#if 0 /*KR: 원본*/
         you_are("cold resistant", from_what(COLD_RES));
+#else
+        you_have("추위에 대한 내성", from_what(COLD_RES));
+#endif
     if (Sleep_resistance)
+#if 0 /*KR: 원본*/
         you_are("sleep resistant", from_what(SLEEP_RES));
+#else
+        you_have("수면에 대한 내성", from_what(SLEEP_RES));
+#endif
     if (Disint_resistance)
+#if 0 /*KR: 원본*/
         you_are("disintegration-resistant", from_what(DISINT_RES));
+#else
+        you_have("분해에 대한 내성", from_what(DISINT_RES));
+#endif
     if (Shock_resistance)
+#if 0 /*KR: 원본*/
         you_are("shock resistant", from_what(SHOCK_RES));
+#else
+        you_have("전격에 대한 내성", from_what(SHOCK_RES));
+#endif
     if (Poison_resistance)
+#if 0 /*KR: 원본*/
         you_are("poison resistant", from_what(POISON_RES));
+#else
+        you_have("독에 대한 내성", from_what(POISON_RES));
+#endif
     if (Acid_resistance)
+#if 0 /*KR: 원본*/
         you_are("acid resistant", from_what(ACID_RES));
+#else
+        you_have("산에 대한 내성", from_what(ACID_RES));
+#endif
     if (Drain_resistance)
+#if 0 /*KR: 원본*/
         you_are("level-drain resistant", from_what(DRAIN_RES));
+#else
+        you_have("레벨 흡수에 대한 내성", from_what(DRAIN_RES));
+#endif
     if (Sick_resistance)
+#if 0 /*KR: 원본*/
         you_are("immune to sickness", from_what(SICK_RES));
+#else
+        you_have("질병에 대한 면역", from_what(SICK_RES));
+#endif
     if (Stone_resistance)
+#if 0 /*KR: 원본*/
         you_are("petrification resistant", from_what(STONE_RES));
+#else
+        you_have("석화에 대한 내성", from_what(STONE_RES));
+#endif
     if (Halluc_resistance)
+#if 0 /*KR: 원본*/
         enl_msg(You_, "resist", "resisted", " hallucinations",
                 from_what(HALLUC_RES));
+#else
+        you_have("환각에 대한 내성", from_what(HALLUC_RES));
+#endif
     if (u.uedibility)
+#if 0 /*KR: 원본*/
         you_can("recognize detrimental food", "");
+#else
+        you_can("유해한 음식을 식별", "");
+#endif
 
     /*** Vision and senses ***/
     if (!Blind && (Blinded || !haseyes(youmonst.data)))
+#if 0 /*KR: 원본*/
         you_can("see", from_what(-BLINDED)); /* Eyes of the Overworld */
+#else
+        you_can("사물을 볼", from_what(-BLINDED));
+#endif
     if (See_invisible) {
         if (!Blind)
+#if 0 /*KR: 원본*/
             enl_msg(You_, "see", "saw", " invisible", from_what(SEE_INVIS));
+#else
+            enl_msg_kr(You_, "투명한 것을 볼 ", from_what(SEE_INVIS),
+                       "수 있다", "수 있었다");
+#endif
         else
+#if 0 /*KR: 원본*/
             enl_msg(You_, "will see", "would have seen",
                     " invisible when not blind", from_what(SEE_INVIS));
+#else
+            enl_msg_kr(You_, "눈이 멀지 않았다면 투명한 것을 볼 ",
+                       from_what(SEE_INVIS), "수 있다", "수 있었다");
+#endif
     }
     if (Blind_telepat)
+#if 0 /*KR: 원본*/
         you_are("telepathic", from_what(TELEPAT));
+#else /*KR: KRNethack 맞춤 번역*/
+        you_have("텔레파시 능력", from_what(TELEPAT));
+#endif
     if (Warning)
+#if 0 /*KR: 원본*/
         you_are("warned", from_what(WARNING));
+#else
+        you_have("경계 능력", from_what(WARNING));
+#endif
     if (Warn_of_mon && context.warntype.obj) {
+#if 0 /*KR: 원본*/
         Sprintf(buf, "aware of the presence of %s",
                 (context.warntype.obj & M2_ORC) ? "orcs"
                 : (context.warntype.obj & M2_ELF) ? "elves"
                 : (context.warntype.obj & M2_DEMON) ? "demons" : something);
         you_are(buf, from_what(WARN_OF_MON));
+#else
+        Sprintf(buf, "%s의 존재를 감지하는 능력",
+                (context.warntype.obj & M2_ORC)     ? "오크"
+                : (context.warntype.obj & M2_ELF)   ? "엘프"
+                : (context.warntype.obj & M2_DEMON) ? "악마"
+                                                    : "무언가");
+        you_have(buf, "");
+#endif
     }
     if (Warn_of_mon && context.warntype.polyd) {
+#if 0 /*KR: 원본*/
         Sprintf(buf, "aware of the presence of %s",
                 ((context.warntype.polyd & (M2_HUMAN | M2_ELF))
                  == (M2_HUMAN | M2_ELF))
@@ -2962,31 +3522,79 @@ int final;
                                             ? "demons"
                                             : "certain monsters");
         you_are(buf, "");
+#else
+        Sprintf(buf, "%s의 존재를 감지하는 능력",
+                ((context.warntype.polyd & (M2_HUMAN | M2_ELF))
+                 == (M2_HUMAN | M2_ELF))
+                    ? "인간과 엘프"
+                : (context.warntype.polyd & M2_HUMAN) ? "인간"
+                : (context.warntype.polyd & M2_ELF)   ? "엘프"
+                : (context.warntype.polyd & M2_ORC)   ? "오크"
+                : (context.warntype.polyd & M2_DEMON) ? "악마"
+                                                      : "특정 몬스터");
+        you_have(buf, "");
+#endif
     }
     if (Warn_of_mon && context.warntype.speciesidx >= LOW_PM) {
+#if 0 /*KR: 원본*/
         Sprintf(buf, "aware of the presence of %s",
                 makeplural(mons[context.warntype.speciesidx].mname));
         you_are(buf, from_what(WARN_OF_MON));
+#else
+        /* get_kr_name을 사용해 몬스터 이름을 한글로 받아옵니다. */
+        extern char *get_kr_name(const char *);
+        Sprintf(buf, "%s의 존재를 감지하는 능력",
+                get_kr_name(mons[context.warntype.speciesidx].mname));
+        you_have(buf, from_what(WARN_OF_MON));
+#endif
     }
     if (Undead_warning)
+#if 0 /*KR: 원본*/
         you_are("warned of undead", from_what(WARN_UNDEAD));
+#else
+        you_have("언데드에 대한 경계 능력", from_what(WARN_UNDEAD));
+#endif
     if (Searching)
+#if 0 /*KR: 원본*/
         you_have("automatic searching", from_what(SEARCHING));
+#else
+        you_have("자동 탐색 능력", from_what(SEARCHING));
+#endif
     if (Clairvoyant)
+#if 0 /*KR: 원본*/
         you_are("clairvoyant", from_what(CLAIRVOYANT));
+#else
+        you_have("천리안 능력", from_what(CLAIRVOYANT));
+#endif
     else if ((HClairvoyant || EClairvoyant) && BClairvoyant) {
         Strcpy(buf, from_what(-CLAIRVOYANT));
+#if 0 /*KR: 원본 (위험한 문자열 조작 로직 제거)*/
         if (!strncmp(buf, " because of ", 12))
             /* overwrite substring; strncpy doesn't add terminator */
             (void) strncpy(buf, " if not for ", 12);
         enl_msg(You_, "could be", "could have been", " clairvoyant", buf);
+#else /*KR: KRNethack 맞춤 번역 (자연스럽고 안전한 의역)*/
+        enl_msg_kr(You_, "천리안 능력이 차단된 상태", buf, "이다", "이었다");
+#endif
     }
     if (Infravision)
+#if 0 /*KR: 원본*/
         you_have("infravision", from_what(INFRAVISION));
+#else
+        you_have("적외선 시야", from_what(INFRAVISION));
+#endif
     if (Detect_monsters)
+#if 0 /*KR: 원본*/
         you_are("sensing the presence of monsters", "");
+#else
+        you_have("몬스터의 존재를 감지하는 능력", "");
+#endif
     if (u.umconf)
+#if 0 /*KR: 원본*/
         you_are("going to confuse monsters", "");
+#else
+        you_have("몬스터를 혼란시키는 능력", "");
+#endif
 
     /*** Appearance and behavior ***/
     if (Adornment) {
@@ -2999,35 +3607,67 @@ int final;
         /* the sum might be 0 (+0 ring or two which negate each other);
            that yields "you are charismatic" (which isn't pointless
            because it potentially impacts seduction attacks) */
+#if 0 /*KR: 원본*/
         Sprintf(buf, "%scharismatic",
                 (adorn > 0) ? "more " : (adorn < 0) ? "less " : "");
         you_are(buf, from_what(ADORNED));
+#else
+        Sprintf(buf, "매력이 %s 상태",
+                (adorn > 0)   ? "증가한" : (adorn < 0) ? "감소한"
+                                                       : "돋보이는");
+        enl_msg_kr(You_, buf, from_what(ADORNED), "이다", "이었다");
+#endif
     }
     if (Invisible)
+#if 0 /*KR: 원본*/
         you_are("invisible", from_what(INVIS));
+#else
+        you_are("투명한 상태", from_what(INVIS));
+#endif
     else if (Invis)
+#if 0 /*KR: 원본*/
         you_are("invisible to others", from_what(INVIS));
+#else
+        you_are("타인에게 투명하게 보이는 상태", from_what(INVIS));
+#endif
     /* ordinarily "visible" is redundant; this is a special case for
        the situation when invisibility would be an expected attribute */
     else if ((HInvis || EInvis) && BInvis)
+#if 0 /*KR: 원본*/
         you_are("visible", from_what(-INVIS));
+#else
+        you_are("투명화가 차단된 상태", from_what(-INVIS));
+#endif
     if (Displaced)
-        you_are("displaced", from_what(DISPLACED));
+        /*KR you_are("displaced", from_what(DISPLACED)); */
+        you_have("환영을 만드는 능력", from_what(DISPLACED));
     if (Stealth)
-        you_are("stealthy", from_what(STEALTH));
+        /*KR you_are("stealthy", from_what(STEALTH)); */
+        you_have("은밀하게 행동하는 능력", from_what(STEALTH));
     if (Aggravate_monster)
+#if 0 /*KR: 원본*/
         enl_msg("You aggravate", "", "d", " monsters",
                 from_what(AGGRAVATE_MONSTER));
+#else
+        enl_msg_kr(You_, "몬스터들을 자극하고 ", from_what(AGGRAVATE_MONSTER),
+                   "있다", "있었다");
+#endif
     if (Conflict)
-        enl_msg("You cause", "", "d", " conflict", from_what(CONFLICT));
+        /*KR enl_msg("You cause", "", "d", " conflict", from_what(CONFLICT));
+         */
+        enl_msg_kr(You_, "분쟁을 일으키고 ", from_what(CONFLICT), "있다",
+                   "있었다");
 
     /*** Transportation ***/
     if (Jumping)
-        you_can("jump", from_what(JUMPING));
+        /*KR you_can("jump", from_what(JUMPING)); */
+        you_can("도약할", from_what(JUMPING));
     if (Teleportation)
-        you_can("teleport", from_what(TELEPORT));
+        /*KR you_can("teleport", from_what(TELEPORT)); */
+        you_can("순간이동을 할", from_what(TELEPORT));
     if (Teleport_control)
-        you_have("teleport control", from_what(TELEPORT_CONTROL));
+        /*KR you_have("teleport control", from_what(TELEPORT_CONTROL)); */
+        you_have("순간이동 제어 능력", from_what(TELEPORT_CONTROL));
     /* actively levitating handled earlier as a status condition */
     if (BLevitation) { /* levitation is blocked */
         long save_BLev = BLevitation;
@@ -3037,6 +3677,7 @@ int final;
             /* either trapped in the floor or inside solid rock
                (or both if chained to buried iron ball and have
                moved one step into solid rock somehow) */
+#if 0 /*KR: 원본*/
             boolean trapped = (save_BLev & I_SPECIAL) != 0L,
                     terrain = (save_BLev & FROMOUTSIDE) != 0L;
 
@@ -3045,6 +3686,10 @@ int final;
                     (trapped && terrain) ? " and" : "",
                     terrain ? if_surroundings_permitted : "");
             enl_msg(You_, "would levitate", "would have levitated", buf, "");
+#else /*KR: KRNethack 맞춤 번역 (상황이 허락한다면 부유할 수 있음)*/
+            enl_msg_kr(You_, "상황이 허락했다면 부유할 ", "", "수 있다",
+                       "수 있었다");
+#endif
         }
         BLevitation = save_BLev;
     }
@@ -3054,6 +3699,7 @@ int final;
 
         BFlying = 0L;
         if (Flying) {
+#if 0 /*KR: 원본*/
             enl_msg(You_, "would fly", "would have flown",
                     /* wording quibble: for past tense, "hadn't been"
                        would sound better than "weren't" (and
@@ -3073,31 +3719,51 @@ int final;
                                 and being trapped in the floor */
                              : " if circumstances permitted",
                     "");
+#else
+            enl_msg_kr(You_, "날 ",
+                       /* 번역: 부유 중이 아니었다면 / 갇혀 있지 않았다면 /
+                          주변 환경이 허락했다면 / 상황이 허락했다면 */
+                       Levitation                 ? "부유 중이 아니었다면 "
+                       : (save_BFly == I_SPECIAL) ? "갇혀 있지 않았다면 "
+                       : (save_BFly == FROMOUTSIDE)
+                           ? "주변 환경이 허락했다면 "
+                           : "상황이 허락했다면 ",
+                       "수 있다", "수 있었다");
+#endif
         }
         BFlying = save_BFly;
     }
     /* actively walking on water handled earlier as a status condition */
     if (Wwalking && !walking_on_water())
-        you_can("walk on water", from_what(WWALKING));
+        /*KR you_can("walk on water", from_what(WWALKING)); */
+        you_can("물 위를 걸을", from_what(WWALKING));
     /* actively swimming (in water but not under it) handled earlier */
     if (Swimming && (Underwater || !u.uinwater))
-        you_can("swim", from_what(SWIMMING));
+        /*KR you_can("swim", from_what(SWIMMING)); */
+        you_can("수영할", from_what(SWIMMING));
     if (Breathless)
-        you_can("survive without air", from_what(MAGICAL_BREATHING));
+        /*KR you_can("survive without air", from_what(MAGICAL_BREATHING)); */
+        you_can("공기 없이도 생존할", from_what(MAGICAL_BREATHING));
     else if (Amphibious)
-        you_can("breathe water", from_what(MAGICAL_BREATHING));
+        /*KR you_can("breathe water", from_what(MAGICAL_BREATHING)); */
+        you_can("물속에서 호흡할", from_what(MAGICAL_BREATHING));
     if (Passes_walls)
-        you_can("walk through walls", from_what(PASSES_WALLS));
+        /*KR you_can("walk through walls", from_what(PASSES_WALLS)); */
+        you_can("벽을 통과할", from_what(PASSES_WALLS));
 
     /*** Physical attributes ***/
     if (Regeneration)
-        enl_msg("You regenerate", "", "d", "", from_what(REGENERATION));
+        /*KR enl_msg("You regenerate", "", "d", "", from_what(REGENERATION)); */
+        you_have("재생 능력", from_what(REGENERATION));
     if (Slow_digestion)
-        you_have("slower digestion", from_what(SLOW_DIGESTION));
+        /*KR you_have("slower digestion", from_what(SLOW_DIGESTION)); */
+        you_have("느린 소화 능력", from_what(SLOW_DIGESTION));
     if (u.uhitinc)
-        you_have(enlght_combatinc("to hit", u.uhitinc, final, buf), "");
+        /*KR you_have(enlght_combatinc("to hit", u.uhitinc, final, buf), ""); */
+        you_have(enlght_combatinc("명중률", u.uhitinc, final, buf), "");
     if (u.udaminc)
-        you_have(enlght_combatinc("damage", u.udaminc, final, buf), "");
+        /*KR you_have(enlght_combatinc("damage", u.udaminc, final, buf), ""); */
+        you_have(enlght_combatinc("데미지", u.udaminc, final, buf), "");
     if (u.uspellprot || Protection) {
         int prot = 0;
 
@@ -3109,13 +3775,24 @@ int final;
             prot += u.ublessed;
         prot += u.uspellprot;
         if (prot)
-            you_have(enlght_combatinc("defense", prot, final, buf), "");
+            /*KR you_have(enlght_combatinc("defense", prot, final, buf), "");
+             */
+            you_have(enlght_combatinc("방어", prot, final, buf), "");
     }
     if ((armpro = magic_negation(&youmonst)) > 0) {
         /* magic cancellation factor, conferred by worn armor */
+#if 0 /*KR: 원본*/
         static const char *const mc_types[] = {
             "" /*ordinary*/, "warded", "guarded", "protected",
         };
+#else
+        static const char *const mc_types[] = {
+            "" /*ordinary*/,
+            "마법을 튕겨내는 상태",
+            "마법을 방어하는 상태",
+            "마법으로부터 보호받는 상태",
+        };
+#endif
         /* sanity check */
         if (armpro >= SIZE(mc_types))
             armpro = SIZE(mc_types) - 1;
@@ -3127,99 +3804,181 @@ int final;
         enlght_halfdmg(HALF_SPDAM, final);
     /* polymorph and other shape change */
     if (Protection_from_shape_changers)
-        you_are("protected from shape changers",
+        /*KR you_are("protected from shape changers",
+         * from_what(PROT_FROM_SHAPE_CHANGERS)); */
+        you_are("변신 생물로부터 보호받는 상태",
                 from_what(PROT_FROM_SHAPE_CHANGERS));
     if (Unchanging) {
         const char *what = 0;
 
         if (!Upolyd) /* Upolyd handled below after current form */
-            you_can("not change from your current form",
-                    from_what(UNCHANGING));
+            /*KR you_can("not change from your current form",
+             * from_what(UNCHANGING)); */
+            you_can("현재의 모습에서 변하지 않을", from_what(UNCHANGING));
         /* blocked shape changes */
         if (Polymorph)
+#if 0 /*KR: 원본*/
             what = !final ? "polymorph" : "have polymorphed";
+#else
+            what = !final ? "폴리모프를 해야" : "폴리모프를 했어야";
+#endif
         else if (u.ulycn >= LOW_PM)
+#if 0 /*KR: 원본*/
             what = !final ? "change shape" : "have changed shape";
+#else
+            what = !final ? "모습이 변해야" : "모습이 변했어야";
+#endif
         if (what) {
+#if 0 /*KR: 원본*/
             Sprintf(buf, "would %s periodically", what);
             /* omit from_what(UNCHANGING); too verbose */
             enl_msg(You_, buf, buf, " if not locked into your current form",
                     "");
+#else /*KR: KRNethack 맞춤 번역 (구조 변경)*/
+            Sprintf(buf, "주기적으로 %s 하지만, 현재 모습으로 고정되어 ",
+                    what);
+            enl_msg_kr(You_, buf, "", "있다", "있었다");
+#endif
         }
     } else if (Polymorph) {
-        you_are("polymorphing periodically", from_what(POLYMORPH));
+        /*KR you_are("polymorphing periodically", from_what(POLYMORPH)); */
+        you_are("주기적으로 폴리모프하는 상태", from_what(POLYMORPH));
     }
     if (Polymorph_control)
-        you_have("polymorph control", from_what(POLYMORPH_CONTROL));
-    if (Upolyd && u.umonnum != u.ulycn
+        /*KR you_have("polymorph control", from_what(POLYMORPH_CONTROL)); */
+        you_have("폴리모프 제어 능력", from_what(POLYMORPH_CONTROL));
+    if (Upolyd
+        && u.umonnum != u.ulycn
         /* if we've died from turning into slime, we're polymorphed
            right now but don't want to list it as a temporary attribute
            [we need a more reliable way to detect this situation] */
-        && !(final == ENL_GAMEOVERDEAD
-             && u.umonnum == PM_GREEN_SLIME && !Unchanging)) {
+        && !(final == ENL_GAMEOVERDEAD && u.umonnum == PM_GREEN_SLIME
+             && !Unchanging)) {
         /* foreign shape (except were-form which is handled below) */
+#if 0 /*KR: 원본 (변수 호출 구조 변경)*/
         Sprintf(buf, "polymorphed into %s", an(youmonst.data->mname));
+#else
+        extern char *get_kr_name(const char *);
+        Sprintf(buf, "%s(으)로 폴리모프된 상태",
+                get_kr_name(youmonst.data->mname));
+#endif
         if (wizard)
             Sprintf(eos(buf), " (%d)", u.mtimedone);
         you_are(buf, "");
     }
     if (lays_eggs(youmonst.data) && flags.female) /* Upolyd */
-        you_can("lay eggs", "");
+        /*KR you_can("lay eggs", ""); */
+        you_can("알을 낳을", "");
     if (u.ulycn >= LOW_PM) {
         /* "you are a werecreature [in beast form]" */
+#if 0 /*KR: 원본 (변수 호출 구조 변경)*/
         Strcpy(buf, an(mons[u.ulycn].mname));
         if (u.umonnum == u.ulycn) {
             Strcat(buf, " in beast form");
+#else
+        extern char *get_kr_name(const char *);
+        Strcpy(buf, get_kr_name(mons[u.ulycn].mname));
+        if (u.umonnum == u.ulycn) {
+            Strcat(buf, " 야수 형태");
+#endif
             if (wizard)
                 Sprintf(eos(buf), " (%d)", u.mtimedone);
         }
         you_are(buf, "");
     }
     if (Unchanging && Upolyd) /* !Upolyd handled above */
-        you_can("not change from your current form", from_what(UNCHANGING));
+        /*KR you_can("not change from your current form",
+         * from_what(UNCHANGING)); */
+        you_can("현재 모습에서 변하지 않을", from_what(UNCHANGING));
     if (Hate_silver)
-        you_are("harmed by silver", "");
+        /*KR you_are("harmed by silver", ""); */
+        you_are("은에 피해를 입는 상태", "");
     /* movement and non-armor-based protection */
     if (Fast)
+#if 0 /*KR: 원본 (삼항 연산자 내부 텍스트 길이로 인한 분리)*/
         you_are(Very_fast ? "very fast" : "fast", from_what(FAST));
+#else
+        you_are(Very_fast ? "매우 빠른 상태" : "빠른 상태", from_what(FAST));
+#endif
     if (Reflecting)
-        you_have("reflection", from_what(REFLECTING));
+        /*KR you_have("reflection", from_what(REFLECTING)); */
+        you_have("반사 능력", from_what(REFLECTING));
     if (Free_action)
-        you_have("free action", from_what(FREE_ACTION));
+        /*KR you_have("free action", from_what(FREE_ACTION)); */
+        you_have("자유 행동 능력", from_what(FREE_ACTION));
     if (Fixed_abil)
-        you_have("fixed abilities", from_what(FIXED_ABIL));
+        /*KR you_have("fixed abilities", from_what(FIXED_ABIL)); */
+        you_have("능력치 유지 속성", from_what(FIXED_ABIL));
     if (Lifesaved)
+#if 0 /*KR: 원본 (함수 변경 및 구조 변경)*/
         enl_msg("Your life ", "will be", "would have been", " saved", "");
+#else
+        enl_msg_kr("당신의 생명은 ", "구원받을 ", "", "것이다", "것이었다");
+#endif
 
     /*** Miscellany ***/
     if (Luck) {
         ltmp = abs((int) Luck);
+#if 0 /*KR: 원본*/
         Sprintf(buf, "%s%slucky",
                 ltmp >= 10 ? "extremely " : ltmp >= 5 ? "very " : "",
                 Luck < 0 ? "un" : "");
         if (wizard)
             Sprintf(eos(buf), " (%d)", Luck);
         you_are(buf, "");
+#else
+        Sprintf(buf, "%s%s 상태",
+                ltmp >= 10  ? "극도로 "
+                : ltmp >= 5 ? "매우 "
+                            : "",
+                Luck < 0 ? "불운한" : "운이 좋은");
+        if (wizard)
+            Sprintf(eos(buf), " (%d)", Luck);
+        you_are(buf, "");
+#endif
     } else if (wizard)
+#if 0 /*KR: 원본*/
         enl_msg("Your luck ", "is", "was", " zero", "");
+#else
+        enl_msg_kr("당신의 운은 ", "0", "", "이다", "이었다");
+#endif
     if (u.moreluck > 0)
-        you_have("extra luck", "");
+        /*KR you_have("extra luck", ""); */
+        you_have("추가적인 운", "");
     else if (u.moreluck < 0)
-        you_have("reduced luck", "");
+        /*KR you_have("reduced luck", ""); */
+        you_have("감소된 운", "");
     if (carrying(LUCKSTONE) || stone_luck(TRUE)) {
         ltmp = stone_luck(FALSE);
+#if 0 /*KR: 원본*/
         if (ltmp <= 0)
             enl_msg("Bad luck ", "does", "did", " not time out for you", "");
         if (ltmp >= 0)
             enl_msg("Good luck ", "does", "did", " not time out for you", "");
+#else /*KR: KRNethack 맞춤 번역 (함수 변경)*/
+        if (ltmp <= 0)
+            enl_msg_kr("불운의 기한이 ", "사라지지 ", "", "않는다", "않았다");
+        if (ltmp >= 0)
+            enl_msg_kr("행운의 기한이 ", "사라지지 ", "", "않는다", "않았다");
+#endif
     }
 
     if (u.ugangr) {
+#if 0 /*KR: 원본*/
         Sprintf(buf, " %sangry with you",
                 u.ugangr > 6 ? "extremely " : u.ugangr > 3 ? "very " : "");
         if (wizard)
             Sprintf(eos(buf), " (%d)", u.ugangr);
         enl_msg(u_gname(), " is", " was", buf, "");
+#else
+        Sprintf(buf, "당신에게 %s분노한 상태",
+                u.ugangr > 6   ? "극도로 "
+                : u.ugangr > 3 ? "매우 "
+                               : "");
+        if (wizard)
+            Sprintf(eos(buf), " (%d)", u.ugangr);
+        enl_msg_kr(u_gname(), buf, "", "이다", "이었다");
+#endif
     } else {
         /*
          * We need to suppress this when the game is over, because death
@@ -3227,16 +3986,18 @@ int final;
          * resulting in a false claim that you could have prayed safely.
          */
         if (!final) {
-#if 0
-            /* "can [not] safely pray" vs "could [not] have safely prayed" */
-            Sprintf(buf, "%s%ssafely pray%s", can_pray(FALSE) ? "" : "not ",
-                    final ? "have " : "", final ? "ed" : "");
-#else
+#if 0 /*KR: 원본*/
             Sprintf(buf, "%ssafely pray", can_pray(FALSE) ? "" : "not ");
-#endif
             if (wizard)
                 Sprintf(eos(buf), " (%d)", u.ublesscnt);
             you_can(buf, "");
+#else /*KR: KRNethack 맞춤 번역 (구조 및 함수 변경)*/
+            Sprintf(buf, "안전하게 기도할 ");
+            if (wizard)
+                Sprintf(eos(buf), " (%d)", u.ublesscnt);
+            enl_msg_kr(You_, buf, "", can_pray(FALSE) ? "수 있다" : "수 없다",
+                       can_pray(FALSE) ? "수 있었다" : "수 없었다");
+#endif
         }
     }
 
@@ -3251,12 +4012,23 @@ int final;
                               * possibly mask or even introduce a problem,
                               * but it does useful sanity checking */
         for (f = ffruit; f; f = f->nextf) {
+#if 0 /*KR: 원본*/
             Sprintf(buf, "Fruit #%d ", f->fid);
             enl_msg(buf, "is ", "was ", f->fname, "");
+#else /*KR: KRNethack 맞춤 번역*/
+            Sprintf(buf, "과일 #%d(은)는 ", f->fid);
+            enl_msg_kr(buf, f->fname, "", "이다", "이었다");
+#endif
         }
+#if 0 /*KR: 원본*/
         enl_msg("The current fruit ", "is ", "was ", pl_fruit, "");
         Sprintf(buf, "%d", flags.made_fruit);
         enl_msg("The made fruit flag ", "is ", "was ", buf, "");
+#else /*KR: KRNethack 맞춤 번역*/
+        enl_msg_kr("현재 과일은 ", pl_fruit, "", "이다", "이었다");
+        Sprintf(buf, "%d", flags.made_fruit);
+        enl_msg_kr("만들어진 과일 플래그는 ", buf, "", "이다", "이었다");
+#endif
     }
 #endif
 
@@ -3265,39 +4037,94 @@ int final;
 
         buf[0] = '\0';
         if (final < 2) { /* still in progress, or quit/escaped/ascended */
+#if 0                    /*KR: 원본*/
             p = "survived after being killed ";
+#else
+            p = "번 죽고 부활했다"; /* "N 번 죽고 부활했다"로 활용 */
+#endif
             switch (u.umortality) {
             case 0:
+#if 0 /*KR: 원본*/
                 p = !final ? (char *) 0 : "survived";
+#else
+                p = !final ? (char *) 0 : "생존했다";
+#endif
                 break;
             case 1:
+#if 0 /*KR: 원본*/
                 Strcpy(buf, "once");
+#else
+                Strcpy(buf, "한");
+#endif
                 break;
             case 2:
+#if 0 /*KR: 원본*/
                 Strcpy(buf, "twice");
+#else
+                Strcpy(buf, "두");
+#endif
                 break;
             case 3:
+#if 0 /*KR: 원본*/
                 Strcpy(buf, "thrice");
+#else
+                Strcpy(buf, "세");
+#endif
                 break;
             default:
+#if 0 /*KR: 원본*/
                 Sprintf(buf, "%d times", u.umortality);
+#else
+                Sprintf(buf, "%d", u.umortality);
+#endif
                 break;
             }
         } else { /* game ended in character's death */
+#if 0            /*KR: 원본*/
             p = "are dead";
+#else
+            p = "사망했다";
+#endif
             switch (u.umortality) {
             case 0:
                 impossible("dead without dying?");
             case 1:
                 break; /* just "are dead" */
             default:
+#if 0 /*KR: 원본*/
                 Sprintf(buf, " (%d%s time!)", u.umortality,
                         ordin(u.umortality));
+#else
+                Sprintf(buf, " (%d번째 죽음!)", u.umortality);
+#endif
                 break;
             }
         }
-        if (p)
+        if (p) {
+#if 0 /*KR: 원본 (함수 및 구조 변경)*/
             enl_msg(You_, "have been killed ", p, buf, "");
+#else /*KR: KRNethack 맞춤 번역*/
+            if (final < 2) {
+                if (u.umortality == 0) {
+                    /* "당신은 생존했다." */
+                    enl_msg_kr(You_, p, "", "", "");
+                } else {
+                    /* "당신은 한 번 죽고 부활했다." */
+                    Sprintf(buf + strlen(buf), " %s", p);
+                    enl_msg_kr(You_, buf, "", "", "");
+                }
+            } else {
+                if (u.umortality <= 1) {
+                    /* "당신은 사망했다." */
+                    enl_msg_kr(You_, p, "", "", "");
+                } else {
+                    /* "당신은 사망했다. (N번째 죽음!)" */
+                    Sprintf(buf + strlen(buf), " %s", p);
+                    enl_msg_kr(You_, buf, "", "", "");
+                }
+            }
+#endif
+        }
     }
 }
 
@@ -3331,83 +4158,125 @@ minimal_enlightenment()
     buf[0] = buf2[0] = '\0';
     tmpwin = create_nhwindow(NHW_MENU);
     start_menu(tmpwin);
+/*KR add_menu(tmpwin, NO_GLYPH, &any, 0, 0, iflags.menu_headings, "Starting", FALSE); */
     add_menu(tmpwin, NO_GLYPH, &any, 0, 0, iflags.menu_headings,
-             "Starting", FALSE);
+             "시작", FALSE);
 
     /* Starting name, race, role, gender */
-    Sprintf(buf, fmtstr, "name", plname);
+    /*KR Sprintf(buf, fmtstr, "name", plname); */
+    Sprintf(buf, fmtstr, "이름", plname);
     add_menu(tmpwin, NO_GLYPH, &any, 0, 0, ATR_NONE, buf, FALSE);
-    Sprintf(buf, fmtstr, "race", urace.noun);
+    /*KR Sprintf(buf, fmtstr, "race", urace.noun); */
+    Sprintf(buf, fmtstr, "종족", urace.noun);
     add_menu(tmpwin, NO_GLYPH, &any, 0, 0, ATR_NONE, buf, FALSE);
-    Sprintf(buf, fmtstr, "role",
+    /*KR Sprintf(buf, fmtstr, "role", (flags.initgend && urole.name.f) ? urole.name.f : urole.name.m); */
+    Sprintf(buf, fmtstr, "직업",
             (flags.initgend && urole.name.f) ? urole.name.f : urole.name.m);
     add_menu(tmpwin, NO_GLYPH, &any, 0, 0, ATR_NONE, buf, FALSE);
-    Sprintf(buf, fmtstr, "gender", genders[flags.initgend].adj);
+    /*KR Sprintf(buf, fmtstr, "gender", genders[flags.initgend].adj); */
+    Sprintf(buf, fmtstr, "성별", genders[flags.initgend].adj);
     add_menu(tmpwin, NO_GLYPH, &any, 0, 0, ATR_NONE, buf, FALSE);
 
     /* Starting alignment */
-    Sprintf(buf, fmtstr, "alignment", align_str(u.ualignbase[A_ORIGINAL]));
+    /*KR Sprintf(buf, fmtstr, "alignment", align_str(u.ualignbase[A_ORIGINAL])); */
+    Sprintf(buf, fmtstr, "성향", align_str(u.ualignbase[A_ORIGINAL]));
     add_menu(tmpwin, NO_GLYPH, &any, 0, 0, ATR_NONE, buf, FALSE);
 
     /* Current name, race, role, gender */
     add_menu(tmpwin, NO_GLYPH, &any, 0, 0, ATR_NONE, "", FALSE);
+    /*KR add_menu(tmpwin, NO_GLYPH, &any, 0, 0, iflags.menu_headings, "Current", FALSE); */
     add_menu(tmpwin, NO_GLYPH, &any, 0, 0, iflags.menu_headings,
-             "Current", FALSE);
-    Sprintf(buf, fmtstr, "race", Upolyd ? youmonst.data->mname : urace.noun);
+             "현재", FALSE);
+    /*KR Sprintf(buf, fmtstr, "race", Upolyd ? youmonst.data->mname : urace.noun); */
+    Sprintf(buf, fmtstr, "종족", Upolyd ? youmonst.data->mname : urace.noun);
     add_menu(tmpwin, NO_GLYPH, &any, 0, 0, ATR_NONE, buf, FALSE);
     if (Upolyd) {
-        Sprintf(buf, fmtstr, "role (base)",
+        /*KR Sprintf(buf, fmtstr, "role (base)", (u.mfemale && urole.name.f) ? urole.name.f : urole.name.m); */
+        Sprintf(buf, fmtstr, "직업 (기본)",
                 (u.mfemale && urole.name.f) ? urole.name.f
                                             : urole.name.m);
         add_menu(tmpwin, NO_GLYPH, &any, 0, 0, ATR_NONE, buf, FALSE);
     } else {
-        Sprintf(buf, fmtstr, "role",
+        /*KR Sprintf(buf, fmtstr, "role", (flags.female && urole.name.f) ? urole.name.f : urole.name.m); */
+        Sprintf(buf, fmtstr, "직업",
                 (flags.female && urole.name.f) ? urole.name.f
                                                : urole.name.m);
         add_menu(tmpwin, NO_GLYPH, &any, 0, 0, ATR_NONE, buf, FALSE);
     }
     /* don't want poly_gender() here; it forces `2' for non-humanoids */
     genidx = is_neuter(youmonst.data) ? 2 : flags.female;
-    Sprintf(buf, fmtstr, "gender", genders[genidx].adj);
+    /*KR Sprintf(buf, fmtstr, "gender", genders[genidx].adj); */
+    Sprintf(buf, fmtstr, "성별", genders[genidx].adj);
     add_menu(tmpwin, NO_GLYPH, &any, 0, 0, ATR_NONE, buf, FALSE);
     if (Upolyd && (int) u.mfemale != genidx) {
-        Sprintf(buf, fmtstr, "gender (base)", genders[u.mfemale].adj);
+        /*KR Sprintf(buf, fmtstr, "gender (base)", genders[u.mfemale].adj); */
+        Sprintf(buf, fmtstr, "성별 (기본)", genders[u.mfemale].adj);
         add_menu(tmpwin, NO_GLYPH, &any, 0, 0, ATR_NONE, buf, FALSE);
     }
 
     /* Current alignment */
-    Sprintf(buf, fmtstr, "alignment", align_str(u.ualign.type));
+    /*KR Sprintf(buf, fmtstr, "alignment", align_str(u.ualign.type)); */
+    Sprintf(buf, fmtstr, "성향", align_str(u.ualign.type));
     add_menu(tmpwin, NO_GLYPH, &any, 0, 0, ATR_NONE, buf, FALSE);
 
     /* Deity list */
     add_menu(tmpwin, NO_GLYPH, &any, 0, 0, ATR_NONE, "", FALSE);
+    /*KR add_menu(tmpwin, NO_GLYPH, &any, 0, 0, iflags.menu_headings, "Deities", FALSE); */
     add_menu(tmpwin, NO_GLYPH, &any, 0, 0, iflags.menu_headings,
-             "Deities", FALSE);
+             "모시는 신", FALSE);
+#if 0  /*KR: 원본*/
     Sprintf(buf2, deity_fmtstr, align_gname(A_CHAOTIC),
             (u.ualignbase[A_ORIGINAL] == u.ualign.type
              && u.ualign.type == A_CHAOTIC)               ? " (s,c)"
                 : (u.ualignbase[A_ORIGINAL] == A_CHAOTIC) ? " (s)"
                 : (u.ualign.type   == A_CHAOTIC)          ? " (c)" : "");
-    Sprintf(buf, fmtstr, "Chaotic", buf2);
+#else
+    Sprintf(buf2, deity_fmtstr, align_gname(A_CHAOTIC),
+            (u.ualignbase[A_ORIGINAL] == u.ualign.type
+             && u.ualign.type == A_CHAOTIC)               ? " (시작, 현재)"
+                : (u.ualignbase[A_ORIGINAL] == A_CHAOTIC) ? " (시작)"
+                : (u.ualign.type   == A_CHAOTIC)          ? " (현재)" : "");
+#endif
+    /*KR Sprintf(buf, fmtstr, "Chaotic", buf2); */
+    Sprintf(buf, fmtstr, "혼돈", buf2);
     add_menu(tmpwin, NO_GLYPH, &any, 0, 0, ATR_NONE, buf, FALSE);
 
+#if 0 /*KR: 원본*/
     Sprintf(buf2, deity_fmtstr, align_gname(A_NEUTRAL),
             (u.ualignbase[A_ORIGINAL] == u.ualign.type
              && u.ualign.type == A_NEUTRAL)               ? " (s,c)"
                 : (u.ualignbase[A_ORIGINAL] == A_NEUTRAL) ? " (s)"
                 : (u.ualign.type   == A_NEUTRAL)          ? " (c)" : "");
-    Sprintf(buf, fmtstr, "Neutral", buf2);
+#else
+    Sprintf(buf2, deity_fmtstr, align_gname(A_NEUTRAL),
+            (u.ualignbase[A_ORIGINAL] == u.ualign.type
+             && u.ualign.type == A_NEUTRAL)               ? " (시작, 현재)"
+                : (u.ualignbase[A_ORIGINAL] == A_NEUTRAL) ? " (시작)"
+                : (u.ualign.type   == A_NEUTRAL)          ? " (현재)" : "");
+#endif
+    /*KR Sprintf(buf, fmtstr, "Neutral", buf2); */
+    Sprintf(buf, fmtstr, "중립", buf2);
     add_menu(tmpwin, NO_GLYPH, &any, 0, 0, ATR_NONE, buf, FALSE);
 
+#if 0 /*KR: 원본*/
     Sprintf(buf2, deity_fmtstr, align_gname(A_LAWFUL),
             (u.ualignbase[A_ORIGINAL] == u.ualign.type
              && u.ualign.type == A_LAWFUL)                ? " (s,c)"
                 : (u.ualignbase[A_ORIGINAL] == A_LAWFUL)  ? " (s)"
                 : (u.ualign.type   == A_LAWFUL)           ? " (c)" : "");
-    Sprintf(buf, fmtstr, "Lawful", buf2);
+#else
+    Sprintf(buf2, deity_fmtstr, align_gname(A_LAWFUL),
+            (u.ualignbase[A_ORIGINAL] == u.ualign.type
+             && u.ualign.type == A_LAWFUL)                ? " (시작, 현재)"
+                : (u.ualignbase[A_ORIGINAL] == A_LAWFUL)  ? " (시작)"
+                : (u.ualign.type   == A_LAWFUL)           ? " (현재)" : "");
+#endif
+    /*KR Sprintf(buf, fmtstr, "Lawful", buf2); */
+    Sprintf(buf, fmtstr, "질서", buf2);
     add_menu(tmpwin, NO_GLYPH, &any, 0, 0, ATR_NONE, buf, FALSE);
 
-    end_menu(tmpwin, "Base Attributes");
+    /*KR end_menu(tmpwin, "Base Attributes"); */
+    end_menu(tmpwin, "기본 속성");
     n = select_menu(tmpwin, PICK_NONE, &selected);
     destroy_nhwindow(tmpwin);
     return (boolean) (n != -1);
@@ -3435,11 +4304,16 @@ int msgflag;          /* for variant message phrasing */
 {
     char *bp, buf[BUFSZ];
 
+#if 0 /*KR: 원본*/
     Strcpy(buf, "hiding");
+#else
+    buf[0] = '\0'; /* KR: 한국어 어순을 위해 초기화 */
+#endif
     if (U_AP_TYPE != M_AP_NOTHING) {
         /* mimic; hero is only able to mimic a strange object or gold
            or hallucinatory alternative to gold, so we skip the details
            for the hypothetical furniture and monster cases */
+#if 0 /*KR: 원본*/
         bp = eos(strcpy(buf, "mimicking"));
         if (U_AP_TYPE == M_AP_OBJECT) {
             Sprintf(bp, " %s", an(simple_typename(youmonst.mappearance)));
@@ -3450,7 +4324,22 @@ int msgflag;          /* for variant message phrasing */
         } else {
             ; /* something unexpected; leave 'buf' as-is */
         }
+#else /*KR: KRNethack 맞춤 번역 (어순 재배치)*/
+        if (U_AP_TYPE == M_AP_OBJECT) {
+            extern char *get_kr_name(const char *);
+            Strcpy(buf, get_kr_name(simple_typename(youmonst.mappearance)));
+        } else if (U_AP_TYPE == M_AP_FURNITURE) {
+            Strcpy(buf, "무언가");
+        } else if (U_AP_TYPE == M_AP_MONSTER) {
+            Strcpy(buf, "누군가");
+        } else {
+            ; /* something unexpected; leave 'buf' as-is */
+        }
+        if (buf[0])
+            Strcat(buf, "의 모습으로 위장하고 ");
+#endif
     } else if (u.uundetected) {
+#if 0             /*KR: 원본*/
         bp = eos(buf); /* points past "hiding" */
         if (youmonst.data->mlet == S_EEL) {
             if (is_pool(u.ux, u.uy))
@@ -3473,17 +4362,58 @@ int msgflag;          /* for variant message phrasing */
             } else
                 Sprintf(bp, " on the %s", surface(u.ux, u.uy));
         }
+#else             /*KR: KRNethack 맞춤 번역*/
+        bp = buf; /* 버퍼 시작점부터 덮어씀 */
+        if (youmonst.data->mlet == S_EEL) {
+            if (is_pool(u.ux, u.uy))
+                Sprintf(bp, "%s 안에", waterbody_name(u.ux, u.uy));
+        } else if (hides_under(youmonst.data)) {
+            struct obj *o = level.objects[u.ux][u.uy];
+
+            if (o)
+                Sprintf(bp, "%s 아래에", ansimpleoname(o));
+        } else if (is_clinger(youmonst.data) || Flying) {
+            /* Flying: 'lurker above' hides on ceiling but doesn't cling */
+            Sprintf(bp, "%s에", ceiling(u.ux, u.uy));
+        } else {
+            /* on floor; is_hider() but otherwise not special: 'trapper' */
+            if (u.utrap && u.utraptype == TT_PIT) {
+                struct trap *t = t_at(u.ux, u.uy);
+
+                Sprintf(bp, "%s함정 속에",
+                        (t && t->ttyp == SPIKED_PIT) ? "가시 " : "구덩이 ");
+            } else
+                Sprintf(bp, "%s에", surface(u.ux, u.uy));
+        }
+        Strcat(buf, " 숨어 ");
+#endif
     } else {
+#if 0 /*KR: 원본*/
         ; /* shouldn't happen; will result in generic "you are hiding" */
+#else
+        Strcpy(buf, "숨어 ");
+#endif
     }
 
     if (via_enlghtmt) {
         int final = msgflag; /* 'final' is used by you_are() macro */
 
+#if 0 /*KR: 원본 (함수 변경)*/
         you_are(buf, "");
+#else
+        enl_msg_kr(You_, buf, "", "있다", "있었다");
+#endif
     } else {
         /* for dohide(), when player uses '#monster' command */
+#if 0 /*KR: 원본 (구조 변경)*/
         You("are %s %s.", msgflag ? "already" : "now", buf);
+#else
+        if (msgflag) {
+            You("이미 %s있다.", buf);
+        } else {
+            You("이제 %s있다.", buf);
+        }
+#endif
     }
 }
 
@@ -3504,82 +4434,131 @@ int final;
     char buf[BUFSZ];
     int ngenocided;
 
-    /* Create the conduct window */
+/* Create the conduct window */
     en_win = create_nhwindow(NHW_MENU);
-    putstr(en_win, 0, "Voluntary challenges:");
+    /*KR putstr(en_win, 0, "Voluntary challenges:"); */
+    putstr(en_win, 0, "자발적 도전 과제:");
 
     if (u.uroleplay.blind)
-        you_have_been("blind from birth");
+        /*KR you_have_been("blind from birth"); */
+        you_have_been("태어날 때부터 맹인");
     if (u.uroleplay.nudist)
-        you_have_been("faithfully nudist");
+        /*KR you_have_been("faithfully nudist"); */
+        you_have_been("철저한 나체주의자");
 
     if (!u.uconduct.food)
+#if 0 /*KR: 원본 (함수 변경 및 의미 의역)*/
         enl_msg(You_, "have gone", "went", " without food", "");
-        /* but beverages are okay */
+#else
+        you_have_never("음식을 먹은 ");
+#endif
+    /* but beverages are okay */
     else if (!u.uconduct.unvegan)
+#if 0 /*KR: 원본 (함수 변경: you_have_X -> you_have_been)*/
         you_have_X("followed a strict vegan diet");
+#else
+        you_have_been("철저한 비건(완전 채식주의자)");
+#endif
     else if (!u.uconduct.unvegetarian)
-        you_have_been("vegetarian");
+        /*KR you_have_been("vegetarian"); */
+        you_have_been("채식주의자");
 
     if (!u.uconduct.gnostic)
-        you_have_been("an atheist");
+        /*KR you_have_been("an atheist"); */
+        you_have_been("무신론자");
 
     if (!u.uconduct.weaphit) {
-        you_have_never("hit with a wielded weapon");
+        /*KR you_have_never("hit with a wielded weapon"); */
+        you_have_never("장비한 무기로 공격한 ");
     } else if (wizard) {
+#if 0 /*KR: 원본 (plur 함수 제거)*/
         Sprintf(buf, "used a wielded weapon %ld time%s", u.uconduct.weaphit,
                 plur(u.uconduct.weaphit));
         you_have_X(buf);
+#else
+        Sprintf(buf, "장비한 무기를 %ld번 사용한 ", u.uconduct.weaphit);
+        you_have_X(buf);
+#endif
     }
     if (!u.uconduct.killer)
-        you_have_been("a pacifist");
+        /*KR you_have_been("a pacifist"); */
+        you_have_been("평화주의자");
 
     if (!u.uconduct.literate) {
-        you_have_been("illiterate");
+        /*KR you_have_been("illiterate"); */
+        you_have_been("문맹");
     } else if (wizard) {
+#if 0 /*KR: 원본 (plur 함수 제거)*/
         Sprintf(buf, "read items or engraved %ld time%s", u.uconduct.literate,
                 plur(u.uconduct.literate));
         you_have_X(buf);
+#else
+        Sprintf(buf, "물건을 읽거나 글씨를 %ld번 새긴 ", u.uconduct.literate);
+        you_have_X(buf);
+#endif
     }
 
     ngenocided = num_genocides();
     if (ngenocided == 0) {
-        you_have_never("genocided any monsters");
+        /*KR you_have_never("genocided any monsters"); */
+        you_have_never("몬스터를 학살한 ");
     } else {
+#if 0 /*KR: 원본 (plur 함수 제거)*/
         Sprintf(buf, "genocided %d type%s of monster%s", ngenocided,
                 plur(ngenocided), plur(ngenocided));
         you_have_X(buf);
+#else
+        Sprintf(buf, "%d종류의 몬스터를 학살한 ", ngenocided);
+        you_have_X(buf);
+#endif
     }
 
     if (!u.uconduct.polypiles) {
-        you_have_never("polymorphed an object");
+        /*KR you_have_never("polymorphed an object"); */
+        you_have_never("물건을 폴리모프한 ");
     } else if (wizard) {
+#if 0 /*KR: 원본 (plur 함수 제거)*/
         Sprintf(buf, "polymorphed %ld item%s", u.uconduct.polypiles,
                 plur(u.uconduct.polypiles));
         you_have_X(buf);
+#else
+        Sprintf(buf, "%ld개의 물건을 폴리모프한 ", u.uconduct.polypiles);
+        you_have_X(buf);
+#endif
     }
 
     if (!u.uconduct.polyselfs) {
-        you_have_never("changed form");
+        /*KR you_have_never("changed form"); */
+        you_have_never("모습을 바꾼 ");
     } else if (wizard) {
+#if 0 /*KR: 원본 (plur 함수 제거)*/
         Sprintf(buf, "changed form %ld time%s", u.uconduct.polyselfs,
                 plur(u.uconduct.polyselfs));
         you_have_X(buf);
+#else
+        Sprintf(buf, "%ld번 모습을 바꾼 ", u.uconduct.polyselfs);
+        you_have_X(buf);
+#endif
     }
 
     if (!u.uconduct.wishes) {
+#if 0 /*KR: 원본 (함수 변경: you_have_X -> you_have_never)*/
         you_have_X("used no wishes");
+#else
+        you_have_never("소원을 빈 ");
+#endif
     } else {
+#if 0 /*KR: 원본*/
         Sprintf(buf, "used %ld wish%s", u.uconduct.wishes,
                 (u.uconduct.wishes > 1L) ? "es" : "");
         if (u.uconduct.wisharti) {
             /* if wisharti == wishes
-             *  1 wish (for an artifact)
-             *  2 wishes (both for artifacts)
-             *  N wishes (all for artifacts)
+             * 1 wish (for an artifact)
+             * 2 wishes (both for artifacts)
+             * N wishes (all for artifacts)
              * else (N is at least 2 in order to get here; M < N)
-             *  N wishes (1 for an artifact)
-             *  N wishes (M for artifacts)
+             * N wishes (1 for an artifact)
+             * N wishes (M for artifacts)
              */
             if (u.uconduct.wisharti == u.uconduct.wishes)
                 Sprintf(eos(buf), " (%s",
@@ -3592,11 +4571,25 @@ int final;
                     (u.uconduct.wisharti == 1L) ? "an artifact"
                                                 : "artifacts");
         }
+#else /*KR: KRNethack 맞춤 번역 (단복수 처리 제거 및 한국어 최적화)*/
+        Sprintf(buf, "%ld번 소원을 빈 ", u.uconduct.wishes);
+        if (u.uconduct.wisharti) {
+            if (u.uconduct.wisharti == u.uconduct.wishes)
+                Sprintf(eos(buf), " (전부 아티팩트)");
+            else
+                Sprintf(eos(buf), " (그 중 %ld번은 아티팩트)",
+                        u.uconduct.wisharti);
+        }
+#endif
         you_have_X(buf);
 
         if (!u.uconduct.wisharti)
+#if 0 /*KR: 원본 (함수 변경: enl_msg -> you_have_never)*/
             enl_msg(You_, "have not wished", "did not wish",
                     " for any artifacts", "");
+#else
+            you_have_never("아티팩트를 소원한 ");
+#endif
     }
 
     /* Pop up the window and wait for a key */
@@ -3994,6 +4987,7 @@ struct movcmd {
     uchar k1, k2, k3, k4; /* 'normal', 'qwertz', 'numpad', 'phone' */
     const char *txt, *alt; /* compass direction, screen direction */
 };
+#if 0 /*KR: 원본*/
 static const struct movcmd movtab[] = {
     { 'h', 'h', '4', '4', "west",      "left" },
     { 'j', 'j', '2', '8', "south",     "down" },
@@ -4005,6 +4999,19 @@ static const struct movcmd movtab[] = {
     { 'y', 'z', '7', '1', "northwest", "upper left" },
     {   0,   0,   0,   0,  (char *) 0, (char *) 0 }
 };
+#else
+static const struct movcmd movtab[] = {
+    { 'h', 'h', '4', '4', "서쪽", "왼쪽" },
+    { 'j', 'j', '2', '8', "남쪽", "아래쪽" },
+    { 'k', 'k', '8', '2', "북쪽", "위쪽" },
+    { 'l', 'l', '6', '6', "동쪽", "오른쪽" },
+    { 'b', 'b', '1', '7', "남서쪽", "좌측 하단" },
+    { 'n', 'n', '3', '9', "남동쪽", "우측 하단" },
+    { 'u', 'u', '9', '3', "북동쪽", "우측 상단" },
+    { 'y', 'z', '7', '1', "북서쪽", "좌측 상단" },
+    { 0, 0, 0, 0, (char *) 0, (char *) 0 }
+};
+#endif
 
 int extcmdlist_length = SIZE(extcmdlist) - 1;
 
@@ -4022,30 +5029,46 @@ uchar key;
        that match !number_pad movement (like 'j' for "jump") */
     key2cmdbuf[0] = '\0';
     if (movecmd(k = key))
-        Strcpy(key2cmdbuf, "move"); /* "move or attack"? */
+        /* "move or attack"? */
+        /*KR Strcpy(key2cmdbuf, "move"); */ 
+        Strcpy(key2cmdbuf, "이동");
     else if (movecmd(k = unctrl(key)))
-        Strcpy(key2cmdbuf, "rush");
+        /*KR Strcpy(key2cmdbuf, "rush"); */
+        Strcpy(key2cmdbuf, "돌진");
     else if (movecmd(k = (Cmd.num_pad ? unmeta(key) : lowc(key))))
-        Strcpy(key2cmdbuf, "run");
+        /*KR Strcpy(key2cmdbuf, "run"); */
+        Strcpy(key2cmdbuf, "달리기");
     if (*key2cmdbuf) {
         for (mov = &movtab[0]; mov->k1; ++mov) {
             c = !Cmd.num_pad ? (!Cmd.swap_yz ? mov->k1 : mov->k2)
                              : (!Cmd.phone_layout ? mov->k3 : mov->k4);
             if (c == k) {
+#if 0 /*KR: 원본*/
                 Sprintf(eos(key2cmdbuf), " %s (screen %s)",
                         mov->txt, mov->alt);
+#else
+                Sprintf(eos(key2cmdbuf), ": %s (화면 %s)", mov->txt,
+                        mov->alt);
+#endif
                 return key2cmdbuf;
             }
         }
     } else if (digit(key) || (Cmd.num_pad && digit(unmeta(key)))) {
         key2cmdbuf[0] = '\0';
         if (!Cmd.num_pad)
-            Strcpy(key2cmdbuf, "start of, or continuation of, a count");
+       /*KR Strcpy(key2cmdbuf, "start of, or continuation of, a count"); */
+            Strcpy(key2cmdbuf, "반복 횟수 입력 시작 또는 계속");
         else if (key == '5' || key == M_5)
+#if 0 /*KR: 원본*/
             Sprintf(key2cmdbuf, "%s prefix",
                     (!!Cmd.pcHack_compat ^ (key == M_5)) ? "run" : "rush");
+#else
+            Sprintf(key2cmdbuf, "%s 접두사",
+                    (!!Cmd.pcHack_compat ^ (key == M_5)) ? "달리기" : "돌진");
+#endif
         else if (key == '0' || (Cmd.pcHack_compat && key == M_0))
-            Strcpy(key2cmdbuf, "synonym for 'i'");
+            /*KR Strcpy(key2cmdbuf, "synonym for 'i'"); */
+            Strcpy(key2cmdbuf, "'i'와 동일");
         if (*key2cmdbuf)
             return key2cmdbuf;
     }
@@ -4165,91 +5188,125 @@ dokeylist(VOID_ARGS)
 {
     char buf[BUFSZ], buf2[BUFSZ];
     uchar key;
-    boolean keys_used[256] = {0};
+    boolean keys_used[256] = { 0 };
     winid datawin;
     int i;
     static const char
+#if 0 /*KR: 원본*/
         run_desc[] = "Prefix: run until something very interesting is seen",
         forcefight_desc[] =
                      "Prefix: force fight even if you don't see a monster";
+#else
+        run_desc[] = "접두사: 무언가 아주 흥미로운 것을 발견할 때까지 달린다",
+        forcefight_desc[] = "접두사: 몬스터가 보이지 않더라도 강제 공격한다";
+#endif
     static const struct {
         int nhkf;
         const char *desc;
         boolean numpad;
     } misc_keys[] = {
-        { NHKF_ESC, "escape from the current query/action", FALSE },
-        { NHKF_RUSH,
-          "Prefix: rush until something interesting is seen", FALSE },
+        /*KR { NHKF_ESC, "escape from the current query/action", FALSE }, */
+        { NHKF_ESC, "현재 질문/행동에서 벗어난다(취소)", FALSE },
+        /*KR { NHKF_RUSH, "Prefix: rush until something interesting is seen",
+           FALSE }, */
+        { NHKF_RUSH, "접두사: 무언가 흥미로운 것을 발견할 때까지 돌진한다",
+          FALSE },
         { NHKF_RUN, run_desc, FALSE },
         { NHKF_RUN2, run_desc, TRUE },
         { NHKF_FIGHT, forcefight_desc, FALSE },
-        { NHKF_FIGHT2, forcefight_desc, TRUE } ,
-        { NHKF_NOPICKUP,
-          "Prefix: move without picking up objects/fighting", FALSE },
-        { NHKF_RUN_NOPICKUP,
-          "Prefix: run without picking up objects/fighting", FALSE },
-        { NHKF_DOINV, "view inventory", TRUE },
-        { NHKF_REQMENU, "Prefix: request a menu", FALSE },
+        { NHKF_FIGHT2, forcefight_desc, TRUE },
+        /*KR { NHKF_NOPICKUP, "Prefix: move without picking up
+           objects/fighting", FALSE }, */
+        { NHKF_NOPICKUP, "접두사: 물건을 줍거나 싸우지 않고 이동한다",
+          FALSE },
+        /*KR { NHKF_RUN_NOPICKUP, "Prefix: run without picking up
+           objects/fighting", FALSE }, */
+        { NHKF_RUN_NOPICKUP, "접두사: 물건을 줍거나 싸우지 않고 달린다",
+          FALSE },
+        /*KR { NHKF_DOINV, "view inventory", TRUE }, */
+        { NHKF_DOINV, "소지품을 본다", TRUE },
+        /*KR { NHKF_REQMENU, "Prefix: request a menu", FALSE }, */
+        { NHKF_REQMENU, "접두사: 메뉴를 요청한다", FALSE },
 #ifdef REDO
-        { NHKF_DOAGAIN , "re-do: perform the previous command again", FALSE },
+        /*KR { NHKF_DOAGAIN , "re-do: perform the previous command again",
+           FALSE }, */
+        { NHKF_DOAGAIN, "재실행: 이전 명령어를 다시 수행한다", FALSE },
 #endif
         { 0, (const char *) 0, FALSE }
     };
 
     datawin = create_nhwindow(NHW_TEXT);
     putstr(datawin, 0, "");
-    putstr(datawin, 0, "            Full Current Key Bindings List");
+    /*KR putstr(datawin, 0, "            Full Current Key Bindings List"); */
+    putstr(datawin, 0, "            현재 전체 키 바인딩 목록");
 
     /* directional keys */
     putstr(datawin, 0, "");
-    putstr(datawin, 0, "Directional keys:");
-    show_direction_keys(datawin, '.', FALSE); /* '.'==self in direction grid */
+    /*KR putstr(datawin, 0, "Directional keys:"); */
+    putstr(datawin, 0, "방향 키:");
+    show_direction_keys(datawin, '.',
+                        FALSE); /* '.'==self in direction grid */
 
-    keys_used[(uchar) Cmd.move_NW] = keys_used[(uchar) Cmd.move_N]
-        = keys_used[(uchar) Cmd.move_NE] = keys_used[(uchar) Cmd.move_W]
-        = keys_used[(uchar) Cmd.move_E] = keys_used[(uchar) Cmd.move_SW]
-        = keys_used[(uchar) Cmd.move_S] = keys_used[(uchar) Cmd.move_SE]
-        = TRUE;
+    keys_used[(uchar) Cmd.move_NW] = keys_used[(uchar) Cmd.move_N] =
+        keys_used[(uchar) Cmd.move_NE] = keys_used[(uchar) Cmd.move_W] =
+            keys_used[(uchar) Cmd.move_E] = keys_used[(uchar) Cmd.move_SW] =
+                keys_used[(uchar) Cmd.move_S] =
+                    keys_used[(uchar) Cmd.move_SE] = TRUE;
 
     if (!iflags.num_pad) {
-        keys_used[(uchar) highc(Cmd.move_NW)]
-            = keys_used[(uchar) highc(Cmd.move_N)]
-            = keys_used[(uchar) highc(Cmd.move_NE)]
-            = keys_used[(uchar) highc(Cmd.move_W)]
-            = keys_used[(uchar) highc(Cmd.move_E)]
-            = keys_used[(uchar) highc(Cmd.move_SW)]
-            = keys_used[(uchar) highc(Cmd.move_S)]
-            = keys_used[(uchar) highc(Cmd.move_SE)] = TRUE;
-        keys_used[(uchar) C(Cmd.move_NW)]
-            = keys_used[(uchar) C(Cmd.move_N)]
-            = keys_used[(uchar) C(Cmd.move_NE)]
-            = keys_used[(uchar) C(Cmd.move_W)]
-            = keys_used[(uchar) C(Cmd.move_E)]
-            = keys_used[(uchar) C(Cmd.move_SW)]
-            = keys_used[(uchar) C(Cmd.move_S)]
-            = keys_used[(uchar) C(Cmd.move_SE)] = TRUE;
+        keys_used[(uchar) highc(Cmd.move_NW)] =
+            keys_used[(uchar) highc(Cmd.move_N)] =
+                keys_used[(uchar) highc(Cmd.move_NE)] =
+                    keys_used[(uchar) highc(Cmd.move_W)] =
+                        keys_used[(uchar) highc(Cmd.move_E)] =
+                            keys_used[(uchar) highc(Cmd.move_SW)] =
+                                keys_used[(uchar) highc(Cmd.move_S)] =
+                                    keys_used[(uchar) highc(Cmd.move_SE)] =
+                                        TRUE;
+        keys_used[(uchar) C(Cmd.move_NW)] = keys_used[(uchar) C(Cmd.move_N)] =
+            keys_used[(uchar) C(Cmd.move_NE)] =
+                keys_used[(uchar) C(Cmd.move_W)] =
+                    keys_used[(uchar) C(Cmd.move_E)] =
+                        keys_used[(uchar) C(Cmd.move_SW)] =
+                            keys_used[(uchar) C(Cmd.move_S)] =
+                                keys_used[(uchar) C(Cmd.move_SE)] = TRUE;
         putstr(datawin, 0, "");
+#if 0 /*KR: 원본*/
         putstr(datawin, 0,
           "Shift-<direction> will move in specified direction until you hit");
         putstr(datawin, 0, "        a wall or run into something.");
+#else
+        putstr(datawin, 0,
+               "Shift-<방향>은 벽에 부딪히거나 무언가와 마주칠 때까지");
+        putstr(datawin, 0, "        지정된 방향으로 이동합니다.");
+#endif
+#if 0 /*KR: 원본*/
         putstr(datawin, 0,
           "Ctrl-<direction> will run in specified direction until something");
         putstr(datawin, 0, "        very interesting is seen.");
+#else
+        putstr(datawin, 0,
+               "Ctrl-<방향>은 무언가 아주 흥미로운 것을 발견할 때까지");
+        putstr(datawin, 0, "        지정된 방향으로 달립니다.");
+#endif
     }
 
     putstr(datawin, 0, "");
-    putstr(datawin, 0, "Miscellaneous keys:");
+    /*KR putstr(datawin, 0, "Miscellaneous keys:"); */
+    putstr(datawin, 0, "기타 키:");
     for (i = 0; misc_keys[i].desc; i++) {
         key = Cmd.spkeys[misc_keys[i].nhkf];
-        if (key && ((misc_keys[i].numpad && iflags.num_pad)
-                    || !misc_keys[i].numpad)) {
+        if (key
+            && ((misc_keys[i].numpad && iflags.num_pad)
+                || !misc_keys[i].numpad)) {
             keys_used[(uchar) key] = TRUE;
             Sprintf(buf, "%-8s %s", key2txt(key, buf2), misc_keys[i].desc);
             putstr(datawin, 0, buf);
         }
     }
 #ifndef NO_SIGNAL
-    putstr(datawin, 0, "^c       break out of NetHack (SIGINT)");
+    /*KR putstr(datawin, 0, "^c        break out of NetHack (SIGINT)"); */
+    putstr(datawin, 0, "^c        넷핵을 강제 종료합니다 (SIGINT)");
     keys_used[(uchar) C('c')] = TRUE;
 #endif
 
@@ -4258,21 +5315,24 @@ dokeylist(VOID_ARGS)
 
     if (dokeylist_putcmds(datawin, TRUE, GENERALCMD, WIZMODECMD, keys_used)) {
         putstr(datawin, 0, "");
-        putstr(datawin, 0, "General commands:");
+        /*KR putstr(datawin, 0, "General commands:"); */
+        putstr(datawin, 0, "일반 명령어:");
         (void) dokeylist_putcmds(datawin, FALSE, GENERALCMD, WIZMODECMD,
                                  keys_used);
     }
 
     if (dokeylist_putcmds(datawin, TRUE, 0, WIZMODECMD, keys_used)) {
         putstr(datawin, 0, "");
-        putstr(datawin, 0, "Game commands:");
+        /*KR putstr(datawin, 0, "Game commands:"); */
+        putstr(datawin, 0, "게임 명령어:");
         (void) dokeylist_putcmds(datawin, FALSE, 0, WIZMODECMD, keys_used);
     }
 
     if (wizard
         && dokeylist_putcmds(datawin, TRUE, WIZMODECMD, 0, keys_used)) {
         putstr(datawin, 0, "");
-        putstr(datawin, 0, "Wizard-mode commands:");
+        /*KR putstr(datawin, 0, "Wizard-mode commands:"); */
+        putstr(datawin, 0, "마법사 모드 명령어:");
         (void) dokeylist_putcmds(datawin, FALSE, WIZMODECMD, 0, keys_used);
     }
 
@@ -5299,7 +6359,8 @@ register char *cmd;
            a movement attempt, but that didn't provide for any
            feedback and led to strangeness if the key pressed
            ('u' in particular) was overloaded for num_pad use */
-        You_cant("get there from here...");
+        /*KR You_cant("get there from here..."); */
+        You_cant("여기서 거기로는 갈 수 없다...");
         context.run = 0;
         context.nopick = context.forcefight = FALSE;
         context.move = context.mv = FALSE;
@@ -5337,10 +6398,12 @@ register char *cmd;
         /* current - use *cmd to directly index cmdlist array */
         if ((tlist = Cmd.commands[*cmd & 0xff]) != 0) {
             if (!wizard && (tlist->flags & WIZMODECMD)) {
-                You_cant("do that!");
+                /*KR You_cant("do that!"); */
+                pline("그럴 수는 없다!");
                 res = 0;
             } else if (u.uburied && !(tlist->flags & IFBURIED)) {
-                You_cant("do that while you are buried!");
+                /*KR You_cant("do that while you are buried!"); */
+                You("파묻힌 상태에서는 그럴 수 없다!");
                 res = 0;
             } else {
                 /* we discard 'const' because some compilers seem to have
@@ -5368,8 +6431,10 @@ register char *cmd;
         while ((c = *cmd++) != '\0')
             Strcat(expcmd, visctrl(c)); /* add 1..4 chars plus terminator */
 
-        if (!prefix_seen || !help_dir(c1, spkey, "Invalid direction key!"))
-            Norep("Unknown command '%s'.", expcmd);
+   /*KR if (!prefix_seen || !help_dir(c1, spkey, "Invalid direction key!")) */
+        if (!prefix_seen || !help_dir(c1, spkey, "잘못된 방향키입니다!"))
+            /*KR Norep("Unknown command '%s'.", expcmd); */
+            Norep("알 수 없는 명령어 '%s'.", expcmd);
     }
     /* didn't move */
     context.move = FALSE;
@@ -5499,7 +6564,8 @@ const char *s;
     if (in_doagain || *readchar_queue)
         dirsym = readchar();
     else
-        dirsym = yn_function((s && *s != '^') ? s : "In what direction?",
+   /*KR dirsym = yn_function((s && *s != '^') ? s : "In what direction?", */
+        dirsym = yn_function((s && *s != '^') ? s : "어느 방향으로?",
                              (char *) 0, '\0');
     /* remove the prompt string so caller won't have to */
     clear_nhwindow(WIN_MESSAGE);
@@ -5519,19 +6585,23 @@ const char *s;
         if (!index(quitchars, dirsym)) {
             help_requested = (dirsym == Cmd.spkeys[NHKF_GETDIR_HELP]);
             if (help_requested || iflags.cmdassist) {
-                did_help = help_dir((s && *s == '^') ? dirsym : '\0',
-                                    NHKF_ESC,
-                                    help_requested ? (const char *) 0
-                                                  : "Invalid direction key!");
+                did_help =
+                    help_dir((s && *s == '^') ? dirsym : '\0', NHKF_ESC,
+                             help_requested
+                                 ? (const char *) 0
+                                 /*KR : "Invalid direction key!"); */
+                                 : "잘못된 방향키입니다!");
                 if (help_requested)
                     goto retry;
             }
             if (!did_help)
-                pline("What a strange direction!");
+                /*KR pline("What a strange direction!"); */
+                pline("정말 이상한 방향이다!");
         }
         return 0;
     } else if (is_mov && !dxdy_moveok()) {
-        You_cant("orient yourself that direction.");
+        /*KR You_cant("orient yourself that direction."); */
+        You_cant("그 방향으로는 몸을 틀 수 없다.");
         return 0;
     }
     if (!u.dz && (Stunned || (Confusion && !rn2(5))))
@@ -5599,14 +6669,18 @@ const char *msg;
      * Delivered via pline if 'cmdassist' is off, or instead of the
      * general message if it's on.
      */
-    dothat = "do that";
-    how = " at"; /* for "<action> at yourself"; not used for up/down */
+    /*KR dothat = "do that"; */
+    dothat = "그렇게 할";
+    /*KR how = " at"; */
+    how = "을 향해"; /* for "<action> at yourself"; not used for up/down */
     switch (spkey) {
     case NHKF_NOPICKUP:
-        dothat = "move";
+        /*KR dothat = "move"; */
+        dothat = "이동할";
         break;
     case NHKF_RUSH:
-        dothat = "rush";
+        /*KR dothat = "rush"; */
+        dothat = "돌진할";
         break;
     case NHKF_RUN2:
         if (!Cmd.num_pad)
@@ -5614,15 +6688,18 @@ const char *msg;
         /*FALLTHRU*/
     case NHKF_RUN:
     case NHKF_RUN_NOPICKUP:
-        dothat = "run";
+        /*KR dothat = "run"; */
+        dothat = "달릴";
         break;
     case NHKF_FIGHT2:
         if (!Cmd.num_pad)
             break;
         /*FALLTHRU*/
     case NHKF_FIGHT:
-        dothat = "fight";
-        how = ""; /* avoid "fight at yourself" */
+        /*KR dothat = "fight"; */
+        dothat = "공격할";
+        /*KR how = ""; */
+        how = "을"; /* avoid "fight at yourself" -> 자신'을' 공격 */
         break;
     default:
         prefixhandling = FALSE;
@@ -5635,13 +6712,22 @@ const char *msg;
     if (prefixhandling
         && (sym == Cmd.spkeys[NHKF_GETDIR_SELF]
             || (Cmd.num_pad && sym == Cmd.spkeys[NHKF_GETDIR_SELF2]))) {
+#if 0 /*KR: 원본*/
         Sprintf(buf, "You can't %s%s yourself.", dothat, how);
-    /* for movement prefix followed by up or down */
+#else
+        Sprintf(buf, "자신%s %s 수는 없다.", how, dothat);
+#endif
+        /* for movement prefix followed by up or down */
     } else if (prefixhandling && (sym == '<' || sym == '>')) {
+#if 0 /*KR: 원본*/
         Sprintf(buf, "You can't %s %s.", dothat,
                 /* was "upwards" and "downwards", but they're considered
                    to be variants of canonical "upward" and "downward" */
                 (sym == '<') ? "upward" : "downward");
+#else
+        Sprintf(buf, "%s %s 수는 없다.", (sym == '<') ? "위로" : "아래로",
+                dothat);
+#endif
     }
 
     /* if '!cmdassist', display via pline() and we're done (note: asking
@@ -5649,8 +6735,13 @@ const char *msg;
     if (!viawindow) {
         if (prefixhandling) {
             if (!*buf)
+#if 0 /*KR: 원본*/
                 Sprintf(buf, "Invalid direction for '%s' prefix.",
                         visctrl(Cmd.spkeys[spkey]));
+#else
+                Sprintf(buf, "'%s' 접두사에 대해 잘못된 방향입니다.",
+                        visctrl(Cmd.spkeys[spkey]));
+#endif
             pline("%s", buf);
             return TRUE;
         }
@@ -5658,7 +6749,7 @@ const char *msg;
         return FALSE;
     }
 
-    win = create_nhwindow(NHW_TEXT);
+win = create_nhwindow(NHW_TEXT);
     if (!win)
         return FALSE;
 
@@ -5674,28 +6765,43 @@ const char *msg;
 
     if (!prefixhandling && (letter(sym) || sym == '[')) {
         /* '[': old 'cmdhelp' showed ESC as ^[ */
-        sym = highc(sym); /* @A-Z[ (note: letter() accepts '@') */
+        sym = highc(sym);       /* @A-Z[ (note: letter() accepts '@') */
         ctrl = (sym - 'A') + 1; /* 0-27 (note: 28-31 aren't applicable) */
         if ((explain = dowhatdoes_core(ctrl, buf2)) != 0
             && (!index(wiz_only_list, sym) || wizard)) {
+#if 0 /*KR: 원본 (한국어 어순을 위해 매개변수 순서 변경)*/
             Sprintf(buf, "Are you trying to use ^%c%s?", sym,
                     index(wiz_only_list, sym) ? ""
                         : " as specified in the Guidebook");
+#else
+            Sprintf(buf, "%s^%c 명령어를 사용하려고 하셨습니까?",
+                    index(wiz_only_list, sym) ? "" : "가이드북에 명시된 ",
+                    sym);
+#endif
             putstr(win, 0, buf);
             putstr(win, 0, "");
             putstr(win, 0, explain);
             putstr(win, 0, "");
+            /*KR putstr(win, 0, "To use that command, hold down the <Ctrl> key
+             * as a shift"); */
             putstr(win, 0,
-                  "To use that command, hold down the <Ctrl> key as a shift");
-            Sprintf(buf, "and press the <%c> key.", sym);
+                   "해당 명령어를 사용하려면 <Ctrl> 키를 누른 상태에서");
+            /*KR Sprintf(buf, "and press the <%c> key.", sym); */
+            Sprintf(buf, "<%c> 키를 누르십시오.", sym);
             putstr(win, 0, buf);
             putstr(win, 0, "");
         }
     }
 
+#if 0 /*KR: 원본*/
     Sprintf(buf, "Valid direction keys%s%s%s are:",
             prefixhandling ? " to " : "", prefixhandling ? dothat : "",
             NODIAG(u.umonnum) ? " in your current form" : "");
+#else /*KR: KRNethack 맞춤 번역 (어순 재배치)*/
+    Sprintf(buf, "%s%s 유효한 방향키는 다음과 같습니다:",
+            NODIAG(u.umonnum) ? "현재 모습에서 " : "",
+            prefixhandling ? dothat : "");
+#endif
     putstr(win, 0, buf);
     show_direction_keys(win, !prefixhandling ? '.' : ' ', NODIAG(u.umonnum));
 
@@ -5705,13 +6811,20 @@ const char *msg;
            given but we include up and down for 'm'+invalid_direction;
            self is excluded as a viable direction for every prefix */
         putstr(win, 0, "");
-        putstr(win, 0, "          <  up");
-        putstr(win, 0, "          >  down");
+        /*KR putstr(win, 0, "          <  up"); */
+        putstr(win, 0, "          <  위로");
+        /*KR putstr(win, 0, "          >  down"); */
+        putstr(win, 0, "          >  아래로");
         if (!prefixhandling) {
             int selfi = Cmd.num_pad ? NHKF_GETDIR_SELF2 : NHKF_GETDIR_SELF;
 
+#if 0 /*KR: 원본*/
             Sprintf(buf,   "       %4s  direct at yourself",
                     visctrl(Cmd.spkeys[selfi]));
+#else
+            Sprintf(buf, "       %4s  자신을 향함",
+                    visctrl(Cmd.spkeys[selfi]));
+#endif
             putstr(win, 0, buf);
         }
     }
@@ -5719,8 +6832,13 @@ const char *msg;
     if (msg) {
         /* non-null msg means that this wasn't an explicit user request */
         putstr(win, 0, "");
+#if 0 /*KR: 원본*/
         putstr(win, 0,
                "(Suppress this message with !cmdassist in config file.)");
+#else
+        putstr(win, 0,
+               "(이 메시지를 끄려면 설정 파일에 !cmdassist를 추가하세요.)");
+#endif
     }
     display_nhwindow(win, FALSE);
     destroy_nhwindow(win);
@@ -5741,13 +6859,21 @@ const char *
 directionname(dir)
 int dir;
 {
+#if 0 /*KR: 원본*/
     static NEARDATA const char *const dirnames[] = {
         "west",      "northwest", "north",     "northeast", "east",
         "southeast", "south",     "southwest", "down",      "up",
     };
+#else
+    static NEARDATA const char *const dirnames[] = {
+        "서쪽",   "북서쪽", "북쪽",   "북동쪽", "동쪽",
+        "남동쪽", "남쪽",   "남서쪽", "아래",   "위",
+    };
+#endif
 
     if (dir < 0 || dir >= SIZE(dirnames))
-        return "invalid";
+        /*KR return "invalid"; */
+        return "잘못된 방향";
     return dirnames[dir];
 }
 
@@ -5860,32 +6986,40 @@ int x, y;
         }
     }
 
-    if (typ <= SCORR)
-        add_herecmd_menuitem(win, dosearch, "Search for secret doors"), ++K;
+if (typ <= SCORR)
+        /*KR add_herecmd_menuitem(win, dosearch, "Search for secret doors"),
+         * ++K; */
+        add_herecmd_menuitem(win, dosearch, "비밀 문을 찾는다"), ++K;
 
     if ((ttmp = t_at(x, y)) != 0 && ttmp->tseen) {
-        add_herecmd_menuitem(win, doidtrap, "Examine trap"), ++K;
+        /*KR add_herecmd_menuitem(win, doidtrap, "Examine trap"), ++K; */
+        add_herecmd_menuitem(win, doidtrap, "함정을 조사한다"), ++K;
         if (ttmp->ttyp != VIBRATING_SQUARE)
-            add_herecmd_menuitem(win, dountrap, "Attempt to disarm trap"), ++K;
+            /*KR add_herecmd_menuitem(win, dountrap, "Attempt to disarm
+             * trap"), ++K; */
+            add_herecmd_menuitem(win, dountrap, "함정 해제를 시도한다"), ++K;
     }
 
     mtmp = m_at(x, y);
     if (mtmp && !canspotmon(mtmp))
         mtmp = 0;
     if (mtmp && which_armor(mtmp, W_SADDLE)) {
-        char *mnam = x_monnam(mtmp, ARTICLE_THE, (char *) 0,
-                              SUPPRESS_SADDLE, FALSE);
+        char *mnam =
+            x_monnam(mtmp, ARTICLE_THE, (char *) 0, SUPPRESS_SADDLE, FALSE);
 
         if (!u.usteed) {
-            Sprintf(buf, "Ride %s", mnam);
+            /*KR Sprintf(buf, "Ride %s", mnam); */
+            Sprintf(buf, "%s(을)를 탄다", mnam);
             add_herecmd_menuitem(win, doride, buf), ++K;
         }
-        Sprintf(buf, "Remove saddle from %s", mnam);
+        /*KR Sprintf(buf, "Remove saddle from %s", mnam); */
+        Sprintf(buf, "%s에게서 안장을 벗긴다", mnam);
         add_herecmd_menuitem(win, doloot, buf), ++K;
     }
     if (mtmp && can_saddle(mtmp) && !which_armor(mtmp, W_SADDLE)
         && carrying(SADDLE)) {
-        Sprintf(buf, "Put saddle on %s", mon_nam(mtmp)), ++K;
+        /*KR Sprintf(buf, "Put saddle on %s", mon_nam(mtmp)), ++K; */
+        Sprintf(buf, "%s에게 안장을 얹는다", mon_nam(mtmp)), ++K;
         add_herecmd_menuitem(win, doapply, buf);
     }
 #if 0
@@ -5897,10 +7031,12 @@ int x, y;
 #endif
 
     if (K) {
-        end_menu(win, "What do you want to do?");
+        /*KR end_menu(win, "What do you want to do?"); */
+        end_menu(win, "무엇을 하시겠습니까?");
         npick = select_menu(win, PICK_ONE, &picks);
     } else {
-        pline("No applicable actions.");
+        /*KR pline("No applicable actions."); */
+        pline("가능한 행동이 없습니다.");
         npick = 0;
     }
     destroy_nhwindow(win);
@@ -5934,41 +7070,62 @@ boolean doit;
     win = create_nhwindow(NHW_MENU);
     start_menu(win);
 
-    if (IS_FOUNTAIN(typ) || IS_SINK(typ)) {
+if (IS_FOUNTAIN(typ) || IS_SINK(typ)) {
+#if 0 /*KR: 원본*/
         Sprintf(buf, "Drink from the %s",
                 defsyms[IS_FOUNTAIN(typ) ? S_fountain : S_sink].explanation);
+#else
+        Sprintf(buf, "%s에서 물을 마신다",
+                defsyms[IS_FOUNTAIN(typ) ? S_fountain : S_sink].explanation);
+#endif
         add_herecmd_menuitem(win, dodrink, buf);
     }
     if (IS_FOUNTAIN(typ))
-        add_herecmd_menuitem(win, dodip,
-                             "Dip something into the fountain");
+        /*KR add_herecmd_menuitem(win, dodip, "Dip something into the
+         * fountain"); */
+        add_herecmd_menuitem(win, dodip, "분수에 무언가를 담근다");
     if (IS_THRONE(typ))
-        add_herecmd_menuitem(win, dosit,
-                             "Sit on the throne");
+        /*KR add_herecmd_menuitem(win, dosit, "Sit on the throne"); */
+        add_herecmd_menuitem(win, dosit, "왕좌에 앉는다");
 
     if ((u.ux == xupstair && u.uy == yupstair)
         || (u.ux == sstairs.sx && u.uy == sstairs.sy && sstairs.up)
         || (u.ux == xupladder && u.uy == yupladder)) {
+#if 0 /*KR: 원본*/
         Sprintf(buf, "Go up the %s",
                 (u.ux == xupladder && u.uy == yupladder)
                 ? "ladder" : "stairs");
+#else
+        Sprintf(buf, "%s(을)를 올라간다",
+                (u.ux == xupladder && u.uy == yupladder) ? "사다리" : "계단");
+#endif
         add_herecmd_menuitem(win, doup, buf);
     }
     if ((u.ux == xdnstair && u.uy == ydnstair)
         || (u.ux == sstairs.sx && u.uy == sstairs.sy && !sstairs.up)
         || (u.ux == xdnladder && u.uy == ydnladder)) {
+#if 0 /*KR: 원본*/
         Sprintf(buf, "Go down the %s",
                 (u.ux == xupladder && u.uy == yupladder)
                 ? "ladder" : "stairs");
+#else
+        Sprintf(buf, "%s(을)를 내려간다",
+                (u.ux == xupladder && u.uy == yupladder) ? "사다리" : "계단");
+#endif
         add_herecmd_menuitem(win, dodown, buf);
     }
     if (u.usteed) { /* another movement choice */
+#if 0               /*KR: 원본*/
         Sprintf(buf, "Dismount %s",
                 x_monnam(u.usteed, ARTICLE_THE, (char *) 0,
                          SUPPRESS_SADDLE, FALSE));
+#else
+        Sprintf(buf, "%s에게서 내린다",
+                x_monnam(u.usteed, ARTICLE_THE, (char *) 0, SUPPRESS_SADDLE,
+                         FALSE));
+#endif
         add_herecmd_menuitem(win, doride, buf);
     }
-
 #if 0
     if (Upolyd) { /* before objects */
         Sprintf(buf, "Use %s special ability",
@@ -5980,27 +7137,39 @@ boolean doit;
     if (OBJ_AT(u.ux, u.uy)) {
         struct obj *otmp = level.objects[u.ux][u.uy];
 
+#if 0 /*KR: 원본*/
         Sprintf(buf, "Pick up %s", otmp->nexthere ? "items" : doname(otmp));
+#else
+        Sprintf(buf, "%s(을)를 줍는다",
+                otmp->nexthere ? "물건들" : doname(otmp));
+#endif
         add_herecmd_menuitem(win, dopickup, buf);
 
         if (Is_container(otmp)) {
-            Sprintf(buf, "Loot %s", doname(otmp));
+            /*KR Sprintf(buf, "Loot %s", doname(otmp)); */
+            Sprintf(buf, "%s(을)를 뒤진다", doname(otmp));
             add_herecmd_menuitem(win, doloot, buf);
         }
         if (otmp->oclass == FOOD_CLASS) {
-            Sprintf(buf, "Eat %s", doname(otmp));
+            /*KR Sprintf(buf, "Eat %s", doname(otmp)); */
+            Sprintf(buf, "%s(을)를 먹는다", doname(otmp));
             add_herecmd_menuitem(win, doeat, buf);
         }
     }
 
     if (invent)
-        add_herecmd_menuitem(win, dodrop, "Drop items");
+        /*KR add_herecmd_menuitem(win, dodrop, "Drop items"); */
+        add_herecmd_menuitem(win, dodrop, "물건들을 내려놓는다");
 
-    add_herecmd_menuitem(win, donull, "Rest one turn");
-    add_herecmd_menuitem(win, dosearch, "Search around you");
-    add_herecmd_menuitem(win, dolook, "Look at what is here");
+    /*KR add_herecmd_menuitem(win, donull, "Rest one turn"); */
+    add_herecmd_menuitem(win, donull, "한 턴 쉰다");
+    /*KR add_herecmd_menuitem(win, dosearch, "Search around you"); */
+    add_herecmd_menuitem(win, dosearch, "주변을 탐색한다");
+    /*KR add_herecmd_menuitem(win, dolook, "Look at what is here"); */
+    add_herecmd_menuitem(win, dolook, "이곳에 무엇이 있는지 살핀다");
 
-    end_menu(win, "What do you want to do?");
+    /*KR end_menu(win, "What do you want to do?"); */
+    end_menu(win, "무엇을 하시겠습니까?");
     npick = select_menu(win, PICK_ONE, &picks);
     destroy_nhwindow(win);
     ch = '\0';
@@ -6195,12 +7364,14 @@ boolean historical; /* whether to include in message history: True => yes */
             break;
         }
 
-        if (cnt > 9 || backspaced) {
+if (cnt > 9 || backspaced) {
             clear_nhwindow(WIN_MESSAGE);
             if (backspaced && !cnt) {
-                Sprintf(qbuf, "Count: ");
+                /*KR Sprintf(qbuf, "Count: "); */
+                Sprintf(qbuf, "횟수: ");
             } else {
-                Sprintf(qbuf, "Count: %ld", cnt);
+                /*KR Sprintf(qbuf, "Count: %ld", cnt); */
+                Sprintf(qbuf, "횟수: %ld", cnt);
                 backspaced = FALSE;
             }
             custompline(SUPPRESS_HISTORY, "%s", qbuf);
@@ -6209,7 +7380,8 @@ boolean historical; /* whether to include in message history: True => yes */
     }
 
     if (historical) {
-        Sprintf(qbuf, "Count: %ld ", *count);
+        /*KR Sprintf(qbuf, "Count: %ld ", *count); */
+        Sprintf(qbuf, "횟수: %ld ", *count);
         (void) key2txt((uchar) key, eos(qbuf));
         putmsghistory(qbuf, FALSE);
     }
@@ -6441,8 +7613,10 @@ dotravel(VOID_ARGS)
         }
         iflags.getloc_filter = gf;
     } else {
-        pline("Where do you want to travel to?");
-        if (getpos(&cc, TRUE, "the desired destination") < 0) {
+        /*KR pline("Where do you want to travel to?"); */
+        pline("어디로 이동하시겠습니까?");
+        /*KR if (getpos(&cc, TRUE, "the desired destination") < 0) { */
+        if (getpos(&cc, TRUE, "목적지") < 0) {
             /* user pressed ESC */
             iflags.getloc_travelmode = FALSE;
             return 0;

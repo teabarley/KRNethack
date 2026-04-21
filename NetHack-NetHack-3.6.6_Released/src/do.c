@@ -8,13 +8,13 @@
 #include "hack.h"
 #include "lev.h"
 
-STATIC_DCL void FDECL(trycall, (struct obj *));
+STATIC_DCL void FDECL(trycall, (struct obj *) );
 STATIC_DCL void NDECL(polymorph_sink);
 STATIC_DCL boolean NDECL(teleport_sink);
-STATIC_DCL void FDECL(dosinkring, (struct obj *));
-STATIC_PTR int FDECL(drop, (struct obj *));
+STATIC_DCL void FDECL(dosinkring, (struct obj *) );
+STATIC_PTR int FDECL(drop, (struct obj *) );
 STATIC_PTR int NDECL(wipeoff);
-STATIC_DCL int FDECL(menu_drop, (int));
+STATIC_DCL int FDECL(menu_drop, (int) );
 STATIC_DCL int NDECL(currentlevel_rewrite);
 STATIC_DCL void NDECL(final_level);
 /* static boolean FDECL(badspot, (XCHAR_P,XCHAR_P)); */
@@ -85,7 +85,8 @@ boolean pushing;
                 pline("%s %s %s into the %s.", upstart(whobuf),
                       vtense(whobuf, "push"), the(xname(otmp)), what);
 #else
-                pline("%s %s %s 안으로 밀어넣었다.", append_josa(whobuf, "은"),
+                pline("%s %s %s 안으로 밀어넣었다.",
+                      append_josa(whobuf, "은"),
                       append_josa(xname(otmp), "를"), what);
 #endif
                 if (flags.verbose && !Blind)
@@ -102,13 +103,14 @@ boolean pushing;
                           the(xname(otmp)), fills_up ? "fills" : "falls into",
                           what);
 #else
-                    pline("%s가 %s에 %s 철퍽 하고 커다랗게 튀었다.",
-                        xname(otmp), what,
-                        fills_up ? "채워지며" : "떨어지며");
+                    pline("%s %s에 %s 철퍽 하고 커다랗게 튀었다.",
+                          append_josa(xname(otmp), "이"), what,
+                          fills_up ? "채워지며" : "떨어지며");
 #endif
                 } else if (!Deaf)
                     /*KR You_hear("a%s splash.", lava ? " sizzling" : ""); */
-                    You_hear("%s하고 튀는 소리를 들었다.", lava ? "치이익 " : "철퍽");
+                    You_hear("%s하고 튀는 소리를 들었다.",
+                             lava ? "치이익 " : "철퍽");
                 wake_nearto(rx, ry, 40);
             }
 
@@ -124,17 +126,17 @@ boolean pushing;
                 You("are hit by molten %s%c",
                     hliquid("lava"), Fire_resistance ? '.' : '!');
 #else
-                You("녹은 %s에 맞았다%s",
-                    hliquid("용암"), Fire_resistance ? "." : "!");
+                You("녹은 %s에 맞았다%s", hliquid("용암"),
+                    Fire_resistance ? "." : "!");
 #endif
                 burn_away_slime();
                 dmg = d((Fire_resistance ? 1 : 3), 6);
                 losehp(Maybe_Half_Phys(dmg), /* lava damage */
-               /*KR "molten lava", KILLED_BY); */
-                    "녹은 용암에", KILLED_BY);
+                       /*KR "molten lava", KILLED_BY); */
+                       "녹은 용암에", KILLED_BY);
             } else if (!fills_up && flags.verbose
                        && (pushing ? !Blind : cansee(rx, ry)))
-           /*KR pline("It sinks without a trace!"); */
+                /*KR pline("It sinks without a trace!"); */
                 pline("그것은 흔적도 없이 가라앉았다!");
         }
 
@@ -187,11 +189,14 @@ const char *verb;
 #else
             if (*verb && (cansee(x, y) || distu(x, y) == 0)) {
                 /* vtense 없이 verb를 그대로 가져옵니다.
-                   단, '버리다(drop)'가 넘어왔을 때는 어색하므로 자연스럽게
-                   보정합니다. */
+                   단, 영어 동사가 넘어올 때를 대비해 추가 보정을 합니다. */
                 pline("바위가 %s구덩이 안으로 %s.",
                       mtmp ? "" : "당신과 함께 ",
-                      !strcmp(verb, "버리다") ? "떨어졌다" : verb);
+                      !strcmp(verb, "버리다") || !strcmp(verb, "drop")
+                          ? "떨어졌다"
+                      : !strcmp(verb, "throw") ? "던져졌다"
+                      : !strcmp(verb, "push")  ? "밀려들어갔다"
+                                               : verb);
             }
 #endif
             if (mtmp) {
@@ -218,10 +223,12 @@ const char *verb;
                                         || is_vampshifter(mtmp))
                                     ? "destroyed" : "killed");
 #else
-                                pline("%s %s!", append_josa(Monnam(mtmp), "이"),
-                                    (nonliving(mtmp->data)
-                                     || is_vampshifter(mtmp))
-                                    ? "쓰러졌다" : "죽었다");
+                                pline("%s %s!",
+                                      append_josa(Monnam(mtmp), "이"),
+                                      (nonliving(mtmp->data)
+                                       || is_vampshifter(mtmp))
+                                          ? "쓰러졌다"
+                                          : "죽었다");
 #endif
                             mondied(mtmp);
                         }
@@ -238,8 +245,8 @@ const char *verb;
                     losehp(Maybe_Half_Phys(rnd(15)),
                         "squished under a boulder", NO_KILLER_PREFIX);
 #else
-                    losehp(Maybe_Half_Phys(rnd(15)),
-                        "바위 밑에 깔려서", KILLED_BY);
+                    losehp(Maybe_Half_Phys(rnd(15)), "바위 밑에 깔려서",
+                           KILLED_BY);
 #endif
                     return FALSE; /* player remains trapped */
                 } else
@@ -249,7 +256,7 @@ const char *verb;
         if (*verb) {
             if (Blind && (x == u.ux) && (y == u.uy)) {
                 /*KR You_hear("a CRASH! beneath you."); */
-                You_hear("등 뒤에서 쾅! 하는 소리를 들었다.");
+                You_hear("발밑에서 쾅! 하는 소리를 들었다.");
             } else if (!Blind && cansee(x, y)) {
 #if 0 /*KR:T*/
                 pline_The("boulder %s%s.",
@@ -260,20 +267,19 @@ const char *verb;
                     : (ttyp == HOLE) ? "plugs a hole"
                     : "fills a pit");
 #else
-                pline("바위가 %s%s.", 
-                    t->tseen ? "" : "함정으로 작동되어 ",
-                    t->ttyp == TRAPDOOR ? "함정문을 메웠다" :
-                    t->ttyp == HOLE ? "구멍을 메웠다" :
-                    "구덩이를 메웠다");
+                pline("바위가 %s%s.", t->tseen ? "" : "함정으로 작동되어 ",
+                      t->ttyp == TRAPDOOR ? "함정문을 메웠다"
+                      : t->ttyp == HOLE   ? "구멍을 메웠다"
+                                          : "구덩이를 메웠다");
 #endif
             } else {
-           /*KR You_hear("a boulder %s.", verb); */
+                /*KR You_hear("a boulder %s.", verb); */
                 You_hear("바위가 %s 하는 소리를 듣는다.", verb);
             }
         }
         /*
          * Note:  trap might have gone away via ((hmon -> killed -> xkilled)
-         *  || mondied) -> mondead -> m_detach -> fill_pit.
+         * || mondied) -> mondead -> m_detach -> fill_pit.
          */
         if ((t = t_at(x, y)) != 0)
             deltrap(t);
@@ -291,10 +297,10 @@ const char *verb;
             && ((x == u.ux) && (y == u.uy))) {
             if (!Underwater) {
                 if (weight(obj) > 9) {
-               /*KR pline("Splash!"); */
+                    /*KR pline("Splash!"); */
                     pline("철벅!");
                 } else if (Levitation || Flying) {
-               /*KR pline("Plop!"); */
+                    /*KR pline("Plop!"); */
                     pline("퐁당!");
                 }
             }
@@ -305,8 +311,9 @@ const char *verb;
     } else if (u.ux == x && u.uy == y && (t = t_at(x, y)) != 0
                && (uteetering_at_seen_pit(t) || uescaped_shaft(t))) {
         if (Blind && !Deaf)
-       /*KR You_hear("%s tumble downwards.", the(xname(obj))); */
-            You_hear("%s가 아래로 굴러 떨어지는 소리를 듣는다.", xname(obj));
+            /*KR You_hear("%s tumble downwards.", the(xname(obj))); */
+            You_hear("%s 아래로 굴러 떨어지는 소리를 듣는다.",
+                     append_josa(xname(obj), "이"));
         else
 #if 0 /*KR:T*/
             pline("%s %s into %s %s.", The(xname(obj)),
@@ -332,9 +339,7 @@ const char *verb;
 }
 
 /* obj is an object dropped on an altar */
-void
-doaltarobj(obj)
-register struct obj *obj;
+void doaltarobj(obj) register struct obj *obj;
 {
     if (Blind)
         return;
@@ -348,27 +353,26 @@ register struct obj *obj;
     }
 
     if (obj->blessed || obj->cursed) {
-#if 0 /*KR:T*/ /*KR JNethack에서는 an 대신 jconj_adj를 사용해줌 */
+#if 0 /*KR:T*/
         There("is %s flash as %s %s the altar.",
               an(hcolor(obj->blessed ? NH_AMBER : NH_BLACK)), doname(obj),
               otense(obj, "hit"));
 #else
-        pline("%s 제단에 닿자 %s 빛이 난다.",
-            append_josa(doname(obj), "이"), an(hcolor(obj->blessed ? NH_AMBER : NH_BLACK)));
+        pline("%s 제단에 닿자 %s 빛이 난다.", append_josa(doname(obj), "이"),
+              an(hcolor(obj->blessed ? NH_AMBER : NH_BLACK)));
 #endif
         if (!Hallucination)
             obj->bknown = 1; /* ok to bypass set_bknown() */
     } else {
-   /*KR pline("%s %s on the altar.", Doname2(obj), otense(obj, "land")); */
+        /*KR pline("%s %s on the altar.", Doname2(obj), otense(obj, "land"));
+         */
         pline("%s 제단 위에 놓았다.", append_josa(Doname2(obj), "를"));
         if (obj->oclass != COIN_CLASS)
             obj->bknown = 1; /* ok to bypass set_bknown() */
     }
 }
 
-STATIC_OVL void
-trycall(obj)
-register struct obj *obj;
+STATIC_OVL void trycall(obj) register struct obj *obj;
 {
     if (!objects[obj->otyp].oc_name_known && !objects[obj->otyp].oc_uname)
         docall(obj);
@@ -411,8 +415,8 @@ polymorph_sink()
         /* 3.6.3: this used to pass 'rn2(A_LAWFUL + 2) - 1' to
            Align2amask() but that evaluates its argument more than once */
         algn = rn2(3) - 1; /* -1 (A_Cha) or 0 (A_Neu) or +1 (A_Law) */
-        levl[u.ux][u.uy].altarmask = ((Inhell && rn2(3)) ? AM_NONE
-                                      : Align2amask(algn));
+        levl[u.ux][u.uy].altarmask =
+            ((Inhell && rn2(3)) ? AM_NONE : Align2amask(algn));
         break;
     case 3:
         sym = S_room;
@@ -425,10 +429,11 @@ polymorph_sink()
     /* give message even if blind; we know we're not levitating,
        so can feel the outcome even if we can't directly see it */
     if (levl[u.ux][u.uy].typ != ROOM)
-   /*KR pline_The("sink transforms into %s!", an(defsyms[sym].explanation)); */
+        /*KR pline_The("sink transforms into %s!",
+         * an(defsyms[sym].explanation)); */
         pline_The("싱크대가 %s(으)로 변했다!", defsyms[sym].explanation);
     else
-   /*KR pline_The("sink vanishes."); */
+        /*KR pline_The("sink vanishes."); */
         pline("싱크대가 사라졌다.");
     newsym(u.ux, u.uy);
 }
@@ -466,9 +471,7 @@ teleport_sink()
 }
 
 /* obj is a ring being dropped over a kitchen sink */
-STATIC_OVL void
-dosinkring(obj)
-register struct obj *obj;
+STATIC_OVL void dosinkring(obj) register struct obj *obj;
 {
     struct obj *otmp, *otmp2;
     boolean ideed = TRUE;
@@ -479,11 +482,13 @@ register struct obj *obj;
     obj->in_use = TRUE;  /* block free identification via interrupt */
     switch (obj->otyp) { /* effects that can be noticed without eyes */
     case RIN_SEARCHING:
-   /*KR You("thought %s got lost in the sink, but there it is!", yname(obj)); */
-        You("%s 잃어버렸다고 생각했지만, 다시 찾아냈다!", append_josa(yname(obj), "을"));
+        /*KR You("thought %s got lost in the sink, but there it is!",
+         * yname(obj)); */
+        You("%s 잃어버렸다고 생각했지만, 다시 찾아냈다!",
+            append_josa(yname(obj), "을"));
         goto giveback;
     case RIN_SLOW_DIGESTION:
-   /*KR pline_The("ring is regurgitated!"); */
+        /*KR pline_The("ring is regurgitated!"); */
         pline("반지가 역류되어 나왔다!");
     giveback:
         obj->in_use = FALSE;
@@ -491,11 +496,11 @@ register struct obj *obj;
         trycall(obj);
         return;
     case RIN_LEVITATION:
-   /*KR pline_The("sink quivers upward for a moment."); */
+        /*KR pline_The("sink quivers upward for a moment."); */
         pline("싱크대가 잠시 위아래로 떨렸다.");
         break;
     case RIN_POISON_RESISTANCE:
-   /*KR You("smell rotten %s.", makeplural(fruitname(FALSE))); */
+        /*KR You("smell rotten %s.", makeplural(fruitname(FALSE))); */
         pline("썩은 %s의 냄새가 난다.", fruitname(FALSE));
         break;
     case RIN_AGGRAVATE_MONSTER:
@@ -504,19 +509,19 @@ register struct obj *obj;
             Hallucination ? makeplural(rndmonnam(NULL)) : "flies");
 #else
         pline("%s 여러 마리가 싱크대 근처에서 화난 듯이 웅웅거린다.",
-            Hallucination ? rndmonnam(NULL) : "파리");
+              Hallucination ? rndmonnam(NULL) : "파리");
 #endif
         break;
     case RIN_SHOCK_RESISTANCE:
-   /*KR pline("Static electricity surrounds the sink."); */
+        /*KR pline("Static electricity surrounds the sink."); */
         pline("정전기가 싱크대를 감싼다.");
         break;
     case RIN_CONFLICT:
-   /*KR You_hear("loud noises coming from the drain."); */
+        /*KR You_hear("loud noises coming from the drain."); */
         You_hear("개수구에서 큰 소리가 났다.");
         break;
     case RIN_SUSTAIN_ABILITY: /* KMH */
-   /*KR pline_The("%s flow seems fixed.", hliquid("water")); */
+        /*KR pline_The("%s flow seems fixed.", hliquid("water")); */
         pline_The("%s의 흐름이 일정해졌다.", hliquid("물"));
         break;
     case RIN_GAIN_STRENGTH:
@@ -525,9 +530,8 @@ register struct obj *obj;
             hliquid("water"),
             (obj->spe < 0) ? "weak" : "strong");
 #else
-        pline("%s의 흐름이 %해졌다.",
-            hliquid("물"),
-            (obj->spe < 0) ? "약" : "강");
+        pline("%s의 흐름이 %해졌다.", hliquid("물"),
+              (obj->spe < 0) ? "약" : "강");
 #endif
         break;
     case RIN_GAIN_CONSTITUTION:
@@ -536,20 +540,18 @@ register struct obj *obj;
             hliquid("water"),
             (obj->spe < 0) ? "less" : "great");
 #else
-        pline("%s살이 %s.",
-            hliquid("물"),
-            (obj->spe < 0) ? "줄어들었다" : "불어났다");
+        pline("%s살이 %s.", hliquid("물"),
+              (obj->spe < 0) ? "줄어들었다" : "불어났다");
 #endif
         break;
     case RIN_INCREASE_ACCURACY: /* KMH */
-#if 0 /*KR:T*/
+#if 0                           /*KR:T*/
         pline_The("%s flow %s the drain.",
             hliquid("water"),
             (obj->spe < 0) ? "misses" : "hits");
 #else
-        pline("%s살이 개수구%s.",
-            hliquid("물"),
-            (obj->spe < 0) ? "를 빗나갔다" : "에 명중했다");
+        pline("%s살이 개수구%s.", hliquid("물"),
+              (obj->spe < 0) ? "를 빗나갔다" : "에 명중했다");
 #endif
         break;
     case RIN_INCREASE_DAMAGE:
@@ -557,8 +559,7 @@ register struct obj *obj;
         pline_The("water's force seems %ser now.",
             (obj->spe < 0) ? "small" : "great");
 #else
-        pline("물살이 %s.",
-            (obj->spe < 0) ? "약해졌다" : "거세졌다");
+        pline("물살이 %s.", (obj->spe < 0) ? "약해졌다" : "거세졌다");
 #endif
         break;
     case RIN_HUNGER:
@@ -572,7 +573,8 @@ register struct obj *obj;
                     pline("Suddenly, %s %s from the sink!", doname(otmp),
                         otense(otmp, "vanish"));
 #else
-                    pline("갑자기, %s 싱크대에서 사라졌다!", append_josa(doname(otmp), "이"));
+                    pline("갑자기, %s 싱크대에서 사라졌다!",
+                          append_josa(doname(otmp), "이"));
 #endif
                     ideed = TRUE;
                 }
@@ -632,7 +634,8 @@ register struct obj *obj;
 #endif
             break;
         case RIN_STEALTH:
-            /*KR pline_The("sink seems to blend into the floor for a moment."); */
+       /*KR pline_The("sink seems to blend into the floor for a
+        *   moment."); */
             pline("싱크대가 잠시 바닥에 스며드는 것처럼 보였다.");
             break;
         case RIN_FIRE_RESISTANCE:
@@ -647,7 +650,7 @@ register struct obj *obj;
 #if 0 /*KR hliquid를 사용하지 않는 형태로 */
             pline_The("cold %s faucet flashes brightly for a moment.",
                 hliquid("water"));
-#else 
+#else
             pline("냉수 꼭지가 잠시 밝게 빛난다.");
 #endif
             break;
@@ -656,25 +659,25 @@ register struct obj *obj;
             pline("싱크대가 분수와 전혀 다른 것처럼 보인다.");
             break;
         case RIN_PROTECTION:
-            /*JP jconj_adj 사용. 수정필요*/
             /*KR pline_The("sink glows %s for a moment.", */
-            pline("싱크대가 잠시 %s 빛난다.",
-                      hcolor((obj->spe < 0) ? NH_BLACK : NH_SILVER));
+            pline("싱크대가 잠시 %s 빛을 발한다.",
+                  hcolor((obj->spe < 0) ? NH_BLACK : NH_SILVER));
             break;
         case RIN_WARNING:
-            /*JP jconj_adj 사용. 수정필요 */
-            /*KR pline_The("sink glows %s for a moment.", hcolor(NH_WHITE)); */
-            pline("싱크대가 잠시 %s 빛난다.", hcolor(NH_WHITE));
+       /*KR pline_The("sink glows %s for a moment.", hcolor(NH_WHITE)); */
+            pline("싱크대가 잠시 %s 빛을 발한다.", hcolor(NH_WHITE));
             break;
         case RIN_TELEPORT_CONTROL:
             /*KR beam aboard는 스타 트랙의 '전송' */
-            /*KR pline_The("sink looks like it is being beamed aboard somewhere."); */
+            /*KR pline_The("sink looks like it is being beamed aboard
+             * somewhere."); */
             pline("싱크대가 어디론가 전송되고 있는 것처럼 보인다.");
             break;
         case RIN_POLYMORPH_CONTROL:
             pline_The(
-             /*KR "sink momentarily looks like a regularly erupting geyser."); */
-                  "싱크대가 잠시 주기적으로 분출되는 간헐천처럼 보였다.");
+                /*KR "sink momentarily looks like a regularly erupting
+                   geyser."); */
+                "싱크대가 잠시 주기적으로 분출되는 간헐천처럼 보였다.");
             break;
         default:
             break;
@@ -714,14 +717,15 @@ const char *word;
 
     if (word && *word) {
         /* word(예: "drop")를 넣어서 kr_action(예: "버릴")을 뽑아옵니다 */
-        get_kr_strings(word, &kr_action, &kr_prompt, 
-                       fallback_act, fallback_prm);
+        get_kr_strings(word, &kr_action, &kr_prompt, fallback_act,
+                       fallback_prm);
     }
 #endif
 
     if (obj->owornmask & (W_ARMOR | W_ACCESSORY)) {
         if (*word)
-            /*KR Norep("You cannot %s %s you are wearing.", word, something); */
+            /*KR Norep("You cannot %s %s you are wearing.", word, something);
+             */
             Norep("착용하고 있는 것을 %s 수는 없다.", kr_action);
         return FALSE;
     }
@@ -746,13 +750,14 @@ const char *word;
     }
     if (obj->otyp == LEASH && obj->leashmon != 0) {
         if (*word)
-       /*KR pline_The("leash is tied around your %s.", body_part(HAND)); */
+            /*KR pline_The("leash is tied around your %s.", body_part(HAND));
+             */
             pline("%s에 가죽끈이 감겨 있다.", body_part(HAND));
         return FALSE;
     }
     if (obj->owornmask & W_SADDLE) {
         if (*word)
-       /*KR You("cannot %s %s you are sitting on.", word, something); */
+            /*KR You("cannot %s %s you are sitting on.", word, something); */
             You("타고 있는 동안에는 %s 수 없다.", kr_action);
         return FALSE;
     }
@@ -835,9 +840,7 @@ register struct obj *obj;
 /* dropx - take dropped item out of inventory;
    called in several places - may produce output
    (eg ship_object() and dropy() -> sellobj() both produce output) */
-void
-dropx(obj)
-register struct obj *obj;
+void dropx(obj) register struct obj *obj;
 {
     /* Ensure update when we drop gold objects */
     if (obj->oclass == COIN_CLASS)
@@ -853,17 +856,13 @@ register struct obj *obj;
 }
 
 /* dropy - put dropped object at destination; called from lots of places */
-void
-dropy(obj)
-struct obj *obj;
+void dropy(obj) struct obj *obj;
 {
     dropz(obj, FALSE);
 }
 
 /* dropz - really put dropped object at its destination... */
-void
-dropz(obj, with_impact)
-struct obj *obj;
+void dropz(obj, with_impact) struct obj *obj;
 boolean with_impact;
 {
     if (obj == uwep)
@@ -933,9 +932,7 @@ boolean with_impact;
 
 /* things that must change when not held; recurse into containers.
    Called for both player and monsters */
-void
-obj_no_longer_held(obj)
-struct obj *obj;
+void obj_no_longer_held(obj) struct obj *obj;
 {
     if (!obj) {
         return;
@@ -1040,10 +1037,10 @@ int retry;
          * Dropping a burning potion of oil while levitating can cause
          * an explosion which might destroy some of hero's inventory,
          * so the old code
-         *      for (otmp = invent; otmp; otmp = otmp2) {
-         *          otmp2 = otmp->nobj;
-         *          n_dropped += drop(otmp);
-         *      }
+         * for (otmp = invent; otmp; otmp = otmp2) {
+         * otmp2 = otmp->nobj;
+         * n_dropped += drop(otmp);
+         * }
          * was unreliable and could lead to an "object lost" panic.
          *
          * Use the bypass bit to mark items already processed (hence
@@ -1107,7 +1104,7 @@ int retry;
         }
     }
 
- drop_done:
+drop_done:
     return n_dropped;
 }
 
@@ -1177,8 +1174,7 @@ dodown()
             You("are floating in %s.",
                 is_pool(u.ux, u.uy) ? "the water" : "a bubble of air");
 #else
-            You("%s 속에 떠 있다.",
-                is_pool(u.ux, u.uy) ? "물" : "공기 거품");
+            You("%s 속에 떠 있다.", is_pool(u.ux, u.uy) ? "물" : "공기 거품");
 #endif
         else
 #if 0 /*KR:T*/
@@ -1186,9 +1182,9 @@ dodown()
                                                     ? "ladder"
                                                     : surface(u.ux, u.uy));
 #else
-            floating_above(stairs_down ? "계단" : ladder_down
-                                                  ? "사다리"
-                                                  : surface(u.ux, u.uy));
+            floating_above(stairs_down   ? "계단"
+                           : ladder_down ? "사다리"
+                                         : surface(u.ux, u.uy));
 #endif
         return 0; /* didn't move */
     }
@@ -1217,8 +1213,8 @@ dodown()
         if (trap && (uteetering_at_seen_pit(trap) || uescaped_shaft(trap))) {
             dotrap(trap, TOOKPLUNGE);
             return 1;
-        } else if (!trap || !is_hole(trap->ttyp)
-                   || !Can_fall_thru(&u.uz) || !trap->tseen) {
+        } else if (!trap || !is_hole(trap->ttyp) || !Can_fall_thru(&u.uz)
+                   || !trap->tseen) {
             if (flags.autodig && !context.nopick && uwep && is_pick(uwep)) {
                 return use_pick_axe2(uwep);
             } else {
@@ -1235,10 +1231,10 @@ dodown()
                                              ? "swallowed"
                                              : "engulfed");
 #else
-        You("%s 내려갈 수 없다.",
-            !u.uswallow ? "붙잡혀 있으므로" : is_animal(u.ustuck->data)
-                                                   ? "삼켜져 있으므로"
-                                                   : "휩쓸려 있으므로");
+        You("%s 내려갈 수 없다.", !u.uswallow ? "붙잡혀 있으므로"
+                                  : is_animal(u.ustuck->data)
+                                      ? "삼켜져 있으므로"
+                                      : "휩쓸려 있으므로");
 #endif
         return 1;
     }
@@ -1269,7 +1265,7 @@ dodown()
 #if 0 /*KR*/
         const char *actn = Flying ? "fly" : locomotion(youmonst.data, "jump");
 #else
-        const char* actn = "";
+        const char *actn = "";
 #endif
 
         if (youmonst.data->msize >= MZ_HUGE) {
@@ -1287,14 +1283,14 @@ dodown()
 #if 0 /*KR*/
                     actn = "manage to squeeze";
 #else
-                    actn = "어떻게든";
+                    actn = "어떻게든 ";
 #endif
 #if 0 /*KR*/
                     losehp(Maybe_Half_Phys(rnd(4)),
                         "contusion from a small passage", KILLED_BY);
 #else
                     losehp(Maybe_Half_Phys(rnd(4)),
-                        "좁은 통로에서의 타박상으로", KILLED_BY);
+                           "좁은 통로에서의 타박상으로", KILLED_BY);
 #endif
                 } else {
                     /*KR You("were unable to fit %s.", down_or_thru); */
@@ -1309,7 +1305,7 @@ dodown()
         You("%s %s the %s.", actn, down_or_thru,
             trap->ttyp == HOLE ? "hole" : "trap door");
 #else
-        You("%s %s.", actn,
+        You("%s%s.", actn,
             trap->ttyp == HOLE ? "구멍을 빠져나왔다" : "함정문을 빠져나왔다");
 #endif
     }
@@ -1340,7 +1336,7 @@ doup()
         && (!xupladder || u.ux != xupladder || u.uy != yupladder)
         && (!sstairs.sx || u.ux != sstairs.sx || u.uy != sstairs.sy
             || !sstairs.up)) {
-   /*KR You_cant("go up here."); */
+        /*KR You_cant("go up here."); */
         pline("여기서는 올라갈 수 없다.");
         return 0;
     }
@@ -1354,10 +1350,10 @@ doup()
                                              ? "swallowed"
                                              : "engulfed");
 #else
-        You("%s 올라갈 수 없다.",
-            !u.uswallow ? "잡혀 있기 때문에" : is_animal(u.ustuck->data)
-            ? "삼켜져 있기 때문에"
-            : "휩쓸려 있기 때문에");
+        You("%s 올라갈 수 없다.", !u.uswallow ? "잡혀 있기 때문에"
+                                  : is_animal(u.ustuck->data)
+                                      ? "삼켜져 있기 때문에"
+                                      : "휩쓸려 있기 때문에");
 #endif
         return 1;
     }
@@ -1368,15 +1364,17 @@ doup()
              levl[u.ux][u.uy].typ == STAIRS ? "stairs" : "ladder");
 #else
         Your("짐은 %s 오르기에 너무 무겁습니다.",
-            levl[u.ux][u.uy].typ == STAIRS ? "계단을" : "사다리를");
+             levl[u.ux][u.uy].typ == STAIRS ? "계단을" : "사다리를");
 #endif
         return 1;
     }
     if (ledger_no(&u.uz) == 1) {
         if (iflags.debug_fuzzer)
             return 0;
-        /*KR if (yn("Beware, there will be no return!  Still climb?") != 'y') */
-        if (yn("주의하십시오, 돌아올 수 없게 됩니다! 그래도 올라가겠습니까?") != 'y')
+        /*KR if (yn("Beware, there will be no return!  Still climb?") != 'y')
+         */
+        if (yn("주의하십시오, 돌아올 수 없게 됩니다! 그래도 올라가겠습니까?")
+            != 'y')
             return 0;
     }
     if (!next_to_u()) {
@@ -1400,7 +1398,7 @@ currentlevel_rewrite()
     char whynot[BUFSZ];
 
     /* since level change might be a bit slow, flush any buffered screen
-     *  output (like "you fall through a trap door") */
+     * output (like "you fall through a trap door") */
     mark_synch();
 
     fd = create_levelfile(ledger_no(&u.uz), whynot);
@@ -1465,17 +1463,15 @@ register xchar x, y;
 
 /* when arriving on a level, if hero and a monster are trying to share same
    spot, move one; extracted from goto_level(); also used by wiz_makemap() */
-void
-u_collide_m(mtmp)
-struct monst *mtmp;
+void u_collide_m(mtmp) struct monst *mtmp;
 {
     coord cc;
 
     if (!mtmp || mtmp == u.usteed || mtmp != m_at(u.ux, u.uy)) {
         impossible("level arrival collision: %s?",
-                   !mtmp ? "no monster"
-                     : (mtmp == u.usteed) ? "steed is on map"
-                       : "monster not co-located");
+                   !mtmp                ? "no monster"
+                   : (mtmp == u.usteed) ? "steed is on map"
+                                        : "monster not co-located");
         return;
     }
 
@@ -1495,26 +1491,24 @@ struct monst *mtmp;
            here, but it's not impossible and we're prepared to cope
            with the situation, so only say something when debugging */
         if (wizard)
-            pline("(monster in hero's way)");
+            /*KR pline("(monster in hero's way)"); */
+            pline("(영웅의 길을 몬스터가 막고 있음)");
         if (!rloc(mtmp, TRUE) || (mtmp = m_at(u.ux, u.uy)) != 0)
             /* no room to move it; send it away, to return later */
             m_into_limbo(mtmp);
     }
 }
 
-void
-goto_level(newlevel, at_stairs, falling, portal)
-d_level *newlevel;
+void goto_level(newlevel, at_stairs, falling, portal) d_level *newlevel;
 boolean at_stairs, falling, portal;
 {
     int fd, l_idx;
     xchar new_ledger;
     boolean cant_go_back, great_effort,
-            up = (depth(newlevel) < depth(&u.uz)),
-            newdungeon = (u.uz.dnum != newlevel->dnum),
-            was_in_W_tower = In_W_tower(u.ux, u.uy, &u.uz),
-            familiar = FALSE,
-            new = FALSE; /* made a new level? */
+        up = (depth(newlevel) < depth(&u.uz)),
+        newdungeon = (u.uz.dnum != newlevel->dnum),
+        was_in_W_tower = In_W_tower(u.ux, u.uy, &u.uz), familiar = FALSE,
+        new = FALSE; /* made a new level? */
     struct monst *mtmp;
     char whynot[BUFSZ];
     char *annotation;
@@ -1539,12 +1533,12 @@ boolean at_stairs, falling, portal;
      * due to overlooking the effect of the call to assign_rnd_lvl().)
      *
      * Odds for making it to the next level up, or of being sent down:
-     *  "up"    L      N      C
-     *   +1   75.0   75.0   75.0
-     *    0    6.25   8.33  12.5
-     *   -1   11.46  12.50  12.5
-     *   -2    5.21   4.17   0.0
-     *   -3    2.08   0.0    0.0
+     * "up"    L      N      C
+     * +1   75.0   75.0   75.0
+     * 0    6.25   8.33  12.5
+     * -1   11.46  12.50  12.5
+     * -2    5.21   4.17   0.0
+     * -3    2.08   0.0    0.0
      */
     if (Inhell && up && u.uhave.amulet && !newdungeon && !portal
         && (dunlev(&u.uz) < dunlevs_in_dungeon(&u.uz) - 3)) {
@@ -1621,9 +1615,9 @@ boolean at_stairs, falling, portal;
         u.uswldtim = u.uswallow = 0;
     recalc_mapseen(); /* recalculate map overview before we leave the level */
     /*
-     *  We no longer see anything on the level.  Make sure that this
-     *  follows u.uswallow set to null since uswallow overrides all
-     *  normal vision.
+     * We no longer see anything on the level.  Make sure that this
+     * follows u.uswallow set to null since uswallow overrides all
+     * normal vision.
      */
     vision_recalc(2);
 
@@ -1704,7 +1698,8 @@ boolean at_stairs, falling, portal;
         fd = open_levelfile(new_ledger, whynot);
         if (tricked_fileremoved(fd, whynot)) {
             /* we'll reach here if running in wizard mode */
-            error("Cannot continue this game.");
+            /*KR error("Cannot continue this game."); */
+            error("이 게임을 계속할 수 없습니다.");
         }
         reseed_random(rn2);
         reseed_random(rn2_on_display_rng);
@@ -1756,8 +1751,7 @@ boolean at_stairs, falling, portal;
                       (Flying && at_ladder) ? " along" : "",
                       at_ladder ? "ladder" : "stairs");
 #else /* 날아갔다고 해도 아무튼 '올라감' */
-                You("%s%s 올라갔다.",
-                    great_effort ? "겨우내" : "",
+                You("%s%s 올라갔다.", great_effort ? "온 힘을 다해 " : "",
                     at_ladder ? "사다리를" : "계단을");
 #endif
         } else { /* down */
@@ -1778,9 +1772,10 @@ boolean at_stairs, falling, portal;
                     You("날아서 %s 내려갔다.",
                         at_ladder ? "사다리를 따라" : "계단을");
 #endif
-            } else if (near_capacity() > UNENCUMBERED
-                       || Punished || Fumbling) {
-           /*KR You("fall down the %s.", at_ladder ? "ladder" : "stairs"); */
+            } else if (near_capacity() > UNENCUMBERED || Punished
+                       || Fumbling) {
+                /*KR You("fall down the %s.", at_ladder ? "ladder" :
+                 * "stairs"); */
                 You("%s 굴러 떨어졌다.", at_ladder ? "사다리를" : "계단을");
                 if (Punished) {
                     drag_down();
@@ -1791,10 +1786,11 @@ boolean at_stairs, falling, portal;
                     dismount_steed(DISMOUNT_FELL);
                 else
                     losehp(Maybe_Half_Phys(rnd(3)),
-                      /*KR at_ladder ? "falling off a ladder" */
-                           at_ladder ? "사다리에서 떨어지며"
-                                /*KR : "tumbling down a flight of stairs", */
-                                     : "계단을 굴러 떨어지며",
+                           /*KR at_ladder ? "falling off a ladder" */
+                           at_ladder
+                               ? "사다리에서 떨어지며"
+                               /*KR : "tumbling down a flight of stairs", */
+                               : "계단을 굴러 떨어지며",
                            KILLED_BY);
                 /*KR selftouch("Falling, you"); */
                 selftouch("떨어지며, 당신은");
@@ -1804,8 +1800,8 @@ boolean at_stairs, falling, portal;
                     You("%s.", at_ladder ? "climb down the ladder"
                                          : "descend the stairs");
 #else
-                    You("%s.", at_ladder ? "사다리를 올라갔다"
-                                         : "계단을 내려갔다");
+                    You("%s.",
+                        at_ladder ? "사다리를 내려갔다" : "계단을 내려갔다");
 #endif
             }
         }
@@ -1857,7 +1853,7 @@ boolean at_stairs, falling, portal;
     flush_screen(-1);
 
     /*
-     *  Move all plines beyond the screen reset.
+     * Move all plines beyond the screen reset.
      */
 
     /* special levels can have a custom arrival message */
@@ -1874,15 +1870,16 @@ boolean at_stairs, falling, portal;
         if (Is_valley(&u.uz)) {
             /*KR You("arrive at the Valley of the Dead..."); */
             You("망자의 계곡에 도달했다...");
-            /*KR pline_The("odor of burnt flesh and decay pervades the air."); */
+            /*KR pline_The("odor of burnt flesh and decay pervades the air.");
+             */
             pline("불에 타고 썩어들어간 살갗 냄새가 공기중에 가득하다.");
 #ifdef MICRO
             display_nhwindow(WIN_MESSAGE, FALSE);
 #endif
-       /*KR You_hear("groans and moans everywhere."); */
+            /*KR You_hear("groans and moans everywhere."); */
             You_hear("여기저기서 구슬프게 울부짖는 신음소리를 듣는다.");
         } else
-       /*KR pline("It is hot here.  You smell smoke..."); */
+            /*KR pline("It is hot here.  You smell smoke..."); */
             pline("이곳은 덥다. 연기 냄새가 난다...");
         u.uachieve.enter_gehennom = 1;
     }
@@ -1891,7 +1888,7 @@ boolean at_stairs, falling, portal;
         u.uevent.gehennom_entered = 1;
 
     if (familiar) {
-        static const char* const fam_msgs[4] = {
+        static const char *const fam_msgs[4] = {
             /*KR "You have a sense of deja vu.", */
             "당신은 데자뷔를 느낀다.",
             /*KR "You feel like you've been here before.", */
@@ -1902,10 +1899,11 @@ boolean at_stairs, falling, portal;
             "이 장소는 눈에 익은 곳이다...", 0 /* no message */
 #endif
         };
-        static const char* const halu_fam_msgs[4] = {
+        static const char *const halu_fam_msgs[4] = {
             /*KR "Whoa!  Everything %s different.", */
             "와아! 모든 게 다르게 보여!",
-            /*KR "You are surrounded by twisty little passages, all alike.", */
+            /*KR "You are surrounded by twisty little passages, all alike.",
+             */
             "당신은 모두 똑같이 생긴 작고 꼬불꼬불한 통로들에 둘러싸였다.",
 #if 0 /*KR:T*/
             "Gee, this %s like uncle Conan's place...", 0 /* no message */
@@ -1913,7 +1911,7 @@ boolean at_stairs, falling, portal;
             "세상에나, 코난 삼촌네 집이랑 완전 똑같잖아?", 0 /* no message */
 #endif
         };
-        const char* mesg;
+        const char *mesg;
 #if 0 /*KR*/
         char buf[BUFSZ];
 #endif
@@ -1935,7 +1933,7 @@ boolean at_stairs, falling, portal;
 
     /* special location arrival messages/events */
     if (In_endgame(&u.uz)) {
-        if (new &&on_level(&u.uz, &astral_level))
+        if (new && on_level(&u.uz, &astral_level))
             final_level(); /* guardian angel,&c */
         else if (newdungeon && u.uhave.amulet)
             resurrect(); /* force confrontation with Wizard */
@@ -1949,7 +1947,7 @@ boolean at_stairs, falling, portal;
         /* alarm stops working once Croesus has died */
         if (new || !mvitals[PM_CROESUS].died) {
             /*KR You("have penetrated a high security area!"); */
-            You("최고보안구역에 침투했다!");
+            You("최고 보안 구역에 침투했다!");
             /*KR pline("An alarm sounds!"); */
             pline("경보 장치가 울렸다!");
             for (mtmp = fmon; mtmp; mtmp = mtmp->nmon) {
@@ -1960,12 +1958,10 @@ boolean at_stairs, falling, portal;
         }
     } else {
         if (new && Is_rogue_level(&u.uz))
-       /*KR You("enter what seems to be an older, more primitive world."); */
+            /*KR You("enter what seems to be an older, more primitive
+             * world."); */
             You("오래되고, 매우 단순해 보이는 세계에 들어섰다.");
         /* main dungeon message from your quest leader */
-   /*KR if (!In_quest(&u.uz0) && at_dgn_entrance("The Quest") */
-        /*KR dungeon.c, dungeon.def, quest.txt, quest.c, mklev.c, trap.c */
-        /*KR 이 8개에 들어있음. 동시 수정필요. */
         if (!In_quest(&u.uz0) && at_dgn_entrance("The Quest")
             && !(u.uevent.qcompleted || u.uevent.qexpelled
                  || quest_status.leader_is_dead)) {
@@ -1984,7 +1980,7 @@ boolean at_stairs, falling, portal;
 #endif
 
     if ((annotation = get_annotation(&u.uz)) != 0)
-   /*KR You("remember this level as %s.", annotation); */
+        /*KR You("remember this level as %s.", annotation); */
         You("이 층을 %s(으)로 기억하고 있다.", annotation);
 
     /* assume this will always return TRUE when changing level */
@@ -2011,13 +2007,12 @@ final_level()
     gain_guardian_angel();
 }
 
-static char *dfr_pre_msg = 0,  /* pline() before level change */
-            *dfr_post_msg = 0; /* pline() after level change */
+static char *dfr_pre_msg = 0, /* pline() before level change */
+    *dfr_post_msg = 0;        /* pline() after level change */
 
 /* change levels at the end of this turn, after monsters finish moving */
-void
-schedule_goto(tolev, at_stairs, falling, portal_flag, pre_msg, post_msg)
-d_level *tolev;
+void schedule_goto(tolev, at_stairs, falling, portal_flag, pre_msg,
+                   post_msg) d_level *tolev;
 boolean at_stairs, falling;
 int portal_flag;
 const char *pre_msg, *post_msg;
@@ -2106,7 +2101,8 @@ struct obj *corpse;
         struct monst *mtmp2;
 
         container = corpse->ocontainer;
-        mtmp2 = get_container_location(container, &container_where, (int *) 0);
+        mtmp2 =
+            get_container_location(container, &container_where, (int *) 0);
         /* container_where is the outermost container's location even if
          * nested */
         if (container_where == OBJ_MINVENT && mtmp2)
@@ -2118,10 +2114,10 @@ struct obj *corpse;
         switch (where) {
         case OBJ_INVENT:
             if (is_uwep)
-           /*KR pline_The("%s writhes out of your grasp!", cname); */
+                /*KR pline_The("%s writhes out of your grasp!", cname); */
                 pline_The("%s 발버둥친다!", append_josa(cname, "이"));
             else
-           /*KR You_feel("squirming in your backpack!"); */
+                /*KR You_feel("squirming in your backpack!"); */
                 pline("가방 속에서 뭔가가 꿈틀대는 것이 느껴진다!");
             break;
 
@@ -2134,7 +2130,8 @@ struct obj *corpse;
 #else
                 pline("%s 되살아났다!",
                       append_josa(chewed ? Adjmonnam(mtmp, "물린 자국이 있는")
-                                         : Monnam(mtmp), "이"));
+                                         : Monnam(mtmp),
+                                  "이"));
 #endif
             break;
 
@@ -2146,7 +2143,9 @@ struct obj *corpse;
                           mon_nam(mcarry), an(cname));
 #else
                     pline("%s 되살아난 것에 놀라서, %s %s 떨어뜨렸다!",
-                          append_josa(cname, "이"), append_josa(mon_nam(mcarry), "은"), append_josa(cname, "을"));
+                          append_josa(cname, "이"),
+                          append_josa(mon_nam(mcarry), "은"),
+                          append_josa(cname, "을"));
 #endif
                 else
 #if 0 /*KR:T*/
@@ -2155,8 +2154,10 @@ struct obj *corpse;
                                  : Monnam(mtmp));
 #else
                     pline("%s 갑자기 나타났다!",
-                          append_josa(chewed ? Adjmonnam(mtmp, "물린 자국이 있는")
-                                             : Monnam(mtmp), "이"));
+                          append_josa(
+                              chewed ? Adjmonnam(mtmp, "물린 자국이 있는")
+                                     : Monnam(mtmp),
+                              "이"));
 #endif
             }
             break;
@@ -2166,8 +2167,8 @@ struct obj *corpse;
             if (container_where == OBJ_MINVENT && cansee(mtmp->mx, mtmp->my)
                 && mcarry && canseemon(mcarry) && container) {
                 /*KR pline("%s writhes out of %s!", Amonnam(mtmp), */
-                pline("%s %s에서 빠져나오려고 한다!", append_josa(Amonnam(mtmp), "이"),
-                      yname(container));
+                pline("%s %s에서 빠져나오려고 한다!",
+                      append_josa(Amonnam(mtmp), "이"), yname(container));
             } else if (container_where == OBJ_INVENT && container) {
                 Strcpy(sackname, an(xname(container)));
 #if 0 /*KR:T*/
@@ -2183,7 +2184,8 @@ struct obj *corpse;
                        && cansee(mtmp->mx, mtmp->my)) {
                 Strcpy(sackname, an(xname(container)));
                 /*KR pline("%s escapes from %s!", Amonnam(mtmp), sackname); */
-                pline("%s %s에서 빠져나왔다!", append_josa(Amonnam(mtmp), "이"), sackname);
+                pline("%s %s에서 빠져나왔다!",
+                      append_josa(Amonnam(mtmp), "이"), sackname);
             }
             break;
         }
@@ -2199,9 +2201,7 @@ struct obj *corpse;
 
 /* Revive the corpse via a timeout. */
 /*ARGSUSED*/
-void
-revive_mon(arg, timeout)
-anything *arg;
+void revive_mon(arg, timeout) anything *arg;
 long timeout UNUSED;
 {
     struct obj *body = arg->a_obj;
@@ -2224,13 +2224,17 @@ long timeout UNUSED;
 #if 0 /*KR:T*/
                 pline("%s appears.", Monnam(mtmp)); /* not pre-rloc monname */
 #else
-                pline("%s 나타났다.", append_josa(Monnam(mtmp), "이")); /* not pre-rloc monname */
+                pline("%s 나타났다.",
+                      append_josa(Monnam(mtmp),
+                                  "이")); /* not pre-rloc monname */
 #endif
             else if (notice_it && dist2(mtmp->mx, mtmp->my, x, y) > 2)
 #if 0 /*KR:T*/
                 pline("%s teleports.", monname); /* saw it and still see it */
 #else
-                pline("%s 순간이동했다.", append_josa(monname, "이")); /* 봤고, 여전히 볼 수 있음 */
+                pline(
+                    "%s 순간이동했다.",
+                    append_josa(monname, "이")); /* 봤고, 여전히 볼 수 있음 */
 #endif
         }
     }
@@ -2246,7 +2250,8 @@ long timeout UNUSED;
                 if (!rn2(3))
                     break;
         } else { /* rot this corpse away */
-            /*KR You_feel("%sless hassled.", is_rider(mptr) ? "much " : ""); */
+            /*KR You_feel("%sless hassled.", is_rider(mptr) ? "much " : "");
+             */
             You("고민거리가 %s줄어들었다.", is_rider(mptr) ? "훨씬 " : "");
             action = ROT_CORPSE;
             when = 250L - (monstermoves - body->age);
@@ -2310,9 +2315,7 @@ dowipe()
     return 1;
 }
 
-void
-set_wounded_legs(side, timex)
-register long side;
+void set_wounded_legs(side, timex) register long side;
 register int timex;
 {
     /* KMH -- STEED
@@ -2332,9 +2335,8 @@ register int timex;
     (void) encumber_msg();
 }
 
-void
-heal_legs(how)
-int how; /* 0: ordinary, 1: dismounting steed, 2: limbs turn to stone */
+void heal_legs(how) int how; /* 0: ordinary, 1: dismounting steed, 2: limbs
+                                turn to stone */
 {
     if (Wounded_legs) {
         if (ATEMP(A_DEX) < 0) {

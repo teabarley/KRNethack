@@ -628,7 +628,8 @@ char *s;
 }
 
 #define ORC_LEADER 1
-static const char *orcfruit[] = { "paddle cactus", "dwarven root" };
+/*KR static const char *orcfruit[] = { "paddle cactus", "dwarven root" }; */
+static const char *orcfruit[] = { "부채선인장", "드워프 뿌리" };
 
 STATIC_OVL void
 migrate_orc(mtmp, mflags)
@@ -1365,7 +1366,12 @@ fumaroles()
         }
     }
     if (snd && !Deaf)
+#if 0 /*KR: 원본*/
         Norep("You hear a %swhoosh!", loud ? "loud " : "");  /* Deaf-aware */
+#else
+        Norep("%s슈우욱 하는 소리가 들린다!",
+              loud ? "크게 " : ""); /* Deaf-aware */
+#endif
 }
 
 /*
@@ -1564,7 +1570,8 @@ water_friction()
         eff = TRUE;
     }
     if (eff)
-        pline("Water turbulence affects your movements.");
+        /*KR pline("Water turbulence affects your movements."); */
+        pline("거센 물살이 움직임에 영향을 미친다.");
 }
 
 void
@@ -1647,20 +1654,26 @@ xchar x, y;
     if (ltyp == DRAWBRIDGE_UP)
         ltyp = db_under_typ(lev->drawbridgemask);
 
-    if (ltyp == LAVAPOOL)
-        return hliquid("lava");
+if (ltyp == LAVAPOOL)
+        /*KR return hliquid("lava"); */
+        return hliquid("용암");
     else if (ltyp == ICE)
-        return "ice";
+        /*KR return "ice"; */
+        return "얼음";
     else if (ltyp == POOL)
-        return "pool of water";
+        /*KR return "pool of water"; */
+        return "물웅덩이";
     else if (ltyp == WATER || Is_waterlevel(&u.uz))
         ; /* fall through to default return value */
     else if (Is_juiblex_level(&u.uz))
-        return "swamp";
+        /*KR return "swamp"; */
+        return "늪";
     else if (ltyp == MOAT && !Is_medusa_level(&u.uz))
-        return "moat";
+        /*KR return "moat"; */
+        return "해자";
 
-    return hliquid("water");
+    /*KR return hliquid("water"); */
+    return hliquid("물");
 }
 
 STATIC_OVL void

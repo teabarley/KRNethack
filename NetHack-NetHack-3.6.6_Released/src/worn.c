@@ -5,10 +5,10 @@
 
 #include "hack.h"
 
-STATIC_DCL void FDECL(m_lose_armor, (struct monst *, struct obj *));
+STATIC_DCL void FDECL(m_lose_armor, (struct monst *, struct obj *) );
 STATIC_DCL void FDECL(m_dowear_type,
                       (struct monst *, long, BOOLEAN_P, BOOLEAN_P));
-STATIC_DCL int FDECL(extra_pref, (struct monst *, struct obj *));
+STATIC_DCL int FDECL(extra_pref, (struct monst *, struct obj *) );
 
 const struct worn {
     long w_mask;
@@ -29,23 +29,19 @@ const struct worn {
              { W_TOOL, &ublindf },
              { W_BALL, &uball },
              { W_CHAIN, &uchain },
-             { 0, 0 }
-};
+             { 0, 0 } };
 
 /* This only allows for one blocking item per property */
-#define w_blocks(o, m) \
-    ((o->otyp == MUMMY_WRAPPING && ((m) & W_ARMC))                          \
-         ? INVIS                                                            \
-         : (o->otyp == CORNUTHAUM && ((m) & W_ARMH) && !Role_if(PM_WIZARD)) \
-               ? CLAIRVOYANT                                                \
-               : 0)
+#define w_blocks(o, m)                                                  \
+    ((o->otyp == MUMMY_WRAPPING && ((m) & W_ARMC)) ? INVIS              \
+     : (o->otyp == CORNUTHAUM && ((m) & W_ARMH) && !Role_if(PM_WIZARD)) \
+         ? CLAIRVOYANT                                                  \
+         : 0)
 /* note: monsters don't have clairvoyance, so your role
    has no significant effect on their use of w_blocks() */
 
 /* Updated to use the extrinsic and blocked fields. */
-void
-setworn(obj, mask)
-register struct obj *obj;
+void setworn(obj, mask) register struct obj *obj;
 long mask;
 {
     register const struct worn *wp;
@@ -111,9 +107,7 @@ long mask;
 
 /* called e.g. when obj is destroyed */
 /* Updated to use the extrinsic and blocked fields. */
-void
-setnotworn(obj)
-register struct obj *obj;
+void setnotworn(obj) register struct obj *obj;
 {
     register const struct worn *wp;
     register int p;
@@ -227,9 +221,7 @@ struct obj *obj;
     return res;
 }
 
-void
-mon_set_minvis(mon)
-struct monst *mon;
+void mon_set_minvis(mon) struct monst *mon;
 {
     mon->perminvis = 1;
     if (!mon->invis_blkd) {
@@ -240,9 +232,7 @@ struct monst *mon;
     }
 }
 
-void
-mon_adjust_speed(mon, adjust, obj)
-struct monst *mon;
+void mon_adjust_speed(mon, adjust, obj) struct monst *mon;
 int adjust;      /* positive => increase speed, negative => decrease */
 struct obj *obj; /* item to make known if effect can be seen */
 {
@@ -298,18 +288,37 @@ struct obj *obj; /* item to make known if effect can be seen */
     if (give_msg && (mon->mspeed != oldspeed || petrify) && mon->data->mmove
         && !(mon->mfrozen || mon->msleeping) && canseemon(mon)) {
         /* fast to slow (skipping intermediate state) or vice versa */
+#if 0 /*KR: 원본*/
         const char *howmuch =
             (mon->mspeed + oldspeed == MFAST + MSLOW) ? "much " : "";
+#else
+        const char *howmuch =
+            (mon->mspeed + oldspeed == MFAST + MSLOW) ? "훨씬 " : "";
+#endif
 
         if (petrify) {
             /* mimic the player's petrification countdown; "slowing down"
                even if fast movement rate retained via worn speed boots */
             if (flags.verbose)
+#if 0 /*KR: 원본*/
                 pline("%s is slowing down.", Monnam(mon));
+#else
+                pline("%s 느려지고 있다.", append_josa(Monnam(mon), "이"));
+#endif
         } else if (adjust > 0 || mon->mspeed == MFAST)
+#if 0 /*KR: 원본*/
             pline("%s is suddenly moving %sfaster.", Monnam(mon), howmuch);
+#else
+            pline("%s 갑자기 %s빨리 움직인다.",
+                  append_josa(Monnam(mon), "이"), howmuch);
+#endif
         else
+#if 0 /*KR: 원본*/
             pline("%s seems to be moving %sslower.", Monnam(mon), howmuch);
+#else
+            pline("%s %s느리게 움직이는 것처럼 보인다.",
+                  append_josa(Monnam(mon), "이"), howmuch);
+#endif
 
         /* might discover an object if we see the speed change happen */
         if (obj != 0)
@@ -319,9 +328,7 @@ struct obj *obj; /* item to make known if effect can be seen */
 
 /* armor put on or taken off; might be magical variety
    [TODO: rename to 'update_mon_extrinsics()' and change all callers...] */
-void
-update_mon_intrinsics(mon, obj, on, silently)
-struct monst *mon;
+void update_mon_intrinsics(mon, obj, on, silently) struct monst *mon;
 struct obj *obj;
 boolean on, silently;
 {
@@ -399,8 +406,7 @@ boolean on, silently;
             /* update monster's extrinsics (for worn objects only;
                'obj' itself might still be worn or already unworn) */
             for (otmp = mon->minvent; otmp; otmp = otmp->nobj)
-                if (otmp != obj
-                    && otmp->owornmask
+                if (otmp != obj && otmp->owornmask
                     && (int) objects[otmp->otyp].oc_oprop == which)
                     break;
             if (!otmp)
@@ -411,7 +417,7 @@ boolean on, silently;
         }
     }
 
- maybe_blocks:
+maybe_blocks:
     /* obj->owornmask has been cleared by this point, so we can't use it.
        However, since monsters don't wield armor, we don't have to guard
        against that and can get away with a blanket worn-mask value. */
@@ -466,9 +472,7 @@ register struct monst *mon;
  * players to influence what gets worn.  Putting on a shirt underneath
  * already worn body armor is too obviously buggy...
  */
-void
-m_dowear(mon, creation)
-register struct monst *mon;
+void m_dowear(mon, creation) register struct monst *mon;
 boolean creation;
 {
 #define RACE_EXCEPTION TRUE
@@ -481,8 +485,9 @@ boolean creation;
     /* give mummies a chance to wear their wrappings
      * and let skeletons wear their initial armor */
     if (mindless(mon->data)
-        && (!creation || (mon->data->mlet != S_MUMMY
-                          && mon->data != &mons[PM_SKELETON])))
+        && (!creation
+            || (mon->data->mlet != S_MUMMY
+                && mon->data != &mons[PM_SKELETON])))
         return;
 
     m_dowear_type(mon, W_AMUL, creation, FALSE);
@@ -505,9 +510,8 @@ boolean creation;
         m_dowear_type(mon, W_ARM, creation, RACE_EXCEPTION);
 }
 
-STATIC_OVL void
-m_dowear_type(mon, flag, creation, racialexception)
-struct monst *mon;
+STATIC_OVL void m_dowear_type(mon, flag, creation,
+                              racialexception) struct monst *mon;
 long flag;
 boolean creation;
 boolean racialexception;
@@ -588,8 +592,9 @@ boolean racialexception;
          * it would forget spe and once again think the object is better
          * than what it already has.
          */
-        if (best && (ARM_BONUS(best) + extra_pref(mon, best)
-                     >= ARM_BONUS(obj) + extra_pref(mon, obj)))
+        if (best
+            && (ARM_BONUS(best) + extra_pref(mon, best)
+                >= ARM_BONUS(obj) + extra_pref(mon, obj)))
             continue;
         best = obj;
     }
@@ -598,8 +603,9 @@ outer_break:
         return;
 
     /* same auto-cursing behavior as for hero */
-    autocurse = ((best->otyp == HELM_OF_OPPOSITE_ALIGNMENT
-                  || best->otyp == DUNCE_CAP) && !best->cursed);
+    autocurse =
+        ((best->otyp == HELM_OF_OPPOSITE_ALIGNMENT || best->otyp == DUNCE_CAP)
+         && !best->cursed);
     /* if wearing a cloak, account for the time spent removing
        and re-wearing it when putting on a suit or shirt */
     if ((flag == W_ARM || flag == W_ARMU) && (mon->misc_worn_check & W_ARMC))
@@ -616,15 +622,30 @@ outer_break:
             char buf[BUFSZ];
 
             if (old)
+#if 0 /*KR: 원본*/
                 Sprintf(buf, " removes %s and", distant_name(old, doname));
+#else /*KR: KRNethack 맞춤 번역 (뒤에 오는 공백 제어)*/
+                Sprintf(buf, "%s 벗고 ",
+                        append_josa(distant_name(old, doname), "을"));
+#endif
             else
                 buf[0] = '\0';
+#if 0 /*KR: 원본*/
             pline("%s%s puts on %s.", Monnam(mon), buf,
                   distant_name(best, doname));
+#else /*KR: old가 없을 때 이중 공백이 생기지 않도록 "%s %s%s" 로 배치*/
+            pline("%s %s%s 입었다.", append_josa(Monnam(mon), "이"), buf,
+                  append_josa(distant_name(best, doname), "을"));
+#endif
             if (autocurse)
+#if 0 /*KR: 원본*/
                 pline("%s %s %s %s for a moment.", s_suffix(Monnam(mon)),
                       simpleonames(best), otense(best, "glow"),
                       hcolor(NH_BLACK));
+#else
+                pline("%s %s 잠시 %s 빛났다.", s_suffix(Monnam(mon)),
+                      simpleonames(best), hcolor(NH_BLACK));
+#endif
         } /* can see it */
         m_delay += objects[best->otyp].oc_delay;
         mon->mfrozen = m_delay;
@@ -641,7 +662,11 @@ outer_break:
     /* if couldn't see it but now can, or vice versa, */
     if (!creation && (unseen ^ !canseemon(mon))) {
         if (mon->minvis && !See_invisible) {
+#if 0 /*KR: 원본*/
             pline("Suddenly you cannot see %s.", nambuf);
+#else
+            pline("갑자기 %s 보이지 않게 되었다.", append_josa(nambuf, "이"));
+#endif
             makeknown(best->otyp);
         } /* else if (!mon->minvis) pline("%s suddenly appears!",
              Amonnam(mon)); */
@@ -685,9 +710,7 @@ long flag;
 }
 
 /* remove an item of armor and then drop it */
-STATIC_OVL void
-m_lose_armor(mon, obj)
-struct monst *mon;
+STATIC_OVL void m_lose_armor(mon, obj) struct monst *mon;
 struct obj *obj;
 {
     mon->misc_worn_check &= ~obj->owornmask;
@@ -764,18 +787,14 @@ clear_bypasses()
     context.bypasses = FALSE;
 }
 
-void
-bypass_obj(obj)
-struct obj *obj;
+void bypass_obj(obj) struct obj *obj;
 {
     obj->bypass = 1;
     context.bypasses = TRUE;
 }
 
 /* set or clear the bypass bit in a list of objects */
-void
-bypass_objlist(objchain, on)
-struct obj *objchain;
+void bypass_objlist(objchain, on) struct obj *objchain;
 boolean on; /* TRUE => set, FALSE => clear */
 {
     if (on && objchain)
@@ -826,15 +845,14 @@ struct obj *listhead;
     return obj;
 }
 
-void
-mon_break_armor(mon, polyspot)
-struct monst *mon;
+void mon_break_armor(mon, polyspot) struct monst *mon;
 boolean polyspot;
 {
     register struct obj *otmp;
     struct permonst *mdat = mon->data;
     boolean vis = cansee(mon->mx, mon->my);
     boolean handless_or_tiny = (nohands(mdat) || verysmall(mdat));
+    /*KR: 한글에서 mhim/mhis 대명사는 대부분 생략 or 이름으로 대체됨.*/
     const char *pronoun = mhim(mon), *ppronoun = mhis(mon);
 
     if (breakarm(mdat)) {
@@ -845,42 +863,69 @@ boolean polyspot;
                      "the dragon merges with his scaly armor" is odd
                      and the monster's previous form is already gone */
             else if (vis)
+#if 0 /*KR: 원본*/
                 pline("%s breaks out of %s armor!", Monnam(mon), ppronoun);
+#else
+                pline("%s 갑옷을 부수고 나왔다!",
+                      append_josa(Monnam(mon), "이"));
+#endif
             else
-                You_hear("a cracking sound.");
+                /*KR You_hear("a cracking sound."); */
+                You_hear("우지직 하는 소리를 들었다.");
             m_useup(mon, otmp);
         }
         if ((otmp = which_armor(mon, W_ARMC)) != 0) {
             if (otmp->oartifact) {
                 if (vis)
+#if 0 /*KR: 원본*/
                     pline("%s %s falls off!", s_suffix(Monnam(mon)),
                           cloak_simple_name(otmp));
+#else
+                    pline("%s %s 떨어졌다!", s_suffix(Monnam(mon)),
+                          append_josa(cloak_simple_name(otmp), "이"));
+#endif
                 if (polyspot)
                     bypass_obj(otmp);
                 m_lose_armor(mon, otmp);
             } else {
                 if (vis)
+#if 0 /*KR: 원본*/
                     pline("%s %s tears apart!", s_suffix(Monnam(mon)),
                           cloak_simple_name(otmp));
+#else
+                    pline("%s %s 갈갈이 찢어졌다!", s_suffix(Monnam(mon)),
+                          append_josa(cloak_simple_name(otmp), "이"));
+#endif
                 else
-                    You_hear("a ripping sound.");
+                    /*KR You_hear("a ripping sound."); */
+                    You_hear("옷감이 찢어지는 소리를 들었다.");
                 m_useup(mon, otmp);
             }
         }
         if ((otmp = which_armor(mon, W_ARMU)) != 0) {
             if (vis)
+#if 0 /*KR: 원본*/
                 pline("%s shirt rips to shreds!", s_suffix(Monnam(mon)));
+#else
+                pline("%s 셔츠가 갈갈이 찢어졌다!", s_suffix(Monnam(mon)));
+#endif
             else
-                You_hear("a ripping sound.");
+                /*KR You_hear("a ripping sound."); */
+                You_hear("옷감이 찢어지는 소리를 들었다.");
             m_useup(mon, otmp);
         }
     } else if (sliparm(mdat)) {
         if ((otmp = which_armor(mon, W_ARM)) != 0) {
             if (vis)
+#if 0 /*KR: 원본*/
                 pline("%s armor falls around %s!", s_suffix(Monnam(mon)),
                       pronoun);
+#else
+                pline("%s 갑옷이 바닥에 떨어졌다!", s_suffix(Monnam(mon)));
+#endif
             else
-                You_hear("a thud.");
+                /*KR You_hear("a thud."); */
+                You_hear("쿵 하는 소리를 들었다.");
             if (polyspot)
                 bypass_obj(otmp);
             m_lose_armor(mon, otmp);
@@ -888,11 +933,23 @@ boolean polyspot;
         if ((otmp = which_armor(mon, W_ARMC)) != 0) {
             if (vis) {
                 if (is_whirly(mon->data))
+#if 0 /*KR: 원본*/
                     pline("%s %s falls, unsupported!", s_suffix(Monnam(mon)),
                           cloak_simple_name(otmp));
+#else
+                    pline("%s %s 더이상 걸쳐지지 못하고 떨어졌다!",
+                          s_suffix(Monnam(mon)),
+                          append_josa(cloak_simple_name(otmp), "이"));
+#endif
                 else
+#if 0 /*KR: 원본*/
                     pline("%s shrinks out of %s %s!", Monnam(mon), ppronoun,
                           cloak_simple_name(otmp));
+#else
+                    pline("%s 몸이 줄어들어 %s에서 빠져나왔다!",
+                          append_josa(Monnam(mon), "의"),
+                          cloak_simple_name(otmp));
+#endif
             }
             if (polyspot)
                 bypass_obj(otmp);
@@ -901,11 +958,21 @@ boolean polyspot;
         if ((otmp = which_armor(mon, W_ARMU)) != 0) {
             if (vis) {
                 if (sliparm(mon->data))
+#if 0 /*KR: 원본*/
                     pline("%s seeps right through %s shirt!", Monnam(mon),
                           ppronoun);
+#else
+                    pline("%s 셔츠를 통과해 스며나왔다!",
+                          append_josa(Monnam(mon), "이"));
+#endif
                 else
+#if 0 /*KR: 원본*/
                     pline("%s becomes much too small for %s shirt!",
                           Monnam(mon), ppronoun);
+#else
+                    pline("%s 셔츠를 입기엔 몸이 너무 작아졌다!",
+                          append_josa(Monnam(mon), "이"));
+#endif
             }
             if (polyspot)
                 bypass_obj(otmp);
@@ -916,18 +983,29 @@ boolean polyspot;
         /* [caller needs to handle weapon checks] */
         if ((otmp = which_armor(mon, W_ARMG)) != 0) {
             if (vis)
+#if 0 /*KR: 원본*/
                 pline("%s drops %s gloves%s!", Monnam(mon), ppronoun,
                       MON_WEP(mon) ? " and weapon" : "");
+#else
+                pline("%s 장갑%s 떨어뜨렸다!", append_josa(Monnam(mon), "이"),
+                      MON_WEP(mon) ? "과 무기를" : "을");
+#endif
             if (polyspot)
                 bypass_obj(otmp);
             m_lose_armor(mon, otmp);
         }
         if ((otmp = which_armor(mon, W_ARMS)) != 0) {
             if (vis)
+#if 0 /*KR: 원본*/
                 pline("%s can no longer hold %s shield!", Monnam(mon),
                       ppronoun);
+#else
+                pline("%s 더이상 방패를 들 수 없다!",
+                      append_josa(Monnam(mon), "은"));
+#endif
             else
-                You_hear("a clank.");
+                /*KR You_hear("a clank."); */
+                You_hear("철그럭 하는 소리를 들었다.");
             if (polyspot)
                 bypass_obj(otmp);
             m_lose_armor(mon, otmp);
@@ -938,10 +1016,16 @@ boolean polyspot;
             /* flimsy test for horns matches polyself handling */
             && (handless_or_tiny || !is_flimsy(otmp))) {
             if (vis)
+#if 0 /*KR: 원본*/
                 pline("%s helmet falls to the %s!", s_suffix(Monnam(mon)),
                       surface(mon->mx, mon->my));
+#else
+                pline("%s 투구가 %s에 떨어졌다!", s_suffix(Monnam(mon)),
+                      surface(mon->mx, mon->my));
+#endif
             else
-                You_hear("a clank.");
+                /*KR You_hear("a clank."); */
+                You_hear("철그럭 하는 소리를 들었다.");
             if (polyspot)
                 bypass_obj(otmp);
             m_lose_armor(mon, otmp);
@@ -951,10 +1035,19 @@ boolean polyspot;
         if ((otmp = which_armor(mon, W_ARMF)) != 0) {
             if (vis) {
                 if (is_whirly(mon->data))
+#if 0 /*KR: 원본*/
                     pline("%s boots fall away!", s_suffix(Monnam(mon)));
+#else
+                    pline("%s 신발이 떨어져 나갔다!", s_suffix(Monnam(mon)));
+#endif
                 else
+#if 0 /*KR: 원본*/
                     pline("%s boots %s off %s feet!", s_suffix(Monnam(mon)),
                           verysmall(mdat) ? "slide" : "are pushed", ppronoun);
+#else
+                    pline("%s 신발이 발에서 %s!", s_suffix(Monnam(mon)),
+                          verysmall(mdat) ? "미끄러졌다" : "밀려났다");
+#endif
             }
             if (polyspot)
                 bypass_obj(otmp);
@@ -967,18 +1060,31 @@ boolean polyspot;
                 bypass_obj(otmp);
             m_lose_armor(mon, otmp);
             if (vis)
+#if 0 /*KR: 원본*/
                 pline("%s saddle falls off.", s_suffix(Monnam(mon)));
+#else
+                pline("%s 안장이 떨어졌다.", s_suffix(Monnam(mon)));
+#endif
         }
         if (mon == u.usteed)
             goto noride;
     } else if (mon == u.usteed && !can_ride(mon)) {
     noride:
+#if 0 /*KR: 원본*/
         You("can no longer ride %s.", mon_nam(mon));
+#else
+        You("더 이상 %s 탈 수 없다.", append_josa(mon_nam(mon), "을"));
+#endif
         if (touch_petrifies(u.usteed->data) && !Stone_resistance && rnl(3)) {
             char buf[BUFSZ];
 
+#if 0 /*KR: 원본*/
             You("touch %s.", mon_nam(u.usteed));
             Sprintf(buf, "falling off %s", an(u.usteed->data->mname));
+#else
+            You("%s 건드렸다.", append_josa(mon_nam(u.usteed), "을"));
+            Sprintf(buf, "%s에게서 떨어지면서", u.usteed->data->mname);
+#endif
             instapetrify(buf);
         }
         dismount_steed(DISMOUNT_FELL);
@@ -1006,9 +1112,9 @@ struct obj *obj;
  * Exceptions to things based on race.
  * Correctly checks polymorphed player race.
  * Returns:
- *       0 No exception, normal rules apply.
- *       1 If the race/object combination is acceptable.
- *      -1 If the race/object combination is unacceptable.
+ * 0 No exception, normal rules apply.
+ * 1 If the race/object combination is acceptable.
+ * -1 If the race/object combination is unacceptable.
  */
 int
 racial_exception(mon, obj)
@@ -1023,7 +1129,7 @@ struct obj *obj;
         return 1;
     /* Unacceptable Exceptions: */
     /* Checks for object that certain races should never use go here */
-    /*  return -1; */
+    /* return -1; */
 
     return 0;
 }

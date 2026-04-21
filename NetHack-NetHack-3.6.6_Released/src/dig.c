@@ -97,11 +97,19 @@ register boolean rockit;
     register xchar i;
     register boolean waslit = rm_waslit();
 
+#if 0 /*KR: 원본*/
     if (rockit)
         pline("Crash!  The ceiling collapses around you!");
     else
         pline("A mysterious force %s cave around you!",
               (levl[u.ux][u.uy].typ == CORR) ? "creates a" : "extends the");
+#else
+    if (rockit)
+        pline("콰쾅! 천장이 당신 주변으로 무너져 내린다!");
+    else
+        pline("불가사의한 힘이 당신 주변의 동굴을 %s!",
+              (levl[u.ux][u.uy].typ == CORR) ? "만들어냈다" : "확장시켰다");
+#endif
     display_nhwindow(WIN_MESSAGE, TRUE);
 
     for (dist = 1; dist <= 2; dist++) {
@@ -186,33 +194,50 @@ boolean verbose;
 int x, y;
 {
     struct trap *ttmp = t_at(x, y);
+#if 0 /*KR: 원본*/
     const char *verb =
         (madeby == BY_YOU && uwep && is_axe(uwep)) ? "chop" : "dig in";
+#else
+    const char *verb =
+        (madeby == BY_YOU && uwep && is_axe(uwep)) ? "베어내기" : "파내기";
+#endif
 
     if (On_stairs(x, y)) {
+#if 0 /*KR: 원본*/
         if (x == xdnladder || x == xupladder) {
             if (verbose)
                 pline_The("ladder resists your effort.");
         } else if (verbose)
             pline_The("stairs are too hard to %s.", verb);
+#else
+        if (x == xdnladder || x == xupladder) {
+            if (verbose)
+                pline_The("사다리는 당신의 노력에도 끄떡없다.");
+        } else if (verbose)
+            pline_The("계단은 %s에는 너무 단단하다.", verb);
+#endif
         return FALSE;
     } else if (IS_THRONE(levl[x][y].typ) && madeby != BY_OBJECT) {
         if (verbose)
-            pline_The("throne is too hard to break apart.");
+            /*KR pline_The("throne is too hard to break apart."); */
+            pline_The("왕좌는 부수기에는 너무 단단하다.");
         return FALSE;
     } else if (IS_ALTAR(levl[x][y].typ)
                && (madeby != BY_OBJECT || Is_astralevel(&u.uz)
                    || Is_sanctum(&u.uz))) {
         if (verbose)
-            pline_The("altar is too hard to break apart.");
+            /*KR pline_The("altar is too hard to break apart."); */
+            pline_The("제단은 부수기에는 너무 단단하다.");
         return FALSE;
     } else if (Is_airlevel(&u.uz)) {
         if (verbose)
-            You("cannot %s thin air.", verb);
+            /*KR You("cannot %s thin air.", verb); */
+            You("허공을 %s 수는 없다.", verb);
         return FALSE;
     } else if (Is_waterlevel(&u.uz)) {
         if (verbose)
-            pline_The("%s splashes and subsides.", hliquid("water"));
+            /*KR pline_The("%s splashes and subsides.", hliquid("water")); */
+            pline_The("%s 튀어오르다 가라앉는다.", hliquid("water"));
         return FALSE;
     } else if ((IS_ROCK(levl[x][y].typ) && levl[x][y].typ != SDOOR
                 && (levl[x][y].wall_info & W_NONDIGGABLE) != 0)
@@ -221,11 +246,17 @@ int x, y;
                        || ttmp->ttyp == VIBRATING_SQUARE
                        || (!Can_dig_down(&u.uz) && !levl[x][y].candig)))) {
         if (verbose)
-            pline_The("%s here is too hard to %s.", surface(x, y), verb);
+            /*KR pline_The("%s here is too hard to %s.", surface(x, y), verb);
+             */
+            pline_The("이곳의 %s %s에는 너무 단단하다.", surface(x, y), verb);
         return FALSE;
     } else if (sobj_at(BOULDER, x, y)) {
         if (verbose)
+#if 0 /*KR: 원본*/
             There("isn't enough room to %s here.", verb);
+#else
+            pline("이곳에는 %s 공간이 충분하지 않다.", verb);
+#endif
         return FALSE;
     } else if (madeby == BY_OBJECT
                /* the block against existing traps is mainly to
@@ -243,7 +274,11 @@ dig(VOID_ARGS)
     register struct rm *lev;
     register xchar dpx = context.digging.pos.x, dpy = context.digging.pos.y;
     register boolean ispick = uwep && is_pick(uwep);
+#if 0 /*KR: 원본*/
     const char *verb = (!uwep || is_pick(uwep)) ? "dig into" : "chop through";
+#else
+    const char *verb = (!uwep || is_pick(uwep)) ? "파내기" : "부수기";
+#endif
 
     lev = &levl[dpx][dpy];
     /* perhaps a nymph stole your pick-axe while you were busy digging */
@@ -260,19 +295,26 @@ dig(VOID_ARGS)
     } else { /* !context.digging.down */
         if (IS_TREE(lev->typ) && !may_dig(dpx, dpy)
             && dig_typ(uwep, dpx, dpy) == DIGTYP_TREE) {
-            pline("This tree seems to be petrified.");
+            /*KR pline("This tree seems to be petrified."); */
+            pline("이 나무는 석화된 것 같다.");
             return 0;
         }
         if (IS_ROCK(lev->typ) && !may_dig(dpx, dpy)
             && dig_typ(uwep, dpx, dpy) == DIGTYP_ROCK) {
+#if 0 /*KR: 원본*/
             pline("This %s is too hard to %s.",
                   is_db_wall(dpx, dpy) ? "drawbridge" : "wall", verb);
+#else
+            pline("이 %s %s에는 너무 단단하다.",
+                  is_db_wall(dpx, dpy) ? "도개교는" : "벽은", verb);
+#endif
             return 0;
         }
     }
     if (Fumbling && !rn2(3)) {
         switch (rn2(3)) {
         case 0:
+#if 0 /*KR: 원본*/
             if (!welded(uwep)) {
                 You("fumble and drop %s.", yname(uwep));
                 dropx(uwep);
@@ -285,13 +327,35 @@ dig(VOID_ARGS)
                           otense(uwep, "hit"));
                 set_wounded_legs(RIGHT_SIDE, 5 + rnd(5));
             }
+#else
+            if (!welded(uwep)) {
+                You("실수해서 %s 떨어뜨렸다.",
+                    append_josa(yname(uwep), "을"));
+                dropx(uwep);
+            } else {
+                if (u.usteed)
+                    pline("%s 튕겨나와 %s 맞췄다!",
+                          append_josa(Yname2(uwep), "이"),
+                          append_josa(mon_nam(u.usteed), "을"));
+                else
+                    pline("아야! %s 튕겨나와 당신을 맞췄다!",
+                          append_josa(Yname2(uwep), "이"));
+                set_wounded_legs(RIGHT_SIDE, 5 + rnd(5));
+            }
+#endif
             break;
         case 1:
+#if 0 /*KR: 원본*/
             pline("Bang!  You hit with the broad side of %s!",
                   the(xname(uwep)));
+#else
+            pline("쾅! %s 넓은 면으로 쳤다!",
+                  append_josa(the(xname(uwep)), "의"));
+#endif
             break;
         default:
-            Your("swing misses its mark.");
+            /*KR Your("swing misses its mark."); */
+            Your("스윙이 빗나갔다.");
             break;
         }
         return 0;
@@ -332,13 +396,25 @@ dig(VOID_ARGS)
                     dmg = 1;
                 else if (uarmf)
                     dmg = (dmg + 1) / 2;
+#if 0 /*KR: 원본*/
                 You("hit yourself in the %s.", body_part(FOOT));
                 Sprintf(kbuf, "chopping off %s own %s", uhis(),
                         body_part(FOOT));
+#else
+                You("자신의 %s 찍고 말았다.",
+                    append_josa(body_part(FOOT), "을"));
+                Sprintf(kbuf, "자신의 %s 찍어버린 것",
+                        append_josa(body_part(FOOT), "을"));
+#endif
                 losehp(Maybe_Half_Phys(dmg), kbuf, KILLED_BY);
             } else {
+#if 0 /*KR: 원본*/
                 You("destroy the bear trap with %s.",
                     yobjnam(uwep, (const char *) 0));
+#else
+                You("%s 곰 덫을 부수었다.",
+                    append_josa(yobjnam(uwep, (const char *) 0), "으로"));
+#endif
                 deltrap(ttmp);
                 reset_utrap(TRUE); /* release from trap, maybe Lev or Fly */
             }
@@ -366,6 +442,7 @@ dig(VOID_ARGS)
         boolean shopedge = *in_rooms(dpx, dpy, SHOPBASE);
 
         if ((obj = sobj_at(STATUE, dpx, dpy)) != 0) {
+#if 0 /*KR: 원본*/
             if (break_statue(obj))
                 digtxt = "The statue shatters.";
             else
@@ -385,6 +462,23 @@ dig(VOID_ARGS)
             digtxt = "The boulder falls apart.";
         } else if (lev->typ == STONE || lev->typ == SCORR
                    || IS_TREE(lev->typ)) {
+#else
+            if (break_statue(obj))
+                digtxt = "석상이 산산조각 났다.";
+            else
+                digtxt = (char *) 0;
+        } else if ((obj = sobj_at(BOULDER, dpx, dpy)) != 0) {
+            struct obj *bobj;
+
+            fracture_rock(obj);
+            if ((bobj = sobj_at(BOULDER, dpx, dpy)) != 0) {
+                obj_extract_self(bobj);
+                place_object(bobj, dpx, dpy);
+            }
+            digtxt = "바위가 부서졌다.";
+        } else if (lev->typ == STONE || lev->typ == SCORR
+                   || IS_TREE(lev->typ)) {
+#endif
             if (Is_earthlevel(&u.uz)) {
                 if (uwep->blessed && !rn2(3)) {
                     mkcavearea(FALSE);
@@ -395,6 +489,7 @@ dig(VOID_ARGS)
                     goto cleanup;
                 }
             }
+#if 0 /*KR: 원본*/
             if (IS_TREE(lev->typ)) {
                 digtxt = "You cut down the tree.";
                 lev->typ = ROOM, lev->flags = 0;
@@ -432,6 +527,49 @@ dig(VOID_ARGS)
                 lev->doormask = D_BROKEN;
         } else
             return 0; /* statue or boulder got taken */
+#else
+            if (IS_TREE(lev->typ)) {
+                digtxt = "나무를 베어 넘겼다.";
+                lev->typ = ROOM, lev->flags = 0;
+                if (!rn2(5))
+                    (void) rnd_treefruit_at(dpx, dpy);
+            } else {
+                digtxt = "바위를 약간 깎아내는 데 성공했다.";
+                lev->typ = CORR, lev->flags = 0;
+            }
+        } else if (IS_WALL(lev->typ)) {
+            if (shopedge) {
+                add_damage(dpx, dpy, SHOP_WALL_DMG);
+                /*KR dmgtxt = "damage"; */
+                dmgtxt = "damage";
+            }
+            if (level.flags.is_maze_lev) {
+                lev->typ = ROOM, lev->flags = 0;
+            } else if (level.flags.is_cavernous_lev && !in_town(dpx, dpy)) {
+                lev->typ = CORR, lev->flags = 0;
+            } else {
+                lev->typ = DOOR, lev->doormask = D_NODOOR;
+            }
+            digtxt = "벽에 구멍을 냈다.";
+        } else if (lev->typ == SDOOR) {
+            cvt_sdoor_to_door(lev); /* ->typ = DOOR */
+            digtxt = "비밀 문을 부수고 나갔다!";
+            if (!(lev->doormask & D_TRAPPED))
+                lev->doormask = D_BROKEN;
+        } else if (closed_door(dpx, dpy)) {
+            digtxt = "문을 부수고 나갔다.";
+            if (shopedge) {
+                add_damage(dpx, dpy, SHOP_DOOR_COST);
+                /*JP
+                                dmgtxt = "break";
+                */
+                dmgtxt = "코와스";
+            }
+            if (!(lev->doormask & D_TRAPPED))
+                lev->doormask = D_BROKEN;
+        } else
+            return 0; /* statue or boulder got taken */
+#endif
 
         if (!does_block(dpx, dpy, &levl[dpx][dpy]))
             unblock_point(dpx, dpy); /* vision:  can see through */
@@ -454,11 +592,13 @@ dig(VOID_ARGS)
                 break;
             }
             if (mtmp)
-                pline_The("debris from your digging comes to life!");
+                /*KR pline_The("debris from your digging comes to life!"); */
+                pline_The("당신이 파낸 잔해가 살아서 움직이기 시작한다!");
         }
         if (IS_DOOR(lev->typ) && (lev->doormask & D_TRAPPED)) {
             lev->doormask = D_NODOOR;
-            b_trapped("door", 0);
+            /*KR b_trapped("door", 0); */
+            b_trapped("문", 0);
             newsym(dpx, dpy);
         }
     cleanup:
@@ -468,24 +608,45 @@ dig(VOID_ARGS)
         context.digging.level.dlevel = -1;
         return 0;
     } else { /* not enough effort has been spent yet */
+#if 0        /*KR: 원본*/
         static const char *const d_target[6] = { "",        "rock", "statue",
                                                  "boulder", "door", "tree" };
+#else
+        static const char *const d_target[6] = { "",        "바위", "석상",
+                                                 "큰 바위", "문",   "나무" };
+#endif
         int dig_target = dig_typ(uwep, dpx, dpy);
 
         if (IS_WALL(lev->typ) || dig_target == DIGTYP_DOOR) {
+#if 0 /*KR: 원본*/
             if (*in_rooms(dpx, dpy, SHOPBASE)) {
                 pline("This %s seems too hard to %s.",
                       IS_DOOR(lev->typ) ? "door" : "wall", verb);
                 return 0;
             }
+#else
+            if (*in_rooms(dpx, dpy, SHOPBASE)) {
+                pline("이 %s %s에는 너무 단단해 보인다.",
+                      IS_DOOR(lev->typ) ? "문은" : "벽은", verb);
+                return 0;
+            }
+#endif
         } else if (dig_target == DIGTYP_UNDIGGABLE
                    || (dig_target == DIGTYP_ROCK && !IS_ROCK(lev->typ)))
             return 0; /* statue or boulder got taken */
 
+#if 0 /*KR: 원본*/
         if (!did_dig_msg) {
             You("hit the %s with all your might.", d_target[dig_target]);
             did_dig_msg = TRUE;
         }
+#else
+        if (!did_dig_msg) {
+            You("%s 온 힘을 다해 쳤다.",
+                append_josa(d_target[dig_target], "을"));
+            did_dig_msg = TRUE;
+        }
+#endif
     }
     return 1;
 }
@@ -588,7 +749,10 @@ int ttyp;
     /* maketrap() might change it, also, in this situation,
        surface() returns an inappropriate string for a grave */
     if (IS_GRAVE(lev->typ))
-        Strcpy(surface_type, "grave");
+        /*JP
+                Strcpy(surface_type, "grave");
+        */
+        Strcpy(surface_type, "묘");
     else
         Strcpy(surface_type, surface(x, y));
     shopdoor = IS_DOOR(lev->typ) && *in_rooms(x, y, SHOPBASE);
@@ -605,6 +769,7 @@ int ttyp;
         feeltrap(ttmp);
 
     if (ttyp == PIT) {
+#if 0 /*KR: 원본*/
         if (madeby_u) {
             if (x != u.ux || y != u.uy)
                 You("dig an adjacent pit.");
@@ -617,6 +782,21 @@ int ttyp;
         } else if (cansee(x, y) && flags.verbose) {
             pline("A pit appears in the %s.", surface_type);
         }
+#else
+        if (madeby_u) {
+            if (x != u.ux || y != u.uy)
+                You("인접한 곳에 구덩이를 팠다.");
+            else
+                You("%s에 구덩이를 팠다.", surface_type);
+            if (shopdoor)
+                pay_for_damage("망가뜨린", FALSE);
+        } else if (!madeby_obj && canseemon(madeby)) {
+            pline("%s %s에 구덩이를 판다.", append_josa(Monnam(madeby), "이"),
+                  surface_type);
+        } else if (cansee(x, y) && flags.verbose) {
+            pline("%s에 구덩이가 나타났다.", surface_type);
+        }
+#endif
         /* in case we're digging down while encased in solid rock
            which is blocking levitation or flight */
         switch_terrain();
@@ -633,14 +813,22 @@ int ttyp;
                 (void) pickup(1);   /* detects pit */
         } else if (mtmp) {
             if (is_flyer(mtmp->data) || is_floater(mtmp->data)) {
+#if 0 /*KR: 원본*/
                 if (canseemon(mtmp))
                     pline("%s %s over the pit.", Monnam(mtmp),
                           (is_flyer(mtmp->data)) ? "flies" : "floats");
+#else
+                if (canseemon(mtmp))
+                    pline("%s 구덩이 위로 %s.",
+                          append_josa(Monnam(mtmp), "이"),
+                          (is_flyer(mtmp->data)) ? "날아갔다" : "떠올랐다");
+#endif
             } else if (mtmp != madeby)
                 (void) mintrap(mtmp);
         }
     } else { /* was TRAPDOOR now a HOLE*/
 
+#if 0 /*KR: 원본*/
         if (madeby_u)
             You("dig a hole through the %s.", surface_type);
         else if (!madeby_obj && canseemon(madeby))
@@ -648,6 +836,16 @@ int ttyp;
                   surface_type);
         else if (cansee(x, y) && flags.verbose)
             pline("A hole appears in the %s.", surface_type);
+#else
+        if (madeby_u)
+            You("%s 파서 구멍을 뚫었다.", append_josa(surface_type, "을"));
+        else if (!madeby_obj && canseemon(madeby))
+            pline("%s %s 파서 구멍을 뚫었다.",
+                  append_josa(Monnam(madeby), "이"),
+                  append_josa(surface_type, "을"));
+        else if (cansee(x, y) && flags.verbose)
+            pline("%s에 구멍이 나타났다.", surface_type);
+#endif
 
         if (at_u) {
             /* in case we're digging down while encased in solid rock
@@ -658,7 +856,8 @@ int ttyp;
 
             /* check for leashed pet that can't fall right now */
             if (!u.ustuck && !wont_fall && !next_to_u()) {
-                You("are jerked back by your pet!");
+                /*KR You("are jerked back by your pet!"); */
+                You("애완동물에게 뒤로 확 당겨졌다!");
                 wont_fall = TRUE;
             }
 
@@ -672,7 +871,8 @@ int ttyp;
                 if (oldobjs != newobjs)
                     (void) pickup(1);
                 if (shopdoor && madeby_u)
-                    pay_for_damage("ruin", FALSE);
+                    /*KR pay_for_damage("ruin", FALSE); */
+                    pay_for_damage("망가뜨린", FALSE);
 
             } else {
                 d_level newlevel;
@@ -681,9 +881,11 @@ int ttyp;
                     shopdig(1); /* shk might snatch pack */
                 /* handle earlier damage, eg breaking wand of digging */
                 else if (!madeby_u)
-                    pay_for_damage("dig into", TRUE);
+                    /*KR pay_for_damage("dig into", TRUE); */
+                    pay_for_damage("파낸", TRUE);
 
-                You("fall through...");
+           /*KR You("fall through..."); */
+                You("아래로 떨어졌다...");
                 /* Earlier checks must ensure that the destination
                  * level exists and is in the present dungeon.
                  */
@@ -695,7 +897,8 @@ int ttyp;
             }
         } else {
             if (shopdoor && madeby_u)
-                pay_for_damage("ruin", FALSE);
+                /*KR pay_for_damage("ruin", FALSE); */
+                pay_for_damage("망가뜨린", FALSE);
             if (newobjs)
                 impact_drop((struct obj *) 0, x, y, 0);
             if (mtmp) {
@@ -711,19 +914,24 @@ int ttyp;
                 if (teleport_pet(mtmp, FALSE)) {
                     d_level tolevel;
 
-                    if (Is_stronghold(&u.uz)) {
+if (Is_stronghold(&u.uz)) {
                         assign_level(&tolevel, &valley_level);
                     } else if (Is_botlevel(&u.uz)) {
                         if (canseemon(mtmp))
+#if 0 /*KR: 원본*/
                             pline("%s avoids the trap.", Monnam(mtmp));
+#else
+                            pline("%s 함정을 피했다.",
+                                  append_josa(Monnam(mtmp), "은"));
+#endif
                         return;
                     } else {
                         get_level(&tolevel, depth(&u.uz) + 1);
                     }
                     if (mtmp->isshk)
                         make_angry_shk(mtmp, 0, 0);
-                    migrate_to_level(mtmp, ledger_no(&tolevel),
-                                     MIGR_RANDOM, (coord *) 0);
+                    migrate_to_level(mtmp, ledger_no(&tolevel), MIGR_RANDOM,
+                                     (coord *) 0);
                 }
             }
         }
@@ -734,9 +942,7 @@ int ttyp;
  * Called from dighole(), but also from do_break_wand()
  * in apply.c.
  */
-void
-liquid_flow(x, y, typ, ttmp, fillmsg)
-xchar x, y;
+void liquid_flow(x, y, typ, ttmp, fillmsg) xchar x, y;
 schar typ;
 struct trap *ttmp;
 const char *fillmsg;
@@ -749,7 +955,11 @@ const char *fillmsg;
     unearth_objs(x, y);
 
     if (fillmsg)
+#if 0 /*KR: 원본*/
         pline(fillmsg, hliquid(typ == LAVAPOOL ? "lava" : "water"));
+#else
+        pline(fillmsg, hliquid(typ == LAVAPOOL ? "용암" : "물"));
+#endif
     if (u_spot && !(Levitation || Flying)) {
         if (typ == LAVAPOOL)
             (void) lava_effects();
@@ -785,16 +995,27 @@ coord *cc;
     lev = &levl[dig_x][dig_y];
     nohole = (!Can_dig_down(&u.uz) && !lev->candig);
 
-    if ((ttmp && (ttmp->ttyp == MAGIC_PORTAL
-                  || ttmp->ttyp == VIBRATING_SQUARE || nohole))
+    if ((ttmp
+         && (ttmp->ttyp == MAGIC_PORTAL || ttmp->ttyp == VIBRATING_SQUARE
+             || nohole))
         || (IS_ROCK(lev->typ) && lev->typ != SDOOR
             && (lev->wall_info & W_NONDIGGABLE) != 0)) {
+#if 0 /*KR: 원본*/
         pline_The("%s %shere is too hard to dig in.", surface(dig_x, dig_y),
                   (dig_x != u.ux || dig_y != u.uy) ? "t" : "");
+#else
+        pline_The("이곳의 %s 파내기에는 너무 단단하다.",
+                  surface(dig_x, dig_y));
+#endif
 
     } else if (is_pool_or_lava(dig_x, dig_y)) {
+#if 0 /*KR: 원본*/
         pline_The("%s sloshes furiously for a moment, then subsides.",
                   hliquid(is_lava(dig_x, dig_y) ? "lava" : "water"));
+#else
+        pline_The("%s 잠시 맹렬하게 출렁이다가 가라앉았다.",
+                  hliquid(is_lava(dig_x, dig_y) ? "용암" : "물"));
+#endif
         wake_nearby(); /* splashing */
 
     } else if (lev->typ == DRAWBRIDGE_DOWN
@@ -803,7 +1024,11 @@ coord *cc;
            bridge is extended; drawbridge_wall is the open "doorway" or
            closed "door" where the portcullis/mechanism is located */
         if (pit_only) {
+#if 0 /*KR: 원본*/
             pline_The("drawbridge seems too hard to dig through.");
+#else
+            pline_The("도개교는 파내기에는 너무 단단해 보인다.");
+#endif
             return FALSE;
         } else {
             int x = dig_x, y = dig_y;
@@ -814,17 +1039,23 @@ coord *cc;
         }
 
     } else if ((boulder_here = sobj_at(BOULDER, dig_x, dig_y)) != 0) {
-        if (ttmp && is_pit(ttmp->ttyp)
-            && rn2(2)) {
+        if (ttmp && is_pit(ttmp->ttyp) && rn2(2)) {
+#if 0 /*KR: 원본*/
             pline_The("boulder settles into the %spit.",
                       (dig_x != u.ux || dig_y != u.uy) ? "adjacent " : "");
+#else
+            pline_The("바위가 %s구덩이 안으로 자리잡았다.",
+                      (dig_x != u.ux || dig_y != u.uy) ? "인접한 " : "");
+#endif
             ttmp->ttyp = PIT; /* crush spikes */
         } else {
             /*
              * digging makes a hole, but the boulder immediately
              * fills it.  Final outcome:  no hole, no boulder.
              */
-            pline("KADOOM!  The boulder falls in!");
+            /*KR pline("KADOOM!  The boulder falls in!"); */
+            pline("쿠쿵! 바위가 떨어져 내렸다!");
+
             (void) delfloortrap(ttmp);
         }
         delobj(boulder_here);
@@ -844,24 +1075,38 @@ coord *cc;
              * We can't dig a hole here since that will destroy
              * the drawbridge.  The following is a cop-out. --dlc
              */
+#if 0 /*KR: 원본*/
             pline_The("%s %shere is too hard to dig in.",
                       surface(dig_x, dig_y),
                       (dig_x != u.ux || dig_y != u.uy) ? "t" : "");
+#else
+            pline_The("이곳의 %s 파내기에는 너무 단단하다.",
+                      surface(dig_x, dig_y));
+#endif
             return FALSE;
         }
 
         lev->drawbridgemask &= ~DB_UNDER;
         lev->drawbridgemask |= (typ == LAVAPOOL) ? DB_LAVA : DB_MOAT;
+#if 0 /*KR: 원본*/
         liquid_flow(dig_x, dig_y, typ, ttmp,
                     "As you dig, the hole fills with %s!");
+#else
+        liquid_flow(dig_x, dig_y, typ, ttmp,
+                    "당신이 파내자, 구멍이 %s(으)로 채워진다!");
+#endif
         return TRUE;
 
-    /* the following two are here for the wand of digging */
+        /* the following two are here for the wand of digging */
     } else if (IS_THRONE(lev->typ)) {
-        pline_The("throne is too hard to break apart.");
+        /*KR pline_The("throne is too hard to break apart."); */
+        pline_The("왕좌는 부수기에는 너무 단단하다.");
+
 
     } else if (IS_ALTAR(lev->typ)) {
-        pline_The("altar is too hard to break apart.");
+        /*KR pline_The("altar is too hard to break apart."); */
+        pline_The("제단은 부수기에는 너무 단단하다.");
+
 
     } else {
         typ = fillholetyp(dig_x, dig_y, FALSE);
@@ -869,8 +1114,13 @@ coord *cc;
         lev->flags = 0;
         if (typ != ROOM) {
             lev->typ = typ;
+#if 0 /*KR: 원본*/
             liquid_flow(dig_x, dig_y, typ, ttmp,
                         "As you dig, the hole fills with %s!");
+#else
+            liquid_flow(dig_x, dig_y, typ, ttmp,
+                        "당신이 파내자, 구멍이 %s(으)로 채워진다!");
+#endif
             return TRUE;
         }
 
@@ -895,9 +1145,7 @@ coord *cc;
     return FALSE;
 }
 
-STATIC_OVL void
-dig_up_grave(cc)
-coord *cc;
+STATIC_OVL void dig_up_grave(cc) coord *cc;
 {
     struct obj *otmp;
     xchar dig_x, dig_y;
@@ -916,37 +1164,57 @@ coord *cc;
     exercise(A_WIS, FALSE);
     if (Role_if(PM_ARCHEOLOGIST)) {
         adjalign(-sgn(u.ualign.type) * 3);
-        You_feel("like a despicable grave-robber!");
+        /*KR You_feel("like a despicable grave-robber!"); */
+        You_feel("비열한 도굴꾼이 된 기분이다!");
+
     } else if (Role_if(PM_SAMURAI)) {
         adjalign(-sgn(u.ualign.type));
-        You("disturb the honorable dead!");
+        /*KR You("disturb the honorable dead!"); */
+        You("명예로운 고인을 방해했다!");
+
     } else if ((u.ualign.type == A_LAWFUL) && (u.ualign.record > -10)) {
         adjalign(-sgn(u.ualign.type));
-        You("have violated the sanctity of this grave!");
+        /*KR You("have violated the sanctity of this grave!"); */
+        You("이 무덤의 신성함을 더럽혔다!");
+
     }
 
     switch (rn2(5)) {
     case 0:
     case 1:
-        You("unearth a corpse.");
+        /*KR You("unearth a corpse."); */
+        You("시체를 파냈다.");
+
         if ((otmp = mk_tt_object(CORPSE, dig_x, dig_y)) != 0)
             otmp->age -= 100; /* this is an *OLD* corpse */
         break;
     case 2:
         if (!Blind)
+#if 0 /*KR: 원본*/
             pline(Hallucination ? "Dude!  The living dead!"
                                 : "The grave's owner is very upset!");
+#else
+            pline(Hallucination ? "이런! 살아있는 시체다!"
+                                : "무덤의 주인이 매우 화가 났다!");
+#endif
         (void) makemon(mkclass(S_ZOMBIE, 0), dig_x, dig_y, NO_MM_FLAGS);
         break;
     case 3:
         if (!Blind)
+#if 0 /*KR: 원본*/
             pline(Hallucination ? "I want my mummy!"
                                 : "You've disturbed a tomb!");
+#else
+            pline(Hallucination ? "내 미라를 돌려줘!"
+                                : "당신은 무덤을 훼손했다!");
+#endif
         (void) makemon(mkclass(S_MUMMY, 0), dig_x, dig_y, NO_MM_FLAGS);
         break;
     default:
         /* No corpse */
-        pline_The("grave seems unused.  Strange....");
+        /*KR pline_The("grave seems unused.  Strange...."); */
+        pline_The("무덤은 사용되지 않은 것 같다. 이상하군....");
+
         break;
     }
     levl[dig_x][dig_y].typ = ROOM, levl[dig_x][dig_y].flags = 0;
@@ -972,8 +1240,10 @@ struct obj *obj;
             res = 1;
     }
     ispick = is_pick(obj);
-    verb = ispick ? "dig" : "chop";
+    /*KR verb = ispick ? "dig" : "chop"; */
+    verb = ispick ? "파내기" : "베어내기";
 
+#if 0 /*KR: 원본*/
     if (u.utrap && u.utraptype == TT_WEB) {
         pline("%s you can't %s while entangled in a web.",
               /* res==0 => no prior message;
@@ -981,6 +1251,13 @@ struct obj *obj;
               !res ? "Unfortunately," : "But", verb);
         return res;
     }
+#else
+    if (u.utrap && u.utraptype == TT_WEB) {
+        pline("%s 거미줄에 얽힌 채로는 %s 수 없다.",
+              !res ? "불행히도" : "하지만", verb);
+        return res;
+    }
+#endif
 
     /* construct list of directions to show player for likely choices */
     downok = !!can_reach_floor(FALSE);
@@ -1011,7 +1288,10 @@ struct obj *obj;
         *dsp++ = *sdp;
     }
     *dsp = 0;
-    Sprintf(qbuf, "In what direction do you want to %s? [%s]", verb, dirsyms);
+
+    /*KR Sprintf(qbuf, "In what direction do you want to %s? [%s]", verb, dirsyms); */
+    Sprintf(qbuf, "어느 방향으로 %s 하시겠습니까? [%s]", verb, dirsyms);
+
     if (!getdir(qbuf))
         return res;
 
@@ -1019,8 +1299,8 @@ struct obj *obj;
 }
 
 /* MRKR: use_pick_axe() is split in two to allow autodig to bypass */
-/*       the "In what direction do you want to dig?" query.        */
-/*       use_pick_axe2() uses the existing u.dx, u.dy and u.dz    */
+/* the "In what direction do you want to dig?" query.        */
+/* use_pick_axe2() uses the existing u.dx, u.dy and u.dz     */
 int
 use_pick_axe2(obj)
 struct obj *obj;
@@ -1030,17 +1310,21 @@ struct obj *obj;
     struct trap *trap, *trap_with_u;
     int dig_target;
     boolean ispick = is_pick(obj);
-    const char *verbing = ispick ? "digging" : "chopping";
+    /*KR const char *verbing = ispick ? "digging" : "chopping"; */
+    const char *verbing = ispick ? "파내기를" : "베어내기를";
 
     if (u.uswallow && attack(u.ustuck)) {
         ; /* return 1 */
     } else if (Underwater) {
-        pline("Turbulence torpedoes your %s attempts.", verbing);
+        /*KR pline("Turbulence torpedoes your %s attempts.", verbing); */
+        pline("거센 물살이 당신의 %s 시도를 무산시켰다.", verbing);
     } else if (u.dz < 0) {
         if (Levitation)
-            You("don't have enough leverage.");
+            /*KR You("don't have enough leverage."); */
+            You("지렛대 역할을 할 공간이 부족하다.");
         else
-            You_cant("reach the %s.", ceiling(u.ux, u.uy));
+            /*KR You_cant("reach the %s.", ceiling(u.ux, u.uy)); */
+            You_cant("%s에 닿을 수 없다.", ceiling(u.ux, u.uy));
     } else if (!u.dx && !u.dy && !u.dz) {
         char buf[BUFSZ];
         int dam;
@@ -1048,8 +1332,13 @@ struct obj *obj;
         dam = rnd(2) + dbon() + obj->spe;
         if (dam <= 0)
             dam = 1;
+#if 0 /*KR: 원본*/
         You("hit yourself with %s.", yname(uwep));
         Sprintf(buf, "%s own %s", uhis(), OBJ_NAME(objects[obj->otyp]));
+#else
+        You("자신을 %s 쳤다.", append_josa(yname(uwep), "으로"));
+        Sprintf(buf, "자신의 %s 친 것", OBJ_NAME(objects[obj->otyp]));
+#endif
         losehp(Maybe_Half_Phys(dam), buf, KILLED_BY);
         context.botl = 1;
         return 1;
@@ -1059,7 +1348,8 @@ struct obj *obj;
         rx = u.ux + u.dx;
         ry = u.uy + u.dy;
         if (!isok(rx, ry)) {
-            pline("Clash!");
+            /*KR pline("Clash!"); */
+            pline("챙강!");
             return 1;
         }
         lev = &levl[rx][ry];
@@ -1072,30 +1362,46 @@ struct obj *obj;
             if (trap && trap->ttyp == WEB) {
                 if (!trap->tseen) {
                     seetrap(trap);
-                    There("is a spider web there!");
+                    /*KR There("is a spider web there!"); */
+                    There("에는 거미줄이 있다!");
                 }
+#if 0 /*KR: 원본*/
                 pline("%s entangled in the web.", Yobjnam2(obj, "become"));
+#else
+                pline("%s 거미줄에 얽혔다.", append_josa(Yname2(obj), "이"));
+#endif
                 /* you ought to be able to let go; tough luck */
                 /* (maybe `move_into_trap()' would be better) */
                 nomul(-d(2, 2));
-                multi_reason = "stuck in a spider web";
-                nomovemsg = "You pull free.";
+                /*KR multi_reason = "stuck in a spider web"; */
+                multi_reason = "거미줄에 걸림";
+                /*KR nomovemsg = "You pull free."; */
+                nomovemsg = "당신은 몸을 빼냈다.";
             } else if (lev->typ == IRONBARS) {
-                pline("Clang!");
+                /*KR pline("Clang!"); */
+                pline("챙그랑!");
                 wake_nearby();
             } else if (IS_TREE(lev->typ)) {
-                You("need an axe to cut down a tree.");
+                /*KR You("need an axe to cut down a tree."); */
+                You("나무를 베려면 도끼가 필요하다.");
             } else if (IS_ROCK(lev->typ)) {
-                You("need a pick to dig rock.");
+                /*KR You("need a pick to dig rock."); */
+                You("바위를 파내려면 곡괭이가 필요하다.");
             } else if (!ispick && (sobj_at(STATUE, rx, ry)
                                    || sobj_at(BOULDER, rx, ry))) {
                 boolean vibrate = !rn2(3);
-
+#if 0 /*KR: 원본*/
                 pline("Sparks fly as you whack the %s.%s",
                       sobj_at(STATUE, rx, ry) ? "statue" : "boulder",
                       vibrate ? " The axe-handle vibrates violently!" : "");
+#else
+                pline("%s 강하게 치자 불꽃이 튄다.%s",
+                      sobj_at(STATUE, rx, ry) ? "석상을" : "바위를",
+                      vibrate ? " 도끼 자루가 격렬하게 진동한다!" : "");
+#endif
                 if (vibrate)
-                    losehp(Maybe_Half_Phys(2), "axing a hard object",
+                    /*KR losehp(Maybe_Half_Phys(2), "axing a hard object", */
+                    losehp(Maybe_Half_Phys(2), "단단한 물체를 도끼로 친 것",
                            KILLED_BY);
             } else if (u.utrap && u.utraptype == TT_PIT && trap
                        && (trap_with_u = t_at(u.ux, u.uy))
@@ -1113,10 +1419,12 @@ struct obj *obj;
 
                     trap_with_u->conjoined |= (1 << idx);
                     trap->conjoined |= (1 << adjidx);
-                    pline("You clear some debris from between the pits.");
+                    /*KR pline("You clear some debris from between the pits."); */
+                    pline("당신은 구덩이 사이의 잔해를 치웠다.");
                 }
             } else if (u.utrap && u.utraptype == TT_PIT
                        && (trap_with_u = t_at(u.ux, u.uy)) != 0) {
+#if 0 /*KR: 원본*/
                 You("swing %s, but the rubble has no place to go.",
                     yobjnam(obj, (char *) 0));
             } else {
@@ -1128,6 +1436,20 @@ struct obj *obj;
                                                      "hitting the boulder",
                                                      "chopping at the door",
                                                      "cutting the tree" };
+#else
+                You("%s 휘둘렀지만, 잔해가 갈 곳이 없다.",
+                    append_josa(yobjnam(obj, (char *) 0), "을"));
+            } else {
+                You("허공에 대고 %s 휘둘렀다.",
+                    append_josa(yobjnam(obj, (char *) 0), "을"));
+            }
+        } else {
+            static const char *const d_action[6] = { "스윙을", "파내기를",
+                                                     "석상 쪼개기를",
+                                                     "바위 치기를",
+                                                     "문 부수기를",
+                                                     "나무 베기를" };
+#endif
 
             did_dig_msg = FALSE;
             context.digging.quiet = FALSE;
@@ -1151,23 +1473,40 @@ struct obj *obj;
                 assign_level(&context.digging.level, &u.uz);
                 context.digging.effort = 0;
                 if (!context.digging.quiet)
-                    You("start %s.", d_action[dig_target]);
+                    /*KR You("start %s.", d_action[dig_target]); */
+                    You("%s 시작했다.", d_action[dig_target]);
             } else {
+#if 0 /*KR:T*/
                 You("%s %s.", context.digging.chew ? "begin" : "continue",
                     d_action[dig_target]);
+#else
+                You("%s %s.", d_action[dig_target],
+                    context.digging.chew ? "시작했다" : "계속했다");
+#endif
                 context.digging.chew = FALSE;
             }
             set_occupation(dig, verbing, 0);
         }
+
     } else if (Is_airlevel(&u.uz) || Is_waterlevel(&u.uz)) {
+#if 0 /*KR:T*/
         /* it must be air -- water checked above */
         You("swing %s through thin air.", yobjnam(obj, (char *) 0));
+#else
+        You("허공에 대고 %s 휘둘렀다.",
+            append_josa(yobjnam(obj, (char *) 0), "을"));
+#endif
     } else if (!can_reach_floor(FALSE)) {
         cant_reach_floor(u.ux, u.uy, FALSE, FALSE);
     } else if (is_pool_or_lava(u.ux, u.uy)) {
         /* Monsters which swim also happen not to be able to dig */
+#if 0 /*KR:T*/
         You("cannot stay under%s long enough.",
             is_pool(u.ux, u.uy) ? "water" : " the lava");
+#else
+        You("%s 충분히 오래 머물 수 없다.",
+            is_pool(u.ux, u.uy) ? "물속에" : "용암 속에");
+#endif
     } else if ((trap = t_at(u.ux, u.uy)) != 0
                && (uteetering_at_seen_pit(trap) || uescaped_shaft(trap))) {
         dotrap(trap, FORCEBUNGLE);
@@ -1179,8 +1518,13 @@ struct obj *obj;
                   trigger or disarm a trap here */
                && (!trap || (trap->ttyp != LANDMINE
                              && trap->ttyp != BEAR_TRAP))) {
+#if 0 /*KR:T*/
         pline("%s merely scratches the %s.", Yobjnam2(obj, (char *) 0),
               surface(u.ux, u.uy));
+#else
+        pline("%s %s 살짝 긁었을 뿐이다.", append_josa(Yname2(obj), "은"),
+              surface(u.ux, u.uy));
+#endif
         u_wipe_engr(3);
     } else {
         if (context.digging.pos.x != u.ux || context.digging.pos.y != u.uy
@@ -1193,11 +1537,14 @@ struct obj *obj;
             context.digging.pos.y = u.uy;
             assign_level(&context.digging.level, &u.uz);
             context.digging.effort = 0;
-            You("start %s downward.", verbing);
+            /*KR You("start %s downward.", verbing); */
+            You("아래쪽으로 %s 시작했다.", verbing);
             if (*u.ushops)
                 shopdig(0);
         } else
-            You("continue %s downward.", verbing);
+            /*KR You("continue %s downward.", verbing); */
+            You("아래쪽으로 계속 %s.", verbing);
+
         did_dig_msg = FALSE;
         set_occupation(dig, verbing, 0);
     }
@@ -1233,11 +1580,13 @@ boolean zap;
 
         if (mtmp) {
             if (zap || context.digging.warned) {
-                verbalize("Halt, vandal!  You're under arrest!");
+                /*KR verbalize("Halt, vandal!  You're under arrest!"); */
+                verbalize("멈춰라! 기물 파손죄로 체포하겠다!");
                 (void) angry_guards(!!Deaf);
             } else {
                 const char *str;
 
+#if 0                
                 if (IS_DOOR(lev->typ))
                     str = "door";
                 else if (IS_TREE(lev->typ))
@@ -1246,7 +1595,18 @@ boolean zap;
                     str = "wall";
                 else
                     str = "fountain";
-                verbalize("Hey, stop damaging that %s!", str);
+#else
+                if (IS_DOOR(lev->typ))
+                    str = "문을";
+                else if (IS_TREE(lev->typ))
+                    str = "나무를";
+                else if (IS_ROCK(lev->typ))
+                    str = "벽을";
+                else
+                    str = "분수를";
+#endif
+                /*KR verbalize("Hey, stop damaging that %s!", str); */
+                verbalize("이봐, 그 %s 훼손하는 걸 당장 멈춰!", str);
                 context.digging.warned = TRUE;
             }
             if (is_digging())
@@ -1307,7 +1667,8 @@ register struct monst *mtmp;
     if (IS_WALL(here->typ)) {
         /* KMH -- Okay on arboreal levels (room walls are still stone) */
         if (flags.verbose && !rn2(5))
-            You_hear("crashing rock.");
+            /*KR You_hear("crashing rock."); */
+            You_hear("바위가 부서지는 소리를 들었다.");
         if (*in_rooms(mtmp->mx, mtmp->my, SHOPBASE))
             add_damage(mtmp->mx, mtmp->my, 0L);
         if (level.flags.is_maze_lev) {
@@ -1352,24 +1713,36 @@ boolean unexpected;
 
     if (unexpected) {
         if (!Hallucination)
-            You_feel("an unexpected draft.");
+            /*KR You_feel("an unexpected draft."); */
+            You_feel("예기치 않은 외풍을 느꼈다.");
         else
             /* U.S. classification system uses 1-A for eligible to serve
                and 4-F for ineligible due to physical or mental defect;
                some intermediate values exist but are rarely seen */
+#if 0
             You_feel("like you are %s.",
                      (ACURR(A_STR) < 6 || ACURR(A_DEX) < 6
                       || ACURR(A_CON) < 6 || ACURR(A_CHA) < 6
                       || ACURR(A_INT) < 6 || ACURR(A_WIS) < 6) ? "4-F"
                                                                : "1-A");
+#else
+            /* 징병(draft) 말장난 */
+            You_feel("당신은 %s 판정을 받은 것 같은 기분이 든다.",
+                     (ACURR(A_STR) < 6 || ACURR(A_DEX) < 6 
+                      || ACURR(A_CON) < 6 || ACURR(A_CHA) < 6 
+                      || ACURR(A_INT) < 6 || ACURR(A_WIS) < 6) ? "4급"
+                                                               : "1급");
+#endif
     } else {
         if (!Hallucination) {
-            You_feel("a draft.");
+            /*KR You_feel("a draft."); */
+            You_feel("외풍을 느꼈다.");
         } else {
             /* "marching" is deliberately ambiguous; it might mean drills
                 after entering military service or mean engaging in protests */
             static const char *draft_reaction[] = {
-                "enlisting", "marching", "protesting", "fleeing",
+                /*KR "enlisting", "marching", "protesting", "fleeing", */
+                "입대하는", "행군하는", "시위하는", "도망치는",
             };
             int dridx;
 
@@ -1378,7 +1751,8 @@ boolean unexpected;
             if (u.ualign.record < STRIDENT)
                 /* L: +(0..2), N: +(-1..1), C: +(-2..0); all: 0..3 */
                 dridx += rn1(3, sgn(u.ualign.type) - 1);
-            You_feel("like %s.", draft_reaction[dridx]);
+            /*KR You_feel("like %s.", draft_reaction[dridx]); */
+            You_feel("마치 %s 것 같은 기분이 든다.", draft_reaction[dridx]);
         }
     }
 }
@@ -1409,7 +1783,8 @@ zap_dig()
 
         if (!is_whirly(mtmp->data)) {
             if (is_animal(mtmp->data))
-                You("pierce %s %s wall!", s_suffix(mon_nam(mtmp)),
+           /*KR You("pierce %s %s wall!", s_suffix(mon_nam(mtmp)), */
+                You("%s %s 벽을 뚫었다!", s_suffix(mon_nam(mtmp)),
                     mbodypart(mtmp, STOMACH));
             mtmp->mhp = 1; /* almost dead */
             expels(mtmp, mtmp->data, !is_animal(mtmp->data));
@@ -1421,6 +1796,7 @@ zap_dig()
         if (!Is_airlevel(&u.uz) && !Is_waterlevel(&u.uz) && !Underwater) {
             if (u.dz < 0 || On_stairs(u.ux, u.uy)) {
                 int dmg;
+#if 0
                 if (On_stairs(u.ux, u.uy))
                     pline_The("beam bounces off the %s and hits the %s.",
                               (u.ux == xdnladder || u.ux == xupladder)
@@ -1431,6 +1807,18 @@ zap_dig()
                 pline("It falls on your %s!", body_part(HEAD));
                 dmg = rnd((uarmh && is_metallic(uarmh)) ? 2 : 6);
                 losehp(Maybe_Half_Phys(dmg), "falling rock", KILLED_BY_AN);
+#else
+                if (On_stairs(u.ux, u.uy))
+                    pline_The("광선이 %s에서 튕겨나와 %s(을)를 맞췄다.",
+                              (u.ux == xdnladder || u.ux == xupladder)
+                                  ? "사다리"
+                                  : "계단",
+                              ceiling(u.ux, u.uy));
+                You("%s에서 돌을 떼어냈다.", ceiling(u.ux, u.uy));
+                pline("돌이 당신의 %s에 떨어졌다!", body_part(HEAD));
+                dmg = rnd((uarmh && is_metallic(uarmh)) ? 2 : 6);
+                losehp(Maybe_Half_Phys(dmg), "낙석", KILLED_BY_AN);
+#endif
                 otmp = mksobj_at(ROCK, u.ux, u.uy, FALSE, FALSE);
                 if (otmp) {
                     (void) xname(otmp); /* set dknown, maybe bknown */
@@ -1510,7 +1898,8 @@ zap_dig()
             if (room->typ == SDOOR)
                 room->typ = DOOR; /* doormask set below */
             else if (cansee(zx, zy))
-                pline_The("door is razed!");
+                /*KR pline_The("door is razed!"); */
+                pline_The("문이 파괴되었다!");
             watch_dig((struct monst *) 0, zx, zy, TRUE);
             room->doormask = D_NODOOR;
             unblock_point(zx, zy); /* vision */
@@ -1527,21 +1916,24 @@ zap_dig()
                     room->typ = ROOM, room->flags = 0;
                     unblock_point(zx, zy); /* vision */
                 } else if (!Blind)
-                    pline_The("wall glows then fades.");
+                    /*KR pline_The("wall glows then fades."); */
+                    pline_The("벽이 빛나더니 이내 사그라든다.");
                 break;
             } else if (IS_TREE(room->typ)) { /* check trees before stone */
                 if (!(room->wall_info & W_NONDIGGABLE)) {
                     room->typ = ROOM, room->flags = 0;
                     unblock_point(zx, zy); /* vision */
                 } else if (!Blind)
-                    pline_The("tree shudders but is unharmed.");
+                    /*KR pline_The("tree shudders but is unharmed."); */
+                    pline_The("나무가 흔들렸지만 상처 하나 없다.");
                 break;
             } else if (room->typ == STONE || room->typ == SCORR) {
                 if (!(room->wall_info & W_NONDIGGABLE)) {
                     room->typ = CORR, room->flags = 0;
                     unblock_point(zx, zy); /* vision */
                 } else if (!Blind)
-                    pline_The("rock glows then fades.");
+                    /*KR pline_The("rock glows then fades."); */
+                    pline_The("바위가 빛나더니 이내 사그라든다.");
                 break;
             }
         } else if (IS_ROCK(room->typ)) {
@@ -1585,7 +1977,8 @@ zap_dig()
     }
 
     if (shopdoor || shopwall)
-        pay_for_damage(shopdoor ? "destroy" : "dig into", FALSE);
+        /*KR pay_for_damage(shopdoor ? "destroy" : "dig into", FALSE); */
+        pay_for_damage(shopdoor ? "파괴한" : "파낸", FALSE);
     return;
 }
 
@@ -1603,7 +1996,8 @@ char *msg;
     int ltyp;
     struct rm *room;
     const char *foundation_msg =
-                 "The foundation is too hard to dig through from this angle.";
+        /*KR "The foundation is too hard to dig through from this angle."; */
+                 "이 각도에서 파내기에는 지반이 너무 단단하다.";
 
     if (!cc)
         return FALSE;
@@ -1627,16 +2021,19 @@ char *msg;
         return FALSE;
     } else if (IS_TREE(ltyp)) { /* check trees before stone */
         /* if (room->wall_info & W_NONDIGGABLE) */
-        Strcpy(msg, "The tree's roots glow then fade.");
+        /*KR Strcpy(msg, "The tree's roots glow then fade."); */
+        Strcpy(msg, "나무뿌리가 빛나더니 이내 사그라든다.");
         return FALSE;
     } else if (ltyp == STONE || ltyp == SCORR) {
         if (room->wall_info & W_NONDIGGABLE) {
-            Strcpy(msg, "The rock glows then fades.");
+            /*KR Strcpy(msg, "The rock glows then fades."); */
+            Strcpy(msg, "바위가 빛나더니 이내 사그라든다.");
             return FALSE;
         }
     } else if (ltyp == IRONBARS) {
         /* "set of iron bars" */
-        Strcpy(msg, "The bars go much deeper than your pit.");
+        /*KR Strcpy(msg, "The bars go much deeper than your pit."); */
+        Strcpy(msg, "쇠창살이 당신의 구덩이보다 훨씬 깊이 박혀 있다.");
 #if 0
     } else if (is_lava(cc->x, cc->y)) {
     } else if (is_ice(cc->x, cc->y)) {
@@ -1644,11 +2041,13 @@ char *msg;
     } else if (IS_GRAVE(ltyp)) {
 #endif
     } else if (IS_SINK(ltyp)) {
-        Strcpy(msg, "A tangled mass of plumbing remains below the sink.");
+        /*KR Strcpy(msg, "A tangled mass of plumbing remains below the sink."); */
+        Strcpy(msg, "싱크대 아래에 엉킨 배관 덩어리가 남아 있다.");
         return FALSE;
     } else if ((cc->x == xupladder && cc->y == yupladder) /* ladder up */
                || (cc->x == xdnladder && cc->y == ydnladder)) { /* " down */
-        Strcpy(msg, "The ladder is unaffected.");
+        /*KR Strcpy(msg, "The ladder is unaffected."); */
+        Strcpy(msg, "사다리는 아무런 영향도 받지 않았다.");
         return FALSE;
     } else {
         const char *supporting = (const char *) 0;
@@ -1673,12 +2072,20 @@ char *msg;
                  || ltyp == DBWALL)        /* "raised drawbridge" */
             supporting = "drawbridge";
 
+#if 0 /*KR: 원본*/
         if (supporting) {
             Sprintf(msg, "The %s%ssupporting structures remain intact.",
                     supporting ? s_suffix(supporting) : "",
                     supporting ? " " : "");
             return FALSE;
         }
+#else
+        if (supporting) {
+            Sprintf(msg, "%s지지 구조물은 온전하게 남아 있다.",
+                    supporting ? append_josa(supporting, "의 ") : "");
+            return FALSE;
+        }
+#endif
     }
     return TRUE;
 }
@@ -1699,7 +2106,8 @@ schar filltyp;
         levl[t.tx][t.ty].typ = filltyp, levl[t.tx][t.ty].flags = 0;
         liquid_flow(t.tx, t.ty, filltyp, trap,
                     (t.tx == u.ux && t.ty == u.uy)
-                        ? "Suddenly %s flows in from the adjacent pit!"
+                   /*KR ? "Suddenly %s flows in from the adjacent pit!" */
+                        ? "갑자기 인접한 구덩이에서 %s 흘러들어온다!"
                         : (char *) 0);
         for (idx = 0; idx < 8; ++idx) {
             if (t.conjoined & (1 << idx)) {
@@ -1834,7 +2242,8 @@ boolean *dealloced;
         unpunish();
         u.utrap = rn1(50, 20);
         u.utraptype = TT_BURIEDBALL;
-        pline_The("iron ball gets buried!");
+        /*KR pline_The("iron ball gets buried!"); */
+        pline_The("무거운 쇠구슬이 파묻혔다!");
     }
     /* after unpunish(), or might get deallocated chain */
     otmp2 = otmp->nexthere;
@@ -1916,10 +2325,17 @@ int x, y;
     del_engr_at(x, y);
     newsym(x, y);
 
+#if 0 /*KR: 원본*/
     if (costly && loss) {
         You("owe %s %ld %s for burying merchandise.", mon_nam(shkp), loss,
             currency(loss));
     }
+#else
+    if (costly && loss) {
+        You("상품을 파묻은 값으로 %s에게 %ld %s 빚졌다.", mon_nam(shkp), loss,
+            append_josa(currency(loss), "를"));
+    }
+#endif
 }
 
 /* move objects from buriedobjlist to fobj/nexthere lists */
@@ -2003,8 +2419,13 @@ long timeout;
         if (flags.verbose) {
             char *cname = corpse_xname(obj, (const char *) 0, CXN_NO_PFX);
 
+#if 0 /*KR: 원본*/
             Your("%s%s %s away%c", obj == uwep ? "wielded " : "", cname,
                  otense(obj, "rot"), obj == uwep ? '!' : '.');
+#else
+            pline("당신이 %s%s 썩어버렸다%s", obj == uwep ? "장비한 " : "",
+                  append_josa(cname, "은"), obj == uwep ? "!" : ".");
+#endif
         }
         if (obj == uwep) {
             uwepgone(); /* now bare handed */
@@ -2047,12 +2468,14 @@ struct monst *mtmp;
     debugpline1("bury_monst: %s", mon_nam(mtmp));
     if (canseemon(mtmp)) {
         if (is_flyer(mtmp->data) || is_floater(mtmp->data)) {
-            pline_The("%s opens up, but %s is not swallowed!",
-                      surface(mtmp->mx, mtmp->my), mon_nam(mtmp));
+            /*KR pline_The("%s opens up, but %s is not swallowed!", */
+            pline_The("%s 열렸지만, %s 삼켜지지는 않았다!",
+                      surface(mtmp->mx, mtmp->my), append_josa(mon_nam(mtmp), "은"));
             return;
         } else
-            pline_The("%s opens up and swallows %s!",
-                      surface(mtmp->mx, mtmp->my), mon_nam(mtmp));
+            /*KR pline_The("%s opens up and swallows %s!", */
+            pline_The("%s 열리더니 %s 삼켰다!",
+                      surface(mtmp->mx, mtmp->my), append_josa(mon_nam(mtmp), "을"));
     }
 
     mtmp->mburied = TRUE;
@@ -2066,9 +2489,11 @@ bury_you()
     debugpline0("bury_you");
     if (!Levitation && !Flying) {
         if (u.uswallow)
-            You_feel("a sensation like falling into a trap!");
+       /*KR You_feel("a sensation like falling into a trap!"); */
+            You_feel("함정에 빠지는 듯한 감각을 느꼈다!");
         else
-            pline_The("%s opens beneath you and you fall in!",
+            /*KR pline_The("%s opens beneath you and you fall in!", */
+            pline_The("발밑의 %s 열리고, 당신은 떨어졌다!",
                       surface(u.ux, u.uy));
 
         u.uburied = TRUE;
@@ -2095,7 +2520,8 @@ escape_tomb()
     debugpline0("escape_tomb");
     if ((Teleportation || can_teleport(youmonst.data))
         && (Teleport_control || rn2(3) < Luck+2)) {
-        You("attempt a teleport spell.");
+        /*KR You("attempt a teleport spell."); */
+        You("텔레포트 마법을 시도했다.");
         (void) dotele(FALSE);        /* calls unearth_you() */
     } else if (u.uburied) { /* still buried after 'port attempt */
         boolean good;
@@ -2105,6 +2531,7 @@ escape_tomb()
             || (unsolid(youmonst.data)
                 && youmonst.data != &mons[PM_WATER_ELEMENTAL])
             || (tunnels(youmonst.data) && !needspick(youmonst.data))) {
+#if 0 /*KR*/
             You("%s up through the %s.",
                 (tunnels(youmonst.data) && !needspick(youmonst.data))
                    ? "try to tunnel"
@@ -2112,6 +2539,13 @@ escape_tomb()
                       ? "ooze"
                       : "phase",
                 surface(u.ux, u.uy));
+#else
+            You("%s 위로 %s 시도했다.", surface(u.ux, u.uy),
+                (tunnels(youmonst.data) && !needspick(youmonst.data))
+                   ? "파고 나가기를"
+                   : (amorphous(youmonst.data)) ? "스며 나가기를"
+                                                : "통과해 나가기를");
+#endif
 
             good = (tunnels(youmonst.data) && !needspick(youmonst.data))
                       ? dighole(TRUE, FALSE, (coord *)0) : TRUE;
@@ -2127,7 +2561,8 @@ struct obj *otmp;
 {
     debugpline0("bury_obj");
     if (cansee(otmp->ox, otmp->oy))
-        pline_The("objects on the %s tumble into a hole!",
+        /*KR pline_The("objects on the %s tumble into a hole!", */
+        pline_The("%s 위의 물건들이 구멍 속으로 굴러 떨어졌다!",
                   surface(otmp->ox, otmp->oy));
 
     bury_objs(otmp->ox, otmp->oy);

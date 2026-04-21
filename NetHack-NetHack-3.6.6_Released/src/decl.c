@@ -223,14 +223,22 @@ NEARDATA struct mvitals mvitals[NUMMONS];
 NEARDATA long domove_attempting = 0L;
 NEARDATA long domove_succeeded = 0L;
 
+#if 0 /*KR: 원본*/
 NEARDATA struct c_color_names c_color_names = {
     "black",  "amber", "golden", "light blue", "red",   "green",
     "silver", "blue",  "purple", "white",      "orange"
 };
+#else
+NEARDATA struct c_color_names c_color_names = {
+    "검은",   "호박색의", "금빛의",   "하늘색의", "붉은",    "녹색의",
+    "은빛의", "파란",     "보라색의", "하얀",     "주황색의"
+};
+#endif
 
 struct menucoloring *menu_colorings = NULL;
 
 const char *c_obj_colors[] = {
+#if 0 /*KR: 원본*/
     "black",          /* CLR_BLACK */
     "red",            /* CLR_RED */
     "green",          /* CLR_GREEN */
@@ -247,8 +255,27 @@ const char *c_obj_colors[] = {
     "bright magenta", /* CLR_BRIGHT_MAGENTA */
     "bright cyan",    /* CLR_BRIGHT_CYAN */
     "white",          /* CLR_WHITE */
+#else
+    "검은색",      /* CLR_BLACK */
+    "빨간색",      /* CLR_RED */
+    "녹색",        /* CLR_GREEN */
+    "갈색",        /* CLR_BROWN */
+    "파란색",      /* CLR_BLUE */
+    "자홍색",      /* CLR_MAGENTA */
+    "청록색",      /* CLR_CYAN */
+    "회색",        /* CLR_GRAY */
+    "투명한",      /* no_color */
+    "주황색",      /* CLR_ORANGE */
+    "밝은 녹색",   /* CLR_BRIGHT_GREEN */
+    "노란색",      /* CLR_YELLOW */
+    "밝은 파란색", /* CLR_BRIGHT_BLUE */
+    "밝은 자홍색", /* CLR_BRIGHT_MAGENTA */
+    "밝은 청록색", /* CLR_BRIGHT_CYAN */
+    "하얀색",      /* CLR_WHITE */
+#endif
 };
 
+#if 0 /*KR: 원본*/
 struct c_common_strings c_common_strings = { "Nothing happens.",
                                              "That's enough tries!",
                                              "That is a silly thing to %s.",
@@ -260,15 +287,36 @@ struct c_common_strings c_common_strings = { "Nothing happens.",
                                              "vision quickly clears.",
                                              { "the", "your" },
                                              { "mon", "you" } };
+#else
+struct c_common_strings c_common_strings = { "아무 일도 일어나지 않았다.",
+                                             "이제 충분히 시도했다!",
+                                             "%s하다니 참 어리석은 짓이다.",
+                                             "순간 몸서리쳤다.",
+                                             "무언가",
+                                             "무언가",
+                                             "다시 움직일 수 있게 되었다.",
+                                             "그만두었다.",
+                                             "시야가 금세 맑아졌다.",
+                                             { "", "당신의 " },
+                                             { "mon", "you" } };
+#endif
 
 /* NOTE: the order of these words exactly corresponds to the
    order of oc_material values #define'd in objclass.h. */
+#if 0 /*KR: 원본*/
 const char *materialnm[] = { "mysterious", "liquid",  "wax",        "organic",
                              "flesh",      "paper",   "cloth",      "leather",
                              "wooden",     "bone",    "dragonhide", "iron",
                              "metal",      "copper",  "silver",     "gold",
                              "platinum",   "mithril", "plastic",    "glass",
                              "gemstone",   "stone" };
+#else
+const char *materialnm[] = { "신비로운", "액체", "밀랍",   "유기물",   "살점",
+                             "종이",     "천",   "가죽",   "나무",     "뼈",
+                             "용가죽",   "철",   "금속",   "구리",     "은",
+                             "금",       "백금", "미스릴", "플라스틱", "유리",
+                             "보석",     "돌" };
+#endif
 
 /* Vision */
 NEARDATA boolean vision_full_recalc = 0;

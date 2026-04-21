@@ -72,11 +72,26 @@ amulet()
             if (ttmp->ttyp == MAGIC_PORTAL) {
                 int du = distu(ttmp->tx, ttmp->ty);
                 if (du <= 9)
+#if 0 /*KR: 원본*/
                     pline("%s hot!", Tobjnam(amu, "feel"));
+#else
+                    pline("%s 뜨겁게 느껴진다!",
+                          append_josa(xname(amu), "이"));
+#endif
                 else if (du <= 64)
+#if 0 /*KR: 원본*/
                     pline("%s very warm.", Tobjnam(amu, "feel"));
+#else
+                    pline("%s 매우 따뜻하게 느껴진다.",
+                          append_josa(xname(amu), "이"));
+#endif
                 else if (du <= 144)
+#if 0 /*KR: 원본*/
                     pline("%s warm.", Tobjnam(amu, "feel"));
+#else
+                    pline("%s 따뜻하게 느껴진다.",
+                          append_josa(xname(amu), "이"));
+#endif
                 /* else, the amulet feels normal */
                 break;
             }
@@ -92,8 +107,10 @@ amulet()
         if (mtmp->iswiz && mtmp->msleeping && !rn2(40)) {
             mtmp->msleeping = 0;
             if (distu(mtmp->mx, mtmp->my) > 2)
-                You(
-      "get the creepy feeling that somebody noticed your taking the Amulet.");
+                /*KR You("get the creepy feeling that somebody noticed your
+                 * taking the Amulet."); */
+                You("당신이 아뮬렛을 가졌다는 사실을 누군가 알아챘다는 "
+                    "으스스한 기분이 든다.");
             return;
         }
     }
@@ -423,10 +440,19 @@ register struct monst *mtmp;
 
                 if ((otmp = on_ground(which_arti(targ))) != 0) {
                     if (cansee(mtmp->mx, mtmp->my))
+#if 0 /*KR: 원본*/
                         pline("%s picks up %s.", Monnam(mtmp),
                               (distu(mtmp->mx, mtmp->my) <= 5)
                                   ? doname(otmp)
                                   : distant_name(otmp, doname));
+#else
+                        pline("%s %s 집어들었다.",
+                              append_josa(Monnam(mtmp), "이"),
+                              (distu(mtmp->mx, mtmp->my) <= 5)
+                                  ? append_josa(doname(otmp), "을")
+                                  : append_josa(distant_name(otmp, doname),
+                                                "을"));
+#endif
                     obj_extract_self(otmp);
                     (void) mpickobj(mtmp, otmp);
                     return 1;
@@ -634,14 +660,16 @@ resurrect()
 
     if (!context.no_of_wizards) {
         /* make a new Wizard */
-        verb = "kill";
+        /*KR verb = "kill"; */
+        verb = "죽일";
         mtmp = makemon(&mons[PM_WIZARD_OF_YENDOR], u.ux, u.uy, MM_NOWAIT);
         /* affects experience; he's not coming back from a corpse
            but is subject to repeated killing like a revived corpse */
         if (mtmp) mtmp->mrevived = 1;
     } else {
         /* look for a migrating Wizard */
-        verb = "elude";
+        /*KR verb = "elude"; */
+        verb = "따돌릴";
         mmtmp = &migrating_mons;
         while ((mtmp = *mmtmp) != 0) {
             if (mtmp->iswiz
@@ -672,8 +700,12 @@ resurrect()
         mtmp->mtame = mtmp->mpeaceful = 0; /* paranoia */
         set_malign(mtmp);
         if (!Deaf) {
-            pline("A voice booms out...");
-            verbalize("So thou thought thou couldst %s me, fool.", verb);
+            /*KR pline("A voice booms out..."); */
+            pline("목소리가 크게 울려 퍼진다...");
+            /*KR verbalize("So thou thought thou couldst %s me, fool.", verb);
+             */
+            verbalize("네가 감히 날 %s 수 있을 거라 생각했느냐, 어리석은 놈.",
+                      verb);
         }
     }
 }
@@ -688,11 +720,16 @@ intervene()
     switch (which) {
     case 0:
     case 1:
-        You_feel("vaguely nervous.");
+        /*KR You_feel("vaguely nervous."); */
+        You_feel("왠지 모르게 불안해진다.");
         break;
     case 2:
         if (!Blind)
+#if 0 /*KR: 원본*/
             You("notice a %s glow surrounding you.", hcolor(NH_BLACK));
+#else
+            You("당신을 둘러싼 %s 빛을 알아차렸다.", hcolor(NH_BLACK));
+#endif
         rndcurse();
         break;
     case 3:
@@ -718,6 +755,7 @@ wizdead()
 }
 
 const char *const random_insult[] = {
+#if 0 /*KR: 원본*/
     "antic",      "blackguard",   "caitiff",    "chucklehead",
     "coistrel",   "craven",       "cretin",     "cur",
     "dastard",    "demon fodder", "dimwit",     "dolt",
@@ -726,15 +764,34 @@ const char *const random_insult[] = {
     "rattlepate", "reprobate",    "scapegrace", "varlet",
     "villein", /* (sic.) */
     "wittol",     "worm",         "wretch",
+#else
+    "광대 같은 놈", "악당",      "비열한 놈", "얼간이",
+    "불한당",       "겁쟁이",    "백치",      "똥개",
+    "비겁자",       "악마의 밥", "머저리",    "바보",
+    "멍청이",       "노상강도",  "천치",      "악한",
+    "저주받은 놈",  "악종",      "겁쟁이",    "비겁자",
+    "빈머리",       "타락한 놈", "망나니",    "악당",
+    "농노", /* (sic.) */
+    "얼간이",       "벌레만도 못한 놈",       "불쌍한 놈",
+#endif
 };
 
 const char *const random_malediction[] = {
+#if 0 /*KR: 원본*/
     "Hell shall soon claim thy remains,", "I chortle at thee, thou pathetic",
     "Prepare to die, thou", "Resistance is useless,",
     "Surrender or die, thou", "There shall be no mercy, thou",
     "Thou shalt repent of thy cunning,", "Thou art as a flea to me,",
     "Thou art doomed,", "Thy fate is sealed,",
     "Verily, thou shalt be one dead"
+#else
+    "지옥이 곧 네 시체를 거두러 올 것이다,", "가소롭구나, 이 불쌍한 놈",
+    "네놈, 죽을 준비나 해라", "저항해도 소용없다,",
+    "네놈, 항복하지 않으면 죽음뿐이다", "네놈, 자비는 없을 것이다",
+    "네놈의 잔꾀를 후회하게 만들어주마,", "네놈은 내게 벼룩 같은 존재다,",
+    "네놈의 운명도 여기까지다,", "네놈의 운명은 결정되었다,",
+    "진실로, 네놈은 곧 죽을 것이다"
+#endif
 };
 
 /* Insult or intimidate the player */
@@ -746,27 +803,52 @@ register struct monst *mtmp;
         return;
     if (mtmp->iswiz) {
         if (!rn2(5)) /* typical bad guy action */
+#if 0                /*KR: 원본*/
             pline("%s laughs fiendishly.", Monnam(mtmp));
+#else
+            pline("%s 사악하게 웃는다.", append_josa(Monnam(mtmp), "이"));
+#endif
         else if (u.uhave.amulet && !rn2(SIZE(random_insult)))
-            verbalize("Relinquish the amulet, %s!",
+            /*KR verbalize("Relinquish the amulet, %s!", */
+            verbalize("부적을 내놓아라, %s!",
                       random_insult[rn2(SIZE(random_insult))]);
         else if (u.uhp < 5 && !rn2(2)) /* Panic */
+#if 0                                  /*KR: 원본*/
             verbalize(rn2(2) ? "Even now thy life force ebbs, %s!"
                              : "Savor thy breath, %s, it be thy last!",
                       random_insult[rn2(SIZE(random_insult))]);
+#else
+            verbalize(rn2(2) ? "지금도 네 생명력은 빠져나가고 있다, %s!"
+                             : "마지막 숨결을 음미해라, %s!",
+                      random_insult[rn2(SIZE(random_insult))]);
+#endif
         else if (mtmp->mhp < 5 && !rn2(2)) /* Parthian shot */
-            verbalize(rn2(2) ? "I shall return." : "I'll be back.");
+            /*KR verbalize(rn2(2) ? "I shall return." : "I'll be back."); */
+            verbalize(rn2(2) ? "나는 돌아올 것이다." : "반드시 돌아오겠다.");
         else
+#if 0 /*KR: 원본*/
             verbalize("%s %s!",
                       random_malediction[rn2(SIZE(random_malediction))],
                       random_insult[rn2(SIZE(random_insult))]);
+#else /*KR: KRNethack 맞춤 번역 (한국어 어순)*/
+            /* 한국어에서는 "지옥이 널 부른다, 이 바보야!" 처럼 자연스럽게
+             * 이어지도록 공백 추가 */
+            verbalize("%s %s!",
+                      random_malediction[rn2(SIZE(random_malediction))],
+                      random_insult[rn2(SIZE(random_insult))]);
+#endif
     } else if (is_lminion(mtmp)
                && !(mtmp->isminion && EMIN(mtmp)->renegade)) {
         com_pager(rn2(QTN_ANGELIC - 1 + (Hallucination ? 1 : 0))
                   + QT_ANGELIC);
     } else {
         if (!rn2(is_minion(mtmp->data) ? 100 : 5))
+#if 0 /*KR: 원본*/
             pline("%s casts aspersions on your ancestry.", Monnam(mtmp));
+#else
+            pline("%s 당신의 조상을 모욕했다.",
+                  append_josa(Monnam(mtmp), "이"));
+#endif
         else
             com_pager(rn2(QTN_DEMONIC) + QT_DEMONIC);
     }
