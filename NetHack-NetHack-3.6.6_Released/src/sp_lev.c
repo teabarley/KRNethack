@@ -1696,9 +1696,26 @@ struct mkroom *croom;
 #endif
                 for (i = 0; i < NUM_OBJECTS; i++)
                     if (OBJ_NAME(objects[i])
-                        /*KR && !strcmp(OBJ_NAME(objects[i]), m->appear_as.str)) */
+#if 0 /*KR:T*/
+                        && !strcmp(OBJ_NAME(objects[i]), m->appear_as.str))
+#else
                         && !strcmp(OBJ_NAME(objects[i]), search_str))
+#endif
                         break;
+
+#if 1 /*KR:T*/
+                /* OBJ_NAME(진짜 이름)에서 못 찾았다면, OBJ_DESCR(외형
+                 * 묘사)에서 다시 찾기 */
+                if (i == NUM_OBJECTS) {
+                    for (i = 0; i < NUM_OBJECTS; i++) {
+                        if (OBJ_DESCR(objects[i])
+                            && (!strcmp(OBJ_DESCR(objects[i]), search_str)
+                                || !strcmp(OBJ_DESCR(objects[i]),
+                                           m->appear_as.str)))
+                            break;
+                    }
+                }
+#endif
                 if (i == NUM_OBJECTS) {
                     impossible("create_monster: can't find object \"%s\"",
                                m->appear_as.str);

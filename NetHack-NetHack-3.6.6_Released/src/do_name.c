@@ -275,6 +275,7 @@ const char *goal;
         } else {
             Sprintf(kbuf, "'%s'", visctrl(Cmd.spkeys[NHKF_GETPOS_PICK]));
         }
+#if 0 /*KR: 원본*/
         Sprintf(sbuf, "Type a %s when you are at the right place.", kbuf);
         putstr(tmpwin, 0, sbuf);
         if (doing_what_is) {
@@ -299,6 +300,31 @@ const char *goal;
     }
     if (!force)
         putstr(tmpwin, 0, "Type Space or Escape when you're done.");
+#else /*KR: KRNethack 맞춤 번역 */
+        Sprintf(sbuf, "원하는 곳에 도착하면 %s 중 하나를 누르십시오.", kbuf);
+        putstr(tmpwin, 0, sbuf);
+        if (doing_what_is) {
+            Sprintf(sbuf,
+                    "  '%s' 현재 위치 설명, '추가 정보' 표시 후 다른 위치로 "
+                    "이동.",
+                    visctrl(Cmd.spkeys[NHKF_GETPOS_PICK_V]));
+            putstr(tmpwin, 0, sbuf);
+            Sprintf(sbuf, "  '%s' 현재 위치 설명,%s 다른 위치로 이동;",
+                    visctrl(Cmd.spkeys[NHKF_GETPOS_PICK]),
+                    flags.help ? " '추가 정보'가 있으면 묻고" : "");
+            putstr(tmpwin, 0, sbuf);
+            Sprintf(sbuf,
+                    "  '%s' 현재 위치 설명 후, 곧바로 다른 위치로 이동;",
+                    visctrl(Cmd.spkeys[NHKF_GETPOS_PICK_Q]));
+            putstr(tmpwin, 0, sbuf);
+            Sprintf(sbuf, "  '%s' 현재 위치 설명 후, 탐색 종료;",
+                    visctrl(Cmd.spkeys[NHKF_GETPOS_PICK_O]));
+            putstr(tmpwin, 0, sbuf);
+        }
+    }
+    if (!force)
+        putstr(tmpwin, 0, "종료하려면 Space나 Escape를 누르십시오.");
+#endif
     putstr(tmpwin, 0, "");
     display_nhwindow(tmpwin, TRUE);
     destroy_nhwindow(tmpwin);
@@ -665,9 +691,14 @@ int gloc;
 
     if (gcount < 2) { /* gcount always includes the hero */
         free((genericptr_t) garr);
+#if 0 /*KR: 원본*/
         You("cannot %s %s.",
             iflags.getloc_filter == GFILTER_VIEW ? "see" : "detect",
             gloc_descr[gloc][0]);
+#else /*KR: KRNethack 맞춤 번역 */
+        You("%s %s 수 없다.", append_josa(gloc_descr[gloc][0], "을"),
+            iflags.getloc_filter == GFILTER_VIEW ? "볼" : "찾을");
+#endif
         return FALSE;
     }
 
@@ -696,10 +727,17 @@ int gloc;
         }
     }
 
+#if 0 /*KR: 원본*/
     Sprintf(tmpbuf, "Pick %s%s%s",
             an(gloc_descr[gloc][1]),
             gloc_filtertxt[iflags.getloc_filter],
             iflags.getloc_travelmode ? " for travel destination" : "");
+#else /*KR: KRNethack 맞춤 번역 */
+    Sprintf(tmpbuf, "%s%s목표로 삼을 %s 선택하십시오",
+            iflags.getloc_travelmode ? "이동 목적지용 " : "",
+            gloc_filtertxt[iflags.getloc_filter],
+            append_josa(gloc_descr[gloc][1], "을"));
+#endif
     end_menu(tmpwin, tmpbuf);
     pick_cnt = select_menu(tmpwin, PICK_ONE, &picks);
     destroy_nhwindow(tmpwin);
@@ -761,6 +799,7 @@ const char *goal;
         mMoOdDxX[i] = Cmd.spkeys[mMoOdDxX_def[i]];
     mMoOdDxX[SIZE(mMoOdDxX_def)] = '\0';
 
+#if 0 /*KR: 원본*/
     if (!goal)
         goal = "desired location";
     if (flags.verbose) {
@@ -768,6 +807,15 @@ const char *goal;
               visctrl(Cmd.spkeys[NHKF_GETPOS_HELP]));
         msg_given = TRUE;
     }
+#else /*KR: KRNethack 맞춤 번역 */
+    if (!goal)
+        goal = "원하는 위치";
+    if (flags.verbose) {
+        pline("(도움말을 보려면 '%s'를 누르십시오)",
+              visctrl(Cmd.spkeys[NHKF_GETPOS_HELP]));
+        msg_given = TRUE;
+    }
+#endif
     cx = ccp->x;
     cy = ccp->y;
 #ifdef CLIPPING
@@ -780,7 +828,8 @@ const char *goal;
 #endif
     for (;;) {
         if (show_goal_msg) {
-            pline("Move cursor to %s:", goal);
+            /*KR pline("Move cursor to %s:", goal); */
+            pline("커서를 %s(으)로 이동시키십시오:", goal);
             curs(WIN_MAP, cx, cy);
             flush_screen(0);
             show_goal_msg = FALSE;
@@ -888,19 +937,32 @@ const char *goal;
             goto nxtc;
         } else if (c == Cmd.spkeys[NHKF_GETPOS_AUTODESC]) {
             iflags.autodescribe = !iflags.autodescribe;
+#if 0 /*KR: 원본*/
             pline("Automatic description %sis %s.",
                   flags.verbose ? "of features under cursor " : "",
                   iflags.autodescribe ? "on" : "off");
+#else /*KR: KRNethack 맞춤 번역 */
+            pline("%s자동 설명: %s",
+                  flags.verbose ? "커서가 가리키는 지형 " : "",
+                  iflags.autodescribe ? "켜짐" : "꺼짐");
+#endif
             if (!iflags.autodescribe)
                 show_goal_msg = TRUE;
             msg_given = TRUE;
             goto nxtc;
         } else if (c == Cmd.spkeys[NHKF_GETPOS_LIMITVIEW]) {
+#if 0 /*KR: 원본*/
             static const char *const view_filters[NUM_GFILTER] = {
                 "Not limiting targets",
                 "Limiting targets to those in sight",
                 "Limiting targets to those in same area"
             };
+#else /*KR: KRNethack 맞춤 번역 */
+            static const char *const view_filters[NUM_GFILTER] = {
+                "목표를 제한하지 않음", "목표를 시야 내부로 제한함",
+                "목표를 같은 구역으로 제한함"
+            };
+#endif
 
             iflags.getloc_filter = (iflags.getloc_filter + 1) % NUM_GFILTER;
             for (i = 0; i < NUM_GLOCS; i++) {
@@ -915,10 +977,18 @@ const char *goal;
             goto nxtc;
         } else if (c == Cmd.spkeys[NHKF_GETPOS_MENU]) {
             iflags.getloc_usemenu = !iflags.getloc_usemenu;
+#if 0 /*KR: 원본*/
             pline("%s a menu to show possible targets%s.",
                   iflags.getloc_usemenu ? "Using" : "Not using",
                   iflags.getloc_usemenu
                       ? " for 'm|M', 'o|O', 'd|D', and 'x|X'" : "");
+#else /*KR: KRNethack 맞춤 번역 */
+            pline("가능한 목표를 보여주는 메뉴를 사용%s.%s",
+                  iflags.getloc_usemenu ? "합니다" : "하지 않습니다",
+                  iflags.getloc_usemenu
+                      ? " ('m|M', 'o|O', 'd|D', 'x|X' 키에 적용)"
+                      : "");
+#endif
             msg_given = TRUE;
             goto nxtc;
         } else if (c == Cmd.spkeys[NHKF_GETPOS_SELF]) {
@@ -931,8 +1001,13 @@ const char *goal;
             goto nxtc;
         } else if (c == Cmd.spkeys[NHKF_GETPOS_MOVESKIP]) {
             iflags.getloc_moveskip = !iflags.getloc_moveskip;
+#if 0 /*KR: 원본*/
             pline("%skipping over similar terrain when fastmoving the cursor.",
                   iflags.getloc_moveskip ? "S" : "Not s");
+#else /*KR: KRNethack 맞춤 번역 */
+            pline("고속 이동 시 비슷한 지형을 건너뛰%s.",
+                  iflags.getloc_moveskip ? "며 이동합니다" : "지 않습니다");
+#endif
         } else if ((cp = index(mMoOdDxX, c)) != 0) { /* 'm|M', 'o|O', &c */
             /* nearest or farthest monster or object or door or unexplored */
             int gtmp = (int) (cp - mMoOdDxX), /* 0..7 */
@@ -1024,26 +1099,38 @@ const char *goal;
                             } /* column */
                         }     /* row */
                     }         /* pass */
-                    pline("Can't find dungeon feature '%c'.", c);
+                    /*KR pline("Can't find dungeon feature '%c'.", c); */
+                    pline("미궁의 지형 '%c'를 찾을 수 없습니다.", c);
                     msg_given = TRUE;
                     goto nxtc;
                 } else {
                     char note[QBUFSZ];
 
                     if (!force)
-                        Strcpy(note, "aborted");
+                   /*KR Strcpy(note, "aborted"); */
+                        Strcpy(note, "취소됨");
                     else /* hjkl */
+#if 0                    /*KR: 원본*/
                         Sprintf(note, "use '%c', '%c', '%c', '%c' or '%s'",
                                 Cmd.move_W, Cmd.move_S, Cmd.move_N, Cmd.move_E,
                                 visctrl(Cmd.spkeys[NHKF_GETPOS_PICK]));
                     pline("Unknown direction: '%s' (%s).", visctrl((char) c),
                           note);
+#else                    /*KR: KRNethack 맞춤 번역 */
+                        Sprintf(note, "'%c', '%c', '%c', '%c' 또는 '%s' 사용",
+                                Cmd.move_W, Cmd.move_S, Cmd.move_N,
+                                Cmd.move_E,
+                                visctrl(Cmd.spkeys[NHKF_GETPOS_PICK]));
+                    pline("알 수 없는 방향: '%s' (%s).", visctrl((char) c),
+                          note);
+#endif
                     msg_given = TRUE;
                 } /* k => matching */
             }     /* !quitchars */
             if (force)
                 goto nxtc;
-            pline("Done.");
+            /*KR pline("Done."); */
+            pline("완료.");
             msg_given = FALSE; /* suppress clear */
             cx = -1;
             cy = 0;
@@ -1191,13 +1278,22 @@ char *monnambuf, *usrbuf;
         /* catch trying to name "the {priest,Angel} of Crom" as "Crom" */
         || ((p = strstri(monnambuf, " of ")) != 0
             && fuzzymatch(usrbuf, p + 4, " -_", TRUE))) {
+#if 0 /*KR: 원본*/
         pline("%s is already called %s.",
               upstart(strcpy(pronounbuf, mhe(mtmp))), monnambuf);
+#else /*KR: KRNethack 맞춤 번역 */
+        pline("%s 이미 %s(이)라고 불리고 있다.",
+              append_josa(upstart(strcpy(pronounbuf, mhe(mtmp))), "은"),
+              monnambuf);
+#endif
         return TRUE;
     } else if (mtmp->data == &mons[PM_JUIBLEX]
                && strstri(monnambuf, "Juiblex")
                && !strcmpi(usrbuf, "Jubilex")) {
-        pline("%s doesn't like being called %s.", upstart(monnambuf), usrbuf);
+        /*KR pline("%s doesn't like being called %s.", 
+         *         upstart(monnambuf), usrbuf); */
+        pline("%s %s(이)라고 불리는 것을 싫어한다.",
+              append_josa(upstart(monnambuf), "은"), usrbuf);
         return TRUE;
     }
     return FALSE;
@@ -1213,12 +1309,14 @@ do_mname()
     struct monst *mtmp = 0;
 
     if (Hallucination) {
-        You("would never recognize it anyway.");
+        /*KR You("would never recognize it anyway."); */
+        You("어쨌든 그것을 절대 알아볼 수 없을 것이다.");
         return;
     }
     cc.x = u.ux;
     cc.y = u.uy;
-    if (getpos(&cc, FALSE, "the monster you want to name") < 0
+    /*KR if (getpos(&cc, FALSE, "the monster you want to name") < 0 */
+    if (getpos(&cc, FALSE, "이름을 지어줄 몬스터") < 0
         || !isok(cc.x, cc.y))
         return;
     cx = cc.x, cy = cc.y;
@@ -1227,8 +1325,13 @@ do_mname()
         if (u.usteed && canspotmon(u.usteed)) {
             mtmp = u.usteed;
         } else {
+#if 0 /*KR: 원본*/
             pline("This %s creature is called %s and cannot be renamed.",
                   beautiful(), plname);
+#else /*KR: KRNethack 맞춤 번역 */
+            pline("이 %s 생명체는 %s(이)라 불리며, 이름을 바꿀 수 없다.",
+                  beautiful(), plname);
+#endif
             return;
         }
     } else
@@ -1240,12 +1343,18 @@ do_mname()
                 || mtmp->mundetected || M_AP_TYPE(mtmp) == M_AP_FURNITURE
                 || M_AP_TYPE(mtmp) == M_AP_OBJECT
                 || (mtmp->minvis && !See_invisible)))) {
-        pline("I see no monster there.");
+        /*KR pline("I see no monster there."); */
+        pline("그곳에는 몬스터가 보이지 않는다.");
         return;
     }
     /* special case similar to the one in lookat() */
+#if 0 /*KR: 원본*/
     Sprintf(qbuf, "What do you want to call %s?",
             distant_monnam(mtmp, ARTICLE_THE, monnambuf));
+#else /*KR: KRNethack 맞춤 번역 */
+    Sprintf(qbuf, "%s 무엇이라고 부르겠습니까?",
+            append_josa(distant_monnam(mtmp, ARTICLE_THE, monnambuf), "을"));
+#endif
     buf[0] = '\0';
 #ifdef EDIT_GETLIN
     /* if there's an existing name, make it be the default answer */
@@ -1270,15 +1379,27 @@ do_mname()
      */
     if ((mtmp->data->geno & G_UNIQ) && !mtmp->ispriest) {
         if (!alreadynamed(mtmp, monnambuf, buf))
-            pline("%s doesn't like being called names!", upstart(monnambuf));
+#if 0 /*KR: 원본*/
+            pline("%s doesn't like being called names!",
+                  upstart(monnambuf));
+#else
+            pline("%s 별명으로 불리는 것을 좋아하지 않는다!",
+                  append_josa(upstart(monnambuf), "은"));
+#endif
     } else if (mtmp->isshk
                && !(Deaf || mtmp->msleeping || !mtmp->mcanmove
                     || mtmp->data->msound <= MS_ANIMAL)) {
         if (!alreadynamed(mtmp, monnambuf, buf))
-            verbalize("I'm %s, not %s.", shkname(mtmp), buf);
+            /*KR verbalize("I'm %s, not %s.", shkname(mtmp), buf); */
+            verbalize("나는 %s(이)지, %s(이)가 아니다.", shkname(mtmp), buf);
     } else if (mtmp->ispriest || mtmp->isminion || mtmp->isshk) {
         if (!alreadynamed(mtmp, monnambuf, buf))
+#if 0 /*KR: 원본*/
             pline("%s will not accept the name %s.", upstart(monnambuf), buf);
+#else /*KR: KRNethack 맞춤 번역 */
+            pline("%s %s라는 이름을 받아들이지 않을 것이다.",
+                  append_josa(upstart(monnambuf), "은"), buf);
+#endif
     } else
         (void) christen_monst(mtmp, buf);
 }
@@ -1301,13 +1422,23 @@ register struct obj *obj;
 
     /* Do this now because there's no point in even asking for a name */
     if (obj->otyp == SPE_NOVEL) {
+#if 0 /*KR: 원본*/
         pline("%s already has a published name.", Ysimple_name2(obj));
+#else
+        pline("%s 이미 출판된 이름이 있다.",
+              append_josa(Ysimple_name2(obj), "은"));
+#endif
         return;
     }
 
+#if 0 /*KR: 원본*/
     Sprintf(qbuf, "What do you want to name %s ",
             is_plural(obj) ? "these" : "this");
     (void) safe_qbuf(qbuf, qbuf, "?", obj, xname, simpleonames, "item");
+#else /*KR: KRNethack 맞춤 번역 */
+    (void) safe_qbuf(qbuf, "", "에 무엇이라고 이름을 붙이겠습니까?", obj,
+                     xname, simpleonames, "이것");
+#endif
     buf[0] = '\0';
 #ifdef EDIT_GETLIN
     /* if there's an existing name, make it be the default answer */
@@ -1335,7 +1466,8 @@ register struct obj *obj;
         Strcpy(buf, aname);
 
     if (obj->oartifact) {
-        pline_The("artifact seems to resist the attempt.");
+        /*KR pline_The("artifact seems to resist the attempt."); */
+        pline_The("아티팩트는 그 시도에 저항하는 것 같다.");
         return;
     } else if (restrict_name(obj, buf) || exist_artifact(obj->otyp, buf)) {
         /* this used to change one letter, substituting a value
@@ -1355,9 +1487,15 @@ register struct obj *obj;
         do {
             wipeout_text(bufp, rn2_on_display_rng(2), (unsigned) 0);
         } while (!strcmp(buf, bufcpy));
+#if 0 /*KR: 원본*/
         pline("While engraving, your %s slips.", body_part(HAND));
+#else
+        pline("이름을 새기려던 찰나, 당신의 %s 미끄러졌다.",
+              append_josa(body_part(HAND), "이"));
+#endif
         display_nhwindow(WIN_MESSAGE, FALSE);
-        You("engrave: \"%s\".", buf);
+        /*KR You("engrave: \"%s\".", buf); */
+        You("\"%s\"(이)라고 새겼다.", buf);
         /* violate illiteracy conduct since hero attempted to write
            a valid artifact name */
         u.uconduct.literate++;
@@ -1444,11 +1582,10 @@ docallcmd()
     start_menu(win);
     any = zeroany;
     any.a_char = 'm'; /* group accelerator 'C' */
+#if 0 /*KR: 원본*/
     add_menu(win, NO_GLYPH, &any, abc ? 0 : any.a_char, 'C', ATR_NONE,
              "a monster", MENU_UNSELECTED);
     if (invent) {
-        /* we use y and n as accelerators so that we can accept user's
-           response keyed to old "name an individual object?" prompt */
         any.a_char = 'i'; /* group accelerator 'y' */
         add_menu(win, NO_GLYPH, &any, abc ? 0 : any.a_char, 'y', ATR_NONE,
                  "a particular object in inventory", MENU_UNSELECTED);
@@ -1466,6 +1603,28 @@ docallcmd()
     add_menu(win, NO_GLYPH, &any, abc ? 0 : any.a_char, 'l', ATR_NONE,
              "record an annotation for the current level", MENU_UNSELECTED);
     end_menu(win, "What do you want to name?");
+#else /*KR: KRNethack 맞춤 번역 */
+    add_menu(win, NO_GLYPH, &any, abc ? 0 : any.a_char, 'C', ATR_NONE,
+             "몬스터", MENU_UNSELECTED);
+    if (invent) {
+        any.a_char = 'i'; /* group accelerator 'y' */
+        add_menu(win, NO_GLYPH, &any, abc ? 0 : any.a_char, 'y', ATR_NONE,
+                 "소지품 중 특정 물건", MENU_UNSELECTED);
+        any.a_char = 'o'; /* group accelerator 'n' */
+        add_menu(win, NO_GLYPH, &any, abc ? 0 : any.a_char, 'n', ATR_NONE,
+                 "소지품 중 특정 물건의 종류", MENU_UNSELECTED);
+    }
+    any.a_char = 'f'; /* group accelerator ',' (or ':' instead?) */
+    add_menu(win, NO_GLYPH, &any, abc ? 0 : any.a_char, ',', ATR_NONE,
+             "바닥에 있는 물건의 종류", MENU_UNSELECTED);
+    any.a_char = 'd'; /* group accelerator '\' */
+    add_menu(win, NO_GLYPH, &any, abc ? 0 : any.a_char, '\\', ATR_NONE,
+             "발견 리스트에 있는 물건의 종류", MENU_UNSELECTED);
+    any.a_char = 'a'; /* group accelerator 'l' */
+    add_menu(win, NO_GLYPH, &any, abc ? 0 : any.a_char, 'l', ATR_NONE,
+             "현재 층에 대한 주석 기록", MENU_UNSELECTED);
+    end_menu(win, "무엇에 이름을 붙이겠습니까?");
+#endif
     if (select_menu(win, PICK_ONE, &pick_list) > 0) {
         ch = pick_list[0].item.a_char;
         free((genericptr_t) pick_list);
@@ -1496,10 +1655,12 @@ docallcmd()
             (void) xname(obj);
 
             if (!obj->dknown) {
-                You("would never recognize another one.");
+                /*KR You("would never recognize another one."); */
+                You("어차피 다른 것은 절대 알아보지 못할 것이다.");
 #if 0
             } else if (!objtyp_is_callable(obj->otyp)) {
-                You("know those as well as you ever will.");
+                /*KR You("know those as well as you ever will."); */
+                You("이미 그것들에 대해 충분히 알고 있다.");
 #endif
             } else {
                 docall(obj);
@@ -1564,12 +1725,20 @@ struct obj *obj;
     flush_screen(1); /* buffered updates might matter to player's response */
 
     if (obj->oclass == POTION_CLASS && obj->fromsink)
+#if 0 /*KR: 원본*/
         /* kludge, meaning it's sink water */
         Sprintf(qbuf, "Call a stream of %s fluid:",
                 OBJ_DESCR(objects[obj->otyp]));
     else
         (void) safe_qbuf(qbuf, "Call ", ":", obj,
                          docall_xname, simpleonames, "thing");
+#else /*KR: KRNethack 맞춤 번역 */
+        Sprintf(qbuf, "이 한 줄기의 %s 액체를 무엇이라 부르겠습니까:",
+                OBJ_DESCR(objects[obj->otyp]));
+    else
+        (void) safe_qbuf(qbuf, "", "에 무엇이라 이름을 붙이겠습니까?", obj,
+                         docall_xname, simpleonames, "이것");
+#endif
     /* pointer to old name */
     str1 = &(objects[obj->otyp].oc_uname);
     buf[0] = '\0';
@@ -1614,8 +1783,12 @@ namefloorobj()
     /* "dot for under/over you" only makes sense when the cursor hasn't
        been moved off the hero's '@' yet, but there's no way to adjust
        the help text once getpos() has started */
+#if 0 /*KR: 원본*/
     Sprintf(buf, "object on map (or '.' for one %s you)",
             (u.uundetected && hides_under(youmonst.data)) ? "over" : "under");
+#else /*KR: KRNethack 맞춤 번역 */
+    Sprintf(buf, "지도 상의 물건 (발 밑의 물건은 '.')");
+#endif
     if (getpos(&cc, FALSE, buf) < 0 || cc.x <= 0)
         return;
     if (cc.x == u.ux && cc.y == u.uy) {
@@ -1628,8 +1801,13 @@ namefloorobj()
     }
     if (!obj) {
         /* "under you" is safe here since there's no object to hide under */
+#if 0 /*KR: 원본*/
         pline("There doesn't seem to be any object %s.",
               (cc.x == u.ux && cc.y == u.uy) ? "under you" : "there");
+#else /*KR: KRNethack 맞춤 번역 */
+        pline("%s에는 어떤 물건도 없는 것 같다.",
+              (cc.x == u.ux && cc.y == u.uy) ? "당신의 발 밑" : "그곳");
+#endif
         return;
     }
     /* note well: 'obj' might be an instance of STRANGE_OBJECT if target
@@ -1662,16 +1840,31 @@ namefloorobj()
         /* traditional */
         unames[4] = roguename();
         /* silly */
+#if 0 /*KR: 원본*/
         unames[5] = "Wibbly Wobbly";
         pline("%s %s to call you \"%s.\"",
               The(buf), use_plural ? "decide" : "decides",
               unames[rn2_on_display_rng(SIZE(unames))]);
+#else /*KR: KRNethack 맞춤 번역 */
+        unames[5] = "비틀비틀 흔들흔들";
+        pline("%s 당신을 \"%s\"(이)라고 부르기로 결정했다.",
+              append_josa(The(buf), "은"),
+              unames[rn2_on_display_rng(SIZE(unames))]);
+#endif
     } else if (!objtyp_is_callable(obj->otyp)) {
+#if 0 /*KR: 원본*/
         pline("%s %s can't be assigned a type name.",
               use_plural ? "Those" : "That", buf);
+#else /*KR: KRNethack 맞춤 번역 */
+        pline("%s 종류의 이름을 지정할 수 없다.", append_josa(buf, "에는"));
+#endif
     } else if (!obj->dknown) {
+#if 0 /*KR: 원본*/
         You("don't know %s %s well enough to name %s.",
             use_plural ? "those" : "that", buf, use_plural ? "them" : "it");
+#else /*KR: KRNethack 맞춤 번역 */
+        You("%s 이름을 지어줄 만큼 잘 알지 못한다.", append_josa(buf, "에"));
+#endif
     } else {
         docall(obj);
     }
@@ -1743,8 +1936,10 @@ boolean called;
     struct permonst *mdat = mtmp->data;
     const char *pm_name = mdat->mname;
     boolean do_hallu, do_invis, do_it, do_saddle, do_name;
+#if 0 /*KR bp를 사용하지 않게 됐음 */
     boolean name_at_start, has_adjectives;
     char *bp;
+#endif
 
 #if 1 /*KR: 몬스터 이름 한글 번역 사전 가로채기 */
     pm_name = get_kr_name(pm_name);
@@ -1767,7 +1962,8 @@ boolean called;
 
     /* unseen monsters, etc.  Use "it" */
     if (do_it) {
-        Strcpy(buf, "it");
+        /*KR Strcpy(buf, "it"); */
+        Strcpy(buf, "무언가");
         return buf;
     }
 
@@ -1793,9 +1989,11 @@ boolean called;
     /* an "aligned priest" not flagged as a priest or minion should be
        "priest" or "priestess" (normally handled by priestname()) */
     if (mdat == &mons[PM_ALIGNED_PRIEST])
-        pm_name = mtmp->female ? "priestess" : "priest";
+        /*KR pm_name = mtmp->female ? "priestess" : "priest"; */
+        pm_name = mtmp->female ? "여사제" : "사제";
     else if (mdat == &mons[PM_HIGH_PRIEST] && mtmp->female)
-        pm_name = "high priestess";
+        /*KR pm_name = "high priestess"; */
+        pm_name = "고위 여사제";
 
     /* Shopkeepers: use shopkeeper name.  For normal shopkeepers, just
      * "Asidonhopo"; for unusual ones, "Asidonhopo the invisible
@@ -1803,6 +2001,7 @@ boolean called;
      * none of this applies.
      */
     if (mtmp->isshk && !do_hallu) {
+#if 0 /*KR: 원본*/
         if (adjective && article == ARTICLE_THE) {
             /* pathological case: "the angry Asidonhopo the blue dragon"
                sounds silly */
@@ -1819,6 +2018,20 @@ boolean called;
             Strcat(buf, "invisible ");
         Strcat(buf, pm_name);
         return buf;
+#else /*KR: KRNethack 맞춤 번역 (어순 변경) */
+        if (mdat == &mons[PM_SHOPKEEPER] && !do_invis) {
+            Strcpy(buf, shkname(mtmp));
+        } else {
+            Sprintf(buf, "%s(이)라는 이름의 %s%s", shkname(mtmp),
+                    do_invis ? "보이지 않는 " : "", pm_name);
+        }
+        if (adjective && article == ARTICLE_THE) {
+            char tempbuf[BUFSZ];
+            Sprintf(tempbuf, "%s %s", adjective, buf);
+            Strcpy(buf, tempbuf);
+        }
+        return buf;
+#endif
     }
 
     /* Put the adjectives in the buffer */
@@ -1829,8 +2042,11 @@ boolean called;
         Strcat(buf, "보이지 않는 ");
     if (do_saddle && (mtmp->misc_worn_check & W_SADDLE) && !Blind
         && !Hallucination)
-        Strcat(buf, "saddled ");
+   /*KR Strcat(buf, "saddled "); */
+        Strcat(buf, "안장을 얹은 ");
+#if 0 /*KR*/
     has_adjectives = (buf[0] != '\0');
+#endif
 
     /* Put the actual monster name or type into the buffer now.
        Remember whether the buffer starts with a personal name. */
@@ -1839,14 +2055,19 @@ boolean called;
         char *rname = rndmonnam(&rnamecode);
 
         Strcat(buf, rname);
+#if 0 /*KR*/
         name_at_start = bogon_is_pname(rnamecode);
+#endif
     } else if (do_name && has_mname(mtmp)) {
         char *name = MNAME(mtmp);
 
         if (mdat == &mons[PM_GHOST]) {
             /*KR Sprintf(eos(buf), "%s ghost", s_suffix(name)); */
             Sprintf(buf, "%s의 유령", name);
+#if 0 /*KR*/
             name_at_start = TRUE;
+#endif
+#if 0 /*KR:T 한국어에서는 'the' 분리 로직이 불필요함 */
         } else if (called) {
             Sprintf(eos(buf), "%s called %s", pm_name, name);
             name_at_start = (boolean) type_is_pname(mdat);
@@ -1863,21 +2084,40 @@ boolean called;
             article = ARTICLE_NONE;
             name_at_start = TRUE;
         } else {
+#else /*KR: (위에서 이미 직업 칭호를 앞으로 뺐음) */
+        } else if (called) {
+            Sprintf(eos(buf), "%s(이)라고 불리는 %s", name, pm_name);
+#if 0 /*KR*/
+            name_at_start = (boolean) type_is_pname(mdat);
+#endif
+        } else {
+#endif
             Strcat(buf, name);
+#if 0 /*KR*/
             name_at_start = TRUE;
+#endif
         }
     } else if (is_mplayer(mdat) && !In_endgame(&u.uz)) {
         char pbuf[BUFSZ];
 
         Strcpy(pbuf, rank_of((int) mtmp->m_lev, monsndx(mdat),
                              (boolean) mtmp->female));
+#if 0 /*KR*/
         Strcat(buf, lcase(pbuf));
+#else
+        Strcat(buf, pbuf);
+#endif
+#if 0 /*KR*/
         name_at_start = FALSE;
+#endif
     } else {
         Strcat(buf, pm_name);
+#if 0 /*KR*/
         name_at_start = (boolean) type_is_pname(mdat);
+#endif
     }
 
+#if 0 /*KR*/
     if (name_at_start && (article == ARTICLE_YOUR || !has_adjectives)) {
         if (mdat == &mons[PM_WIZARD_OF_YENDOR])
             article = ARTICLE_THE;
@@ -1886,9 +2126,10 @@ boolean called;
     } else if ((mdat->geno & G_UNIQ) && article == ARTICLE_A) {
         article = ARTICLE_THE;
     }
-
+#endif
     {
         char buf2[BUFSZ];
+
 
 #if 0 /*KR*/
         switch (article) {
@@ -2055,8 +2296,12 @@ char *outbuf;
        its own obfuscation) */
     if (mon->data == &mons[PM_HIGH_PRIEST] && !Hallucination
         && Is_astralevel(&u.uz) && distu(mon->mx, mon->my) > 2) {
+#if 0 /*KR: 원본*/
         Strcpy(outbuf, article == ARTICLE_THE ? "the " : "");
         Strcat(outbuf, mon->female ? "high priestess" : "high priest");
+#else /*KR: KRNethack 맞춤 번역 */
+        Strcpy(outbuf, mon->female ? "고위 여사제" : "고위 사제");
+#endif
     } else {
         Strcpy(outbuf, x_monnam(mon, article, (char *) 0, 0, TRUE));
     }
@@ -2075,6 +2320,7 @@ struct monst *mon, *other_mon;
         outbuf = mon_nam(mon);
     } else {
         outbuf = nextmbuf();
+#if 0 /*KR: 원본*/
         switch (pronoun_gender(mon, FALSE)) {
         case 0:
             Strcpy(outbuf, "himself");
@@ -2086,6 +2332,9 @@ struct monst *mon, *other_mon;
             Strcpy(outbuf, "itself");
             break;
         }
+#else /*KR: (공통 재귀 대명사 사용) */
+        Strcpy(outbuf, "자기 자신");
+#endif
     }
     return outbuf;
 }
@@ -2205,6 +2454,7 @@ roguename()
 }
 
 static NEARDATA const char *const hcolors[] = {
+#if 0 /*KR: 원본*/
     "ultraviolet", "infrared", "bluish-orange", "reddish-green", "dark white",
     "light black", "sky blue-pink", "salty", "sweet", "sour", "bitter",
     "striped", "spiral", "swirly", "plaid", "checkered", "argyle", "paisley",
@@ -2212,6 +2462,16 @@ static NEARDATA const char *const hcolors[] = {
     "triangular", "cabernet", "sangria", "fuchsia", "wisteria", "lemon-lime",
     "strawberry-banana", "peppermint", "romantic", "incandescent",
     "octarine", /* Discworld: the Colour of Magic */
+#else /*KR: KRNethack 맞춤 번역 */
+    "자외선 색의", "적외선 색의", "푸르스름한 주황색", "붉그스름한 초록색",
+    "어두운 흰색", "밝은 검은색", "하늘색 섞인 분홍색", "짠맛이 나는",
+    "단맛이 나는", "신맛이 나는", "쓴맛이 나는", "줄무늬의", "나선형의",
+    "소용돌이치는", "격자무늬의", "체크무늬의", "아가일 무늬의",
+    "페이즐리 무늬의", "얼룩덜룩한", "건지소 얼룩의", "물방울무늬의",
+    "네모난", "둥근", "세모난", "카베르네 색의", "상그리아 색의",
+    "푸크시아 색의", "등나무 색의", "레몬라임 색의", "딸기바나나 색의",
+    "페퍼민트 색의", "로맨틱한 색의", "백열의", "옥타린 색의",
+#endif
 };
 
 const char *
@@ -2231,12 +2491,12 @@ rndcolor()
 
     return Hallucination ? hcolor((char *) 0)
                     /*KR : (k == NO_COLOR) ? "colorless" */
-                         : (k == NO_COLOR) ? "colorless"
+                         : (k == NO_COLOR) ? "무색"
                                            : c_obj_colors[k];
 }
 
 static NEARDATA const char *const hliquids[] = {
-#if 0 /*KR:T*/
+#if 0 /*KR: 원본*/
     "yoghurt", "oobleck", "clotted blood", "diluted water", "purified water",
     "instant coffee", "tea", "herbal infusion", "liquid rainbow",
     "creamy foam", "mulled wine", "bouillon", "nectar", "grog", "flubber",
@@ -2244,14 +2504,13 @@ static NEARDATA const char *const hliquids[] = {
     "caramel sauce", "ink", "aqueous humour", "milk substitute",
     "fruit juice", "glowing lava", "gastric acid", "mineral water",
     "cough syrup", "quicksilver", "sweet vitriol", "grey goo", "pink slime",
-#else
-    "요거트", "우블렉", "응혈", "증류수", "정제수",
-    "인스턴트 커피", "홍차", "herbal infusion", "liquid rainbow",
-    "creamy foam", "mulled wine", "bouillon", "nectar", "grog", "flubber",
-    "케첩", "slow light", "oil", "vinaigrette", "liquid crystal", "꿀",
-    "캐러멜 소스", "잉크", "aqueous humour", "milk substitute",
-    "과일 주스", "glowing lava", "gastric acid", "광천수",
-    "cough syrup", "수은", "sweet vitriol", "grey goo", "분홍 슬라임",
+#else /*KR: KRNethack 맞춤 번역 */
+    "요거트", "우블렉", "응혈", "희석된 물", "정제수", "인스턴트 커피",
+    "홍차", "허브티", "액체 무지개", "크림 거품", "따뜻한 와인", "부이용",
+    "과즙", "그로그", "플러버", "케첩", "느린 빛", "기름", "비네그레트 소스",
+    "액정", "꿀", "캐러멜 소스", "잉크", "방수", "대용유", "과일 주스",
+    "빛나는 용암", "위산", "광천수", "기침 시럽", "수은", "단 황산",
+    "그레이 구", "핑크 슬라임",
 #endif
 };
 

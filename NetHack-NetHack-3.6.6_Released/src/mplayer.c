@@ -74,12 +74,17 @@ char *nam;
 {
     boolean fmlkind = is_female(mtmp->data);
     const char *devnam;
+#if 1 /*KR: KRNethack 맞춤 번역 (칭호 이름 조립용)*/
+    char tmp_nam[PL_NSIZ];
+#endif
 
-    devnam = dev_name();
+devnam = dev_name();
     if (!devnam)
-        Strcpy(nam, fmlkind ? "Eve" : "Adam");
+        /*KR Strcpy(nam, fmlkind ? "Eve" : "Adam"); */
+        Strcpy(nam, fmlkind ? "이브" : "아담");
     else if (fmlkind && !!strcmp(devnam, "Janet"))
-        Strcpy(nam, rn2(2) ? "Maud" : "Eve");
+        /*KR Strcpy(nam, rn2(2) ? "Maud" : "Eve"); */
+        Strcpy(nam, rn2(2) ? "모드" : "이브");
     else
         Strcpy(nam, devnam);
 
@@ -87,9 +92,17 @@ char *nam;
         mtmp->female = 1;
     else
         mtmp->female = 0;
+#if 0 /*KR: 원본*/
     Strcat(nam, " the ");
     Strcat(nam, rank_of((int) mtmp->m_lev, monsndx(mtmp->data),
                         (boolean) mtmp->female));
+#else /*KR: KRNethack 맞춤 번역 (칭호를 이름 앞에 배치)*/
+    Strcpy(tmp_nam, rank_of((int) mtmp->m_lev, monsndx(mtmp->data),
+                            (boolean) mtmp->female));
+    Strcat(tmp_nam, " ");
+    Strcat(tmp_nam, nam);
+    Strcpy(nam, tmp_nam);
+#endif
 }
 
 STATIC_OVL void
@@ -363,24 +376,64 @@ mplayer_talk(mtmp)
 register struct monst *mtmp;
 {
     static const char
+#if 0 /*KR: 원본*/
         *same_class_msg[3] = {
             "I can't win, and neither will you!",
             "You don't deserve to win!",
             "Mine should be the honor, not yours!",
         },
+#else /*KR: KRNethack 맞춤 번역 (성별에 따른 대사 분리) */
+        *same_class_msg[2][3] = { 
+        {
+            "나도 이기지 못했는데, 네가 이길 수 있을 것 같으냐!",
+            "네게는 승리할 자격이 없다!",
+            "그 영광은 네가 아니라 내 차지여야 했다!",
+        },
+        {
+            "나도 이기지 못했는데, 네가 이길 수 있겠어!",
+            "당신에게는 승리할 자격이 없어!",
+            "그 영광은 당신이 아니라 내 것이어야 해!",
+        } 
+        },
+#endif
+#if 0 /*KR: 원본*/
         *other_class_msg[3] = {
             "The low-life wants to talk, eh?",
             "Fight, scum!",
             "Here is what I have to say!",
         };
-
+#else /*KR: KRNethack 맞춤 번역 (성별에 따른 대사 분리) */
+         *other_class_msg[2][3] = { 
+         {
+            "하등한 놈이 감히 말을 걸어오다니?",
+            "싸우자, 이 쓰레기야!",
+            "이게 내 대답이다!",
+         },
+         {
+            "천한 녀석이 감히 말을 걸어?",
+            "싸워라, 쓰레기!",
+            "내 대답은 이거야!",
+         } 
+         };
+#endif
+#if 1 /*KR: KRNethack 맞춤 번역*/
+    int female;
+#endif
     if (mtmp->mpeaceful)
         return; /* will drop to humanoid talk */
 
+#if 0 /*KR: 원본*/
     pline("Talk? -- %s", (mtmp->data == &mons[urole.malenum]
                           || mtmp->data == &mons[urole.femalenum])
                              ? same_class_msg[rn2(3)]
                              : other_class_msg[rn2(3)]);
+#else /*KR: KRNethack 맞춤 번역 */
+    female = (mtmp->female ? 1 : 0);
+    pline("대화라고? -- %s", (mtmp->data == &mons[urole.malenum]
+                              || mtmp->data == &mons[urole.femalenum])
+                                 ? same_class_msg[female][rn2(3)]
+                                 : other_class_msg[female][rn2(3)]);
+#endif
 }
 
 /*mplayer.c*/

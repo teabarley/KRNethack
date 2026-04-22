@@ -5,13 +5,11 @@
 
 #include "hack.h"
 /*
- *      These routines provide basic data for any type of monster.
+ * These routines provide basic data for any type of monster.
  */
 
 /* set up an individual monster's base type (initial creation, shapechange) */
-void
-set_mon_data(mon, ptr)
-struct monst *mon;
+void set_mon_data(mon, ptr) struct monst *mon;
 struct permonst *ptr;
 {
     int new_speed, old_speed = mon->data ? mon->data->mmove : 0;
@@ -100,10 +98,11 @@ struct monst *mon;
     struct permonst *ptr = mon->data;
     struct obj *wep;
 
-    if (is_undead(ptr) || is_demon(ptr) || is_were(ptr)
+    if (is_undead(ptr) || is_demon(ptr)
+        || is_were(ptr)
         /* is_were() doesn't handle hero in human form */
-        || (mon == &youmonst && u.ulycn >= LOW_PM)
-        || ptr == &mons[PM_DEATH] || is_vampshifter(mon))
+        || (mon == &youmonst && u.ulycn >= LOW_PM) || ptr == &mons[PM_DEATH]
+        || is_vampshifter(mon))
         return TRUE;
     wep = (mon == &youmonst) ? uwep : MON_WEP(mon);
     return (boolean) (wep && wep->oartifact && defends(AD_DRLI, wep));
@@ -154,7 +153,8 @@ struct monst *mon;
     struct obj *o;
 
     if (is_you ? (Blind || Unaware)
-               : (mon->mblinded || !mon->mcansee || !haseyes(ptr)
+               : (mon->mblinded || !mon->mcansee
+                  || !haseyes(ptr)
                   /* BUG: temporary sleep sets mfrozen, but since
                           paralysis does too, we can't check it */
                   || mon->msleeping))
@@ -261,9 +261,17 @@ struct obj *obj; /* aatyp == AT_WEAP, AT_SPIT */
     if (check_visor) {
         o = (mdef == &youmonst) ? invent : mdef->minvent;
         for (; o; o = o->nobj)
+#if 0 /*KR: 원본*/
             if ((o->owornmask & W_ARMH)
                 && (s = OBJ_DESCR(objects[o->otyp])) != (char *) 0
                 && !strcmp(s, "visored helmet"))
+#else
+            if ((o->owornmask & W_ARMH)
+                && (s = OBJ_DESCR(objects[o->otyp])) != (char *) 0
+                && !strcmp(s,
+                           "얼굴 가리개가 있는 투구")) /* objects.c의 번역과
+                                                          일치하게 수정 */
+#endif
                 return FALSE;
     }
 
@@ -279,8 +287,8 @@ struct permonst *ptr;
     long atk_mask = (1L << AT_BREA) | (1L << AT_SPIT) | (1L << AT_GAZE);
 
     /* was: (attacktype(ptr, AT_BREA) || attacktype(ptr, AT_WEAP)
-     *       || attacktype(ptr, AT_SPIT) || attacktype(ptr, AT_GAZE)
-     *       || attacktype(ptr, AT_MAGC));
+     * || attacktype(ptr, AT_SPIT) || attacktype(ptr, AT_GAZE)
+     * || attacktype(ptr, AT_MAGC));
      * but that's too slow -dlc
      */
     for (i = 0; i < NATTK; i++) {
@@ -312,7 +320,8 @@ register struct permonst *ptr;
                       || (ptr->mlet == S_IMP && ptr != &mons[PM_TENGU]));
 }
 
-/* True if specific monster is especially affected by light-emitting weapons */
+/* True if specific monster is especially affected by light-emitting weapons
+ */
 boolean
 mon_hates_light(mon)
 struct monst *mon;
@@ -350,9 +359,9 @@ boolean
 can_chant(mtmp)
 struct monst *mtmp;
 {
-    if ((mtmp == &youmonst && Strangled)
-        || is_silent(mtmp->data) || !has_head(mtmp->data)
-        || mtmp->data->msound == MS_BUZZ || mtmp->data->msound == MS_BURBLE)
+    if ((mtmp == &youmonst && Strangled) || is_silent(mtmp->data)
+        || !has_head(mtmp->data) || mtmp->data->msound == MS_BUZZ
+        || mtmp->data->msound == MS_BURBLE)
         return FALSE;
     return TRUE;
 }
@@ -670,11 +679,9 @@ struct alt_spl {
 };
 
 /* figure out what type of monster a user-supplied string is specifying */
-int
-name_to_mon(in_str)
-const char *in_str;
+int name_to_mon(in_str) const char *in_str;
 {
-#if 1 /*KR*/
+#if 1 /*KR: 한글 입력을 매칭하기 위한 변환*/
     extern char *get_kr_name(const char *);
     if (in_str) {
         in_str = get_kr_name(in_str);
@@ -794,6 +801,7 @@ const char *in_str;
                 mntmp = i;
                 break; /* exact match */
             } else if (slen > m_i_len
+#if 0 /*KR: 원본*/
                        && (str[m_i_len] == ' '
                            || !strcmpi(&str[m_i_len], "s")
                            || !strncmpi(&str[m_i_len], "s ", 2)
@@ -803,6 +811,9 @@ const char *in_str;
                            || !strncmpi(&str[m_i_len], "'s ", 3)
                            || !strcmpi(&str[m_i_len], "es")
                            || !strncmpi(&str[m_i_len], "es ", 3))) {
+#else /*KR: KRNethack 맞춤 번역 (복수형 검사 최소화)*/
+                       && (str[m_i_len] == ' ')) {
+#endif
                 mntmp = i;
                 len = m_i_len;
             }
@@ -815,9 +826,7 @@ const char *in_str;
 
 /* monster class from user input; used for genocide and controlled polymorph;
    returns 0 rather than MAXMCLASSES if no match is found */
-int
-name_to_monclass(in_str, mndx_p)
-const char *in_str;
+int name_to_monclass(in_str, mndx_p) const char *in_str;
 int *mndx_p;
 {
     /* Single letters are matched against def_monsyms[].sym; words
@@ -1093,6 +1102,7 @@ struct monst *mtmp;
         return mtmp->data;
 }
 
+#if 0 /*KR: 원본*/
 static const char *levitate[4] = { "float", "Float", "wobble", "Wobble" };
 static const char *flys[4] = { "fly", "Fly", "flutter", "Flutter" };
 static const char *flyl[4] = { "fly", "Fly", "stagger", "Stagger" };
@@ -1100,40 +1110,69 @@ static const char *slither[4] = { "slither", "Slither", "falter", "Falter" };
 static const char *ooze[4] = { "ooze", "Ooze", "tremble", "Tremble" };
 static const char *immobile[4] = { "wiggle", "Wiggle", "pulsate", "Pulsate" };
 static const char *crawl[4] = { "crawl", "Crawl", "falter", "Falter" };
+#else
+static const char *levitate[4] = { "떠다닌다", "떠다닌다", "비틀거린다",
+                                   "비틀거린다" };
+static const char *flys[4] = { "난다", "난다", "퍼덕인다", "퍼덕인다" };
+static const char *flyl[4] = { "난다", "난다", "비틀거린다", "비틀거린다" };
+static const char *slither[4] = { "미끄러진다", "미끄러진다", "주춤거린다",
+                                  "주춤거린다" };
+static const char *ooze[4] = { "스며나온다", "스며나온다", "떨린다",
+                               "떨린다" };
+static const char *immobile[4] = { "꿈틀거린다", "꿈틀거린다", "맥동한다",
+                                   "맥동한다" };
+static const char *crawl[4] = { "기어간다", "기어간다", "주춤거린다",
+                                "주춤거린다" };
+#endif
 
-const char *
-locomotion(ptr, def)
-const struct permonst *ptr;
+const char *locomotion(ptr, def) const struct permonst *ptr;
 const char *def;
 {
     int capitalize = (*def == highc(*def));
 
-    return (is_floater(ptr) ? levitate[capitalize]
+    return (is_floater(ptr)                             ? levitate[capitalize]
             : (is_flyer(ptr) && ptr->msize <= MZ_SMALL) ? flys[capitalize]
-              : (is_flyer(ptr) && ptr->msize > MZ_SMALL) ? flyl[capitalize]
-                : slithy(ptr) ? slither[capitalize]
-                  : amorphous(ptr) ? ooze[capitalize]
-                    : !ptr->mmove ? immobile[capitalize]
-                      : nolimbs(ptr) ? crawl[capitalize]
-                        : def);
+            : (is_flyer(ptr) && ptr->msize > MZ_SMALL)  ? flyl[capitalize]
+            : slithy(ptr)                               ? slither[capitalize]
+            : amorphous(ptr)                            ? ooze[capitalize]
+            : !ptr->mmove                               ? immobile[capitalize]
+            : nolimbs(ptr)                              ? crawl[capitalize]
+                                                        : def);
 }
 
-const char *
-stagger(ptr, def)
-const struct permonst *ptr;
+const char *stagger(ptr, def) const struct permonst *ptr;
 const char *def;
 {
     int capitalize = 2 + (*def == highc(*def));
 
-    return (is_floater(ptr) ? levitate[capitalize]
+    return (is_floater(ptr)                             ? levitate[capitalize]
             : (is_flyer(ptr) && ptr->msize <= MZ_SMALL) ? flys[capitalize]
-              : (is_flyer(ptr) && ptr->msize > MZ_SMALL) ? flyl[capitalize]
-                : slithy(ptr) ? slither[capitalize]
-                  : amorphous(ptr) ? ooze[capitalize]
-                    : !ptr->mmove ? immobile[capitalize]
-                      : nolimbs(ptr) ? crawl[capitalize]
-                        : def);
+            : (is_flyer(ptr) && ptr->msize > MZ_SMALL)  ? flyl[capitalize]
+            : slithy(ptr)                               ? slither[capitalize]
+            : amorphous(ptr)                            ? ooze[capitalize]
+            : !ptr->mmove                               ? immobile[capitalize]
+            : nolimbs(ptr)                              ? crawl[capitalize]
+                                                        : def);
 }
+
+#if 1 /*KR: JNetHack 기반 추가 함수 (일부 변역에서 호출될 수 있음)*/
+static const char *levitate2 = "떠서 나왔다";
+static const char *fly2 = "날아 나왔다";
+static const char *slither2 = "미끄러져 나왔다";
+static const char *ooze2 = "스며 나왔다";
+static const char *crawl2 = "기어 나왔다";
+
+const char *jumpedthrough(ptr, def) const struct permonst *ptr;
+const char *def;
+{
+    return (is_floater(ptr)  ? levitate2
+            : is_flyer(ptr)  ? fly2
+            : slithy(ptr)    ? slither2
+            : amorphous(ptr) ? ooze2
+            : nolimbs(ptr)   ? crawl2
+                             : def);
+}
+#endif
 
 /* return phrase describing the effect of fire attack on a type of monster */
 const char *
@@ -1148,16 +1187,19 @@ struct attack *mattk;
     case PM_FIRE_VORTEX:
     case PM_FIRE_ELEMENTAL:
     case PM_SALAMANDER:
-        what = "already on fire";
+        /*KR what = "already on fire"; */
+        what = "이미 불타고 있다";
         break;
     case PM_WATER_ELEMENTAL:
     case PM_FOG_CLOUD:
     case PM_STEAM_VORTEX:
-        what = "boiling";
+        /*KR what = "boiling"; */
+        what = "끓고 있다";
         break;
     case PM_ICE_VORTEX:
     case PM_GLASS_GOLEM:
-        what = "melting";
+        /*KR what = "melting"; */
+        what = "녹고 있다";
         break;
     case PM_STONE_GOLEM:
     case PM_CLAY_GOLEM:
@@ -1166,10 +1208,16 @@ struct attack *mattk;
     case PM_EARTH_ELEMENTAL:
     case PM_DUST_VORTEX:
     case PM_ENERGY_VORTEX:
-        what = "heating up";
+        /*KR what = "heating up"; */
+        what = "열을 받고 있다";
         break;
     default:
+#if 0 /*KR: 원본*/
         what = (mattk->aatyp == AT_HUGS) ? "being roasted" : "on fire";
+#else
+        what =
+            (mattk->aatyp == AT_HUGS) ? "구워지고 있다" : "불길에 휩싸였다";
+#endif
         break;
     }
     return what;
@@ -1177,8 +1225,8 @@ struct attack *mattk;
 
 /*
  * Returns:
- *      True if monster is presumed to have a sense of smell.
- *      False if monster definitely does not have a sense of smell.
+ * True if monster is presumed to have a sense of smell.
+ * False if monster definitely does not have a sense of smell.
  *
  * Do not base this on presence of a head or nose, since many
  * creatures sense smells other ways (feelers, forked-tongues, etc.)
@@ -1188,8 +1236,7 @@ boolean
 olfaction(mdat)
 struct permonst *mdat;
 {
-    if (is_golem(mdat)
-        || mdat->mlet == S_EYE /* spheres  */
+    if (is_golem(mdat) || mdat->mlet == S_EYE /* spheres  */
         || mdat->mlet == S_JELLY || mdat->mlet == S_PUDDING
         || mdat->mlet == S_BLOB || mdat->mlet == S_VORTEX
         || mdat->mlet == S_ELEMENTAL
@@ -1199,4 +1246,4 @@ struct permonst *mdat;
     return TRUE;
 }
 
-/*mondata.c*/
+ /*mondata.c*/

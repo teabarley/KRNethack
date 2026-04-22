@@ -118,13 +118,39 @@ time_t when;
     for (line = DEATH_LINE, dpx = buf; line < YEAR_LINE; line++) {
         register int i, i0;
         char tmpchar;
+#if 1 /*KR: KRNethack 맞춤 번역 (멀티바이트 문자열 계산) */
+        unsigned char *uc;
+        int kstone_line;
+
+        if ((i0 = strlen(dpx)) <= STONE_LINE_LEN)
+            kstone_line = STONE_LINE_LEN;
+        else if (i0 / 2 <= STONE_LINE_LEN)
+            kstone_line = ((i0 + 3) / 4) * 2;
+        else if (i0 / 3 <= STONE_LINE_LEN)
+            kstone_line = ((i0 + 5) / 6) * 2;
+        else
+            kstone_line = ((i0 + 7) / 8) * 2;
+#endif
 
         if ((i0 = strlen(dpx)) > STONE_LINE_LEN) {
             for (i = STONE_LINE_LEN; ((i0 > STONE_LINE_LEN) && i); i--)
                 if (dpx[i] == ' ')
                     i0 = i;
             if (!i)
+#if 0 /*KR: 원본*/
                 i0 = STONE_LINE_LEN;
+#else /*KR: (멀티바이트 문자가 반으로 잘리지 않도록 보호) */
+            {
+                i0 = 0;
+                while (i0 < kstone_line) {
+                    uc = (unsigned char *) (dpx + i0);
+                    if (*uc < 128)
+                        ++i0;
+                    else
+                        i0 += 2;
+                }
+            }
+#endif
         }
         tmpchar = dpx[i0];
         dpx[i0] = 0;
@@ -143,7 +169,8 @@ time_t when;
 
 #ifdef DUMPLOG
     if (tmpwin == 0)
-        dump_forward_putstr(0, 0, "Game over:", TRUE);
+   /*KR dump_forward_putstr(0, 0, "Game over:", TRUE); */
+        dump_forward_putstr(0, 0, "게임 오버:", TRUE);
     else
 #endif
         putstr(tmpwin, 0, "");

@@ -68,7 +68,22 @@ append_josa(const char *word, const char *josa)
     is_rieul = (jong == 8); /* 'ㄹ' 받침 (예: 활, 칼) */
 
     /* 입력된 조사 형태에 따라 알맞은 짝을 찾습니다. */
-    if (strstr(josa, "은") || strstr(josa, "는"))
+    /* '으로/로'는 특이하게 'ㄹ' 받침일 때는 받침이 없는 것과 똑같이
+     * '로'를 씁니다. (예: 칼로, 검으로) */
+    if (strstr(josa, "으로") || strstr(josa, "로")) j =
+        (has_jong && !is_rieul) ? "으로" : "로";
+    else if (strstr(josa, "이라고") || strstr(josa, "라고")) j =
+        has_jong ? "이라고" : "라고";
+    else if (strstr(josa, "이라는") || strstr(josa, "라는")) j =
+        has_jong ? "이라는" : "라는";
+    else if (strstr(josa, "이라") || strstr(josa, "라")) j =
+        has_jong ? "이라" : "라";
+    else if (strstr(josa, "이야") || strstr(josa, "야")) j =
+        has_jong ? "이야" : "야";
+    else if (strstr(josa, "이다") || strstr(josa, "다")) j =
+        has_jong ? "이다" : "다";
+    /* 짧은 기본 조사는 마지막에 검사 */
+    else if (strstr(josa, "은") || strstr(josa, "는"))
         j = has_jong ? "은" : "는";
     else if (strstr(josa, "이") || strstr(josa, "가"))
         j = has_jong ? "이" : "가";
@@ -76,20 +91,6 @@ append_josa(const char *word, const char *josa)
         j = has_jong ? "을" : "를";
     else if (strstr(josa, "과") || strstr(josa, "와"))
         j = has_jong ? "과" : "와";
-    /* '으로/로'는 특이하게 'ㄹ' 받침일 때는 받침이 없는 것과 똑같이
-     * '로'를 씁니다. (예: 칼로, 검으로) */
-    else if (strstr(josa, "으로") || strstr(josa, "로"))
-        j = (has_jong && !is_rieul) ? "으로" : "로";
-    else if (strstr(josa, "이라고") || strstr(josa, "라고"))
-        j = has_jong ? "이라고" : "라고";
-    else if (strstr(josa, "이라는") || strstr(josa, "라는"))
-        j = has_jong ? "이라는" : "라는";
-    else if (strstr(josa, "이라") || strstr(josa, "라"))
-        j = has_jong ? "이라" : "라";
-    else if (strstr(josa, "이야") || strstr(josa, "야"))
-        j = has_jong ? "이야" : "야";
-    else if (strstr(josa, "이다") || strstr(josa, "다"))
-        j = has_jong ? "이다" : "다";
     else
         j = josa; /* 알 수 없는 조사면 그냥 그대로 붙임 */
 
@@ -1367,19 +1368,19 @@ get_kr_name(const char *en_name)
     if (!strcmp(en_name, "high boots"))
         return "긴 장화";
     if (!strcmp(en_name, "speed boots"))
-        return "가속의 부츠";
+        return "가속의 장화";
     if (!strcmp(en_name, "water walking boots"))
-        return "수면 보행 부츠";
+        return "수면 보행 장화";
     if (!strcmp(en_name, "jumping boots"))
-        return "도약의 부츠";
+        return "도약의 장화";
     if (!strcmp(en_name, "elven boots"))
-        return "엘프제 부츠";
+        return "엘프제 장화";
     if (!strcmp(en_name, "kicking boots"))
-        return "발차기의 부츠";
+        return "발차기의 장화";
     if (!strcmp(en_name, "fumble boots"))
-        return "실수의 부츠";
+        return "실수의 장화";
     if (!strcmp(en_name, "levitation boots"))
-        return "부유의 부츠";
+        return "부유의 장화";
 
     /* ========================================== *
      * 반지 (Rings)
@@ -2045,7 +2046,7 @@ get_kr_name(const char *en_name)
     if (!strcmp(en_name, "combat boots"))
         return "전투화";
     if (!strcmp(en_name, "jungle boots"))
-        return "정글 부츠";
+        return "정글 장화";
     if (!strcmp(en_name, "hiking boots"))
         return "등산화";
     if (!strcmp(en_name, "mud boots"))

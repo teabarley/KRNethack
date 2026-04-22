@@ -275,6 +275,15 @@ int bufsz;
             *op++ = *sp;
             *op = '\0';
             cnt++;
+#if 1 /*KR: KRNethack 맞춤 번역 (CP949 한글 2바이트 처리) */
+        } else if ((unsigned char) (*sp) >= 0x81
+                   && (unsigned char) (*sp) <= 0xFE) {
+            *op++ = *sp++;
+            if (*sp)
+                *op++ = *sp; /* 문자열 끝이 아닐 경우 두 번째 바이트 복사 */
+            *op = '\0';
+            cnt += 2;
+#endif
         } else {
             (void) sprintf(op, "%c%02X", quotechar, *sp);
             op += 3;
@@ -572,8 +581,13 @@ char errbuf[];
        settle for `lock' instead of `fq_lock' because the latter
        might end up being too big for nethack's BUFSZ */
     if (fd < 0 && errbuf)
+#if 0 /*KR:T*/
         Sprintf(errbuf, "Cannot open file \"%s\" for level %d (errno %d).",
                 lock, lev, errno);
+#else
+        Sprintf(errbuf, "지하 %d층의 파일 \"%s\"을(를) 열 수 없습니다 (errno %d)．", 
+                lev, lock, errno);
+#endif
 
     return fd;
 }
@@ -1920,7 +1934,11 @@ const char *filename;
 
 const char *default_configfile =
 #ifdef UNIX
+#if 0 /*KR: 원본*/
     ".nethackrc";
+#else /*KR: krnethackrc 인식으로 변경 */
+    ".krnethackrc";
+#endif
 #else
 #if defined(MAC) || defined(__BEOS__)
     "NetHack Defaults";
@@ -2055,6 +2073,16 @@ int src;
         return fp;
 #else /* should be only UNIX left */
     envp = nh_getenv("HOME");
+#if 1 /*KR .krnethackrc 전용 설정 파일 우선 로드 */
+    if (!envp)
+        Strcpy(tmp_config, ".krnethackrc");
+    else
+        Sprintf(tmp_config, "%s/%s", envp, ".krnethackrc");
+
+    set_configfile_name(tmp_config);
+    if ((fp = fopenp(configfile, "r")) != (FILE *) 0)
+        return fp;
+#endif
     if (!envp)
         Strcpy(tmp_config, ".nethackrc");
     else
@@ -4296,7 +4324,8 @@ unsigned oid; /* book identifier */
 
     int scope = 0;
     int linect = 0, passagecnt = 0, targetpassage = 0;
-    const char *badtranslation = "an incomprehensible foreign translation";
+    /*KR const char *badtranslation = "an incomprehensible foreign translation"; */
+    const char *badtranslation = "불완전한 외국어 번역";
     boolean matchedsection = FALSE, matchedtitle = FALSE;
     winid tribwin = WIN_ERR;
     boolean grasped = FALSE;
@@ -4308,7 +4337,11 @@ unsigned oid; /* book identifier */
     /* check for mandatories */
     if (!tribsection || !tribtitle) {
         if (!nowin_buf)
+#if 0 /*KR:T*/
             pline("It's %s of \"%s\"!", badtranslation, tribtitle);
+#else
+            pline("이것은 \"%s\"의 %s다!", tribtitle, badtranslation);
+#endif
         return grasped;
     }
 
@@ -4319,7 +4352,8 @@ unsigned oid; /* book identifier */
     if (!fp) {
         /* this is actually an error - cannot open tribute file! */
         if (!nowin_buf)
-            pline("You feel too overwhelmed to continue!");
+            /*KR pline("You feel too overwhelmed to continue!"); */
+            pline("당신은 너무 압도되어 계속할 수 없습니다!");
         return grasped;
     }
 
@@ -4451,7 +4485,12 @@ unsigned oid; /* book identifier */
         }
         if (!grasped)
             /* multi-line window, problem */
+#if 0 /*KR:T*/
             pline("It seems to be %s of \"%s\"!", badtranslation, tribtitle);
+#else
+            pline("이것은 \"%s\"의 %s인 것 같다!", tribtitle, badtranslation);
+#endif
+
     }
     return grasped;
 }

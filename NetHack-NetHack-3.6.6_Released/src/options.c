@@ -3,6 +3,13 @@
 /*-Copyright (c) Michael Allison, 2008. */
 /* NetHack may be freely redistributed.  See license for details. */
 
+/*
+ * KR Note:
+ * JNetHack 전용 옵션이었던 'setkcode'(일본어 인코딩 설정) 및
+ * 'set_keyhandling_via_option'(일본어 IME 호환 윈도우 키처리)은
+ * KRNethack 환경에 불필요하여 구현부와 함께 파싱 코드를 완전히 삭제함.
+ */
+
 #ifdef OPTION_LISTS_ONLY /* (AMIGA) external program for opt lists */
 #include "config.h"
 #include "objclass.h"
@@ -45,13 +52,13 @@ enum window_option_types {
 static char empty_optstr[] = { '\0' };
 
 /*
- *  NOTE:  If you add (or delete) an option, please update the short
- *  options help (option_help()), the long options help (dat/opthelp),
- *  and the current options setting display function (doset()),
- *  and also the Guidebooks.
+ * NOTE:  If you add (or delete) an option, please update the short
+ * options help (option_help()), the long options help (dat/opthelp),
+ * and the current options setting display function (doset()),
+ * and also the Guidebooks.
  *
- *  The order matters.  If an option is a an initial substring of another
- *  option (e.g. time and timed_delay) the shorter one must come first.
+ * The order matters.  If an option is a an initial substring of another
+ * option (e.g. time and timed_delay) the shorter one must come first.
  */
 
 static struct Bool_Opt {
@@ -109,13 +116,15 @@ static struct Bool_Opt {
     { "clicklook", &iflags.clicklook, FALSE, SET_IN_GAME },
     { "cmdassist", &iflags.cmdassist, TRUE, SET_IN_GAME },
 #if defined(MICRO) || defined(WIN32) || defined(CURSES_GRAPHICS)
-    { "color", &iflags.wc_color, TRUE, SET_IN_GAME }, /* on/off: use WC or not */
+    { "color", &iflags.wc_color, TRUE,
+      SET_IN_GAME }, /* on/off: use WC or not */
 #else /* systems that support multiple terminals, many monochrome */
     { "color", &iflags.wc_color, FALSE, SET_IN_GAME },
 #endif
     { "confirm", &flags.confirm, TRUE, SET_IN_GAME },
     { "dark_room", &flags.dark_room, TRUE, SET_IN_GAME },
-    { "eight_bit_tty", &iflags.wc_eight_bit_input, FALSE, SET_IN_GAME }, /*WC*/
+    { "eight_bit_tty", &iflags.wc_eight_bit_input, FALSE,
+      SET_IN_GAME }, /*WC*/
 #if defined(TTY_GRAPHICS) || defined(CURSES_GRAPHICS) || defined(X11_GRAPHICS)
     { "extmenu", &iflags.extmenu, FALSE, SET_IN_GAME },
 #else
@@ -136,7 +145,7 @@ static struct Bool_Opt {
     { "force_invmenu", &iflags.force_invmenu, FALSE, SET_IN_GAME },
     { "fullscreen", &iflags.wc2_fullscreen, FALSE, SET_IN_FILE }, /*WC2*/
     { "goldX", &iflags.goldX, FALSE, SET_IN_GAME },
-    { "guicolor", &iflags.wc2_guicolor, TRUE, SET_IN_GAME}, /*WC2*/
+    { "guicolor", &iflags.wc2_guicolor, TRUE, SET_IN_GAME }, /*WC2*/
     { "help", &flags.help, TRUE, SET_IN_GAME },
     { "herecmd_menu", &iflags.herecmd_menu, FALSE, SET_IN_GAME },
     { "hilite_pet", &iflags.wc_hilite_pet, FALSE, SET_IN_GAME }, /*WC*/
@@ -270,190 +279,351 @@ static struct Comp_Opt {
                * a different format */
     int optflags;
 } compopt[] = {
-    { "align", "your starting alignment (lawful, neutral, or chaotic)", 8,
+  /*KR { "align", "your starting alignment (lawful, neutral, or chaotic)", 8, */
+    { "align", "시작 시의 성향 (lawful, neutral, chaotic 중 하나)", 8,
       DISP_IN_GAME },
-    { "align_message", "message window alignment", 20, DISP_IN_GAME }, /*WC*/
-    { "align_status", "status window alignment", 20, DISP_IN_GAME },   /*WC*/
-    { "altkeyhandler", "alternate key handler", 20, SET_IN_GAME },
+    /*KR { "align_message", "message window alignment", 20, DISP_IN_GAME }, */
+    { "align_message", "메시지 창 정렬", 20, DISP_IN_GAME }, /*WC*/
+    /*KR { "align_status", "status window alignment", 20, DISP_IN_GAME }, */
+    { "align_status", "상태 창 정렬", 20, DISP_IN_GAME }, /*WC*/
+    /*KR { "altkeyhandler", "alternate key handler", 20, SET_IN_GAME }, */
+    { "altkeyhandler", "대체 키 핸들러", 20, SET_IN_GAME },
 #ifdef BACKWARD_COMPAT
-    { "boulder", "deprecated (use S_boulder in sym file instead)", 1,
-      SET_IN_GAME },
+    /*KR { "boulder", "deprecated (use S_boulder in sym file instead)", 1, */
+    { "boulder",
+      "거대 바위를 표시할 기호 (사용 금지됨, 대신 기호 파일의 S_boulder "
+      "사용)",
+      1, SET_IN_GAME },
 #endif
-    { "catname", "the name of your (first) cat (e.g., catname:Tabby)",
-      PL_PSIZ, DISP_IN_GAME },
-    { "disclose", "the kinds of information to disclose at end of game",
+    /*KR { "catname", "the name of your (first) cat (e.g., catname:Tabby)", */
+    { "catname", "(첫 번째) 고양이의 이름 (예: catname:나비)", PL_PSIZ,
+      DISP_IN_GAME },
+    /*KR { "disclose", "the kinds of information to disclose at end of game",
+     */
+    { "disclose", "게임 종료 시 공개할 정보의 종류",
       sizeof flags.end_disclose * 2, SET_IN_GAME },
-    { "dogname", "the name of your (first) dog (e.g., dogname:Fang)", PL_PSIZ,
+    /*KR { "dogname", "the name of your (first) dog (e.g., dogname:Fang)",
+       PL_PSIZ, */
+    { "dogname", "(첫 번째) 개의 이름 (예: dogname:바둑이)", PL_PSIZ,
       DISP_IN_GAME },
-    { "dungeon", "the symbols to use in drawing the dungeon map",
-      MAXDCHARS + 1, SET_IN_FILE },
-    { "effects", "the symbols to use in drawing special effects",
-      MAXECHARS + 1, SET_IN_FILE },
-    { "font_map", "the font to use in the map window", 40,
-      DISP_IN_GAME },                                              /*WC*/
-    { "font_menu", "the font to use in menus", 40, DISP_IN_GAME }, /*WC*/
-    { "font_message", "the font to use in the message window", 40,
-      DISP_IN_GAME },                                                  /*WC*/
-    { "font_size_map", "the size of the map font", 20, DISP_IN_GAME }, /*WC*/
-    { "font_size_menu", "the size of the menu font", 20,
-      DISP_IN_GAME }, /*WC*/
-    { "font_size_message", "the size of the message font", 20,
-      DISP_IN_GAME }, /*WC*/
-    { "font_size_status", "the size of the status font", 20,
-      DISP_IN_GAME }, /*WC*/
-    { "font_size_text", "the size of the text font", 20,
-      DISP_IN_GAME }, /*WC*/
-    { "font_status", "the font to use in status window", 40,
-      DISP_IN_GAME }, /*WC*/
-    { "font_text", "the font to use in text windows", 40,
-      DISP_IN_GAME }, /*WC*/
-    { "fruit", "the name of a fruit you enjoy eating", PL_FSIZ, SET_IN_GAME },
-    { "gender", "your starting gender (male or female)", 8, DISP_IN_GAME },
-    { "horsename", "the name of your (first) horse (e.g., horsename:Silver)",
-      PL_PSIZ, DISP_IN_GAME },
-    { "map_mode", "map display mode under Windows", 20, DISP_IN_GAME }, /*WC*/
-    { "menustyle", "user interface for object selection", MENUTYPELEN,
+    /*KR { "dungeon", "the symbols to use in drawing the dungeon map", */
+    { "dungeon", "던전 지도를 그릴 때 사용할 기호", MAXDCHARS + 1,
+      SET_IN_FILE },
+    /*KR { "effects", "the symbols to use in drawing special effects", */
+    { "effects", "특수 효과를 그릴 때 사용할 기호", MAXECHARS + 1,
+      SET_IN_FILE },
+    /*KR { "font_map", "the font to use in the map window", 40, */
+    { "font_map", "지도 창에 사용할 폰트", 40, DISP_IN_GAME }, /*WC*/
+    /*KR { "font_menu", "the font to use in menus", 40, DISP_IN_GAME }, */
+    { "font_menu", "메뉴에 사용할 폰트", 40, DISP_IN_GAME }, /*WC*/
+    /*KR { "font_message", "the font to use in the message window", 40, */
+    { "font_message", "메시지 창에 사용할 폰트", 40, DISP_IN_GAME }, /*WC*/
+    /*KR { "font_size_map", "the size of the map font", 20, DISP_IN_GAME }, */
+    { "font_size_map", "지도 폰트 크기", 20, DISP_IN_GAME }, /*WC*/
+    /*KR { "font_size_menu", "the size of the menu font", 20, */
+    { "font_size_menu", "메뉴 폰트 크기", 20, DISP_IN_GAME }, /*WC*/
+    /*KR { "font_size_message", "the size of the message font", 20, */
+    { "font_size_message", "메시지 폰트 크기", 20, DISP_IN_GAME }, /*WC*/
+    /*KR { "font_size_status", "the size of the status font", 20, */
+    { "font_size_status", "상태 폰트 크기", 20, DISP_IN_GAME }, /*WC*/
+    /*KR { "font_size_text", "the size of the text font", 20, */
+    { "font_size_text", "텍스트 폰트 크기", 20, DISP_IN_GAME }, /*WC*/
+    /*KR { "font_status", "the font to use in status window", 40, */
+    { "font_status", "상태 창에 사용할 폰트", 40, DISP_IN_GAME }, /*WC*/
+    /*KR { "font_text", "the font to use in text windows", 40, */
+    { "font_text", "텍스트 창에 사용할 폰트", 40, DISP_IN_GAME }, /*WC*/
+    /*KR { "fruit", "the name of a fruit you enjoy eating", PL_FSIZ,
+       SET_IN_GAME }, */
+    { "fruit", "당신이 좋아하는 과일 이름", PL_FSIZ, SET_IN_GAME },
+    /*KR { "gender", "your starting gender (male or female)", 8, DISP_IN_GAME
+       }, */
+    { "gender", "시작 시의 성별 (male 또는 female)", 8, DISP_IN_GAME },
+    /*KR { "horsename", "the name of your (first) horse (e.g.,
+       horsename:Silver)", */
+    { "horsename", "(첫 번째) 말의 이름 (예: horsename:적토마)", PL_PSIZ,
+      DISP_IN_GAME },
+    /*KR { "map_mode", "map display mode under Windows", 20, DISP_IN_GAME },
+     */
+    { "map_mode", "윈도우에서의 지도 표시 모드", 20, DISP_IN_GAME }, /*WC*/
+    /*KR { "menustyle", "user interface for object selection", MENUTYPELEN, */
+    { "menustyle", "물건 선택 시의 사용자 인터페이스", MENUTYPELEN,
       SET_IN_GAME },
-    { "menu_deselect_all", "deselect all items in a menu", 4, SET_IN_FILE },
-    { "menu_deselect_page", "deselect all items on this page of a menu", 4,
+    /*KR { "menu_deselect_all", "deselect all items in a menu", 4, SET_IN_FILE
+       }, */
+    { "menu_deselect_all", "메뉴의 모든 항목 선택 해제", 4, SET_IN_FILE },
+    /*KR { "menu_deselect_page", "deselect all items on this page of a menu",
+       4, */
+    { "menu_deselect_page", "이 메뉴 페이지의 모든 항목 선택 해제", 4,
       SET_IN_FILE },
-    { "menu_first_page", "jump to the first page in a menu", 4, SET_IN_FILE },
-    { "menu_headings", "text attribute for menu headings", 9, SET_IN_GAME },
-    { "menu_invert_all", "invert all items in a menu", 4, SET_IN_FILE },
-    { "menu_invert_page", "invert all items on this page of a menu", 4,
-      SET_IN_FILE },
-    { "menu_last_page", "jump to the last page in a menu", 4, SET_IN_FILE },
-    { "menu_next_page", "goto the next menu page", 4, SET_IN_FILE },
-    { "menu_previous_page", "goto the previous menu page", 4, SET_IN_FILE },
-    { "menu_search", "search for a menu item", 4, SET_IN_FILE },
-    { "menu_select_all", "select all items in a menu", 4, SET_IN_FILE },
-    { "menu_select_page", "select all items on this page of a menu", 4,
-      SET_IN_FILE },
-    { "monsters", "the symbols to use for monsters", MAXMCLASSES,
-      SET_IN_FILE },
-    { "msghistory", "number of top line messages to save", 5, DISP_IN_GAME },
+    /*KR { "menu_first_page", "jump to the first page in a menu", 4,
+       SET_IN_FILE }, */
+    { "menu_first_page", "메뉴의 첫 페이지로 이동", 4, SET_IN_FILE },
+    /*KR { "menu_headings", "text attribute for menu headings", 9, SET_IN_GAME
+       }, */
+    { "menu_headings", "메뉴 제목의 텍스트 속성", 9, SET_IN_GAME },
+    /*KR { "menu_invert_all", "invert all items in a menu", 4, SET_IN_FILE },
+     */
+    { "menu_invert_all", "메뉴의 모든 항목 선택 반전", 4, SET_IN_FILE },
+    /*KR { "menu_invert_page", "invert all items on this page of a menu", 4,
+     */
+    { "menu_invert_page", "이 메뉴 페이지의 항목 선택 반전", 4, SET_IN_FILE },
+    /*KR { "menu_last_page", "jump to the last page in a menu", 4, SET_IN_FILE
+       }, */
+    { "menu_last_page", "메뉴의 마지막 페이지로 이동", 4, SET_IN_FILE },
+    /*KR { "menu_next_page", "goto the next menu page", 4, SET_IN_FILE }, */
+    { "menu_next_page", "다음 메뉴 페이지로 이동", 4, SET_IN_FILE },
+    /*KR { "menu_previous_page", "goto the previous menu page", 4, SET_IN_FILE
+       }, */
+    { "menu_previous_page", "이전 메뉴 페이지로 이동", 4, SET_IN_FILE },
+    /*KR { "menu_search", "search for a menu item", 4, SET_IN_FILE }, */
+    { "menu_search", "메뉴 항목 검색", 4, SET_IN_FILE },
+    /*KR { "menu_select_all", "select all items in a menu", 4, SET_IN_FILE },
+     */
+    { "menu_select_all", "메뉴의 모든 항목 선택", 4, SET_IN_FILE },
+    /*KR { "menu_select_page", "select all items on this page of a menu", 4,
+     */
+    { "menu_select_page", "이 메뉴 페이지의 모든 항목 선택", 4, SET_IN_FILE },
+    /*KR { "monsters", "the symbols to use for monsters", MAXMCLASSES, */
+    { "monsters", "몬스터를 표시할 기호", MAXMCLASSES, SET_IN_FILE },
+    /*KR { "msghistory", "number of top line messages to save", 5,
+       DISP_IN_GAME }, */
+    { "msghistory", "저장할 상단 메시지 줄 수", 5, DISP_IN_GAME },
 #if defined(TTY_GRAPHICS) || defined(CURSES_GRAPHICS)
-    { "msg_window", "the type of message window required", 1, SET_IN_GAME },
+    /*KR { "msg_window", "the type of message window required", 1, SET_IN_GAME
+       }, */
+    { "msg_window", "요구되는 메시지 창의 종류", 1, SET_IN_GAME },
 #else
-    { "msg_window", "the type of message window required", 1, SET_IN_FILE },
+    /*KR { "msg_window", "the type of message window required", 1, SET_IN_FILE
+       }, */
+    { "msg_window", "요구되는 메시지 창의 종류", 1, SET_IN_FILE },
 #endif
-    { "name", "your character's name (e.g., name:Merlin-W)", PL_NSIZ,
-      DISP_IN_GAME },
-    { "mouse_support", "game receives click info from mouse", 0, SET_IN_GAME },
-    { "number_pad", "use the number pad for movement", 1, SET_IN_GAME },
-    { "objects", "the symbols to use for objects", MAXOCLASSES, SET_IN_FILE },
-    { "packorder", "the inventory order of the items in your pack",
-      MAXOCLASSES, SET_IN_GAME },
+    /*KR { "name", "your character's name (e.g., name:Merlin-W)", PL_NSIZ, */
+    { "name", "캐릭터의 이름 (예: name:홍길동)", PL_NSIZ, DISP_IN_GAME },
+    /*KR { "mouse_support", "game receives click info from mouse", 0,
+       SET_IN_GAME }, */
+    { "mouse_support", "마우스 클릭 정보 수신 여부", 0, SET_IN_GAME },
+    /*KR { "number_pad", "use the number pad for movement", 1, SET_IN_GAME },
+     */
+    { "number_pad", "이동에 숫자 패드 사용", 1, SET_IN_GAME },
+    /*KR { "objects", "the symbols to use for objects", MAXOCLASSES,
+       SET_IN_FILE }, */
+    { "objects", "물건을 표시할 기호", MAXOCLASSES, SET_IN_FILE },
+    /*KR { "packorder", "the inventory order of the items in your pack", */
+    { "packorder", "배낭 안의 물건 정렬 순서", MAXOCLASSES, SET_IN_GAME },
 #ifdef CHANGE_COLOR
     { "palette",
 #ifndef WIN32
-      "palette (00c/880/-fff is blue/yellow/reverse white)", 15, SET_IN_GAME
+      /*KR "palette (00c/880/-fff is blue/yellow/reverse white)", 15,
+         SET_IN_GAME */
+      "팔레트 (00c/880/-fff는 파랑/노랑/반전 흰색)", 15, SET_IN_GAME
 #else
-      "palette (adjust an RGB color in palette (color-R-G-B)", 15, SET_IN_FILE
+      /*KR "palette (adjust an RGB color in palette (color-R-G-B)", 15,
+         SET_IN_FILE */
+      "팔레트의 RGB 색상 조정 (color-R-G-B)", 15, SET_IN_FILE
 #endif
     },
 #if defined(MAC)
-    { "hicolor", "same as palette, only order is reversed", 15, SET_IN_FILE },
+    /*KR { "hicolor", "same as palette, only order is reversed", 15,
+       SET_IN_FILE }, */
+    { "hicolor", "팔레트와 동일하되, 반전만 됨", 15, SET_IN_FILE },
 #endif
 #endif
+#if 0 /*KR: 원본*/
     { "paranoid_confirmation", "extra prompting in certain situations", 28,
       SET_IN_GAME },
-    { "petattr",  "attributes for highlighting pets", 88, SET_IN_GAME },
-    { "pettype", "your preferred initial pet type", 4, DISP_IN_GAME },
-    { "pickup_burden", "maximum burden picked up before prompt", 20,
+#else /*KR: KRNethack 맞춤 번역 */
+    { "paranoid_confirmation", "특정 상황에서 추가 확인", 28, SET_IN_GAME },
+#endif
+    /*KR { "petattr",  "attributes for highlighting pets", 88, SET_IN_GAME },
+     */
+    { "petattr", "애완동물 강조를 위한 속성", 88, SET_IN_GAME },
+    /*KR { "pettype", "your preferred initial pet type", 4, DISP_IN_GAME }, */
+    { "pettype", "선호하는 초기 애완동물 종류", 4, DISP_IN_GAME },
+    /*KR { "pickup_burden", "maximum burden picked up before prompt", 20, */
+    { "pickup_burden", "자동 줍기 전 허용되는 최대 짐 무게", 20,
       SET_IN_GAME },
-    { "pickup_types", "types of objects to pick up automatically",
-      MAXOCLASSES, SET_IN_GAME },
+    /*KR { "pickup_types", "types of objects to pick up automatically", */
+    { "pickup_types", "자동으로 주울 물건 종류", MAXOCLASSES, SET_IN_GAME },
+#if 0 /*KR: 원본*/
     { "pile_limit", "threshold for \"there are many objects here\"", 24,
       SET_IN_GAME },
+#else /*KR: KRNethack 맞춤 번역 */
+    { "pile_limit", "\"여기에 많은 물건이 있습니다\" 메시지 기준값", 24,
+      SET_IN_GAME },
+#endif
+#if 0 /*KR: 원본*/
     { "playmode", "normal play, non-scoring explore mode, or debug mode", 8,
       DISP_IN_GAME },
-    { "player_selection", "choose character via dialog or prompts", 12,
+#else /*KR: KRNethack 맞춤 번역 */
+    { "playmode", "일반, 점수 없는 탐험 모드, 또는 디버그 모드", 8,
       DISP_IN_GAME },
-    { "race", "your starting race (e.g., Human, Elf)", PL_CSIZ,
+#endif
+    /*KR { "player_selection", "choose character via dialog or prompts", 12,
+     */
+    { "player_selection", "대화 상자 또는 프롬프트로 캐릭터 선택", 12,
       DISP_IN_GAME },
-    { "role", "your starting role (e.g., Barbarian, Valkyrie)", PL_CSIZ,
+    /*KR { "race", "your starting race (e.g., Human, Elf)", PL_CSIZ, */
+    { "race", "시작 시의 종족 (예: Human, Elf)", PL_CSIZ, DISP_IN_GAME },
+    /*KR { "role", "your starting role (e.g., Barbarian, Valkyrie)", PL_CSIZ,
+     */
+    { "role", "시작 시의 직업 (예: Barbarian, Valkyrie)", PL_CSIZ,
       DISP_IN_GAME },
-    { "runmode", "display frequency when `running' or `travelling'",
-      sizeof "teleport", SET_IN_GAME },
-    { "scores", "the parts of the score list you wish to see", 32,
+    /*KR { "runmode", "display frequency when `running' or `travelling'", */
+    { "runmode", "'달리기'나 '여행' 시 화면 갱신 빈도", sizeof "teleport",
       SET_IN_GAME },
-    { "scroll_amount", "amount to scroll map when scroll_margin is reached",
-      20, DISP_IN_GAME }, /*WC*/
-    { "scroll_margin", "scroll map when this far from the edge", 20,
+    /*KR { "scores", "the parts of the score list you wish to see", 32, */
+    { "scores", "표시할 점수 목록 항목", 32, SET_IN_GAME },
+    /*KR { "scroll_amount", "amount to scroll map when scroll_margin is
+       reached", */
+    { "scroll_amount", "scroll_margin에 도달했을 때의 스크롤 양", 20,
       DISP_IN_GAME }, /*WC*/
-    { "sortloot", "sort object selection lists by description", 4,
-      SET_IN_GAME },
+    /*KR { "scroll_margin", "scroll map when this far from the edge", 20, */
+    { "scroll_margin", "화면 가장자리에서 이만큼 떨어졌을 때 스크롤", 20,
+      DISP_IN_GAME }, /*WC*/
+    /*KR { "sortloot", "sort object selection lists by description", 4, */
+    { "sortloot", "물건 선택 목록을 설명순으로 정렬", 4, SET_IN_GAME },
 #ifdef MSDOS
-    { "soundcard", "type of sound card to use", 20, SET_IN_FILE },
+    /*KR { "soundcard", "type of sound card to use", 20, SET_IN_FILE }, */
+    { "soundcard", "사용할 사운드 카드 종류", 20, SET_IN_FILE },
 #endif
     { "statushilites",
 #ifdef STATUS_HILITES
+#if 0 /*KR: 원본*/
       "0=no status highlighting, N=show highlights for N turns",
+#else /*KR: KRNethack 맞춤 번역 */
+      "0=상태 강조 없음, N=N턴 동안 상태 강조 표시",
+#endif
       20, SET_IN_GAME
 #else
-    "highlight control", 20, SET_IN_FILE
+      /*KR "highlight control", 20, SET_IN_FILE */
+      "상태 강조 제어", 20, SET_IN_FILE
 #endif
     },
     { "statuslines",
 #ifdef CURSES_GRAPHICS
-      "2 or 3 lines for horizontal (bottom or top) status display",
-      20, SET_IN_GAME
+      /*KR "2 or 3 lines for horizontal (bottom or top) status display", */
+      "가로(하단 또는 상단) 상태 표시를 위해 2줄 또는 3줄 사용", 20,
+      SET_IN_GAME
 #else
-      "2 or 3 lines for status display",
-      20, SET_IN_FILE
+      /*KR "2 or 3 lines for status display", */
+      "상태 표시를 위해 2줄 또는 3줄 사용", 20, SET_IN_FILE
 #endif
     }, /*WC2*/
+#if 0  /*KR: 원본*/
     { "symset", "load a set of display symbols from the symbols file", 70,
       SET_IN_GAME },
+#else  /*KR: KRNethack 맞춤 번역 */
+    { "symset", "기호 파일에서 표시 기호 세트 불러오기", 70, SET_IN_GAME },
+#endif
+#if 0 /*KR: 원본*/
     { "roguesymset",
       "load a set of rogue display symbols from the symbols file", 70,
       SET_IN_GAME },
-#ifdef WIN32
-    { "subkeyvalue", "override keystroke value", 7, SET_IN_FILE },
-#endif
-    { "suppress_alert", "suppress alerts about version-specific features", 8,
+#else /*KR: KRNethack 맞춤 번역 */
+    { "roguesymset", "기호 파일에서 로그 레벨 기호 세트 불러오기", 70,
       SET_IN_GAME },
-    /* term_cols,term_rows -> WC2_TERM_SIZE (6: room to format 1..32767) */
+#endif
+#ifdef WIN32
+    /*KR { "subkeyvalue", "override keystroke value", 7, SET_IN_FILE }, */
+    { "subkeyvalue", "키 입력 값 덮어쓰기", 7, SET_IN_FILE },
+#endif
+    /*KR { "suppress_alert", "suppress alerts about version-specific
+       features", 8, */
+    { "suppress_alert", "특정 버전의 기능에 대한 알림 숨기기", 8,
+      SET_IN_GAME },
+/* term_cols,term_rows -> WC2_TERM_SIZE (6: room to format 1..32767) */
+#if 0 /*KR: 원본*/
     { "term_cols", "number of columns", 6, SET_IN_FILE }, /*WC2*/
+#else /*KR: KRNethack 맞춤 번역 */
+    { "term_cols", "열의 수", 6, SET_IN_FILE }, /*WC2*/
+#endif
+#if 0 /*KR: 원본*/
     { "term_rows", "number of rows", 6, SET_IN_FILE }, /*WC2*/
+#else /*KR: KRNethack 맞춤 번역 */
+    { "term_rows", "행의 수", 6, SET_IN_FILE }, /*WC2*/
+#endif
+#if 0 /*KR: 원본*/
     { "tile_width", "width of tiles", 20, DISP_IN_GAME },   /*WC*/
+#else /*KR: KRNethack 맞춤 번역 */
+    { "tile_width", "타일 너비", 20, DISP_IN_GAME }, /*WC*/
+#endif
+#if 0 /*KR: 원본*/
     { "tile_height", "height of tiles", 20, DISP_IN_GAME }, /*WC*/
+#else /*KR: KRNethack 맞춤 번역 */
+    { "tile_height", "타일 높이", 20, DISP_IN_GAME }, /*WC*/
+#endif
+#if 0 /*KR: 원본*/
     { "tile_file", "name of tile file", 70, DISP_IN_GAME }, /*WC*/
-    { "traps", "the symbols to use in drawing traps", MAXTCHARS + 1,
-      SET_IN_FILE },
-    { "vary_msgcount", "show more old messages at a time", 20,
+#else /*KR: KRNethack 맞춤 번역 */
+    { "tile_file", "타일 파일 이름", 70, DISP_IN_GAME }, /*WC*/
+#endif
+    /*KR { "traps", "the symbols to use in drawing traps", MAXTCHARS + 1, */
+    { "traps", "함정을 그릴 때 사용할 기호", MAXTCHARS + 1, SET_IN_FILE },
+    /*KR { "vary_msgcount", "show more old messages at a time", 20, */
+    { "vary_msgcount", "한 번에 표시할 이전 메시지 수", 20,
       DISP_IN_GAME }, /*WC*/
 #ifdef MSDOS
-    { "video", "method of video updating", 20, SET_IN_FILE },
+    /*KR { "video", "method of video updating", 20, SET_IN_FILE }, */
+    { "video", "비디오 화면 갱신 방식", 20, SET_IN_FILE },
 #endif
 #ifdef VIDEOSHADES
-    { "videocolors", "color mappings for internal screen routines", 40,
-      DISP_IN_GAME },
-    { "videoshades", "gray shades to map to black/gray/white", 32,
-      DISP_IN_GAME },
+    /*KR { "videocolors", "color mappings for internal screen routines", 40,
+     */
+    { "videocolors", "내부 화면 루틴용 색상 매핑", 40, DISP_IN_GAME },
+    /*KR { "videoshades", "gray shades to map to black/gray/white", 32, */
+    { "videoshades", "검정/회색/흰색에 매핑할 회색조", 32, DISP_IN_GAME },
 #endif
+#if 0 /*KR: 원본*/
     { "whatis_coord", "show coordinates when auto-describing cursor position",
       1, SET_IN_GAME },
+#else /*KR: KRNethack 맞춤 번역 */
+    { "whatis_coord", "커서 위치 자동 설명 시 좌표 표시", 1, SET_IN_GAME },
+#endif
+#if 0 /*KR: 원본*/
     { "whatis_filter",
       "filter coordinate locations when targeting next or previous",
       1, SET_IN_GAME },
-    { "windowborders", "0 (off), 1 (on), 2 (auto)", 9, SET_IN_GAME }, /*WC2*/
+#else /*KR: KRNethack 맞춤 번역 */
+    { "whatis_filter", "이전/다음 타겟 선택 시 좌표 위치 필터링", 1,
+      SET_IN_GAME },
+#endif
+  /*KR { "windowborders", "0 (off), 1 (on), 2 (auto)", 9, SET_IN_GAME }, */ /*WC2*/
+    { "windowborders", "0 (끄기), 1 (켜기), 2 (자동)", 9, SET_IN_GAME }, /*WC2*/
+#if 0 /*KR: 원본*/
     { "windowcolors", "the foreground/background colors of windows", /*WC*/
       80, DISP_IN_GAME },
-    { "windowtype", "windowing system to use", WINTYPELEN, DISP_IN_GAME },
+#else /*KR: KRNethack 맞춤 번역 */
+    { "windowcolors", "창의 전경/배경 색상", /*WC*/
+      80, DISP_IN_GAME },
+#endif
+    /*KR { "windowtype", "windowing system to use", WINTYPELEN, DISP_IN_GAME
+       }, */
+    { "windowtype", "사용할 윈도우 시스템", WINTYPELEN, DISP_IN_GAME },
 #ifdef WINCHAIN
-    { "windowchain", "window processor to use", WINTYPELEN, SET_IN_SYS },
+    /*KR { "windowchain", "window processor to use", WINTYPELEN, SET_IN_SYS },
+     */
+    { "windowchain", "사용할 윈도우 프로세서", WINTYPELEN, SET_IN_SYS },
 #endif
 #ifdef BACKWARD_COMPAT
-    { "DECgraphics", "load DECGraphics display symbols", 70, SET_IN_FILE },
-    { "IBMgraphics", "load IBMGraphics display symbols", 70, SET_IN_FILE },
+    /*KR { "DECgraphics", "load DECGraphics display symbols", 70, SET_IN_FILE
+       }, */
+    { "DECgraphics", "DEC 그래픽 표시 기호 불러오기", 70, SET_IN_FILE },
+    /*KR { "IBMgraphics", "load IBMGraphics display symbols", 70, SET_IN_FILE
+       }, */
+    { "IBMgraphics", "IBM 그래픽 표시 기호 불러오기", 70, SET_IN_FILE },
 #ifdef CURSES_GRAPHICS
-    { "cursesgraphics", "load curses display symbols", 70, SET_IN_FILE },
+    /*KR { "cursesgraphics", "load curses display symbols", 70, SET_IN_FILE },
+     */
+    { "cursesgraphics", "curses 표시 기호 불러오기", 70, SET_IN_FILE },
 #endif
 #ifdef MAC_GRAPHICS_ENV
-    { "Macgraphics", "load MACGraphics display symbols", 70, SET_IN_FILE },
+    /*KR { "Macgraphics", "load MACGraphics display symbols", 70, SET_IN_FILE
+       }, */
+    { "Macgraphics", "MAC 그래픽 표시 기호 불러오기", 70, SET_IN_FILE },
 #endif
+#endif
+#if 1 /*KR: KRNethack 고유 옵션*/
+    { "kcode", "단말기 한글 문자 코드,", 4, SET_IN_FILE },
 #endif
     { (char *) 0, (char *) 0, 0, 0 }
 };
@@ -469,7 +639,7 @@ extern struct symparse loadsyms[];
 static boolean need_redraw; /* for doset() */
 
 #if defined(TOS) && defined(TEXTCOLOR)
-extern boolean colors_changed;  /* in tos.c */
+extern boolean colors_changed; /* in tos.c */
 #endif
 
 #ifdef VIDEOSHADES
@@ -478,34 +648,35 @@ extern char ttycolors[CLR_MAX]; /* in sys/msdos/video.c */
 #endif
 
 static char def_inv_order[MAXOCLASSES] = {
-    COIN_CLASS, AMULET_CLASS, WEAPON_CLASS, ARMOR_CLASS, FOOD_CLASS,
-    SCROLL_CLASS, SPBOOK_CLASS, POTION_CLASS, RING_CLASS, WAND_CLASS,
-    TOOL_CLASS, GEM_CLASS, ROCK_CLASS, BALL_CLASS, CHAIN_CLASS, 0,
+    COIN_CLASS, AMULET_CLASS, WEAPON_CLASS, ARMOR_CLASS,
+    FOOD_CLASS, SCROLL_CLASS, SPBOOK_CLASS, POTION_CLASS,
+    RING_CLASS, WAND_CLASS,   TOOL_CLASS,   GEM_CLASS,
+    ROCK_CLASS, BALL_CLASS,   CHAIN_CLASS,  0,
 };
 
 /*
  * Default menu manipulation command accelerators.  These may _not_ be:
  *
- *      + a number - reserved for counts
- *      + an upper or lower case US ASCII letter - used for accelerators
- *      + ESC - reserved for escaping the menu
- *      + NULL, CR or LF - reserved for commiting the selection(s).  NULL
- *        is kind of odd, but the tty's xwaitforspace() will return it if
- *        someone hits a <ret>.
- *      + a default object class symbol - used for object class accelerators
+ * + a number - reserved for counts
+ * + an upper or lower case US ASCII letter - used for accelerators
+ * + ESC - reserved for escaping the menu
+ * + NULL, CR or LF - reserved for commiting the selection(s).  NULL
+ * is kind of odd, but the tty's xwaitforspace() will return it if
+ * someone hits a <ret>.
+ * + a default object class symbol - used for object class accelerators
  *
  * Standard letters (for now) are:
  *
- *              <  back 1 page
- *              >  forward 1 page
- *              ^  first page
- *              |  last page
- *              :  search
+ * <  back 1 page
+ * >  forward 1 page
+ * ^  first page
+ * |  last page
+ * :  search
  *
- *              page            all
- *               ,    select     .
- *               \    deselect   -
- *               ~    invert     @
+ * page            all
+ * ,    select     .
+ * \    deselect   -
+ * ~    invert     @
  *
  * The command name list is duplicated in the compopt array.
  */
@@ -516,18 +687,63 @@ typedef struct {
 } menu_cmd_t;
 
 static const menu_cmd_t default_menu_cmd_info[] = {
+#if 0 /*KR: 원본*/
  { "menu_first_page", MENU_FIRST_PAGE, "Go to first page" },
+#else /*KR: KRNethack 맞춤 번역 */
+    { "menu_first_page", MENU_FIRST_PAGE, "첫 페이지로 이동" },
+#endif
+#if 0 /*KR: 원본*/
  { "menu_last_page", MENU_LAST_PAGE, "Go to last page" },
+#else /*KR: KRNethack 맞춤 번역 */
+    { "menu_last_page", MENU_LAST_PAGE, "마지막 페이지로 이동" },
+#endif
+#if 0 /*KR: 원본*/
  { "menu_next_page", MENU_NEXT_PAGE, "Go to next page" },
+#else /*KR: KRNethack 맞춤 번역 */
+    { "menu_next_page", MENU_NEXT_PAGE, "다음 페이지로 이동" },
+#endif
+#if 0 /*KR: 원본*/
  { "menu_previous_page", MENU_PREVIOUS_PAGE, "Go to previous page" },
+#else /*KR: KRNethack 맞춤 번역 */
+    { "menu_previous_page", MENU_PREVIOUS_PAGE, "이전 페이지로 이동" },
+#endif
+#if 0 /*KR: 원본*/
  { "menu_select_all", MENU_SELECT_ALL, "Select all items" },
+#else /*KR: KRNethack 맞춤 번역 */
+    { "menu_select_all", MENU_SELECT_ALL, "모든 항목 선택" },
+#endif
+#if 0 /*KR: 원본*/
  { "menu_deselect_all", MENU_UNSELECT_ALL, "Unselect all items" },
+#else /*KR: KRNethack 맞춤 번역 */
+    { "menu_deselect_all", MENU_UNSELECT_ALL, "모든 항목 선택 해제" },
+#endif
+#if 0 /*KR: 원본*/
  { "menu_invert_all", MENU_INVERT_ALL, "Invert selection" },
+#else /*KR: KRNethack 맞춤 번역 */
+    { "menu_invert_all", MENU_INVERT_ALL, "선택 반전" },
+#endif
+#if 0 /*KR: 원본*/
  { "menu_select_page", MENU_SELECT_PAGE, "Select items in current page" },
+#else /*KR: KRNethack 맞춤 번역 */
+    { "menu_select_page", MENU_SELECT_PAGE, "현재 페이지 항목 선택" },
+#endif
+#if 0 /*KR: 원본*/
  { "menu_deselect_page", MENU_UNSELECT_PAGE,
    "Unselect items in current page" },
+#else /*KR: KRNethack 맞춤 번역 */
+    { "menu_deselect_page", MENU_UNSELECT_PAGE,
+      "현재 페이지 항목 선택 해제" },
+#endif
+#if 0 /*KR: 원본*/
  { "menu_invert_page", MENU_INVERT_PAGE, "Invert current page selection" },
+#else /*KR: KRNethack 맞춤 번역 */
+    { "menu_invert_page", MENU_INVERT_PAGE, "현재 페이지 선택 반전" },
+#endif
+#if 0 /*KR: 원본*/
  { "menu_search", MENU_SEARCH, "Search and toggle matching items" },
+#else /*KR: KRNethack 맞춤 번역 */
+    { "menu_search", MENU_SEARCH, "일치하는 항목 검색 및 전환" },
+#endif
 };
 
 /*
@@ -541,47 +757,47 @@ static short n_menu_mapped = 0;
 
 static boolean initial, from_file;
 
-STATIC_DCL void FDECL(nmcpy, (char *, const char *, int));
-STATIC_DCL void FDECL(escapes, (const char *, char *));
-STATIC_DCL void FDECL(rejectoption, (const char *));
+STATIC_DCL void FDECL(nmcpy, (char *, const char *, int) );
+STATIC_DCL void FDECL(escapes, (const char *, char *) );
+STATIC_DCL void FDECL(rejectoption, (const char *) );
 STATIC_DCL char *FDECL(string_for_opt, (char *, BOOLEAN_P));
 STATIC_DCL char *FDECL(string_for_env_opt, (const char *, char *, BOOLEAN_P));
 STATIC_DCL void FDECL(bad_negation, (const char *, BOOLEAN_P));
-STATIC_DCL int FDECL(change_inv_order, (char *));
-STATIC_DCL boolean FDECL(warning_opts, (char *, const char *));
-STATIC_DCL int FDECL(feature_alert_opts, (char *, const char *));
-STATIC_DCL boolean FDECL(duplicate_opt_detection, (const char *, int));
-STATIC_DCL void FDECL(complain_about_duplicate, (const char *, int));
+STATIC_DCL int FDECL(change_inv_order, (char *) );
+STATIC_DCL boolean FDECL(warning_opts, (char *, const char *) );
+STATIC_DCL int FDECL(feature_alert_opts, (char *, const char *) );
+STATIC_DCL boolean FDECL(duplicate_opt_detection, (const char *, int) );
+STATIC_DCL void FDECL(complain_about_duplicate, (const char *, int) );
 
-STATIC_DCL const char *FDECL(attr2attrname, (int));
-STATIC_DCL const char * FDECL(msgtype2name, (int));
+STATIC_DCL const char *FDECL(attr2attrname, (int) );
+STATIC_DCL const char *FDECL(msgtype2name, (int) );
 STATIC_DCL int NDECL(query_msgtype);
-STATIC_DCL boolean FDECL(msgtype_add, (int, char *));
-STATIC_DCL void FDECL(free_one_msgtype, (int));
+STATIC_DCL boolean FDECL(msgtype_add, (int, char *) );
+STATIC_DCL void FDECL(free_one_msgtype, (int) );
 STATIC_DCL int NDECL(msgtype_count);
-STATIC_DCL boolean FDECL(test_regex_pattern, (const char *, const char *));
-STATIC_DCL boolean FDECL(add_menu_coloring_parsed, (char *, int, int));
-STATIC_DCL void FDECL(free_one_menu_coloring, (int));
+STATIC_DCL boolean FDECL(test_regex_pattern, (const char *, const char *) );
+STATIC_DCL boolean FDECL(add_menu_coloring_parsed, (char *, int, int) );
+STATIC_DCL void FDECL(free_one_menu_coloring, (int) );
 STATIC_DCL int NDECL(count_menucolors);
-STATIC_DCL boolean FDECL(parse_role_opts, (BOOLEAN_P, const char *,
-                                           char *, char **));
+STATIC_DCL boolean FDECL(parse_role_opts,
+                         (BOOLEAN_P, const char *, char *, char **) );
 
-STATIC_DCL void FDECL(doset_add_menu, (winid, const char *, int));
-STATIC_DCL void FDECL(opts_add_others, (winid, const char *, int,
-                                        char *, int));
-STATIC_DCL int FDECL(handle_add_list_remove, (const char *, int));
-STATIC_DCL boolean FDECL(special_handling, (const char *,
-                                            BOOLEAN_P, BOOLEAN_P));
-STATIC_DCL const char *FDECL(get_compopt_value, (const char *, char *));
+STATIC_DCL void FDECL(doset_add_menu, (winid, const char *, int) );
+STATIC_DCL void FDECL(opts_add_others,
+                      (winid, const char *, int, char *, int) );
+STATIC_DCL int FDECL(handle_add_list_remove, (const char *, int) );
+STATIC_DCL boolean FDECL(special_handling,
+                         (const char *, BOOLEAN_P, BOOLEAN_P));
+STATIC_DCL const char *FDECL(get_compopt_value, (const char *, char *) );
 STATIC_DCL void FDECL(remove_autopickup_exception,
-                      (struct autopickup_exception *));
+                      (struct autopickup_exception *) );
 
-STATIC_DCL boolean FDECL(is_wc_option, (const char *));
-STATIC_DCL boolean FDECL(wc_supported, (const char *));
-STATIC_DCL boolean FDECL(is_wc2_option, (const char *));
-STATIC_DCL boolean FDECL(wc2_supported, (const char *));
-STATIC_DCL void FDECL(wc_set_font_name, (int, char *));
-STATIC_DCL int FDECL(wc_set_window_colors, (char *));
+STATIC_DCL boolean FDECL(is_wc_option, (const char *) );
+STATIC_DCL boolean FDECL(wc_supported, (const char *) );
+STATIC_DCL boolean FDECL(is_wc2_option, (const char *) );
+STATIC_DCL boolean FDECL(wc2_supported, (const char *) );
+STATIC_DCL void FDECL(wc_set_font_name, (int, char *) );
+STATIC_DCL int FDECL(wc_set_window_colors, (char *) );
 
 void
 reglyph_darkroom()
@@ -615,24 +831,23 @@ reglyph_darkroom()
 /* check whether a user-supplied option string is a proper leading
    substring of a particular option name; option string might have
    a colon or equals sign and arbitrary value appended to it */
-boolean
-match_optname(user_string, opt_name, min_length, val_allowed)
-const char *user_string, *opt_name;
+boolean match_optname(user_string, opt_name, min_length, val_allowed) const
+    char *user_string,
+    *opt_name;
 int min_length;
 boolean val_allowed;
 {
     int len = (int) strlen(user_string);
 
     if (val_allowed) {
-        const char *p = index(user_string, ':'),
-                   *q = index(user_string, '=');
+        const char *p = index(user_string, ':'), *q = index(user_string, '=');
 
         if (!p || (q && q < p))
             p = q;
         if (p) {
             /* 'user_string' hasn't necessarily been through mungspaces()
                so might have tabs or consecutive spaces */
-            while (p > user_string && isspace((uchar) *(p - 1)))
+            while (p > user_string && isspace((uchar) * (p - 1)))
                 p--;
             len = (int) (p - user_string);
         }
@@ -649,9 +864,7 @@ boolean val_allowed;
  * if it's put in a smaller buffer, the responsible code will have to
  * bounds-check itself.
  */
-char *
-nh_getenv(ev)
-const char *ev;
+char *nh_getenv(ev) const char *ev;
 {
     char *getev = getenv(ev);
 
@@ -729,7 +942,7 @@ initoptions_init()
 #endif
 #ifdef SYSFLAGS
     Strcpy(sysflags.sysflagsid, "sysflags");
-    sysflags.sysflagsid[9] = (char) sizeof (struct sysflag);
+    sysflags.sysflagsid[9] = (char) sizeof(struct sysflag);
 #endif
     flags.end_own = FALSE;
     flags.end_top = 3;
@@ -750,8 +963,8 @@ initoptions_init()
     iflags.getpos_coords = GPCOORDS_NONE;
 
     /* hero's role, race, &c haven't been chosen yet */
-    flags.initrole = flags.initrace = flags.initgend = flags.initalign
-        = ROLE_NONE;
+    flags.initrole = flags.initrace = flags.initgend = flags.initalign =
+        ROLE_NONE;
 
     init_ov_primary_symbols();
     init_ov_rogue_symbols();
@@ -777,6 +990,7 @@ initoptions_init()
         flags.end_disclose[i] = DISCLOSE_PROMPT_DEFAULT_NO;
     switch_symbols(FALSE); /* set default characters */
     init_rogue_symbols();
+#if 0 /*KR: KRNethack 맞춤 번역 (심볼 자동 설정 해제 로직 보존)*/
 #if defined(UNIX) && defined(TTY_GRAPHICS)
     /*
      * Set defaults for some options depending on what we can
@@ -823,6 +1037,7 @@ initoptions_init()
         load_symset("MACGraphics", PRIMARY);
     switch_symbols(TRUE);
 #endif /* MAC_GRAPHICS_ENV */
+#endif
     flags.menu_style = MENU_FULL;
 
     iflags.wc_align_message = ALIGN_TOP;
@@ -884,8 +1099,8 @@ initoptions_finish()
      */
     obj_descr[SLIME_MOLD].oc_name = "fruit";
 
-    sym = get_othersym(SYM_BOULDER,
-                Is_rogue_level(&u.uz) ? ROGUESET : PRIMARY);
+    sym =
+        get_othersym(SYM_BOULDER, Is_rogue_level(&u.uz) ? ROGUESET : PRIMARY);
     if (sym)
         showsyms[SYM_BOULDER + SYM_OFF_X] = sym;
     reglyph_darkroom();
@@ -912,9 +1127,7 @@ initoptions_finish()
 
 /* copy up to maxlen-1 characters; 'dest' must be able to hold maxlen;
    treat comma as alternate end of 'src' */
-STATIC_OVL void
-nmcpy(dest, src, maxlen)
-char *dest;
+STATIC_OVL void nmcpy(dest, src, maxlen) char *dest;
 const char *src;
 int maxlen;
 {
@@ -937,9 +1150,9 @@ int maxlen;
  * has the effect of 'meta'-ing the value which follows (so that the
  * alternate character set will be enabled).
  *
- * X     normal key X
- * ^X    control-X
- * \mX   meta-X
+ * X  normal key X
+ * ^X control-X
+ * \mX  meta-X
  *
  * For 3.4.3 and earlier, input ending with "\M", backslash, or caret
  * prior to terminating '\0' would pull that '\0' into the output and then
@@ -950,10 +1163,9 @@ int maxlen;
  * an appropriate digit will also fall through to \<other> and yield 'X'
  * or 'O', plus stop if the non-digit is end-of-string.
  */
-STATIC_OVL void
-escapes(cp, tp)
-const char *cp; /* might be 'tp', updating in place */
-char *tp; /* result is never longer than 'cp' */
+STATIC_OVL void escapes(cp, tp) const
+    char *cp; /* might be 'tp', updating in place */
+char *tp;     /* result is never longer than 'cp' */
 {
     static NEARDATA const char oct[] = "01234567", dec[] = "0123456789",
                                hex[] = "00112233445566778899aAbBcCdDeEfF";
@@ -975,7 +1187,8 @@ char *tp; /* result is never longer than 'cp' */
             cval = (*++cp & 0x1f);
             ++cp;
 
-        /* remaining cases are all for backslash; we know cp[1] is not \0 */
+            /* remaining cases are all for backslash; we know cp[1] is not \0
+             */
         } else if (index(dec, cp[1])) {
             ++cp; /* move past backslash to first digit */
             do {
@@ -1023,15 +1236,22 @@ char *tp; /* result is never longer than 'cp' */
     *tp = '\0';
 }
 
-STATIC_OVL void
-rejectoption(optname)
-const char *optname;
+STATIC_OVL void rejectoption(optname) const char *optname;
 {
 #ifdef MICRO
+#if 0 /*KR: 원본*/
     pline("\"%s\" settable only from %s.", optname, configfile);
+#else /*KR: KRNethack 맞춤 번역 */
+    pline("\"%s\" 옵션은 %s에서만 설정할 수 있습니다.", optname, configfile);
+#endif
 #else
+#if 0 /*KR: 원본*/
     pline("%s can be set only from NETHACKOPTIONS or %s.", optname,
           configfile);
+#else /*KR: KRNethack 맞춤 번역 */
+    pline("%s 옵션은 NETHACKOPTIONS나 %s에서만 설정할 수 있습니다.", optname,
+          configfile);
+#endif
 #endif
 }
 
@@ -1068,15 +1288,18 @@ boolean val_optional;
 
     if (!colon || !*++colon) {
         if (!val_optional)
+#if 0 /*KR: 원본*/
             config_error_add("Missing parameter for '%s'", opts);
+#else /*KR: KRNethack 맞춤 번역 */
+            config_error_add("'%s'의 인수가 없습니다", opts);
+#endif
         return empty_optstr;
     }
     return colon;
 }
 
-STATIC_OVL char *
-string_for_env_opt(optname, opts, val_optional)
-const char *optname;
+STATIC_OVL char *string_for_env_opt(optname, opts, val_optional) const
+    char *optname;
 char *opts;
 boolean val_optional;
 {
@@ -1087,13 +1310,16 @@ boolean val_optional;
     return string_for_opt(opts, val_optional);
 }
 
-STATIC_OVL void
-bad_negation(optname, with_parameter)
-const char *optname;
+STATIC_OVL void bad_negation(optname, with_parameter) const char *optname;
 boolean with_parameter;
 {
+#if 0 /*KR: 원본*/
     pline_The("%s option may not %sbe negated.", optname,
               with_parameter ? "both have a value and " : "");
+#else /*KR: KRNethack 맞춤 번역 */
+    pline_The("%s 옵션은 부정%s수 없다.", optname,
+              with_parameter ? "과 값 지정을 동시에 할 " : "할 ");
+#endif
 }
 
 /*
@@ -1169,15 +1395,13 @@ const char *optype;
     /* match the form obtained from PC configuration files */
     for (i = 0; i < WARNCOUNT; i++)
         translate[i] = (i >= length) ? 0
-                                     : opts[i] ? (uchar) opts[i]
-                                               : def_warnsyms[i].sym;
+                       : opts[i]     ? (uchar) opts[i]
+                                     : def_warnsyms[i].sym;
     assign_warnings(translate);
     return TRUE;
 }
 
-void
-assign_warnings(graph_chars)
-register uchar *graph_chars;
+void assign_warnings(graph_chars) register uchar *graph_chars;
 {
     int i;
 
@@ -1198,11 +1422,15 @@ const char *optn;
         return 0;
     if (fnv > get_current_feature_ver()) {
         if (!initial) {
+#if 0 /*KR: 원본*/
             You_cant("disable new feature alerts for future versions.");
+#else /*KR: KRNethack 맞춤 번역 */
+            You_cant("미래 버전의 새로운 기능 알림을 끌 수 없다.");
+#endif
         } else {
             config_error_add(
-                        "%s=%s Invalid reference to a future version ignored",
-                             optn, op);
+                "%s=%s Invalid reference to a future version ignored", optn,
+                op);
         }
         return 0;
     }
@@ -1211,16 +1439,20 @@ const char *optn;
     if (!initial) {
         Sprintf(buf, "%lu.%lu.%lu", FEATURE_NOTICE_VER_MAJ,
                 FEATURE_NOTICE_VER_MIN, FEATURE_NOTICE_VER_PATCH);
+#if 0 /*KR: 원본*/
         pline(
           "Feature change alerts disabled for NetHack %s features and prior.",
               buf);
+#else /*KR: KRNethack 맞춤 번역 */
+        pline("NetHack %s 버전 및 그 이전 기능들에 대한 기능 변경 알림이 "
+              "꺼졌다.",
+              buf);
+#endif
     }
     return 1;
 }
 
-void
-set_duplicate_opt_detection(on_or_off)
-int on_or_off;
+void set_duplicate_opt_detection(on_or_off) int on_or_off;
 {
     int k, *optptr;
 
@@ -1228,14 +1460,14 @@ int on_or_off;
         /*-- ON --*/
         if (iflags.opt_booldup)
             impossible("iflags.opt_booldup already on (memory leak)");
-        iflags.opt_booldup = (int *) alloc(SIZE(boolopt) * sizeof (int));
+        iflags.opt_booldup = (int *) alloc(SIZE(boolopt) * sizeof(int));
         optptr = iflags.opt_booldup;
         for (k = 0; k < SIZE(boolopt); ++k)
             *optptr++ = 0;
 
         if (iflags.opt_compdup)
             impossible("iflags.opt_compdup already on (memory leak)");
-        iflags.opt_compdup = (int *) alloc(SIZE(compopt) * sizeof (int));
+        iflags.opt_compdup = (int *) alloc(SIZE(compopt) * sizeof(int));
         optptr = iflags.opt_compdup;
         for (k = 0; k < SIZE(compopt); ++k)
             *optptr++ = 0;
@@ -1250,9 +1482,7 @@ int on_or_off;
     }
 }
 
-STATIC_OVL boolean
-duplicate_opt_detection(opts, iscompound)
-const char *opts;
+STATIC_OVL boolean duplicate_opt_detection(opts, iscompound) const char *opts;
 int iscompound; /* 0 == boolean option, 1 == compound */
 {
     int i, *optptr;
@@ -1284,9 +1514,7 @@ int iscompound; /* 0 == boolean option, 1 == compound */
     return FALSE;
 }
 
-STATIC_OVL void
-complain_about_duplicate(opts, iscompound)
-const char *opts;
+STATIC_OVL void complain_about_duplicate(opts, iscompound) const char *opts;
 int iscompound; /* 0 == boolean option, 1 == compound */
 {
 #ifdef MAC
@@ -1295,8 +1523,13 @@ int iscompound; /* 0 == boolean option, 1 == compound */
      * For now just return.
      */
 #else /* !MAC */
+#if 0 /*KR: 원본*/
     config_error_add("%s option specified multiple times: %s",
                      iscompound ? "compound" : "boolean", opts);
+#else /*KR: KRNethack 맞춤 번역 */
+    config_error_add("%s옵션이 여러 번 지정되었습니다: %s",
+                     iscompound ? "복합" : "부울(진릿값)", opts);
+#endif
 #endif /* ?MAC */
     return;
 }
@@ -1320,25 +1553,65 @@ STATIC_VAR const struct paranoia_opts {
        both require at least two letters during config processing and use
        case-senstivity for 'O's interactive menu */
     { PARANOID_CONFIRM, "Confirm", 1, "Paranoia", 2,
+#if 0  /*KR: 원본*/
       "for \"yes\" confirmations, require \"no\" to reject" },
+#else  /*KR: KRNethack 맞춤 번역 */
+      "\"yes\" 확인 창에서, 거절하기 위해 \"no\"를 요구함" },
+#endif
     { PARANOID_QUIT, "quit", 1, "explore", 2,
+#if 0 /*KR: 원본*/
       "yes vs y to quit or to enter explore mode" },
+#else /*KR: KRNethack 맞춤 번역 */
+      "종료하거나 탐험 모드 진입 시 y 대신 yes 요구" },
+#endif
     { PARANOID_DIE, "die", 1, "death", 2,
+#if 0 /*KR: 원본*/
       "yes vs y to die (explore mode or debug mode)" },
+#else /*KR: KRNethack 맞춤 번역 */
+      "스스로 죽을 때 y 대신 yes 요구 (탐험 또는 디버그 모드)" },
+#endif
     { PARANOID_BONES, "bones", 1, 0, 0,
+#if 0 /*KR: 원본*/
       "yes vs y to save bones data when dying in debug mode" },
+#else /*KR: KRNethack 맞춤 번역 */
+      "디버그 모드에서 죽어 뼈 파일을 남길 때 y 대신 yes 요구" },
+#endif
     { PARANOID_HIT, "attack", 1, "hit", 1,
+#if 0 /*KR: 원본*/
       "yes vs y to attack a peaceful monster" },
+#else /*KR: KRNethack 맞춤 번역 */
+      "평화로운 몬스터를 공격할 때 y 대신 yes 요구" },
+#endif
     { PARANOID_BREAKWAND, "wand-break", 2, "break-wand", 2,
+#if 0 /*KR: 원본*/
       "yes vs y to break a wand via (a)pply" },
+#else /*KR: KRNethack 맞춤 번역 */
+      "지팡이를 부러뜨릴 때 y 대신 yes 요구" },
+#endif
     { PARANOID_EATING, "eat", 1, "continue", 4,
+#if 0 /*KR: 원본*/
       "yes vs y to continue eating after first bite when satiated" },
+#else /*KR: KRNethack 맞춤 번역 */
+      "포만 상태에서 계속 음식을 먹을 때 y 대신 yes 요구" },
+#endif
     { PARANOID_WERECHANGE, "Were-change", 2, (const char *) 0, 0,
+#if 0 /*KR: 원본*/
       "yes vs y to change form when lycanthropy is controllable" },
+#else /*KR: KRNethack 맞춤 번역 */
+      "수인병을 조절할 수 있을 때 형태를 바꿀지 물을 때 y 대신 yes 요구" },
+#endif
     { PARANOID_PRAY, "pray", 1, 0, 0,
+#if 0 /*KR: 원본*/
       "y to pray (supersedes old \"prayconfirm\" option)" },
+#else /*KR: KRNethack 맞춤 번역 */
+      "기도할 때 확인하기 (과거 \"prayconfirm\" 옵션 대체)" },
+#endif
     { PARANOID_REMOVE, "Remove", 1, "Takeoff", 1,
+#if 0 /*KR: 원본*/
       "always pick from inventory for Remove and Takeoff" },
+#else /*KR: KRNethack 맞춤 번역 */
+      "벗거나(Takeoff/Remove) 뺄 때 항상 소지품 창에서 고르기" },
+#endif
     /* for config file parsing; interactive menu skips these */
     { 0, "none", 4, 0, 0, 0 }, /* require full word match */
     { ~0, "all", 3, 0, 0, 0 }, /* ditto */
@@ -1349,49 +1622,44 @@ extern struct menucoloring *menu_colorings;
 static const struct {
     const char *name;
     const int color;
-} colornames[] = {
-    { "black", CLR_BLACK },
-    { "red", CLR_RED },
-    { "green", CLR_GREEN },
-    { "brown", CLR_BROWN },
-    { "blue", CLR_BLUE },
-    { "magenta", CLR_MAGENTA },
-    { "cyan", CLR_CYAN },
-    { "gray", CLR_GRAY },
-    { "orange", CLR_ORANGE },
-    { "light green", CLR_BRIGHT_GREEN },
-    { "yellow", CLR_YELLOW },
-    { "light blue", CLR_BRIGHT_BLUE },
-    { "light magenta", CLR_BRIGHT_MAGENTA },
-    { "light cyan", CLR_BRIGHT_CYAN },
-    { "white", CLR_WHITE },
-    { "no color", NO_COLOR },
-    { NULL, CLR_BLACK }, /* everything after this is an alias */
-    { "transparent", NO_COLOR },
-    { "purple", CLR_MAGENTA },
-    { "light purple", CLR_BRIGHT_MAGENTA },
-    { "bright purple", CLR_BRIGHT_MAGENTA },
-    { "grey", CLR_GRAY },
-    { "bright red", CLR_ORANGE },
-    { "bright green", CLR_BRIGHT_GREEN },
-    { "bright blue", CLR_BRIGHT_BLUE },
-    { "bright magenta", CLR_BRIGHT_MAGENTA },
-    { "bright cyan", CLR_BRIGHT_CYAN }
-};
+} colornames[] = { { "black", CLR_BLACK },
+                   { "red", CLR_RED },
+                   { "green", CLR_GREEN },
+                   { "brown", CLR_BROWN },
+                   { "blue", CLR_BLUE },
+                   { "magenta", CLR_MAGENTA },
+                   { "cyan", CLR_CYAN },
+                   { "gray", CLR_GRAY },
+                   { "orange", CLR_ORANGE },
+                   { "light green", CLR_BRIGHT_GREEN },
+                   { "yellow", CLR_YELLOW },
+                   { "light blue", CLR_BRIGHT_BLUE },
+                   { "light magenta", CLR_BRIGHT_MAGENTA },
+                   { "light cyan", CLR_BRIGHT_CYAN },
+                   { "white", CLR_WHITE },
+                   { "no color", NO_COLOR },
+                   { NULL,
+                     CLR_BLACK }, /* everything after this is an alias */
+                   { "transparent", NO_COLOR },
+                   { "purple", CLR_MAGENTA },
+                   { "light purple", CLR_BRIGHT_MAGENTA },
+                   { "bright purple", CLR_BRIGHT_MAGENTA },
+                   { "grey", CLR_GRAY },
+                   { "bright red", CLR_ORANGE },
+                   { "bright green", CLR_BRIGHT_GREEN },
+                   { "bright blue", CLR_BRIGHT_BLUE },
+                   { "bright magenta", CLR_BRIGHT_MAGENTA },
+                   { "bright cyan", CLR_BRIGHT_CYAN } };
 
 static const struct {
     const char *name;
     const int attr;
 } attrnames[] = {
-    { "none", ATR_NONE },
-    { "bold", ATR_BOLD },
-    { "dim", ATR_DIM },
-    { "underline", ATR_ULINE },
-    { "blink", ATR_BLINK },
-    { "inverse", ATR_INVERSE },
+    { "none", ATR_NONE },       { "bold", ATR_BOLD },
+    { "dim", ATR_DIM },         { "underline", ATR_ULINE },
+    { "blink", ATR_BLINK },     { "inverse", ATR_INVERSE },
     { NULL, ATR_NONE }, /* everything after this is an alias */
-    { "normal", ATR_NONE },
-    { "uline", ATR_ULINE },
+    { "normal", ATR_NONE },     { "uline", ATR_ULINE },
     { "reverse", ATR_INVERSE },
 };
 
@@ -1445,9 +1713,7 @@ int attr;
     return (char *) 0;
 }
 
-int
-match_str2attr(str, complain)
-const char *str;
+int match_str2attr(str, complain) const char *str;
 boolean complain;
 {
     int i, a = -1;
@@ -1465,9 +1731,7 @@ boolean complain;
     return a;
 }
 
-int
-query_color(prompt)
-const char *prompt;
+int query_color(prompt) const char *prompt;
 {
     winid tmpwin;
     anything any;
@@ -1485,7 +1749,8 @@ const char *prompt;
                  (colornames[i].color == NO_COLOR) ? MENU_SELECTED
                                                    : MENU_UNSELECTED);
     }
-    end_menu(tmpwin, (prompt && *prompt) ? prompt : "Pick a color");
+    /*KR end_menu(tmpwin, (prompt && *prompt) ? prompt : "Pick a color"); */
+    end_menu(tmpwin, (prompt && *prompt) ? prompt : "색상을 선택하십시오");
     pick_cnt = select_menu(tmpwin, PICK_ONE, &picks);
     destroy_nhwindow(tmpwin);
     if (pick_cnt > 0) {
@@ -1507,9 +1772,7 @@ const char *prompt;
    coloring patterns, only one attribute at a time is allowed;
    for status highlighting, multiple attributes are allowed [overkill;
    life would be much simpler if that were restricted to one also...] */
-int
-query_attr(prompt)
-const char *prompt;
+int query_attr(prompt) const char *prompt;
 {
     winid tmpwin;
     anything any;
@@ -1532,7 +1795,8 @@ const char *prompt;
                  (attrnames[i].attr == default_attr) ? MENU_SELECTED
                                                      : MENU_UNSELECTED);
     }
-    end_menu(tmpwin, (prompt && *prompt) ? prompt : "Pick an attribute");
+ /*KR end_menu(tmpwin, (prompt && *prompt) ? prompt : "Pick an attribute"); */
+    end_menu(tmpwin, (prompt && *prompt) ? prompt : "속성을 선택하십시오");
     pick_cnt = select_menu(tmpwin, allow_many ? PICK_ANY : PICK_ONE, &picks);
     destroy_nhwindow(tmpwin);
     if (pick_cnt > 0) {
@@ -1591,12 +1855,28 @@ static const struct {
     xchar msgtyp;
     const char *descr;
 } msgtype_names[] = {
+#if 0 /*KR: 원본*/
     { "show", MSGTYP_NORMAL, "Show message normally" },
+#else /*KR: KRNethack 맞춤 번역 */
+    { "show", MSGTYP_NORMAL, "정상적으로 메시지 표시" },
+#endif
+#if 0 /*KR: 원본*/
     { "hide", MSGTYP_NOSHOW, "Hide message" },
+#else /*KR: KRNethack 맞춤 번역 */
+    { "hide", MSGTYP_NOSHOW, "메시지 숨기기" },
+#endif
     { "noshow", MSGTYP_NOSHOW, NULL },
+#if 0 /*KR: 원본*/
     { "stop", MSGTYP_STOP, "Prompt for more after the message" },
+#else /*KR: KRNethack 맞춤 번역 */
+    { "stop", MSGTYP_STOP, "메시지 후 추가 정보 묻기" },
+#endif
     { "more", MSGTYP_STOP, NULL },
+#if 0 /*KR: 원본*/
     { "norep", MSGTYP_NOREP, "Do not repeat the message" }
+#else /*KR: KRNethack 맞춤 번역 */
+    { "norep", MSGTYP_NOREP, "메시지 반복하지 않기" }
+#endif
 };
 
 STATIC_OVL const char *
@@ -1626,9 +1906,13 @@ query_msgtype()
         if (msgtype_names[i].descr) {
             any.a_int = msgtype_names[i].msgtyp + 1;
             add_menu(tmpwin, NO_GLYPH, &any, 0, 0, ATR_NONE,
-                 msgtype_names[i].descr, MENU_UNSELECTED);
+                     msgtype_names[i].descr, MENU_UNSELECTED);
         }
+#if 0 /*KR: 원본*/
     end_menu(tmpwin, "How to show the message");
+#else
+    end_menu(tmpwin, "메시지 표시 방법");
+#endif
     pick_cnt = select_menu(tmpwin, PICK_ONE, &picks);
     destroy_nhwindow(tmpwin);
     if (pick_cnt > 0) {
@@ -1676,9 +1960,7 @@ msgtype_free()
     plinemsg_types = (struct plinemsg_type *) 0;
 }
 
-STATIC_OVL void
-free_one_msgtype(idx)
-int idx; /* 0 .. */
+STATIC_OVL void free_one_msgtype(idx) int idx; /* 0 .. */
 {
     struct plinemsg_type *tmp = plinemsg_types;
     struct plinemsg_type *prev = NULL;
@@ -1702,9 +1984,7 @@ int idx; /* 0 .. */
     }
 }
 
-int
-msgtype_type(msg, norepeat)
-const char *msg;
+int msgtype_type(msg, norepeat) const char *msg;
 boolean norepeat; /* called from Norep(via pline) */
 {
     struct plinemsg_type *tmp = plinemsg_types;
@@ -1721,9 +2001,7 @@ boolean norepeat; /* called from Norep(via pline) */
 
 /* negate one or more types of messages so that their type handling will
    be disabled or re-enabled; MSGTYPE_NORMAL (value 0) is not affected */
-void
-hide_unhide_msgtypes(hide, hide_mask)
-boolean hide;
+void hide_unhide_msgtypes(hide, hide_mask) boolean hide;
 int hide_mask;
 {
     struct plinemsg_type *tmp;
@@ -1778,9 +2056,7 @@ char *str;
     return FALSE;
 }
 
-STATIC_OVL boolean
-test_regex_pattern(str, errmsg)
-const char *str;
+STATIC_OVL boolean test_regex_pattern(str, errmsg) const char *str;
 const char *errmsg;
 {
     static const char re_error[] = "Regex error";
@@ -1880,9 +2156,7 @@ char *tmpstr; /* never Null but could be empty */
     return add_menu_coloring_parsed(tmps, c, a);
 }
 
-boolean
-get_menu_coloring(str, color, attr)
-const char *str;
+boolean get_menu_coloring(str, color, attr) const char *str;
 int *color, *attr;
 {
     struct menucoloring *tmpmc;
@@ -1910,9 +2184,7 @@ free_menu_coloring()
     }
 }
 
-STATIC_OVL void
-free_one_menu_coloring(idx)
-int idx; /* 0 .. */
+STATIC_OVL void free_one_menu_coloring(idx) int idx; /* 0 .. */
 {
     struct menucoloring *tmp = menu_colorings;
     struct menucoloring *prev = NULL;
@@ -1959,7 +2231,7 @@ char **opp;
     if (negated) {
         bad_negation(fullname, FALSE);
     } else if ((op = string_for_env_opt(fullname, opts, FALSE))
-                                        != empty_optstr) {
+               != empty_optstr) {
         boolean val_negated = FALSE;
 
         while ((*op == '!') || !strncmpi(op, "no", 2)) {
@@ -1989,8 +2261,8 @@ boolean
 illegal_menu_cmd_key(c)
 char c;
 {
-    if (c == 0 || c == '\r' || c == '\n' || c == '\033'
-        || c == ' ' || digit(c) || (letter(c) && c != '@')) {
+    if (c == 0 || c == '\r' || c == '\n' || c == '\033' || c == ' '
+        || digit(c) || (letter(c) && c != '@')) {
         config_error_add("Reserved menu command key '%s'", visctrl(c));
         return TRUE;
     } else { /* reject default object class symbols */
@@ -2157,7 +2429,7 @@ boolean tinitial, tfrom_file;
         if (duplicate)
             complain_about_duplicate(opts, 1);
         if ((op = string_for_env_opt(fullname, opts, negated))
-                                     != empty_optstr) {
+            != empty_optstr) {
             if (negated) {
                 bad_negation(fullname, TRUE);
                 return FALSE;
@@ -2183,7 +2455,11 @@ boolean tinitial, tfrom_file;
                     preferred_pet = '\0';
                     break;
                 default:
+#if 0  /*KR: 원본*/
                     config_error_add("Unrecognized pet type '%s'.", op);
+#else  /*KR: KRNethack 맞춤 번역 */
+                    pline("'%s'은(는) 애완동물 종류로 인식할 수 없습니다.", op);
+#endif
                     return FALSE;
                     break;
                 }
@@ -2200,7 +2476,7 @@ boolean tinitial, tfrom_file;
             bad_negation(fullname, FALSE);
             return FALSE;
         } else if ((op = string_for_env_opt(fullname, opts, FALSE))
-                                            != empty_optstr) {
+                   != empty_optstr) {
             nmcpy(catname, op, PL_PSIZ);
         } else
             return FALSE;
@@ -2216,7 +2492,7 @@ boolean tinitial, tfrom_file;
             bad_negation(fullname, FALSE);
             return FALSE;
         } else if ((op = string_for_env_opt(fullname, opts, FALSE))
-                                            != empty_optstr) {
+                   != empty_optstr) {
             nmcpy(dogname, op, PL_PSIZ);
         } else
             return FALSE;
@@ -2232,7 +2508,7 @@ boolean tinitial, tfrom_file;
             bad_negation(fullname, FALSE);
             return FALSE;
         } else if ((op = string_for_env_opt(fullname, opts, FALSE))
-                                            != empty_optstr) {
+                   != empty_optstr) {
             nmcpy(horsename, op, PL_PSIZ);
         } else
             return FALSE;
@@ -2324,8 +2600,8 @@ boolean tinitial, tfrom_file;
             if (!read_sym_file(ROGUESET)) {
                 clear_symsetentry(ROGUESET, TRUE);
                 config_error_add(
-                               "Unable to load symbol set \"%s\" from \"%s\"",
-                                 op, SYMBOLS);
+                    "Unable to load symbol set \"%s\" from \"%s\"", op,
+                    SYMBOLS);
                 return FALSE;
             } else {
                 if (!initial && Is_rogue_level(&u.uz))
@@ -2349,8 +2625,8 @@ boolean tinitial, tfrom_file;
             if (!read_sym_file(PRIMARY)) {
                 clear_symsetentry(PRIMARY, TRUE);
                 config_error_add(
-                               "Unable to load symbol set \"%s\" from \"%s\"",
-                                 op, SYMBOLS);
+                    "Unable to load symbol set \"%s\" from \"%s\"", op,
+                    SYMBOLS);
                 return FALSE;
             } else {
                 switch_symbols(symset[PRIMARY].name != (char *) 0);
@@ -2392,7 +2668,7 @@ boolean tinitial, tfrom_file;
             bad_negation(fullname, FALSE);
             return FALSE;
         } else if ((op = string_for_env_opt(fullname, opts, FALSE))
-                                            != empty_optstr) {
+                   != empty_optstr) {
             if (!add_menu_coloring(op))
                 return FALSE;
         } else
@@ -2536,7 +2812,7 @@ boolean tinitial, tfrom_file;
 #ifdef MAC
         || match_optname(opts, "hicolor", 3, TRUE)
 #endif
-        ) {
+    ) {
         int color_number, color_incr;
 
 #ifndef WIN32
@@ -2646,13 +2922,18 @@ boolean tinitial, tfrom_file;
                     forig = fruit_from_name(pl_fruit, FALSE, (int *) 0);
 
                 if (!forig && fnum >= 100) {
+#if 0  /*KR: 원본*/
                     config_error_add(
                              "Doing that so many times isn't very fruitful.");
+#else  /*KR: KRNethack 맞춤 번역 */
+                    config_error_add(
+                        "그렇게 여러 번 해도 별 의미가 없습니다.");
+#endif
                     return retval;
                 }
             }
         }
- goodfruit:
+    goodfruit:
         nmcpy(pl_fruit, op, PL_FSIZ);
         sanitize_name(pl_fruit);
         /* OBJ_NAME(objects[SLIME_MOLD]) won't work for this after
@@ -2682,10 +2963,10 @@ boolean tinitial, tfrom_file;
             iflags.getpos_coords = GPCOORDS_NONE;
             return retval;
         } else if ((op = string_for_env_opt(fullname, opts, FALSE))
-                                            != empty_optstr) {
-            static char gpcoords[] = { GPCOORDS_NONE, GPCOORDS_COMPASS,
+                   != empty_optstr) {
+            static char gpcoords[] = { GPCOORDS_NONE,    GPCOORDS_COMPASS,
                                        GPCOORDS_COMFULL, GPCOORDS_MAP,
-                                       GPCOORDS_SCREEN, '\0' };
+                                       GPCOORDS_SCREEN,  '\0' };
             char c = lowc(*op);
 
             if (c && index(gpcoords, c))
@@ -2707,7 +2988,7 @@ boolean tinitial, tfrom_file;
             iflags.getloc_filter = GFILTER_NONE;
             return retval;
         } else if ((op = string_for_env_opt(fullname, opts, FALSE))
-                                            != empty_optstr) {
+                   != empty_optstr) {
             char c = lowc(*op);
 
             switch (c) {
@@ -3034,8 +3315,13 @@ boolean tinitial, tfrom_file;
                 boolean wasspace;
 
                 use_menu = FALSE;
+#if 0 /*KR: 원본*/
                 Sprintf(qbuf, "New %s: [%s am] (%s)", fullname, ocl,
                         *tbuf ? tbuf : "all");
+#else /*KR: KRNethack 맞춤 번역 */
+                Sprintf(qbuf, "새로운 %s 설정: [%s am] (%s)", fullname, ocl,
+                        *tbuf ? tbuf : "모두(all)");
+#endif
                 abuf[0] = '\0';
                 getlin(qbuf, abuf);
                 wasspace = (abuf[0] == ' '); /* before mungspaces */
@@ -3052,8 +3338,13 @@ boolean tinitial, tfrom_file;
             if (use_menu) {
                 if (wizard && !index(ocl, VENOM_SYM))
                     strkitten(ocl, VENOM_SYM);
+#if 0 /*KR: 원본*/
                 (void) choose_classes_menu("Autopickup what?", 1, TRUE, ocl,
                                            tbuf);
+#else /*KR: KRNethack 맞춤 번역 */
+                (void) choose_classes_menu("무엇을 자동 줍기 하시겠습니까?",
+                                           1, TRUE, ocl, tbuf);
+#endif
                 op = tbuf;
             }
         }
@@ -3159,19 +3450,19 @@ boolean tinitial, tfrom_file;
     if (match_optname(opts, fullname, 7, TRUE)) {
         /*
          * The order that the end_disclose options are stored:
-         *      inventory, attribs, vanquished, genocided,
-         *      conduct, overview.
+         * inventory, attribs, vanquished, genocided,
+         * conduct, overview.
          * There is an array in flags:
-         *      end_disclose[NUM_DISCLOSURE_OPT];
+         * end_disclose[NUM_DISCLOSURE_OPT];
          * with option settings for the each of the following:
          * iagvc [see disclosure_options in decl.c]:
          * Allowed setting values in that array are:
-         *      DISCLOSE_PROMPT_DEFAULT_YES  ask with default answer yes
-         *      DISCLOSE_PROMPT_DEFAULT_NO   ask with default answer no
-         *      DISCLOSE_YES_WITHOUT_PROMPT  always disclose and don't ask
-         *      DISCLOSE_NO_WITHOUT_PROMPT   never disclose and don't ask
-         *      DISCLOSE_PROMPT_DEFAULT_SPECIAL  for 'vanquished' only...
-         *      DISCLOSE_SPECIAL_WITHOUT_PROMPT  ...to set up sort order.
+         * DISCLOSE_PROMPT_DEFAULT_YES  ask with default answer yes
+         * DISCLOSE_PROMPT_DEFAULT_NO   ask with default answer no
+         * DISCLOSE_YES_WITHOUT_PROMPT  always disclose and don't ask
+         * DISCLOSE_NO_WITHOUT_PROMPT   never disclose and don't ask
+         * DISCLOSE_PROMPT_DEFAULT_SPECIAL  for 'vanquished' only...
+         * DISCLOSE_SPECIAL_WITHOUT_PROMPT  ...to set up sort order.
          *
          * Those setting values can be used in the option
          * string as a prefix to get the desired behaviour.
@@ -3191,8 +3482,8 @@ boolean tinitial, tfrom_file;
         }
         /* "disclose" without a value means "all with prompting"
            and negated means "none without prompting" */
-        if (op == empty_optstr
-            || !strcmpi(op, "all") || !strcmpi(op, "none")) {
+        if (op == empty_optstr || !strcmpi(op, "all")
+            || !strcmpi(op, "none")) {
             if (op != empty_optstr && !strcmpi(op, "none"))
                 negated = TRUE;
             for (num = 0; num < NUM_DISCLOSURE_OPTIONS; num++)
@@ -3205,12 +3496,13 @@ boolean tinitial, tfrom_file;
         num = 0;
         prefix_val = -1;
         while (*op && num < sizeof flags.end_disclose - 1) {
-            static char valid_settings[] = {
-                DISCLOSE_PROMPT_DEFAULT_YES, DISCLOSE_PROMPT_DEFAULT_NO,
-                DISCLOSE_PROMPT_DEFAULT_SPECIAL,
-                DISCLOSE_YES_WITHOUT_PROMPT, DISCLOSE_NO_WITHOUT_PROMPT,
-                DISCLOSE_SPECIAL_WITHOUT_PROMPT, '\0'
-            };
+            static char valid_settings[] = { DISCLOSE_PROMPT_DEFAULT_YES,
+                                             DISCLOSE_PROMPT_DEFAULT_NO,
+                                             DISCLOSE_PROMPT_DEFAULT_SPECIAL,
+                                             DISCLOSE_YES_WITHOUT_PROMPT,
+                                             DISCLOSE_NO_WITHOUT_PROMPT,
+                                             DISCLOSE_SPECIAL_WITHOUT_PROMPT,
+                                             '\0' };
             register char c, *dop;
 
             c = lowc(*op);
@@ -3349,7 +3641,7 @@ boolean tinitial, tfrom_file;
             bad_negation(fullname, FALSE);
             return FALSE;
         } else if ((opts = string_for_env_opt(fullname, opts, FALSE))
-                                              == empty_optstr) {
+                   == empty_optstr) {
             return FALSE;
         }
         if (!assign_videocolors(opts)) {
@@ -3367,7 +3659,7 @@ boolean tinitial, tfrom_file;
             bad_negation(fullname, FALSE);
             return FALSE;
         } else if ((opts = string_for_env_opt(fullname, opts, FALSE))
-                                              == empty_optstr) {
+                   == empty_optstr) {
             return FALSE;
         }
         if (!assign_videoshades(opts)) {
@@ -3389,7 +3681,7 @@ boolean tinitial, tfrom_file;
             bad_negation(fullname, FALSE);
             return FALSE;
         } else if ((opts = string_for_env_opt(fullname, opts, FALSE))
-                                              == empty_optstr) {
+                   == empty_optstr) {
             return FALSE;
         }
         if (!assign_video(opts)) {
@@ -3408,7 +3700,7 @@ boolean tinitial, tfrom_file;
             bad_negation(fullname, FALSE);
             return FALSE;
         } else if ((opts = string_for_env_opt(fullname, opts, FALSE))
-                                              == empty_optstr) {
+                   == empty_optstr) {
             return FALSE;
         }
         if (!assign_soundcard(opts)) {
@@ -3421,9 +3713,9 @@ boolean tinitial, tfrom_file;
 
     /* WINCAP
      *
-     *  map_mode:[tiles|ascii4x6|ascii6x8|ascii8x8|ascii16x8|ascii7x12
-     *            |ascii8x12|ascii16x12|ascii12x16|ascii10x18|fit_to_screen
-     *            |ascii_fit_to_screen|tiles_fit_to_screen]
+     * map_mode:[tiles|ascii4x6|ascii6x8|ascii8x8|ascii16x8|ascii7x12
+     * |ascii8x12|ascii16x12|ascii12x16|ascii10x18|fit_to_screen
+     * |ascii_fit_to_screen|tiles_fit_to_screen]
      */
     fullname = "map_mode";
     if (match_optname(opts, fullname, sizeof "map_mode" - 1, TRUE)) {
@@ -3611,7 +3903,7 @@ boolean tinitial, tfrom_file;
             bad_negation(fullname, FALSE);
             return FALSE;
         } else if ((op = string_for_env_opt(fullname, opts, FALSE))
-                                            != empty_optstr) {
+                   != empty_optstr) {
             if (!iflags.windowtype_deferred) {
                 char buf[WINTYPELEN];
 
@@ -3632,7 +3924,7 @@ boolean tinitial, tfrom_file;
             bad_negation(fullname, FALSE);
             return FALSE;
         } else if ((op = string_for_env_opt(fullname, opts, FALSE))
-                                            != empty_optstr) {
+                   != empty_optstr) {
             char buf[WINTYPELEN];
 
             nmcpy(buf, op, WINTYPELEN);
@@ -3680,7 +3972,8 @@ boolean tinitial, tfrom_file;
                 bad_negation(fullname, FALSE);
                 retval = FALSE;
 
-            /* just checks atol() sanity, not logical window size sanity */
+                /* just checks atol() sanity, not logical window size sanity
+                 */
             } else if (ltmp <= 0L || ltmp >= (long) LARGEST_INT) {
                 config_error_add("Invalid %s: %ld", fullname, ltmp);
                 retval = FALSE;
@@ -3744,7 +4037,7 @@ boolean tinitial, tfrom_file;
                 itmp = 0; /* Off */
             else if (op == empty_optstr)
                 itmp = 1; /* On */
-            else    /* Value supplied; expect 0 (off), 1 (on), or 2 (auto) */
+            else /* Value supplied; expect 0 (off), 1 (on), or 2 (auto) */
                 itmp = atoi(op);
 
             if (itmp < 0 || itmp > 2) {
@@ -3834,7 +4127,7 @@ boolean tinitial, tfrom_file;
             bad_negation(fullname, FALSE);
             return FALSE;
         } else if ((opts = string_for_env_opt(fullname, opts, FALSE))
-                                              == empty_optstr) {
+                   == empty_optstr) {
             return FALSE;
         }
         tmpattr = match_str2attr(opts, TRUE);
@@ -3892,7 +4185,8 @@ boolean tinitial, tfrom_file;
 #endif
     }
 
-    /* control over whether highlights should be displayed, and for how long */
+    /* control over whether highlights should be displayed, and for how long
+     */
     fullname = "statushilites";
     if (match_optname(opts, fullname, 9, TRUE)) {
 #ifdef STATUS_HILITES
@@ -3900,7 +4194,8 @@ boolean tinitial, tfrom_file;
             iflags.hilite_delta = 0L;
         } else {
             op = string_for_opt(opts, TRUE);
-            iflags.hilite_delta = (op == empty_optstr || !*op) ? 3L : atol(op);
+            iflags.hilite_delta =
+                (op == empty_optstr || !*op) ? 3L : atol(op);
             if (iflags.hilite_delta < 0L)
                 iflags.hilite_delta = 1L;
         }
@@ -4012,9 +4307,8 @@ boolean tinitial, tfrom_file;
             }
         }
         return retval;
-#else   /* !(MAC_GRAPHICS_ENV && BACKWARD_COMPAT) */
-        config_error_add("'%s' %s; use 'symset:%s' instead",
-                         fullname,
+#else                   /* !(MAC_GRAPHICS_ENV && BACKWARD_COMPAT) */
+        config_error_add("'%s' %s; use 'symset:%s' instead", fullname,
 #ifdef MAC_GRAPHICS_ENV /* implies BACKWARD_COMPAT is not defined */
                          "no longer supported",
 #else
@@ -4022,7 +4316,7 @@ boolean tinitial, tfrom_file;
 #endif
                          fullname);
         return FALSE;
-#endif  /* ?(MAC_GRAPHICS_ENV && BACKWARD_COMPAT) */
+#endif /* ?(MAC_GRAPHICS_ENV && BACKWARD_COMPAT) */
     } /* "MACgraphics" */
 
     /*
@@ -4048,8 +4342,8 @@ boolean tinitial, tfrom_file;
             if (op != empty_optstr) {
                 if (negated) {
                     config_error_add(
-                           "Negated boolean '%s' should not have a parameter",
-                                     boolopt[i].name);
+                        "Negated boolean '%s' should not have a parameter",
+                        boolopt[i].name);
                     return FALSE;
                 }
                 if (!strcmp(op, "true") || !strcmp(op, "yes")) {
@@ -4137,7 +4431,8 @@ boolean tinitial, tfrom_file;
                 if (WINDOWPORT("curses")) {
                     /* if we're enabling hilite_pet and petattr isn't set,
                        set it to Inverse; if we're disabling, leave petattr
-                       alone so that re-enabling will get current value back */
+                       alone so that re-enabling will get current value back
+                     */
                     if (iflags.hilite_pet && !iflags.wc2_petattr)
                         iflags.wc2_petattr = curses_read_attrs("I");
                 }
@@ -4184,7 +4479,7 @@ boolean tinitial, tfrom_file;
 /* parse key:command */
 boolean
 parsebindings(bindings)
-char* bindings;
+char *bindings;
 {
     char *bind;
     char key;
@@ -4198,7 +4493,7 @@ char* bindings;
     }
 
     /* parse a single binding: first split around : */
-    if (! (bind = index(bindings, ':')))
+    if (!(bind = index(bindings, ':')))
         return FALSE; /* it's not a binding */
     *bind++ = 0;
 
@@ -4251,9 +4546,7 @@ static NEARDATA const char *sortltype[] = { "none", "loot", "full" };
  * Convert the given string of object classes to a string of default object
  * symbols.
  */
-void
-oc_to_str(src, dest)
-char *src, *dest;
+void oc_to_str(src, dest) char *src, *dest;
 {
     int i;
 
@@ -4270,12 +4563,11 @@ char *src, *dest;
  * Add the given mapping to the menu command map list.  Always keep the
  * maps valid C strings.
  */
-void
-add_menu_cmd_alias(from_ch, to_ch)
-char from_ch, to_ch;
+void add_menu_cmd_alias(from_ch, to_ch) char from_ch, to_ch;
 {
     if (n_menu_mapped >= MAX_MENU_MAPPED_CMDS) {
-        pline("out of menu map space.");
+        /*KR pline("out of menu map space."); */
+        pline("메뉴 매핑 공간이 부족합니다.");
     } else {
         mapped_menu_cmds[n_menu_mapped] = from_ch;
         mapped_menu_op[n_menu_mapped] = to_ch;
@@ -4317,14 +4609,16 @@ char ch;
     return ch;
 }
 
-void
-show_menu_controls(win, dolist)
-winid win;
+void show_menu_controls(win, dolist) winid win;
 boolean dolist;
 {
     char buf[BUFSZ];
 
+#if 0 /*KR: 원본*/
     putstr(win, 0, "Menu control keys:");
+#else /*KR: KRNethack 맞춤 번역 */
+    putstr(win, 0, "메뉴 제어 키:");
+#endif
     if (dolist) {
         int i;
 
@@ -4335,55 +4629,110 @@ boolean dolist;
             putstr(win, 0, buf);
         }
     } else {
-        const char
-            fmt3[] = " %-12s       %-2s        %-2s  %s",
-            fmt2[] = " %-12s       %-2s        %-2s",
-            fmt1[] = " %10s  %-2s  %s",
-            fmt0[] = " %14s  %s";
+        const char fmt3[] = " %-12s        %-2s        %-2s  %s",
+                   fmt2[] = " %-12s        %-2s        %-2s",
+                   fmt1[] = " %10s  %-2s  %s", fmt0[] = " %14s  %s";
 
         putstr(win, 0, "");
+#if 0 /*KR: 원본*/
         putstr(win, 0, "Selection:       On page   Full menu");
+#else /*KR: KRNethack 맞춤 번역 */
+        putstr(win, 0, "선택:             현재 페이지 전체 메뉴");
+#endif
+#if 0 /*KR: 원본*/
         Sprintf(buf, fmt2, "Select all",
+#else /*KR: KRNethack 맞춤 번역 */
+        Sprintf(buf, fmt2, "모두 선택",
+#endif
                 visctrl(get_menu_cmd_key(MENU_SELECT_PAGE)),
                 visctrl(get_menu_cmd_key(MENU_SELECT_ALL)));
         putstr(win, 0, buf);
+#if 0 /*KR: 원본*/
         Sprintf(buf, fmt2, "Deselect all",
+#else /*KR: KRNethack 맞춤 번역 */
+        Sprintf(buf, fmt2, "모두 선택 해제",
+#endif
                 visctrl(get_menu_cmd_key(MENU_UNSELECT_PAGE)),
                 visctrl(get_menu_cmd_key(MENU_UNSELECT_ALL)));
         putstr(win, 0, buf);
+#if 0 /*KR: 원본*/
         Sprintf(buf, fmt2, "Invert all",
+#else /*KR: KRNethack 맞춤 번역 */
+        Sprintf(buf, fmt2, "모두 반전",
+#endif
                 visctrl(get_menu_cmd_key(MENU_INVERT_PAGE)),
                 visctrl(get_menu_cmd_key(MENU_INVERT_ALL)));
         putstr(win, 0, buf);
+#if 0 /*KR: 원본*/
         Sprintf(buf, fmt3, "Text match", "",
+#else /*KR: KRNethack 맞춤 번역 */
+        Sprintf(buf, fmt3, "텍스트 검색", "",
+#endif
                 visctrl(get_menu_cmd_key(MENU_SEARCH)),
+#if 0 /*KR: 원본*/
                 "Search and toggle matching entries");
+#else /*KR: KRNethack 맞춤 번역 */
+                "일치하는 항목 검색 및 전환");
+#endif
         putstr(win, 0, buf);
         putstr(win, 0, "");
+#if 0 /*KR: 원본*/
         putstr(win, 0, "Navigation:");
+#else /*KR: KRNethack 맞춤 번역 */
+        putstr(win, 0, "탐색:");
+#endif
+#if 0 /*KR: 원본*/
         Sprintf(buf, fmt1, "Go to     ",
+#else /*KR: KRNethack 맞춤 번역 */
+        Sprintf(buf, fmt1, "이동      ",
+#endif
                 visctrl(get_menu_cmd_key(MENU_NEXT_PAGE)),
+#if 0 /*KR: 원본*/
                 "Next page");
+#else /*KR: KRNethack 맞춤 번역 */
+                "다음 페이지");
+#endif
         putstr(win, 0, buf);
-        Sprintf(buf, fmt1, "",
-                visctrl(get_menu_cmd_key(MENU_PREVIOUS_PAGE)),
+        Sprintf(buf, fmt1, "", visctrl(get_menu_cmd_key(MENU_PREVIOUS_PAGE)),
+#if 0 /*KR: 원본*/
                 "Previous page");
+#else /*KR: KRNethack 맞춤 번역 */
+                "이전 페이지");
+#endif
         putstr(win, 0, buf);
-        Sprintf(buf, fmt1, "",
-                visctrl(get_menu_cmd_key(MENU_FIRST_PAGE)),
+        Sprintf(buf, fmt1, "", visctrl(get_menu_cmd_key(MENU_FIRST_PAGE)),
+#if 0 /*KR: 원본*/
                 "First page");
+#else /*KR: KRNethack 맞춤 번역 */
+                "첫 페이지");
+#endif
         putstr(win, 0, buf);
-        Sprintf(buf, fmt1, "",
-                visctrl(get_menu_cmd_key(MENU_LAST_PAGE)),
+        Sprintf(buf, fmt1, "", visctrl(get_menu_cmd_key(MENU_LAST_PAGE)),
+#if 0 /*KR: 원본*/
                 "Last page");
+#else /*KR: KRNethack 맞춤 번역 */
+                "마지막 페이지");
+#endif
         putstr(win, 0, buf);
+#if 0 /*KR: 원본*/
         Sprintf(buf, fmt0, "SPACE", "Next page, if any, otherwise RETURN");
+#else /*KR: KRNethack 맞춤 번역 */
+        Sprintf(buf, fmt0, "SPACE", "다음 페이지 (없으면 RETURN)");
+#endif
         putstr(win, 0, buf);
         Sprintf(buf, fmt0, "RETURN/ENTER",
+#if 0 /*KR: 원본*/
                 "Finish menu with any selection(s) made");
+#else /*KR: KRNethack 맞춤 번역 */
+                "선택 항목을 적용하고 메뉴 종료");
+#endif
         putstr(win, 0, buf);
         Sprintf(buf, fmt0, "ESCAPE",
+#if 0 /*KR: 원본*/
                 "Cancel menu without selecting anything");
+#else /*KR: KRNethack 맞춤 번역 */
+                "선택하지 않고 메뉴 취소");
+#endif
         putstr(win, 0, buf);
     }
 }
@@ -4396,15 +4745,18 @@ boolean dolist;
 
 static char fmtstr_doset[] = "%s%-15s [%s]   ";
 static char fmtstr_doset_tab[] = "%s\t[%s]";
+#if 0 /*KR: 원본*/
 static char n_currently_set[] = "(%d currently set)";
+#else /*KR: KRNethack 맞춤 번역 */
+static char n_currently_set[] = "(현재 %d개 설정됨)";
+#endif
 
 /* doset('O' command) menu entries for compound options */
-STATIC_OVL void
-doset_add_menu(win, option, indexoffset)
-winid win;          /* window to add to */
-const char *option; /* option name */
-int indexoffset;    /* value to add to index in compopt[], or zero
-                       if option cannot be changed */
+STATIC_OVL void doset_add_menu(win, option,
+                               indexoffset) winid win; /* window to add to */
+const char *option;                                    /* option name */
+int indexoffset; /* value to add to index in compopt[], or zero
+                    if option cannot be changed */
 {
     const char *value = "unknown"; /* current value */
     char buf[BUFSZ], buf2[BUFSZ];
@@ -4426,22 +4778,19 @@ int indexoffset;    /* value to add to index in compopt[], or zero
         } else {
             /* We are trying to add an option not found in compopt[].
                This is almost certainly bad, but we'll let it through anyway
-               (with a zero value, so it can't be selected). */
+               (with a zero value, so it can can't be selected). */
             any.a_int = 0;
         }
     }
     /* "    " replaces "a - " -- assumes menus follow that style */
     if (!iflags.menu_tab_sep)
-        Sprintf(buf, fmtstr_doset, any.a_int ? "" : "    ", option,
-                value);
+        Sprintf(buf, fmtstr_doset, any.a_int ? "" : "    ", option, value);
     else
         Sprintf(buf, fmtstr_doset_tab, option, value);
     add_menu(win, NO_GLYPH, &any, 0, 0, ATR_NONE, buf, MENU_UNSELECTED);
 }
 
-STATIC_OVL void
-opts_add_others(win, name, id, bufx, nset)
-winid win;
+STATIC_OVL void opts_add_others(win, name, id, bufx, nset) winid win;
 const char *name;
 int id;
 char *bufx;
@@ -4456,8 +4805,7 @@ int nset;
     else
         Sprintf(buf2, "%s", bufx);
     if (!iflags.menu_tab_sep)
-        Sprintf(buf, fmtstr_doset, any.a_int ? "" : "    ",
-                name, buf2);
+        Sprintf(buf, fmtstr_doset, any.a_int ? "" : "    ", name, buf2);
     else
         Sprintf(buf, fmtstr_doset_tab, name, buf2);
     add_menu(win, NO_GLYPH, &any, 0, 0, ATR_NONE, buf, MENU_UNSELECTED);
@@ -4470,8 +4818,8 @@ count_apes(VOID_ARGS)
     struct autopickup_exception *ape = apelist;
 
     while (ape) {
-      numapes++;
-      ape = ape->next;
+        numapes++;
+        ape = ape->next;
     }
 
     return numapes;
@@ -4535,14 +4883,16 @@ doset() /* changing options via menu by Per Liboriussen */
            and adjust the format string accordingly */
         longest_name_len = 0;
         for (pass = 0; pass <= 2; pass++)
-            for (i = 0; (name = ((pass == 0) ? boolopt[i].name
+            for (i = 0; (name = ((pass == 0)   ? boolopt[i].name
                                  : (pass == 1) ? compopt[i].name
-                                   : othropt[i].name)) != 0; i++) {
+                                               : othropt[i].name))
+                        != 0;
+                 i++) {
                 if (pass == 0 && !boolopt[i].addr)
                     continue;
-                optflags = (pass == 0) ? boolopt[i].optflags
+                optflags = (pass == 0)   ? boolopt[i].optflags
                            : (pass == 1) ? compopt[i].optflags
-                             : othropt[i].optflags;
+                                         : othropt[i].optflags;
                 if (optflags < startpass || optflags > endpass)
                     continue;
                 if ((is_wc_option(name) && !wc_supported(name))
@@ -4557,8 +4907,13 @@ doset() /* changing options via menu by Per Liboriussen */
     }
 
     any = zeroany;
+#if 0 /*KR: 원본*/
     add_menu(tmpwin, NO_GLYPH, &any, 0, 0, iflags.menu_headings,
              "Booleans (selecting will toggle value):", MENU_UNSELECTED);
+#else /*KR: KRNethack 맞춤 번역 */
+    add_menu(tmpwin, NO_GLYPH, &any, 0, 0, iflags.menu_headings,
+             "참/거짓 옵션 (선택 시 값이 전환됩니다):", MENU_UNSELECTED);
+#endif
     any.a_int = 0;
     /* first list any other non-modifiable booleans, then modifiable ones */
     for (pass = 0; pass <= 1; pass++)
@@ -4579,8 +4934,8 @@ doset() /* changing options via menu by Per Liboriussen */
                     Sprintf(buf, fmtstr_doset, (pass == 0) ? "    " : "",
                             name, *bool_p ? "true" : "false");
                 else
-                    Sprintf(buf, fmtstr_doset_tab,
-                            name, *bool_p ? "true" : "false");
+                    Sprintf(buf, fmtstr_doset_tab, name,
+                            *bool_p ? "true" : "false");
                 add_menu(tmpwin, NO_GLYPH, &any, 0, 0, ATR_NONE, buf,
                          MENU_UNSELECTED);
             }
@@ -4589,9 +4944,14 @@ doset() /* changing options via menu by Per Liboriussen */
     indexoffset = boolcount;
     any = zeroany;
     add_menu(tmpwin, NO_GLYPH, &any, 0, 0, ATR_NONE, "", MENU_UNSELECTED);
+#if 0 /*KR: 원본*/
     add_menu(tmpwin, NO_GLYPH, &any, 0, 0, iflags.menu_headings,
              "Compounds (selecting will prompt for new value):",
              MENU_UNSELECTED);
+#else /*KR: KRNethack 맞춤 번역 */
+    add_menu(tmpwin, NO_GLYPH, &any, 0, 0, iflags.menu_headings,
+             "복합 옵션 (선택 시 새로운 값을 묻습니다):", MENU_UNSELECTED);
+#endif
 
     /* deliberately put playmode, name, role+race+gender+align first */
     doset_add_menu(tmpwin, "playmode", 0);
@@ -4604,8 +4964,8 @@ doset() /* changing options via menu by Per Liboriussen */
     for (pass = startpass; pass <= endpass; pass++)
         for (i = 0; (name = compopt[i].name) != 0; i++)
             if (compopt[i].optflags == pass) {
-                if (!strcmp(name, "playmode")  || !strcmp(name, "name")
-                    || !strcmp(name, "role")   || !strcmp(name, "race")
+                if (!strcmp(name, "playmode") || !strcmp(name, "name")
+                    || !strcmp(name, "role") || !strcmp(name, "race")
                     || !strcmp(name, "gender") || !strcmp(name, "align"))
                     continue;
                 if ((is_wc_option(name) && !wc_supported(name))
@@ -4619,25 +4979,32 @@ doset() /* changing options via menu by Per Liboriussen */
     any = zeroany;
     add_menu(tmpwin, NO_GLYPH, &any, 0, 0, ATR_NONE, "", MENU_UNSELECTED);
     add_menu(tmpwin, NO_GLYPH, &any, 0, 0, iflags.menu_headings,
-             "Other settings:", MENU_UNSELECTED);
+        /*KR "Other settings:", MENU_UNSELECTED); */
+             "기타 설정:", MENU_UNSELECTED);
 
     for (i = 0; (name = othropt[i].name) != 0; i++) {
         if ((is_wc_option(name) && !wc_supported(name))
             || (is_wc2_option(name) && !wc2_supported(name)))
             continue;
-        opts_add_others(tmpwin, name, othropt[i].code,
-                        (char *) 0, othropt[i].othr_count_func());
+        opts_add_others(tmpwin, name, othropt[i].code, (char *) 0,
+                        othropt[i].othr_count_func());
     }
 
 #ifdef PREFIXES_IN_USE
     any = zeroany;
     add_menu(tmpwin, NO_GLYPH, &any, 0, 0, ATR_NONE, "", MENU_UNSELECTED);
+#if 0 /*KR: 원본*/
     add_menu(tmpwin, NO_GLYPH, &any, 0, 0, iflags.menu_headings,
              "Variable playground locations:", MENU_UNSELECTED);
+#else /*KR: KRNethack 맞춤 번역 */
+    add_menu(tmpwin, NO_GLYPH, &any, 0, 0, iflags.menu_headings,
+             "가변 플레이그라운드 위치:", MENU_UNSELECTED);
+#endif
     for (i = 0; i < PREFIX_COUNT; i++)
         doset_add_menu(tmpwin, fqn_prefix_names[i], 0);
 #endif
-    end_menu(tmpwin, "Set what options?");
+    /*KR end_menu(tmpwin, "Set what options?"); */
+    end_menu(tmpwin, "어떤 옵션을 설정하시겠습니까?");
     need_redraw = FALSE;
     if ((pick_cnt = select_menu(tmpwin, PICK_ANY, &pick_list)) > 0) {
         /*
@@ -4656,17 +5023,17 @@ doset() /* changing options via menu by Per Liboriussen */
 #ifdef STATUS_HILITES
             } else if (opt_indx == OPT_OTHER_STATHILITE) {
                 if (!status_hilite_menu()) {
-                    pline("Bad status hilite(s) specified.");
+                    /*KR pline("Bad status hilite(s) specified."); */
+                    pline("잘못된 상태 강조가 지정되었습니다.");
                 } else {
                     if (wc2_supported("hilite_status"))
                         preference_update("hilite_status");
                 }
 #endif
             } else if (opt_indx == OPT_OTHER_MENUCOLOR) {
-                    (void) special_handling("menu_colors", setinitial,
-                                            fromfile);
+                (void) special_handling("menu_colors", setinitial, fromfile);
             } else if (opt_indx == OPT_OTHER_MSGTYPE) {
-                    (void) special_handling("msgtype", setinitial, fromfile);
+                (void) special_handling("msgtype", setinitial, fromfile);
             } else if (opt_indx < boolcount) {
                 /* boolean option */
                 Sprintf(buf, "%s%s", *boolopt[opt_indx].addr ? "!" : "",
@@ -4683,7 +5050,10 @@ doset() /* changing options via menu by Per Liboriussen */
                                       fromfile)) {
                     char abuf[BUFSZ];
 
-                    Sprintf(buf, "Set %s to what?", compopt[opt_indx].name);
+                    /*KR Sprintf(buf, "Set %s to what?",
+                     * compopt[opt_indx].name); */
+                    Sprintf(buf, "%s에 무엇을 설정하시겠습니까?",
+                            compopt[opt_indx].name);
                     abuf[0] = '\0';
                     getlin(buf, abuf);
                     if (abuf[0] == '\033')
@@ -4712,15 +5082,14 @@ doset() /* changing options via menu by Per Liboriussen */
 }
 
 /* common to msg-types, menu-colors, autopickup-exceptions */
-STATIC_OVL int
-handle_add_list_remove(optname, numtotal)
-const char *optname;
+STATIC_OVL int handle_add_list_remove(optname, numtotal) const char *optname;
 int numtotal;
 {
     winid tmpwin;
     anything any;
     int i, pick_cnt, opt_idx;
     menu_item *pick_list = (menu_item *) 0;
+#if 0 /*KR: 원본*/
     static const struct action {
         char letr;
         const char *desc;
@@ -4730,6 +5099,17 @@ int numtotal;
         { 'r', "remove existing %s" }, /* [2] */
         { 'x', "exit this menu" },     /* [3] */
     };
+#else /*KR: KRNethack 맞춤 번역 */
+    static const struct action {
+        char letr;
+        const char *desc;
+    } action_titles[] = {
+        { 'a', "새로운 %s 추가" }, /* [0] */
+        { 'l', "%s 목록 보기" },   /* [1] */
+        { 'r', "기존 %s 제거" },   /* [2] */
+        { 'x', "이 메뉴 종료" },   /* [3] */
+    };
+#endif
 
     opt_idx = 0;
     tmpwin = create_nhwindow(NHW_MENU);
@@ -4747,7 +5127,8 @@ int numtotal;
         add_menu(tmpwin, NO_GLYPH, &any, action_titles[i].letr, 0, ATR_NONE,
                  tmpbuf, (i == 3) ? MENU_SELECTED : MENU_UNSELECTED);
     }
-    end_menu(tmpwin, "Do what?");
+    /*KR end_menu(tmpwin, "Do what?"); */
+    end_menu(tmpwin, "어떻게 하시겠습니까?");
     if ((pick_cnt = select_menu(tmpwin, PICK_ONE, &pick_list)) > 0) {
         opt_idx = pick_list[0].item.a_int - 1;
         if (pick_cnt > 1 && opt_idx == 3)
@@ -4762,9 +5143,8 @@ int numtotal;
 struct symsetentry *symset_list = 0; /* files.c will populate this with
                                       * list of available sets */
 
-STATIC_OVL boolean
-special_handling(optname, setinitial, setfromfile)
-const char *optname;
+STATIC_OVL boolean special_handling(optname, setinitial, setfromfile) const
+    char *optname;
 boolean setinitial, setfromfile;
 {
     winid tmpwin;
@@ -4792,7 +5172,8 @@ boolean setinitial, setfromfile;
             add_menu(tmpwin, NO_GLYPH, &any, *style_name, 0, ATR_NONE,
                      style_name, MENU_UNSELECTED);
         }
-        end_menu(tmpwin, "Select menustyle:");
+        /*KR end_menu(tmpwin, "Select menustyle:"); */
+        end_menu(tmpwin, "메뉴 스타일을 선택하십시오:");
         if (select_menu(tmpwin, PICK_ONE, &style_pick) > 0) {
             flags.menu_style = style_pick->item.a_int - 1;
             free((genericptr_t) style_pick);
@@ -4814,7 +5195,8 @@ boolean setinitial, setfromfile;
                          ? MENU_SELECTED
                          : MENU_UNSELECTED);
         }
-        end_menu(tmpwin, "Actions requiring extra confirmation:");
+        /*KR end_menu(tmpwin, "Actions requiring extra confirmation:"); */
+        end_menu(tmpwin, "추가 확인이 필요한 작업:");
         i = select_menu(tmpwin, PICK_ANY, &paranoia_picks);
         if (i >= 0) {
             /* player didn't cancel; we reset all the paranoia options
@@ -4842,7 +5224,8 @@ boolean setinitial, setfromfile;
             add_menu(tmpwin, NO_GLYPH, &any, burden_letters[i], 0, ATR_NONE,
                      burden_name, MENU_UNSELECTED);
         }
-        end_menu(tmpwin, "Select encumbrance level:");
+        /*KR end_menu(tmpwin, "Select encumbrance level:"); */
+        end_menu(tmpwin, "경고를 표시할 짐 무게 수준을 선택하십시오:");
         if (select_menu(tmpwin, PICK_ONE, &burden_pick) > 0) {
             flags.pickup_burden = burden_pick->item.a_int - 1;
             free((genericptr_t) burden_pick);
@@ -4850,8 +5233,8 @@ boolean setinitial, setfromfile;
         destroy_nhwindow(tmpwin);
     } else if (!strcmp("pickup_types", optname)) {
         /* parseoptions will prompt for the list of types */
-        (void) parseoptions(strcpy(buf, "pickup_types"),
-                            setinitial, setfromfile);
+        (void) parseoptions(strcpy(buf, "pickup_types"), setinitial,
+                            setfromfile);
     } else if (!strcmp("disclose", optname)) {
         /* order of disclose_names[] must correspond to
            disclosure_options in decl.c */
@@ -4875,7 +5258,9 @@ boolean setinitial, setfromfile;
                      ATR_NONE, buf, MENU_UNSELECTED);
             disc_cat[i] = 0;
         }
-        end_menu(tmpwin, "Change which disclosure options categories:");
+        /*KR end_menu(tmpwin, "Change which disclosure options categories:");
+         */
+        end_menu(tmpwin, "변경할 공개 옵션 범주를 선택하십시오:");
         pick_cnt = select_menu(tmpwin, PICK_ANY, &disclosure_pick);
         if (pick_cnt > 0) {
             for (pick_idx = 0; pick_idx < pick_cnt; ++pick_idx) {
@@ -4890,39 +5275,68 @@ boolean setinitial, setfromfile;
         for (i = 0; i < NUM_DISCLOSURE_OPTIONS; i++) {
             if (disc_cat[i]) {
                 c = flags.end_disclose[i];
+#if 0 /*KR: 원본*/
                 Sprintf(buf, "Disclosure options for %s:",
                         disclosure_names[i]);
+#else /*KR: KRNethack 맞춤 번역 */
+                Sprintf(buf, "%s에 대한 공개 옵션:", disclosure_names[i]);
+#endif
                 tmpwin = create_nhwindow(NHW_MENU);
                 start_menu(tmpwin);
                 any = zeroany;
                 /* 'y','n',and '+' work as alternate selectors; '-' doesn't */
                 any.a_char = DISCLOSE_NO_WITHOUT_PROMPT;
-                add_menu(tmpwin, NO_GLYPH, &any, 0, any.a_char, ATR_NONE,
+                /*KR add_menu(tmpwin, NO_GLYPH, &any, 0, any.a_char, ATR_NONE,
                          "Never disclose, without prompting",
                          (c == any.a_char) ? MENU_SELECTED : MENU_UNSELECTED);
-                any.a_char = DISCLOSE_YES_WITHOUT_PROMPT;
+                 */
                 add_menu(tmpwin, NO_GLYPH, &any, 0, any.a_char, ATR_NONE,
+                         "확인 없이 절대 공개하지 않음",
+                         (c == any.a_char) ? MENU_SELECTED : MENU_UNSELECTED);
+                any.a_char = DISCLOSE_YES_WITHOUT_PROMPT;
+                /*KR add_menu(tmpwin, NO_GLYPH, &any, 0, any.a_char, ATR_NONE,
                          "Always disclose, without prompting",
+                         (c == any.a_char) ? MENU_SELECTED : MENU_UNSELECTED);
+                 */
+                add_menu(tmpwin, NO_GLYPH, &any, 0, any.a_char, ATR_NONE,
+                         "확인 없이 항상 공개함",
                          (c == any.a_char) ? MENU_SELECTED : MENU_UNSELECTED);
                 if (*disclosure_names[i] == 'v') {
                     any.a_char = DISCLOSE_SPECIAL_WITHOUT_PROMPT; /* '#' */
+                    /*KR add_menu(tmpwin, NO_GLYPH, &any, 0, any.a_char,
+                       ATR_NONE, "Always disclose, pick sort order from menu",
+                             (c == any.a_char) ? MENU_SELECTED
+                                               : MENU_UNSELECTED); */
                     add_menu(tmpwin, NO_GLYPH, &any, 0, any.a_char, ATR_NONE,
-                             "Always disclose, pick sort order from menu",
+                             "항상 공개하되, 메뉴에서 정렬 순서 선택",
                              (c == any.a_char) ? MENU_SELECTED
                                                : MENU_UNSELECTED);
                 }
                 any.a_char = DISCLOSE_PROMPT_DEFAULT_NO;
-                add_menu(tmpwin, NO_GLYPH, &any, 0, any.a_char, ATR_NONE,
+                /*KR add_menu(tmpwin, NO_GLYPH, &any, 0, any.a_char, ATR_NONE,
                          "Prompt, with default answer of \"No\"",
                          (c == any.a_char) ? MENU_SELECTED : MENU_UNSELECTED);
-                any.a_char = DISCLOSE_PROMPT_DEFAULT_YES;
+                 */
                 add_menu(tmpwin, NO_GLYPH, &any, 0, any.a_char, ATR_NONE,
+                         "\"아니오\"를 기본값으로 확인",
+                         (c == any.a_char) ? MENU_SELECTED : MENU_UNSELECTED);
+                any.a_char = DISCLOSE_PROMPT_DEFAULT_YES;
+                /*KR add_menu(tmpwin, NO_GLYPH, &any, 0, any.a_char, ATR_NONE,
                          "Prompt, with default answer of \"Yes\"",
+                         (c == any.a_char) ? MENU_SELECTED : MENU_UNSELECTED);
+                 */
+                add_menu(tmpwin, NO_GLYPH, &any, 0, any.a_char, ATR_NONE,
+                         "\"예\"를 기본값으로 확인",
                          (c == any.a_char) ? MENU_SELECTED : MENU_UNSELECTED);
                 if (*disclosure_names[i] == 'v') {
                     any.a_char = DISCLOSE_PROMPT_DEFAULT_SPECIAL; /* '?' */
+                    /*KR add_menu(tmpwin, NO_GLYPH, &any, 0, any.a_char,
+                ATR_NONE, "Prompt, with default answer of \"Ask\" to request
+                sort menu", (c == any.a_char) ? MENU_SELECTED :
+                MENU_UNSELECTED); */
                     add_menu(tmpwin, NO_GLYPH, &any, 0, any.a_char, ATR_NONE,
-                "Prompt, with default answer of \"Ask\" to request sort menu",
+                             "정렬 메뉴 요청을 위해 \"묻기(Ask)\"를 "
+                             "기본값으로 확인",
                              (c == any.a_char) ? MENU_SELECTED
                                                : MENU_UNSELECTED);
                 }
@@ -4931,7 +5345,8 @@ boolean setinitial, setfromfile;
                 if (n > 0) {
                     flags.end_disclose[i] = disclosure_pick[0].item.a_char;
                     if (n > 1 && flags.end_disclose[i] == c)
-                        flags.end_disclose[i] = disclosure_pick[1].item.a_char;
+                        flags.end_disclose[i] =
+                            disclosure_pick[1].item.a_char;
                     free((genericptr_t) disclosure_pick);
                 }
                 destroy_nhwindow(tmpwin);
@@ -4950,7 +5365,8 @@ boolean setinitial, setfromfile;
             add_menu(tmpwin, NO_GLYPH, &any, *mode_name, 0, ATR_NONE,
                      mode_name, MENU_UNSELECTED);
         }
-        end_menu(tmpwin, "Select run/travel display mode:");
+        /*KR end_menu(tmpwin, "Select run/travel display mode:"); */
+        end_menu(tmpwin, "달리기/여행 표시 모드를 선택하십시오:");
         if (select_menu(tmpwin, PICK_ONE, &mode_pick) > 0) {
             flags.runmode = mode_pick->item.a_int - 1;
             free((genericptr_t) mode_pick);
@@ -4986,25 +5402,30 @@ boolean setinitial, setfromfile;
                  (gp == GPCOORDS_NONE) ? MENU_SELECTED : MENU_UNSELECTED);
         any.a_long = 0L;
         add_menu(tmpwin, NO_GLYPH, &any, 0, 0, ATR_NONE, "", MENU_UNSELECTED);
-        Sprintf(buf, "map: upper-left: <%d,%d>, lower-right: <%d,%d>%s",
-                1, 0, COLNO - 1, ROWNO - 1,
+        Sprintf(buf, "map: upper-left: <%d,%d>, lower-right: <%d,%d>%s", 1, 0,
+                COLNO - 1, ROWNO - 1,
                 flags.verbose ? "; column 0 unused, off left edge" : "");
-        add_menu(tmpwin, NO_GLYPH, &any, 0, 0, ATR_NONE, buf, MENU_UNSELECTED);
+        add_menu(tmpwin, NO_GLYPH, &any, 0, 0, ATR_NONE, buf,
+                 MENU_UNSELECTED);
         if (strcmp(windowprocs.name, "tty")) /* only show for non-tty */
             add_menu(tmpwin, NO_GLYPH, &any, 0, 0, ATR_NONE,
-       "screen: row is offset to accommodate tty interface's use of top line",
+                     "screen: row is offset to accommodate tty interface's "
+                     "use of top line",
                      MENU_UNSELECTED);
 #if COLNO == 80
 #define COL80ARG flags.verbose ? "; column 80 is not used" : ""
 #else
 #define COL80ARG ""
 #endif
-        Sprintf(buf, "screen: upper-left: [%02d,%02d], lower-right: [%d,%d]%s",
+        Sprintf(buf,
+                "screen: upper-left: [%02d,%02d], lower-right: [%d,%d]%s",
                 0 + 2, 1, ROWNO - 1 + 2, COLNO - 1, COL80ARG);
 #undef COL80ARG
-        add_menu(tmpwin, NO_GLYPH, &any, 0, 0, ATR_NONE, buf, MENU_UNSELECTED);
+        add_menu(tmpwin, NO_GLYPH, &any, 0, 0, ATR_NONE, buf,
+                 MENU_UNSELECTED);
         add_menu(tmpwin, NO_GLYPH, &any, 0, 0, ATR_NONE, "", MENU_UNSELECTED);
-        end_menu(tmpwin,
+        end_menu(
+            tmpwin,
             "Select coordinate display when auto-describing a map position:");
         if ((pick_cnt = select_menu(tmpwin, PICK_ONE, &window_pick)) > 0) {
             iflags.getpos_coords = window_pick[0].item.a_char;
@@ -5024,19 +5445,16 @@ boolean setinitial, setfromfile;
         start_menu(tmpwin);
         any = zeroany;
         any.a_char = (GFILTER_NONE + 1);
-        add_menu(tmpwin, NO_GLYPH, &any, 'n',
-                 0, ATR_NONE, "no filtering",
+        add_menu(tmpwin, NO_GLYPH, &any, 'n', 0, ATR_NONE, "no filtering",
                  (gf == GFILTER_NONE) ? MENU_SELECTED : MENU_UNSELECTED);
         any.a_char = (GFILTER_VIEW + 1);
-        add_menu(tmpwin, NO_GLYPH, &any, 'v',
-                 0, ATR_NONE, "in view only",
+        add_menu(tmpwin, NO_GLYPH, &any, 'v', 0, ATR_NONE, "in view only",
                  (gf == GFILTER_VIEW) ? MENU_SELECTED : MENU_UNSELECTED);
         any.a_char = (GFILTER_AREA + 1);
-        add_menu(tmpwin, NO_GLYPH, &any, 'a',
-                 0, ATR_NONE, "in same area",
+        add_menu(tmpwin, NO_GLYPH, &any, 'a', 0, ATR_NONE, "in same area",
                  (gf == GFILTER_AREA) ? MENU_SELECTED : MENU_UNSELECTED);
-        end_menu(tmpwin,
-      "Select location filtering when going for next/previous map position:");
+        end_menu(tmpwin, "Select location filtering when going for "
+                         "next/previous map position:");
         if ((pick_cnt = select_menu(tmpwin, PICK_ONE, &window_pick)) > 0) {
             iflags.getloc_filter = (window_pick[0].item.a_char - 1);
             /* PICK_ONE doesn't unselect preselected entry when
@@ -5057,8 +5475,8 @@ boolean setinitial, setfromfile;
             any = zeroany;
             if (!WINDOWPORT("curses")) {
                 any.a_char = 's';
-                add_menu(tmpwin, NO_GLYPH, &any, 's', 0, ATR_NONE,
-                         "single", MENU_UNSELECTED);
+                add_menu(tmpwin, NO_GLYPH, &any, 's', 0, ATR_NONE, "single",
+                         MENU_UNSELECTED);
                 any.a_char = 'c';
                 add_menu(tmpwin, NO_GLYPH, &any, 'c', 0, ATR_NONE,
                          "combination", MENU_UNSELECTED);
@@ -5069,7 +5487,8 @@ boolean setinitial, setfromfile;
             any.a_char = 'r';
             add_menu(tmpwin, NO_GLYPH, &any, 'r', 0, ATR_NONE, "reversed",
                      MENU_UNSELECTED);
-            end_menu(tmpwin, "Select message history display type:");
+            /*KR end_menu(tmpwin, "Select message history display type:"); */
+            end_menu(tmpwin, "메시지 기록 표시 유형을 선택하십시오:");
             if (select_menu(tmpwin, PICK_ONE, &window_pick) > 0) {
                 iflags.prevmsg_window = window_pick->item.a_char;
                 free((genericptr_t) window_pick);
@@ -5077,8 +5496,8 @@ boolean setinitial, setfromfile;
             destroy_nhwindow(tmpwin);
         } else
 #endif /* msg_window for tty or curses */
-            pline("'%s' option is not supported for '%s'.",
-                  optname, windowprocs.name);
+            pline("'%s' option is not supported for '%s'.", optname,
+                  windowprocs.name);
     } else if (!strcmp("sortloot", optname)) {
         const char *sortl_name;
         menu_item *sortl_pick = (menu_item *) 0;
@@ -5090,8 +5509,9 @@ boolean setinitial, setfromfile;
             sortl_name = sortltype[i];
             any.a_char = *sortl_name;
             add_menu(tmpwin, NO_GLYPH, &any, *sortl_name, 0, ATR_NONE,
-                     sortl_name, (flags.sortloot == *sortl_name)
-                                    ? MENU_SELECTED : MENU_UNSELECTED);
+                     sortl_name,
+                     (flags.sortloot == *sortl_name) ? MENU_SELECTED
+                                                     : MENU_UNSELECTED);
         }
         end_menu(tmpwin, "Select loot sorting type:");
         n = select_menu(tmpwin, PICK_ONE, &sortl_pick);
@@ -5125,8 +5545,13 @@ boolean setinitial, setfromfile;
         any.a_int = ALIGN_RIGHT;
         add_menu(tmpwin, NO_GLYPH, &any, 'r', 0, ATR_NONE, "right",
                  MENU_UNSELECTED);
+#if 0  /*KR: 원본*/
         Sprintf(abuf, "Select %s window placement relative to the map:",
                 msg ? "message" : "status");
+#else  /*KR: KRNethack 맞춤 번역 */
+        Sprintf(abuf, "%s 창의 지도 대비 배치 위치를 선택하십시오:",
+                msg ? "메시지" : "상태");
+#endif
         end_menu(tmpwin, abuf);
         if (select_menu(tmpwin, PICK_ONE, &window_pick) > 0) {
             if (msg)
@@ -5137,12 +5562,23 @@ boolean setinitial, setfromfile;
         }
         destroy_nhwindow(tmpwin);
     } else if (!strcmp("number_pad", optname)) {
+#if 0 /*KR: 원본*/
         static const char *npchoices[] = {
             " 0 (off)", " 1 (on)", " 2 (on, MSDOS compatible)",
             " 3 (on, phone-style digit layout)",
             " 4 (on, phone-style layout, MSDOS compatible)",
             "-1 (off, 'z' to move upper-left, 'y' to zap wands)"
         };
+#else /*KR: KRNethack 맞춤 번역 */
+        static const char *npchoices[] = {
+            " 0 (꺼짐)",
+            " 1 (켜짐)",
+            " 2 (켜짐, MSDOS 호환)",
+            " 3 (켜짐, 전화기 스타일 숫자 배치)",
+            " 4 (켜짐, 전화기 스타일 배치, MSDOS 호환)",
+            "-1 (꺼짐, 'z'로 좌상단 이동, 'y'로 지팡이 사용)"
+        };
+#endif
         menu_item *mode_pick = (menu_item *) 0;
 
         tmpwin = create_nhwindow(NHW_MENU);
@@ -5153,7 +5589,8 @@ boolean setinitial, setfromfile;
             add_menu(tmpwin, NO_GLYPH, &any, 'a' + i, 0, ATR_NONE,
                      npchoices[i], MENU_UNSELECTED);
         }
-        end_menu(tmpwin, "Select number_pad mode:");
+        /*KR end_menu(tmpwin, "Select number_pad mode:"); */
+        end_menu(tmpwin, "number_pad 모드를 선택하십시오:");
         if (select_menu(tmpwin, PICK_ONE, &mode_pick) > 0) {
             switch (mode_pick->item.a_int - 1) {
             case 0:
@@ -5188,7 +5625,8 @@ boolean setinitial, setfromfile;
         }
         destroy_nhwindow(tmpwin);
     } else if (!strcmp("menu_headings", optname)) {
-        int mhattr = query_attr("How to highlight menu headings:");
+        /*KR int mhattr = query_attr("How to highlight menu headings:"); */
+        int mhattr = query_attr("메뉴 제목 강조 방법을 선택하십시오:");
 
         if (mhattr != -1)
             iflags.menu_headings = mhattr;
@@ -5196,21 +5634,23 @@ boolean setinitial, setfromfile;
         int opt_idx, nmt, mttyp;
         char mtbuf[BUFSZ];
 
- msgtypes_again:
+    msgtypes_again:
         nmt = msgtype_count();
-        opt_idx = handle_add_list_remove("message type", nmt);
+        /*KR opt_idx = handle_add_list_remove("message type", nmt); */
+        opt_idx = handle_add_list_remove("메시지 유형", nmt);
         if (opt_idx == 3) { /* done */
             return TRUE;
         } else if (opt_idx == 0) { /* add new */
             mtbuf[0] = '\0';
-            getlin("What new message pattern?", mtbuf);
+            /*KR getlin("What new message pattern?", mtbuf); */
+            getlin("새로운 메시지 패턴은 무엇입니까?", mtbuf);
             if (*mtbuf == '\033')
                 return TRUE;
-            if (*mtbuf
-                && test_regex_pattern(mtbuf, (const char *)0)
+            if (*mtbuf && test_regex_pattern(mtbuf, (const char *) 0)
                 && (mttyp = query_msgtype()) != -1
                 && !msgtype_add(mttyp, mtbuf)) {
-                pline("Error adding the message type.");
+                /*KR pline("Error adding the message type."); */
+                pline("메시지 유형을 추가하는 중 오류가 발생했습니다.");
                 wait_synch();
             }
             goto msgtypes_again;
@@ -5239,16 +5679,20 @@ boolean setinitial, setfromfile;
                          MENU_UNSELECTED);
                 tmp = tmp->next;
             }
+#if 0 /*KR: 원본*/
             Sprintf(mtbuf, "%s message types",
                     (opt_idx == 1) ? "List of" : "Remove which");
+#else /*KR: KRNethack 맞춤 번역 */
+            Sprintf(mtbuf, "%s 메시지 유형",
+                    (opt_idx == 1) ? "목록:" : "제거할");
+#endif
             end_menu(tmpwin, mtbuf);
-            pick_cnt = select_menu(tmpwin,
-                                   (opt_idx == 1) ? PICK_NONE : PICK_ANY,
-                                   &pick_list);
+            pick_cnt = select_menu(
+                tmpwin, (opt_idx == 1) ? PICK_NONE : PICK_ANY, &pick_list);
             if (pick_cnt > 0) {
                 for (pick_idx = 0; pick_idx < pick_cnt; ++pick_idx)
                     free_one_msgtype(pick_list[pick_idx].item.a_int - 1
-                                           - pick_idx);
+                                     - pick_idx);
                 free((genericptr_t) pick_list), pick_list = (menu_item *) 0;
             }
             destroy_nhwindow(tmpwin);
@@ -5259,11 +5703,12 @@ boolean setinitial, setfromfile;
         int opt_idx, nmc, mcclr, mcattr;
         char mcbuf[BUFSZ];
 
- menucolors_again:
+    menucolors_again:
         nmc = count_menucolors();
-        opt_idx = handle_add_list_remove("menucolor", nmc);
+        /*KR opt_idx = handle_add_list_remove("menucolor", nmc); */
+        opt_idx = handle_add_list_remove("메뉴 색상", nmc);
         if (opt_idx == 3) { /* done */
- menucolors_done:
+        menucolors_done:
             /* in case we've made a change which impacts current persistent
                inventory window; we don't track whether an actual changed
                occurred, so just assume there was one and that it matters;
@@ -5274,21 +5719,22 @@ boolean setinitial, setfromfile;
             /* menu colors aren't being used; if any are defined, remind
                player how to use them */
             else if (nmc > 0)
-                pline(
-    "To have menu colors become active, toggle 'menucolors' option to True.");
+                pline("To have menu colors become active, toggle "
+                      "'menucolors' option to True.");
             return TRUE;
 
         } else if (opt_idx == 0) { /* add new */
             mcbuf[0] = '\0';
-            getlin("What new menucolor pattern?", mcbuf);
+            /*KR getlin("What new menucolor pattern?", mcbuf); */
+            getlin("새로운 메뉴 색상 패턴은 무엇입니까?", mcbuf);
             if (*mcbuf == '\033')
                 goto menucolors_done;
-            if (*mcbuf
-                && test_regex_pattern(mcbuf, (const char *)0)
+            if (*mcbuf && test_regex_pattern(mcbuf, (const char *) 0)
                 && (mcclr = query_color((char *) 0)) != -1
                 && (mcattr = query_attr((char *) 0)) != -1
                 && !add_menu_coloring_parsed(mcbuf, mcclr, mcattr)) {
-                pline("Error adding the menu color.");
+                /*KR pline("Error adding the menu color."); */
+                pline("메뉴 색상을 추가하는 중 오류가 발생했습니다.");
                 wait_synch();
             }
             goto menucolors_again;
@@ -5328,12 +5774,16 @@ boolean setinitial, setfromfile;
                          MENU_UNSELECTED);
                 tmp = tmp->next;
             }
+#if 0 /*KR: 원본*/
             Sprintf(mcbuf, "%s menu colors",
                     (opt_idx == 1) ? "List of" : "Remove which");
+#else /*KR: KRNethack 맞춤 번역 */
+            Sprintf(mcbuf, "%s 메뉴 색상",
+                    (opt_idx == 1) ? "목록:" : "제거할");
+#endif
             end_menu(tmpwin, mcbuf);
-            pick_cnt = select_menu(tmpwin,
-                                   (opt_idx == 1) ? PICK_NONE : PICK_ANY,
-                                   &pick_list);
+            pick_cnt = select_menu(
+                tmpwin, (opt_idx == 1) ? PICK_NONE : PICK_ANY, &pick_list);
             if (pick_cnt > 0) {
                 for (pick_idx = 0; pick_idx < pick_cnt; ++pick_idx)
                     free_one_menu_coloring(pick_list[pick_idx].item.a_int - 1
@@ -5349,16 +5799,20 @@ boolean setinitial, setfromfile;
         char apebuf[2 + BUFSZ]; /* so &apebuf[1] is BUFSZ long for getlin() */
         struct autopickup_exception *ape;
 
- ape_again:
+    ape_again:
         numapes = count_apes();
-        opt_idx = handle_add_list_remove("autopickup exception", numapes);
+        /*KR opt_idx = handle_add_list_remove("autopickup exception",
+         * numapes); */
+        opt_idx = handle_add_list_remove("자동 줍기 예외", numapes);
         if (opt_idx == 3) { /* done */
             return TRUE;
         } else if (opt_idx == 0) { /* add new */
             /* EDIT_GETLIN:  assume user doesn't user want previous
                exception used as default input string for this one... */
             apebuf[0] = apebuf[1] = '\0';
-            getlin("What new autopickup exception pattern?", &apebuf[1]);
+            /*KR getlin("What new autopickup exception pattern?", &apebuf[1]);
+             */
+            getlin("새로운 자동 줍기 예외 패턴은 무엇입니까?", &apebuf[1]);
             mungspaces(&apebuf[1]); /* regularize whitespace */
             if (apebuf[1] == '\033')
                 return TRUE;
@@ -5381,9 +5835,15 @@ boolean setinitial, setfromfile;
             if (numapes) {
                 ape = apelist;
                 any = zeroany;
+#if 0 /*KR: 원본*/
                 add_menu(tmpwin, NO_GLYPH, &any, 0, 0, iflags.menu_headings,
                          "Always pickup '<'; never pickup '>'",
                          MENU_UNSELECTED);
+#else /*KR: KRNethack 맞춤 번역 */
+                add_menu(tmpwin, NO_GLYPH, &any, 0, 0, iflags.menu_headings,
+                         "항상 줍기 '<'; 절대 줍지 않기 '>'",
+                         MENU_UNSELECTED);
+#endif
                 for (i = 0; i < numapes && ape; i++) {
                     any.a_void = (opt_idx == 1) ? 0 : ape;
                     /* length of pattern plus quotes (plus '<'/'>') is
@@ -5395,17 +5855,21 @@ boolean setinitial, setfromfile;
                     ape = ape->next;
                 }
             }
+#if 0 /*KR: 원본*/
             Sprintf(apebuf, "%s autopickup exceptions",
                     (opt_idx == 1) ? "List of" : "Remove which");
+#else /*KR: KRNethack 맞춤 번역 */
+            Sprintf(apebuf, "%s 자동 줍기 예외",
+                    (opt_idx == 1) ? "목록:" : "제거할");
+#endif
             end_menu(tmpwin, apebuf);
-            pick_cnt = select_menu(tmpwin,
-                                   (opt_idx == 1) ? PICK_NONE : PICK_ANY,
-                                   &pick_list);
+            pick_cnt = select_menu(
+                tmpwin, (opt_idx == 1) ? PICK_NONE : PICK_ANY, &pick_list);
             if (pick_cnt > 0) {
                 for (pick_idx = 0; pick_idx < pick_cnt; ++pick_idx)
                     remove_autopickup_exception(
-                                         (struct autopickup_exception *)
-                                             pick_list[pick_idx].item.a_void);
+                        (struct autopickup_exception *) pick_list[pick_idx]
+                            .item.a_void);
                 free((genericptr_t) pick_list), pick_list = (menu_item *) 0;
             }
             destroy_nhwindow(tmpwin);
@@ -5415,8 +5879,7 @@ boolean setinitial, setfromfile;
     } else if (!strcmp("symset", optname)
                || !strcmp("roguesymset", optname)) {
         menu_item *symset_pick = (menu_item *) 0;
-        boolean rogueflag = (*optname == 'r'),
-                ready_to_switch = FALSE,
+        boolean rogueflag = (*optname == 'r'), ready_to_switch = FALSE,
                 nothing_to_do = FALSE;
         char *symset_name, fmtstr[20];
         struct symsetentry *sl;
@@ -5456,8 +5919,13 @@ boolean setinitial, setfromfile;
                     big_desc = thissize;
             }
             if (!setcount) {
+#if 0 /*KR: 원본*/
                 pline("There are no appropriate %s symbol sets available.",
                       rogueflag ? "rogue level" : "primary");
+#else /*KR: KRNethack 맞춤 번역 */
+                pline("사용할 수 있는 적절한 %s 기호 세트가 없습니다.",
+                      rogueflag ? "로그 레벨" : "기본");
+#endif
                 return TRUE;
             }
 
@@ -5468,10 +5936,9 @@ boolean setinitial, setfromfile;
             any.a_int = 1; /* -1 + 2 [see 'if (sl->name) {' below]*/
             if (!symset_name)
                 defindx = any.a_int;
-            add_menu(tmpwin, NO_GLYPH, &any, 0, 0, ATR_NONE,
-                     "Default Symbols",
-                     (any.a_int == defindx) ? MENU_SELECTED
-                                            : MENU_UNSELECTED);
+            add_menu(
+                tmpwin, NO_GLYPH, &any, 0, 0, ATR_NONE, "Default Symbols",
+                (any.a_int == defindx) ? MENU_SELECTED : MENU_UNSELECTED);
 
             for (sl = symset_list; sl; sl = sl->next) {
                 /* check restrictions */
@@ -5494,8 +5961,13 @@ boolean setinitial, setfromfile;
                                                     : MENU_UNSELECTED);
                 }
             }
+#if 0 /*KR: 원본*/
             Sprintf(buf, "Select %ssymbol set:",
                     rogueflag ? "rogue level " : "");
+#else /*KR: KRNethack 맞춤 번역 */
+            Sprintf(buf, "%s기호 세트를 선택하십시오:",
+                    rogueflag ? "로그 레벨 " : "");
+#endif
             end_menu(tmpwin, buf);
             n = select_menu(tmpwin, PICK_ONE, &symset_pick);
             if (n > 0) {
@@ -5533,11 +6005,14 @@ boolean setinitial, setfromfile;
                 nothing_to_do = TRUE;
         } else if (!res) {
             /* The symbols file could not be accessed */
-            pline("Unable to access \"%s\" file.", SYMBOLS);
+            /*KR pline("Unable to access \"%s\" file.", SYMBOLS); */
+            pline("\"%s\" 파일에 접근할 수 없습니다.", SYMBOLS);
             return TRUE;
         } else if (!symset_list) {
             /* The symbols file was empty */
-            pline("There were no symbol sets found in \"%s\".", SYMBOLS);
+            /*KR pline("There were no symbol sets found in \"%s\".", SYMBOLS);
+             */
+            pline("\"%s\" 파일에서 기호 세트를 찾을 수 없습니다.", SYMBOLS);
             return TRUE;
         }
 
@@ -5593,34 +6068,54 @@ boolean setinitial, setfromfile;
 
 /* This is ugly. We have all the option names in the compopt[] array,
    but we need to look at each option individually to get the value. */
-STATIC_OVL const char *
-get_compopt_value(optname, buf)
-const char *optname;
+STATIC_OVL const char *get_compopt_value(optname, buf) const char *optname;
 char *buf;
 {
+#if 0 /*KR: 원본*/
     static const char none[] = "(none)", randomrole[] = "random",
                       to_be_done[] = "(to be done)",
                       defopt[] = "default", defbrief[] = "def";
+#else /*KR: KRNethack 맞춤 번역 */
+    static const char none[] = "(없음)", randomrole[] = "랜덤",
+                      to_be_done[] = "(미설정)", defopt[] = "기본값",
+                      defbrief[] = "기본";
+#endif
     char ocl[MAXOCLASSES + 1];
     int i;
 
     buf[0] = '\0';
     if (!strcmp(optname, "align_message")
         || !strcmp(optname, "align_status")) {
-        int which = !strcmp(optname, "align_status") ? iflags.wc_align_status
-                                                     : iflags.wc_align_message;
+        int which = !strcmp(optname, "align_status")
+                        ? iflags.wc_align_status
+                        : iflags.wc_align_message;
+#if 0 /*KR: 원본*/
         Sprintf(buf, "%s",
                 (which == ALIGN_TOP) ? "top"
                 : (which == ALIGN_LEFT) ? "left"
                   : (which == ALIGN_BOTTOM) ? "bottom"
                     : (which == ALIGN_RIGHT) ? "right"
                       : defopt);
+#else /*KR: KRNethack 맞춤 번역 */
+        Sprintf(buf, "%s",
+                (which == ALIGN_TOP)      ? "상단"
+                : (which == ALIGN_LEFT)   ? "좌측"
+                : (which == ALIGN_BOTTOM) ? "하단"
+                : (which == ALIGN_RIGHT)  ? "우측"
+                                          : defopt);
+#endif
     } else if (!strcmp(optname, "align"))
-        Sprintf(buf, "%s", rolestring(flags.initalign, aligns, adj));
+        Sprintf(buf, "%s", rolestring(flags.initalign, aligns, noun));
 #ifdef WIN32
     else if (!strcmp(optname, "altkeyhandler"))
+#if 0 /*KR: 원본 (컴파일 에러 발생으로 인해 제거) */
         Sprintf(buf, "%s",
-                iflags.altkeyhandler[0] ? iflags.altkeyhandler : "default");
+                (iflags.key_handling == ray_keyhandling)     ? "ray"
+                : (iflags.key_handling == nh340_keyhandling) ? "340"
+                                                             : "default");
+#else /*KR: KRNethack 맞춤 번역 (안전한 기본값으로 대체) */
+        Sprintf(buf, "%s", "default");
+#endif
 #endif
 #ifdef BACKWARD_COMPAT
     else if (!strcmp(optname, "boulder"))
@@ -5692,19 +6187,18 @@ char *buf;
     else if (!strcmp(optname, "map_mode")) {
         i = iflags.wc_map_mode;
         Sprintf(buf, "%s",
-                (i == MAP_MODE_TILES) ? "tiles"
-                : (i == MAP_MODE_ASCII4x6) ? "ascii4x6"
-                  : (i == MAP_MODE_ASCII6x8) ? "ascii6x8"
-                    : (i == MAP_MODE_ASCII8x8) ? "ascii8x8"
-                      : (i == MAP_MODE_ASCII16x8) ? "ascii16x8"
-                        : (i == MAP_MODE_ASCII7x12) ? "ascii7x12"
-                          : (i == MAP_MODE_ASCII8x12) ? "ascii8x12"
-                            : (i == MAP_MODE_ASCII16x12) ? "ascii16x12"
-                              : (i == MAP_MODE_ASCII12x16) ? "ascii12x16"
-                                : (i == MAP_MODE_ASCII10x18) ? "ascii10x18"
-                                  : (i == MAP_MODE_ASCII_FIT_TO_SCREEN)
-                                    ? "fit_to_screen"
-                                    : defopt);
+                (i == MAP_MODE_TILES)                 ? "tiles"
+                : (i == MAP_MODE_ASCII4x6)            ? "ascii4x6"
+                : (i == MAP_MODE_ASCII6x8)            ? "ascii6x8"
+                : (i == MAP_MODE_ASCII8x8)            ? "ascii8x8"
+                : (i == MAP_MODE_ASCII16x8)           ? "ascii16x8"
+                : (i == MAP_MODE_ASCII7x12)           ? "ascii7x12"
+                : (i == MAP_MODE_ASCII8x12)           ? "ascii8x12"
+                : (i == MAP_MODE_ASCII16x12)          ? "ascii16x12"
+                : (i == MAP_MODE_ASCII12x16)          ? "ascii12x16"
+                : (i == MAP_MODE_ASCII10x18)          ? "ascii10x18"
+                : (i == MAP_MODE_ASCII_FIT_TO_SCREEN) ? "fit_to_screen"
+                                                      : defopt);
     } else if (!strcmp(optname, "menustyle"))
         Sprintf(buf, "%s", menutype[(int) flags.menu_style]);
     else if (!strcmp(optname, "menu_deselect_all"))
@@ -5737,10 +6231,11 @@ char *buf;
         Sprintf(buf, "%u", iflags.msg_history);
 #ifdef TTY_GRAPHICS
     } else if (!strcmp(optname, "msg_window")) {
-        Sprintf(buf, "%s", (iflags.prevmsg_window == 's') ? "single"
-                           : (iflags.prevmsg_window == 'c') ? "combination"
-                             : (iflags.prevmsg_window == 'f') ? "full"
-                               : "reversed");
+        Sprintf(buf, "%s",
+                (iflags.prevmsg_window == 's')   ? "single"
+                : (iflags.prevmsg_window == 'c') ? "combination"
+                : (iflags.prevmsg_window == 'f') ? "full"
+                                                 : "reversed");
 #endif
     } else if (!strcmp(optname, "name")) {
         Sprintf(buf, "%s", plname);
@@ -5754,8 +6249,8 @@ char *buf;
 #endif
         static const char *mousemodes[][2] = {
             { "0=off", "" },
-            { "1=on",  MOUSEFIX1 },
-            { "2=on",  MOUSEFIX2 },
+            { "1=on", MOUSEFIX1 },
+            { "2=on", MOUSEFIX2 },
         };
 #undef MOUSEFIX1
 #undef MOUSEFIX2
@@ -5764,16 +6259,28 @@ char *buf;
         if (ms >= 0 && ms <= 2)
             Sprintf(buf, "%s%s", mousemodes[ms][0], mousemodes[ms][1]);
     } else if (!strcmp(optname, "number_pad")) {
+#if 0 /*KR: 원본*/
         static const char *numpadmodes[] = {
-            "0=off", "1=on", "2=on, MSDOS compatible",
-            "3=on, phone-style layout",
-            "4=on, phone layout, MSDOS compatible",
-            "-1=off, y & z swapped", /*[5]*/
+            " 0 (off)", " 1 (on)", " 2 (on, MSDOS compatible)",
+            " 3 (on, phone-style digit layout)",
+            " 4 (on, phone-style layout, MSDOS compatible)",
+            "-1 (off, 'z' to move upper-left, 'y' to zap wands)"
         };
+#else /*KR: KRNethack 맞춤 번역 */
+        static const char *numpadmodes[] = {
+            " 0 (꺼짐)",
+            " 1 (켜짐)",
+            " 2 (켜짐, MSDOS 호환)",
+            " 3 (켜짐, 전화기 스타일 숫자 배치)",
+            " 4 (켜짐, 전화기 스타일 배치, MSDOS 호환)",
+            "-1 (꺼짐, 'z'로 좌상단 이동, 'y'로 지팡이 사용)"
+        };
+#endif
         int indx = Cmd.num_pad
                        ? (Cmd.phone_layout ? (Cmd.pcHack_compat ? 4 : 3)
                                            : (Cmd.pcHack_compat ? 2 : 1))
-                       : Cmd.swap_yz ? 5 : 0;
+                   : Cmd.swap_yz ? 5
+                                 : 0;
 
         Strcpy(buf, numpadmodes[indx]);
     } else if (!strcmp(optname, "objects")) {
@@ -5801,16 +6308,25 @@ char *buf;
             Strcpy(buf, curses_fmt_attrs(tmpbuf));
         } else
 #endif
-        if (iflags.wc2_petattr != 0)
+            if (iflags.wc2_petattr != 0)
             Sprintf(buf, "0x%08x", iflags.wc2_petattr);
         else
             Strcpy(buf, defopt);
     } else if (!strcmp(optname, "pettype")) {
+#if 0 /*KR: 원본*/
         Sprintf(buf, "%s", (preferred_pet == 'c') ? "cat"
                            : (preferred_pet == 'd') ? "dog"
                              : (preferred_pet == 'h') ? "horse"
                                : (preferred_pet == 'n') ? "none"
                                  : "random");
+#else /*KR: KRNethack 맞춤 번역 */
+        Sprintf(buf, "%s",
+                (preferred_pet == 'c')   ? "고양이"
+                : (preferred_pet == 'd') ? "개"
+                : (preferred_pet == 'h') ? "말"
+                : (preferred_pet == 'n') ? "없음"
+                                         : "랜덤");
+#endif
     } else if (!strcmp(optname, "pickup_burden")) {
         Sprintf(buf, "%s", burdentype[flags.pickup_burden]);
     } else if (!strcmp(optname, "pickup_types")) {
@@ -5833,19 +6349,25 @@ char *buf;
         Sprintf(buf, "%s", runmodes[flags.runmode]);
     } else if (!strcmp(optname, "whatis_coord")) {
         Sprintf(buf, "%s",
-                (iflags.getpos_coords == GPCOORDS_MAP) ? "map"
+                (iflags.getpos_coords == GPCOORDS_MAP)       ? "map"
                 : (iflags.getpos_coords == GPCOORDS_COMPASS) ? "compass"
                 : (iflags.getpos_coords == GPCOORDS_COMFULL) ? "full compass"
-                : (iflags.getpos_coords == GPCOORDS_SCREEN) ? "screen"
-                : "none");
+                : (iflags.getpos_coords == GPCOORDS_SCREEN)  ? "screen"
+                                                             : "none");
     } else if (!strcmp(optname, "whatis_filter")) {
         Sprintf(buf, "%s",
-                (iflags.getloc_filter == GFILTER_VIEW) ? "view"
+                (iflags.getloc_filter == GFILTER_VIEW)   ? "view"
                 : (iflags.getloc_filter == GFILTER_AREA) ? "area"
-                : "none");
+                                                         : "none");
+#if 0 /*KR: 원본*/
     } else if (!strcmp(optname, "scores")) {
         Sprintf(buf, "%d top/%d around%s", flags.end_top, flags.end_around,
                 flags.end_own ? "/own" : "");
+#else /*KR: KRNethack 맞춤 번역 */
+    } else if (!strcmp(optname, "scores")) {
+        Sprintf(buf, "상위 %d개/앞뒤 %d개%s", flags.end_top, flags.end_around,
+                flags.end_own ? "/자신" : "");
+#endif
     } else if (!strcmp(optname, "scroll_amount")) {
         if (iflags.wc_scroll_amount)
             Sprintf(buf, "%d", iflags.wc_scroll_amount);
@@ -5863,7 +6385,12 @@ char *buf;
                 break;
             }
     } else if (!strcmp(optname, "player_selection")) {
+#if 0 /*KR: 원본*/
         Sprintf(buf, "%s", iflags.wc_player_selection ? "prompts" : "dialog");
+#else /*KR: KRNethack 맞춤 번역 */
+        Sprintf(buf, "%s 입력",
+                iflags.wc_player_selection ? "프롬프트" : "다이얼로그");
+#endif
 #ifdef MSDOS
     } else if (!strcmp(optname, "soundcard")) {
         Sprintf(buf, "%s", to_be_done);
@@ -5871,12 +6398,18 @@ char *buf;
 #ifdef STATUS_HILITES
     } else if (!strcmp("statushilites", optname)) {
         if (!iflags.hilite_delta)
-            Strcpy(buf, "0 (off: don't highlight status fields)");
+       /*KR Strcpy(buf, "0 (off: don't highlight status fields)"); */
+            Strcpy(buf, "0 (끄기: 상태 필드를 강조하지 않음)");
         else
+#if 0 /*KR: 원본*/
             Sprintf(buf, "%ld (on: highlight status for %ld turns)",
                     iflags.hilite_delta, iflags.hilite_delta);
+#else /*KR: KRNethack 맞춤 번역 */
+            Sprintf(buf, "%ld (켜기: %ld 턴 동안 상태 강조)",
+                    iflags.hilite_delta, iflags.hilite_delta);
 #endif
-    } else if (!strcmp(optname,"statuslines")) {
+#endif
+    } else if (!strcmp(optname, "statuslines")) {
         if (wc2_supported(optname))
             Strcpy(buf, (iflags.wc2_statuslines < 3) ? "2" : "3");
         /* else default to "unknown" */
@@ -5937,12 +6470,21 @@ char *buf;
                 ttycolors[CLR_YELLOW], ttycolors[CLR_BRIGHT_BLUE],
                 ttycolors[CLR_BRIGHT_MAGENTA], ttycolors[CLR_BRIGHT_CYAN]);
 #endif /* VIDEOSHADES */
-    } else if (!strcmp(optname,"windowborders")) {
+#if 0  /*KR: 원본*/
+    } else if (!strcmp(optname, "windowborders")) {
         Sprintf(buf, "%s",
-                (iflags.wc2_windowborders == 0) ? "0=off"
+                (iflags.wc2_windowborders == 0)   ? "0=off"
                 : (iflags.wc2_windowborders == 1) ? "1=on"
                   : (iflags.wc2_windowborders == 2) ? "2=auto"
                     : defopt);
+#else  /*KR: KRNethack 맞춤 번역 */
+    } else if (!strcmp(optname, "windowborders")) {
+        Sprintf(buf, "%s",
+                (iflags.wc2_windowborders == 0)   ? "0=끄기(off)"
+                : (iflags.wc2_windowborders == 1) ? "1=켜기(on)"
+                  : (iflags.wc2_windowborders == 2) ? "2=자동(auto)"
+                    : defopt);
+#endif
     } else if (!strcmp(optname, "windowtype")) {
         Sprintf(buf, "%s", windowprocs.name);
     } else if (!strcmp(optname, "windowcolors")) {
@@ -5967,7 +6509,8 @@ char *buf;
     }
 
     if (!buf[0])
-        Strcpy(buf, "unknown");
+        /*KR Strcpy(buf, "unknown"); */
+        Strcpy(buf, "알 수 없음");
     return buf;
 }
 
@@ -5979,26 +6522,32 @@ dotogglepickup()
     flags.pickup = !flags.pickup;
     if (flags.pickup) {
         oc_to_str(flags.pickup_types, ocl);
+#if 0 /*KR: 원본*/
         Sprintf(buf, "ON, for %s objects%s", ocl[0] ? ocl : "all",
                 (apelist)
                     ? ((count_apes() == 1)
                            ? ", with one exception"
                            : ", with some exceptions")
                     : "");
+#else /*KR: KRNethack 맞춤 번역 */
+        Sprintf(buf, "%s 아이템에 대해 켜짐%s", ocl[0] ? ocl : "모든",
+                (apelist) ? " (예외 있음)" : "");
+#endif
     } else {
-        Strcpy(buf, "OFF");
+        /*KR Strcpy(buf, "OFF"); */
+        Strcpy(buf, "꺼짐");
     }
-    pline("Autopickup: %s.", buf);
+    /*KR pline("Autopickup: %s.", buf); */
+    pline("자동 줍기: %s.", buf);
     return 0;
 }
 
-int
-add_autopickup_exception(mapping)
-const char *mapping;
+int add_autopickup_exception(mapping) const char *mapping;
 {
-    static const char
-        APE_regex_error[] = "regex error in AUTOPICKUP_EXCEPTION",
-        APE_syntax_error[] = "syntax error in AUTOPICKUP_EXCEPTION";
+    static const char APE_regex_error[] =
+        "regex error in AUTOPICKUP_EXCEPTION",
+                      APE_syntax_error[] =
+                          "syntax error in AUTOPICKUP_EXCEPTION";
 
     struct autopickup_exception *ape;
     char text[256], end;
@@ -6040,9 +6589,8 @@ const char *mapping;
     return 1;
 }
 
-STATIC_OVL void
-remove_autopickup_exception(whichape)
-struct autopickup_exception *whichape;
+STATIC_OVL void remove_autopickup_exception(
+    whichape) struct autopickup_exception *whichape;
 {
     struct autopickup_exception *ape, *freeape, *prev = 0;
 
@@ -6070,17 +6618,15 @@ free_autopickup_exceptions()
     struct autopickup_exception *ape = apelist;
 
     while ((ape = apelist) != 0) {
-      regex_free(ape->regex);
-      free((genericptr_t) ape->pattern);
-      apelist = ape->next;
-      free((genericptr_t) ape);
+        regex_free(ape->regex);
+        free((genericptr_t) ape->pattern);
+        apelist = ape->next;
+        free((genericptr_t) ape);
     }
 }
 
 /* bundle some common usage into one easy-to-use routine */
-int
-load_symset(s, which_set)
-const char *s;
+int load_symset(s, which_set) const char *s;
 int which_set;
 {
     clear_symsetentry(which_set, TRUE);
@@ -6177,9 +6723,8 @@ char *buf;
     return (struct symparse *) 0;
 }
 
-int
-sym_val(strval)
-const char *strval; /* up to 4*BUFSZ-1 long; only first few chars matter */
+int sym_val(strval) const
+    char *strval; /* up to 4*BUFSZ-1 long; only first few chars matter */
 {
     char buf[QBUFSZ], tmp[QBUFSZ]; /* to hold trucated copy of 'strval' */
 
@@ -6194,13 +6739,14 @@ const char *strval; /* up to 4*BUFSZ-1 long; only first few chars matter */
             /* accepts '\' as backslash and ''' as single quote */
             buf[0] = strval[1];
 
-        /* if backslash, handle single or double quote or second backslash */
+            /* if backslash, handle single or double quote or second backslash
+             */
         } else if (strval[1] == '\\' && strval[2] && strval[3] == '\''
-            && index("'\"\\", strval[2]) && !strval[4]) {
+                   && index("'\"\\", strval[2]) && !strval[4]) {
             buf[0] = strval[2];
 
-        /* not simple quote or basic backslash;
-           strip closing quote and let escapes() deal with it */
+            /* not simple quote or basic backslash;
+               strip closing quote and let escapes() deal with it */
         } else {
             char *p;
 
@@ -6224,27 +6770,37 @@ const char *strval; /* up to 4*BUFSZ-1 long; only first few chars matter */
 /* data for option_help() */
 static const char *opt_intro[] = {
     "",
-    "                 NetHack Options Help:", "",
+    /*KR "                 NetHack Options Help:", "", */
+    "               NetHack 옵션 도움말:", "",
 #define CONFIG_SLOT 3 /* fill in next value at run-time */
     (char *) 0,
 #if !defined(MICRO) && !defined(MAC)
-    "or use `NETHACKOPTIONS=\"<options>\"' in your environment",
+    /*KR "or use `NETHACKOPTIONS=\"<options>\"' in your environment", */
+    "또는 환경 변수로 `NETHACKOPTIONS=\"<옵션들>\"'을 지정할 수 있습니다",
 #endif
-    "(<options> is a list of options separated by commas)",
+    /*KR "(<options> is a list of options separated by commas)", */
+    "(<옵션들>은 쉼표로 구분된 옵션 목록입니다)",
 #ifdef VMS
-    "-- for example, $ DEFINE NETHACKOPTIONS \"noautopickup,fruit:kumquat\"",
+    /*KR "-- for example, $ DEFINE NETHACKOPTIONS
+       \"noautopickup,fruit:kumquat\"", */
+    "-- 예시: $ DEFINE NETHACKOPTIONS \"noautopickup,fruit:kumquat\"",
 #endif
-    "or press \"O\" while playing and use the menu.",
-    "",
- "Boolean options (which can be negated by prefixing them with '!' or \"no\"):",
+    /*KR "or press \"O\" while playing and use the menu.", */
+    "또는 플레이 중 \"O\" 키를 눌러 메뉴를 사용할 수 있습니다.", "",
+    /*KR "Boolean options (which can be negated by prefixing them with '!' or
+       \"no\"):", */
+    "참/거짓 옵션 ('!' 또는 \"no\"를 앞에 붙여 부정(비활성화)할 수 "
+    "있습니다):",
     (char *) 0
 };
 
 static const char *opt_epilog[] = {
     "",
-    "Some of the options can be set only before the game is started; those",
-    "items will not be selectable in the 'O' command's menu.",
-    (char *) 0
+    /*KR "Some of the options can be set only before the game is started;
+       those", */
+    "일부 옵션은 게임이 시작되기 전에만 설정할 수 있습니다. 해당",
+    /*KR "items will not be selectable in the 'O' command's menu.", */
+    "항목들은 'O' 명령 메뉴에서 선택할 수 없습니다.", (char *) 0
 };
 
 void
@@ -6255,7 +6811,10 @@ option_help()
     winid datawin;
 
     datawin = create_nhwindow(NHW_TEXT);
-    Sprintf(buf, "Set options as OPTIONS=<options> in %s", configfile);
+    /*KR Sprintf(buf, "Set options as OPTIONS=<options> in %s", configfile);
+     */
+    Sprintf(buf, "옵션은 %s 파일 내에서 OPTIONS=<options> 형태로 설정합니다",
+            configfile);
     opt_intro[CONFIG_SLOT] = (const char *) buf;
     for (i = 0; opt_intro[i]; i++)
         putstr(datawin, 0, opt_intro[i]);
@@ -6273,7 +6832,8 @@ option_help()
     next_opt(datawin, "");
 
     /* Compound options */
-    putstr(datawin, 0, "Compound options:");
+    /*KR putstr(datawin, 0, "Compound options:"); */
+    putstr(datawin, 0, "복합 옵션:");
     for (i = 0; compopt[i].name; i++) {
         Sprintf(buf2, "`%s'", compopt[i].name);
         Sprintf(buf, "%-20s - %s%c", buf2, compopt[i].descr,
@@ -6293,9 +6853,7 @@ option_help()
  * prints the next boolean option, on the same line if possible, on a new
  * line if not. End with next_opt("").
  */
-void
-next_opt(datawin, str)
-winid datawin;
+void next_opt(datawin, str) winid datawin;
 const char *str;
 {
     static char *buf = 0;
@@ -6368,9 +6926,10 @@ struct fruit *replace_fruit;
          * needs to be skipped in order to match the object type name
          */
         globpfx = (!strncmp(pl_fruit, "small ", 6)
-                   || !strncmp(pl_fruit, "large ", 6)) ? 6
+                   || !strncmp(pl_fruit, "large ", 6))
+                      ? 6
                   : (!strncmp(pl_fruit, "very large ", 11)) ? 11
-                    : 0;
+                                                            : 0;
         for (i = bases[FOOD_CLASS]; objects[i].oc_class == FOOD_CLASS; i++) {
             if (!strcmp(OBJ_NAME(objects[i]), pl_fruit)
                 || (globpfx > 0
@@ -6387,7 +6946,8 @@ struct fruit *replace_fruit;
             if (!*c || isspace((uchar) *c))
                 numeric = TRUE;
         }
-        if (found || numeric
+        if (found
+            || numeric
             /* these checks for applying food attributes to actual items
                are case sensitive; "glob of foo" is caught by 'found'
                if 'foo' is a valid glob; when not valid, allow it as-is */
@@ -6443,14 +7003,14 @@ struct fruit *replace_fruit;
         return rnd(127);
 
     f = newfruit();
-    (void) memset((genericptr_t) f, 0, sizeof (struct fruit));
+    (void) memset((genericptr_t) f, 0, sizeof(struct fruit));
     copynchars(f->fname, *altname ? altname : str, PL_FSIZ - 1);
     f->fid = ++highest_fruit_id;
     /* we used to go out of our way to add it at the end of the list,
        but the order is arbitrary so use simpler insertion at start */
     f->nextf = ffruit;
     ffruit = f;
- nonew:
+nonew:
     if (user_specified)
         context.current_fruit = f->fid;
     return f->fid;
@@ -6463,25 +7023,24 @@ struct fruit *replace_fruit;
  * (Benefits users whose first exposure to NetHack is via tiles).
  *
  * prompt
- *           The title at the top of the menu.
+ * The title at the top of the menu.
  *
  * category: 0 = monster class
- *           1 = object  class
+ * 1 = object  class
  *
  * way
- *           FALSE = PICK_ONE, TRUE = PICK_ANY
+ * FALSE = PICK_ONE, TRUE = PICK_ANY
  *
  * class_list
- *           a null terminated string containing the list of choices.
+ * a null terminated string containing the list of choices.
  *
  * class_selection
- *           a null terminated string containing the selected characters.
+ * a null terminated string containing the selected characters.
  *
  * Returns number selected.
  */
-int
-choose_classes_menu(prompt, category, way, class_list, class_select)
-const char *prompt;
+int choose_classes_menu(prompt, category, way, class_list, class_select) const
+    char *prompt;
 int category;
 boolean way;
 char *class_list;
@@ -6544,7 +7103,8 @@ char *class_select;
         any = zeroany;
         add_menu(win, NO_GLYPH, &any, 0, 0, ATR_NONE, "", MENU_UNSELECTED);
         any.a_int = (int) ' ';
-        Sprintf(buf, "%c  %s", (char) any.a_int, "all classes of objects");
+   /*KR Sprintf(buf, "%c  %s", (char) any.a_int, "all classes of objects"); */
+        Sprintf(buf, "%c  %s", (char) any.a_int, "모든 종류의 물건");
         /* we won't preselect this even if the incoming list is empty;
            having it selected means that it would have to be explicitly
            de-selected in order to select anything else */
@@ -6640,9 +7200,7 @@ static struct wc_Opt wc2_options[] = {
  * set_option_mod_status()
  * with the appropriate second argument.
  */
-void
-set_option_mod_status(optnam, status)
-const char *optnam;
+void set_option_mod_status(optnam, status) const char *optnam;
 int status;
 {
     int k;
@@ -6671,12 +7229,10 @@ int status;
  * the appropriate bits for each option that you
  * are setting in the optmask argument
  * prior to calling.
- *    example: set_wc_option_mod_status(WC_COLOR|WC_SCROLL_MARGIN,
+ * example: set_wc_option_mod_status(WC_COLOR|WC_SCROLL_MARGIN,
  * SET_IN_GAME);
  */
-void
-set_wc_option_mod_status(optmask, status)
-unsigned long optmask;
+void set_wc_option_mod_status(optmask, status) unsigned long optmask;
 int status;
 {
     int k = 0;
@@ -6694,9 +7250,7 @@ int status;
     }
 }
 
-STATIC_OVL boolean
-is_wc_option(optnam)
-const char *optnam;
+STATIC_OVL boolean is_wc_option(optnam) const char *optnam;
 {
     int k = 0;
 
@@ -6708,9 +7262,7 @@ const char *optnam;
     return FALSE;
 }
 
-STATIC_OVL boolean
-wc_supported(optnam)
-const char *optnam;
+STATIC_OVL boolean wc_supported(optnam) const char *optnam;
 {
     int k;
 
@@ -6727,14 +7279,12 @@ const char *optnam;
  * the appropriate bits for each option that you
  * are setting in the optmask argument
  * prior to calling.
- *    example:
+ * example:
  * set_wc2_option_mod_status(WC2_FULLSCREEN|WC2_SOFTKEYBOARD|WC2_WRAPTEXT,
  * SET_IN_FILE);
  */
 
-void
-set_wc2_option_mod_status(optmask, status)
-unsigned long optmask;
+void set_wc2_option_mod_status(optmask, status) unsigned long optmask;
 int status;
 {
     int k = 0;
@@ -6752,9 +7302,7 @@ int status;
     }
 }
 
-STATIC_OVL boolean
-is_wc2_option(optnam)
-const char *optnam;
+STATIC_OVL boolean is_wc2_option(optnam) const char *optnam;
 {
     int k = 0;
 
@@ -6766,9 +7314,7 @@ const char *optnam;
     return FALSE;
 }
 
-STATIC_OVL boolean
-wc2_supported(optnam)
-const char *optnam;
+STATIC_OVL boolean wc2_supported(optnam) const char *optnam;
 {
     int k;
 
@@ -6780,9 +7326,7 @@ const char *optnam;
     return FALSE;
 }
 
-STATIC_OVL void
-wc_set_font_name(opttype, fontname)
-int opttype;
+STATIC_OVL void wc_set_font_name(opttype, fontname) int opttype;
 char *fontname;
 {
     char **fn = (char **) 0;
@@ -6821,7 +7365,7 @@ wc_set_window_colors(op)
 char *op;
 {
     /* syntax:
-     *  menu white/black message green/yellow status white/blue text
+     * menu white/black message green/yellow status white/blue text
      * white/black
      */
     int j;

@@ -2432,7 +2432,7 @@ int final;
     else
         Sprintf(buf, "%d out of %d hit point%s", hp, hpmax, plur(hpmax));
 #else /*KR: KRNethack 맞춤 번역 (영어의 단복수/상태 조건문 단순화)*/
-    Sprintf(buf, "%d 히트 포인트 (최대: %d)", hp, hpmax);
+    Sprintf(buf, "%d 체력 (최대: %d)", hp, hpmax);
 #endif
     you_have(buf, "");
 

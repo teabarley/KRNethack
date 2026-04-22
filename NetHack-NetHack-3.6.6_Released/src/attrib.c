@@ -940,7 +940,7 @@ int propidx; /* special cases can have negative values */
 /*KR 원래는 minimal_xname()을 사용해야 하지만 static이므로 대체함 */
     if (wizard) {
         /*KR static NEARDATA const char because_of[] = " because of %s"; */
-        static NEARDATA const char because_of[] = " %s 때문에";
+        static NEARDATA const char because_of[] = "%s 때문에 ";
 
         if (propidx >= 0) {
 #if 0 /*KR*/
@@ -965,22 +965,22 @@ int propidx; /* special cases can have negative values */
              */
             if (propidx == BLINDED && u.uroleplay.blind)
                 /*KR Sprintf(buf, " from birth"); */
-                Sprintf(buf, " 태어나서부터");
+                Sprintf(buf, "태어나서부터 ");
             else if (innateness == FROM_ROLE || innateness == FROM_RACE)
                 /*KR Strcpy(buf, " innately"); */
-                Strcpy(buf, " 태어나면서");
+                Strcpy(buf, "태어나면서 ");
             else if (innateness == FROM_INTR) /* [].intrinsic & FROMOUTSIDE */
                 /*KR Strcpy(buf, " intrinsically"); */
-                Strcpy(buf, " 내적으로");
+                Strcpy(buf, "내적으로 ");
             else if (innateness == FROM_EXP)
                 /*KR Strcpy(buf, " because of your experience"); */
-                Strcpy(buf, " 경험에 의해");
+                Strcpy(buf, "경험에 의해 ");
             else if (innateness == FROM_LYCN)
                 /*KR Strcpy(buf, " due to your lycanthropy"); */
-                Strcpy(buf, " 야수병에 의해");
+                Strcpy(buf, "야수병에 의해 ");
             else if (innateness == FROM_FORM)
                 /*KR Strcpy(buf, " from current creature form"); */
-                Strcpy(buf, " 현재의 모습에서");
+                Strcpy(buf, "현재의 모습에서 ");
             else if (propidx == FAST && Very_fast)
 #if 0 /*KR:T*/
                 Sprintf(buf, because_of,

@@ -384,10 +384,15 @@ boolean cuttier; /* hit is by wielded blade or axe or by thrown axe */
         place_worm_seg(worm, x, y); /* place the "head" segment back */
         if (context.mon_moving) {
             if (canspotmon(worm))
+#if 0 /*KR:T*/
                 pline("Part of %s tail has been cut off.",
                       s_suffix(mon_nam(worm)));
+#else
+                pline("%s의 꼬리 일부가 잘려나갔다.", mon_nam(worm));
+#endif
         } else
-            You("cut part of the tail off of %s.", mon_nam(worm));
+            /*KR You("cut part of the tail off of %s.", mon_nam(worm)); */
+            You("%s의 꼬리 일부를 잘라냈다.", mon_nam(worm));
         toss_wsegs(new_tail, TRUE);
         if (worm->mhp > 1)
             worm->mhp /= 2;
@@ -417,9 +422,11 @@ boolean cuttier; /* hit is by wielded blade or axe or by thrown axe */
     place_wsegs(new_worm, worm);
 
     if (context.mon_moving)
-        pline("%s is cut in half.", Monnam(worm));
+        /*KR pline("%s is cut in half.", Monnam(worm)); */
+        pline("%s가 반으로 잘렸다.", Monnam(worm));
     else
-        You("cut %s in half.", mon_nam(worm));
+        /*KR You("cut %s in half.", mon_nam(worm)); */
+        You("%s를 반으로 잘랐다.", mon_nam(worm));
 }
 
 /*

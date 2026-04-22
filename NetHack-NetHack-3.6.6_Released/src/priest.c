@@ -10,11 +10,9 @@
 #define ALGN_PIOUS 14    /* better than fervent (9..13) */
 
 STATIC_DCL boolean FDECL(histemple_at, (struct monst *, XCHAR_P, XCHAR_P));
-STATIC_DCL boolean FDECL(has_shrine, (struct monst *));
+STATIC_DCL boolean FDECL(has_shrine, (struct monst *) );
 
-void
-newepri(mtmp)
-struct monst *mtmp;
+void newepri(mtmp) struct monst *mtmp;
 {
     if (!mtmp->mextra)
         mtmp->mextra = newmextra();
@@ -24,9 +22,7 @@ struct monst *mtmp;
     }
 }
 
-void
-free_epri(mtmp)
-struct monst *mtmp;
+void free_epri(mtmp) struct monst *mtmp;
 {
     if (mtmp->mextra && EPRI(mtmp)) {
         free((genericptr_t) EPRI(mtmp));
@@ -128,8 +124,13 @@ pick_move:
 #if 0 /* dead code; maybe someday someone will track down why... */
         if (ib) {
             if (cansee(mtmp->mx, mtmp->my))
+#if 0 /*KR: 원본*/
                 pline("%s picks up %s.", Monnam(mtmp),
                       distant_name(ib, doname));
+#else
+                pline("%s %s 집어들었다.", append_josa(Monnam(mtmp), "이"),
+                      append_josa(distant_name(ib, doname), "을"));
+#endif
             obj_extract_self(ib);
             (void) mpickobj(mtmp, ib);
         }
@@ -204,7 +205,10 @@ register struct monst *priest;
         || (Conflict && !resist(priest, RING_CLASS, 0, 0))) {
         if (monnear(priest, u.ux, u.uy)) {
             if (Displaced)
-                Your("displaced image doesn't fool %s!", mon_nam(priest));
+                /*KR Your("displaced image doesn't fool %s!",
+                 * mon_nam(priest)); */
+                Your("환영은 %s 속이지 못했다!",
+                     append_josa(mon_nam(priest), "을"));
             (void) mattacku(priest);
             return 0;
         } else if (index(u.urooms, temple)) {
@@ -222,9 +226,7 @@ register struct monst *priest;
 }
 
 /* exclusively for mktemple() */
-void
-priestini(lvl, sroom, sx, sy, sanctum)
-d_level *lvl;
+void priestini(lvl, sroom, sx, sy, sanctum) d_level *lvl;
 struct mkroom *sroom;
 int sx, sy;
 boolean sanctum; /* is it the seat of the high priest? */
@@ -275,9 +277,9 @@ aligntyp
 mon_aligntyp(mon)
 struct monst *mon;
 {
-    aligntyp algn = mon->ispriest ? EPRI(mon)->shralign
-                                  : mon->isminion ? EMIN(mon)->min_align
-                                                  : mon->data->maligntyp;
+    aligntyp algn = mon->ispriest   ? EPRI(mon)->shralign
+                    : mon->isminion ? EMIN(mon)->min_align
+                                    : mon->data->maligntyp;
 
     if (algn == A_NONE)
         return A_NONE; /* negative but differs from chaotic */
@@ -286,13 +288,13 @@ struct monst *mon;
 
 /*
  * Specially aligned monsters are named specially.
- *      - aligned priests with ispriest and high priests have shrines
- *              they retain ispriest and epri when polymorphed
- *      - aligned priests without ispriest are roamers
- *              they have isminion set and use emin rather than epri
- *      - minions do not have ispriest but have isminion and emin
- *      - caller needs to inhibit Hallucination if it wants to force
- *              the true name even when under that influence
+ * - aligned priests with ispriest and high priests have shrines
+ * they retain ispriest and epri when polymorphed
+ * - aligned priests without ispriest are roamers
+ * they have isminion set and use emin rather than epri
+ * - minions do not have ispriest but have isminion and emin
+ * - caller needs to inhibit Hallucination if it wants to force
+ * the true name even when under that influence
  */
 char *
 priestname(mon, pname)
@@ -309,38 +311,69 @@ char *pname; /* caller-supplied output buffer */
         return strcpy(pname, what);       /* caller must be confused */
 
     *pname = '\0';
+#if 0 /*KR: 한국어는 관사 불필요 */
     if (!do_hallu || !bogon_is_pname(whatcode))
         Strcat(pname, "the ");
+#endif
     if (mon->minvis)
-        Strcat(pname, "invisible ");
+        /*KR Strcat(pname, "invisible "); */
+        Strcat(pname, "투명한 ");
     if (mon->isminion && EMIN(mon)->renegade)
-        Strcat(pname, "renegade ");
+        /*KR Strcat(pname, "renegade "); */
+        Strcat(pname, "배교자 ");
+
+#if 1 /*KR: 한국어 어순 (성향 + 의 + 이름) */
+    if (do_hallu || !high_priest || !Is_astralevel(&u.uz)
+        || distu(mon->mx, mon->my) <= 2 || program_state.gameover) {
+        Strcat(pname, halu_gname(mon_aligntyp(mon)));
+        Strcat(pname, "의 ");
+    }
+#endif
 
     if (mon->ispriest || aligned_priest) { /* high_priest implies ispriest */
         if (!aligned_priest && !high_priest) {
             ; /* polymorphed priest; use ``what'' as is */
         } else {
             if (high_priest)
+#if 0 /*KR: 원본*/
                 Strcat(pname, "high ");
-            if (Hallucination)
-                what = "poohbah";
+#else
+            {
+                if (Hallucination)
+                    what = "무능한 고위 관료";
+                else
+                    what = "고위 사제";
+            } else /* 위에서 완성했으므로 하단 로직 패스 */
+#endif
+                if (Hallucination)
+                /*KR what = "poohbah"; */
+                what = "무능한 관료";
             else if (mon->female)
-                what = "priestess";
+                /*KR what = "priestess"; */
+                what = "여사제";
             else
-                what = "priest";
+                /*KR what = "priest"; */
+                what = "사제";
         }
     } else {
+#if 0 /*KR: 원본*/
         if (mon->mtame && !strcmpi(what, "Angel"))
             Strcat(pname, "guardian ");
+#else
+        if (mon->mtame && (!strcmpi(what, "Angel") || !strcmpi(what, "천사")))
+            Strcat(pname, "수호 ");
+#endif
     }
 
     Strcat(pname, what);
+#if 0 /*KR: 성향(of ~)을 이미 앞에서 붙였음 */
     /* same as distant_monnam(), more or less... */
     if (do_hallu || !high_priest || !Is_astralevel(&u.uz)
         || distu(mon->mx, mon->my) <= 2 || program_state.gameover) {
         Strcat(pname, " of ");
         Strcat(pname, halu_gname(mon_aligntyp(mon)));
     }
+#endif
     return pname;
 }
 
@@ -385,9 +418,7 @@ char roomno;
 }
 
 /* called from check_special_room() when the player enters the temple room */
-void
-intemple(roomno)
-int roomno;
+void intemple(roomno) int roomno;
 {
     struct monst *priest, *mtmp;
     struct epri *epri_p;
@@ -416,8 +447,15 @@ int roomno;
                Moloch so suppress the "of Moloch" for him here too */
             if (sanctum && !Hallucination)
                 priest->ispriest = 0;
+#if 0 /*KR: 원본*/
             pline("%s intones:",
                   canseemon(priest) ? Monnam(priest) : "A nearby voice");
+#else
+            pline("%s 읊조렸다:",
+                  append_josa(canseemon(priest) ? Monnam(priest)
+                                                : "근처의 누군가",
+                              "가"));
+#endif
             priest->ispriest = save_priest;
             epri_p->intone_time = moves + (long) d(10, 500); /* ~2505 */
             /* make sure that we don't suppress entry message when
@@ -428,18 +466,26 @@ int roomno;
         if (sanctum && Is_sanctum(&u.uz)) {
             if (priest->mpeaceful) {
                 /* first time inside */
-                msg1 = "Infidel, you have entered Moloch's Sanctum!";
-                msg2 = "Be gone!";
+                /*KR msg1 = "Infidel, you have entered Moloch's Sanctum!"; */
+                msg1 = "이교도여, 네놈은 몰록의 성소에 발을 들였다!";
+                /*KR msg2 = "Be gone!"; */
+                msg2 = "당장 꺼져라!";
                 priest->mpeaceful = 0;
                 /* became angry voluntarily; no penalty for attacking him */
                 set_malign(priest);
             } else {
                 /* repeat visit, or attacked priest before entering */
-                msg1 = "You desecrate this place by your presence!";
+                /*KR msg1 = "You desecrate this place by your presence!"; */
+                msg1 = "네 존재 자체가 이곳을 모독하는구나!";
             }
         } else if (moves >= epri_p->enter_time) {
+#if 0 /*KR: 원본*/
             Sprintf(buf, "Pilgrim, you enter a %s place!",
                     !shrined ? "desecrated" : "sacred");
+#else
+            Sprintf(buf, "순례자여, 당신은 %s 장소에 발을 들였습니다!",
+                    !shrined ? "더럽혀진" : "신성한");
+#endif
             msg1 = buf;
         }
         if (msg1 && can_speak && !Deaf) {
@@ -451,13 +497,19 @@ int roomno;
         if (!sanctum) {
             if (!shrined || !p_coaligned(priest)
                 || u.ualign.record <= ALGN_SINNED) {
-                msg1 = "have a%s forbidding feeling...";
-                msg2 = (!shrined || !p_coaligned(priest)) ? "" : " strange";
+                /*KR msg1 = "have a%s forbidding feeling..."; */
+                msg1 = "%s 불길한 기분이 든다...";
+                /*KR msg2 = (!shrined || !p_coaligned(priest)) ? "" : "
+                 * strange"; */
+                msg2 = (!shrined || !p_coaligned(priest)) ? "" : "기묘하고";
                 this_time = &epri_p->hostile_time;
                 other_time = &epri_p->peaceful_time;
             } else {
-                msg1 = "experience %s sense of peace.";
-                msg2 = (u.ualign.record >= ALGN_PIOUS) ? "a" : "an unusual";
+                /*KR msg1 = "experience %s sense of peace."; */
+                msg1 = "%s 평화로움을 경험한다.";
+                /*KR msg2 = (u.ualign.record >= ALGN_PIOUS) ? "a" : "an
+                 * unusual"; */
+                msg2 = (u.ualign.record >= ALGN_PIOUS) ? "" : "평소와는 다른";
                 this_time = &epri_p->peaceful_time;
                 other_time = &epri_p->hostile_time;
             }
@@ -481,13 +533,16 @@ int roomno;
 
         switch (rn2(4)) {
         case 0:
-            You("have an eerie feeling...");
+            /*KR You("have an eerie feeling..."); */
+            You("섬뜩한 기분이 든다...");
             break;
         case 1:
-            You_feel("like you are being watched.");
+            /*KR You_feel("like you are being watched."); */
+            You_feel("누군가 지켜보고 있는 것 같다.");
             break;
         case 2:
-            pline("A shiver runs down your %s.", body_part(SPINE));
+            /*KR pline("A shiver runs down your %s.", body_part(SPINE)); */
+            pline("당신의 %s을 타고 오한이 흐른다.", body_part(SPINE));
             break;
         default:
             break; /* no message; unfortunately there's no
@@ -499,27 +554,34 @@ int roomno;
                    != 0) {
             int ngen = mvitals[PM_GHOST].born;
             if (canspotmon(mtmp))
+#if 0 /*KR: 원본*/
                 pline("A%s ghost appears next to you%c",
                       ngen < 5 ? "n enormous" : "",
                       ngen < 10 ? '!' : '.');
+#else
+                pline("%s 유령이 당신 곁에 나타났다%s",
+                      ngen < 5 ? "거대한" : "", ngen < 10 ? "!" : ".");
+#endif
             else
-                You("sense a presence close by!");
+                /*KR You("sense a presence close by!"); */
+                You("가까이에 무언가 있음을 감지했다!");
             mtmp->mpeaceful = 0;
             set_malign(mtmp);
             if (flags.verbose)
-                You("are frightened to death, and unable to move.");
+                /*KR You("are frightened to death, and unable to move."); */
+                You("공포에 질려, 꼼짝도 할 수 없다.");
             nomul(-3);
-            multi_reason = "being terrified of a ghost";
-            nomovemsg = "You regain your composure.";
+            /*KR multi_reason = "being terrified of a ghost"; */
+            multi_reason = "유령에 겁을 집어먹고 있는 도중에";
+            /*KR nomovemsg = "You regain your composure."; */
+            nomovemsg = "당신은 평정을 되찾았다.";
         }
     }
 }
 
 /* reset the move counters used to limit temple entry feedback;
    leaving the level and then returning yields a fresh start */
-void
-forget_temple_entry(priest)
-struct monst *priest;
+void forget_temple_entry(priest) struct monst *priest;
 {
     struct epri *epri_p = priest->ispriest ? EPRI(priest) : 0;
 
@@ -531,9 +593,7 @@ struct monst *priest;
         epri_p->hostile_time = 0L;
 }
 
-void
-priest_talk(priest)
-register struct monst *priest;
+void priest_talk(priest) register struct monst *priest;
 {
     boolean coaligned = p_coaligned(priest);
     boolean strayed = (u.ualign.record < 0);
@@ -542,23 +602,34 @@ register struct monst *priest;
     u.uconduct.gnostic++;
 
     if (priest->mflee || (!priest->ispriest && coaligned && strayed)) {
-        pline("%s doesn't want anything to do with you!", Monnam(priest));
+        /*KR pline("%s doesn't want anything to do with you!",
+         * Monnam(priest)); */
+        pline("%s 당신과 엮이고 싶어 하지 않는다!",
+              append_josa(Monnam(priest), "은"));
         priest->mpeaceful = 0;
         return;
     }
 
     /* priests don't chat unless peaceful and in their own temple */
-    if (!inhistemple(priest) || !priest->mpeaceful
-        || !priest->mcanmove || priest->msleeping) {
+    if (!inhistemple(priest) || !priest->mpeaceful || !priest->mcanmove
+        || priest->msleeping) {
         static const char *cranky_msg[3] = {
-            "Thou wouldst have words, eh?  I'll give thee a word or two!",
-            "Talk?  Here is what I have to say!",
-            "Pilgrim, I would speak no longer with thee."
+            /*KR "Thou wouldst have words, eh?  I'll give thee a word or
+               two!", */
+            "나와 대화를 나누고 싶은가? 한두 마디 들려주지!",
+            /*KR "Talk?  Here is what I have to say!", */
+            "대화라고? 이게 내가 할 말이다!",
+            /*KR "Pilgrim, I would speak no longer with thee." */
+            "순례자여, 난 더 이상 그대와 할 말이 없다."
         };
 
         if (!priest->mcanmove || priest->msleeping) {
+#if 0 /*KR: 원본*/
             pline("%s breaks out of %s reverie!", Monnam(priest),
                   mhis(priest));
+#else
+            pline("%s 환상에서 깨어났다!", append_josa(Monnam(priest), "이"));
+#endif
             priest->mfrozen = priest->msleeping = 0;
             priest->mcanmove = 1;
         }
@@ -570,8 +641,10 @@ register struct monst *priest;
     /* you desecrated the temple and now you want to chat? */
     if (priest->mpeaceful && *in_rooms(priest->mx, priest->my, TEMPLE)
         && !has_shrine(priest)) {
-        verbalize(
+        /*KR verbalize(
               "Begone!  Thou desecratest this holy place with thy presence.");
+         */
+        verbalize("물러가라! 그대의 존재가 이 신성한 곳을 더럽히는구나.");
         priest->mpeaceful = 0;
         return;
     }
@@ -580,38 +653,56 @@ register struct monst *priest;
             long pmoney = money_cnt(priest->minvent);
             if (pmoney > 0L) {
                 /* Note: two bits is actually 25 cents.  Hmm. */
+#if 0 /*KR: 원본*/
                 pline("%s gives you %s for an ale.", Monnam(priest),
                       (pmoney == 1L) ? "one bit" : "two bits");
+#else
+                pline("%s 에일이라도 마시라며 %s 건네준다.",
+                      append_josa(Monnam(priest), "이"),
+                      (pmoney == 1L) ? "금화 1닢을" : "금화 2닢을");
+#endif
                 money2u(priest, pmoney > 1L ? 2 : 1);
             } else
-                pline("%s preaches the virtues of poverty.", Monnam(priest));
+                /*KR pline("%s preaches the virtues of poverty.",
+                 * Monnam(priest)); */
+                pline("%s 청빈의 미덕을 설교한다.",
+                      append_josa(Monnam(priest), "이"));
             exercise(A_WIS, TRUE);
         } else
-            pline("%s is not interested.", Monnam(priest));
+            /*KR pline("%s is not interested.", Monnam(priest)); */
+            pline("%s 별 관심이 없어 보인다.",
+                  append_josa(Monnam(priest), "은"));
         return;
     } else {
         long offer;
 
-        pline("%s asks you for a contribution for the temple.",
-              Monnam(priest));
+        /*KR pline("%s asks you for a contribution for the temple.",
+              Monnam(priest)); */
+        pline("%s 신전을 위한 기부를 요청한다.",
+              append_josa(Monnam(priest), "이"));
         if ((offer = bribe(priest)) == 0) {
-            verbalize("Thou shalt regret thine action!");
+            /*KR verbalize("Thou shalt regret thine action!"); */
+            verbalize("그대, 이 일을 후회하게 될 지니!");
             if (coaligned)
                 adjalign(-1);
         } else if (offer < (u.ulevel * 200)) {
             if (money_cnt(invent) > (offer * 2L)) {
-                verbalize("Cheapskate.");
+                /*KR verbalize("Cheapskate."); */
+                verbalize("구두쇠 녀석.");
             } else {
-                verbalize("I thank thee for thy contribution.");
+                /*KR verbalize("I thank thee for thy contribution."); */
+                verbalize("그대의 기부에 감사하노라.");
                 /* give player some token */
                 exercise(A_WIS, TRUE);
             }
         } else if (offer < (u.ulevel * 400)) {
-            verbalize("Thou art indeed a pious individual.");
+            /*KR verbalize("Thou art indeed a pious individual."); */
+            verbalize("그대는 참으로 신앙심이 깊은 자로구나.");
             if (money_cnt(invent) < (offer * 2L)) {
                 if (coaligned && u.ualign.record <= ALGN_SINNED)
                     adjalign(1);
-                verbalize("I bestow upon thee a blessing.");
+                /*KR verbalize("I bestow upon thee a blessing."); */
+                verbalize("그대에게 축복을 내리노라.");
                 incr_itimeout(&HClairvoyant, rn1(500, 500));
             }
         } else if (offer < (u.ulevel * 600)
@@ -622,7 +713,8 @@ register struct monst *priest;
                    && (!(HProtection & INTRINSIC)
                        || (u.ublessed < 20
                            && (u.ublessed < 9 || !rn2(u.ublessed))))) {
-            verbalize("Thy devotion has been rewarded.");
+            /*KR verbalize("Thy devotion has been rewarded."); */
+            verbalize("그대의 헌신에 보답하노라.");
             if (!(HProtection & INTRINSIC)) {
                 HProtection |= FROMOUTSIDE;
                 if (!u.ublessed)
@@ -630,7 +722,9 @@ register struct monst *priest;
             } else
                 u.ublessed++;
         } else {
-            verbalize("Thy selfless generosity is deeply appreciated.");
+            /*KR verbalize("Thy selfless generosity is deeply appreciated.");
+             */
+            verbalize("그대의 이타적인 관대함에 깊이 감사하노라.");
             if (money_cnt(invent) < (offer * 2L) && coaligned) {
                 if (strayed && (moves - u.ucleansed) > 5000L) {
                     u.ualign.record = 0; /* cleanse thee */
@@ -677,9 +771,7 @@ boolean peaceful;
     return roamer;
 }
 
-void
-reset_hostility(roamer)
-register struct monst *roamer;
+void reset_hostility(roamer) register struct monst *roamer;
 {
     if (!roamer->isminion)
         return;
@@ -719,9 +811,7 @@ xchar x, y;
 }
 
 /* when attacking "priest" in his temple */
-void
-ghod_hitsu(priest)
-struct monst *priest;
+void ghod_hitsu(priest) struct monst *priest;
 {
     int x, y, ax, ay, roomno = (int) temple_occupied(u.urooms);
     struct mkroom *troom;
@@ -774,16 +864,31 @@ struct monst *priest;
 
     switch (rn2(3)) {
     case 0:
+#if 0 /*KR: 원본*/
         pline("%s roars in anger:  \"Thou shalt suffer!\"",
               a_gname_at(ax, ay));
+#else
+        pline("%s 분노하여 포효한다: \"고통받을 지어다!\"",
+              append_josa(a_gname_at(ax, ay), "이"));
+#endif
         break;
     case 1:
+#if 0 /*KR: 원본*/
         pline("%s voice booms:  \"How darest thou harm my servant!\"",
               s_suffix(a_gname_at(ax, ay)));
+#else
+        pline("%s 목소리가 울려 퍼진다: \"감히 내 종을 해치려 들다니!\"",
+              append_josa(a_gname_at(ax, ay), "의"));
+#endif
         break;
     default:
+#if 0 /*KR: 원본*/
         pline("%s roars:  \"Thou dost profane my shrine!\"",
               a_gname_at(ax, ay));
+#else
+        pline("%s 포효한다: \"내 성소를 모독하는구나!\"",
+              append_josa(a_gname_at(ax, ay), "이"));
+#endif
         break;
     }
 
@@ -847,9 +952,7 @@ clearpriests()
 }
 
 /* munge priest-specific structure when restoring -dlc */
-void
-restpriest(mtmp, ghostly)
-register struct monst *mtmp;
+void restpriest(mtmp, ghostly) register struct monst *mtmp;
 boolean ghostly;
 {
     if (u.uz.dlevel) {
@@ -877,15 +980,20 @@ aligntyp alignment;
 {
     switch ((int) alignment) {
     case A_CHAOTIC:
-        return "chaotic";
+        /*KR return "chaotic"; */
+        return "혼돈";
     case A_NEUTRAL:
-        return "neutral";
+        /*KR return "neutral"; */
+        return "중립";
     case A_LAWFUL:
-        return "lawful";
+        /*KR return "lawful"; */
+        return "질서";
     case A_NONE:
-        return "unaligned";
+        /*KR return "unaligned"; */
+        return "무성향";
     }
-    return "unknown";
+    /*KR return "unknown"; */
+    return "알 수 없음";
 }
 
 /* used for self-probing */
@@ -899,27 +1007,37 @@ const char *suffix;
 
     /* note: piousness 20 matches MIN_QUEST_ALIGN (quest.h) */
     if (u.ualign.record >= 20)
-        pio = "piously";
+        /*KR pio = "piously"; */
+        pio = "경건한";
     else if (u.ualign.record > 13)
-        pio = "devoutly";
+        /*KR pio = "devoutly"; */
+        pio = "독실한";
     else if (u.ualign.record > 8)
-        pio = "fervently";
+        /*KR pio = "fervently"; */
+        pio = "열렬한";
     else if (u.ualign.record > 3)
-        pio = "stridently";
+        /*KR pio = "stridently"; */
+        pio = "단호한";
     else if (u.ualign.record == 3)
         pio = "";
     else if (u.ualign.record > 0)
-        pio = "haltingly";
+        /*KR pio = "haltingly"; */
+        pio = "망설이는";
     else if (u.ualign.record == 0)
-        pio = "nominally";
+        /*KR pio = "nominally"; */
+        pio = "명목상";
     else if (!showneg)
-        pio = "insufficiently";
+        /*KR pio = "insufficiently"; */
+        pio = "불충분한";
     else if (u.ualign.record >= -3)
-        pio = "strayed";
+        /*KR pio = "strayed"; */
+        pio = "방황하는";
     else if (u.ualign.record >= -8)
-        pio = "sinned";
+        /*KR pio = "sinned"; */
+        pio = "죄지은";
     else
-        pio = "transgressed";
+        /*KR pio = "transgressed"; */
+        pio = "어긋난";
 
     Sprintf(buf, "%s", pio);
     if (suffix && (!showneg || u.ualign.record >= 0)) {
@@ -931,16 +1049,15 @@ const char *suffix;
 }
 
 /* stethoscope or probing applied to monster -- one-line feedback */
-void
-mstatusline(mtmp)
-struct monst *mtmp;
+void mstatusline(mtmp) struct monst *mtmp;
 {
     aligntyp alignment = mon_aligntyp(mtmp);
     char info[BUFSZ], monnambuf[BUFSZ];
 
     info[0] = 0;
     if (mtmp->mtame) {
-        Strcat(info, ", tame");
+        /*KR Strcat(info, ", tame"); */
+        Strcat(info, ", 길들여짐");
         if (wizard) {
             Sprintf(eos(info), " (%d", mtmp->mtame);
             if (!mtmp->isminion)
@@ -949,7 +1066,8 @@ struct monst *mtmp;
             Strcat(info, ")");
         }
     } else if (mtmp->mpeaceful)
-        Strcat(info, ", peaceful");
+        /*KR Strcat(info, ", peaceful"); */
+        Strcat(info, ", 평화로움");
 
     if (mtmp->data == &mons[PM_LONG_WORM]) {
         int segndx, nsegs = count_wsegs(mtmp);
@@ -958,74 +1076,113 @@ struct monst *mtmp;
            the worm's segments, but we count it as such when presenting
            worm feedback to the player */
         if (!nsegs) {
-            Strcat(info, ", single segment");
+            /*KR Strcat(info, ", single segment"); */
+            Strcat(info, ", 단일 마디");
         } else {
             ++nsegs; /* include head in the segment count */
             segndx = wseg_at(mtmp, bhitpos.x, bhitpos.y);
+#if 0 /*KR: 원본*/
             Sprintf(eos(info), ", %d%s of %d segments",
                     segndx, ordin(segndx), nsegs);
+#else
+            Sprintf(eos(info), ", %d개의 마디 중 %d번째", nsegs, segndx);
+#endif
         }
     }
     if (mtmp->cham >= LOW_PM && mtmp->data != &mons[mtmp->cham])
         /* don't reveal the innate form (chameleon, vampire, &c),
            just expose the fact that this current form isn't it */
-        Strcat(info, ", shapechanger");
+        /*KR Strcat(info, ", shapechanger"); */
+        Strcat(info, ", 변신중");
     /* pets eating mimic corpses mimic while eating, so this comes first */
     if (mtmp->meating)
-        Strcat(info, ", eating");
+        /*KR Strcat(info, ", eating"); */
+        Strcat(info, ", 식사중");
     /* a stethoscope exposes mimic before getting here so this
        won't be relevant for it, but wand of probing doesn't */
     if (mtmp->mundetected || mtmp->m_ap_type)
         mhidden_description(mtmp, TRUE, eos(info));
     if (mtmp->mcan)
-        Strcat(info, ", cancelled");
+        /*KR Strcat(info, ", cancelled"); */
+        Strcat(info, ", 무효화됨");
     if (mtmp->mconf)
-        Strcat(info, ", confused");
+        /*KR Strcat(info, ", confused"); */
+        Strcat(info, ", 혼란스러움");
     if (mtmp->mblinded || !mtmp->mcansee)
-        Strcat(info, ", blind");
+        /*KR Strcat(info, ", blind"); */
+        Strcat(info, ", 눈이 멂");
     if (mtmp->mstun)
-        Strcat(info, ", stunned");
+        /*KR Strcat(info, ", stunned"); */
+        Strcat(info, ", 기절함");
     if (mtmp->msleeping)
-        Strcat(info, ", asleep");
+        /*KR Strcat(info, ", asleep"); */
+        Strcat(info, ", 잠듦");
 #if 0 /* unfortunately mfrozen covers temporary sleep and being busy \
          (donning armor, for instance) as well as paralysis */
     else if (mtmp->mfrozen)
         Strcat(info, ", paralyzed");
 #else
     else if (mtmp->mfrozen || !mtmp->mcanmove)
-        Strcat(info, ", can't move");
+        /*KR Strcat(info, ", can't move"); */
+        Strcat(info, ", 움직일 수 없음");
 #endif
     /* [arbitrary reason why it isn't moving] */
     else if (mtmp->mstrategy & STRAT_WAITMASK)
-        Strcat(info, ", meditating");
+        /*KR Strcat(info, ", meditating"); */
+        Strcat(info, ", 명상중");
     if (mtmp->mflee)
-        Strcat(info, ", scared");
+        /*KR Strcat(info, ", scared"); */
+        Strcat(info, ", 겁먹음");
     if (mtmp->mtrapped)
-        Strcat(info, ", trapped");
+        /*KR Strcat(info, ", trapped"); */
+        Strcat(info, ", 함정에 빠짐");
     if (mtmp->mspeed)
+#if 0 /*KR: 원본*/
         Strcat(info, (mtmp->mspeed == MFAST) ? ", fast"
                       : (mtmp->mspeed == MSLOW) ? ", slow"
                          : ", [? speed]");
+#else
+        Strcat(info, (mtmp->mspeed == MFAST)   ? ", 빠름"
+                     : (mtmp->mspeed == MSLOW) ? ", 느림"
+                                               : ", [속도 알 수 없음]");
+#endif
     if (mtmp->minvis)
-        Strcat(info, ", invisible");
+        /*KR Strcat(info, ", invisible"); */
+        Strcat(info, ", 투명함");
     if (mtmp == u.ustuck)
+#if 0 /*KR: 원본*/
         Strcat(info, sticks(youmonst.data) ? ", held by you"
                       : !u.uswallow ? ", holding you"
                          : attacktype_fordmg(u.ustuck->data, AT_ENGL, AD_DGST)
                             ? ", digesting you"
                             : is_animal(u.ustuck->data) ? ", swallowing you"
                                : ", engulfing you");
+#else
+        Strcat(info, sticks(youmonst.data) ? ", 당신에게 붙잡힘"
+                     : !u.uswallow         ? ", 당신을 붙잡고 있음"
+                     : attacktype_fordmg(u.ustuck->data, AT_ENGL, AD_DGST)
+                         ? ", 당신을 소화하는 중"
+                     : is_animal(u.ustuck->data) ? ", 당신을 삼키는 중"
+                                                 : ", 당신을 집어삼키는 중");
+#endif
     if (mtmp == u.usteed)
-        Strcat(info, ", carrying you");
+        /*KR Strcat(info, ", carrying you"); */
+        Strcat(info, ", 당신을 태우고 있음");
 
     /* avoid "Status of the invisible newt ..., invisible" */
     /* and unlike a normal mon_nam, use "saddled" even if it has a name */
     Strcpy(monnambuf, x_monnam(mtmp, ARTICLE_THE, (char *) 0,
                                (SUPPRESS_IT | SUPPRESS_INVISIBLE), FALSE));
 
+#if 0 /*KR: 원본*/
     pline("Status of %s (%s):  Level %d  HP %d(%d)  AC %d%s.", monnambuf,
           align_str(alignment), mtmp->m_lev, mtmp->mhp, mtmp->mhpmax,
           find_mac(mtmp), info);
+#else
+    pline("%s의 상태 (%s):  레벨 %d  체력 %d(%d)  방어력 %d%s.", monnambuf,
+          align_str(alignment), mtmp->m_lev, mtmp->mhp, mtmp->mhpmax,
+          find_mac(mtmp), info);
+#endif
 }
 
 /* stethoscope or probing applied to hero -- one-line feedback */
@@ -1036,6 +1193,7 @@ ustatusline()
 
     info[0] = '\0';
     if (Sick) {
+#if 0 /*KR: 원본*/
         Strcat(info, ", dying from");
         if (u.usick_type & SICK_VOMITABLE)
             Strcat(info, " food poisoning");
@@ -1044,18 +1202,35 @@ ustatusline()
                 Strcat(info, " and");
             Strcat(info, " illness");
         }
+#else
+        Strcat(info, ", ");
+        if (u.usick_type & SICK_VOMITABLE)
+            Strcat(info, "식중독");
+        if (u.usick_type & SICK_NONVOMITABLE) {
+            if (u.usick_type & SICK_VOMITABLE)
+                Strcat(info, "과 ");
+            Strcat(info, "질병");
+        }
+        Strcat(info, "으로 죽어감");
+#endif
     }
     if (Stoned)
-        Strcat(info, ", solidifying");
+        /*KR Strcat(info, ", solidifying"); */
+        Strcat(info, ", 굳어가는 중");
     if (Slimed)
-        Strcat(info, ", becoming slimy");
+        /*KR Strcat(info, ", becoming slimy"); */
+        Strcat(info, ", 점액으로 변하는 중");
     if (Strangled)
-        Strcat(info, ", being strangled");
+        /*KR Strcat(info, ", being strangled"); */
+        Strcat(info, ", 목이 졸리는 중");
     if (Vomiting)
-        Strcat(info, ", nauseated"); /* !"nauseous" */
+        /*KR Strcat(info, ", nauseated"); */ /* !"nauseous" */
+        Strcat(info, ", 구역질남");
     if (Confusion)
-        Strcat(info, ", confused");
+        /*KR Strcat(info, ", confused"); */
+        Strcat(info, ", 혼란스러움");
     if (Blind) {
+#if 0 /*KR: 원본*/
         Strcat(info, ", blind");
         if (u.ucreamed) {
             if ((long) u.ucreamed < Blinded || Blindfolded
@@ -1063,37 +1238,75 @@ ustatusline()
                 Strcat(info, ", cover");
             Strcat(info, "ed by sticky goop");
         } /* note: "goop" == "glop"; variation is intentional */
+#else
+        Strcat(info, ", 눈이 멂");
+        if (u.ucreamed) {
+            Strcat(info, " (");
+            if ((long) u.ucreamed < Blinded || Blindfolded
+                || !haseyes(youmonst.data))
+                Strcat(info, "끈적이는 오물로 덮임");
+            else
+                Strcat(info, "얼굴에 끈적이는 오물이 묻음");
+            Strcat(info, ")");
+        }
+#endif
     }
     if (Stunned)
-        Strcat(info, ", stunned");
+        /*KR Strcat(info, ", stunned"); */
+        Strcat(info, ", 기절함");
     if (!u.usteed && Wounded_legs) {
         const char *what = body_part(LEG);
         if ((Wounded_legs & BOTH_SIDES) == BOTH_SIDES)
             what = makeplural(what);
-        Sprintf(eos(info), ", injured %s", what);
+   /*KR Sprintf(eos(info), ", injured %s", what); */
+        Sprintf(eos(info), ", %s 부상", what);
+
     }
     if (Glib)
-        Sprintf(eos(info), ", slippery %s", makeplural(body_part(HAND)));
+   /*KR Sprintf(eos(info), ", slippery %s", makeplural(body_part(HAND))); */
+        Sprintf(eos(info), ", 미끄러운 %s", makeplural(body_part(HAND)));
+
     if (u.utrap)
-        Strcat(info, ", trapped");
+        /*KR Strcat(info, ", trapped"); */
+        Strcat(info, ", 함정에 빠짐");
     if (Fast)
-        Strcat(info, Very_fast ? ", very fast" : ", fast");
+        /*KR Strcat(info, Very_fast ? ", very fast" : ", fast"); */
+        Strcat(info, Very_fast ? ", 매우 빠름" : ", 빠름");
     if (u.uundetected)
-        Strcat(info, ", concealed");
+        /*KR Strcat(info, ", concealed"); */
+        Strcat(info, ", 숨어 있음");
     if (Invis)
-        Strcat(info, ", invisible");
+        /*KR Strcat(info, ", invisible"); */
+        Strcat(info, ", 투명함");
     if (u.ustuck) {
+#if 0 /*KR: 원본*/
         if (sticks(youmonst.data))
             Strcat(info, ", holding ");
         else
             Strcat(info, ", held by ");
         Strcat(info, mon_nam(u.ustuck));
+#else
+        Strcat(info, ", ");
+        Strcat(info, mon_nam(u.ustuck));
+        if (sticks(youmonst.data))
+            /*KR append_josa를 적용할 수 있을지도 모름 */
+            Strcat(info, "(을)를 붙잡고 있음"); 
+        else
+            Strcat(info, "에게 붙잡혀 있음");
+#endif
     }
 
+#if 0 /*KR: 원본*/
     pline("Status of %s (%s):  Level %d  HP %d(%d)  AC %d%s.", plname,
           piousness(FALSE, align_str(u.ualign.type)),
           Upolyd ? mons[u.umonnum].mlevel : u.ulevel, Upolyd ? u.mh : u.uhp,
           Upolyd ? u.mhmax : u.uhpmax, u.uac, info);
+#else
+    pline("%s의 상태 (%s):  레벨 %d  체력 %d(%d)  방어력 %d%s.", plname,
+          piousness(FALSE, align_str(u.ualign.type)),
+          Upolyd ? mons[u.umonnum].mlevel : u.ulevel, Upolyd ? u.mh : u.uhp,
+          Upolyd ? u.mhmax : u.uhpmax, u.uac, info);
+#endif
 }
 
-/*priest.c*/
+ /*priest.c*/

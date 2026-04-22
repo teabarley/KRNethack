@@ -149,7 +149,11 @@ boolean exclude_cookie;
             Strcat(rumor_buf, xcrypt(line, xbuf));
         } while (
             count++ < 50 && exclude_cookie
+#if 0 /*KR: 원본*/
             && (strstri(rumor_buf, "fortune") || strstri(rumor_buf, "pity")));
+#else /*KR: 번역된 소문 파일의 문자열에 맞춰 검색어 변경) */
+            && (strstri(rumor_buf, "운세") || strstri(rumor_buf, "유감")));
+#endif
         (void) dlb_fclose(rumors);
         if (count >= 50)
             impossible("Can't find non-cookie rumor?");
@@ -363,7 +367,7 @@ int mechanism;
                        : (!rn2(3) ? "casually "
                                   : (rn2(2) ? "nonchalantly " : ""))));
 #else
-        pline("약속대로, 신관은 %s말했다: ",
+        pline("약속대로, 현자는 %s말했다: ",
               (!rn2(4) ? "아무렇게나 "
                        : (!rn2(3) ? "무심하게 "
                                   : (rn2(2) ? "무관심하게 " : ""))));
@@ -473,7 +477,7 @@ boolean delphi;
                    special
                 /*KR ? "The Oracle scornfully takes all your money and says:"
                      : "The Oracle meditates for a moment and then intones:"); */
-                     ? "신관은 경멸하듯이 당신의 모든 돈을 받아들고는 말했다:"
+                     ? "현자는 경멸하듯이 당신의 모든 돈을 받아들고는 말했다:"
                      : "현자는 잠시 명상하더니 이내 노래하듯이 말했다:");
         else
             /*KR putstr(tmpwin, 0, "The message reads:"); */
@@ -508,12 +512,15 @@ struct monst *oracl;
     umoney = money_cnt(invent);
 
     if (!oracl) {
-        /*KR There("is no one here to consult."); */
+#if 0 /*KR: 원본*/
+        There("is no one here to consult.");
+#else 
         pline("거기에는 신탁을 말해줄 사람이 없다.");
+#endif
         return 0;
     } else if (!oracl->mpeaceful) {
         /*KR pline("%s is in no mood for consultations.", Monnam(oracl)); */
-        pline("신관은 신탁을 알릴 기분이 아니다.");
+        pline("현자는 신탁을 알릴 기분이 아니다.");
         return 0;
     } else if (!umoney) {
         /*KR You("have no money."); */
@@ -522,7 +529,7 @@ struct monst *oracl;
     }
 
     /*KR Sprintf(qbuf, "\"Wilt thou settle for a minor consultation?\" (%d %s)", */
-    Sprintf(qbuf, "\"그대, 사소한 신탁을 받겠는가?\" (%d %s)",
+    Sprintf(qbuf, "\"그대, 작은 신탁을 받겠는가?\" (%d %s)",
             minor_cost, currency((long) minor_cost));
     switch (ynq(qbuf)) {
     default:
@@ -541,7 +548,7 @@ struct monst *oracl;
             || (oracle_cnt == 1 || oracle_flg < 0))
             return 0;
         /*KR Sprintf(qbuf, "\"Then dost thou desire a major one?\" (%d %s)", */
-        Sprintf(qbuf, "\"그렇다면 그대, 중요한 신탁을 받겠는가?\" (%d %s)",
+        Sprintf(qbuf, "\"그렇다면 그대, 큰 신탁을 받겠는가?\" (%d %s)",
                 major_cost, currency((long) major_cost));
         if (yn(qbuf) != 'y')
             return 0;
@@ -586,7 +593,8 @@ const char *filename;
     if (!iflags.debug_fuzzer)
         program_state.something_worth_saving = 0;
 
-    impossible("Can't open '%s' file.", filename);
+    /*KR impossible("Can't open '%s' file.", filename); */
+    impossible("'%s' 파일을 열 수 없습니다.", filename);
     program_state.something_worth_saving = save_something;
 }
 

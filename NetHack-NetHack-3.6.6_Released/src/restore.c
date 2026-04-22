@@ -133,7 +133,8 @@ boolean quietly;
         otmp2 = otmp->nobj;
         if (otmp->in_use) {
             if (!quietly)
-                pline("Finishing off %s...", xname(otmp));
+                /*KR pline("Finishing off %s...", xname(otmp)); */
+                pline("%s 다 썼다...", append_josa(xname(otmp), "를"));
             useup(otmp);
         }
     }
@@ -551,7 +552,8 @@ unsigned int *stuckid, *steedid;
         && uid != (unsigned long) getuid()) { /* strange ... */
         /* for wizard mode, issue a reminder; for others, treat it
            as an attempt to cheat and refuse to restore this file */
-        pline("Saved game was not yours.");
+        /*KR pline("Saved game was not yours."); */
+        pline("저장되어 있던 게임은 당신의 것이 아닙니다.");
         if (!wizard)
             return FALSE;
     }
@@ -619,7 +621,8 @@ unsigned int *stuckid, *steedid;
 #endif
     if (u.uhp <= 0 && (!Upolyd || u.mh <= 0)) {
         u.ux = u.uy = 0; /* affects pline() [hence You()] */
-        You("were not healthy enough to survive restoration.");
+        /*KR You("were not healthy enough to survive restoration."); */
+        You("당신은 복원될 만큼 건강하지 않았습니다.");
         /* wiz1_level.dlevel is used by mklev.c to see if lots of stuff is
          * uninitialized, so we only have to set it and not the other stuff.
          */
@@ -762,7 +765,8 @@ xchar ltmp;
         /* The savelev can't proceed because the size required
          * is greater than the available disk space.
          */
-        pline("Not enough space on `%s' to restore your game.", levels);
+   /*KR pline("Not enough space on `%s' to restore your game.", levels); */
+        pline("게임을 재개하기 위한 '%s' 전용 공간이 없습니다.", levels);
 
         /* Remove levels and bones that may have been created.
          */
@@ -787,7 +791,8 @@ xchar ltmp;
             return dorecover(fd);            /* 0 or 1 */
         }
 #endif /* ?AMIGA */
-        pline("Be seeing you...");
+        /*KR pline("Be seeing you..."); */
+        pline("다음에 또 봐요...");
         nh_terminate(EXIT_SUCCESS);
     }
 #endif /* MFLOPPY */
@@ -846,10 +851,18 @@ register int fd;
         clear_nhwindow(WIN_MAP);
 #endif
     clear_nhwindow(WIN_MESSAGE);
+#if 0 /*KR:T*/
     You("return to level %d in %s%s.", depth(&u.uz),
         dungeons[u.uz.dnum].dname,
         flags.debug ? " while in debug mode"
                     : flags.explore ? " while in explore mode" : "");
+#else
+    You("%s%s의 지하 %d층으로 돌아왔다.",
+        flags.debug     ? "위자드 모드 중"
+        : flags.explore ? "탐험 모드 중"
+                        : "",
+        dungeons[u.uz.dnum].dname, depth(&u.uz));
+#endif
     curs(WIN_MAP, 1, 1);
     dotcnt = 0;
     dotrow = 2;
@@ -1010,9 +1023,12 @@ void
 trickery(reason)
 char *reason;
 {
-    pline("Strange, this map is not as I remember it.");
-    pline("Somebody is trying some trickery here...");
-    pline("This game is void.");
+    /*KR pline("Strange, this map is not as I remember it."); */
+    pline("이상하네요. 이 지도는 제가 기억하는 것과 다릅니다.");
+    /*KR pline("Somebody is trying some trickery here..."); */
+    pline("누군가가 여기서 속임수를 쓰고 있습니다...");
+    /*KR pline("This game is void."); */
+    pline("이 게임은 무효입니다.");
     Strcpy(killer.name, reason ? reason : "");
     done(TRICKED);
 }
@@ -1359,8 +1375,13 @@ winid bannerwin; /* if not WIN_ERR, clear window and show copyright in menu */
             add_menu(tmpwin, NO_GLYPH, &any, 0, 0, ATR_NONE, "",
                      MENU_UNSELECTED);
         }
+#if 0 /*KR:T*/
         add_menu(tmpwin, NO_GLYPH, &any, 0, 0, ATR_NONE,
                  "Select one of your saved games", MENU_UNSELECTED);
+#else
+        add_menu(tmpwin, NO_GLYPH, &any, 0, 0, ATR_NONE,
+                 "저장한 게임 중에서 선택하십시오", MENU_UNSELECTED);
+#endif
         for (k = 0; saved[k]; ++k) {
             any.a_int = k + 1;
             add_menu(tmpwin, NO_GLYPH, &any, 0, 0, ATR_NONE, saved[k],
@@ -1368,12 +1389,22 @@ winid bannerwin; /* if not WIN_ERR, clear window and show copyright in menu */
         }
         clet = (k <= 'n' - 'a') ? 'n' : 0; /* new game */
         any.a_int = -1;                    /* not >= 0 */
+#if 0 /*KR:T*/
         add_menu(tmpwin, NO_GLYPH, &any, clet, 0, ATR_NONE,
                  "Start a new character", MENU_UNSELECTED);
+#else
+        add_menu(tmpwin, NO_GLYPH, &any, clet, 0, ATR_NONE,
+                 "새로운 캐릭터로 시작한다", MENU_UNSELECTED);
+#endif
         clet = (k + 1 <= 'q' - 'a') ? 'q' : 0; /* quit */
         any.a_int = -2;
+#if 0 /*KR:T*/
         add_menu(tmpwin, NO_GLYPH, &any, clet, 0, ATR_NONE,
                  "Never mind (quit)", MENU_SELECTED);
+#else
+        add_menu(tmpwin, NO_GLYPH, &any, clet, 0, ATR_NONE, 
+                 "그만둔다", MENU_SELECTED);
+#endif
         /* no prompt on end_menu, as we've done our own at the top */
         end_menu(tmpwin, (char *) 0);
         if (select_menu(tmpwin, PICK_ONE, &chosen_game) > 0) {

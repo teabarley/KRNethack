@@ -389,7 +389,7 @@ int x, y;
         case MARK:
             if (!Blind) {
                 sensed = 1;
-                /*KR pline("There's some graffiti on the %s here.", surface(x, y)); */
+           /*KR pline("There's some graffiti on the %s here.", surface(x, y)); */
                 pline("여기 %s에 그래피티가 있다.", surface(x, y));
             }
             break;
@@ -1071,7 +1071,7 @@ doengrave()
         } else if (type == oep->engr_type
                    && (!Blind || oep->engr_type == BURN
                        || oep->engr_type == ENGRAVE)) {
-            /*KR c = yn_function("Do you want to add to the current engraving?", */
+       /*KR c = yn_function("Do you want to add to the current engraving?", */
             c = yn_function("현재 새겨진 글자에 추가하시겠습니까?",
                             ynqchars, 'y');
             if (c == 'q') {
@@ -1173,20 +1173,30 @@ doengrave()
 
     /* Tell adventurer what is going on */
     if (otmp != &zeroobj)
-        /*KR You("%s the %s with %s.", everb, eloc, doname(otmp)); */
-        /*KR You write on(everb) the floor(eloc) with your finger(doname(otmp)) */
-        /*JP jpast(everb)를 사용. 수정필요*/
-        You("%s으로 %s에 %s.", doname(otmp), eloc, everb);
+#if 0 /*KR: 원본*/
+   /*KR You write on(everb) the floor(eloc) with your finger(doname(otmp)) */
+        You("%s the %s with %s.", everb, eloc, doname(otmp));
+#else /*KR: KRNethack 맞춤 번역 */
+        You("%s %s에 %s.", append_josa(doname(otmp), "으로"), eloc, everb);
+#endif
     else
-        /*KR You("%s the %s with your %s.", everb, eloc, body_part(FINGERTIP)); */
-        /*KR You write on(everb) the floor(eloc) with your finger(body_part(FINGERTIP))*/
-        You("%s으로 %s에 %s.", body_part(FINGERTIP), eloc, everb);
+
+
+#if 0 /*KR: 원본*/
+   /*KR You write on(everb) the floor(eloc) with your finger(body_part(FINGERTIP)) */
+        You("%s the %s with your %s.", everb, eloc, body_part(FINGERTIP));
+#else /*KR: KRNethack 맞춤 번역 */
+        You("당신의 %s %s에 %s.", append_josa(body_part(FINGERTIP), "으로"),
+            eloc, everb);
+#endif
 
     /* Prompt for engraving! */
-    /*KR Sprintf(qbuf, "What do you want to %s the %s here?", everb, eloc); */
-    /*KR What do you want to write on(everb) the floor(eloc) here? */
-    /*KR 여기 있는 %s(바닥)에 무엇을 %s? */
-    Sprintf(qbuf, "당신은 %s에 %s. 뭐라고 쓰시겠습니까?", eloc, everb);
+#if 0 /*KR: 원본*/
+  /*KR What do you want to write on(everb) the floor(eloc) here? */
+    Sprintf(qbuf, "What do you want to %s the %s here?", everb, eloc);
+#else /* (everb에 따라 조사를 유연하게 처리하기 어렵지만, 문맥을 통일) */
+    Sprintf(qbuf, "여기 %s에 무엇이라고 쓰시겠습니까?", eloc);
+#endif
     getlin(qbuf, ebuf);
     /* convert tabs to spaces and condense consecutive spaces to one */
     mungspaces(ebuf);
@@ -1245,13 +1255,13 @@ doengrave()
         multi = -(len / 10);
         if (multi)
             /*KR nomovemsg = "You finish your weird engraving."; */
-            nomovemsg = "You finish your weird engraving.";
+            nomovemsg = "당신은 기묘한 문양 새기기를 마쳤다.";
         break;
     case DUST:
         multi = -(len / 10);
         if (multi)
             /*KR nomovemsg = "You finish writing in the dust."; */
-            nomovemsg = "You finish writing in the dust.";
+            nomovemsg = "당신은 먼지 위에 쓰기를 마쳤다.";
         break;
     case HEADSTONE:
     case ENGRAVE:
@@ -1265,8 +1275,11 @@ doengrave()
              * to engrave "Elbereth" all at once.
              * However, you can engrave "Elb", then "ere", then "th".
              */
-            /*KR pline("%s dull.", Yobjnam2(otmp, "get")); */
+#if 0 /*KR: 원본*/
+            pline("%s dull.", Yobjnam2(otmp, "get"));
+#else /*KR: KRNethack 맞춤 번역 */
             Your("%s 무뎌졌다.", append_josa(xname(otmp), "이"));
+#endif
             costly_alteration(otmp, COST_DEGRD);
             if (len > maxelen) {
                 multi = -maxelen;
@@ -1297,7 +1310,7 @@ doengrave()
             maxelen = otmp->spe * 2; /* one charge / 2 letters */
             if (len > maxelen) {
                 /*KR Your("marker dries out."); */
-                Your("마커펜이 말라 버렸다.");
+                Your("마커가 말라 버렸다.");
                 otmp->spe = 0;
                 multi = -(maxelen / 10);
             } else if (len > 1)
