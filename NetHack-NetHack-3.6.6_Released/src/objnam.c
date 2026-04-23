@@ -27,15 +27,16 @@ STATIC_DCL char *FDECL(xname_flags, (struct obj *, unsigned));
 STATIC_DCL boolean FDECL(badman, (const char *, BOOLEAN_P));
 STATIC_DCL char *FDECL(globwt, (struct obj *, char *, boolean *));
 
-struct Jitem {
-    int item;
-    const char *name;
-};
-
 #define BSTRCMPI(base, ptr, str) ((ptr) < base || strcmpi((ptr), str))
 #define BSTRNCMPI(base, ptr, str, num) \
     ((ptr) < base || strncmpi((ptr), str, num))
 #define Strcasecpy(dst, src) (void) strcasecpy(dst, src)
+
+/*KR: 한글 파싱 매크로 추가 (문자열 일치 시 l에 길이를 자동 할당) */
+#ifndef STRNCMPEX
+#define STRNCMPEX(s, match) strncmp((s), (match), l = strlen(match))
+#define STRNCMP2(s, match) strncmp((s), (match), strlen(match))
+#endif
 
 /* true for gems/rocks that should have " stone" appended to their names */
 #define GemStone(typ)                                                  \
@@ -45,37 +46,7 @@ struct Jitem {
              && typ != SAPPHIRE && typ != BLACK_OPAL && typ != EMERALD \
              && typ != OPAL)))
 
-#if 0 /*KR:T*/
-STATIC_OVL struct Jitem Japanese_items[] = { { SHORT_SWORD, "wakizashi" },
-                                             { BROADSWORD, "ninja-to" },
-                                             { FLAIL, "nunchaku" },
-                                             { GLAIVE, "naginata" },
-                                             { LOCK_PICK, "osaku" },
-                                             { WOODEN_HARP, "koto" },
-                                             { KNIFE, "shito" },
-                                             { PLATE_MAIL, "tanko" },
-                                             { HELMET, "kabuto" },
-                                             { LEATHER_GLOVES, "yugake" },
-                                             { FOOD_RATION, "gunyoki" },
-                                             { POT_BOOZE, "sake" },
-                                             { 0, "" } };
-#else
-STATIC_OVL struct Jitem Japanese_items[] = { { SHORT_SWORD, "와키자시" },
-                                             { BROADSWORD, "닌자토" },
-                                             { FLAIL, "눈차크" },
-                                             { GLAIVE, "나기나타" },
-                                             { LOCK_PICK, "오사쿠" },
-                                             { WOODEN_HARP, "고토" },
-                                             { KNIFE, "시토우" },
-                                             { PLATE_MAIL, "탄코우" },
-                                             { HELMET, "카부토" },
-                                             { LEATHER_GLOVES, "유가케" },
-                                             { FOOD_RATION, "군요키" },
-                                             { POT_BOOZE, "사케" },
-                                             { 0, "" } };
-#endif
 
-STATIC_DCL const char *FDECL(Japanese_item_name, (int i));
 
 STATIC_OVL char *
 strprepend(s, pref)
@@ -130,8 +101,6 @@ register int otyp;
     const char *un = ocl->oc_uname;
     int nn = ocl->oc_name_known;
 
-    if (Role_if(PM_SAMURAI) && Japanese_item_name(otyp))
-        actualn = Japanese_item_name(otyp);
     switch (ocl->oc_class) {
     case COIN_CLASS:
         /*KR Strcpy(buf, "coin"); */
@@ -503,8 +472,6 @@ unsigned cxn_flags; /* bitmask of CXN_xxx values */
     boolean known, dknown, bknown;
 
     buf = nextobuf() + PREFIX; /* leave room for "17 -3 " */
-    if (Role_if(PM_SAMURAI) && Japanese_item_name(typ))
-        actualn = Japanese_item_name(typ);
     /* As of 3.6.2: this used to be part of 'dn's initialization, but it
        needs to come after possibly overriding 'actualn' */
     if (!dn)
@@ -1436,12 +1403,15 @@ unsigned doname_flags;
                        /* in case of perm_invent update while Wear/Takeoff
                           is in progress; check doffing() before donning()
                           because donning() returns True for both cases */
-                    /*KR : doffing(obj) ? " (being doffed)"
-                         : donning(obj) ? " (being donned)"
-                           : " (being worn)"); */
-                       : doffing(obj) ? " (몸에 걸치는 도중)"
-                         : donning(obj) ? " (벗고 있는 도중)"
-                           : " (몸에 걸치고 있음)");
+#if 0 /*KR:T*/
+                                      : doffing(obj) ? " (being doffed)"
+                                      : donning(obj) ? " (being donned)"
+                                                     : " (being worn)"); */
+#else
+                                      : doffing(obj) ? " (몸에 걸치는 도중)"
+                                      : donning(obj) ? " (벗고 있는 도중)"
+                                                     : " (몸에 걸치고 있음)");
+#endif
             /* slippery fingers is an intrinsic condition of the hero
                rather than extrinsic condition of objects, but gloves
                are described as slippery when hero has slippery fingers */
@@ -1622,15 +1592,15 @@ unsigned doname_flags;
 
             if (warn_obj_cnt && obj == uwep && (EWarn_of_mon & W_WEP) != 0L) {
                 if (!Blind) /* we know bp[] ends with ')'; overwrite that */
-                    /*JP #if 0, #else, #endif를 사용함. 
-                    Sprintf(eos(bp) - 1, ", %s%s이루)",
-                            jconj_adj(glow_color(obj->oartifact)),
-                            jconj(glow_verb(warn_obj_cnt, TRUE), "테")); */
-                    /*extern.h와 jlib.c에서 정의한 특수 함수. 
-                    그냥 사용하거나 j함수 해석 전까지는 보류. 수정필요 */
+#if 0 /*KR:T 한국어 어순(색상 -> 동사)에 맞춰 순서 변경. */
                     Sprintf(eos(bp) - 1, ", %s %s)",
                             glow_verb(warn_obj_cnt, TRUE),
                             glow_color(obj->oartifact));
+#else /*KR glow_color [붉은색 등] glow_verb [빛나는 등] 이라 가정 */
+                    Sprintf(eos(bp) - 1, ", %s으로 %s)",
+                            glow_color(obj->oartifact),
+                            glow_verb(warn_obj_cnt, TRUE));
+#endif /*KR: "붉은색으로 빛나는" 등으로 표시됨을 상정 */
             }
         }
     }
@@ -2245,8 +2215,7 @@ char *the(str) const char *str;
     Strcat(buf, str);
 
     return buf;
-#else
-    /* 한국어는 정관사(the)를 사용하지 않습니다. */
+#else /*KR 한국어는 정관사(the)를 사용하지 않습니다. */
     char *buf = nextobuf();
     if (str)
         Strcpy(buf, str);
@@ -2275,6 +2244,7 @@ const char *str;
 #endif
 }
 
+#if 0 /*KR:T*/
 /* returns "count cxname(otmp)" or just cxname(otmp) if count == 1 */
 char *
 aobjnam(otmp, verb)
@@ -2294,6 +2264,15 @@ const char *verb;
     }
     return bp;
 }
+#else
+char *
+aobjnam(otmp, verb)
+register struct obj *otmp;
+register const char *verb;
+{
+    return xname(otmp);
+}
+#endif
 
 /* combine yname and aobjnam eg "your count cxname(otmp)" */
 char *
@@ -2323,7 +2302,9 @@ const char *verb;
 {
     register char *s = yobjnam(obj, verb);
 
+#if 0 /*KR*/
     *s = highc(*s);
+#endif
     return s;
 }
 
@@ -2335,10 +2316,12 @@ const char *verb;
 {
     char *bp = The(xname(otmp));
 
+#if 0 /*KR 한국어에는 3인칭 단수 현재형 s가 없다 */
     if (verb) {
         Strcat(bp, " ");
         Strcat(bp, otense(otmp, verb));
     }
+#endif
     return bp;
 }
 
@@ -2404,7 +2387,9 @@ struct obj *obj;
 {
     char *s = yname(obj);
 
+#if 0 /*KR*/
     *s = highc(*s);
+#endif
     return s;
 }
 
@@ -2418,9 +2403,15 @@ struct obj *obj;
 {
     char *outbuf = nextobuf();
     char *s = shk_your(outbuf, obj); /* assert( s == outbuf ); */
+#if 0 /*KR*/
     int space_left = BUFSZ - 1 - strlen(s);
 
     return strncat(s, minimal_xname(obj), space_left);
+#else
+    int space_left = BUFSZ - strlen(s);
+
+    return strncat(s, minimal_xname(obj), space_left);
+#endif
 }
 
 /* capitalized variant of ysimple_name() */
@@ -2430,7 +2421,9 @@ struct obj *obj;
 {
     char *s = ysimple_name(obj);
 
+#if 0 /*KR*/
     *s = highc(*s);
+#endif
     return s;
 }
 
@@ -2441,8 +2434,10 @@ struct obj *obj;
 {
     char *simpleoname = minimal_xname(obj);
 
+#if 0 /*KR 한국어는 단수 복수가 동일한 형태 */
     if (obj->quan != 1L)
         simpleoname = makeplural(simpleoname);
+#endif
     return simpleoname;
 }
 
@@ -2489,26 +2484,31 @@ struct obj *obj;
     if (obj->oartifact) {
         outbuf = nextobuf();
         Strcpy(outbuf, artiname(obj->oartifact));
+#if 0 /*KR*/
         if (!strncmp(outbuf, "The ", 4))
             outbuf[0] = lowc(outbuf[0]);
+#endif
     } else {
         outbuf = xname(obj);
     }
     return outbuf;
 }
 
+#if 0 /*KR*/
 static const char *wrp[] = {
     "wand",   "ring",      "potion",     "scroll", "gem",
     "amulet", "spellbook", "spell book",
     /* for non-specific wishes */
     "weapon", "armor",     "tool",       "food",   "comestible",
 };
+#endif
 static const char wrpsym[] = { WAND_CLASS,   RING_CLASS,   POTION_CLASS,
                                SCROLL_CLASS, GEM_CLASS,    AMULET_CLASS,
                                SPBOOK_CLASS, SPBOOK_CLASS, WEAPON_CLASS,
                                ARMOR_CLASS,  TOOL_CLASS,   FOOD_CLASS,
                                FOOD_CLASS };
 
+#if 0 /*KR 한국어에는 3인칭 단수 현재형 s가 없다 */
 /* return form of the verb (input plural) if xname(otmp) were the subject */
 char *
 otense(otmp, verb)
@@ -2638,7 +2638,30 @@ register const char *verb;
 
     return buf;
 }
+#else /*KR: KRNethack 맞춤 번역 */
+/* (외부 파일의 호출 에러 방지를 위해 원형 반환으로 복구) */
+char *
+otense(otmp, verb)
+struct obj *otmp;
+const char *verb;
+{
+    char *buf = nextobuf();
+    Strcpy(buf, verb);
+    return buf;
+}
 
+char *
+vtense(subj, verb)
+register const char *subj;
+register const char *verb;
+{
+    char *buf = nextobuf();
+    Strcpy(buf, verb);
+    return buf;
+}
+#endif
+
+#if 0 /*KR*/
 struct sing_plur {
     const char *sing, *plur;
 };
@@ -2797,6 +2820,7 @@ char *str;
     /* wasn't recognized as a compound phrase */
     return 0;
 }
+#endif
 
 /* Plural routine; once upon a time it may have been chiefly used for
  * user-defined fruits, but it is now used extensively throughout the
@@ -3008,6 +3032,7 @@ char *
 makesingular(oldstr)
 const char *oldstr;
 {
+#if 0 /*KR 한국어는 단수 복수가 동일한 형태 */
     register char *p, *bp;
     const char *excess = 0;
     char *str = nextobuf();
@@ -3117,8 +3142,14 @@ const char *oldstr;
         Strcat(bp, excess);
 
     return bp;
+#else /*KR 새로운 버퍼는 필요 */
+    char *str = nextobuf();
+    Strcpy(str, oldstr);
+    return str;
+#endif
 }
 
+#if 0 /*KR*/
 STATIC_OVL boolean
 badman(basestr, to_plural)
 const char *basestr;
@@ -3166,6 +3197,7 @@ boolean to_plural;            /* true => makeplural, false => makesingular */
     }
     return FALSE;
 }
+#endif
 
 /* compare user string against object name string using fuzzy matching */
 STATIC_OVL boolean
@@ -3266,6 +3298,7 @@ struct o_range {
     int f_o_range, l_o_range;
 };
 
+#if 0 /*KR 특정 범주를 지정해서 소원을 빌 때. 한국어에선 일단 안함 */
 /* wishable subranges of objects */
 STATIC_OVL NEARDATA const struct o_range o_ranges[] = {
     { "bag", TOOL_CLASS, SACK, BAG_OF_TRICKS },
@@ -3290,7 +3323,9 @@ STATIC_OVL NEARDATA const struct o_range o_ranges[] = {
     { "gray stone", GEM_CLASS, LUCKSTONE, FLINT },
     { "grey stone", GEM_CLASS, LUCKSTONE, FLINT },
 };
+#endif
 
+#if 0 /*KR 미사용 */
 /* alternate spellings; if the difference is only the presence or
    absence of spaces and/or hyphens (such as "pickaxe" vs "pick axe"
    vs "pick-axe") then there is no need for inclusion in this list;
@@ -3363,6 +3398,7 @@ schar skill;
     }
     return otyp;
 }
+#endif
 
 STATIC_OVL short
 rnd_otyp_by_namedesc(name, oclass, xtra_prob)
@@ -3390,10 +3426,9 @@ int xtra_prob; /* to force 0% random generation items to also be considered */
      */
 
 
-    for (i = oclass ? bases[(int) oclass] : STRANGE_OBJECT + 1;
-         i < NUM_OBJECTS && (!oclass || objects[i].oc_class == oclass);
-         ++i) {
-#if 0 /*KR*/
+for (i = oclass ? bases[(int) oclass] : STRANGE_OBJECT + 1;
+         i < NUM_OBJECTS && (!oclass || objects[i].oc_class == oclass); ++i) {
+#if 0 /*KR: 원본*/
         /* don't match extra descriptions (w/o real name) */
         if ((zn = OBJ_NAME(objects[i])) == 0)
             continue;
@@ -3405,10 +3440,16 @@ int xtra_prob; /* to force 0% random generation items to also be considered */
             validobjs[n++] = (short) i;
             maxprob += (objects[i].oc_prob + xtra_prob);
         }
-#else
+#else /*KR: (영어 검색 지원 및 가짜 옌더의 부적 예외 처리) */
         const char *raw_zn;
         /* don't match extra descriptions (w/o real name) */
         if ((zn = OBJ_NAME(objects[i])) == 0)
+            continue;
+
+        /* "옌더의 부적"을 소원으로 빌었을 때 여기서 가짜 부적이 검색되지
+         * 않도록 함. (비-위자드 모드일 때 진짜를 가짜로 바꾸는 처리는 나중에
+         * 수행됨) */
+        if (i == FAKE_AMULET_OF_YENDOR)
             continue;
 
         raw_zn = RAW_OBJ_NAME(objects[i]); /* 영어 원본 이름 추출 */
@@ -3466,11 +3507,19 @@ struct obj *no_wish;
     int eroded, eroded2, erodeproof, locked, unlocked, broken;
     int halfeaten, mntmp, contents;
     int islit, unlabeled, ishistoric, isdiluted, trapped;
+#if 0 /*KR*/
     int tmp, tinv, tvariety;
+#else
+    int tvariety;
+#endif
     int wetness, gsize = 0;
     struct fruit *f;
     int ftype = context.current_fruit;
+#if 0 /*KR*/
     char fruitbuf[BUFSZ], globbuf[BUFSZ];
+#else
+    char fruitbuf[BUFSZ];
+#endif
     /* Fruits may not mess up the ability to wish for real objects (since
      * you can leave a fruit in a bones file and it will be added to
      * another person's game), so they must be checked for last, after
@@ -3510,8 +3559,14 @@ struct obj *no_wish;
     (void) mungspaces(bp);
     /* allow wishing for "nothing" to preserve wishless conduct...
        [now requires "wand of nothing" if that's what was really wanted] */
+#if 0 /*KR 영어 원문 유지 + 한국어 추가 */
     if (!strcmpi(bp, "nothing") || !strcmpi(bp, "nil")
         || !strcmpi(bp, "none"))
+#else
+    if (!strcmpi(bp, "nothing") || !strcmpi(bp, "nil") || !strcmpi(bp, "none")
+        || !strcmp(bp, "없음") || !strcmp(bp, "아무것도 없음")
+        || !strcmp(bp, "아무것도") || !strcmp(bp, "무"))
+#endif
         return no_wish;
     /* save the [nearly] unmodified choice string */
     Strcpy(fruitbuf, bp);
@@ -3532,6 +3587,16 @@ struct obj *no_wish;
             while (*bp == ' ')
                 bp++;
             l = 0;
+#if 1 /*KR 한국어의 수량사 뒤에 붙는 단위+조사 건너뛰기 */            
+            if (!STRNCMPEX(bp, "권의")    || !STRNCMPEX(bp, "자루의")
+                || !STRNCMPEX(bp, "벌의") || !STRNCMPEX(bp, "개의")
+                || !STRNCMPEX(bp, "장의") || !STRNCMPEX(bp, "마리의")
+                || !STRNCMPEX(bp, "의"))
+                ; /* 일치하면 포인터를 다음으로 넘김 */
+            else
+                l = 0;
+#endif
+
         } else if (*bp == '+' || *bp == '-') {
             spesgn = (*bp++ == '+') ? 1 : -1;
             spe = atoi(bp);
@@ -3540,6 +3605,7 @@ struct obj *no_wish;
             while (*bp == ' ')
                 bp++;
             l = 0;
+#if 0 /*KR: 원본*/
         } else if (!strncmpi(bp, "blessed ", l = 8)
                    || !strncmpi(bp, "holy ", l = 5)) {
             blessed = 1;
@@ -3554,25 +3620,92 @@ struct obj *no_wish;
             iscursed = 1;
         } else if (!strncmpi(bp, "uncursed ", l = 9)) {
             uncursed = 1;
+#else /*KR: KRNethack 맞춤 번역 (영어+한글 동시 지원) */
+        } else if (!strncmpi(bp, "blessed ", l = 8)
+                   || !strncmpi(bp, "holy ", l = 5)
+                   || !STRNCMPEX(bp, "축복받은 ")
+                   || !STRNCMPEX(bp, "성스러운 ")) {
+            blessed = 1;
+        } else if (!strncmpi(bp, "moist ", l = 6)
+                   || !strncmpi(bp, "wet ", l = 4)
+                   || !STRNCMPEX(bp, "축축한 ") || !STRNCMPEX(bp, "젖은 ")) {
+            if (!strncmpi(bp, "wet ", 4) || !STRNCMP2(bp, "젖은 "))
+                wetness = rn2(3) + 3;
+            else
+                wetness = rnd(2);
+        } else if (!strncmpi(bp, "cursed ", l = 7)
+                   || !strncmpi(bp, "unholy ", l = 7)
+                   || !STRNCMPEX(bp, "저주받은 ")
+                   || !STRNCMPEX(bp, "불경한 ")) {
+            iscursed = 1;
+        } else if (!strncmpi(bp, "uncursed ", l = 9)
+                   || !STRNCMPEX(bp, "저주받지 않은 ")) {
+            uncursed = 1;
+#endif
+#if 0 /*KR: 원본*/
         } else if (!strncmpi(bp, "rustproof ", l = 10)
                    || !strncmpi(bp, "erodeproof ", l = 11)
                    || !strncmpi(bp, "corrodeproof ", l = 13)
                    || !strncmpi(bp, "fixed ", l = 6)
                    || !strncmpi(bp, "fireproof ", l = 10)
                    || !strncmpi(bp, "rotproof ", l = 9)) {
+#else /*KR: KRNethack 맞춤 번역 (영어+한글 동시 지원) */
+        } else if (!strncmpi(bp, "rustproof ", l = 10)
+                   || !strncmpi(bp, "erodeproof ", l = 11)
+                   || !strncmpi(bp, "corrodeproof ", l = 13)
+                   || !strncmpi(bp, "fixed ", l = 6)
+                   || !strncmpi(bp, "fireproof ", l = 10)
+                   || !strncmpi(bp, "rotproof ", l = 9)
+                   || !STRNCMPEX(bp, "방녹의 ")
+                   || !STRNCMPEX(bp, "방부식의 ")
+                   || !STRNCMPEX(bp, "방염의 ")
+                   || !STRNCMPEX(bp, "방부패의 ")) {
+#endif
             erodeproof = 1;
+
+#if 0 /*KR: 원본*/
         } else if (!strncmpi(bp, "lit ", l = 4)
                    || !strncmpi(bp, "burning ", l = 8)) {
+#else /*KR: KRNethack 맞춤 번역 */
+        } else if (!strncmpi(bp, "lit ", l = 4)
+                   || !strncmpi(bp, "burning ", l = 8)
+                   || !STRNCMPEX(bp, "빛나는 ") || !STRNCMPEX(bp, "타오르는 ")
+                   || !STRNCMPEX(bp, "켜진 ")) {
+#endif
             islit = 1;
+
+#if 0 /*KR: 원본*/
         } else if (!strncmpi(bp, "unlit ", l = 6)
                    || !strncmpi(bp, "extinguished ", l = 13)) {
+#else /*KR: KRNethack 맞춤 번역 */
+        } else if (!strncmpi(bp, "unlit ", l = 6)
+                   || !strncmpi(bp, "extinguished ", l = 13)
+                   || !STRNCMPEX(bp, "꺼진 ")
+                   || !STRNCMPEX(bp, "빛나지 않는 ")) {
+#endif
             islit = 0;
             /* "unlabeled" and "blank" are synonymous */
+
+#if 0 /*KR: 원본*/
         } else if (!strncmpi(bp, "unlabeled ", l = 10)
                    || !strncmpi(bp, "unlabelled ", l = 11)
                    || !strncmpi(bp, "blank ", l = 6)) {
+#else /*KR: KRNethack 맞춤 번역 */
+        } else if (!strncmpi(bp, "unlabeled ", l = 10)
+                   || !strncmpi(bp, "unlabelled ", l = 11)
+                   || !strncmpi(bp, "blank ", l = 6)
+                   || !STRNCMPEX(bp, "라벨 없는 ") || !STRNCMPEX(bp, "백지의 ")
+                   || !STRNCMPEX(bp, "아무것도 안 적힌 ")) {
+#endif
             unlabeled = 1;
+
+#if 0 /*KR: 원본*/
         } else if (!strncmpi(bp, "poisoned ", l = 9)) {
+#else /*KR: KRNethack 맞춤 번역 */
+        } else if (!strncmpi(bp, "poisoned ", l = 9)
+                   || !STRNCMPEX(bp, "독이 발라진 ")
+                   || !STRNCMPEX(bp, "독이 묻은 ")) {
+#endif
             ispoisoned = 1;
             /* "trapped" recognized but not honored outside wizard mode */
         } else if (!strncmpi(bp, "trapped ", l = 8)) {
@@ -3582,39 +3715,130 @@ struct obj *no_wish;
         } else if (!strncmpi(bp, "untrapped ", l = 10)) {
             trapped = 2; /* not trapped */
         /* locked, unlocked, broken: box/chest lock states */
+#if 0                    /*KR: 원본*/
         } else if (!strncmpi(bp, "locked ", l = 7)) {
+#else                    /*KR: KRNethack 맞춤 번역 (영어+한글 동시 지원) */
+        } else if (!strncmpi(bp, "locked ", l = 7) || !STRNCMPEX(bp, "잠긴 ")
+                   || !STRNCMPEX(bp, "자물쇠가 채워진 ")) {
+#endif
             locked = 1, unlocked = broken = 0;
+
+#if 0 /*KR: 원본*/
         } else if (!strncmpi(bp, "unlocked ", l = 9)) {
+#else /*KR: KRNethack 맞춤 번역 */
+        } else if (!strncmpi(bp, "unlocked ", l = 9)
+                   || !STRNCMPEX(bp, "잠기지 않은 ")
+                   || !STRNCMPEX(bp, "자물쇠가 안 채워진 ")) {
+#endif
             unlocked = 1, locked = broken = 0;
+
+#if 0 /*KR: 원본*/
         } else if (!strncmpi(bp, "broken ", l = 7)) {
+#else /*KR: KRNethack 맞춤 번역 */
+        } else if (!strncmpi(bp, "broken ", l = 7)
+                   || !STRNCMPEX(bp, "부서진 ")
+                   || !STRNCMPEX(bp, "망가진 ")) {
+#endif
             broken = 1, locked = unlocked = 0;
+
+#if 0 /*KR: 원본*/
         } else if (!strncmpi(bp, "greased ", l = 8)) {
+#else /*KR: KRNethack 맞춤 번역 */
+        } else if (!strncmpi(bp, "greased ", l = 8)
+                   || !STRNCMPEX(bp, "기름칠 된 ")
+                   || !STRNCMPEX(bp, "기름이 발라진 ")) {
+#endif
             isgreased = 1;
+
+#if 0 /*KR: 원본*/
         } else if (!strncmpi(bp, "very ", l = 5)) {
+#else /*KR: KRNethack 맞춤 번역 */
+        } else if (!strncmpi(bp, "very ", l = 5) || !STRNCMPEX(bp, "매우 ")
+                   || !STRNCMPEX(bp, "아주 ")) {
+#endif
             /* very rusted very heavy iron ball */
             very = 1;
+
+#if 0 /*KR: 원본*/
         } else if (!strncmpi(bp, "thoroughly ", l = 11)) {
+#else /*KR: KRNethack 맞춤 번역 */
+        } else if (!strncmpi(bp, "thoroughly ", l = 11)
+                   || !STRNCMPEX(bp, "철저하게 ")
+                   || !STRNCMPEX(bp, "완전히 ")) {
+#endif
             very = 2;
+
+#if 0 /*KR: 원본*/
         } else if (!strncmpi(bp, "rusty ", l = 6)
                    || !strncmpi(bp, "rusted ", l = 7)
                    || !strncmpi(bp, "burnt ", l = 6)
                    || !strncmpi(bp, "burned ", l = 7)) {
+#else /*KR: KRNethack 맞춤 번역 */
+        } else if (!strncmpi(bp, "rusty ", l = 6)
+                   || !strncmpi(bp, "rusted ", l = 7)
+                   || !strncmpi(bp, "burnt ", l = 6)
+                   || !strncmpi(bp, "burned ", l = 7)
+                   || !STRNCMPEX(bp, "녹슨 ") || !STRNCMPEX(bp, "불탄 ")
+                   || !STRNCMPEX(bp, "탄 ")) {
+#endif
             eroded = 1 + very;
             very = 0;
+
+#if 0 /*KR: 원본*/
         } else if (!strncmpi(bp, "corroded ", l = 9)
                    || !strncmpi(bp, "rotted ", l = 7)) {
+#else /*KR: KRNethack 맞춤 번역 */
+        } else if (!strncmpi(bp, "corroded ", l = 9)
+                   || !strncmpi(bp, "rotted ", l = 7)
+                   || !STRNCMPEX(bp, "부식된 ") || !STRNCMPEX(bp, "썩은 ")) {
+#endif
             eroded2 = 1 + very;
             very = 0;
+
+#if 0 /*KR: 원본*/
         } else if (!strncmpi(bp, "partly eaten ", l = 13)
                    || !strncmpi(bp, "partially eaten ", l = 16)) {
+#else /*KR: KRNethack 맞춤 번역 */
+        } else if (!strncmpi(bp, "partly eaten ", l = 13)
+                   || !strncmpi(bp, "partially eaten ", l = 16)
+                   || !STRNCMPEX(bp, "먹다 만 ")
+                   || !STRNCMPEX(bp, "일부 먹은 ")) {
+#endif
             halfeaten = 1;
+
+#if 0 /*KR: 원본*/
         } else if (!strncmpi(bp, "historic ", l = 9)) {
+#else /*KR: KRNethack 맞춤 번역 */
+        } else if (!strncmpi(bp, "historic ", l = 9)
+                   || !STRNCMPEX(bp, "역사적인 ")
+                   || !STRNCMPEX(bp, "유서 깊은 ")) {
+#endif
             ishistoric = 1;
+
+#if 0 /*KR: 원본*/
         } else if (!strncmpi(bp, "diluted ", l = 8)) {
+#else /*KR: KRNethack 맞춤 번역 */
+        } else if (!strncmpi(bp, "diluted ", l = 8)
+                   || !STRNCMPEX(bp, "희석된 ")
+                   || !STRNCMPEX(bp, "묽어진 ")) {
+#endif
             isdiluted = 1;
+
+#if 0 /*KR: 원본*/
         } else if (!strncmpi(bp, "empty ", l = 6)) {
+#else /*KR: KRNethack 맞춤 번역 */
+        } else if (!strncmpi(bp, "empty ", l = 6) || !STRNCMPEX(bp, "빈 ")
+                   || !STRNCMPEX(bp, "비어있는 ")
+                   || !STRNCMPEX(bp, "비어 있는 ")) {
+#endif
             contents = EMPTY;
+
+#if 0 /*KR: 원본*/
         } else if (!strncmpi(bp, "small ", l = 6)) { /* glob sizes */
+#else /*KR: KRNethack 맞춤 번역 */
+        } else if (!strncmpi(bp, "small ", l = 6)
+                   || !STRNCMPEX(bp, "작은 ")) { /* glob sizes */
+#endif
             /* "small" might be part of monster name (mimic, if wishing
                for its corpse) rather than prefix for glob size; when
                used for globs, it might be either "small glob of <foo>" or
@@ -3623,12 +3847,24 @@ struct obj *no_wish;
             if (strncmpi(bp + l, "glob", 4) && !strstri(bp + l, " glob"))
                 break;
             gsize = 1;
+
+#if 0 /*KR: 원본*/
         } else if (!strncmpi(bp, "medium ", l = 7)) {
+#else /*KR: KRNethack 맞춤 번역 */
+        } else if (!strncmpi(bp, "medium ", l = 7) || !STRNCMPEX(bp, "중간 ")
+                   || !STRNCMPEX(bp, "중간 크기 ")) {
+#endif
             /* xname() doesn't display "medium" but without this
                there'd be no way to ask for the intermediate size
                ("glob" without size prefix yields smallest one) */
             gsize = 2;
+
+#if 0 /*KR: 원본*/
         } else if (!strncmpi(bp, "large ", l = 6)) {
+#else /*KR: KRNethack 맞춤 번역 */
+        } else if (!strncmpi(bp, "large ", l = 6) || !STRNCMPEX(bp, "큰 ")
+                   || !STRNCMPEX(bp, "커다란 ")) {
+#endif
             /* "large" might be part of monster name (dog, cat, koboold,
                mimic) or object name (box, round shield) rather than
                prefix for glob size */
@@ -3712,6 +3948,7 @@ struct obj *no_wish;
     if ((p = strstri(bp, " called ")) != 0) {
         *p = 0;
         un = p + 8;
+#if 0 /*KR 타입별로는 일단 하지 않음 */
         /* "helmet called telepathy" is not "helmet" (a specific type)
          * "shield called reflection" is not "shield" (a general type)
          */
@@ -3720,6 +3957,7 @@ struct obj *no_wish;
                 oclass = o_ranges[i].oclass;
                 goto srch;
             }
+#endif
     }
     if ((p = strstri(bp, " labeled ")) != 0) {
         *p = 0;
@@ -3733,6 +3971,7 @@ struct obj *no_wish;
         contents = SPINACH;
     }
 
+#if 0 /*KR 한국어에서는 처리하지 않는다 */
     /*
      * Skip over "pair of ", "pairs of", "set of" and "sets of".
      *
@@ -3758,7 +3997,9 @@ struct obj *no_wish;
     } else if (!strncmpi(bp, "sets of ", 8)) {
         bp += 8;
     }
+#endif
 
+#if 0 /*KR ('~의 덩어리' 및 '~의' 처리) */
     /* intercept pudding globs here; they're a valid wish target,
      * but we need them to not get treated like a corpse.
      *
@@ -3837,7 +4078,33 @@ struct obj *no_wish;
             }
         }
     }
+#else /*KR:T "괴물명+의 덩어리"는 각각 고유 ID가 있으므로 별도 처리  */
+    {
+        int l = strlen(bp);
+        int l2 = strlen("의 덩어리");
+        if (l > 4 && strncmp(bp + l - l2, "의 덩어리", l2) == 0) {
+            if ((mntmp = name_to_mon(bp)) >= PM_GRAY_OOZE
+                && mntmp <= PM_BLACK_PUDDING) {
+                mntmp = NON_PM; /* lie to ourselves */
+                cnt = 0;        /* force only one */
+            }
+        } else {
+            /* "(괴물명)의 (아이템)" 형태 대응 */
+            if ((mntmp = name_to_mon(bp)) >= LOW_PM) {
+                const char *mp = mons[mntmp].mname;
+                bp = strstri(bp, mp) + strlen(mp);
+                /* "의 " 부분을 건너뛰기 위한 처리 */
+                if (!strncmp(bp, "의 ", 3)) {
+                    bp += 3;
+                } else if (!strncmp(bp, "의", 2)) {
+                    bp += 2;
+                }
+            }
+        }
+    }
+#endif
 
+#if 0 /*KR 단수화는 하지 않는다 */
     /* first change to singular if necessary */
     if (*bp) {
         char *sng = makesingular(bp);
@@ -3848,7 +4115,9 @@ struct obj *no_wish;
             Strcpy(bp, sng);
         }
     }
+#endif
 
+#if 0 /*KR 스펠 발음·어법 공존 처리는 하지 않는다 */
     /* Alternate spellings (pick-ax, silver sabre, &c) */
     {
         const struct alt_spellings *as = spellings;
@@ -3871,7 +4140,9 @@ struct obj *no_wish;
                 ++p; /* self terminating */
         }
     }
+#endif
 
+#if 0 /*KR*/
     /* dragon scales - assumes order of dragons */
     if (!strcmpi(bp, "scales") && mntmp >= PM_GRAY_DRAGON
         && mntmp <= PM_YELLOW_DRAGON) {
@@ -3879,8 +4150,25 @@ struct obj *no_wish;
         mntmp = NON_PM; /* no monster */
         goto typfnd;
     }
+#else
+    /*JP: 「비늘 갑옷」을 먼저 처리해 둔다 */
+    if (!strcmpi(bp, "비늘 갑옷") && mntmp >= PM_GRAY_DRAGON
+        && mntmp <= PM_YELLOW_DRAGON) {
+        typ = GRAY_DRAGON_SCALE_MAIL + mntmp - PM_GRAY_DRAGON;
+        mntmp = NON_PM; /* no monster */
+        goto typfnd;
+    }
+
+    if (!strcmpi(bp, "비늘") && mntmp >= PM_GRAY_DRAGON
+        && mntmp <= PM_YELLOW_DRAGON) {
+        typ = GRAY_DRAGON_SCALES + mntmp - PM_GRAY_DRAGON;
+        mntmp = NON_PM; /* no monster */
+        goto typfnd;
+    }
+#endif
 
     p = eos(bp);
+#if 0 /*KR*/
     if (!BSTRCMPI(bp, p - 10, "holy water")) {
         typ = POT_WATER;
         if ((p - bp) >= 12 && *(p - 12) == 'u')
@@ -3889,11 +4177,31 @@ struct obj *no_wish;
             blessed = 1;
         goto typfnd;
     }
+#else /* 성수와 부정한 물을 별도로 판정 */
+    if (!BSTRCMPI(bp, p - 4, "성수")) {
+        typ = POT_WATER;
+        blessed = 1;
+        goto typfnd;
+    }
+    if (!BSTRCMPI(bp, p - 8, "부정한 물")) {
+        typ = POT_WATER;
+        iscursed = 1;
+        goto typfnd;
+    }
+#endif
+#if 0 /*KR*/
     if (unlabeled && !BSTRCMPI(bp, p - 6, "scroll")) {
+#else
+    if (unlabeled && !BSTRCMPI(bp, p - 4, "두루마리")) {
+#endif
         typ = SCR_BLANK_PAPER;
         goto typfnd;
     }
+#if 0 /*JP*/
     if (unlabeled && !BSTRCMPI(bp, p - 9, "spellbook")) {
+#else
+    if (unlabeled && !BSTRCMPI(bp, p - 6, "주문서")) {
+#endif
         typ = SPE_BLANK_PAPER;
         goto typfnd;
     }
@@ -3908,10 +4216,19 @@ struct obj *no_wish;
      * gold/money concept.  Maybe we want to add other monetary units as
      * well in the future. (TH)
      */
+#if 0 /*KR: 원본*/
     if (!BSTRCMPI(bp, p - 10, "gold piece")
         || !BSTRCMPI(bp, p - 7, "zorkmid")
         || !strcmpi(bp, "gold") || !strcmpi(bp, "money")
         || !strcmpi(bp, "coin") || *bp == GOLD_SYM) {
+#else /*KR: (영어+한글 동시 지원 및 길이 자동계산) */
+    if (!BSTRCMPI(bp, p - 10, "gold piece") || !BSTRCMPI(bp, p - 7, "zorkmid")
+        || !strcmpi(bp, "gold") || !strcmpi(bp, "money")
+        || !strcmpi(bp, "coin") || !BSTRCMPI(bp, p - strlen("금화"), "금화")
+        || !BSTRCMPI(bp, p - strlen("조크미드"), "조크미드")
+        || !strcmp(bp, "금") || !strcmp(bp, "돈") || !strcmp(bp, "동전")
+        || *bp == GOLD_SYM) {
+#endif
         if (cnt > 5000 && !wizard)
             cnt = 5000;
         else if (cnt < 1)
@@ -3930,6 +4247,11 @@ struct obj *no_wish;
         goto any;
     }
 
+#if 0 /*KR*/
+    /*KR 영어에서는 XXXXX potion은 불확정명, 
+     * potion of XXXXX는 확정명이라고 한다.
+     * 구분은 가능하지만, 한국어에서는 둘 다 
+     * "XXXXX의 약"이므로 여기서는 구분하지 않는다 */
     /* Search for class names: XXXXX potion, scroll of XXXXX.  Avoid */
     /* false hits on, e.g., rings for "ring mail". */
     if (strncmpi(bp, "enchant ", 8)
@@ -3982,6 +4304,7 @@ struct obj *no_wish;
                 goto srch;
             }
         }
+#endif
 
     /* Wishing in wizard mode can create traps and furniture.
      * Part I:  distinguish between trap and object for the two
@@ -4025,13 +4348,17 @@ struct obj *no_wish;
     }
 
  retry:
+
+#if 0 /*KR 타입별로는 일단 하지 않는다 */
     /* "grey stone" check must be before general "stone" */
     for (i = 0; i < SIZE(o_ranges); i++)
         if (!strcmpi(bp, o_ranges[i].name)) {
             typ = rnd_class(o_ranges[i].f_o_range, o_ranges[i].l_o_range);
             goto typfnd;
         }
+#endif
 
+#if 0 /*KR 돌의 특별 처리는 불필요 */
     if (!BSTRCMPI(bp, p - 6, " stone") || !BSTRCMPI(bp, p - 4, " gem")) {
         p[!strcmpi(p - 4, " gem") ? -4 : -6] = '\0';
         oclass = GEM_CLASS;
@@ -4069,11 +4396,14 @@ struct obj *no_wish;
             Strcpy(bp, tbuf);
         }
     }
+#endif
 
     actualn = bp;
     if (!dn)
         dn = actualn; /* ex. "skull cap" */
+#if 0 /*KR*/
  srch:
+#endif
     /* check real names of gems first */
     if (!oclass && actualn) {
         for (i = bases[GEM_CLASS]; i <= LAST_GEM; i++) {
@@ -4084,9 +4414,14 @@ struct obj *no_wish;
                 goto typfnd;
             }
         }
+#if 0 /*KR: 원본*/
         /* "tin of foo" would be caught above, but plain "tin" has
            a random chance of yielding "tin wand" unless we do this */
         if (!strcmpi(actualn, "tin")) {
+#else /*KR: KRNethack 맞춤 번역 (영어 지원을 위해 원본 복구 + 한글 추가) */
+        /* 영문 입력 시 'tin(주석)' 지팡이와 혼동되는 것을 막는 필수 코드 */
+        if (!strcmpi(actualn, "tin") || !strcmp(actualn, "통조림")) {
+#endif
             typ = TIN;
             goto typfnd;
         }
@@ -4099,17 +4434,6 @@ struct obj *no_wish;
         goto typfnd;
     typ = 0;
 
-    if (actualn) {
-        struct Jitem *j = Japanese_items;
-
-        while (j->item) {
-            if (actualn && !strcmpi(actualn, j->name)) {
-                typ = j->item;
-                goto typfnd;
-            }
-            j++;
-        }
-    }
     /* if we've stripped off "armor" and failed to match anything
        in objects[], append "mail" and try again to catch misnamed
        requests like "plate armor" and "yellow dragon scale armor" */
@@ -4119,7 +4443,11 @@ struct obj *no_wish;
         Strcat(bp, " mail");
         goto retry;
     }
+#if 0 /*KR: 원본*/
     if (!strcmpi(bp, "spinach")) {
+#else /*KR: KRNethack 맞춤 번역 (영어+한글 동시 지원) */
+    if (!strcmpi(bp, "spinach") || !strcmp(bp, "시금치")) {
+#endif
         contents = SPINACH;
         typ = TIN;
         goto typfnd;
@@ -4327,6 +4655,7 @@ struct obj *no_wish;
         }
     } /* end of wizard mode traps and terrain */
 
+#if 0 /*KR 타입별은 어쨌든 하지 않는다 */
     if (!oclass && !typ) {
         if (!strncmpi(bp, "polearm", 7)) {
             typ = rnd_otyp_by_wpnskill(P_POLEARMS);
@@ -4336,6 +4665,7 @@ struct obj *no_wish;
             goto typfnd;
         }
     }
+#endif
 
     if (!oclass)
         return ((struct obj *) 0);
@@ -4633,8 +4963,13 @@ struct obj *no_wish;
         artifact_exists(otmp, safe_oname(otmp), FALSE);
         obfree(otmp, (struct obj *) 0);
         otmp = (struct obj *) &zeroobj;
+#if 0 /*KR: 원본*/
         pline("For a moment, you feel %s in your %s, but it disappears!",
               something, makeplural(body_part(HAND)));
+#else
+        pline("잠시 %s %s 안에 있는 것 같은 느낌이 들었지만, 곧 사라졌다!",
+              append_josa(something, "이"), makeplural(body_part(HAND)));
+#endif
         return otmp;
     }
 
@@ -4676,20 +5011,6 @@ int first, last;
     return 0;
 }
 
-STATIC_OVL const char *
-Japanese_item_name(i)
-int i;
-{
-    struct Jitem *j = Japanese_items;
-
-    while (j->item) {
-        if (i == j->item)
-            return j->name;
-        j++;
-    }
-    return (const char *) 0;
-}
-
 const char *
 suit_simple_name(suit)
 struct obj *suit;
@@ -4698,18 +5019,33 @@ struct obj *suit;
 
     if (suit) {
         if (Is_dragon_mail(suit))
+#if 0 /*KR:T*/
             return "dragon mail"; /* <color> dragon scale mail */
+#else
+            return "용 비늘 갑옷"; /* <color> dragon scale mail */
+#endif
         else if (Is_dragon_scales(suit))
-            return "dragon scales";
+            /*KR return "dragon scales"; */
+            return "용 비늘";
         suitnm = OBJ_NAME(objects[suit->otyp]);
         esuitp = eos((char *) suitnm);
+#if 0 /*KR: 원본*/
         if (strlen(suitnm) > 5 && !strcmp(esuitp - 5, " mail"))
             return "mail"; /* most suits fall into this category */
         else if (strlen(suitnm) > 7 && !strcmp(esuitp - 7, " jacket"))
             return "jacket"; /* leather jacket */
+#else /*KR: KRNethack 맞춤 번역 */
+        /* UTF-8에서 "갑옷"은 6바이트이므로 길이를 6으로 체크합니다. */
+        if (strlen(suitnm) > 6 && !strcmp(esuitp - 6, "갑옷"))
+            return "갑옷";
+        /* 영문판의 jacket 예외처리를 한글판에 맞게 복구합니다. */
+        else if (strlen(suitnm) > 6 && !strcmp(esuitp - 6, "재킷"))
+            return "재킷"; /* 가죽 재킷 */
+#endif
     }
     /* "suit" is lame but "armor" is ambiguous and "body armor" is absurd */
-    return "suit";
+    /*KR return "suit"; */
+    return "갑옷";
 }
 
 const char *
@@ -4719,18 +5055,25 @@ struct obj *cloak;
     if (cloak) {
         switch (cloak->otyp) {
         case ROBE:
-            return "robe";
+            /*KR return "robe"; */
+            return "로브";
         case MUMMY_WRAPPING:
-            return "wrapping";
+            /*KR return "wrapping"; */
+            return "미라 붕대";
         case ALCHEMY_SMOCK:
+#if 0 /*KR: 원본*/
             return (objects[cloak->otyp].oc_name_known && cloak->dknown)
-                       ? "smock"
-                       : "apron";
+                       ? "smock" : "apron";
+#else /*KR: KRNethack 맞춤 번역 */
+            return (objects[cloak->otyp].oc_name_known && cloak->dknown)
+                       ? "작업복" : "앞치마";
+#endif
         default:
             break;
         }
     }
-    return "cloak";
+    /*KR return "cloak"; */
+    return "망토";
 }
 
 /* helm vs hat for messages */
@@ -4759,7 +5102,8 @@ const char *
 gloves_simple_name(gloves)
 struct obj *gloves;
 {
-    static const char gauntlets[] = "gauntlets";
+    /*KR static const char gauntlets[] = "gauntlets"; */
+    static const char gauntlets[] = "건틀릿";
 
     if (gloves && gloves->dknown) {
         int otyp = gloves->otyp;
@@ -4771,7 +5115,8 @@ struct obj *gloves;
                     gauntlets))
             return gauntlets;
     }
-    return "gloves";
+    /*KR return "gloves"; */
+    return "장갑";
 }
 
 const char *
@@ -4786,7 +5131,7 @@ struct monst *mtmp;
             return simple_typename(mtmp->mappearance);
     }
     /*KR return "whatcha-may-callit"; */
-    return "아무거나";
+    return "정체불명의 물건";
 }
 
 /*
