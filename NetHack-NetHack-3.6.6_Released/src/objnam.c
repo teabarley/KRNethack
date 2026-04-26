@@ -1048,13 +1048,14 @@ struct obj *obj;
     char *onm = xname(obj);
 
     if (m_shot.n > 1 && m_shot.o == obj->otyp) {
+#if 0 /*KR: 원본*/
         /* "the Nth arrow"; value will eventually be passed to an() or
            The(), both of which correctly handle this "the " prefix */
-        /*KR Sprintf(tmpbuf, "the %d%s ", m_shot.i, ordin(m_shot.i)); */
-        /*JP Sprintf(tmpbuf, "%d%s 번째 ", m_shot.i, numeral(obj)); */
-        /*extern.h에서 jlib.c 카테고리에 numeral 정의 후*/
-        /*jlib.c에서 아이템별 수량 단위를 정의함. 수정필요*/
         Sprintf(tmpbuf, "the %d%s ", m_shot.i, ordin(m_shot.i));
+#else /*KR: 일괄적으로 '%d번째 '를 아이템 이름 앞에 붙임 */
+        /* (예: 1번째 화살) */
+        Sprintf(tmpbuf, "%d번째 ", m_shot.i);
+#endif
         onm = strprepend(onm, tmpbuf);
     }
     return onm;

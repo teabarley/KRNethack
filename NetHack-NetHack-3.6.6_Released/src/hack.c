@@ -151,7 +151,7 @@ moverock()
             }
 
             /*KR if (revive_nasty(rx, ry, "You sense movement on the other side.")) */
-            if (revive_nasty(rx, ry, "You sense movement on the other side."))
+            if (revive_nasty(rx, ry, "당신은 반대편에서 움직임을 감지했다."))
                 return -1;
 
             if (mtmp && !noncorporeal(mtmp->data)
@@ -163,11 +163,11 @@ moverock()
                     feel_location(sx, sy);
                 if (canspotmon(mtmp)) {
                     /*KR pline("There's %s on the other side.", a_monnam(mtmp)); */
-                    pline("There's %s on the other side.", a_monnam(mtmp));
+                    pline("반대편에 %s 있다.", append_josa(a_monnam(mtmp), "이"));
                     deliver_part1 = TRUE;
                 } else {
                     /*KR You_hear("a monster behind %s.", the(xname(otmp))); */
-                    pline("a monster behind %s.", the(xname(otmp)));
+                    pline("당신은 %s 뒤에서 몬스터의 소리를 들었다.", the(xname(otmp)));
                     if (!Deaf)
                         deliver_part1 = TRUE;
                     map_invisible(rx, ry);

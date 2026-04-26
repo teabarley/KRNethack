@@ -929,7 +929,7 @@ register struct monst *mon;
 
                 if (bimanual(mw_tmp))
                     mon_hand = makeplural(mon_hand);
-#if 0 /*KR: 원본*/
+#if 0 /*KR:T 'mhis(mon)'(그의) */
                 Sprintf(welded_buf, "%s welded to %s %s",
                         otense(mw_tmp, "are"), mhis(mon), mon_hand);
 
@@ -942,20 +942,21 @@ register struct monst *mon;
                     pline("%s tries to wield %s.", Monnam(mon), doname(obj));
                     pline("%s %s!", Yname2(mw_tmp), welded_buf);
                 }
-#else
-                Sprintf(welded_buf, "%s %s에 들러붙어 있기 때문에", mhis(mon),
-                        mon_hand);
+#else /*KR: 조사 오류를 막기 위해 doname 대신 xname을 사용 */                  
+                Sprintf(welded_buf, "%s에 들러붙어 있", mon_hand);
 
                 if (obj->otyp == PICK_AXE) {
-                    pline("%s 무기가 %s,", s_suffix(mon_nam(mon)),
+                    pline("%s 무기가 %s기 때문에,", s_suffix(mon_nam(mon)),
                           welded_buf);
-                    pline("%s 그 %s(을)를 쥘 수 없다.",
-                          append_josa(mon_nam(mon), "은"), xname(obj));
+                    pline("%s 그 %s 쥘 수 없다.",
+                          append_josa(mon_nam(mon), "은"),
+                          append_josa(xname(obj), "을"));
                 } else {
-                    pline("%s %s(을)를 쥐려고 시도한다.",
-                          append_josa(Monnam(mon), "은"), doname(obj));
-                    pline("%s %s!", append_josa(Yname2(mw_tmp), "이"),
-                          welded_buf);
+                    pline("%s %s 쥐려고 시도한다.",
+                          append_josa(Monnam(mon), "은"),
+                          append_josa(xname(obj), "을"));
+                    pline("하지만 %s %s다!",
+                          append_josa(Yname2(mw_tmp), "이"), welded_buf);
                 }
 #endif
                 mw_tmp->bknown = 1;
@@ -969,11 +970,11 @@ register struct monst *mon;
         if (canseemon(mon)) {
             boolean newly_welded;
 
-#if 0 /*KR: 원본*/
+#if 0 /*KR:T 부가적인 상태 수식어가 다 붙는 doname(obj) */
             pline("%s wields %s!", Monnam(mon), doname(obj));
-#else
-            pline("%s %s(을)를 쥐었다!", append_josa(Monnam(mon), "은"),
-                  doname(obj));
+#else /* 대신 아이템의 순수 이름만 가져오는 xname(obj) */
+            pline("%s %s 쥐었다!", append_josa(Monnam(mon), "은"),
+                  append_josa(xname(obj), "을"));
 #endif
             /* 3.6.3: mwelded() predicate expects the object to have its
                W_WEP bit set in owormmask, but the pline here and for

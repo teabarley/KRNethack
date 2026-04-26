@@ -234,31 +234,40 @@ int ef_flags;
         return ER_NOTHING;
     } else if (!vulnerable || (otmp->oerodeproof && otmp->rknown)) {
         if (flags.verbose && print && (uvictim || vismon))
-#if 0 /*KR:T*/
+#if 0 /*KR: 원본*/
             pline("%s %s %s not affected by %s.",
                   uvictim ? "Your" : s_suffix(Monnam(victim)),
                   ostr, vtense(ostr, "are"), bythe[type]);
-#else
-            pline("%s %s %s 영향을 받지 않았다.",
-                  uvictim ? "당신의" : s_suffix(Monnam(victim)), 
-                  ostr, bythe[type]);
+#else /*KR: KRNethack 맞춤 번역 */
+            if (uvictim) {
+                pline("당신의 %s %s의 영향을 받지 않았다.",
+                      append_josa(ostr, "은"), bythe[type]);
+            } else {
+                pline("%s의 %s %s의 영향을 받지 않았다.", Monnam(victim),
+                      append_josa(ostr, "은"), bythe[type]);
+            }
 #endif
         return ER_NOTHING;
     } else if (otmp->oerodeproof || (otmp->blessed && !rnl(4))) {
         if (flags.verbose && (print || otmp->oerodeproof)
             && (uvictim || vismon || visobj))
-#if 0 /*KR:T*/
+#if 0 /*KR: 원본*/
             pline("Somehow, %s %s %s not affected by the %s.",
                   uvictim ? "your"
                           : !vismon ? "the" /* visobj */
                                     : s_suffix(mon_nam(victim)),
                   ostr, vtense(ostr, "are"), bythe[type]);
-#else
-            pline("어쩐지, %s %s %s 영향을 받지 않았다.",
-                  uvictim ? "당신의"
-                          : !vismon ? "" /* visobj */
-                                    : s_suffix(mon_nam(victim)),
-                  ostr, bythe[type]);
+#else /*KR: KRNethack 맞춤 번역 */
+            if (uvictim) {
+                pline("왠일인지, 당신의 %s %s의 영향을 받지 않았다.",
+                      append_josa(ostr, "은"), bythe[type]);
+            } else if (!vismon) { /* visobj */
+                pline("왠일인지, %s %s의 영향을 받지 않았다.",
+                      append_josa(ostr, "은"), bythe[type]);
+            } else {
+                pline("왠일인지, %s의 %s %s의 영향을 받지 않았다.",
+                      mon_nam(victim), append_josa(ostr, "은"), bythe[type]);
+            }
 #endif
         /* We assume here that if the object is protected because it
          * is blessed, it still shows some minor signs of wear, and
@@ -1091,7 +1100,7 @@ unsigned ftflags;
               a_your[trap->madeby_u],
               defsyms[trap_to_defsym(ttype)].explanation);
 #else /*KR: KRNethack 맞춤 번역 */
-            pline("기류가 당신을 %s %s 안으로 끌어당겼다!",
+            pline("기류가 당신을 %s%s 안으로 끌어당겼다!",
                   set_you[trap->madeby_u],
                   defsyms[trap_to_defsym(ttype)].explanation);
 #endif
@@ -1104,7 +1113,7 @@ unsigned ftflags;
                 a_your[trap->madeby_u],
                 defsyms[trap_to_defsym(ttype)].explanation);
 #else /*KR: KRNethack 맞춤 번역 */
-                You("%s %s 위를 %s.", set_you[trap->madeby_u],
+                You("%s%s 위를 %s.", set_you[trap->madeby_u],
                     defsyms[trap_to_defsym(ttype)].explanation,
                     Levitation ? "떠서 지나갔다" : "날아 지나갔다");
 #endif
@@ -1121,8 +1130,8 @@ unsigned ftflags;
                                      : a_your[trap->madeby_u],
                 defsyms[trap_to_defsym(ttype)].explanation);
 #else /*KR: KRNethack 맞춤 번역 */
-                You("%s %s 피했다.", set_you[trap->madeby_u],
-                    defsyms[trap_to_defsym(ttype)].explanation);
+                You("%s%s 피했다.", set_you[trap->madeby_u],
+                    append_josa(defsyms[trap_to_defsym(ttype)].explanation, "을"));
 #endif
                 return;
             }
@@ -1465,54 +1474,62 @@ unsigned ftflags;
                 }
                 break;
             }
+#if 0 /*KR: 원본*/
             if (!Sokoban) {
                 char verbbuf[BUFSZ];
 
                 *verbbuf = '\0';
                 if (u.usteed) {
                     if ((trflags & RECURSIVETRAP) != 0)
-                        /*KR Sprintf(verbbuf, "and %s fall",
-                         * x_monnam(u.usteed, steed_article, (char *) 0,
-                         * SUPPRESS_SADDLE, FALSE)); */
-                        Sprintf(verbbuf, "당신과 %s",
+                        Sprintf(verbbuf, "and %s fall",
                                 x_monnam(u.usteed, steed_article, (char *) 0,
                                          SUPPRESS_SADDLE, FALSE));
                     else
-#if 0 /*KR: 원본*/
-                    Sprintf(verbbuf, "lead %s",
-                            x_monnam(u.usteed, steed_article, "poor",
-                                     SUPPRESS_SADDLE, FALSE));
-#else /*KR: KRNethack 맞춤 번역 */
-                        Sprintf(verbbuf, "당신과 불쌍한 %s",
-                                x_monnam(u.usteed, steed_article, (char *) 0,
+                        Sprintf(verbbuf, "lead %s",
+                                x_monnam(u.usteed, steed_article, "poor",
                                          SUPPRESS_SADDLE, FALSE));
-#endif
                 } else if (conj_pit) {
-                    /*KR You("move into an adjacent pit."); */
-                    You("인접한 구덩이로 이동했다.");
+                    You("move into an adjacent pit.");
                 } else if (adj_pit) {
-#if 0 /*KR: 원본*/
-                You("stumble over debris%s.",
-                    !rn2(5) ? " between the pits" : "");
-#else /*KR: KRNethack 맞춤 번역 */
-                    You("%s 잔해물에 걸려 넘어졌다.",
-                        !rn2(5) ? "구덩이 사이의 " : "");
-#endif
+                    You("stumble over debris%s.",
+                        !rn2(5) ? " between the pits" : "");
                 } else {
-#if 0 /*KR: 원본*/
-                Strcpy(verbbuf,
-                       !plunged ? "fall" : (Flying ? "dive" : "plunge"));
-#else /*KR: KRNethack 맞춤 번역 */
-                Strcpy(verbbuf,
-                       !plunged ? "떨어졌다"
-                                : (Flying ? "급강하했다" : "돌진했다"));
-#endif
+                    Strcpy(verbbuf,
+                           !plunged ? "fall" : (Flying ? "dive" : "plunge"));
                 }
                 if (*verbbuf)
-               /*KR You("%s into %s pit!", verbbuf, a_your[trap->madeby_u]); */
-                    You("%s %s구덩이로 %s!", verbbuf, dig_you[trap->madeby_u],
-                        verbbuf);
+                    You("%s into %s pit!", verbbuf, a_your[trap->madeby_u]);
             }
+#else /*KR: KRNethack 맞춤 번역 */
+            if (!Sokoban) {
+                if (u.usteed) {
+                    if ((trflags & RECURSIVETRAP) != 0) {
+                        pline("당신과 %s %s구덩이로 떨어졌다!",
+                              append_josa(x_monnam(u.usteed, steed_article,
+                                                   (char *) 0,
+                                                   SUPPRESS_SADDLE, FALSE),
+                                          "는"),
+                              dig_you[trap->madeby_u]);
+                    } else {
+                        You("불쌍한 %s %s구덩이로 이끌었다!",
+                            append_josa(x_monnam(u.usteed, steed_article,
+                                                 (char *) 0, SUPPRESS_SADDLE,
+                                                 FALSE),
+                                        "를"),
+                            dig_you[trap->madeby_u]);
+                    }
+                } else if (conj_pit) {
+                    You("인접한 구덩이로 이동했다.");
+                } else if (adj_pit) {
+                    You("%s잔해물에 걸려 넘어졌다.",
+                        !rn2(5) ? "구덩이 사이의 " : "");
+                } else {
+                    You("%s구덩이로 %s!", dig_you[trap->madeby_u],
+                        !plunged ? "떨어졌다"
+                                 : (Flying ? "급강하했다" : "돌진했다"));
+                }
+            }
+#endif
             /* wumpus reference */
             if (Role_if(PM_RANGER) && !trap->madeby_u && !trap->once
                 && In_quest(&u.uz) && Is_qlocate(&u.uz)) {

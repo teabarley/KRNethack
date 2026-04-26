@@ -405,15 +405,18 @@ dofire()
 }
 
 /* if in midst of multishot shooting/throwing, stop early */
-void
-endmultishot(verbose)
-boolean verbose;
+void endmultishot(verbose) boolean verbose;
 {
     if (m_shot.i < m_shot.n) {
         if (verbose && !context.mon_moving) {
+#if 0 /*KR: 원본*/
             You("stop %s after the %d%s %s.",
                 m_shot.s ? "firing" : "throwing", m_shot.i, ordin(m_shot.i),
                 m_shot.s ? "shot" : "toss");
+#else /*KR: KRNethack 맞춤 번역 */
+            You("%d번째 %s 이후에 %s 멈췄다.", m_shot.i,
+                m_shot.s ? "발사" : "투척", m_shot.s ? "사격을" : "던지기를");
+#endif
         }
         m_shot.n = m_shot.i; /* make current shot be the last */
     }
