@@ -141,12 +141,15 @@ struct obj *wep; /* uwep for attack(), null for kick_monster() */
     if (!canspotmon(mtmp)
         && !glyph_is_warning(glyph) && !glyph_is_invisible(glyph)
         && !(!Blind && mtmp->mundetected && hides_under(mtmp->data))) {
-        pline("Wait!  There's %s there you can't see!", something);
+        /*KR pline("Wait!  There's %s there you can't see!", something); */
+        pline("잠깐! 거기에 보이지 않는 %s 있다!",
+              append_josa(something, "이"));
         map_invisible(bhitpos.x, bhitpos.y);
         /* if it was an invisible mimic, treat it as if we stumbled
          * onto a visible mimic
          */
-        if (M_AP_TYPE(mtmp) && !Protection_from_shape_changers
+        if (M_AP_TYPE(mtmp)
+            && !Protection_from_shape_changers
             /* applied pole-arm attack is too far to get stuck */
             && distu(mtmp->mx, mtmp->my) <= 2) {
             if (!u.ustuck && !mtmp->mflee && dmgtype(mtmp->data, AD_STCK))
@@ -176,8 +179,7 @@ struct obj *wep; /* uwep for attack(), null for kick_monster() */
         return TRUE;
     }
 
-    if (mtmp->mundetected && !canseemon(mtmp)
-        && !glyph_is_warning(glyph)
+    if (mtmp->mundetected && !canseemon(mtmp) && !glyph_is_warning(glyph)
         && (hides_under(mtmp->data) || mtmp->data->mlet == S_EEL)) {
         mtmp->mundetected = mtmp->msleeping = 0;
         newsym(mtmp->mx, mtmp->my);
@@ -189,13 +191,24 @@ struct obj *wep; /* uwep for attack(), null for kick_monster() */
             struct obj *obj;
 
             if (!Blind && Hallucination)
+#if 0 /*KR: 원본*/
                 pline("A %s %s appeared!",
                       mtmp->mtame ? "tame" : "wild", l_monnam(mtmp));
+#else /*KR: KRNethack 맞춤 번역 */
+                pline("%s %s 나타났다!", mtmp->mtame ? "길들여진" : "야생의",
+                      append_josa(l_monnam(mtmp), "이"));
+#endif
             else if (Blind || (is_pool(mtmp->mx, mtmp->my) && !Underwater))
-                pline("Wait!  There's a hidden monster there!");
+                /*KR pline("Wait!  There's a hidden monster there!"); */
+                pline("잠깐! 거기에 숨은 몬스터가 있다!");
             else if ((obj = level.objects[mtmp->mx][mtmp->my]) != 0)
+#if 0 /*KR: 원본*/
                 pline("Wait!  There's %s hiding under %s!",
                       an(l_monnam(mtmp)), doname(obj));
+#else /*KR: KRNethack 맞춤 번역 */
+                pline("잠깐! %s 아래에 %s 숨어 있다!", doname(obj),
+                      append_josa(l_monnam(mtmp), "이"));
+#endif
             return TRUE;
         }
     }
@@ -209,8 +222,8 @@ struct obj *wep; /* uwep for attack(), null for kick_monster() */
         wakeup(mtmp, TRUE);
     }
 
-    if (flags.confirm && mtmp->mpeaceful
-        && !Confusion && !Hallucination && !Stunned) {
+    if (flags.confirm && mtmp->mpeaceful && !Confusion && !Hallucination
+        && !Stunned) {
         /* Intelligent chaotic weapons (Stormbringer) want blood */
         if (wep && wep->oartifact == ART_STORMBRINGER) {
             override_confirmation = TRUE;
@@ -219,7 +232,9 @@ struct obj *wep; /* uwep for attack(), null for kick_monster() */
         if (canspotmon(mtmp)) {
             char qbuf[QBUFSZ];
 
-            Sprintf(qbuf, "Really attack %s?", mon_nam(mtmp));
+            /*KR Sprintf(qbuf, "Really attack %s?", mon_nam(mtmp)); */
+            Sprintf(qbuf, "정말 %s 공격하시겠습니까?",
+                    append_josa(mon_nam(mtmp), "을"));
             if (!paranoid_query(ParanoidHit, qbuf)) {
                 context.move = 0;
                 return TRUE;
@@ -233,9 +248,7 @@ struct obj *wep; /* uwep for attack(), null for kick_monster() */
 /*
  * It is unchivalrous for a knight to attack the defenseless or from behind.
  */
-void
-check_caitiff(mtmp)
-struct monst *mtmp;
+void check_caitiff(mtmp) struct monst *mtmp;
 {
     if (u.ualign.record <= -10)
         return;
@@ -243,11 +256,13 @@ struct monst *mtmp;
     if (Role_if(PM_KNIGHT) && u.ualign.type == A_LAWFUL
         && (!mtmp->mcanmove || mtmp->msleeping
             || (mtmp->mflee && !mtmp->mavenge))) {
-        You("caitiff!");
+        /*KR You("caitiff!"); */
+        pline("이 비겁자야!");
         adjalign(-1);
     } else if (Role_if(PM_SAMURAI) && mtmp->mpeaceful) {
         /* attacking peaceful creatures is bad for the samurai's giri */
-        You("dishonorably attack the innocent!");
+        /*KR You("dishonorably attack the innocent!"); */
+        pline("무고한 자를 공격하다니 불명예스럽도다!");
         adjalign(-1);
     }
 }
@@ -370,15 +385,19 @@ register struct monst *mtmp;
                 monflee(mtmp, rnd(6), FALSE, FALSE);
                 Strcpy(buf, y_monnam(mtmp));
                 buf[0] = highc(buf[0]);
-                You("stop.  %s is in the way!", buf);
-                context.travel = context.travel1 = context.mv = context.run
-                    = 0;
+                /*KR You("stop.  %s is in the way!", buf); */
+                You("멈춰 섰다. %s 길을 막고 있다!", append_josa(buf, "이"));
+                context.travel = context.travel1 = context.mv = context.run =
+                    0;
                 return TRUE;
             } else if ((mtmp->mfrozen || (!mtmp->mcanmove)
-                        || (mtmp->data->mmove == 0)) && rn2(6)) {
-                pline("%s doesn't seem to move!", Monnam(mtmp));
-                context.travel = context.travel1 = context.mv = context.run
-                    = 0;
+                        || (mtmp->data->mmove == 0))
+                       && rn2(6)) {
+                /*KR pline("%s doesn't seem to move!", Monnam(mtmp)); */
+                pline("%s 움직일 것 같지 않다!",
+                      append_josa(Monnam(mtmp), "은"));
+                context.travel = context.travel1 = context.mv = context.run =
+                    0;
                 return TRUE;
             } else
                 return FALSE;
@@ -398,12 +417,14 @@ register struct monst *mtmp;
 
     if (Upolyd && noattacks(youmonst.data)) {
         /* certain "pacifist" monsters don't attack */
-        You("have no way to attack monsters physically.");
+        /*KR You("have no way to attack monsters physically."); */
+        You("물리적으로 몬스터를 공격할 방법이 없다.");
         mtmp->mstrategy &= ~STRAT_WAITMASK;
         goto atk_done;
     }
 
-    if (check_capacity("You cannot fight while so heavily loaded.")
+    /*KR if (check_capacity("You cannot fight while so heavily loaded.") */
+    if (check_capacity("짐이 너무 무거워서 싸울 수 없다.")
         /* consume extra nutrition during combat; maybe pass out */
         || overexertion())
         goto atk_done;
@@ -415,12 +436,20 @@ register struct monst *mtmp;
         unweapon = FALSE;
         if (flags.verbose) {
             if (uwep)
-                You("begin bashing monsters with %s.", yname(uwep));
+                /*KR You("begin bashing monsters with %s.", yname(uwep)); */
+                You("%s 몬스터를 후려치기 시작했다.",
+                    append_josa(yname(uwep), "으로"));
             else if (!cantwield(youmonst.data))
+#if 0 /*KR: 원본*/
                 You("begin %s monsters with your %s %s.",
                     ing_suffix(Role_if(PM_MONK) ? "strike" : "bash"),
                     uarmg ? "gloved" : "bare", /* Del Lamb */
                     makeplural(body_part(HAND)));
+#else /*KR: KRNethack 맞춤 번역 */
+                You("%s %s 몬스터를 %s 시작했다.", uarmg ? "장갑 낀" : "맨",
+                    append_josa(body_part(HAND), "으로"),
+                    Role_if(PM_MONK) ? "치기" : "후려치기");
+#endif
         }
     }
     exercise(A_STR, TRUE); /* you're exercising muscles */
@@ -433,7 +462,8 @@ register struct monst *mtmp;
         && (m_move(mtmp, 0) == 2 /* it died */
             || mtmp->mx != u.ux + u.dx
             || mtmp->my != u.uy + u.dy)) { /* it moved */
-        You("miss wildly and stumble forwards.");
+        /*KR You("miss wildly and stumble forwards."); */
+        You("크게 헛스윙하며 앞으로 비틀거렸다.");
         return FALSE;
     }
 
@@ -443,7 +473,7 @@ register struct monst *mtmp;
         (void) hitum(mtmp, youmonst.data->mattk);
     mtmp->mstrategy &= ~STRAT_WAITMASK;
 
- atk_done:
+atk_done:
     /* see comment in attack_checks() */
     /* we only need to check for this if we did an attack_checks()
      * and it returned 0 (it's okay to attack), and the monster didn't
@@ -469,13 +499,14 @@ int dieroll;
 {
     boolean malive = TRUE,
             /* hmon() might destroy weapon; remember aspect for cutworm */
-            slice_or_chop = (weapon && (is_blade(weapon) || is_axe(weapon)));
+        slice_or_chop = (weapon && (is_blade(weapon) || is_axe(weapon)));
 
     if (override_confirmation) {
         /* this may need to be generalized if weapons other than
            Stormbringer acquire similar anti-social behavior... */
         if (flags.verbose)
-            Your("bloodthirsty blade attacks!");
+            /*KR Your("bloodthirsty blade attacks!"); */
+            Your("피에 굶주린 칼날이 공격한다!");
     }
 
     if (!*mhit) {
@@ -751,9 +782,16 @@ int dieroll;
                     && rnl(4) == 4 - 1) {
                     boolean more_than_1 = (obj->quan > 1L);
 
+#if 0 /*KR: 원본*/
                     pline("As you hit %s, %s%s breaks into splinters.",
                           mon_nam(mon), more_than_1 ? "one of " : "",
                           yname(obj));
+#else /*KR: KRNethack 맞춤 번역 */
+                    pline("당신이 %s 공격하자, %s%s 산산조각 났다.",
+                          append_josa(mon_nam(mon), "을"),
+                          more_than_1 ? "그 중 " : "",
+                          append_josa(yname(obj), "이"));
+#endif
                     if (!more_than_1)
                         uwepgone(); /* set unweapon */
                     useup(obj);
@@ -767,15 +805,19 @@ int dieroll;
                 tmp = dmgval(obj, mon);
                 /* a minimal hit doesn't exercise proficiency */
                 valid_weapon_attack = (tmp > 1);
-                if (!valid_weapon_attack || mon == u.ustuck || u.twoweap
+                if (!valid_weapon_attack || mon == u.ustuck
+                    || u.twoweap
                     /* Cleaver can hit up to three targets at once so don't
                        let it also hit from behind or shatter foes' weapons */
                     || (hand_to_hand && obj->oartifact == ART_CLEAVER)) {
                     ; /* no special bonuses */
-                } else if (mon->mflee && Role_if(PM_ROGUE) && !Upolyd
+                } else if (mon->mflee && Role_if(PM_ROGUE)
+                           && !Upolyd
                            /* multi-shot throwing is too powerful here */
                            && hand_to_hand) {
-                    You("strike %s from behind!", mon_nam(mon));
+                    /*KR You("strike %s from behind!", mon_nam(mon)); */
+                    You("%s 배후에서 공격했다!",
+                        append_josa(mon_nam(mon), "을"));
                     tmp += rnd(u.ulevel);
                     hittxt = TRUE;
                 } else if (dieroll == 2 && obj == uwep
@@ -787,10 +829,13 @@ int dieroll;
                                && P_SKILL(wtype) >= P_SKILLED)
                            && ((monwep = MON_WEP(mon)) != 0
                                && !is_flimsy(monwep)
-                               && !obj_resists(monwep,
-                                       50 + 15 * (greatest_erosion(obj)
-                                                  - greatest_erosion(monwep)),
-                                               100))) {
+                               && !obj_resists(
+                                   monwep,
+                                   50
+                                       + 15
+                                             * (greatest_erosion(obj)
+                                                - greatest_erosion(monwep)),
+                                   100))) {
                     /*
                      * 2.5% chance of shattering defender's weapon when
                      * using a two-handed weapon; less if uwep is rusted.
@@ -803,8 +848,13 @@ int dieroll;
                      */
                     setmnotwielded(mon, monwep);
                     mon->weapon_check = NEED_WEAPON;
+#if 0 /*KR: 원본*/
                     pline("%s from the force of your blow!",
                           Yobjnam2(monwep, "shatter"));
+#else /*KR: KRNethack 맞춤 번역 */
+                    pline("당신의 강력한 일격에 %s 산산조각 났다!",
+                          append_josa(xname(monwep), "이"));
+#endif
                     m_useupall(mon, monwep);
                     /* If someone just shattered MY weapon, I'd flee! */
                     if (rn2(4)) {
@@ -879,7 +929,10 @@ int dieroll;
                     break;
                 case MIRROR:
                     if (breaktest(obj)) {
-                        You("break %s.  That's bad luck!", ysimple_name(obj));
+                        /*KR You("break %s.  That's bad luck!",
+                         * ysimple_name(obj)); */
+                        You("%s 거울을 깨뜨려 버렸다. 재수가 없군!",
+                            ysimple_name(obj));
                         change_luck(-2);
                         useup(obj);
                         obj = (struct obj *) 0;
@@ -890,7 +943,9 @@ int dieroll;
                     tmp = 1;
                     break;
                 case EXPENSIVE_CAMERA:
-                    You("succeed in destroying %s.  Congratulations!",
+                    /*KR You("succeed in destroying %s.  Congratulations!",
+                     * ysimple_name(obj)); */
+                    You("%s 카메라를 파괴하는 데 성공했다. 축하한다!",
                         ysimple_name(obj));
                     release_camera_demon(obj, u.ux, u.uy);
                     useup(obj);
@@ -899,10 +954,20 @@ int dieroll;
                     if (touch_petrifies(&mons[obj->corpsenm])) {
                         tmp = 1;
                         hittxt = TRUE;
+#if 0 /*KR: 원본*/
                         You("hit %s with %s.", mon_nam(mon),
                             corpse_xname(obj, (const char *) 0,
                                          obj->dknown ? CXN_PFX_THE
                                                      : CXN_ARTICLE));
+#else /*KR: KRNethack 맞춤 번역 */
+                        You("%s %s 공격했다.",
+                            append_josa(corpse_xname(obj, (const char *) 0,
+                                                     obj->dknown
+                                                         ? CXN_PFX_THE
+                                                         : CXN_ARTICLE),
+                                        "으로"),
+                            append_josa(mon_nam(mon), "을"));
+#endif
                         obj->dknown = 1;
                         if (!munstone(mon, TRUE))
                             minstapetrify(mon, TRUE);
@@ -916,7 +981,8 @@ int dieroll;
 #endif
                     }
                     tmp = (obj->corpsenm >= LOW_PM ? mons[obj->corpsenm].msize
-                                                   : 0) + 1;
+                                                   : 0)
+                          + 1;
                     break;
 
 #define useup_eggs(o)                    \
@@ -946,12 +1012,19 @@ int dieroll;
 
                     if (touch_petrifies(&mons[obj->corpsenm])) {
                         /*learn_egg_type(obj->corpsenm);*/
+#if 0 /*KR: 원본*/
                         pline("Splat!  You hit %s with %s %s egg%s!",
                               mon_nam(mon),
                               obj->known ? "the" : cnt > 1L ? "some" : "a",
                               obj->known ? mons[obj->corpsenm].mname
                                          : "petrifying",
                               plur(cnt));
+#else /*KR: KRNethack 맞춤 번역 */
+                        pline("철퍼덕! 당신은 %s %s %s 던졌다!",
+                              obj->known ? mons[obj->corpsenm].mname : "석화",
+                              cnt > 1L ? "알 몇 개를" : "알을",
+                              append_josa(mon_nam(mon), "에게"));
+#endif
                         obj->known = 1; /* (not much point...) */
                         useup_eggs(obj);
                         if (!munstone(mon, TRUE))
@@ -960,16 +1033,25 @@ int dieroll;
                             break;
                         return (boolean) (!DEADMONSTER(mon));
                     } else { /* ordinary egg(s) */
+#if 0 /*KR: 원본*/
                         const char *eggp = (obj->corpsenm != NON_PM
                                             && obj->known)
-                                           ? the(mons[obj->corpsenm].mname)
-                                           : (cnt > 1L) ? "some" : "an";
+                                               ? the(mons[obj->corpsenm].mname)
+                                               : (cnt > 1L) ? "some" : "an";
 
                         You("hit %s with %s egg%s.", mon_nam(mon), eggp,
                             plur(cnt));
+#else /*KR: KRNethack 맞춤 번역 */
+                        const char *eggp =
+                            (obj->corpsenm != NON_PM && obj->known)
+                                ? mons[obj->corpsenm].mname
+                                : "";
+                        You("%s알을 %s 던졌다.", eggp,
+                            append_josa(mon_nam(mon), "에게"));
+#endif
                         if (touch_petrifies(mdat) && !stale_egg(obj)) {
-                            pline_The("egg%s %s alive any more...", plur(cnt),
-                                      (cnt == 1L) ? "isn't" : "aren't");
+                            /*KR pline("The egg won't hatch any more..."); */
+                            pline("이제 알이 부화하는 일은 없을 것이다...");
                             if (obj->timed)
                                 obj_stop_timers(obj);
                             obj->otyp = ROCK;
@@ -981,7 +1063,8 @@ int dieroll;
                             if (thrown)
                                 place_object(obj, mon->mx, mon->my);
                         } else {
-                            pline("Splat!");
+                            /*KR pline("Splat!"); */
+                            pline("철퍼덕!");
                             useup_eggs(obj);
                             exercise(A_WIS, FALSE);
                         }
@@ -1000,15 +1083,23 @@ int dieroll;
                     mon->msleeping = 0;
                     if (can_blnd(&youmonst, mon,
                                  (uchar) ((obj->otyp == BLINDING_VENOM)
-                                             ? AT_SPIT
-                                             : AT_WEAP),
+                                              ? AT_SPIT
+                                              : AT_WEAP),
                                  obj)) {
                         if (Blind) {
-                            pline(obj->otyp == CREAM_PIE ? "Splat!"
-                                                         : "Splash!");
+                            /*KR pline(obj->otyp == CREAM_PIE ? "Splat!" :
+                             * "Splash!"); */
+                            pline(obj->otyp == CREAM_PIE ? "철퍼덕!"
+                                                         : "찰박!");
                         } else if (obj->otyp == BLINDING_VENOM) {
+#if 0 /*KR: 원본*/
                             pline_The("venom blinds %s%s!", mon_nam(mon),
                                       mon->mcansee ? "" : " further");
+#else /*KR: KRNethack 맞춤 번역 */
+                            pline("독액 때문에 %s %s눈이 멀었다!",
+                                  append_josa(mon_nam(mon), "은"),
+                                  mon->mcansee ? "" : "더욱 ");
+#endif
                         } else {
                             char *whom = mon_nam(mon);
                             char *what = The(xname(obj));
@@ -1018,10 +1109,20 @@ int dieroll;
                             /* note: s_suffix returns a modifiable buffer */
                             if (haseyes(mdat)
                                 && mdat != &mons[PM_FLOATING_EYE])
+#if 0 /*KR: 원본*/
                                 whom = strcat(strcat(s_suffix(whom), " "),
                                               mbodypart(mon, FACE));
+#else /*KR: KRNethack 맞춤 번역 */
+                                whom = strcat(s_suffix(whom),
+                                              mbodypart(mon, FACE));
+#endif
+#if 0 /*KR: 원본*/
                             pline("%s %s over %s!", what,
                                   vtense(what, "splash"), whom);
+#else /*KR: KRNethack 맞춤 번역 */
+                            pline("%s %s 덮쳤다!", append_josa(what, "이"),
+                                  append_josa(whom, "을"));
+#endif
                         }
                         setmangry(mon, TRUE);
                         mon->mcansee = 0;
@@ -1031,7 +1132,9 @@ int dieroll;
                         else
                             mon->mblinded += tmp;
                     } else {
-                        pline(obj->otyp == CREAM_PIE ? "Splat!" : "Splash!");
+                        /*KR pline(obj->otyp == CREAM_PIE ? "Splat!" :
+                         * "Splash!"); */
+                        pline(obj->otyp == CREAM_PIE ? "철퍼덕!" : "찰박!");
                         setmangry(mon, TRUE);
                     }
                     if (thrown)
@@ -1044,10 +1147,15 @@ int dieroll;
                     break;
                 case ACID_VENOM: /* thrown (or spit) */
                     if (resists_acid(mon)) {
-                        Your("venom hits %s harmlessly.", mon_nam(mon));
+                        /*KR Your("venom hits %s harmlessly.", mon_nam(mon));
+                         */
+                        pline("당신의 독액은 %s 아무런 피해도 주지 못했다.",
+                              append_josa(mon_nam(mon), "에게"));
                         tmp = 0;
                     } else {
-                        Your("venom burns %s!", mon_nam(mon));
+                        /*KR Your("venom burns %s!", mon_nam(mon)); */
+                        Your("독액이 %s 화상을 입혔다!",
+                             append_josa(mon_nam(mon), "에게"));
                         tmp = dmgval(obj, mon);
                     }
                     if (thrown)
@@ -1091,7 +1199,7 @@ int dieroll;
     }
 
     /****** NOTE: perhaps obj is undefined!! (if !thrown && BOOMERANG)
-     *      *OR* if attacking bare-handed!! */
+     * *OR* if attacking bare-handed!! */
 
     if (get_dmg_bonus && tmp > 0) {
         tmp += u.udaminc;
@@ -1120,10 +1228,14 @@ int dieroll;
         if (nopoison < 2)
             nopoison = 2;
         if (Role_if(PM_SAMURAI)) {
-            You("dishonorably use a poisoned weapon!");
+            /*KR You("dishonorably use a poisoned weapon!"); */
+            You("불명예스럽게도 독이 묻은 무기를 사용했다!");
             adjalign(-sgn(u.ualign.type));
         } else if (u.ualign.type == A_LAWFUL && u.ualign.record > -10) {
-            You_feel("like an evil coward for using a poisoned weapon.");
+            /*KR You_feel("like an evil coward for using a poisoned weapon.");
+             */
+            You_feel(
+                "독이 묻은 무기를 사용하다니 사악한 겁쟁이가 된 기분이다.");
             adjalign(-1);
         }
         if (obj && !rn2(nopoison)) {
@@ -1145,16 +1257,22 @@ int dieroll;
         /* make sure that negative damage adjustment can't result
            in inadvertently boosting the victim's hit points */
         tmp = (get_dmg_bonus && !mon_is_shade) ? 1 : 0;
-        if (mon_is_shade && !hittxt
-            && thrown != HMON_THROWN && thrown != HMON_KICKED)
+        if (mon_is_shade && !hittxt && thrown != HMON_THROWN
+            && thrown != HMON_KICKED)
             hittxt = shade_miss(&youmonst, mon, obj, FALSE, TRUE);
     }
 
     if (jousting) {
         tmp += d(2, (obj == uwep) ? 10 : 2); /* [was in dmgval()] */
+#if 0                                        /*KR: 원본*/
         You("joust %s%s", mon_nam(mon), canseemon(mon) ? exclam(tmp) : ".");
+#else                                        /*KR: KRNethack 맞춤 번역 */
+        You("%s 돌격했다%s", append_josa(mon_nam(mon), "에게"),
+            canseemon(mon) ? exclam(tmp) : ".");
+#endif
         if (jousting < 0) {
-            pline("%s shatters on impact!", Yname2(obj));
+            /*KR pline("%s shatters on impact!", Yname2(obj)); */
+            Your("%s 충격으로 산산조각 났다!", append_josa(xname(obj), "이"));
             /* (must be either primary or secondary weapon to get here) */
             u.twoweap = FALSE; /* untwoweapon() is too verbose here */
             if (obj == uwep)
@@ -1176,8 +1294,13 @@ int dieroll;
         if (rnd(100) < P_SKILL(P_BARE_HANDED_COMBAT) && !bigmonst(mdat)
             && !thick_skinned(mdat)) {
             if (canspotmon(mon))
+#if 0 /*KR: 원본*/
                 pline("%s %s from your powerful strike!", Monnam(mon),
                       makeplural(stagger(mon->data, "stagger")));
+#else /*KR: KRNethack 맞춤 번역 */
+                pline("%s 당신의 강력한 일격에 비틀거린다!",
+                      append_josa(Monnam(mon), "은"));
+#endif
             /* avoid migrating a dead monster */
             if (mon->mhp > tmp) {
                 mhurtle(mon, u.dx, u.dy, 1);
@@ -1222,9 +1345,16 @@ int dieroll;
             char withwhat[BUFSZ];
 
             withwhat[0] = '\0';
+#if 0 /*KR: 원본*/
             if (u.twoweap && flags.verbose)
                 Sprintf(withwhat, " with %s", yname(obj));
             pline("%s divides as you hit it%s!", Monnam(mon), withwhat);
+#else /*KR: KRNethack 맞춤 번역 */
+            if (u.twoweap && flags.verbose)
+                Sprintf(withwhat, " %s(으)로", yname(obj));
+            pline("%s 당신이%s 치자 분열했다!",
+                  append_josa(Monnam(mon), "은"), withwhat);
+#endif
             hittxt = TRUE;
             mintrap(mclone);
         }
@@ -1236,12 +1366,22 @@ int dieroll;
         if (thrown)
             hit(mshot_xname(obj), mon, exclam(tmp));
         else if (!flags.verbose)
-            You("hit it.");
+            /*KR You("hit it."); */
+            pline("명중했다.");
         else
+#if 0 /*KR: 원본*/
             You("%s %s%s",
                 (obj && (is_shield(obj) || obj->otyp == HEAVY_IRON_BALL))
                   ? "bash" : Role_if(PM_BARBARIAN) ? "smite" : "hit",
                 mon_nam(mon), canseemon(mon) ? exclam(tmp) : ".");
+#else /*KR: KRNethack 맞춤 번역 */
+            You("%s %s%s", append_josa(mon_nam(mon), "을"),
+                (obj && (is_shield(obj) || obj->otyp == HEAVY_IRON_BALL))
+                    ? "강타했다"
+                : Role_if(PM_BARBARIAN) ? "내리쳤다"
+                                        : "명중시켰다",
+                canseemon(mon) ? exclam(tmp) : ".");
+#endif
     }
 
     if (silvermsg) {
@@ -1251,27 +1391,43 @@ int dieroll;
 
         if (canspotmon(mon)) {
             if (barehand_silver_rings == 1)
-                fmt = "Your silver ring sears %s!";
+                /*KR fmt = "Your silver ring sears %s!"; */
+                fmt = "당신의 은반지가 %s 태웠다!";
             else if (barehand_silver_rings == 2)
-                fmt = "Your silver rings sear %s!";
+                /*KR fmt = "Your silver rings sear %s!"; */
+                fmt = "당신의 은반지들이 %s 태웠다!";
             else if (silverobj && saved_oname[0]) {
                 /* guard constructed format string against '%' in
                    saved_oname[] from xname(via cxname()) */
+#if 0 /*KR: 원본*/
                 Sprintf(silverobjbuf, "Your %s%s %s",
                         strstri(saved_oname, "silver") ? "" : "silver ",
                         saved_oname, vtense(saved_oname, "sear"));
                 (void) strNsubst(silverobjbuf, "%", "%%", 0);
                 Strcat(silverobjbuf, " %s!");
+#else /*KR: KRNethack 맞춤 번역 */
+                /* '은' 또는 '은빛'이 이미 포함된 무기 이름인지 확인합니다 */
+                Sprintf(silverobjbuf, "당신의 %s%s %%s 태웠다!",
+                        strstri(saved_oname, "은") ? "" : "은빛 ",
+                        saved_oname);
+                (void) strNsubst(silverobjbuf, "%%", "%", 0);
+#endif
                 fmt = silverobjbuf;
             } else
-                fmt = "The silver sears %s!";
+                /*KR fmt = "The silver sears %s!"; */
+                fmt = "은이 %s 태웠다!";
         } else {
             *whom = highc(*whom); /* "it" -> "It" */
-            fmt = "%s is seared!";
+            /*KR fmt = "%s is seared!"; */
+            fmt = "%s 화상을 입었다!";
         }
         /* note: s_suffix returns a modifiable buffer */
         if (!noncorporeal(mdat) && !amorphous(mdat))
+#if 0 /*KR: 원본*/
             whom = strcat(s_suffix(whom), " flesh");
+#else /*KR: KRNethack 맞춤 번역 */
+            whom = strcat(s_suffix(whom), " 살을");
+#endif
         pline(fmt, whom);
     }
     if (lightobj) {
@@ -1281,20 +1437,30 @@ int dieroll;
 
         if (canspotmon(mon)) {
             if (saved_oname[0]) {
+#if 0 /*KR: 원본*/
                 Sprintf(emitlightobjbuf,
                         "%s radiance penetrates deep into",
                         s_suffix(saved_oname));
                 Strcat(emitlightobjbuf, " %s!");
+#else /*KR: KRNethack 맞춤 번역 */
+                Sprintf(emitlightobjbuf, "%s 빛이 %%s 깊숙이 꿰뚫었다!",
+                        s_suffix(saved_oname));
+#endif
                 fmt = emitlightobjbuf;
             } else
-                fmt = "The light sears %s!";
+                /*KR fmt = "The light sears %s!"; */
+                fmt = "빛이 %s 태웠다!";
         } else {
-            *whom = highc(*whom); /* "it" -> "It" */
-            fmt = "%s is seared!";
+            /*KR fmt = "%s is seared!"; */
+            fmt = "%s 화상을 입었다!";
         }
         /* note: s_suffix returns a modifiable buffer */
         if (!noncorporeal(mdat) && !amorphous(mdat))
+#if 0 /*KR: 원본*/
             whom = strcat(s_suffix(whom), " flesh");
+#else /*KR: KRNethack 맞춤 번역 */
+            whom = strcat(s_suffix(whom), " 살을");
+#endif
         pline(fmt, whom);
     }
     /* if a "no longer poisoned" message is coming, it will be last;
@@ -1309,9 +1475,12 @@ int dieroll;
        minvent and might merge with a stack that's already there)] */
 
     if (needpoismsg)
-        pline_The("poison doesn't seem to affect %s.", mon_nam(mon));
+        /*KR pline_The("poison doesn't seem to affect %s.", mon_nam(mon)); */
+        pline("독은 %s 아무런 영향도 주지 못한 것 같다.",
+              append_josa(mon_nam(mon), "에게"));
     if (poiskilled) {
-        pline_The("poison was deadly...");
+        /*KR pline_The("poison was deadly..."); */
+        pline("독은 치명적이었다...");
         if (!already_killed)
             xkilled(mon, XKILL_NOMSG);
         destroyed = TRUE; /* return FALSE; */
@@ -1324,12 +1493,19 @@ int dieroll;
             mon->mconf = 1;
             if (!mon->mstun && mon->mcanmove && !mon->msleeping
                 && canseemon(mon))
-                pline("%s appears confused.", Monnam(mon));
+                /*KR pline("%s appears confused.", Monnam(mon)); */
+                pline("%s 혼란스러워 보인다.",
+                      append_josa(Monnam(mon), "은"));
         }
     }
     if (unpoisonmsg)
+#if 0 /*KR: 원본*/
         Your("%s %s no longer poisoned.", saved_oname,
              vtense(saved_oname, "are"));
+#else /*KR: KRNethack 맞춤 번역 */
+        Your("%s 더 이상 독이 묻어 있지 않다.",
+             append_josa(saved_oname, "은"));
+#endif
 
     return destroyed ? FALSE : TRUE;
 }
@@ -1343,12 +1519,11 @@ struct obj *obj;
     /*
      * The things in this list either
      * 1) affect shades.
-     *  OR
+     * OR
      * 2) are dealt with properly by other routines
-     *    when it comes to shades.
+     * when it comes to shades.
      */
-    if (obj->otyp == BOULDER
-        || obj->otyp == HEAVY_IRON_BALL
+    if (obj->otyp == BOULDER || obj->otyp == HEAVY_IRON_BALL
         || obj->otyp == IRON_CHAIN      /* dmgval handles those first three */
         || obj->otyp == MIRROR          /* silver in the reflective surface */
         || obj->otyp == CLOVE_OF_GARLIC /* causes shades to flee */
@@ -1375,17 +1550,30 @@ boolean thrown, verbose;
     if (verbose
         && ((youdef || cansee(mdef->mx, mdef->my) || sensemon(mdef))
             || (magr == &youmonst && distu(mdef->mx, mdef->my) <= 2))) {
-        static const char harmlessly_thru[] = " harmlessly through ";
+        /*KR static const char harmlessly_thru[] = " harmlessly through "; */
 
-        what = (!obj || shade_aware(obj)) ? "attack" : cxname(obj);
-        target = youdef ? "you" : mon_nam(mdef);
+        /*KR what = (!obj || shade_aware(obj)) ? "attack" : cxname(obj); */
+        what = (!obj || shade_aware(obj)) ? "공격" : cxname(obj);
+        /*KR target = youdef ? "you" : mon_nam(mdef); */
+        target = youdef ? "당신" : mon_nam(mdef);
         if (!thrown) {
-            whose = youagr ? "Your" : s_suffix(Monnam(magr));
+            /*KR whose = youagr ? "Your" : s_suffix(Monnam(magr)); */
+            whose = youagr ? "당신의 " : s_suffix(Monnam(magr));
+#if 0 /*KR: 원본*/
             pline("%s %s %s%s%s.", whose, what,
                   vtense(what, "pass"), harmlessly_thru, target);
+#else /*KR: KRNethack 맞춤 번역 */
+            pline("%s%s %s 아무런 해도 입히지 못하고 통과했다.", whose,
+                  append_josa(what, "은"), append_josa(target, "을"));
+#endif
         } else {
+#if 0 /*KR: 원본*/
             pline("%s %s%s%s.", The(what), /* note: not pline_The() */
                   vtense(what, "pass"), harmlessly_thru, target);
+#else /*KR: KRNethack 맞춤 번역 */
+            pline("%s %s 아무런 해도 입히지 못하고 통과했다.", The(what),
+                  append_josa(target, "을"));
+#endif
         }
         if (!youdef && !canspotmon(mdef))
             map_invisible(mdef->mx, mdef->my);
@@ -1420,6 +1608,7 @@ struct attack *mattk;
        protection might fail (33% chance) when the armor is cursed */
     if (obj && (obj->greased || obj->otyp == OILSKIN_CLOAK)
         && (!obj->cursed || rn2(3))) {
+#if 0 /*KR: 원본*/
         You("%s %s %s %s!",
             mattk->adtyp == AD_WRAP ? "slip off of"
                                     : "grab, but cannot hold onto",
@@ -1429,9 +1618,19 @@ struct attack *mattk;
             (obj->greased || objects[obj->otyp].oc_name_known)
                 ? xname(obj)
                 : cloak_simple_name(obj));
+#else /*KR: KRNethack 맞춤 번역 */
+        You("%s %s %s %s!", append_josa(mon_nam(mdef), "의"),
+            obj->greased ? "기름칠된" : "미끄러운",
+            (obj->greased || objects[obj->otyp].oc_name_known)
+                ? xname(obj)
+                : cloak_simple_name(obj),
+            mattk->adtyp == AD_WRAP ? "때문에 미끄러졌다"
+                                    : "때문에 붙잡을 수 없었다");
+#endif
 
         if (obj->greased && !rn2(2)) {
-            pline_The("grease wears off.");
+            /*KR pline_The("grease wears off."); */
+            pline("기름칠이 벗겨졌다.");
             obj->greased = 0;
         }
         return TRUE;
@@ -1486,7 +1685,8 @@ demonpet()
     struct permonst *pm;
     struct monst *dtmp;
 
-    pline("Some hell-p has arrived!");
+    /*KR pline("Some hell-p has arrived!"); */
+    pline("지옥에서 지원군이 도착했다!");
     i = !rn2(6) ? ndemon(u.ualign.type) : NON_PM;
     pm = i != NON_PM ? &mons[i] : youmonst.data;
     if ((dtmp = makemon(pm, u.ux, u.uy, NO_MM_FLAGS)) != 0)
@@ -1502,7 +1702,7 @@ struct obj *otmp;
         || !touch_petrifies(&mons[otmp->corpsenm]) || Stone_resistance)
         return FALSE;
 
-#if 0   /* no poly_when_stoned() critter has theft capability */
+#if 0 /* no poly_when_stoned() critter has theft capability */
     if (poly_when_stoned(youmonst.data) && polymon(PM_STONE_GOLEM)) {
         display_nhwindow(WIN_MESSAGE, FALSE);   /* --More-- */
         return TRUE;
@@ -1510,7 +1710,8 @@ struct obj *otmp;
 #endif
 
     /* stealing this corpse is fatal... */
-    instapetrify(corpse_xname(otmp, "stolen", CXN_ARTICLE));
+    /*KR instapetrify(corpse_xname(otmp, "stolen", CXN_ARTICLE)); */
+    instapetrify(corpse_xname(otmp, "훔친", CXN_ARTICLE));
     /* apparently wasn't fatal after all... */
     return TRUE;
 }
@@ -1521,9 +1722,7 @@ struct obj *otmp;
  * If the target is wearing body armor, take all of its possessions;
  * otherwise, take one object.  [Is this really the behavior we want?]
  */
-STATIC_OVL void
-steal_it(mdef, mattk)
-struct monst *mdef;
+STATIC_OVL void steal_it(mdef, mattk) struct monst *mdef;
 struct attack *mattk;
 {
     struct obj *otmp, *gold = 0, *stealoid, **minvent_ptr;
@@ -1554,11 +1753,22 @@ struct attack *mattk;
 
     if (stealoid) { /* we will be taking everything */
         if (gender(mdef) == (int) u.mfemale && youmonst.data->mlet == S_NYMPH)
+#if 0 /*KR: 원본*/
             You("charm %s.  She gladly hands over %sher possessions.",
                 mon_nam(mdef), !gold ? "" : "most of ");
+#else /*KR: KRNethack 맞춤 번역 */
+            You("%s 매혹했다. 그녀는 기꺼이 자신의 소지품 %s 건네주었다.",
+                append_josa(mon_nam(mdef), "을"),
+                !gold ? "전부를" : "대부분을");
+#endif
         else
+#if 0 /*KR: 원본*/
             You("seduce %s and %s starts to take off %s clothes.",
                 mon_nam(mdef), mhe(mdef), mhis(mdef));
+#else /*KR: KRNethack 맞춤 번역 */
+            You("%s 유혹하자 %s 옷을 벗기 시작했다.",
+                append_josa(mon_nam(mdef), "을"), mhe(mdef));
+#endif
     }
 
     /* prevent gold from being stolen so that steal-item isn't a superset
@@ -1588,12 +1798,23 @@ struct attack *mattk;
             mdef->misc_worn_check |= I_SPECIAL;
 
             if (otmp == stealoid) /* special message for final item */
+#if 0                             /*KR: 원본*/
                 pline("%s finishes taking off %s suit.", Monnam(mdef),
                       mhis(mdef));
+#else                             /*KR: KRNethack 맞춤 번역 */
+                pline("%s 옷을 완전히 다 벗었다.",
+                      append_josa(Monnam(mdef), "은"));
+#endif
         }
         /* give the object to the character */
+#if 0 /*KR: 원본*/
         otmp = hold_another_object(otmp, "You snatched but dropped %s.",
                                    doname(otmp), "You steal: ");
+#else /*KR: KRNethack 맞춤 번역 */
+        otmp = hold_another_object(otmp, "당신은 %s 낚아챘지만 떨어뜨렸다.",
+                                   append_josa(doname(otmp), "을"),
+                                   "당신은 훔쳤다: ");
+#endif
         /* might have dropped otmp, and it might have broken or left level */
         if (!otmp || otmp->where != OBJ_INVENT)
             continue;
@@ -1605,7 +1826,7 @@ struct attack *mattk;
         } else if (unwornmask & W_ARMG) { /* stole worn gloves */
             mselftouch(mdef, (const char *) 0, TRUE);
             if (DEADMONSTER(mdef)) /* it's now a statue */
-                break; /* can't continue stealing */
+                break;             /* can't continue stealing */
         }
 
         if (!stealoid)
@@ -1650,8 +1871,13 @@ int specialdmg; /* blessed and/or silver bonus against various things */
     switch (mattk->adtyp) {
     case AD_STUN:
         if (!Blind)
+#if 0 /*KR: 원본*/
             pline("%s %s for a moment.", Monnam(mdef),
                   makeplural(stagger(pd, "stagger")));
+#else /*KR: KRNethack 맞춤 번역 */
+            pline("%s 잠시 %s.", append_josa(Monnam(mdef), "은"),
+                  stagger(pd, "비틀거렸다"));
+#endif
         mdef->mstun = 1;
         goto physical;
     case AD_LEGS:
@@ -1703,14 +1929,27 @@ int specialdmg; /* blessed and/or silver bonus against various things */
             break;
         }
         if (!Blind)
+#if 0 /*KR: 원본*/
             pline("%s is %s!", Monnam(mdef), on_fire(pd, mattk));
+#else /*KR: KRNethack 맞춤 번역 */
+            pline("%s %s!", append_josa(Monnam(mdef), "은"),
+                  on_fire(mdef->data, mattk));
+#endif
         if (completelyburns(pd)) { /* paper golem or straw golem */
             if (!Blind)
-                pline("%s burns completely!", Monnam(mdef));
+                /*KR pline("%s burns completely!", Monnam(mdef)); */
+                pline("%s 완전히 타버렸다!", append_josa(Monnam(mdef), "은"));
             else
+#if 0 /*KR: 원본*/
                 You("smell burning%s.",
                     (pd == &mons[PM_PAPER_GOLEM]) ? " paper"
                       : (pd == &mons[PM_STRAW_GOLEM]) ? " straw" : "");
+#else /*KR: KRNethack 맞춤 번역 */
+                You("타는 %s 냄새를 맡았다.",
+                    (pd == &mons[PM_PAPER_GOLEM])   ? "종이"
+                    : (pd == &mons[PM_STRAW_GOLEM]) ? "짚"
+                                                    : "무언가의");
+#endif
             xkilled(mdef, XKILL_NOMSG | XKILL_NOCORPSE);
             tmp = 0;
             break;
@@ -1720,7 +1959,9 @@ int specialdmg; /* blessed and/or silver bonus against various things */
         tmp += destroy_mitem(mdef, SPBOOK_CLASS, AD_FIRE);
         if (resists_fire(mdef)) {
             if (!Blind)
-                pline_The("fire doesn't heat %s!", mon_nam(mdef));
+                /*KR pline_The("fire doesn't heat %s!", mon_nam(mdef)); */
+                pline("불길은 %s 전혀 뜨겁게 하지 못했다!",
+                      append_josa(mon_nam(mdef), "을"));
             golemeffects(mdef, AD_FIRE, tmp);
             shieldeff(mdef->mx, mdef->my);
             tmp = 0;
@@ -1734,11 +1975,14 @@ int specialdmg; /* blessed and/or silver bonus against various things */
             break;
         }
         if (!Blind)
-            pline("%s is covered in frost!", Monnam(mdef));
+            /*KR pline("%s is covered in frost!", Monnam(mdef)); */
+            pline("%s 서리로 뒤덮였다!", append_josa(Monnam(mdef), "은"));
         if (resists_cold(mdef)) {
             shieldeff(mdef->mx, mdef->my);
             if (!Blind)
-                pline_The("frost doesn't chill %s!", mon_nam(mdef));
+                /*KR pline_The("frost doesn't chill %s!", mon_nam(mdef)); */
+                pline("서리는 %s 전혀 얼어붙게 하지 못했다!",
+                      append_josa(mon_nam(mdef), "을"));
             golemeffects(mdef, AD_COLD, tmp);
             tmp = 0;
         }
@@ -1750,11 +1994,14 @@ int specialdmg; /* blessed and/or silver bonus against various things */
             break;
         }
         if (!Blind)
-            pline("%s is zapped!", Monnam(mdef));
+            /*KR pline("%s is zapped!", Monnam(mdef)); */
+            pline("%s 전기에 감전되었다!", append_josa(Monnam(mdef), "은"));
         tmp += destroy_mitem(mdef, WAND_CLASS, AD_ELEC);
         if (resists_elec(mdef)) {
             if (!Blind)
-                pline_The("zap doesn't shock %s!", mon_nam(mdef));
+                /*KR pline_The("zap doesn't shock %s!", mon_nam(mdef)); */
+                pline("전격은 %s 전혀 충격을 주지 못했다!",
+                      append_josa(mon_nam(mdef), "에게"));
             golemeffects(mdef, AD_ELEC, tmp);
             shieldeff(mdef->mx, mdef->my);
             tmp = 0;
@@ -1785,10 +2032,16 @@ int specialdmg; /* blessed and/or silver bonus against various things */
             obj_extract_self(mongold);
             if (merge_choice(invent, mongold) || inv_cnt(FALSE) < 52) {
                 addinv(mongold);
-                Your("purse feels heavier.");
+                /*KR Your("purse feels heavier."); */
+                Your("지갑이 무거워진 것을 느꼈다.");
             } else {
+#if 0 /*KR: 원본*/
                 You("grab %s's gold, but find no room in your knapsack.",
                     mon_nam(mdef));
+#else /*KR: KRNethack 맞춤 번역 */
+                You("%s 금화를 낚아챘지만, 배낭에 빈 공간이 없었다.",
+                    append_josa(mon_nam(mdef), "의"));
+#endif
                 dropy(mongold);
             }
         }
@@ -1800,14 +2053,15 @@ int specialdmg; /* blessed and/or silver bonus against various things */
             tmp = 1;
         if (!negated) {
             char nambuf[BUFSZ];
-            boolean u_saw_mon = (canseemon(mdef)
-                                 || (u.uswallow && u.ustuck == mdef));
+            boolean u_saw_mon =
+                (canseemon(mdef) || (u.uswallow && u.ustuck == mdef));
 
             /* record the name before losing sight of monster */
             Strcpy(nambuf, Monnam(mdef));
             if (u_teleport_mon(mdef, FALSE) && u_saw_mon
                 && !(canseemon(mdef) || (u.uswallow && u.ustuck == mdef)))
-                pline("%s suddenly disappears!", nambuf);
+                /*KR pline("%s suddenly disappears!", nambuf); */
+                pline("%s 갑자기 사라졌다!", append_josa(nambuf, "은"));
             if (tmp >= mdef->mhp) { /* see hitmu(mhitu.c) */
                 if (mdef->mhp == 1)
                     ++mdef->mhp;
@@ -1818,7 +2072,8 @@ int specialdmg; /* blessed and/or silver bonus against various things */
     case AD_BLND:
         if (can_blnd(&youmonst, mdef, mattk->aatyp, (struct obj *) 0)) {
             if (!Blind && mdef->mcansee)
-                pline("%s is blinded.", Monnam(mdef));
+                /*KR pline("%s is blinded.", Monnam(mdef)); */
+                pline("%s 눈이 멀었다.", append_josa(Monnam(mdef), "은"));
             mdef->mcansee = 0;
             tmp += mdef->mblinded;
             if (tmp > 127)
@@ -1831,13 +2086,19 @@ int specialdmg; /* blessed and/or silver bonus against various things */
         if (night() && !rn2(10) && !mdef->mcan) {
             if (pd == &mons[PM_CLAY_GOLEM]) {
                 if (!Blind)
+#if 0 /*KR: 원본*/
                     pline("Some writing vanishes from %s head!",
                           s_suffix(mon_nam(mdef)));
+#else /*KR: KRNethack 맞춤 번역 */
+                    pline("%s 머리에 적힌 글귀 일부가 사라졌다!",
+                          append_josa(mon_nam(mdef), "의"));
+#endif
                 xkilled(mdef, XKILL_NOMSG);
                 /* Don't return yet; keep hp<1 and tmp=0 for pet msg */
             } else {
                 mdef->mcan = 1;
-                You("chuckle.");
+                /*KR You("chuckle."); */
+                You("킬킬 웃었다.");
             }
         }
         tmp = 0;
@@ -1846,13 +2107,16 @@ int specialdmg; /* blessed and/or silver bonus against various things */
         if (!negated && !rn2(3) && !resists_drli(mdef)) {
             int xtmp = d(2, 6);
 
-            pline("%s suddenly seems weaker!", Monnam(mdef));
+            /*KR pline("%s suddenly seems weaker!", Monnam(mdef)); */
+            pline("%s 갑자기 더 약해진 것 같다!",
+                  append_josa(Monnam(mdef), "은"));
             mdef->mhpmax -= xtmp;
             mdef->mhp -= xtmp;
             /* !m_lev: level 0 monster is killed regardless of hit points
                rather than drop to level -1 */
             if (DEADMONSTER(mdef) || !mdef->m_lev) {
-                pline("%s dies!", Monnam(mdef));
+                /*KR pline("%s dies!", Monnam(mdef)); */
+                pline("%s 죽었다!", append_josa(Monnam(mdef), "은"));
                 xkilled(mdef, XKILL_NOMSG);
             } else
                 mdef->m_lev--;
@@ -1861,7 +2125,8 @@ int specialdmg; /* blessed and/or silver bonus against various things */
         break;
     case AD_RUST:
         if (pd == &mons[PM_IRON_GOLEM]) {
-            pline("%s falls to pieces!", Monnam(mdef));
+            /*KR pline("%s falls to pieces!", Monnam(mdef)); */
+            pline("%s 산산조각 났다!", append_josa(Monnam(mdef), "은"));
             xkilled(mdef, XKILL_NOMSG);
         }
         erode_armor(mdef, ERODE_RUST);
@@ -1873,7 +2138,8 @@ int specialdmg; /* blessed and/or silver bonus against various things */
         break;
     case AD_DCAY:
         if (pd == &mons[PM_WOOD_GOLEM] || pd == &mons[PM_LEATHER_GOLEM]) {
-            pline("%s falls to pieces!", Monnam(mdef));
+            /*KR pline("%s falls to pieces!", Monnam(mdef)); */
+            pline("%s 산산조각 났다!", append_josa(Monnam(mdef), "은"));
             xkilled(mdef, XKILL_NOMSG);
         }
         erode_armor(mdef, ERODE_ROT);
@@ -1888,12 +2154,18 @@ int specialdmg; /* blessed and/or silver bonus against various things */
     case AD_DRDX:
     case AD_DRCO:
         if (!negated && !rn2(8)) {
-            Your("%s was poisoned!", mpoisons_subj(&youmonst, mattk));
+            /*KR Your("%s was poisoned!", mpoisons_subj(&youmonst, mattk)); */
+            Your("%s 독에 당했다!",
+                 append_josa(mpoisons_subj(&youmonst, mattk), "은"));
             if (resists_poison(mdef)) {
-                pline_The("poison doesn't seem to affect %s.", mon_nam(mdef));
+                /*KR pline_The("poison doesn't seem to affect %s.",
+                 * mon_nam(mdef)); */
+                pline("독은 %s 아무런 영향을 주지 못한 것 같다.",
+                      append_josa(mon_nam(mdef), "에게"));
             } else {
                 if (!rn2(10)) {
-                    Your("poison was deadly...");
+                    /*KR Your("poison was deadly..."); */
+                    Your("독은 치명적이었다...");
                     tmp = mdef->mhp;
                 } else
                     tmp += rn1(10, 6);
@@ -1904,11 +2176,14 @@ int specialdmg; /* blessed and/or silver bonus against various things */
         struct obj *helmet;
 
         if (notonhead || !has_head(pd)) {
-            pline("%s doesn't seem harmed.", Monnam(mdef));
+            /*KR pline("%s doesn't seem harmed.", Monnam(mdef)); */
+            pline("%s 다치지 않은 것 같다.", append_josa(Monnam(mdef), "은"));
             tmp = 0;
             if (!Unchanging && pd == &mons[PM_GREEN_SLIME]) {
                 if (!Slimed) {
-                    You("suck in some slime and don't feel very well.");
+                    /*KR You("suck in some slime and don't feel very well.");
+                     */
+                    You("슬라임을 조금 빨아들였고, 기분이 아주 좋지 않다.");
                     make_slimed(10L, (char *) 0);
                 }
             }
@@ -1918,9 +2193,15 @@ int specialdmg; /* blessed and/or silver bonus against various things */
             break;
 
         if ((helmet = which_armor(mdef, W_ARMH)) != 0 && rn2(8)) {
+#if 0 /*KR: 원본*/
             pline("%s %s blocks your attack to %s head.",
                   s_suffix(Monnam(mdef)), helm_simple_name(helmet),
                   mhis(mdef));
+#else /*KR: KRNethack 맞춤 번역 */
+            pline("%s %s 당신의 머리 공격을 막아냈다.",
+                  append_josa(Monnam(mdef), "의"),
+                  append_josa(helm_simple_name(helmet), "이"));
+#endif
             break;
         }
 
@@ -1937,22 +2218,32 @@ int specialdmg; /* blessed and/or silver bonus against various things */
                 if (m_slips_free(mdef, mattk)) {
                     tmp = 0;
                 } else {
-                    You("swing yourself around %s!", mon_nam(mdef));
+                    /*KR You("swing yourself around %s!", mon_nam(mdef)); */
+                    You("자신의 몸을 %s 주위로 휘감았다!",
+                        append_josa(mon_nam(mdef), "의"));
                     u.ustuck = mdef;
                 }
             } else if (u.ustuck == mdef) {
                 /* Monsters don't wear amulets of magical breathing */
                 if (is_pool(u.ux, u.uy) && !is_swimmer(pd)
                     && !amphibious(pd)) {
-                    You("drown %s...", mon_nam(mdef));
+                    /*KR You("drown %s...", mon_nam(mdef)); */
+                    You("%s 익사시켰다...", append_josa(mon_nam(mdef), "을"));
                     tmp = mdef->mhp;
                 } else if (mattk->aatyp == AT_HUGS)
-                    pline("%s is being crushed.", Monnam(mdef));
+                    /*KR pline("%s is being crushed.", Monnam(mdef)); */
+                    pline("%s 짓눌리고 있다.",
+                          append_josa(Monnam(mdef), "은"));
             } else {
                 tmp = 0;
                 if (flags.verbose)
+#if 0 /*KR: 원본*/
                     You("brush against %s %s.", s_suffix(mon_nam(mdef)),
                         mbodypart(mdef, LEG));
+#else /*KR: KRNethack 맞춤 번역 */
+                    You("%s %s 스쳤다.", append_josa(mon_nam(mdef), "의"),
+                        append_josa(mbodypart(mdef, LEG), "을"));
+#endif
             }
         } else
             tmp = 0;
@@ -1960,14 +2251,18 @@ int specialdmg; /* blessed and/or silver bonus against various things */
     case AD_PLYS:
         if (!negated && mdef->mcanmove && !rn2(3) && tmp < mdef->mhp) {
             if (!Blind)
-                pline("%s is frozen by you!", Monnam(mdef));
+                /*KR pline("%s is frozen by you!", Monnam(mdef)); */
+                pline("%s 당신에 의해 얼어붙었다!",
+                      append_josa(Monnam(mdef), "은"));
             paralyze_monst(mdef, rnd(10));
         }
         break;
     case AD_SLEE:
         if (!negated && !mdef->msleeping && sleep_monst(mdef, rnd(10), -1)) {
             if (!Blind)
-                pline("%s is put to sleep by you!", Monnam(mdef));
+                /*KR pline("%s is put to sleep by you!", Monnam(mdef)); */
+                pline("%s 당신에 의해 잠들었다!",
+                      append_josa(Monnam(mdef), "은"));
             slept_monst(mdef);
         }
         break;
@@ -1978,7 +2273,9 @@ int specialdmg; /* blessed and/or silver bonus against various things */
             if (!munslime(mdef, TRUE) && !DEADMONSTER(mdef)) {
                 /* this assumes newcham() won't fail; since hero has
                    a slime attack, green slimes haven't been geno'd */
-                You("turn %s into slime.", mon_nam(mdef));
+                /*KR You("turn %s into slime.", mon_nam(mdef)); */
+                You("%s 슬라임으로 만들었다.",
+                    append_josa(mon_nam(mdef), "을"));
                 if (newcham(mdef, &mons[PM_GREEN_SLIME], FALSE, FALSE))
                     pd = mdef->data;
             }
@@ -1998,13 +2295,16 @@ int specialdmg; /* blessed and/or silver bonus against various things */
 
             mon_adjust_speed(mdef, -1, (struct obj *) 0);
             if (mdef->mspeed != oldspeed && canseemon(mdef))
-                pline("%s slows down.", Monnam(mdef));
+                /*KR pline("%s slows down.", Monnam(mdef)); */
+                pline("%s 느려졌다.", append_josa(Monnam(mdef), "은"));
         }
         break;
     case AD_CONF:
         if (!mdef->mconf) {
             if (canseemon(mdef))
-                pline("%s looks confused.", Monnam(mdef));
+                /*KR pline("%s looks confused.", Monnam(mdef)); */
+                pline("%s 혼란스러워 보인다.",
+                      append_josa(Monnam(mdef), "은"));
             mdef->mconf = 1;
         }
         break;
@@ -2017,11 +2317,14 @@ int specialdmg; /* blessed and/or silver bonus against various things */
     mdef->mhp -= tmp;
     if (DEADMONSTER(mdef)) {
         if (mdef->mtame && !cansee(mdef->mx, mdef->my)) {
-            You_feel("embarrassed for a moment.");
+            /*KR You_feel("embarrassed for a moment."); */
+            You_feel("잠시 당황했다.");
             if (tmp)
-                xkilled(mdef, XKILL_NOMSG); /* !tmp but hp<1: already killed */
+                xkilled(mdef,
+                        XKILL_NOMSG); /* !tmp but hp<1: already killed */
         } else if (!flags.verbose) {
-            You("destroy it!");
+            /*KR You("destroy it!"); */
+            You("그것을 파괴했다!");
             if (tmp)
                 xkilled(mdef, XKILL_NOMSG);
         } else if (tmp)
@@ -2039,18 +2342,25 @@ register struct attack *mattk;
     boolean resistance; /* only for cold/fire/elec */
     register int tmp = d((int) mattk->damn, (int) mattk->damd);
 
-    You("explode!");
+    /*KR You("explode!"); */
+    You("폭발했다!");
     switch (mattk->adtyp) {
     case AD_BLND:
         if (!resists_blnd(mdef)) {
-            pline("%s is blinded by your flash of light!", Monnam(mdef));
+            /*KR pline("%s is blinded by your flash of light!", Monnam(mdef));
+             */
+            pline("%s 당신이 내뿜은 섬광에 눈이 멀었다!",
+                  append_josa(Monnam(mdef), "은"));
             mdef->mblinded = min((int) mdef->mblinded + tmp, 127);
             mdef->mcansee = 0;
         }
         break;
     case AD_HALU:
         if (haseyes(mdef->data) && mdef->mcansee) {
-            pline("%s is affected by your flash of light!", Monnam(mdef));
+            /*KR pline("%s is affected by your flash of light!",
+             * Monnam(mdef)); */
+            pline("%s 당신이 내뿜은 섬광에 영향을 받았다!",
+                  append_josa(Monnam(mdef), "은"));
             mdef->mconf = 1;
         }
         break;
@@ -2062,9 +2372,10 @@ register struct attack *mattk;
         goto common;
     case AD_ELEC:
         resistance = resists_elec(mdef);
- common:
+    common:
         if (!resistance) {
-            pline("%s gets blasted!", Monnam(mdef));
+            /*KR pline("%s gets blasted!", Monnam(mdef)); */
+            pline("%s 폭발에 휘말렸다!", append_josa(Monnam(mdef), "은"));
             mdef->mhp -= tmp;
             if (DEADMONSTER(mdef)) {
                 killed(mdef);
@@ -2075,7 +2386,10 @@ register struct attack *mattk;
             if (is_golem(mdef->data))
                 golemeffects(mdef, (int) mattk->adtyp, tmp);
             else
-                pline_The("blast doesn't seem to affect %s.", mon_nam(mdef));
+                /*KR pline_The("blast doesn't seem to affect %s.",
+                 * mon_nam(mdef)); */
+                pline("폭발은 %s 아무런 영향을 주지 못한 것 같다.",
+                      append_josa(mon_nam(mdef), "에게"));
         }
         break;
     default:
@@ -2084,16 +2398,15 @@ register struct attack *mattk;
     return 1;
 }
 
-STATIC_OVL void
-start_engulf(mdef)
-struct monst *mdef;
+STATIC_OVL void start_engulf(mdef) struct monst *mdef;
 {
     if (!Invisible) {
         map_location(u.ux, u.uy, TRUE);
         tmp_at(DISP_ALWAYS, mon_to_glyph(&youmonst, rn2_on_display_rng));
         tmp_at(mdef->mx, mdef->my);
     }
-    You("engulf %s!", mon_nam(mdef));
+    /*KR You("engulf %s!", mon_nam(mdef)); */
+    You("%s 집어삼켰다!", append_josa(mon_nam(mdef), "을"));
     delay_output();
     delay_output();
 }
@@ -2142,19 +2455,22 @@ register struct attack *mattk;
            vampire form now instead of dealing with that when it dies */
         if (is_vampshifter(mdef)
             && newcham(mdef, &mons[mdef->cham], FALSE, FALSE)) {
-            You("engulf it, then expel it.");
+            /*KR You("engulf it, then expel it."); */
+            You("그것을 집어삼켰다가 뱉어냈다.");
             if (canspotmon(mdef))
-                pline("It turns into %s.", a_monnam(mdef));
+                /*KR pline("It turns into %s.", a_monnam(mdef)); */
+                pline("그것은 %s(으)로 변했다.", a_monnam(mdef));
             else
                 map_invisible(mdef->mx, mdef->my);
             return 1;
         }
 
         /* engulfing a cockatrice or digesting a Rider or Medusa */
-        fatal_gulp = (touch_petrifies(pd) && !Stone_resistance)
-                     || (mattk->adtyp == AD_DGST
-                         && (is_rider(pd) || (pd == &mons[PM_MEDUSA]
-                                              && !Stone_resistance)));
+        fatal_gulp =
+            (touch_petrifies(pd) && !Stone_resistance)
+            || (mattk->adtyp == AD_DGST
+                && (is_rider(pd)
+                    || (pd == &mons[PM_MEDUSA] && !Stone_resistance)));
 
         if ((mattk->adtyp == AD_DGST && !Slow_digestion) || fatal_gulp)
             eating_conducts(pd);
@@ -2165,20 +2481,34 @@ register struct attack *mattk;
 
             if (!type_is_pname(pd))
                 mname = an(mname);
-            You("englut %s.", mon_nam(mdef));
+            /*KR You("englut %s.", mon_nam(mdef)); */
+            You("%s 꿀꺽 삼켰다.", append_josa(mon_nam(mdef), "을"));
+#if 0 /*KR: 원본*/
             Sprintf(kbuf, "swallowing %s whole", mname);
             instapetrify(kbuf);
+#else /*KR: KRNethack 맞춤 번역 */
+            Sprintf(kbuf, "%s 통째로 삼킨 것", append_josa(mname, "을"));
+            instapetrify(kbuf);
+#endif
         } else {
             start_engulf(mdef);
             switch (mattk->adtyp) {
             case AD_DGST:
                 /* eating a Rider or its corpse is fatal */
                 if (is_rider(pd)) {
-                    pline("Unfortunately, digesting any of it is fatal.");
+                    /*KR pline("Unfortunately, digesting any of it is
+                     * fatal."); */
+                    pline("불행히도 그것을 소화하는 것은 치명적이다.");
                     end_engulf();
+#if 0 /*KR: 원본*/
                     Sprintf(killer.name, "unwisely tried to eat %s",
                             pd->mname);
                     killer.format = NO_KILLER_PREFIX;
+#else /*KR: KRNethack 맞춤 번역 */
+                    Sprintf(killer.name, "어리석게도 %s 먹으려 했다",
+                            append_josa(pd->mname, "을"));
+                    killer.format = KILLED_BY;
+#endif
                     done(DIED);
                     return 0; /* lifesaved */
                 }
@@ -2201,8 +2531,13 @@ register struct attack *mattk;
                    order if the kill message is left implicit */
                 xkilled(mdef, XKILL_GIVEMSG | XKILL_NOCORPSE);
                 if (!DEADMONSTER(mdef)) { /* monster lifesaved */
+#if 0                                     /*KR: 원본*/
                     You("hurriedly regurgitate the sizzling in your %s.",
                         body_part(STOMACH));
+#else                                     /*KR: KRNethack 맞춤 번역 */
+                    You("당신의 %s 안에서 지글거리는 것을 서둘러 토해냈다.",
+                        body_part(STOMACH));
+#endif
                 } else {
                     tmp = 1 + (pd->cwt >> 8);
                     if (corpse_chance(mdef, &youmonst, TRUE)
@@ -2211,24 +2546,37 @@ register struct attack *mattk;
                         u.uhunger += (pd->cnutrit + 1) / 2;
                     } else
                         tmp = 0;
+#if 0 /*KR: 원본*/
                     Sprintf(msgbuf, "You totally digest %s.", mon_nam(mdef));
+#else /*KR: KRNethack 맞춤 번역 */
+                    Sprintf(msgbuf, "당신은 %s 완전히 소화했다.",
+                            append_josa(mon_nam(mdef), "을"));
+#endif
                     if (tmp != 0) {
                         /* setting afternmv = end_engulf is tempting,
                          * but will cause problems if the player is
                          * attacked (which uses his real location) or
                          * if his See_invisible wears off
                          */
-                        You("digest %s.", mon_nam(mdef));
+                        /*KR You("digest %s.", mon_nam(mdef)); */
+                        You("%s 소화하고 있다.",
+                            append_josa(mon_nam(mdef), "을"));
                         if (Slow_digestion)
                             tmp *= 2;
                         nomul(-tmp);
-                        multi_reason = "digesting something";
+                        /*KR multi_reason = "digesting something"; */
+                        multi_reason = "무언가를 소화하느라";
                         nomovemsg = msgbuf;
                     } else
                         pline1(msgbuf);
                     if (pd == &mons[PM_GREEN_SLIME]) {
+#if 0 /*KR: 원본*/
                         Sprintf(msgbuf, "%s isn't sitting well with you.",
                                 The(pd->mname));
+#else /*KR: KRNethack 맞춤 번역 */
+                        Sprintf(msgbuf, "%s 당신과 잘 맞지 않는 것 같다.",
+                                append_josa(The(pd->mname), "은"));
+#endif
                         if (!Unchanging) {
                             make_slimed(5L, (char *) 0);
                         }
@@ -2239,18 +2587,30 @@ register struct attack *mattk;
                 return 2;
             case AD_PHYS:
                 if (youmonst.data == &mons[PM_FOG_CLOUD]) {
-                    pline("%s is laden with your moisture.", Monnam(mdef));
+                    /*KR pline("%s is laden with your moisture.",
+                     * Monnam(mdef)); */
+                    pline("%s 당신의 습기를 머금고 있다.",
+                          append_josa(Monnam(mdef), "은"));
                     if (amphibious(pd) && !flaming(pd)) {
                         dam = 0;
-                        pline("%s seems unharmed.", Monnam(mdef));
+                        /*KR pline("%s seems unharmed.", Monnam(mdef)); */
+                        pline("%s 다치지 않은 것 같다.",
+                              append_josa(Monnam(mdef), "은"));
                     }
                 } else
-                    pline("%s is pummeled with your debris!", Monnam(mdef));
+                    /*KR pline("%s is pummeled with your debris!",
+                     * Monnam(mdef)); */
+                    pline("%s 당신의 파편에 얻어맞았다!",
+                          append_josa(Monnam(mdef), "은"));
                 break;
             case AD_ACID:
-                pline("%s is covered with your goo!", Monnam(mdef));
+                /*KR pline("%s is covered with your goo!", Monnam(mdef)); */
+                pline("%s 당신의 점액으로 뒤덮였다!",
+                      append_josa(Monnam(mdef), "은"));
                 if (resists_acid(mdef)) {
-                    pline("It seems harmless to %s.", mon_nam(mdef));
+                    /*KR pline("It seems harmless to %s.", mon_nam(mdef)); */
+                    pline("그것은 %s 아무런 해도 입히지 않는 것 같다.",
+                          append_josa(mon_nam(mdef), "에게"));
                     dam = 0;
                 }
                 break;
@@ -2258,7 +2618,9 @@ register struct attack *mattk;
                 if (can_blnd(&youmonst, mdef, mattk->aatyp,
                              (struct obj *) 0)) {
                     if (mdef->mcansee)
-                        pline("%s can't see in there!", Monnam(mdef));
+                        /*KR pline("%s can't see in there!", Monnam(mdef)); */
+                        pline("%s 그 안에서는 앞을 볼 수 없다!",
+                              append_josa(Monnam(mdef), "은"));
                     mdef->mcansee = 0;
                     dam += mdef->mblinded;
                     if (dam > 127)
@@ -2269,10 +2631,17 @@ register struct attack *mattk;
                 break;
             case AD_ELEC:
                 if (rn2(2)) {
+#if 0 /*KR: 원본*/
                     pline_The("air around %s crackles with electricity.",
                               mon_nam(mdef));
+#else /*KR: KRNethack 맞춤 번역 */
+                    pline("%s 주변의 공기가 전기로 탁탁 소리를 낸다.",
+                          append_josa(mon_nam(mdef), "의"));
+#endif
                     if (resists_elec(mdef)) {
-                        pline("%s seems unhurt.", Monnam(mdef));
+                        /*KR pline("%s seems unhurt.", Monnam(mdef)); */
+                        pline("%s 다치지 않은 것 같다.",
+                              append_josa(Monnam(mdef), "은"));
                         dam = 0;
                     }
                     golemeffects(mdef, (int) mattk->adtyp, dam);
@@ -2282,10 +2651,16 @@ register struct attack *mattk;
             case AD_COLD:
                 if (rn2(2)) {
                     if (resists_cold(mdef)) {
-                        pline("%s seems mildly chilly.", Monnam(mdef));
+                        /*KR pline("%s seems mildly chilly.", Monnam(mdef));
+                         */
+                        pline("%s 약간 쌀쌀함을 느끼는 것 같다.",
+                              append_josa(Monnam(mdef), "은"));
                         dam = 0;
                     } else
-                        pline("%s is freezing to death!", Monnam(mdef));
+                        /*KR pline("%s is freezing to death!", Monnam(mdef));
+                         */
+                        pline("%s 얼어 죽어가고 있다!",
+                              append_josa(Monnam(mdef), "은"));
                     golemeffects(mdef, (int) mattk->adtyp, dam);
                 } else
                     dam = 0;
@@ -2293,10 +2668,15 @@ register struct attack *mattk;
             case AD_FIRE:
                 if (rn2(2)) {
                     if (resists_fire(mdef)) {
-                        pline("%s seems mildly hot.", Monnam(mdef));
+                        /*KR pline("%s seems mildly hot.", Monnam(mdef)); */
+                        pline("%s 약간 뜨거움을 느끼는 것 같다.",
+                              append_josa(Monnam(mdef), "은"));
                         dam = 0;
                     } else
-                        pline("%s is burning to a crisp!", Monnam(mdef));
+                        /*KR pline("%s is burning to a crisp!", Monnam(mdef));
+                         */
+                        pline("%s 바싹 타들어가고 있다!",
+                              append_josa(Monnam(mdef), "은"));
                     golemeffects(mdef, (int) mattk->adtyp, dam);
                 } else
                     dam = 0;
@@ -2314,32 +2694,44 @@ register struct attack *mattk;
                 if (DEADMONSTER(mdef)) /* not lifesaved */
                     return 2;
             }
+#if 0 /*KR: 원본*/
             You("%s %s!", is_animal(youmonst.data) ? "regurgitate" : "expel",
                 mon_nam(mdef));
+#else /*KR: KRNethack 맞춤 번역 */
+            You("%s %s!", append_josa(mon_nam(mdef), "을"),
+                is_animal(youmonst.data) ? "토해냈다" : "뱉어냈다");
+#endif
             if (Slow_digestion || is_animal(youmonst.data)) {
+#if 0 /*KR: 원본*/
                 pline("Obviously, you didn't like %s taste.",
                       s_suffix(mon_nam(mdef)));
+#else /*KR: KRNethack 맞춤 번역 */
+                pline("분명, 당신은 %s 맛이 마음에 들지 않았던 모양이다.",
+                      append_josa(mon_nam(mdef), "의"));
+#endif
             }
         }
     }
     return 0;
 }
 
-void
-missum(mdef, mattk, wouldhavehit)
-register struct monst *mdef;
+void missum(mdef, mattk, wouldhavehit) register struct monst *mdef;
 register struct attack *mattk;
 boolean wouldhavehit;
 {
     if (wouldhavehit) /* monk is missing due to penalty for wearing suit */
-        Your("armor is rather cumbersome...");
+        /*KR Your("armor is rather cumbersome..."); */
+        Your("방어구가 다소 거추장스럽다...");
 
     if (could_seduce(&youmonst, mdef, mattk))
-        You("pretend to be friendly to %s.", mon_nam(mdef));
+        /*KR You("pretend to be friendly to %s.", mon_nam(mdef)); */
+        You("%s 친근한 척했다.", append_josa(mon_nam(mdef), "에게"));
     else if (canspotmon(mdef) && flags.verbose)
-        You("miss %s.", mon_nam(mdef));
+        /*KR You("miss %s.", mon_nam(mdef)); */
+        You("%s 빗맞혔다.", append_josa(mon_nam(mdef), "을"));
     else
-        You("miss it.");
+        /*KR You("miss it."); */
+        You("그것을 빗맞혔다.");
     if (!mdef->msleeping && mdef->mcanmove)
         wakeup(mdef, TRUE);
 }
@@ -2361,8 +2753,8 @@ register struct monst *mon;
     for (i = 0; i < NATTK; i++) {
         sum[i] = 0;
         mattk = getmattk(&youmonst, mon, i, sum, &alt_attk);
-        if (mattk->aatyp == AT_WEAP
-            || mattk->aatyp == AT_CLAW || mattk->aatyp == AT_TUCH)
+        if (mattk->aatyp == AT_WEAP || mattk->aatyp == AT_CLAW
+            || mattk->aatyp == AT_TUCH)
             ++multi_claw;
     }
     multi_claw = (multi_claw > 1); /* switch from count to yes/no */
@@ -2374,7 +2766,7 @@ register struct monst *mon;
         switch (mattk->aatyp) {
         case AT_WEAP:
             /* if (!uwep) goto weaponless; */
- use_weapon:
+        use_weapon:
             odd_claw = !odd_claw; /* see case AT_CLAW,AT_TUCH below */
             /* if we've already hit with a two-handed weapon, we don't
                get to make another weapon attack (note:  monsters who
@@ -2406,7 +2798,8 @@ register struct monst *mon;
                    if polyform has them, but it matches twoweap behavior;
                    twoweap also only allows primary to be an artifact, so
                    if alternate weapon is one, don't use it */
-                && !uarms && !uswapwep->oartifact
+                && !uarms
+                && !uswapwep->oartifact
                 /* only switch to uswapwep if it's a weapon */
                 && (uswapwep->oclass == WEAPON_CLASS || is_weptool(uswapwep))
                 /* only switch if uswapwep is not bow, arrows, or darts */
@@ -2426,8 +2819,8 @@ register struct monst *mon;
             dieroll = rnd(20);
             dhit = (tmp > dieroll || u.uswallow);
             /* caller must set bhitpos */
-            if (!known_hitum(mon, weapon, &dhit, tmp,
-                             armorpenalty, mattk, dieroll)) {
+            if (!known_hitum(mon, weapon, &dhit, tmp, armorpenalty, mattk,
+                             dieroll)) {
                 /* enemy dead, before any special abilities used */
                 sum[i] = 2;
                 break;
@@ -2460,7 +2853,7 @@ register struct monst *mon;
         case AT_STNG:
         case AT_BUTT:
         case AT_TENT:
-        /*weaponless:*/
+            /*weaponless:*/
             tmp = find_roll_to_hit(mon, mattk->aatyp, (struct obj *) 0,
                                    &attknum, &armorpenalty);
             dieroll = rnd(20);
@@ -2468,15 +2861,24 @@ register struct monst *mon;
             if (dhit) {
                 int compat, specialdmg;
                 long silverhit = 0L;
+#if 0 /*KR: 원본*/
                 const char *verb = 0; /* verb or body part */
+#endif
 
                 if (!u.uswallow
                     && (compat = could_seduce(&youmonst, mon, mattk)) != 0) {
+#if 0 /*KR: 원본*/
                     You("%s %s %s.",
                         (mon->mcansee && haseyes(mon->data)) ? "smile at"
                                                              : "talk to",
                         mon_nam(mon),
                         (compat == 2) ? "engagingly" : "seductively");
+#else /*KR: KRNethack 맞춤 번역 */
+                    You("%s %s %s.", append_josa(mon_nam(mon), "에게"),
+                        (compat == 2) ? "매력적으로" : "유혹적으로",
+                        (mon->mcansee && haseyes(mon->data)) ? "미소 지었다"
+                                                             : "말을 걸었다");
+#endif
                     /* doesn't anger it; no wakeup() */
                     sum[i] = damageum(mon, mattk, 0);
                     break;
@@ -2488,7 +2890,9 @@ register struct monst *mon;
                 case AT_CLAW:
                 case AT_TUCH:
                     /* verb=="claws" may be overridden below */
+#if 0 /*KR: 원본*/
                     verb = (mattk->aatyp == AT_TUCH) ? "touch" : "claws";
+#endif
                     /* decide if silver-hater will be hit by silver ring(s);
                        for 'multi_claw' where attacks alternate right/left,
                        assume 'even' claw or touch attacks use right hand
@@ -2498,55 +2902,76 @@ register struct monst *mon;
                        claw,claw} instead of {claw,claw,bite} doesn't
                        make poly'd hero mysteriously become left-handed */
                     odd_claw = !odd_claw;
-                    specialdmg = special_dmgval(&youmonst, mon,
-                                                W_ARMG
-                                                | ((odd_claw || !multi_claw)
-                                                   ? W_RINGL : 0L)
-                                                | ((!odd_claw || !multi_claw)
-                                                   ? W_RINGR : 0L),
-                                                &silverhit);
+                    specialdmg = special_dmgval(
+                        &youmonst, mon,
+                        W_ARMG | ((odd_claw || !multi_claw) ? W_RINGL : 0L)
+                            | ((!odd_claw || !multi_claw) ? W_RINGR : 0L),
+                        &silverhit);
                     break;
                 case AT_TENT:
                     /* assumes mind flayer's tentacles-on-head rather
                        than sea monster's tentacle-as-arm */
+#if 0 /*KR: 원본*/
                     verb = "tentacles";
+#endif
                     break;
                 case AT_KICK:
+#if 0 /*KR: 원본*/
                     verb = "kick";
-                    specialdmg = special_dmgval(&youmonst, mon, W_ARMF,
-                                                &silverhit);
+#endif
+                    specialdmg =
+                        special_dmgval(&youmonst, mon, W_ARMF, &silverhit);
                     break;
                 case AT_BUTT:
+#if 0 /*KR: 원본*/
                     verb = "head butt"; /* mbodypart(mon,HEAD)=="head" */
                     /* hypothetical; if any form with a head-butt attack
                        could wear a helmet, it would hit shades when
                        wearing a blessed (or silver) one */
-                    specialdmg = special_dmgval(&youmonst, mon, W_ARMH,
-                                                &silverhit);
+#endif
+                    specialdmg =
+                        special_dmgval(&youmonst, mon, W_ARMH, &silverhit);
                     break;
                 case AT_BITE:
+#if 0 /*KR: 원본*/
                     verb = "bite";
+#endif
                     break;
                 case AT_STNG:
+#if 0 /*KR: 원본*/
                     verb = "sting";
+#endif
                     break;
                 default:
+#if 0 /*KR: 원본*/
                     verb = "hit";
+#endif
                     break;
                 }
                 if (mon->data == &mons[PM_SHADE] && !specialdmg) {
+#if 0 /*KR: 원본*/
                     if (!strcmp(verb, "hit")
                         || (mattk->aatyp == AT_CLAW && humanoid(mon->data)))
                         verb = "attack";
                     Your("%s %s harmlessly through %s.",
                          verb, vtense(verb, "pass"), mon_nam(mon));
+#else /*KR: KRNethack 맞춤 번역 */
+                    Your("공격은 %s 아무런 해도 입히지 않고 통과했다.",
+                         append_josa(mon_nam(mon), "을"));
+#endif
                 } else {
                     if (mattk->aatyp == AT_TENT) {
-                        Your("tentacles suck %s.", mon_nam(mon));
+                        /*KR Your("tentacles suck %s.", mon_nam(mon)); */
+                        Your("촉수가 %s 빨아들인다.",
+                             append_josa(mon_nam(mon), "을"));
                     } else {
+#if 0 /*KR: 원본*/
                         if (mattk->aatyp == AT_CLAW)
                             verb = "hit"; /* not "claws" */
                         You("%s %s.", verb, mon_nam(mon));
+#else /*KR: KRNethack 맞춤 번역 */
+                        You("%s 공격했다.", append_josa(mon_nam(mon), "을"));
+#endif
                         if (silverhit && flags.verbose)
                             silver_sears(&youmonst, mon, silverhit);
                     }
@@ -2561,7 +2986,7 @@ register struct monst *mon;
             int specialdmg;
             long silverhit = 0L;
             boolean byhand = hug_throttles(&mons[u.umonnum]), /* rope golem */
-                    unconcerned = (byhand && !can_be_strangled(mon));
+                unconcerned = (byhand && !can_be_strangled(mon));
 
             if (sticks(mon->data) || u.uswallow || notonhead
                 || (byhand && (uwep || !has_head(mon->data)))) {
@@ -2604,28 +3029,47 @@ register struct monst *mon;
                     unconcerned = FALSE;
             }
             if (mon->data == &mons[PM_SHADE]) {
+#if 0 /*KR: 원본*/
                 const char *verb = byhand ? "grasp" : "hug";
+#endif
 
                 /* hugging a shade; successful if blessed outermost armor
                    for normal hug, or blessed gloves or silver ring(s) for
                    choking hug; deals damage but never grabs hold */
                 if (specialdmg) {
+#if 0 /*KR: 원본*/
                     You("%s %s%s", verb, mon_nam(mon), exclam(specialdmg));
+#else /*KR: KRNethack 맞춤 번역 */
+                    You("%s 붙잡았다%s", append_josa(mon_nam(mon), "을"),
+                        exclam(specialdmg));
+#endif
                     if (silverhit && flags.verbose)
                         silver_sears(&youmonst, mon, silverhit);
                     sum[i] = damageum(mon, mattk, specialdmg);
                 } else {
+#if 0 /*KR: 원본*/
                     Your("%s passes harmlessly through %s.",
                          verb, mon_nam(mon));
+#else /*KR: KRNethack 맞춤 번역 */
+                    You("%s 붙잡으려 했지만 통과해버렸다.",
+                        append_josa(mon_nam(mon), "을"));
+#endif
                 }
                 break;
             }
             /* hug attack against ordinary foe */
             if (mon == u.ustuck) {
+#if 0 /*KR: 원본*/
                 pline("%s is being %s%s.", Monnam(mon),
                       byhand ? "throttled" : "crushed",
                       /* extra feedback for non-breather being choked */
                       unconcerned ? " but doesn't seem concerned" : "");
+#else /*KR: KRNethack 맞춤 번역 */
+                pline("%s %s%s.", append_josa(Monnam(mon), "은"),
+                      byhand ? "목을 졸리고 있다" : "으스러지고 있다",
+                      /* extra feedback for non-breather being choked */
+                      unconcerned ? " 하지만 신경 쓰지 않는 것 같다" : "");
+#endif
                 if (silverhit && flags.verbose)
                     silver_sears(&youmonst, mon, silverhit);
                 sum[i] = damageum(mon, mattk, specialdmg);
@@ -2635,7 +3079,8 @@ register struct monst *mon;
                    "<u.ustuck> is no longer in your clutches" */
                 if (u.ustuck && u.ustuck != mon)
                     uunstick();
-                You("grab %s!", mon_nam(mon));
+                /*KR You("grab %s!", mon_nam(mon)); */
+                You("%s 붙잡았다!", append_josa(mon_nam(mon), "을"));
                 u.ustuck = mon;
                 if (silverhit && flags.verbose)
                     silver_sears(&youmonst, mon, silverhit);
@@ -2656,13 +3101,18 @@ register struct monst *mon;
             if ((dhit = (tmp > rnd(20 + i)))) {
                 wakeup(mon, TRUE);
                 if (mon->data == &mons[PM_SHADE])
-                    Your("attempt to surround %s is harmless.", mon_nam(mon));
+                    /*KR Your("attempt to surround %s is harmless.",
+                     * mon_nam(mon)); */
+                    You("%s 에워싸려 했지만 아무런 해도 입히지 못했다.",
+                        append_josa(mon_nam(mon), "을"));
                 else {
                     sum[i] = gulpum(mon, mattk);
-                    if (sum[i] == 2 && (mon->data->mlet == S_ZOMBIE
-                                        || mon->data->mlet == S_MUMMY)
+                    if (sum[i] == 2
+                        && (mon->data->mlet == S_ZOMBIE
+                            || mon->data->mlet == S_MUMMY)
                         && rn2(5) && !Sick_resistance) {
-                        You_feel("%ssick.", (Sick) ? "very " : "");
+                        /*KR You_feel("%ssick.", (Sick) ? "very " : ""); */
+                        You_feel("%s아픔을 느꼈다.", (Sick) ? "매우 " : "");
                         mdamageu(mon, rnd(8));
                     }
                 }
@@ -2776,10 +3226,16 @@ boolean wep_was_destroyed;
     case AD_ACID:
         if (mhit && rn2(2)) {
             if (Blind || !flags.verbose)
-                You("are splashed!");
+                /*KR You("are splashed!"); */
+                You("무언가에 튀었다!");
             else
+#if 0 /*KR: 원본*/
                 You("are splashed by %s %s!", s_suffix(mon_nam(mon)),
                     hliquid("acid"));
+#else /*KR: KRNethack 맞춤 번역 */
+                You("%s %s 뒤집어썼다!", append_josa(mon_nam(mon), "의"),
+                    hliquid("acid"));
+#endif
 
             if (!Acid_resistance)
                 mdamageu(mon, tmp);
@@ -2807,8 +3263,8 @@ boolean wep_was_destroyed;
                 protector = W_ARMG;
 
             if (protector == 0L /* no protection */
-                || (protector == W_ARMG && !uarmg
-                    && !uwep && !wep_was_destroyed)
+                || (protector == W_ARMG && !uarmg && !uwep
+                    && !wep_was_destroyed)
                 || (protector == W_ARMF && !uarmf)
                 || (protector == W_ARMH && !uarmh)
                 || (protector == (W_ARMC | W_ARMG) && (!uarmc || !uarmg))) {
@@ -2847,9 +3303,11 @@ boolean wep_was_destroyed;
         /* wrath of gods for attacking Oracle */
         if (Antimagic) {
             shieldeff(u.ux, u.uy);
-            pline("A hail of magic missiles narrowly misses you!");
+            /*KR pline("A hail of magic missiles narrowly misses you!"); */
+            pline("빗발치는 매직 미사일이 간발의 차이로 당신을 빗나갔다!");
         } else {
-            You("are hit by magic missiles appearing from thin air!");
+            /*KR You("are hit by magic missiles appearing from thin air!"); */
+            pline("허공에서 나타난 매직 미사일에 맞았다!");
             mdamageu(mon, tmp);
         }
         break;
@@ -2869,7 +3327,7 @@ boolean wep_was_destroyed;
         break;
     }
 
-    /*  These only affect you if they still live.
+    /* These only affect you if they still live.
      */
     if (malive && !mon->mcan && rn2(3)) {
         switch (ptr->mattk[i].adtyp) {
@@ -2879,38 +3337,72 @@ boolean wep_was_destroyed;
                     break;
                 }
                 if (mon->mcansee) {
+#if 0 /*KR: 원본*/
                     if (ureflects("%s gaze is reflected by your %s.",
                                   s_suffix(Monnam(mon)))) {
+#else /*KR: KRNethack 맞춤 번역 */
+                    if (ureflects("%s 시선이 당신의 %s에 의해 반사되었다.",
+                                  append_josa(Monnam(mon), "의"))) {
+#endif
                         ;
                     } else if (Hallucination && rn2(4)) {
                         /* [it's the hero who should be getting paralyzed
                            and isn't; this message describes the monster's
                            reaction rather than the hero's escape] */
+#if 0 /*KR: 원본*/
                         pline("%s looks %s%s.", Monnam(mon),
                               !rn2(2) ? "" : "rather ",
                               !rn2(2) ? "numb" : "stupefied");
+#else /*KR: KRNethack 맞춤 번역 */
+                        pline("%s %s%s 보인다.",
+                              append_josa(Monnam(mon), "은"),
+                              !rn2(2) ? "" : "다소 ",
+                              !rn2(2) ? "감각이 없어" : "멍해");
+#endif
                     } else if (Free_action) {
+#if 0 /*KR: 원본*/
                         You("momentarily stiffen under %s gaze!",
                             s_suffix(mon_nam(mon)));
+#else /*KR: KRNethack 맞춤 번역 */
+                        You("%s 시선에 순간적으로 몸이 굳었다!",
+                            append_josa(mon_nam(mon), "의"));
+#endif
                     } else {
+#if 0 /*KR: 원본*/
                         You("are frozen by %s gaze!", s_suffix(mon_nam(mon)));
+#else /*KR: KRNethack 맞춤 번역 */
+                        You("%s 시선에 얼어붙었다!",
+                            append_josa(mon_nam(mon), "의"));
+#endif
                         nomul((ACURR(A_WIS) > 12 || rn2(4)) ? -tmp : -127);
-                        multi_reason = "frozen by a monster's gaze";
+                        /*KR multi_reason = "frozen by a monster's gaze"; */
+                        multi_reason = "몬스터의 시선에 얼어붙어서";
                         nomovemsg = 0;
                     }
                 } else {
+#if 0 /*KR: 원본*/
                     pline("%s cannot defend itself.",
                           Adjmonnam(mon, "blind"));
+#else /*KR: KRNethack 맞춤 번역 */
+                    pline("%s 스스로를 방어할 수 없다.",
+                          append_josa(Adjmonnam(mon, "눈먼"), "은"));
+#endif
                     if (!rn2(500))
                         change_luck(-1);
                 }
             } else if (Free_action) {
-                You("momentarily stiffen.");
+                /*KR You("momentarily stiffen."); */
+                You("순간적으로 몸이 굳었다.");
             } else { /* gelatinous cube */
+#if 0                /*KR: 원본*/
                 You("are frozen by %s!", mon_nam(mon));
+#else                /*KR: KRNethack 맞춤 번역 */
+                You("%s 의해 얼어붙었다!", append_josa(mon_nam(mon), "에게"));
+#endif
                 nomovemsg = You_can_move_again;
                 nomul(-tmp);
-                multi_reason = "frozen by a monster";
+                /*KR multi_reason = "frozen by a monster"; */
+                multi_reason = "몬스터에게 얼어붙어서";
                 exercise(A_DEX, FALSE);
             }
             break;
@@ -2918,11 +3410,13 @@ boolean wep_was_destroyed;
             if (monnear(mon, u.ux, u.uy)) {
                 if (Cold_resistance) {
                     shieldeff(u.ux, u.uy);
-                    You_feel("a mild chill.");
+                    /*KR You_feel("a mild chill."); */
+                    You_feel("가벼운 한기가 느껴졌다.");
                     ugolemeffects(AD_COLD, tmp);
                     break;
                 }
-                You("are suddenly very cold!");
+                /*KR You("are suddenly very cold!"); */
+                You("갑자기 매우 춥다!");
                 mdamageu(mon, tmp);
                 /* monster gets stronger with your heat! */
                 mon->mhp += tmp / 2;
@@ -2941,22 +3435,26 @@ boolean wep_was_destroyed;
             if (monnear(mon, u.ux, u.uy)) {
                 if (Fire_resistance) {
                     shieldeff(u.ux, u.uy);
-                    You_feel("mildly warm.");
+                    /*KR You_feel("mildly warm."); */
+                    You_feel("약간 따뜻하게 느껴진다.");
                     ugolemeffects(AD_FIRE, tmp);
                     break;
                 }
-                You("are suddenly very hot!");
+                /*KR You("are suddenly very hot!"); */
+                You("갑자기 매우 뜨겁다!");
                 mdamageu(mon, tmp); /* fire damage */
             }
             break;
         case AD_ELEC:
             if (Shock_resistance) {
                 shieldeff(u.ux, u.uy);
-                You_feel("a mild tingle.");
+                /*KR You_feel("a mild tingle."); */
+                You_feel("가벼운 따끔거림이 느껴졌다.");
                 ugolemeffects(AD_ELEC, tmp);
                 break;
             }
-            You("are jolted with electricity!");
+            /*KR You("are jolted with electricity!"); */
+            You("전기 충격을 받았다!");
             mdamageu(mon, tmp);
             break;
         default:
@@ -2970,11 +3468,9 @@ boolean wep_was_destroyed;
  * Special (passive) attacks on an attacking object by monsters done here.
  * Assumes the attack was successful.
  */
-void
-passive_obj(mon, obj, mattk)
-struct monst *mon;
-struct obj *obj;          /* null means pick uwep, uswapwep or uarmg */
-struct attack *mattk;     /* null means we find one internally */
+void passive_obj(mon, obj, mattk) struct monst *mon;
+struct obj *obj;      /* null means pick uwep, uswapwep or uarmg */
+struct attack *mattk; /* null means we find one internally */
 {
     struct permonst *ptr = mon->data;
     int i;
@@ -3002,7 +3498,8 @@ struct attack *mattk;     /* null means we find one internally */
 
     switch (mattk->adtyp) {
     case AD_FIRE:
-        if (!rn2(6) && !mon->mcan
+        if (!rn2(6)
+            && !mon->mcan
             /* steam vortex: fire resist applies, fire damage doesn't */
             && mon->data != &mons[PM_STEAM_VORTEX]) {
             (void) erode_obj(obj, NULL, ERODE_BURN, EF_NONE);
@@ -3027,7 +3524,12 @@ struct attack *mattk;     /* null means we find one internally */
         if (!mon->mcan) {
             if (drain_item(obj, TRUE) && carried(obj)
                 && (obj->known || obj->oclass == ARMOR_CLASS)) {
+#if 0 /*KR: 원본*/
                 pline("%s less effective.", Yobjnam2(obj, "seem"));
+#else /*KR: KRNethack 맞춤 번역 */
+                Your("%s 효과가 약해진 것 같다.",
+                     append_josa(xname(obj), "의"));
+#endif
             }
             break;
         }
@@ -3040,11 +3542,13 @@ struct attack *mattk;     /* null means we find one internally */
 }
 
 /* Note: caller must ascertain mtmp is mimicking... */
-void
-stumble_onto_mimic(mtmp)
-struct monst *mtmp;
+void stumble_onto_mimic(mtmp) struct monst *mtmp;
 {
+#if 0 /*KR: 원본*/
     const char *fmt = "Wait!  That's %s!", *generic = "a monster", *what = 0;
+#else /*KR: KRNethack 맞춤 번역 */
+    const char *fmt = "잠깐! 그것은 %s!", *generic = "몬스터", *what = 0;
+#endif
 
     if (!u.ustuck && !mtmp->mflee && dmgtype(mtmp->data, AD_STCK))
         u.ustuck = mtmp;
@@ -3057,11 +3561,20 @@ struct monst *mtmp;
     } else {
         int glyph = levl[u.ux + u.dx][u.uy + u.dy].glyph;
 
-        if (glyph_is_cmap(glyph) && (glyph_to_cmap(glyph) == S_hcdoor
-                                     || glyph_to_cmap(glyph) == S_vcdoor))
+        if (glyph_is_cmap(glyph)
+            && (glyph_to_cmap(glyph) == S_hcdoor
+                || glyph_to_cmap(glyph) == S_vcdoor))
+#if 0 /*KR: 원본*/
             fmt = "The door actually was %s!";
+#else /*KR: KRNethack 맞춤 번역 */
+            fmt = "그 문은 사실 %s!";
+#endif
         else if (glyph_is_object(glyph) && glyph_to_obj(glyph) == GOLD_PIECE)
+#if 0 /*KR: 원본*/
             fmt = "That gold was %s!";
+#else /*KR: KRNethack 맞춤 번역 */
+            fmt = "그 금화는 사실 %s!";
+#endif
 
         /* cloned Wiz starts out mimicking some other monster and
            might make himself invisible before being revealed */
@@ -3070,8 +3583,13 @@ struct monst *mtmp;
         else
             what = a_monnam(mtmp);
     }
+#if 0 /*KR: 원본*/
     if (what)
         pline(fmt, what);
+#else /*KR: KRNethack 맞춤 번역 */
+    if (what)
+        pline(fmt, append_josa(what, "이다"));
+#endif
 
     wakeup(mtmp, FALSE); /* clears mimicking */
     /* if hero is blind, wakeup() won't display the monster even though
@@ -3081,9 +3599,7 @@ struct monst *mtmp;
         map_invisible(mtmp->mx, mtmp->my);
 }
 
-STATIC_OVL void
-nohandglow(mon)
-struct monst *mon;
+STATIC_OVL void nohandglow(mon) struct monst *mon;
 {
     char *hands = makeplural(body_part(HAND));
 
@@ -3091,14 +3607,25 @@ struct monst *mon;
         return;
     if (u.umconf == 1) {
         if (Blind)
-            Your("%s stop tingling.", hands);
+            /*KR Your("%s stop tingling.", hands); */
+            Your("손의 따끔거림이 멈췄다.");
         else
+#if 0 /*KR: 원본*/
             Your("%s stop glowing %s.", hands, hcolor(NH_RED));
+#else /*KR: KRNethack 맞춤 번역 */
+            Your("손이 더 이상 %s 빛나지 않는다.", hcolor(NH_RED));
+#endif
     } else {
         if (Blind)
-            pline_The("tingling in your %s lessens.", hands);
+            /*KR pline_The("tingling in your %s lessens.", hands); */
+            pline("손의 따끔거림이 줄어들었다.");
         else
+#if 0 /*KR: 원본*/
             Your("%s no longer glow so brightly %s.", hands, hcolor(NH_RED));
+#else /*KR: KRNethack 맞춤 번역 */
+            Your("손이 더 이상 그토록 밝게 %s 빛나지 않는다.",
+                 hcolor(NH_RED));
+#endif
     }
     u.umconf--;
 }
@@ -3113,14 +3640,23 @@ struct obj *otmp; /* source of flash */
     if (mtmp->msleeping) {
         mtmp->msleeping = 0;
         if (useeit) {
+#if 0 /*KR: 원본*/
             pline_The("flash awakens %s.", mon_nam(mtmp));
+#else /*KR: KRNethack 맞춤 번역 */
+            pline("섬광이 %s 깨웠다.", append_josa(mon_nam(mtmp), "을"));
+#endif
             res = 1;
         }
     } else if (mtmp->data->mlet != S_LIGHT) {
         if (!resists_blnd(mtmp)) {
             tmp = dist2(otmp->ox, otmp->oy, mtmp->mx, mtmp->my);
             if (useeit) {
+#if 0 /*KR: 원본*/
                 pline("%s is blinded by the flash!", Monnam(mtmp));
+#else /*KR: KRNethack 맞춤 번역 */
+                pline("%s 섬광에 눈이 멀었다!",
+                      append_josa(Monnam(mtmp), "은"));
+#endif
                 res = 1;
             }
             if (mtmp->data == &mons[PM_GREMLIN]) {
@@ -3142,13 +3678,19 @@ struct obj *otmp; /* source of flash */
     return res;
 }
 
-void
-light_hits_gremlin(mon, dmg)
+void 
+light_hits_gremlin(mon, dmg) 
 struct monst *mon;
 int dmg;
 {
+#if 0 /*KR: 원본*/
     pline("%s %s!", Monnam(mon),
           (dmg > mon->mhp / 2) ? "wails in agony" : "cries out in pain");
+#else /*KR: KRNethack 맞춤 번역 */
+    pline("%s %s!", append_josa(Monnam(mon), "은"),
+          (dmg > mon->mhp / 2) ? "고통에 겨워 울부짖는다"
+                               : "고통에 차 비명을 지른다");
+#endif
     mon->mhp -= dmg;
     wake_nearto(mon->mx, mon->my, 30);
     if (DEADMONSTER(mon)) {

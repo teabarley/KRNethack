@@ -52,20 +52,22 @@
 #	Archeologist
 #
 %Cc Arc 00001
-당신은 갑자기 낯익은 환경에 놓입니다. 멀리 보이는 건물들은
-당신의 모교인 것 같지만, 무언가 잘못되었습니다. 최근에 폭동이 있었거나
-%H(이)가 포위 공격을 받은 것 같은 느낌이 듭니다.
+You are suddenly in familiar surroundings.  The buildings in the distance
+seem to be those of your old alma mater, but something is wrong.  It feels
+as if there has been a riot recently, or %H has
+been under siege.
 
-모든 창문은 판자로 막혀 있고, 입구 주변에는 물건들이 흩어져 있습니다.
+All of the windows are boarded up, and there are objects scattered around
+the entrance.
 
-멀리서 기분 나쁜 형상들이 움직이는 것 같습니다.
-%E [%H에 도착했지만, 상황이 좋지 않습니다.]
+Strange forbidding shapes seem to be moving in the distance.
+%E [You arrive at %H, but all is not well.]
 %Cp Arc 00002
-다시 한 번, 당신은 %H에 돌아왔습니다.
+Once again, you are back at %H.
 %E
 %Cp Arc 00003
-당신은 %H에 돌아왔습니다.
-어쩐지 이곳에 오는 것이 이번이 마지막이 될 것 같은 이상한 예감이 듭니다.
+You are back at %H.
+You have an odd feeling this may be the last time you ever come here.
 %E
 %Cp Arc 00005
 "Did you see Lash LaRue in 'Song of Old Wyoming' the other night?"
@@ -2831,24 +2833,26 @@ be spoken by the %gP with awe.  You are truly an inspiration to your
 #	Valkyrie
 #
 %Cc Val 00001
-You materialize at the base of a snowy hill.  Atop the hill sits
-a place you know well, %H.  You immediately realize
-that something here is very wrong!
+당신은 눈 덮인 언덕 기슭에 나타납니다. 언덕 꼭대기에는 
+당신이 아주 잘 아는 장소, %H(이)가 자리 잡고 있습니다.
+하지만 당신은 이곳에 무언가 단단히 잘못되었음을 즉각적으로 깨닫습니다! 
 
-In places, the snow and ice have been melted into steaming pools of
-water.  Fumaroles and pools of bubbling lava surround the hill.
-The stench of sulphur is carried through the air, and you %x creatures
-that should not be able to live in this environment moving towards you.
-%E [You arrive below %H.  Something is wrong; there is lava present.]
+곳곳의 눈과 얼음이 녹아내려 김이 모락모락 피어오르는 물웅덩이로 
+변해 있습니다. 부글부글 끓는 용암 웅덩이와 화산 분기공들이 
+언덕 주변을 에워싸고 있습니다. 공기 중엔 유황의 악취가 흩날리고, 
+이런 척박한 환경에선 도저히 살아갈 수 없을 기괴한 생명체들이 
+당신을 향해 다가오는 것이 %x.
+%E [%H 아래에 도착했습니다. 무언가 잘못되었습니다; 곳곳에 용암이 끓고 있습니다.]
 %Cp Val 00002
-Once again, you are near the abode of %l.
+다시 한 번, 당신은 %l의 거처 근처에 있습니다.
 %E
 %Cp Val 00003
-Again you materialize near %ls abode.  You have a nagging feeling
-that this may be the last time you come here.
+당신은 다시 한번 %l의 거처 근처에 나타납니다. 
+어쩐지 이번이 이곳에 오는 마지막이 될 것 같은 
+지울 수 없는 불길한 예감이 듭니다.
 %E
 %Cp Val 00005
-"Hail, and well met, brave %c."
+"찬양하라, 그리고 잘 왔소, 용감한 %c이여."
 %E
 %Cp Val 00006
 "May %d guide your steps, %p."
@@ -2869,7 +2873,7 @@ that this may be the last time you come here.
 "May %d guide your steps, %p."
 %E
 %Cp Val 00012
-"%lC told us you had succeeded!"
+"%lC께서 당신이 성공했다고 말씀하셨소!"
 %E
 %Cp Val 00013
 "You recovered %o just in time, %p."
@@ -2878,31 +2882,35 @@ that this may be the last time you come here.
 "Hail %d, for delivering %o back to us."
 %E
 %Cc Val 00015
-"Ah, %p, my %S.  You have returned to %H
-at last.  We are in dire need of your aid, but I must determine if you
-are yet ready for such an undertaking.
+"아, %p, 나의 %S. 마침내 %H(으)로 
+돌아왔구나. 우린 너의 도움이 절실히 필요하지만, 
+네가 이 막중한 일을 감당할 준비가 되었는지 먼저 확인해야만 한다.
 
-"Let me read your fate..."
-%E [We need your aid.  Are you ready?]
+"자, 너의 운명을 읽어보도록 할까..."
+%E [당신의 도움이 필요합니다. 준비되셨습니까?]
 %Cp Val 00016
-"Let me read the future for you now, %p, perhaps you have managed to
-change it enough..."
+"이제 네 미래를 한 번 읽어보자꾸나, %p. 어쩌면 
+네가 그 미래를 바꿀 만큼 충분히 성장했을지도 모르니..."
 %E
 %Cp Val 00017
-"Again, I shall read your fate, my %S.  Let us both hope that you have
-made changes to become ready for this task..."
+"다시 한 번 네 운명을 읽어보마, 나의 %S. 
+부디 이 위대한 임무를 수행할 만큼 네가 스스로를 변화시켰기를 
+함께 바라자꾸나..."
 %E
 %Cc Val 00018
-"No, %p.  Your fate is sealed.  I must cast about for another
-champion.  Begone from my presence, and never return.  Know this, that
-you shall never succeed in this life, and Valhalla is denied to you."
-%E ["Begone from my presence and never return."]
+"아니, %p. 네 운명은 이미 결정되었다. 
+난 다른 용사를 찾아봐야겠다. 
+내 앞에서 당장 떠나거라, 그리고 두 번 다시 돌아오지 마라. 
+이것을 명심해라, 넌 이번 생에선 결코 성공하지 못할 것이며, 
+발할라의 문은 너에게 영원히 닫혔음을."
+%E ["내 면전에서 당장 사라지고 다시는 돌아오지 마라."]
 %Cc Val 00019
-"I see you and %n fighting, %p.  But you are not prepared and
-shall die at %ns hand if you proceed.  No.  This will not do.
-Go back out into the world, and grow more experienced at the ways of war.
-Only when you have returned %Ra will you be able to defeat %n."
-%E [Come back when you are %Ra.]
+"네가 %n(와)과 싸우는 환영이 보이는구나, %p. 
+하지만 넌 준비되지 않았고, 만약 지금 이대로 나아간다면 
+%ns의 손에 비참하게 죽을 것이다. 안 돼. 이대로는 보낼 수 없다. 
+세상으로 나가 전쟁의 방식에 대해 좀 더 많은 경험을 쌓아오너라. 
+네가 %Ra(이)가 되어 돌아왔을 때야 비로소 %n를 무찌를 수 있을 것이다."
+%E [%Ra(이)가 되었을 때 다시 오십시오.]
 %Cc Val 00020
 "NO!  This is terrible.  I see you becoming an ally of %n, and
 leading his armies in the final great battles.  This must not come to
@@ -2978,11 +2986,12 @@ from something that %l said.  This is the lair of %n.
 Once again, you stand in sight of %ns lair.
 %E
 %Cc Val 00050
-"So!  %lC has finally sent %ca to challenge me!
+"그래! %lC(이)가 드디어 나에게 대항할 %ca를 보냈군!
 
-"I thought that mastering %o would enable me to challenge
-%d, but it has shown me that first I must kill you!  So come, little
-%s.  Once I defeat you, I can at last begin the final battle with %d."
+"난 %o를 지배하면 곧장 %d(와)과 맞붙을 수 있을 거라 생각했는데, 
+이것이 네놈부터 먼저 처리해야 한다고 알려주더군! 
+자, 이리 와라, 꼬마 %s. 
+널 끝장내고 나면, 마침내 %d(와)과의 최후의 결전을 시작할 수 있겠지."
 %E ["%oC has shown me that I must kill you."]
 %Cp Val 00051
 "Again you challenge me, %r.  Good.  I will kill you now."
@@ -3025,28 +3034,31 @@ Do you really think that one %c can stand against me?"
 "Your body I destroy now, your soul when my hordes overrun Valhalla!"
 %E
 %Cc Val 00070
-As you pick up %o, your mind is suddenly filled with images,
-and you perceive all of the possibilities of each potential choice you
-could make.  As you begin to control and channel your thoughts, you
-realize that you must return %o to %l immediately.
-%E [You must return %o to %l.]
+%o를 손에 쥐자, 당신의 머릿속은 온갖 환영으로 가득 차며, 
+당신이 내릴 수 있는 모든 선택의 잠재적인 가능성들을 모조리 파악하게 됩니다. 
+당신이 쏟아지는 생각들을 통제하고 한 곳으로 집중시키자, 
+지금 당장 %o를 %l에게 돌려주어야 한다는 강렬한 깨달음이 밀려옵니다.
+%E [%o를 %l에게 돌려주어야 합니다.]
 %Cc Val 00080
-A look of surprise and horror appears on %ns face.
+%n의 얼굴에 놀라움과 공포가 스칩니다.
 
-    "No!!!  %o has lied to me!  I have been misled!"
+    "안 돼!!! %o(이)가 나에게 거짓을 보여주었어! 
+    내가 속았단 말이다!"
 
-Suddenly, %n grasps his head and screams in agony, then dies.
-%E [%nC dies.]
+갑자기 %n(은)는 머리를 부여잡고 고통스럽게 비명을 지르더니 이내 절명합니다.
+%E [%nC(이)가 사망합니다.]
 %Cc Val 00081
-As you approach, %l rises and touches %o.
+당신이 다가가자, %l(이)가 자리에서 일어나 %o를 어루만집니다.
 
-"You may take %o with you, %p.  I have removed from
-it the power to foretell the future, for that power no mortal should
-have.  Its other abilities, however, you have at your disposal.
+"%o를 가지고 가도 좋다, %p. 
+어떤 필멸자도 미래를 예견하는 권능을 가져서는 안 되기에, 
+내가 그 안에서 미래를 예견하는 힘은 지워버렸다. 
+하지만 이 유물의 다른 권능들은 네가 마음껏 사용할 수 있을 게다.
 
-"You must now begin in %ds name to search for the Amulet of Yendor.
-May your steps be guided by %d, my %S."
-%E [Take %o.  Search for the Amulet.]
+"이제 넌 %d의 이름 아래 옌더의 부적을 
+찾기 위한 여정을 시작해야 한다. 
+%d께서 너의 발걸음을 이끄시기를, 나의 %S."
+%E [%o를 챙기십시오. 부적을 찾으십시오.]
 # assumes Orb of Fate (glass object)
 %Cc Val 00082
 "Careful, %p!  %oC might break, and that would be
@@ -3059,14 +3071,14 @@ return through the magic portal that brought you here."
 your search for the Amulet as I have wished.  How do you fare?"
 %E
 %Cc Val 00091
-"Excellent, %p.  I see you have recovered the Amulet!
+"훌륭하다, %p. 부적을 무사히 되찾았구나!
 
-"You must take the Amulet to the Great Temple of %d, on the Astral
-Plane.  There you must offer the Amulet to %d.
+"이제 그 부적을 천상계에 있는 %d의 대신전으로 가져가야 한다. 
+그곳에서 부적을 %d께 번제해서 바쳐라.
 
-"Go now, my %S.  I cannot tell you your fate, as the power of the
-Amulet interferes with mine.  I hope for your success."
-%E [Take the Amulet to %ds temple on the Astral Plane and offer it.]
+"이제 가거라, 나의 %S. 부적의 힘이 내 예지력을 간섭하고 있어 
+네 최후의 운명이 어찌 될지는 말해줄 수 없구나. 그저 네가 성공하기만을 바랄 뿐이다."
+%E [부적을 천상계에 있는 %ds의 신전으로 가져가 바치십시오.]
 #
 #	Wizard
 #
@@ -3338,12 +3350,14 @@ experienced before, so be prepared!
 당신의 %G이신 %d께서는 그 부적을 손에 넣어 
 다른 신들 위로 마땅히 군림하고자 하십니다.
 
-이제 막 훈련을 마친 %r인 당신은, 
+이제 막 훈련을 마친 견습인 당신은, 
 태어날 때부터 %d의 도구로 예언되었습니다. 
 당신의 운명은 당신의 신을 위해 부적을 되찾거나, 
-그 여정 속에서 목숨을 바치는 것입니다. 당신의 운명의 시간이 다가왔습니다. 
-우리 모두를 위해, %d(와)과 함께 용감히 나아가십시오!
-%E [%dC(이)가 %dI를 위해 옌더의 부적을 되찾을 자로 당신을 선택했습니다.]
+그 여정 속에서 목숨을 바치는 것입니다. 
+
+당신의 운명의 시간이 다가왔습니다.
+우리 모두를 위해, %d와 함께 용감히 나아가십시오!
+%E [%dC가 %dI를 위해 옌더의 부적을 되찾을 자로 당신을 선택했습니다.]
 %Cp - 00002
 You receive a faint telepathic message from %l:
 Your help is urgently needed at %H!

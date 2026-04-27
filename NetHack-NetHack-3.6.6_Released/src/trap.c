@@ -2916,7 +2916,7 @@ boolean noprefix;
                     if (in_sight) {
                         shieldeff(mtmp->mx, mtmp->my);
                         /*KR pline("%s is uninjured.", Monnam(mtmp)); */
-                        pline("하지만 %s 다치지 않았다.", Monnam(mtmp));
+                        pline("하지만 %s 다치지 않았다.", append_josa(Monnam(mtmp), "은"));
                     }
                 } else {
                     int num = d(2, 4), alt;

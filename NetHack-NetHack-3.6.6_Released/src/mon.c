@@ -40,7 +40,8 @@ STATIC_DCL void FDECL(deal_with_overcrowding, (struct monst *));
 #if 0
 /* part of the original warning code which was replaced in 3.3.1 */
 const char *warnings[] = {
-    "white", "pink", "red", "ruby", "purple", "black"
+    /*KR "white", "pink", "red", "ruby", "purple", "black" */
+    "하얀", "분홍빛", "붉은", "루비빛", "보랏빛", "검은"
 };
 #endif /* 0 */
 
@@ -334,8 +335,12 @@ unsigned corpseflags;
     case PM_BLACK_UNICORN:
         if (mtmp->mrevived && rn2(2)) {
             if (canseemon(mtmp))
+#if 0 /*KR:T*/
                 pline("%s recently regrown horn crumbles to dust.",
                       s_suffix(Monnam(mtmp)));
+#else
+                pline("최근에 다시 자라난 %s의 뿔이 산산조각났다.", Monnam(mtmp));
+#endif
         } else {
             obj = mksobj_at(UNICORN_HORN, x, y, TRUE, FALSE);
             if (obj && mtmp->mrevived)
@@ -524,7 +529,8 @@ register struct monst *mtmp;
         int dam = d(2, 6);
 
         if (cansee(mtmp->mx, mtmp->my))
-            pline("%s rusts.", Monnam(mtmp));
+            /*KR pline("%s rusts.", Monnam(mtmp)); */
+            pline("%s 녹슬었다.", append_josa(Monnam(mtmp), "가"));
         mtmp->mhp -= dam;
         if (mtmp->mhpmax > dam)
             mtmp->mhpmax -= dam;
@@ -555,10 +561,18 @@ register struct monst *mtmp;
                     struct attack *dummy = &mtmp->data->mattk[0];
                     const char *how = on_fire(mtmp->data, dummy);
 
+#if 0 /*KR: 원본*/
                     pline("%s %s.", Monnam(mtmp),
                           !strcmp(how, "boiling") ? "boils away"
                              : !strcmp(how, "melting") ? "melts away"
                                 : "burns to a crisp");
+#else /*KR: KRNethack 맞춤 번역 */
+                    /* mon.c:on_fire()의 반환값을 사용합니다. */
+                    pline("%s %s.", append_josa(Monnam(mtmp), "은"),
+                          !strcmp(how, "끓어오르는") ? "끓어올라 사라졌다"
+                          : !strcmp(how, "녹는")     ? "녹아내렸다"
+                                                     : "바싹 타버렸다");
+#endif
                 }
                 /* unlike fire -> melt ice -> pool, there's no way for the
                    hero to create lava beneath a monster, so the !mon_moving
@@ -572,10 +586,20 @@ register struct monst *mtmp;
                 mtmp->mhp -= 1;
                 if (DEADMONSTER(mtmp)) {
                     if (cansee(mtmp->mx, mtmp->my))
+#if 0 /*KR: 원본*/
                         pline("%s surrenders to the fire.", Monnam(mtmp));
+#else /*KR: KRNethack 맞춤 번역 */
+                        pline("%s 불길에 굴복했다.",
+                              append_josa(Monnam(mtmp), "은"));
+#endif
                     mondead(mtmp);
                 } else if (cansee(mtmp->mx, mtmp->my))
+#if 0 /*KR: 원본*/
                     pline("%s burns slightly.", Monnam(mtmp));
+#else /*KR: KRNethack 맞춤 번역 */
+                    pline("%s 약간 화상을 입었다.",
+                          append_josa(Monnam(mtmp), "은"));
+#endif
             }
             if (!DEADMONSTER(mtmp)) {
                 (void) fire_damage_chain(mtmp->minvent, FALSE, FALSE,
@@ -600,16 +624,29 @@ register struct monst *mtmp;
             }
             if (cansee(mtmp->mx, mtmp->my)) {
                 if (context.mon_moving)
+#if 0 /*KR: 원본*/
                     pline("%s drowns.", Monnam(mtmp));
+#else /*KR: KRNethack 맞춤 번역 */
+                    pline("%s 익사했다.", append_josa(Monnam(mtmp), "은"));
+#endif
                 else
-                    /* hero used fire to melt ice that monster was on */
+                /* hero used fire to melt ice that monster was on */
+#if 0 /*KR: 원본*/
                     You("drown %s.", mon_nam(mtmp));
+#else /*KR: KRNethack 맞춤 번역 */
+                    You("%s 익사시켰다.", append_josa(mon_nam(mtmp), "을"));
+#endif
             }
             if (u.ustuck && u.uswallow && u.ustuck == mtmp) {
                 /* This can happen after a purple worm plucks you off a
                    flying steed while you are over water. */
+#if 0 /*KR: 원본*/
                 pline("%s sinks as %s rushes in and flushes you out.",
                       Monnam(mtmp), hliquid("water"));
+#else /*KR: KRNethack 맞춤 번역 */
+                pline("%s 가라앉으면서 물이 밀려들어와 당신을 뱉어냈다.",
+                      append_josa(Monnam(mtmp), "은"));
+#endif
             }
             if (context.mon_moving)
                 mondead(mtmp);
@@ -643,8 +680,8 @@ struct monst *mon;
     int mmove_adj;
 
     /* Note: MSLOW's `+ 1' prevents slowed speed 1 getting reduced to 0;
-     *       MFAST's `+ 2' prevents hasted speed 1 from becoming a no-op;
-     *       both adjustments have negligible effect on higher speeds.
+     * MFAST's `+ 2' prevents hasted speed 1 from becoming a no-op;
+     * both adjustments have negligible effect on higher speeds.
      */
     if (mon->mspeed == MSLOW)
         mmove = (2 * mmove + 1) / 3;
@@ -699,9 +736,10 @@ mcalcdistress()
 
         /* possibly polymorph shapechangers and lycanthropes */
         if (mtmp->cham >= LOW_PM)
-            decide_to_shapeshift(mtmp, (canspotmon(mtmp)
-                                        || (u.uswallow && mtmp == u.ustuck))
-                                          ? SHIFT_MSG : 0);
+            decide_to_shapeshift(
+                mtmp, (canspotmon(mtmp) || (u.uswallow && mtmp == u.ustuck))
+                          ? SHIFT_MSG
+                          : 0);
         were_change(mtmp);
 
         /* gradually time out temporary problems */
@@ -748,7 +786,7 @@ movemon()
             /* or if the program has lost contact with the user */
             || program_state.done_hup
 #endif
-            ) {
+        ) {
             somebody_can_move = FALSE;
             break;
         }
@@ -821,12 +859,12 @@ movemon()
         /* continue if the monster died fighting */
         if (Conflict && !mtmp->iswiz && mtmp->mcansee) {
             /* Note:
-             *  Conflict does not take effect in the first round.
-             *  Therefore, A monster when stepping into the area will
-             *  get to swing at you.
+             * Conflict does not take effect in the first round.
+             * Therefore, A monster when stepping into the area will
+             * get to swing at you.
              *
-             *  The call to fightm() must be _last_.  The monster might
-             *  have died if it returns 1.
+             * The call to fightm() must be _last_.  The monster might
+             * have died if it returns 1.
              */
             if (couldsee(mtmp->mx, mtmp->my)
                 && (distu(mtmp->mx, mtmp->my) <= BOLT_LIM * BOLT_LIM)
@@ -857,9 +895,10 @@ movemon()
     return somebody_can_move;
 }
 
-#define mstoning(obj)                                       \
-    (ofood(obj) && (touch_petrifies(&mons[(obj)->corpsenm]) \
-                    || (obj)->corpsenm == PM_MEDUSA))
+#define mstoning(obj)                            \
+    (ofood(obj)                                  \
+     && (touch_petrifies(&mons[(obj)->corpsenm]) \
+         || (obj)->corpsenm == PM_MEDUSA))
 
 /*
  * Maybe eat a metallic object (not just gold).
@@ -892,22 +931,39 @@ register struct monst *mtmp;
             && touch_artifact(otmp, mtmp)) {
             if (mtmp->data == &mons[PM_RUST_MONSTER] && otmp->oerodeproof) {
                 if (canseemon(mtmp) && flags.verbose) {
+#if 0 /*KR: 원본*/
                     pline("%s eats %s!", Monnam(mtmp),
                           distant_name(otmp, doname));
+#else /*KR: KRNethack 맞춤 번역 */
+                    pline("%s %s 먹고 있다!", append_josa(Monnam(mtmp), "은"),
+                          distant_name(otmp, doname));
+#endif
                 }
                 /* The object's rustproofing is gone now */
                 otmp->oerodeproof = 0;
                 mtmp->mstun = 1;
                 if (canseemon(mtmp) && flags.verbose) {
+#if 0 /*KR: 원본*/
                     pline("%s spits %s out in disgust!", Monnam(mtmp),
                           distant_name(otmp, doname));
+#else /*KR: KRNethack 맞춤 번역 */
+                    pline("%s 역겹다는 듯이 %s 뱉어냈다!",
+                          append_josa(Monnam(mtmp), "은"),
+                          append_josa(distant_name(otmp, doname), "을"));
+#endif
                 }
             } else {
                 if (cansee(mtmp->mx, mtmp->my) && flags.verbose)
+#if 0 /*KR: 원본*/
                     pline("%s eats %s!", Monnam(mtmp),
                           distant_name(otmp, doname));
+#else /*KR: KRNethack 맞춤 번역 */
+                    pline("%s %s 먹고 있다!", append_josa(Monnam(mtmp), "은"),
+                          distant_name(otmp, doname));
+#endif
                 else if (flags.verbose)
-                    You_hear("a crunching sound.");
+                    /*KR You_hear("a crunching sound."); */
+                    You_hear("무언가 우적우적 씹어먹는 소리가 들렸다.");
                 mtmp->meating = otmp->owt / 2 + 1;
                 /* Heal up to the object's weight in hp */
                 if (mtmp->mhp < mtmp->mhpmax) {
@@ -928,7 +984,8 @@ register struct monst *mtmp;
                     delobj(otmp);
                     ptr = mtmp->data;
                     if (poly) {
-                        if (newcham(mtmp, (struct permonst *) 0, FALSE, FALSE))
+                        if (newcham(mtmp, (struct permonst *) 0, FALSE,
+                                    FALSE))
                             ptr = mtmp->data;
                     } else if (grow) {
                         ptr = grow_up(mtmp, (struct monst *) 0);
@@ -938,7 +995,12 @@ register struct monst *mtmp;
                             ptr = mtmp->data;
                         } else if (!resists_ston(mtmp)) {
                             if (canseemon(mtmp))
+#if 0 /*KR: 원본*/
                                 pline("%s turns to stone!", Monnam(mtmp));
+#else /*KR: KRNethack 맞춤 번역 */
+                                pline("%s 돌로 변했다!",
+                                      append_josa(Monnam(mtmp), "은"));
+#endif
                             monstone(mtmp);
                             ptr = (struct permonst *) 0;
                         }
@@ -985,13 +1047,13 @@ struct monst *mtmp;
             /* Rider corpse isn't just inedible; can't engulf it either */
             (void) revive_corpse(otmp);
 
-        /* untouchable (or inaccessible) items */
+            /* untouchable (or inaccessible) items */
         } else if ((otmp->otyp == CORPSE
                     && touch_petrifies(&mons[otmp->corpsenm])
                     && !resists_ston(mtmp))
                    /* don't engulf boulders and statues or ball&chain */
-                   || otmp->oclass == ROCK_CLASS
-                   || otmp == uball || otmp == uchain
+                   || otmp->oclass == ROCK_CLASS || otmp == uball
+                   || otmp == uchain
                    /* normally mtmp won't have stepped onto scare monster
                       scroll, but if it does, don't eat or engulf that
                       (note: scrolls inside eaten containers will still
@@ -1000,7 +1062,7 @@ struct monst *mtmp;
             /* do nothing--neither eaten nor engulfed */
             continue;
 
-        /* inedible items -- engulf these */
+            /* inedible items -- engulf these */
         } else if (!is_organic(otmp) || obj_resists(otmp, 5, 95)
                    || !touch_artifact(otmp, mtmp)
                    /* redundant due to non-organic composition but
@@ -1018,28 +1080,41 @@ struct monst *mtmp;
             /* engulf */
             ++ecount;
             if (ecount == 1)
+#if 0 /*KR: 원본*/
                 Sprintf(buf, "%s engulfs %s.", Monnam(mtmp),
                         distant_name(otmp, doname));
+#else /*KR: KRNethack 맞춤 번역 */
+                Sprintf(buf, "%s %s 삼켰다.", append_josa(Monnam(mtmp), "은"),
+                        append_josa(distant_name(otmp, doname), "을"));
+#endif
             else if (ecount == 2)
+#if 0 /*KR: 원본*/
                 Sprintf(buf, "%s engulfs several objects.", Monnam(mtmp));
+#else /*KR: KRNethack 맞춤 번역 */
+                Sprintf(buf, "%s 물건 몇 개를 삼켰다.",
+                        append_josa(Monnam(mtmp), "은"));
+#endif
             obj_extract_self(otmp);
             (void) mpickobj(mtmp, otmp); /* slurp */
 
-        /* lastly, edible items; yum! */
+            /* lastly, edible items; yum! */
         } else {
             /* devour */
             ++count;
             if (cansee(mtmp->mx, mtmp->my)) {
                 if (flags.verbose)
+#if 0 /*KR: 원본*/
                     pline("%s eats %s!", Monnam(mtmp),
                           distant_name(otmp, doname));
+#else /*KR: KRNethack 맞춤 번역 */
+                    pline("%s %s 먹고 있다!", append_josa(Monnam(mtmp), "은"),
+                          distant_name(otmp, doname));
+#endif
                 /* give this one even if !verbose */
-                if (otmp->oclass == SCROLL_CLASS
-                    && !strcmpi(OBJ_DESCR(objects[otmp->otyp]), "YUM YUM"))
-                    pline("Yum%c", otmp->blessed ? '!' : '.');
             } else {
                 if (flags.verbose)
-                    You_hear("a slurping sound.");
+                    /*KR You_hear("a slurping sound."); */
+                    You_hear("꿀꺽 삼키는 소리가 들렸다.");
             }
             /* Heal up to the object's weight in hp */
             if (mtmp->mhp < mtmp->mhpmax) {
@@ -1091,27 +1166,31 @@ struct monst *mtmp;
         if (cansee(mtmp->mx, mtmp->my) && flags.verbose && buf[0])
             pline1(buf);
         else if (flags.verbose)
+#if 0 /*KR: 원본*/
             You_hear("%s slurping sound%s.",
                      (ecount == 1) ? "a" : "several", plur(ecount));
+#else /*KR: KRNethack 맞춤 번역 */
+            You_hear("꿀꺽거리는 소리가 들렸다.");
+#endif
     }
     return (count > 0 || ecount > 0) ? 1 : 0;
 }
 
-void
-mpickgold(mtmp)
-register struct monst *mtmp;
+void mpickgold(mtmp) register struct monst *mtmp;
 {
     register struct obj *gold;
-    int mat_idx;
 
     if ((gold = g_at(mtmp->mx, mtmp->my)) != 0) {
-        mat_idx = objects[gold->otyp].oc_material;
         obj_extract_self(gold);
         add_to_minv(mtmp, gold);
         if (cansee(mtmp->mx, mtmp->my)) {
             if (flags.verbose && !mtmp->isgd)
+#if 0 /*KR: 원본*/
                 pline("%s picks up some %s.", Monnam(mtmp),
                       mat_idx == GOLD ? "gold" : "money");
+#else /*KR: KRNethack 맞춤 번역 */
+                pline("%s 돈을 주웠다.", append_josa(Monnam(mtmp), "은"));
+#endif
             newsym(mtmp->mx, mtmp->my);
         }
     }
@@ -1134,7 +1213,8 @@ register const char *str;
         /* Nymphs take everything.  Most monsters don't pick up corpses. */
         if (!str ? searches_for_item(mtmp, otmp)
                  : !!(index(str, otmp->oclass))) {
-            if (otmp->otyp == CORPSE && mtmp->data->mlet != S_NYMPH
+            if (otmp->otyp == CORPSE
+                && mtmp->data->mlet != S_NYMPH
                 /* let a handful of corpse types thru to can_carry() */
                 && !touch_petrifies(&mons[otmp->corpsenm])
                 && otmp->corpsenm != PM_LIZARD
@@ -1153,10 +1233,17 @@ register const char *str;
                 otmp3 = splitobj(otmp, carryamt);
             }
             if (cansee(mtmp->mx, mtmp->my) && flags.verbose)
+#if 0 /*KR: 원본*/
                 pline("%s picks up %s.", Monnam(mtmp),
                       (distu(mtmp->mx, mtmp->my) <= 5)
                           ? doname(otmp3)
                           : distant_name(otmp3, doname));
+#else /*KR: KRNethack 맞춤 번역 */
+                pline("%s %s 주웠다.", append_josa(Monnam(mtmp), "은"),
+                      (distu(mtmp->mx, mtmp->my) <= 5)
+                          ? append_josa(doname(otmp3), "을")
+                          : append_josa(distant_name(otmp3, doname), "을"));
+#endif
             obj_extract_self(otmp3);      /* remove from floor */
             (void) mpickobj(mtmp, otmp3); /* may merge and free otmp3 */
             m_dowear(mtmp, FALSE);
@@ -1887,18 +1974,35 @@ struct monst *mtmp;
          * Nor do you check invisibility, because glowing and
          * disintegrating amulets are always visible. */
         if (cansee(mtmp->mx, mtmp->my)) {
-            pline("But wait...");
+            /*KR pline("But wait..."); */
+            pline("잠깐...");
+#if 0 /*KR: 원본*/
             pline("%s medallion begins to glow!", s_suffix(Monnam(mtmp)));
+#else /*KR: KRNethack 맞춤 번역 */
+            pline("%s 메달이 빛나기 시작했다!",
+                  append_josa(Monnam(mtmp), "의"));
+#endif
             makeknown(AMULET_OF_LIFE_SAVING);
             /* amulet is visible, but monster might not be */
             if (canseemon(mtmp)) {
                 if (attacktype(mtmp->data, AT_EXPL)
                     || attacktype(mtmp->data, AT_BOOM))
+#if 0 /*KR: 원본*/
                     pline("%s reconstitutes!", Monnam(mtmp));
+#else /*KR: KRNethack 맞춤 번역 */
+                    pline("%s 재구성되었다!",
+                          append_josa(Monnam(mtmp), "은"));
+#endif
                 else
+#if 0 /*KR: 원본*/
                     pline("%s looks much better!", Monnam(mtmp));
+#else /*KR: KRNethack 맞춤 번역 */
+                    pline("%s 훨씬 나아 보인다!",
+                          append_josa(Monnam(mtmp), "은"));
+#endif
             }
-            pline_The("medallion crumbles to dust!");
+            /*KR pline_The("medallion crumbles to dust!"); */
+            pline("메달이 바스라져 가루가 되었다!");
         }
         m_useup(mtmp, lifesave);
         /* equip replacement amulet, if any, on next move */
@@ -1917,16 +2021,19 @@ struct monst *mtmp;
         if (!surviver) {
             /* genocided monster can't be life-saved */
             if (cansee(mtmp->mx, mtmp->my))
+#if 0 /*KR: 원본*/
                 pline("Unfortunately, %s is still genocided...",
                       mon_nam(mtmp));
+#else /*KR: KRNethack 맞춤 번역 */
+                pline("안타깝게도, %s 여전히 멸종된 상태다...",
+                      append_josa(mon_nam(mtmp), "은"));
+#endif
             mtmp->mhp = 0;
         }
     }
 }
 
-void
-mondead(mtmp)
-register struct monst *mtmp;
+void mondead(mtmp) register struct monst *mtmp;
 {
     struct permonst *mptr;
     int tmp;
@@ -1946,21 +2053,31 @@ register struct monst *mtmp;
             char buf[BUFSZ];
             boolean in_door = (amorphous(mtmp->data)
                                && closed_door(mtmp->mx, mtmp->my)),
-                /* alternate message phrasing for some monster types */
-                spec_mon = (nonliving(mtmp->data)
-                            || noncorporeal(mtmp->data)
+                    /* alternate message phrasing for some monster types */
+                spec_mon = (nonliving(mtmp->data) || noncorporeal(mtmp->data)
                             || amorphous(mtmp->data)),
-                spec_death = (disintegested /* disintegrated or digested */
-                              || noncorporeal(mtmp->data)
-                              || amorphous(mtmp->data));
+                    spec_death =
+                        (disintegested /* disintegrated or digested */
+                         || noncorporeal(mtmp->data)
+                         || amorphous(mtmp->data));
 
             /* construct a format string before transformation;
                will be capitalized when used, expects one %s arg */
+#if 0 /*KR: 원본*/
             Sprintf(buf, "%s suddenly %s and rises as %%s!",
                     x_monnam(mtmp, ARTICLE_THE,
                              spec_mon ? (char *) 0 : "seemingly dead",
                              (SUPPRESS_INVISIBLE | SUPPRESS_IT), FALSE),
                     spec_death ? "reconstitutes" : "transforms");
+#else /*KR: KRNethack 맞춤 번역 */
+            Sprintf(buf, "%s 갑자기 %s, %%s(으)로 일어났다!",
+                    append_josa(
+                        x_monnam(mtmp, ARTICLE_NONE,
+                                 spec_mon ? (char *) 0 : "죽은 줄 알았던",
+                                 (SUPPRESS_INVISIBLE | SUPPRESS_IT), FALSE),
+                        "은"),
+                    spec_death ? "재구성되더니" : "변신하더니");
+#endif
             mtmp->mcanmove = 1;
             mtmp->mfrozen = 0;
             if (mtmp->mhpmax <= 0)
@@ -1990,10 +2107,10 @@ register struct monst *mtmp;
                 /* 3.6.0 used a_monnam(mtmp); that was weird if mtmp was
                    named: "Dracula suddenly transforms and rises as Dracula";
                    3.6.1 used mtmp->data->mname; that ignored hallucination */
-                pline(upstart(buf),
-                      x_monnam(mtmp, ARTICLE_A, (char *) 0,
-                               (SUPPRESS_NAME | SUPPRESS_IT
-                                | SUPPRESS_INVISIBLE), FALSE));
+                pline(upstart(buf), x_monnam(mtmp, ARTICLE_A, (char *) 0,
+                                             (SUPPRESS_NAME | SUPPRESS_IT
+                                              | SUPPRESS_INVISIBLE),
+                                             FALSE));
                 vamp_rise_msg = TRUE;
             }
             newsym(x, y);
@@ -2082,7 +2199,12 @@ boolean was_swallowed; /* digestion */
 
     if (mdat == &mons[PM_VLAD_THE_IMPALER] || mdat->mlet == S_LICH) {
         if (cansee(mon->mx, mon->my) && !was_swallowed)
+#if 0 /*KR: 원본*/
             pline("%s body crumbles into dust.", s_suffix(Monnam(mon)));
+#else /*KR: KRNethack 맞춤 번역 */
+            pline("%s 몸이 바스라져 가루가 되었다.",
+                  append_josa(Monnam(mon), "의"));
+#endif
         return FALSE;
     }
 
@@ -2097,26 +2219,50 @@ boolean was_swallowed; /* digestion */
                 tmp = 0;
             if (was_swallowed && magr) {
                 if (magr == &youmonst) {
+#if 0 /*KR: 원본*/
                     There("is an explosion in your %s!", body_part(STOMACH));
                     Sprintf(killer.name, "%s explosion",
                             s_suffix(mdat->mname));
+#else /*KR: KRNethack 맞춤 번역 */
+                    pline("당신의 %s 안에서 폭발이 일어났다!",
+                          body_part(STOMACH));
+                    Sprintf(killer.name, "%s의 폭발", mdat->mname);
+#endif
                     losehp(Maybe_Half_Phys(tmp), killer.name, KILLED_BY_AN);
                 } else {
+#if 0 /*KR: 원본*/
                     You_hear("an explosion.");
+#else /*KR: KRNethack 맞춤 번역 */
+                    You_hear("폭발 소리가 들렸다.");
+#endif
                     magr->mhp -= tmp;
                     if (DEADMONSTER(magr))
                         mondied(magr);
                     if (DEADMONSTER(magr)) { /* maybe lifesaved */
                         if (canspotmon(magr))
+#if 0 /*KR: 원본*/
                             pline("%s rips open!", Monnam(magr));
+#else /*KR: KRNethack 맞춤 번역 */
+                            pline("%s 갈기갈기 찢어졌다!",
+                                  append_josa(Monnam(magr), "은"));
+#endif
                     } else if (canseemon(magr))
+#if 0 /*KR: 원본*/
                         pline("%s seems to have indigestion.", Monnam(magr));
+#else /*KR: KRNethack 맞춤 번역 */
+                        pline("%s 소화불량에 걸린 것 같다.",
+                              append_josa(Monnam(magr), "은"));
+#endif
                 }
 
                 return FALSE;
             }
 
+#if 0 /*KR: 원본*/
             Sprintf(killer.name, "%s explosion", s_suffix(mdat->mname));
+#else /*KR: KRNethack 맞춤 번역 */
+            Sprintf(killer.name, "%s의 폭발", mdat->mname);
+#endif
             killer.format = KILLED_BY_AN;
             explode(mon->mx, mon->my, -1, tmp, MON_EXPLODE, EXPL_NOXIOUS);
             killer.name[0] = '\0';
@@ -2139,9 +2285,7 @@ boolean was_swallowed; /* digestion */
 }
 
 /* drop (perhaps) a cadaver and remove monster */
-void
-mondied(mdef)
-register struct monst *mdef;
+void mondied(mdef) register struct monst *mdef;
 {
     mondead(mdef);
     if (!DEADMONSTER(mdef))
@@ -2153,9 +2297,7 @@ register struct monst *mdef;
 }
 
 /* monster disappears, not dies */
-void
-mongone(mdef)
-struct monst *mdef;
+void mongone(mdef) struct monst *mdef;
 {
     mdef->mhp = 0; /* can skip some inventory bookkeeping */
 
@@ -2177,9 +2319,7 @@ struct monst *mdef;
 }
 
 /* drop a statue or rock and remove monster */
-void
-monstone(mdef)
-struct monst *mdef;
+void monstone(mdef) struct monst *mdef;
 {
     struct obj *otmp, *obj, *oldminvent;
     xchar x = mdef->mx, y = mdef->my;
@@ -2220,7 +2360,8 @@ struct monst *mdef;
 #endif
                 /* invocation tools resist even with 0% resistance */
                 || obj_resists(obj, 0, 0)) {
-                if (flooreffects(obj, x, y, "fall"))
+                /*KR if (flooreffects(obj, x, y, "fall")) */
+                if (flooreffects(obj, x, y, "떨어졌다"))
                     continue;
                 place_object(obj, x, y);
             } else {
@@ -2261,15 +2402,17 @@ struct monst *mdef;
     mondead(mdef);
     if (wasinside) {
         if (is_animal(mdef->data))
+#if 0 /*KR: 원본*/
             You("%s through an opening in the new %s.",
                 locomotion(youmonst.data, "jump"), xname(otmp));
+#else /*KR: KRNethack 맞춤 번역 */
+            You("새로 생긴 %s의 틈새로 빠져나왔다.", xname(otmp));
+#endif
     }
 }
 
 /* another monster has killed the monster mdef */
-void
-monkilled(mdef, fltxt, how)
-struct monst *mdef;
+void monkilled(mdef, fltxt, how) struct monst *mdef;
 const char *fltxt;
 int how;
 {
@@ -2277,9 +2420,21 @@ int how;
 
     if ((mdef->wormno ? worm_known(mdef) : cansee(mdef->mx, mdef->my))
         && fltxt)
+#if 0 /*KR: 원본*/
         pline("%s is %s%s%s!", Monnam(mdef),
               nonliving(mdef->data) ? "destroyed" : "killed",
               *fltxt ? " by the " : "", fltxt);
+#else /*KR: KRNethack 맞춤 번역 */
+    {
+        if (*fltxt) {
+            pline("%s %s 의해 %s!", append_josa(Monnam(mdef), "은"), fltxt,
+                  nonliving(mdef->data) ? "파괴되었다" : "살해당했다");
+        } else {
+            pline("%s %s!", append_josa(Monnam(mdef), "은"),
+                  nonliving(mdef->data) ? "파괴되었다" : "살해당했다");
+        }
+    }
+#endif
     else
         be_sad = (mdef->mtame != 0);
 
@@ -2291,12 +2446,11 @@ int how;
         mondied(mdef);
 
     if (be_sad && DEADMONSTER(mdef))
-        You("have a sad feeling for a moment, then it passes.");
+        /*KR You("have a sad feeling for a moment, then it passes."); */
+        You("잠시 슬픈 감정이 들었지만, 이내 사라졌다.");
 }
 
-void
-unstuck(mtmp)
-struct monst *mtmp;
+void unstuck(mtmp) struct monst *mtmp;
 {
     if (u.ustuck == mtmp) {
         if (u.uswallow) {
@@ -2317,46 +2471,51 @@ struct monst *mtmp;
     }
 }
 
-void
-killed(mtmp)
-struct monst *mtmp;
+void killed(mtmp) struct monst *mtmp;
 {
     xkilled(mtmp, XKILL_GIVEMSG);
 }
 
 /* the player has killed the monster mtmp */
-void
-xkilled(mtmp, xkill_flags)
-struct monst *mtmp;
+void xkilled(mtmp, xkill_flags) struct monst *mtmp;
 int xkill_flags; /* 1: suppress message, 2: suppress corpse, 4: pacifist */
 {
     int tmp, mndx, x = mtmp->mx, y = mtmp->my;
     struct permonst *mdat;
     struct obj *otmp;
     struct trap *t;
-    boolean wasinside = u.uswallow && (u.ustuck == mtmp),
-            burycorpse = FALSE,
+    boolean wasinside = u.uswallow && (u.ustuck == mtmp), burycorpse = FALSE,
             nomsg = (xkill_flags & XKILL_NOMSG) != 0,
             nocorpse = (xkill_flags & XKILL_NOCORPSE) != 0,
             noconduct = (xkill_flags & XKILL_NOCONDUCT) != 0;
 
-    mtmp->mhp = 0; /* caller will usually have already done this */
+    mtmp->mhp = 0;  /* caller will usually have already done this */
     if (!noconduct) /* KMH, conduct */
         u.uconduct.killer++;
 
     if (!nomsg) {
         boolean namedpet = has_mname(mtmp) && !Hallucination;
 
+#if 0 /*KR: 원본*/
         You("%s %s!",
             nonliving(mtmp->data) ? "destroy" : "kill",
             !(wasinside || canspotmon(mtmp)) ? "it"
               : !mtmp->mtame ? mon_nam(mtmp)
                 : x_monnam(mtmp, namedpet ? ARTICLE_NONE : ARTICLE_THE,
                            "poor", namedpet ? SUPPRESS_SADDLE : 0, FALSE));
+#else /*KR: KRNethack 맞춤 번역 */
+        You("%s %s!",
+            !(wasinside || canspotmon(mtmp)) ? "그것을"
+            : !mtmp->mtame
+                ? append_josa(mon_nam(mtmp), "을")
+                : append_josa(x_monnam(mtmp, ARTICLE_NONE, "불쌍한",
+                                       namedpet ? SUPPRESS_SADDLE : 0, FALSE),
+                              "을"),
+            nonliving(mtmp->data) ? "파괴했다" : "죽였다");
+#endif
     }
 
-    if (mtmp->mtrapped && (t = t_at(x, y)) != 0
-        && is_pit(t->ttyp)) {
+    if (mtmp->mtrapped && (t = t_at(x, y)) != 0 && is_pit(t->ttyp)) {
         if (sobj_at(BOULDER, x, y))
             nocorpse = TRUE; /* Prevent corpses/treasure being created
                                 "on top" of boulder that is about to fall in.
@@ -2370,7 +2529,8 @@ int xkill_flags; /* 1: suppress message, 2: suppress corpse, 4: pacifist */
     if (mtmp->mtame && !mtmp->isminion)
         EDOG(mtmp)->killed_by_u = 1;
 
-    if (wasinside && thrownobj && thrownobj != uball
+    if (wasinside && thrownobj
+        && thrownobj != uball
         /* don't give to mon if missile is going to return to hero */
         && thrownobj != (struct obj *) iflags.returning_missile) {
         /* thrown object has killed hero's engulfer; add it to mon's
@@ -2383,7 +2543,8 @@ int xkill_flags; /* 1: suppress message, 2: suppress corpse, 4: pacifist */
         thrownobj = 0;
     }
 
-    vamp_rise_msg = FALSE; /* might get set in mondead(); only checked below */
+    vamp_rise_msg =
+        FALSE; /* might get set in mondead(); only checked below */
     disintegested = nocorpse; /* alternate vamp_rise message needed if true */
     /* dispose of monster and make cadaver */
     if (stoned)
@@ -2399,7 +2560,8 @@ int xkill_flags; /* 1: suppress message, 2: suppress corpse, 4: pacifist */
          */
         stoned = FALSE;
         if (!cansee(x, y) && !vamp_rise_msg)
-            pline("Maybe not...");
+            /*KR pline("Maybe not..."); */
+            pline("아님 말고...");
         return;
     }
 
@@ -2438,7 +2600,8 @@ int xkill_flags; /* 1: suppress message, 2: suppress corpse, 4: pacifist */
                 /* oc_big is also oc_bimanual and oc_bulky */
                 && (otmp->owt > 30 || objects[otyp].oc_big)) {
                 delobj(otmp);
-            } else if (!flooreffects(otmp, x, y, nomsg ? "" : "fall")) {
+       /*KR } else if (!flooreffects(otmp, x, y, nomsg ? "" : "fall")) { */
+            } else if (!flooreffects(otmp, x, y, nomsg ? "" : "떨어졌다")) {
                 place_object(otmp, x, y);
                 stackobj(otmp);
             }
@@ -2449,7 +2612,12 @@ int xkill_flags; /* 1: suppress message, 2: suppress corpse, 4: pacifist */
                                                    : CORPSTAT_NONE);
             if (burycorpse && cadaver && cansee(x, y) && !mtmp->minvis
                 && cadaver->where == OBJ_BURIED && !nomsg) {
+#if 0 /*KR: 원본*/
                 pline("%s corpse ends up buried.", s_suffix(Monnam(mtmp)));
+#else /*KR: KRNethack 맞춤 번역 */
+                pline("%s 시체는 결국 묻혀버렸다.",
+                      append_josa(Monnam(mtmp), "의"));
+#endif
             }
         }
     }
@@ -2466,7 +2634,8 @@ int xkill_flags; /* 1: suppress message, 2: suppress corpse, 4: pacifist */
         && u.ualign.type != A_CHAOTIC) {
         HTelepat &= ~INTRINSIC;
         change_luck(-2);
-        You("murderer!");
+        /*KR You("murderer!"); */
+        You("이 살인자!");
         if (Blind && !Blind_telepat)
             see_monsters(); /* Can't sense monsters any more. */
     }
@@ -2474,7 +2643,8 @@ int xkill_flags; /* 1: suppress message, 2: suppress corpse, 4: pacifist */
         change_luck(-1);
     if (is_unicorn(mdat) && sgn(u.ualign.type) == sgn(mdat->maligntyp)) {
         change_luck(-5);
-        You_feel("guilty...");
+        /*KR You_feel("guilty..."); */
+        You_feel("죄책감이 들었다...");
     }
 
     /* give experience points */
@@ -2485,16 +2655,23 @@ int xkill_flags; /* 1: suppress message, 2: suppress corpse, 4: pacifist */
     /* adjust alignment points */
     if (mtmp->m_id == quest_status.leader_m_id) { /* REAL BAD! */
         adjalign(-(u.ualign.record + (int) ALIGNLIM / 2));
+#if 0 /*KR: 원본*/
         pline("That was %sa bad idea...",
               u.uevent.qcompleted ? "probably " : "");
+#else /*KR: KRNethack 맞춤 번역 */
+        pline("%s좋지 않은 생각이었다...",
+              u.uevent.qcompleted ? "아마도 " : "");
+#endif
     } else if (mdat->msound == MS_NEMESIS) { /* Real good! */
         adjalign((int) (ALIGNLIM / 4));
     } else if (mdat->msound == MS_GUARDIAN) { /* Bad */
         adjalign(-(int) (ALIGNLIM / 8));
         if (!Hallucination)
-            pline("That was probably a bad idea...");
+            /*KR pline("That was probably a bad idea..."); */
+            pline("아마도 좋지 않은 생각이었던 것 같다...");
         else
-            pline("Whoopsie-daisy!");
+            /*KR pline("Whoopsie-daisy!"); */
+            pline("이런 맙소사!");
     } else if (mtmp->ispriest) {
         adjalign((p_coaligned(mtmp)) ? -2 : 2);
         /* cancel divine protection for killing your priest */
@@ -2506,53 +2683,60 @@ int xkill_flags; /* 1: suppress message, 2: suppress corpse, 4: pacifist */
         adjalign(-15); /* bad!! */
         /* your god is mighty displeased... */
         if (!Hallucination)
-            You_hear("the rumble of distant thunder...");
+            /*KR You_hear("the rumble of distant thunder..."); */
+            You_hear("멀리서 천둥이 우르릉거리는 소리가 들렸다...");
         else
-            You_hear("the studio audience applaud!");
+            /*KR You_hear("the studio audience applaud!"); */
+            You_hear("방청객이 박수 치는 소리가 들렸다!");
     } else if (mtmp->mpeaceful)
         adjalign(-5);
 
     /* malign was already adjusted for u.ualign.type and randomization */
     adjalign(mtmp->malign);
-}
+ }
 
-/* changes the monster into a stone monster of the same type
-   this should only be called when poly_when_stoned() is true */
-void
-mon_to_stone(mtmp)
-struct monst *mtmp;
-{
-    if (mtmp->data->mlet == S_GOLEM) {
-        /* it's a golem, and not a stone golem */
-        if (canseemon(mtmp))
-            pline("%s solidifies...", Monnam(mtmp));
-        if (newcham(mtmp, &mons[PM_STONE_GOLEM], FALSE, FALSE)) {
-            if (canseemon(mtmp))
+ /* changes the monster into a stone monster of the same type
+    this should only be called when poly_when_stoned() is true */
+ void mon_to_stone(mtmp) struct monst *mtmp;
+ {
+     if (mtmp->data->mlet == S_GOLEM) {
+         /* it's a golem, and not a stone golem */
+         if (canseemon(mtmp))
+             /*KR pline("%s solidifies...", Monnam(mtmp)); */
+             pline("%s 굳어간다...", append_josa(Monnam(mtmp), "은"));
+         if (newcham(mtmp, &mons[PM_STONE_GOLEM], FALSE, FALSE)) {
+             if (canseemon(mtmp))
+#if 0 /*KR: 원본*/
                 pline("Now it's %s.", an(mtmp->data->mname));
-        } else {
-            if (canseemon(mtmp))
-                pline("... and returns to normal.");
-        }
-    } else
-        impossible("Can't polystone %s!", a_monnam(mtmp));
-}
+#else /*KR: KRNethack 맞춤 번역 */
+                 pline("이제 %s(이)가 되었다.", mtmp->data->mname);
+#endif
+         } else {
+             if (canseemon(mtmp))
+                 /*KR pline("... and returns to normal."); */
+                 pline("...그리고 정상으로 돌아왔다.");
+         }
+     } else
+         impossible("Can't polystone %s!", a_monnam(mtmp));
+ }
 
-boolean
-vamp_stone(mtmp)
-struct monst *mtmp;
-{
-    if (is_vampshifter(mtmp)) {
-        int mndx = mtmp->cham;
-        int x = mtmp->mx, y = mtmp->my;
+ boolean
+ vamp_stone(mtmp)
+ struct monst *mtmp;
+ {
+     if (is_vampshifter(mtmp)) {
+         int mndx = mtmp->cham;
+         int x = mtmp->mx, y = mtmp->my;
 
-        /* this only happens if shapeshifted */
-        if (mndx >= LOW_PM && mndx != monsndx(mtmp->data)
-            && !(mvitals[mndx].mvflags & G_GENOD)) {
-            char buf[BUFSZ];
-            boolean in_door = (amorphous(mtmp->data)
-                               && closed_door(mtmp->mx, mtmp->my));
+         /* this only happens if shapeshifted */
+         if (mndx >= LOW_PM && mndx != monsndx(mtmp->data)
+             && !(mvitals[mndx].mvflags & G_GENOD)) {
+             char buf[BUFSZ];
+             boolean in_door =
+                 (amorphous(mtmp->data) && closed_door(mtmp->mx, mtmp->my));
 
-            /* construct a format string before transformation */
+             /* construct a format string before transformation */
+#if 0 /*KR: 원본*/
             Sprintf(buf, "The lapidifying %s %s %s",
                     x_monnam(mtmp, ARTICLE_NONE, (char *) 0,
                              (SUPPRESS_SADDLE | SUPPRESS_HALLUCINATION
@@ -2561,409 +2745,441 @@ struct monst *mtmp;
                        : is_flyer(mtmp->data) ? "drops to the"
                           : "writhes on the",
                     surface(x,y));
-            mtmp->mcanmove = 1;
-            mtmp->mfrozen = 0;
-            if (mtmp->mhpmax <= 0)
-                mtmp->mhpmax = 10;
-            mtmp->mhp = mtmp->mhpmax;
-            /* this can happen if previously a fog cloud */
-            if (u.uswallow && (mtmp == u.ustuck))
-                expels(mtmp, mtmp->data, FALSE);
-            if (in_door) {
-                coord new_xy;
+#else /*KR: KRNethack 맞춤 번역 */
+             {
+                 char mon_buf[BUFSZ];
+                 Sprintf(mon_buf, "돌로 변해가는 %s",
+                         x_monnam(mtmp, ARTICLE_NONE, (char *) 0,
+                                  (SUPPRESS_SADDLE | SUPPRESS_HALLUCINATION
+                                   | SUPPRESS_INVISIBLE | SUPPRESS_IT),
+                                  FALSE));
+                 Sprintf(buf, "%s %s 위%s", append_josa(mon_buf, "은"),
+                         surface(x, y),
+                         amorphous(mtmp->data)  ? "로 뭉쳐졌다"
+                         : is_flyer(mtmp->data) ? "로 떨어졌다"
+                                                : "에서 몸부림쳤다");
+             }
+#endif
+             mtmp->mcanmove = 1;
+             mtmp->mfrozen = 0;
+             if (mtmp->mhpmax <= 0)
+                 mtmp->mhpmax = 10;
+             mtmp->mhp = mtmp->mhpmax;
+             /* this can happen if previously a fog cloud */
+             if (u.uswallow && (mtmp == u.ustuck))
+                 expels(mtmp, mtmp->data, FALSE);
+             if (in_door) {
+                 coord new_xy;
 
-                if (enexto(&new_xy, mtmp->mx, mtmp->my, &mons[mndx])) {
-                    rloc_to(mtmp, new_xy.x, new_xy.y);
-                }
-            }
-            if (canspotmon(mtmp)) {
-                pline("%s!", buf);
-                display_nhwindow(WIN_MESSAGE, FALSE);
-            }
-            newcham(mtmp, &mons[mndx], FALSE, FALSE);
-            if (mtmp->data == &mons[mndx])
-                mtmp->cham = NON_PM;
-            else
-                mtmp->cham = mndx;
-            if (canspotmon(mtmp)) {
+                 if (enexto(&new_xy, mtmp->mx, mtmp->my, &mons[mndx])) {
+                     rloc_to(mtmp, new_xy.x, new_xy.y);
+                 }
+             }
+             if (canspotmon(mtmp)) {
+                 /*KR pline("%s!", buf); */
+                 pline("%s!", buf);
+                 display_nhwindow(WIN_MESSAGE, FALSE);
+             }
+             newcham(mtmp, &mons[mndx], FALSE, FALSE);
+             if (mtmp->data == &mons[mndx])
+                 mtmp->cham = NON_PM;
+             else
+                 mtmp->cham = mndx;
+             if (canspotmon(mtmp)) {
+#if 0 /*KR: 원본*/
                 pline("%s rises from the %s with renewed agility!",
                       Amonnam(mtmp), surface(mtmp->mx, mtmp->my));
-            }
-            newsym(mtmp->mx, mtmp->my);
-            return FALSE;   /* didn't petrify */
-        }
-    } else if (mtmp->cham >= LOW_PM
-               && (mons[mtmp->cham].mresists & MR_STONE)) {
-        /* sandestins are stoning-immune so if hit by stoning damage
-           they revert to innate shape rather than become a statue */
-        mtmp->mcanmove = 1;
-        mtmp->mfrozen = 0;
-        if (mtmp->mhpmax <= 0)
-            mtmp->mhpmax = 10;
-        mtmp->mhp = mtmp->mhpmax;
-        (void) newcham(mtmp, &mons[mtmp->cham], FALSE, TRUE);
-        newsym(mtmp->mx, mtmp->my);
-        return FALSE;   /* didn't petrify */
-    }
-    return TRUE;
-}
+#else /*KR: KRNethack 맞춤 번역 */
+                 pline("%s 기민함을 되찾고 %s에서 일어났다!",
+                       append_josa(Amonnam(mtmp), "은"),
+                       surface(mtmp->mx, mtmp->my));
+#endif
+             }
+             newsym(mtmp->mx, mtmp->my);
+             return FALSE; /* didn't petrify */
+         }
+     } else if (mtmp->cham >= LOW_PM
+                && (mons[mtmp->cham].mresists & MR_STONE)) {
+         /* sandestins are stoning-immune so if hit by stoning damage
+            they revert to innate shape rather than become a statue */
+         mtmp->mcanmove = 1;
+         mtmp->mfrozen = 0;
+         if (mtmp->mhpmax <= 0)
+             mtmp->mhpmax = 10;
+         mtmp->mhp = mtmp->mhpmax;
+         (void) newcham(mtmp, &mons[mtmp->cham], FALSE, TRUE);
+         newsym(mtmp->mx, mtmp->my);
+         return FALSE; /* didn't petrify */
+     }
+     return TRUE;
+ }
 
-/* drop monster into "limbo" - that is, migrate to the current level */
-void
-m_into_limbo(mtmp)
-struct monst *mtmp;
-{
-    xchar target_lev = ledger_no(&u.uz), xyloc = MIGR_APPROX_XY;
+ /* drop monster into "limbo" - that is, migrate to the current level */
+ void m_into_limbo(mtmp) struct monst *mtmp;
+ {
+     xchar target_lev = ledger_no(&u.uz), xyloc = MIGR_APPROX_XY;
 
-    mtmp->mstate |= MON_LIMBO;
-    migrate_mon(mtmp, target_lev, xyloc);
-}
+     mtmp->mstate |= MON_LIMBO;
+     migrate_mon(mtmp, target_lev, xyloc);
+ }
 
-STATIC_OVL void
-migrate_mon(mtmp, target_lev, xyloc)
-struct monst *mtmp;
-xchar target_lev, xyloc;
-{
-    unstuck(mtmp);
-    mdrop_special_objs(mtmp);
-    migrate_to_level(mtmp, target_lev, xyloc, (coord *) 0);
-    mtmp->mstate |= MON_MIGRATING;
-}
+ STATIC_OVL void migrate_mon(mtmp, target_lev, xyloc) struct monst *mtmp;
+ xchar target_lev, xyloc;
+ {
+     unstuck(mtmp);
+     mdrop_special_objs(mtmp);
+     migrate_to_level(mtmp, target_lev, xyloc, (coord *) 0);
+     mtmp->mstate |= MON_MIGRATING;
+ }
 
-STATIC_OVL boolean
-ok_to_obliterate(mtmp)
-struct monst *mtmp;
-{
-    /*
-     * Add checks for monsters that should not be obliterated
-     * here (return FALSE).
-     */
-    if (mtmp->data == &mons[PM_WIZARD_OF_YENDOR] || is_rider(mtmp->data)
-        || has_emin(mtmp) || has_epri(mtmp) || has_eshk(mtmp)
-        || (u.ustuck == mtmp) || (u.usteed == mtmp))
-        return FALSE;
-    return TRUE;
-}
+ STATIC_OVL boolean
+ ok_to_obliterate(mtmp)
+ struct monst *mtmp;
+ {
+     /*
+      * Add checks for monsters that should not be obliterated
+      * here (return FALSE).
+      */
+     if (mtmp->data == &mons[PM_WIZARD_OF_YENDOR] || is_rider(mtmp->data)
+         || has_emin(mtmp) || has_epri(mtmp) || has_eshk(mtmp)
+         || (u.ustuck == mtmp) || (u.usteed == mtmp))
+         return FALSE;
+     return TRUE;
+ }
 
-void
-elemental_clog(mon)
-struct monst *mon;
-{
-    int m_lev = 0;
-    static long msgmv = 0L;
-    struct monst *mtmp, *m1, *m2, *m3, *m4, *m5, *zm;
+ void elemental_clog(mon) struct monst *mon;
+ {
+     int m_lev = 0;
+     static long msgmv = 0L;
+     struct monst *mtmp, *m1, *m2, *m3, *m4, *m5, *zm;
 
-    if (In_endgame(&u.uz)) {
-        m1 = m2 = m3 = m4 = m5 = zm = (struct monst *) 0;
-        if (!msgmv || (moves - msgmv) > 200L) {
-            if (!msgmv || rn2(2))
-                You_feel("besieged.");
-            msgmv = moves;
-        }
-        /*
-         * m1 an elemental from another plane.
-         * m2 an elemental from this plane.
-         * m3 the least powerful monst encountered in loop so far.
-         * m4 some other non-tame monster.
-         * m5 a pet.
-         */
-        for (mtmp = fmon; mtmp; mtmp = mtmp->nmon) {
-            if (DEADMONSTER(mtmp) || mtmp == mon)
-                continue;
-            if (mtmp->mx == 0 && mtmp->my == 0)
-                continue;
-            if (mon_has_amulet(mtmp) || !ok_to_obliterate(mtmp))
-                continue;
-            if (mtmp->data->mlet == S_ELEMENTAL) {
-                if (!is_home_elemental(mtmp->data)) {
-                    if (!m1)
-                        m1 = mtmp;
-                } else {
-                    if (!m2)
-                        m2 = mtmp;
-                }
-            } else {
-                if (!mtmp->mtame) {
-                    if (!m_lev || mtmp->m_lev < m_lev) {
-                        m_lev = mtmp->m_lev;
-                        m3 = mtmp;
-                    } else if (!m4) {
-                        m4 = mtmp;
-                    }
-                } else {
-                    if (!m5)
-                        m5 = mtmp;
-                    break;
-                }
-            }
-        }
-        mtmp = m1 ? m1 : m2 ? m2 : m3 ? m3 : m4 ? m4 : m5 ? m5 : zm;
-        if (mtmp) {
-            int mx = mtmp->mx, my = mtmp->my;
+     if (In_endgame(&u.uz)) {
+         m1 = m2 = m3 = m4 = m5 = zm = (struct monst *) 0;
+         if (!msgmv || (moves - msgmv) > 200L) {
+             if (!msgmv || rn2(2))
+                 /*KR You_feel("besieged."); */
+                 You_feel("포위된 것 같다.");
+             msgmv = moves;
+         }
+         /*
+          * m1 an elemental from another plane.
+          * m2 an elemental from this plane.
+          * m3 the least powerful monst encountered in loop so far.
+          * m4 some other non-tame monster.
+          * m5 a pet.
+          */
+         for (mtmp = fmon; mtmp; mtmp = mtmp->nmon) {
+             if (DEADMONSTER(mtmp) || mtmp == mon)
+                 continue;
+             if (mtmp->mx == 0 && mtmp->my == 0)
+                 continue;
+             if (mon_has_amulet(mtmp) || !ok_to_obliterate(mtmp))
+                 continue;
+             if (mtmp->data->mlet == S_ELEMENTAL) {
+                 if (!is_home_elemental(mtmp->data)) {
+                     if (!m1)
+                         m1 = mtmp;
+                 } else {
+                     if (!m2)
+                         m2 = mtmp;
+                 }
+             } else {
+                 if (!mtmp->mtame) {
+                     if (!m_lev || mtmp->m_lev < m_lev) {
+                         m_lev = mtmp->m_lev;
+                         m3 = mtmp;
+                     } else if (!m4) {
+                         m4 = mtmp;
+                     }
+                 } else {
+                     if (!m5)
+                         m5 = mtmp;
+                     break;
+                 }
+             }
+         }
+         mtmp = m1 ? m1 : m2 ? m2 : m3 ? m3 : m4 ? m4 : m5 ? m5 : zm;
+         if (mtmp) {
+             int mx = mtmp->mx, my = mtmp->my;
 
-            mtmp->mstate |= MON_OBLITERATE;
-            mongone(mtmp);
-            /* places in the code might still reference mtmp->mx, mtmp->my */
-            /* mtmp->mx = mtmp->my = 0; */
-            rloc_to(mon, mx, my);           /* note: mon, not mtmp */
+             mtmp->mstate |= MON_OBLITERATE;
+             mongone(mtmp);
+             /* places in the code might still reference mtmp->mx, mtmp->my */
+             /* mtmp->mx = mtmp->my = 0; */
+             rloc_to(mon, mx, my); /* note: mon, not mtmp */
 
-        /* last resort - migrate mon to the next plane */
-        } else if (!Is_astralevel(&u.uz)) {
-            d_level dest;
-            xchar target_lev;
+             /* last resort - migrate mon to the next plane */
+         } else if (!Is_astralevel(&u.uz)) {
+             d_level dest;
+             xchar target_lev;
 
-            dest = u.uz;
-            dest.dlevel--;
-            target_lev = ledger_no(&dest);
-            mon->mstate |= MON_ENDGAME_MIGR;
-            migrate_mon(mon, target_lev, MIGR_RANDOM);
-        }
-    }
-}
+             dest = u.uz;
+             dest.dlevel--;
+             target_lev = ledger_no(&dest);
+             mon->mstate |= MON_ENDGAME_MIGR;
+             migrate_mon(mon, target_lev, MIGR_RANDOM);
+         }
+     }
+ }
 
-/* make monster mtmp next to you (if possible);
-   might place monst on far side of a wall or boulder */
-void
-mnexto(mtmp)
-struct monst *mtmp;
-{
-    coord mm;
-    boolean couldspot = canspotmon(mtmp);
+ /* make monster mtmp next to you (if possible);
+    might place monst on far side of a wall or boulder */
+ void mnexto(mtmp) struct monst *mtmp;
+ {
+     coord mm;
+     boolean couldspot = canspotmon(mtmp);
 
-    if (mtmp == u.usteed) {
-        /* Keep your steed in sync with you instead */
-        mtmp->mx = u.ux;
-        mtmp->my = u.uy;
-        return;
-    }
+     if (mtmp == u.usteed) {
+         /* Keep your steed in sync with you instead */
+         mtmp->mx = u.ux;
+         mtmp->my = u.uy;
+         return;
+     }
 
-    if (!enexto(&mm, u.ux, u.uy, mtmp->data) || !isok(mm.x, mm.y)) {
-        deal_with_overcrowding(mtmp);
-        return;
-    }
-    rloc_to(mtmp, mm.x, mm.y);
-    if (!in_mklev && (mtmp->mstrategy & STRAT_APPEARMSG)) {
-        mtmp->mstrategy &= ~STRAT_APPEARMSG; /* one chance only */
-        if (!couldspot && canspotmon(mtmp))
+     if (!enexto(&mm, u.ux, u.uy, mtmp->data) || !isok(mm.x, mm.y)) {
+         deal_with_overcrowding(mtmp);
+         return;
+     }
+     rloc_to(mtmp, mm.x, mm.y);
+     if (!in_mklev && (mtmp->mstrategy & STRAT_APPEARMSG)) {
+         mtmp->mstrategy &= ~STRAT_APPEARMSG; /* one chance only */
+         if (!couldspot && canspotmon(mtmp))
+#if 0 /*KR: 원본*/
             pline("%s suddenly %s!", Amonnam(mtmp),
                   !Blind ? "appears" : "arrives");
-    }
-    return;
-}
+#else /*KR: KRNethack 맞춤 번역 */
+             pline("%s 갑자기 %s!", append_josa(Amonnam(mtmp), "은"),
+                   !Blind ? "나타났다" : "도착했다");
+#endif
+     }
+     return;
+ }
 
-STATIC_OVL void
-deal_with_overcrowding(mtmp)
-struct monst *mtmp;
-{
-    if (In_endgame(&u.uz)) {
-        debugpline1("overcrowding: elemental_clog on %s", m_monnam(mtmp));
-        elemental_clog(mtmp);
-    } else {
-        debugpline1("overcrowding: sending %s into limbo", m_monnam(mtmp));
-        m_into_limbo(mtmp);
-    }
-}
+ STATIC_OVL void deal_with_overcrowding(mtmp) struct monst *mtmp;
+ {
+     if (In_endgame(&u.uz)) {
+         debugpline1("overcrowding: elemental_clog on %s", m_monnam(mtmp));
+         elemental_clog(mtmp);
+     } else {
+         debugpline1("overcrowding: sending %s into limbo", m_monnam(mtmp));
+         m_into_limbo(mtmp);
+     }
+ }
 
-/* like mnexto() but requires destination to be directly accessible */
-void
-maybe_mnexto(mtmp)
-struct monst *mtmp;
-{
-    coord mm;
-    struct permonst *ptr = mtmp->data;
-    boolean diagok = !NODIAG(ptr - mons);
-    int tryct = 20;
+ /* like mnexto() but requires destination to be directly accessible */
+ void maybe_mnexto(mtmp) struct monst *mtmp;
+ {
+     coord mm;
+     struct permonst *ptr = mtmp->data;
+     boolean diagok = !NODIAG(ptr - mons);
+     int tryct = 20;
 
-    do {
-        if (!enexto(&mm, u.ux, u.uy, ptr))
-            return;
-        if (couldsee(mm.x, mm.y)
-            /* don't move grid bugs diagonally */
-            && (diagok || mm.x == mtmp->mx || mm.y == mtmp->my)) {
-            rloc_to(mtmp, mm.x, mm.y);
-            return;
-        }
-    } while (--tryct > 0);
-}
+     do {
+         if (!enexto(&mm, u.ux, u.uy, ptr))
+             return;
+         if (couldsee(mm.x, mm.y)
+             /* don't move grid bugs diagonally */
+             && (diagok || mm.x == mtmp->mx || mm.y == mtmp->my)) {
+             rloc_to(mtmp, mm.x, mm.y);
+             return;
+         }
+     } while (--tryct > 0);
+ }
 
-/* mnearto()
- * Put monster near (or at) location if possible.
- * Returns:
- *  2 if another monster was moved out of this one's way;
- *  1 if relocation was successful (without moving another one);
- *  0 otherwise.
- * Note: if already at the target spot, result is 1 rather than 0.
- *
- * Might be called recursively if 'move_other' is True; if so, that argument
- * will be False on the nested call so there won't be any further recursion.
- */
-int
-mnearto(mtmp, x, y, move_other)
-register struct monst *mtmp;
-xchar x, y;
-boolean move_other; /* make sure mtmp gets to x, y! so move m_at(x, y) */
-{
-    struct monst *othermon = (struct monst *) 0;
-    xchar newx, newy;
-    coord mm;
-    int res = 1;
+ /* mnearto()
+  * Put monster near (or at) location if possible.
+  * Returns:
+  * 2 if another monster was moved out of this one's way;
+  * 1 if relocation was successful (without moving another one);
+  * 0 otherwise.
+  * Note: if already at the target spot, result is 1 rather than 0.
+  *
+  * Might be called recursively if 'move_other' is True; if so, that argument
+  * will be False on the nested call so there won't be any further recursion.
+  */
+ int
+ mnearto(mtmp, x, y, move_other)
+ register struct monst *mtmp;
+ xchar x, y;
+ boolean move_other; /* make sure mtmp gets to x, y! so move m_at(x, y) */
+ {
+     struct monst *othermon = (struct monst *) 0;
+     xchar newx, newy;
+     coord mm;
+     int res = 1;
 
-    if (mtmp->mx == x && mtmp->my == y && m_at(x, y) == mtmp)
-        return res;
+     if (mtmp->mx == x && mtmp->my == y && m_at(x, y) == mtmp)
+         return res;
 
-    if (move_other && (othermon = m_at(x, y)) != 0) {
-        if (othermon->wormno)
-            remove_worm(othermon);
-        else
-            remove_monster(x, y);
+     if (move_other && (othermon = m_at(x, y)) != 0) {
+         if (othermon->wormno)
+             remove_worm(othermon);
+         else
+             remove_monster(x, y);
 
-        othermon->mx = othermon->my = 0; /* 'othermon' is not on the map */
-        othermon->mstate |= MON_OFFMAP;
-    }
+         othermon->mx = othermon->my = 0; /* 'othermon' is not on the map */
+         othermon->mstate |= MON_OFFMAP;
+     }
 
-    newx = x;
-    newy = y;
-    if (!goodpos(newx, newy, mtmp, 0)) {
-        /* Actually we have real problems if enexto ever fails.
-         * Migrating_mons that need to be placed will cause
-         * no end of trouble.
-         */
-        if (!enexto(&mm, newx, newy, mtmp->data) || !isok(mm.x, mm.y)) {
-            if (othermon) {
-                /* othermon already had its mx, my set to 0 above
-                 * and this would shortly cause a sanity check to fail
-                 * if we just return 0 here. The caller only possesses
-                 * awareness of mtmp, not othermon. */
-                deal_with_overcrowding(othermon);
-            }
-            return 0;
-        }
-        newx = mm.x;
-        newy = mm.y;
-    }
-    rloc_to(mtmp, newx, newy);
+     newx = x;
+     newy = y;
+     if (!goodpos(newx, newy, mtmp, 0)) {
+         /* Actually we have real problems if enexto ever fails.
+          * Migrating_mons that need to be placed will cause
+          * no end of trouble.
+          */
+         if (!enexto(&mm, newx, newy, mtmp->data) || !isok(mm.x, mm.y)) {
+             if (othermon) {
+                 /* othermon already had its mx, my set to 0 above
+                  * and this would shortly cause a sanity check to fail
+                  * if we just return 0 here. The caller only possesses
+                  * awareness of mtmp, not othermon. */
+                 deal_with_overcrowding(othermon);
+             }
+             return 0;
+         }
+         newx = mm.x;
+         newy = mm.y;
+     }
+     rloc_to(mtmp, newx, newy);
 
-    if (move_other && othermon) {
-        res = 2; /* moving another monster out of the way */
-        if (!mnearto(othermon, x, y, FALSE))  /* no 'move_other' this time */
-            deal_with_overcrowding(othermon);
-    }
+     if (move_other && othermon) {
+         res = 2; /* moving another monster out of the way */
+         if (!mnearto(othermon, x, y, FALSE)) /* no 'move_other' this time */
+             deal_with_overcrowding(othermon);
+     }
 
-    return res;
-}
+     return res;
+ }
 
-/* monster responds to player action; not the same as a passive attack;
-   assumes reason for response has been tested, and response _must_ be made */
-void
-m_respond(mtmp)
-struct monst *mtmp;
-{
-    if (mtmp->data->msound == MS_SHRIEK) {
-        if (!Deaf) {
+ /* monster responds to player action; not the same as a passive attack;
+    assumes reason for response has been tested, and response _must_ be made
+  */
+ void m_respond(mtmp) struct monst *mtmp;
+ {
+     if (mtmp->data->msound == MS_SHRIEK) {
+         if (!Deaf) {
+#if 0 /*KR: 원본*/
             pline("%s shrieks.", Monnam(mtmp));
-            stop_occupation();
-        }
-        if (!rn2(10)) {
-            if (!rn2(13))
-                (void) makemon(&mons[PM_PURPLE_WORM], 0, 0, NO_MM_FLAGS);
-            else
-                (void) makemon((struct permonst *) 0, 0, 0, NO_MM_FLAGS);
-        }
-        aggravate();
-    }
-    if (mtmp->data == &mons[PM_MEDUSA]) {
-        register int i;
+#else /*KR: KRNethack 맞춤 번역 */
+             pline("%s 비명을 지른다.", append_josa(Monnam(mtmp), "은"));
+#endif
+             stop_occupation();
+         }
+         if (!rn2(10)) {
+             if (!rn2(13))
+                 (void) makemon(&mons[PM_PURPLE_WORM], 0, 0, NO_MM_FLAGS);
+             else
+                 (void) makemon((struct permonst *) 0, 0, 0, NO_MM_FLAGS);
+         }
+         aggravate();
+     }
+     if (mtmp->data == &mons[PM_MEDUSA]) {
+         register int i;
 
-        for (i = 0; i < NATTK; i++)
-            if (mtmp->data->mattk[i].aatyp == AT_GAZE) {
-                (void) gazemu(mtmp, &mtmp->data->mattk[i]);
-                break;
-            }
-    }
-}
+         for (i = 0; i < NATTK; i++)
+             if (mtmp->data->mattk[i].aatyp == AT_GAZE) {
+                 (void) gazemu(mtmp, &mtmp->data->mattk[i]);
+                 break;
+             }
+     }
+ }
 
-/* Called whenever the player attacks mtmp; also called in other situations
-   where mtmp gets annoyed at the player. Handles mtmp getting annoyed at the
-   attack and any ramifications that might have. Useful also in situations
-   where mtmp was already hostile; it checks for situations where the player
-   shouldn't be attacking and any ramifications /that/ might have. */
-void
-setmangry(mtmp, via_attack)
-struct monst *mtmp;
-boolean via_attack;
-{
-    if (via_attack && sengr_at("Elbereth", u.ux, u.uy, TRUE)
-        /* only hypocritical if monster is vulnerable to Elbereth (or
-           peaceful--not vulnerable but attacking it is hypocritical) */
-        && (onscary(u.ux, u.uy, mtmp) || mtmp->mpeaceful)) {
-        You_feel("like a hypocrite.");
-        /* AIS: Yes, I know alignment penalties and bonuses aren't balanced
-           at the moment. This is about correct relative to other "small"
-           penalties; it should be fairly large, as attacking while standing
-           on an Elbereth means that you're requesting peace and then
-           violating your own request. I know 5 isn't actually large, but
-           it's intentionally larger than the 1s and 2s that are normally
-           given for this sort of thing. */
-        /* reduce to 3 (average) when alignment is already very low */
-        adjalign((u.ualign.record > 5) ? -5 : -rnd(5));
+ /* Called whenever the player attacks mtmp; also called in other situations
+    where mtmp gets annoyed at the player. Handles mtmp getting annoyed at the
+    attack and any ramifications that might have. Useful also in situations
+    where mtmp was already hostile; it checks for situations where the player
+    shouldn't be attacking and any ramifications /that/ might have. */
+ void setmangry(mtmp, via_attack) struct monst *mtmp;
+ boolean via_attack;
+ {
+     if (via_attack
+         && sengr_at("Elbereth", u.ux, u.uy, TRUE)
+         /* only hypocritical if monster is vulnerable to Elbereth (or
+            peaceful--not vulnerable but attacking it is hypocritical) */
+         && (onscary(u.ux, u.uy, mtmp) || mtmp->mpeaceful)) {
+         /*KR You_feel("like a hypocrite."); */
+         You_feel("위선자가 된 기분이다.");
+         /* AIS: Yes, I know alignment penalties and bonuses aren't balanced
+            at the moment. This is about correct relative to other "small"
+            penalties; it should be fairly large, as attacking while standing
+            on an Elbereth means that you're requesting peace and then
+            violating your own request. I know 5 isn't actually large, but
+            it's intentionally larger than the 1s and 2s that are normally
+            given for this sort of thing. */
+         /* reduce to 3 (average) when alignment is already very low */
+         adjalign((u.ualign.record > 5) ? -5 : -rnd(5));
 
-        if (!Blind)
-            pline("The engraving beneath you fades.");
-        del_engr_at(u.ux, u.uy);
-    }
+         if (!Blind)
+             /*KR pline("The engraving beneath you fades."); */
+             pline("발밑에 새겨진 글씨가 희미해진다.");
+         del_engr_at(u.ux, u.uy);
+     }
 
-    /* AIS: Should this be in both places, or just in wakeup()? */
-    mtmp->mstrategy &= ~STRAT_WAITMASK;
-    if (!mtmp->mpeaceful)
-        return;
-    if (mtmp->mtame)
-        return;
-    mtmp->mpeaceful = 0;
-    if (mtmp->ispriest) {
-        if (p_coaligned(mtmp))
-            adjalign(-5); /* very bad */
-        else
-            adjalign(2);
-    } else
-        adjalign(-1); /* attacking peaceful monsters is bad */
-    if (couldsee(mtmp->mx, mtmp->my)) {
-        if (humanoid(mtmp->data) || mtmp->isshk || mtmp->isgd)
+     /* AIS: Should this be in both places, or just in wakeup()? */
+     mtmp->mstrategy &= ~STRAT_WAITMASK;
+     if (!mtmp->mpeaceful)
+         return;
+     if (mtmp->mtame)
+         return;
+     mtmp->mpeaceful = 0;
+     if (mtmp->ispriest) {
+         if (p_coaligned(mtmp))
+             adjalign(-5); /* very bad */
+         else
+             adjalign(2);
+     } else
+         adjalign(-1); /* attacking peaceful monsters is bad */
+     if (couldsee(mtmp->mx, mtmp->my)) {
+         if (humanoid(mtmp->data) || mtmp->isshk || mtmp->isgd)
+#if 0 /*KR: 원본*/
             pline("%s gets angry!", Monnam(mtmp));
-        else if (flags.verbose && !Deaf)
-            growl(mtmp);
-    }
+#else /*KR: KRNethack 맞춤 번역 */
+             pline("%s 화를 낸다!", append_josa(Monnam(mtmp), "은"));
+#endif
+         else if (flags.verbose && !Deaf)
+             growl(mtmp);
+     }
 
-    /* attacking your own quest leader will anger his or her guardians */
-    if (!context.mon_moving /* should always be the case here */
-        && mtmp->data == &mons[quest_info(MS_LEADER)]) {
-        struct monst *mon;
-        struct permonst *q_guardian = &mons[quest_info(MS_GUARDIAN)];
-        int got_mad = 0;
+     /* attacking your own quest leader will anger his or her guardians */
+     if (!context.mon_moving /* should always be the case here */
+         && mtmp->data == &mons[quest_info(MS_LEADER)]) {
+         struct monst *mon;
+         struct permonst *q_guardian = &mons[quest_info(MS_GUARDIAN)];
+         int got_mad = 0;
 
-        /* guardians will sense this attack even if they can't see it */
-        for (mon = fmon; mon; mon = mon->nmon) {
-            if (DEADMONSTER(mon))
-                continue;
-            if (mon->data == q_guardian && mon->mpeaceful) {
-                mon->mpeaceful = 0;
-                if (canseemon(mon))
-                    ++got_mad;
-            }
-        }
-        if (got_mad && !Hallucination) {
-            const char *who = q_guardian->mname;
+         /* guardians will sense this attack even if they can't see it */
+         for (mon = fmon; mon; mon = mon->nmon) {
+             if (DEADMONSTER(mon))
+                 continue;
+             if (mon->data == q_guardian && mon->mpeaceful) {
+                 mon->mpeaceful = 0;
+                 if (canseemon(mon))
+                     ++got_mad;
+             }
+         }
+         if (got_mad && !Hallucination) {
+             const char *who = q_guardian->mname;
 
+#if 0 /*KR: 원본*/
             if (got_mad > 1)
                 who = makeplural(who);
             pline_The("%s %s to be angry too...",
                       who, vtense(who, "appear"));
+#else /*KR: KRNethack 맞춤 번역 */
+             pline("%s도 화가 난 것 같다...", who);
+#endif
         }
     }
 
     /* make other peaceful monsters react */
     if (!context.mon_moving) {
         static const char *const Exclam[] = {
+#if 0 /*KR: 원본*/
             "Gasp!", "Uh-oh.", "Oh my!", "What?", "Why?",
+#else /*KR: KRNethack 맞춤 번역 */
+            "헉!", "이런.", "맙소사!", "뭐지?", "왜?",
+#endif
         };
         struct monst *mon;
         int mndx = monsndx(mtmp->data);
@@ -2981,7 +3197,8 @@ boolean via_attack;
 
                 if (humanoid(mon->data) || mon->isshk || mon->ispriest) {
                     if (is_watch(mon->data)) {
-                        verbalize("Halt!  You're under arrest!");
+                        /*KR verbalize("Halt!  You're under arrest!"); */
+                        verbalize("거기 서라! 넌 체포되었다!");
                         (void) angry_guards(!!Deaf);
                     } else {
                         if (!rn2(5)) {
@@ -3004,7 +3221,12 @@ boolean via_attack;
                             mon->mpeaceful = 0;
                             adjalign(-1);
                             if (!exclaimed)
+#if 0 /*KR: 원본*/
                                 pline("%s gets angry!", Monnam(mon));
+#else /*KR: KRNethack 맞춤 번역 */
+                                pline("%s 화를 낸다!",
+                                      append_josa(Monnam(mon), "은"));
+#endif
                         }
                     }
                 } else if (mon->data->mlet == mtmp->data->mlet
@@ -3788,20 +4010,39 @@ boolean msg;      /* "The oldmon turns into a newmon!" */
                     char msgtrail[BUFSZ];
 
                     if (is_vampshifter(mtmp)) {
+#if 0 /*KR: 원본*/
                         Sprintf(msgtrail, " which was a shapeshifted %s",
                                 noname_monnam(mtmp, ARTICLE_NONE));
+#else /*KR: KRNethack 맞춤 번역 */
+                        Sprintf(msgtrail, "(알고 보니 모습을 바꾼 %s)",
+                                noname_monnam(mtmp, ARTICLE_NONE));
+#endif
                     } else if (is_animal(mdat)) {
-                        Strcpy(msgtrail, "'s stomach");
+                        /*KR Strcpy(msgtrail, "'s stomach"); */
+                        Strcpy(msgtrail, "의 위장");
                     } else {
                         msgtrail[0] = '\0';
                     }
 
                     /* Do this even if msg is FALSE */
+#if 0 /*KR: 원본*/
                     You("%s %s%s!",
                         (amorphous(olddata) || is_whirly(olddata))
                             ? "emerge from" : "break out of",
                         l_oldname, msgtrail);
-                    msg = FALSE; /* message has been given */
+#else /*KR: KRNethack 맞춤 번역 */
+                    {
+                        char trail_buf[BUFSZ];
+                        Sprintf(trail_buf, "%s%s", l_oldname, msgtrail);
+                        if (amorphous(olddata) || is_whirly(olddata)) {
+                            You("%s에서 빠져나왔다!", trail_buf);
+                        } else {
+                            You("%s 뚫고 나왔다!",
+                                append_josa(trail_buf, "을"));
+                        }
+                    }
+#endif
+                    msg = FALSE;   /* message has been given */
                     mtmp->mhp = 1; /* almost dead */
                 }
                 expels(mtmp, olddata, FALSE);
@@ -3832,15 +4073,45 @@ boolean msg;      /* "The oldmon turns into a newmon!" */
     if (msg) {
         Strcpy(newname, noname_monnam(mtmp, ARTICLE_A));
         /* oldname was capitalized above; newname will be lower case */
+#if 0 /*KR: 원본*/
         if (!strcmpi(newname, "it")) { /* can't see or sense it now */
+#else /*KR: KRNethack 맞춤 번역 */
+        /* KRNethack에서는 'it' 대신 '그것'이나 '무언가'로 번역될 수 있음을
+         * 감안 */
+        if (!strcmpi(newname, "그것") || !strcmpi(newname, "무언가")
+            || !strcmpi(newname, "it")) {
+#endif
+#if 0 /*KR: 원본*/
             if (!!strcmpi(oldname, "it")) /* could see or sense it before */
+#else /*KR: KRNethack 맞춤 번역 */
+            if (!!strcmpi(oldname, "그것") && !!strcmpi(oldname, "무언가")
+                && !!strcmpi(oldname, "it"))
+#endif
+#if 0 /*KR: 원본*/
                 pline("%s disappears!", oldname);
+#else /*KR: KRNethack 맞춤 번역 */
+                pline("%s 사라졌다!", append_josa(oldname, "은"));
+#endif
             (void) usmellmon(mdat);
         } else { /* can see or sense it now */
+#if 0            /*KR: 원본*/
             if (!strcmpi(oldname, "it")) /* couldn't see or sense it before */
+#else            /*KR: KRNethack 맞춤 번역 */
+            if (!strcmpi(oldname, "그것") || !strcmpi(oldname, "무언가")
+                || !strcmpi(oldname, "it"))
+#endif
+#if 0 /*KR: 원본*/
                 pline("%s appears!", upstart(newname));
+#else /*KR: KRNethack 맞춤 번역 */
+                pline("%s 나타났다!", append_josa(upstart(newname), "은"));
+#endif
             else
+#if 0 /*KR: 원본*/
                 pline("%s turns into %s!", oldname, newname);
+#else /*KR: KRNethack 맞춤 번역 */
+                pline("%s %s 되었다!", append_josa(oldname, "은"),
+                      append_josa(newname, "이"));
+#endif
         }
     }
 
@@ -3853,8 +4124,12 @@ boolean msg;      /* "The oldmon turns into a newmon!" */
     possibly_unwield(mtmp, polyspot); /* might lose use of weapon */
     mon_break_armor(mtmp, polyspot);
     if (!(mtmp->misc_worn_check & W_ARMG))
+#if 0 /*KR: 원본*/
         mselftouch(mtmp, "No longer petrify-resistant, ",
                    !context.mon_moving);
+#else /*KR: KRNethack 맞춤 번역 */
+        mselftouch(mtmp, "석화에 대한 저항력을 잃어, ", !context.mon_moving);
+#endif
     m_dowear(mtmp, FALSE);
 
     /* This ought to re-test can_carry() on each item in the inventory
@@ -4058,7 +4333,12 @@ int damtype, dam;
             if (mon->mhp > mon->mhpmax)
                 mon->mhp = mon->mhpmax;
             if (cansee(mon->mx, mon->my))
+#if 0 /*KR: 원본*/
                 pline("%s seems healthier.", Monnam(mon));
+#else /*KR: KRNethack 맞춤 번역 */
+                pline("%s 더 건강해진 것 같다.",
+                      append_josa(Monnam(mon), "은"));
+#endif
         }
     }
 }
@@ -4091,17 +4371,31 @@ boolean silent;
     if (ct) {
         if (!silent) { /* do we want pline msgs? */
             if (slct)
+#if 0 /*KR: 원본*/
                 pline_The("guard%s wake%s up!", slct > 1 ? "s" : "",
                           slct == 1 ? "s" : "");
+#else /*KR: KRNethack 맞춤 번역 */
+                pline("경비병%s 잠에서 깨어났다!", slct > 1 ? "들이" : "이");
+#endif
             if (nct || sct) {
                 if (nct)
+#if 0 /*KR: 원본*/
                     pline_The("guard%s get%s angry!", nct == 1 ? "" : "s",
                               nct == 1 ? "s" : "");
+#else /*KR: KRNethack 맞춤 번역 */
+                    pline("경비병%s 화가 났다!", nct > 1 ? "들이" : "이");
+#endif
                 else if (!Blind)
+#if 0 /*KR: 원본*/
                     You_see("%sangry guard%s approaching!",
                             sct == 1 ? "an " : "", sct > 1 ? "s" : "");
+#else /*KR: KRNethack 맞춤 번역 */
+                    You_see("화난 경비병%s 다가오는 것을 보았다!",
+                            sct > 1 ? "들이" : "이");
+#endif
             } else
-                You_hear("the shrill sound of a guard's whistle.");
+                /*KR You_hear("the shrill sound of a guard's whistle."); */
+                You_hear("경비병의 날카로운 호루라기 소리가 들렸다.");
         }
         return TRUE;
     }
@@ -4121,9 +4415,7 @@ pacify_guards()
     }
 }
 
-void
-mimic_hit_msg(mtmp, otyp)
-struct monst *mtmp;
+void mimic_hit_msg(mtmp, otyp) struct monst *mtmp;
 short otyp;
 {
     short ap = mtmp->mappearance;
@@ -4135,9 +4427,15 @@ short otyp;
         break;
     case M_AP_OBJECT:
         if (otyp == SPE_HEALING || otyp == SPE_EXTRA_HEALING) {
+#if 0 /*KR: 원본*/
             pline("%s seems a more vivid %s than before.",
                   The(simple_typename(ap)),
                   c_obj_colors[objects[ap].oc_color]);
+#else /*KR: KRNethack 맞춤 번역 */
+            pline("%s 이전보다 더 선명한 %s(으)로 보인다.",
+                  append_josa(The(simple_typename(ap)), "은"),
+                  c_obj_colors[objects[ap].oc_color]);
+#endif
         }
         break;
     }
@@ -4158,14 +4456,16 @@ struct permonst *mdat;
         switch (mndx) {
         case PM_ROTHE:
         case PM_MINOTAUR:
-            You("notice a bovine smell.");
+            /*KR You("notice a bovine smell."); */
+            You("소 같은 냄새를 맡았다.");
             msg_given = TRUE;
             break;
         case PM_CAVEMAN:
         case PM_CAVEWOMAN:
         case PM_BARBARIAN:
         case PM_NEANDERTHAL:
-            You("smell body odor.");
+            /*KR You("smell body odor."); */
+            You("체취를 맡았다.");
             msg_given = TRUE;
             break;
         /*
@@ -4188,7 +4488,8 @@ struct permonst *mdat;
         case PM_WERERAT:
         case PM_WEREWOLF:
         case PM_OWLBEAR:
-            You("detect an odor reminiscent of an animal's den.");
+            /*KR You("detect an odor reminiscent of an animal's den."); */
+            You("짐승의 굴이 연상되는 냄새를 맡았다.");
             msg_given = TRUE;
             break;
         /*
@@ -4196,16 +4497,19 @@ struct permonst *mdat;
             break;
         */
         case PM_STEAM_VORTEX:
-            You("smell steam.");
+            /*KR You("smell steam."); */
+            You("증기 냄새를 맡았다.");
             msg_given = TRUE;
             break;
         case PM_GREEN_SLIME:
-            pline("%s stinks.", Something);
+            /*KR pline("%s stinks.", Something); */
+            pline("%s에서 악취가 난다.", Something);
             msg_given = TRUE;
             break;
         case PM_VIOLET_FUNGUS:
         case PM_SHRIEKER:
-            You("smell mushrooms.");
+            /*KR You("smell mushrooms."); */
+            You("버섯 냄새를 맡았다.");
             msg_given = TRUE;
             break;
         /* These are here to avoid triggering the
@@ -4223,35 +4527,48 @@ struct permonst *mdat;
         if (nonspecific)
             switch (mdat->mlet) {
             case S_DOG:
-                You("notice a dog smell.");
+                /*KR You("notice a dog smell."); */
+                You("개 냄새를 맡았다.");
                 msg_given = TRUE;
                 break;
             case S_DRAGON:
-                You("smell a dragon!");
+                /*KR You("smell a dragon!"); */
+                You("드래곤 냄새를 맡았다!");
                 msg_given = TRUE;
                 break;
             case S_FUNGUS:
-                pline("%s smells moldy.", Something);
+                /*KR pline("%s smells moldy.", Something); */
+                pline("%s에서 곰팡내 같은 냄새가 난다.", Something);
                 msg_given = TRUE;
                 break;
             case S_UNICORN:
+#if 0 /*KR: 원본*/
                 You("detect a%s odor reminiscent of a stable.",
                     (mndx == PM_PONY) ? "n" : " strong");
+#else /*KR: KRNethack 맞춤 번역 */
+                You("마구간이 연상되는 %s냄새를 맡았다.",
+                    (mndx == PM_PONY) ? "" : "강한 ");
+#endif
                 msg_given = TRUE;
                 break;
             case S_ZOMBIE:
-                You("smell rotting flesh.");
+                /*KR You("smell rotting flesh."); */
+                You("썩은 고기 냄새를 맡았다.");
                 msg_given = TRUE;
                 break;
             case S_EEL:
-                You("smell fish.");
+                /*KR You("smell fish."); */
+                You("생선 냄새를 맡았다.");
                 msg_given = TRUE;
                 break;
             case S_ORC:
                 if (maybe_polyd(is_orc(youmonst.data), Race_if(PM_ORC)))
-                    You("notice an attractive smell.");
+                    /*KR You("notice an attractive smell."); */
+                    You("매력적인 냄새를 맡았다.");
                 else
-                    pline("A foul stench makes you feel a little nauseated.");
+                    /*KR pline("A foul stench makes you feel a little
+                     * nauseated."); */
+                    pline("역겨운 악취에 약간 구역질이 났다.");
                 msg_given = TRUE;
                 break;
             default:

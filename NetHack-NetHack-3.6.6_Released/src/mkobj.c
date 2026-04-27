@@ -683,21 +683,28 @@ register struct obj *otmp;
 
 /* alteration types; must match COST_xxx macros in hack.h */
 static const char *const alteration_verbs[] = {
+#if 0 /*KR: 원본*/
     "cancel", "drain", "uncharge", "unbless", "uncurse", "disenchant",
     "degrade", "dilute", "erase", "burn", "neutralize", "destroy", "splatter",
     "bite", "open", "break the lock on", "rust", "rot", "tarnish"
+#else /*KR: KRNethack 맞춤 번역 */
+    "무효화했",        "흡수했",    "방전시켰", "축복을 지웠", "저주를 풀었",
+    "마력을 약화시켰", "손상시켰",  "희석시켰", "지웠",        "태웠",
+    "중화시켰",        "파괴했",    "흩뿌렸",   "베어 물었",   "열었",
+    "자물쇠를 부쉈",   "녹슬게 했", "썩게 했",  "변색시켰"
+#endif
 };
 
 /* possibly bill for an object which the player has just modified */
-void
-costly_alteration(obj, alter_type)
-struct obj *obj;
+void costly_alteration(obj, alter_type) struct obj *obj;
 int alter_type;
 {
     xchar ox, oy;
     char objroom;
     boolean learn_bknown;
+#if 0 /*KR: 원본*/
     const char *those, *them;
+#endif
     struct monst *shkp = 0;
 
     if (alter_type < 0 || alter_type >= SIZE(alteration_verbs)) {
@@ -728,10 +735,12 @@ int alter_type;
             return;
     }
 
+#if 0 /*KR: 원본*/
     if (obj->quan == 1L)
         those = "that", them = "it";
     else
         those = "those", them = "them";
+#endif
 
     /* when shopkeeper describes the object as being uncursed or unblessed
        hero will know that it is now uncursed; will also make the feedback
@@ -743,17 +752,28 @@ int alter_type;
     case OBJ_INVENT:
         if (learn_bknown)
             set_bknown(obj, 1);
+#if 0 /*KR: 원본*/
         verbalize("You %s %s %s, you pay for %s!",
                   alteration_verbs[alter_type], those, simpleonames(obj),
                   them);
+#else /*KR: KRNethack 맞춤 번역 */
+        verbalize("%s %s다면, 값을 치러야 할 거다!",
+                  append_josa(simpleonames(obj), "을"),
+                  alteration_verbs[alter_type]);
+#endif
         bill_dummy_object(obj);
         break;
     case OBJ_FLOOR:
         if (learn_bknown)
             obj->bknown = 1; /* ok to bypass set_bknown() here */
         if (costly_spot(u.ux, u.uy) && objroom == *u.ushops) {
+#if 0 /*KR: 원본*/
             verbalize("You %s %s, you pay for %s!",
                       alteration_verbs[alter_type], those, them);
+#else /*KR: KRNethack 맞춤 번역 */
+            verbalize("그렇게 %s다면, 값을 치러야 할 거다!",
+                      alteration_verbs[alter_type]);
+#endif
             bill_dummy_object(obj);
         } else {
             (void) stolen_value(obj, ox, oy, FALSE, FALSE);
@@ -1243,7 +1263,11 @@ int old_range;
             *buf = '\0';
             if (iflags.last_msg == PLNMSG_OBJ_GLOWS)
                 /* we just saw "The <obj> glows <color>." from dipping */
+#if 0 /*KR: 원본*/
                 Strcpy(buf, (obj->quan == 1L) ? "It" : "They");
+#else /*KR: KRNethack 맞춤 번역 */
+                Strcpy(buf, (obj->quan == 1L) ? "그것" : "그것들");
+#endif
             else if (carried(obj) || cansee(ox, oy))
                 Strcpy(buf, Yname2(obj));
             if (*buf) {
@@ -1252,9 +1276,15 @@ int old_range;
                    when changing intensity, using "less brightly" is
                    straightforward for dimming, but we need "brighter"
                    rather than "more brightly" for brightening; ugh */
+#if 0 /*KR: 원본*/
                 pline("%s %s %s%s.", buf, otense(obj, "shine"),
                       (abs(delta) > 1) ? "much " : "",
                       (delta > 0) ? "brighter" : "less brightly");
+#else /*KR: KRNethack 맞춤 번역 */
+                pline("%s %s%s.", append_josa(buf, "은"),
+                      (abs(delta) > 1) ? "훨씬 " : "",
+                      (delta > 0) ? "더 밝게 빛난다" : "빛이 희미해졌다");
+#endif
             }
         }
     }
@@ -2214,15 +2244,21 @@ boolean tipping; /* caller emptying entire contents; affects shop handling */
                 do {
                     obj->otyp = rnd_class(POT_BOOZE, POT_WATER);
                 } while (obj->otyp == POT_SICKNESS);
-            what = (obj->quan > 1L) ? "Some potions" : "A potion";
+            /*KR what = (obj->quan > 1L) ? "Some potions" : "A potion"; */
+            what = (obj->quan > 1L) ? "물약 몇 병" : "물약";
         } else {
             obj = mkobj(FOOD_CLASS, FALSE);
             if (obj->otyp == FOOD_RATION && !rn2(7))
                 obj->otyp = LUMP_OF_ROYAL_JELLY;
-            what = "Some food";
+            /*KR what = "Some food"; */
+            what = "음식";
         }
         ++objcount;
+#if 0 /*KR: 원본*/
         pline("%s %s out.", what, vtense(what, "spill"));
+#else /*KR: KRNethack 맞춤 번역 */
+        pline("%s 쏟아져 나왔다.", append_josa(what, "이"));
+#endif
         obj->blessed = horn->blessed;
         obj->cursed = horn->cursed;
         obj->owt = weight(obj);
@@ -2234,6 +2270,7 @@ boolean tipping; /* caller emptying entire contents; affects shop handling */
            being included in its formatted name during next message */
         iflags.suppress_price++;
         if (!tipping) {
+#if 0 /*KR: 원본*/
             obj = hold_another_object(obj,
                                       u.uswallow
                                         ? "Oops!  %s out of your reach!"
@@ -2244,6 +2281,17 @@ boolean tipping; /* caller emptying entire contents; affects shop handling */
                                           ? "Oops!  %s away from you!"
                                           : "Oops!  %s to the floor!",
                                       The(aobjnam(obj, "slip")), (char *) 0);
+#else /*KR: KRNethack 맞춤 번역 */
+            obj = hold_another_object(
+                obj,
+                u.uswallow ? "앗! %s 닿지 않는 곳에 떨어졌다!"
+                : (Is_airlevel(&u.uz) || Is_waterlevel(&u.uz)
+                   || levl[u.ux][u.uy].typ < IRONBARS
+                   || levl[u.ux][u.uy].typ >= ICE)
+                    ? "앗! %s 당신에게서 미끄러져 떨어졌다!"
+                    : "앗! %s 바닥으로 미끄러져 떨어졌다!",
+                append_josa(xname(obj), "이"), (char *) 0);
+#endif
             nhUse(obj);
         } else {
             /* assumes this is taking place at hero's location */
@@ -2253,8 +2301,14 @@ boolean tipping; /* caller emptying entire contents; affects shop handling */
                 if (IS_ALTAR(levl[u.ux][u.uy].typ))
                     doaltarobj(obj); /* does its own drop message */
                 else
+#if 0 /*KR: 원본*/
                     pline("%s %s to the %s.", Doname2(obj),
                           otense(obj, "drop"), surface(u.ux, u.uy));
+#else /*KR: KRNethack 맞춤 번역 */
+                    pline("%s %s에 떨어졌다.",
+                          append_josa(Doname2(obj), "은"),
+                          surface(u.ux, u.uy));
+#endif
                 dropy(obj);
             }
         }
@@ -2945,9 +2999,11 @@ struct obj *otmp2;
     if ((!Blind && visible) || inpack) {
         if (Hallucination) {
             if (onfloor) {
-                You_see("parts of the floor melting!");
+                /*KR You_see("parts of the floor melting!"); */
+                You_see("바닥의 일부가 녹아내리는 것을 보았다!");
             } else if (inpack) {
-                Your("pack reaches out and grabs something!");
+                /*KR Your("pack reaches out and grabs something!"); */
+                Your("배낭이 손을 뻗어 무언가를 움켜쥐었다!");
             }
             /* even though we can see where they should be,
              * they'll be out of our view (minvent or container)
@@ -2956,13 +3012,20 @@ struct obj *otmp2;
             boolean adj = ((otmp->ox != u.ux || otmp->oy != u.uy)
                            && (otmp2->ox != u.ux || otmp2->oy != u.uy));
 
+#if 0 /*KR: 원본*/
             pline("The %s%s coalesce%s.",
                   (onfloor && adj) ? "adjacent " : "",
                   makeplural(obj_typename(otmp->otyp)),
                   inpack ? " inside your pack" : "");
+#else /*KR: KRNethack 맞춤 번역 */
+            pline("%s%s %s 융합되었다.", (onfloor && adj) ? "인접한 " : "",
+                  append_josa(obj_typename(otmp->otyp), "이"),
+                  inpack ? "배낭 안에서" : "");
+#endif
         }
     } else {
-        You_hear("a faint sloshing sound.");
+        /*KR You_hear("a faint sloshing sound."); */
+        You_hear("희미하게 출렁거리는 소리가 들렸다.");
     }
 }
 

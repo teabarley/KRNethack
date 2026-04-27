@@ -61,12 +61,13 @@ static NEARDATA struct obj *current_container;
 static NEARDATA boolean abort_looting;
 #define Icebox (current_container->otyp == ICE_BOX)
 
-#if 0 /*KR*/
 static const char
-        moderateloadmsg[] = "You have a little trouble lifting",
-        nearloadmsg[] = "You have much trouble lifting",
-        overloadmsg[] = "You have extreme difficulty lifting";
-#endif
+    /*KR moderateloadmsg[] = "You have a little trouble lifting", */
+    moderateloadmsg[] = "들면서 약간 휘청거렸다",
+    /*KR nearloadmsg[] = "You have much trouble lifting", */
+    nearloadmsg[] = "어깨가 짓눌리는 것 같다",
+    /*KR overloadmsg[] = "You have extreme difficulty lifting"; */
+    overloadmsg[] = "들어올리는 데 너무나 큰 고통이 따른다";
 
 /* BUG: this lets you look at cockatrice corpses while blind without
    touching them */
@@ -243,9 +244,17 @@ int *menu_on_demand;
                                                               
 #endif
                     if (*where)
+#if 0 /*KR: 원본*/
                         There("are no %c's %s.", sym, where);
+#else /*KR: KRNethack 맞춤 번역 */
+                        pline("%s에는 %c 종류의 물건이 없다.", where, sym);
+#endif
                     else
+#if 0 /*KR: 원본*/
                         You("have no %c's.", sym);
+#else /*KR: KRNethack 맞춤 번역 */
+                        You("%c 종류의 물건을 가지고 있지 않다.", sym);
+#endif
                     not_everything = TRUE;
                 }
             }
@@ -281,8 +290,15 @@ boolean remotely;
         return FALSE;
     }
 
+#if 0 /*KR: 원본*/
     pline("Touching %s is a fatal mistake.",
           corpse_xname(obj, (const char *) 0, CXN_SINGULAR | CXN_ARTICLE));
+#else /*KR: KRNethack 맞춤 번역 */
+    pline("%s 만진 것은 치명적인 실수다.",
+          append_josa(
+              corpse_xname(obj, (const char *) 0, CXN_SINGULAR | CXN_ARTICLE),
+              "을"));
+#endif
     instapetrify(killer_xname(obj));
     return TRUE;
 }
@@ -296,8 +312,13 @@ boolean remotely;
     if (!obj || obj->otyp != CORPSE || !is_rider(&mons[obj->corpsenm]))
         return FALSE;
 
+#if 0 /*KR: 원본*/
     pline("At your %s, the corpse suddenly moves...",
           remotely ? "attempted acquisition" : "touch");
+#else /*KR: KRNethack 맞춤 번역 */
+    pline("당신이 %s 갑자기 시체가 움직였다...",
+          remotely ? "가져가려 하자," : "손을 대자,");
+#endif
     (void) revive_corpse(obj);
     exercise(A_WIS, FALSE);
     return TRUE;
@@ -548,7 +569,9 @@ int what; /* should be a long */
         }
         if (notake(youmonst.data)) {
             if (!autopickup)
-                You("are physically incapable of picking anything up.");
+                /*KR You("are physically incapable of picking anything up.");
+                 */
+                You("물리적으로 아무것도 주울 수 없다.");
             else
                 check_here(FALSE);
             return 0;
@@ -586,7 +609,8 @@ int what; /* should be a long */
         if (count) { /* looking for N of something */
             char qbuf[QBUFSZ];
 
-            Sprintf(qbuf, "Pick %d of what?", count);
+            /*KR Sprintf(qbuf, "Pick %d of what?", count); */
+            Sprintf(qbuf, "어떤 것을 %d개 주우시겠습니까?", count);
             val_for_n_or_more = count; /* set up callback selector */
             n = query_objlist(qbuf, objchain_p, traverse_how,
                               &pick_list, PICK_ONE, n_or_more);
@@ -594,9 +618,15 @@ int what; /* should be a long */
             for (i = 0; i < n; i++)
                 pick_list[i].count = count;
         } else {
+#if 0 /*KR: 원본*/
             n = query_objlist("Pick up what?", objchain_p,
                               (traverse_how | FEEL_COCKATRICE),
                               &pick_list, PICK_ANY, all_but_uchain);
+#else /*KR: KRNethack 맞춤 번역 */
+            n = query_objlist("무엇을 주우시겠습니까?", objchain_p,
+                              (traverse_how | FEEL_COCKATRICE), &pick_list,
+                              PICK_ANY, all_but_uchain);
+#endif
         }
 
  menu_pickup:
@@ -639,7 +669,11 @@ int what; /* should be a long */
         } else if (ct >= 2) {
             int via_menu = 0;
 
+#if 0 /*KR:T*/            
             There("are %s objects here.", (ct <= 10) ? "several" : "many");
+#else
+            pline("여기에 %s 물건이 있다.", (ct <= 10) ? "몇 개의" : "많은");
+#endif
 #if 0 /*KR:T*/
             if (!query_classes(oclasses, &selective, &all_of_a_type,
                                "pick up", *objchain_p,
@@ -655,10 +689,17 @@ int what; /* should be a long */
                     goto pickupdone;
                 if (selective)
                     traverse_how |= INVORDER_SORT;
+#if 0 /*KR: 원본*/
                 n = query_objlist("Pick up what?", objchain_p, traverse_how,
                                   &pick_list, PICK_ANY,
                                   (via_menu == -2) ? allow_all
                                                    : allow_category);
+#else /*KR: KRNethack 맞춤 번역 */
+                n = query_objlist("무엇을 주우시겠습니까?", objchain_p,
+                                  traverse_how, &pick_list, PICK_ANY,
+                                  (via_menu == -2) ? allow_all
+                                                   : allow_category);
+#endif
                 goto menu_pickup;
             }
         }
@@ -676,8 +717,13 @@ int what; /* should be a long */
             if (!all_of_a_type) {
                 char qbuf[BUFSZ];
 
+#if 0 /*KR: 원본*/
                 (void) safe_qbuf(qbuf, "Pick up ", "?", obj, doname,
                                  ansimpleoname, something);
+#else /*KR: KRNethack 맞춤 번역 */
+                (void) safe_qbuf(qbuf, "", " 주우시겠습니까?", obj, doname,
+                                 ansimpleoname, "이것을");
+#endif
                 switch ((obj->quan < 2L) ? ynaq(qbuf) : ynNaq(qbuf)) {
                 case 'q':
                     goto end_query; /* out 2 levels */
@@ -955,8 +1001,13 @@ boolean FDECL((*allow), (OBJ_P)); /* allow function */
 
         any = zeroany;
         if (sorted && n > 1) {
+#if 0 /*KR: 원본*/
             Sprintf(buf, "%s Creatures",
                     is_animal(u.ustuck->data) ? "Swallowed" : "Engulfed");
+#else /*KR: KRNethack 맞춤 번역 */
+            Sprintf(buf, "%s 몬스터",
+                    is_animal(u.ustuck->data) ? "삼킨" : "집어삼킨");
+#endif
             add_menu(win, NO_GLYPH, &any, 0, 0, iflags.menu_headings, buf,
                      MENU_UNSELECTED);
         }
@@ -985,11 +1036,14 @@ boolean FDECL((*allow), (OBJ_P)); /* allow function */
                 /* this isn't actually possible; fake item representing
                    hero is only included for look here (':'), not pickup,
                    and that's PICK_NONE so we can't get here from there */
-                You_cant("pick yourself up!");
+                /*KR You_cant("pick yourself up!"); */
+                You_cant("당신 스스로를 주울 수는 없다!");
                 continue;
             }
             if (engulfer_minvent && curr->owornmask != 0L) {
-                You_cant("pick %s up.", ysimple_name(curr));
+                /*KR You_cant("pick %s up.", ysimple_name(curr)); */
+                You_cant("%s 주울 수 없다.",
+                         append_josa(ysimple_name(curr), "을"));
                 continue;
             }
             if (mi->count == -1L || mi->count > curr->quan)
@@ -1025,9 +1079,8 @@ boolean FDECL((*allow), (OBJ_P)); /* allow function */
  * allow menu-based category (class) selection (for Drop,take off etc.)
  *
  */
-int
-query_category(qstr, olist, qflags, pick_list, how)
-const char *qstr;      /* query string */
+int query_category(qstr, olist, qflags, pick_list, how) const
+    char *qstr;        /* query string */
 struct obj *olist;     /* the list to pick from */
 int qflags;            /* behaviour modification flags */
 menu_item **pick_list; /* return list of items picked */
@@ -1101,8 +1154,13 @@ int how;               /* type of query */
         any = zeroany;
         any.a_int = 'A';
         add_menu(win, NO_GLYPH, &any, invlet, 0, ATR_NONE,
+#if 0 /*KR: 원본*/
                  (qflags & WORN_TYPES) ? "Auto-select every item being worn"
                                        : "Auto-select every item",
+#else /*KR: KRNethack 맞춤 번역 */
+                 (qflags & WORN_TYPES) ? "착용 중인 모든 아이템 자동 선택"
+                                       : "모든 아이템 자동 선택",
+#endif
                  MENU_UNSELECTED);
 
         any = zeroany;
@@ -1113,9 +1171,11 @@ int how;               /* type of query */
         invlet = 'a';
         any = zeroany;
         any.a_int = ALL_TYPES_SELECTED;
-        add_menu(win, NO_GLYPH, &any, invlet, 0, ATR_NONE,
-                 (qflags & WORN_TYPES) ? "All worn types" : "All types",
-                 MENU_UNSELECTED);
+        add_menu(
+            win, NO_GLYPH, &any, invlet, 0, ATR_NONE,
+            /*KR (qflags & WORN_TYPES) ? "All worn types" : "All types", */
+            (qflags & WORN_TYPES) ? "착용 중인 모든 종류" : "모든 종류",
+            MENU_UNSELECTED);
         invlet = 'b';
     } else
         invlet = 'a';
@@ -1131,9 +1191,10 @@ int how;               /* type of query */
                     add_menu(
                         win, NO_GLYPH, &any, invlet++,
                         def_oc_syms[(int) objects[curr->otyp].oc_class].sym,
-                        ATR_NONE, let_to_name(*pack, FALSE,
-                                              (how != PICK_NONE)
-                                                  && iflags.menu_head_objsym),
+                        ATR_NONE,
+                        let_to_name(*pack, FALSE,
+                                    (how != PICK_NONE)
+                                        && iflags.menu_head_objsym),
                         MENU_UNSELECTED);
                     collected_type_name = TRUE;
                 }
@@ -1158,16 +1219,20 @@ int how;               /* type of query */
         invlet = 'u';
         any = zeroany;
         any.a_int = 'u';
-        add_menu(win, NO_GLYPH, &any, invlet, 0, ATR_NONE, "Unpaid items",
-                 MENU_UNSELECTED);
+        /*KR add_menu(win, NO_GLYPH, &any, invlet, 0, ATR_NONE, "Unpaid
+         * items", */
+        add_menu(win, NO_GLYPH, &any, invlet, 0, ATR_NONE,
+                 "지불하지 않은 물건들", MENU_UNSELECTED);
     }
     /* billed items: checked by caller, so always include if BILLED_TYPES */
     if (qflags & BILLED_TYPES) {
         invlet = 'x';
         any = zeroany;
         any.a_int = 'x';
+        /*KR add_menu(win, NO_GLYPH, &any, invlet, 0, ATR_NONE,
+                 "Unpaid items already used up", MENU_UNSELECTED); */
         add_menu(win, NO_GLYPH, &any, invlet, 0, ATR_NONE,
-                 "Unpaid items already used up", MENU_UNSELECTED);
+                 "사용해 버린 미지불 물건들", MENU_UNSELECTED);
     }
 
     /* items with b/u/c/unknown if there are any;
@@ -1177,33 +1242,41 @@ int how;               /* type of query */
         invlet = 'B';
         any = zeroany;
         any.a_int = 'B';
+        /*KR add_menu(win, NO_GLYPH, &any, invlet, 0, ATR_NONE,
+                 "Items known to be Blessed", MENU_UNSELECTED); */
         add_menu(win, NO_GLYPH, &any, invlet, 0, ATR_NONE,
-                 "Items known to be Blessed", MENU_UNSELECTED);
+                 "축복받았다고 알려진 물건들", MENU_UNSELECTED);
     }
     if (do_cursed) {
         invlet = 'C';
         any = zeroany;
         any.a_int = 'C';
+        /*KR add_menu(win, NO_GLYPH, &any, invlet, 0, ATR_NONE,
+                 "Items known to be Cursed", MENU_UNSELECTED); */
         add_menu(win, NO_GLYPH, &any, invlet, 0, ATR_NONE,
-                 "Items known to be Cursed", MENU_UNSELECTED);
+                 "저주받았다고 알려진 물건들", MENU_UNSELECTED);
     }
     if (do_uncursed) {
         invlet = 'U';
         any = zeroany;
         any.a_int = 'U';
+        /*KR add_menu(win, NO_GLYPH, &any, invlet, 0, ATR_NONE,
+                 "Items known to be Uncursed", MENU_UNSELECTED); */
         add_menu(win, NO_GLYPH, &any, invlet, 0, ATR_NONE,
-                 "Items known to be Uncursed", MENU_UNSELECTED);
+                 "저주받지 않았다고 알려진 물건들", MENU_UNSELECTED);
     }
     if (do_buc_unknown) {
         invlet = 'X';
         any = zeroany;
         any.a_int = 'X';
+        /*KR add_menu(win, NO_GLYPH, &any, invlet, 0, ATR_NONE,
+                 "Items of unknown Bless/Curse status", MENU_UNSELECTED); */
         add_menu(win, NO_GLYPH, &any, invlet, 0, ATR_NONE,
-                 "Items of unknown Bless/Curse status", MENU_UNSELECTED);
+                 "축복/저주 상태를 알 수 없는 물건들", MENU_UNSELECTED);
     }
     end_menu(win, qstr);
     n = select_menu(win, how, pick_list);
- query_done:
+query_done:
     destroy_nhwindow(win);
     if (n < 0)
         n = 0; /* caller's don't expect -1 */
@@ -1226,8 +1299,8 @@ int qflags;
         for (curr = olist; curr; curr = FOLLOW(curr, qflags)) {
             if (curr->oclass == *pack) {
                 if ((qflags & WORN_TYPES)
-                    && !(curr->owornmask & (W_ARMOR | W_ACCESSORY
-                                            | W_WEAPONS)))
+                    && !(curr->owornmask
+                         & (W_ARMOR | W_ACCESSORY | W_WEAPONS)))
                     continue;
                 if (!counted_category) {
                     ccount++;
@@ -1241,9 +1314,9 @@ int qflags;
 }
 
 /*
- *  How much the weight of the given container will change when the given
- *  object is removed from it.  Use before and after weight amounts rather
- *  than trying to match the calculation used by weight() in mkobj.c.
+ * How much the weight of the given container will change when the given
+ * object is removed from it.  Use before and after weight amounts rather
+ * than trying to match the calculation used by weight() in mkobj.c.
  */
 STATIC_OVL int
 delta_cwt(container, obj)
@@ -1284,7 +1357,11 @@ int *wt_before, *wt_after;
     int wt, iw, ow, oow;
     long qq, savequan, umoney;
     unsigned saveowt;
+#if 0 /*KR: 원본*/
     const char *verb, *prefx1, *prefx2, *suffx;
+#else /*KR: KRNethack 맞춤 번역 */
+    const char *verb, *prefx1;
+#endif
     char obj_nambuf[BUFSZ], where[BUFSZ];
 
     savequan = obj->quan;
@@ -1368,11 +1445,15 @@ int *wt_before, *wt_after;
         /* some message will be given */
         Strcpy(obj_nambuf, doname(obj));
         if (container) {
-            Sprintf(where, "in %s", the(xname(container)));
-            verb = "carry";
+            /*KR Sprintf(where, "in %s", the(xname(container))); */
+            Sprintf(where, "%s 안에 있는", the(xname(container)));
+            /*KR verb = "carry"; */
+            verb = "옮길";
         } else {
-            Strcpy(where, "lying here");
-            verb = telekinesis ? "acquire" : "lift";
+            /*KR Strcpy(where, "lying here"); */
+            Strcpy(where, "여기에 있는");
+            /*KR verb = telekinesis ? "acquire" : "lift"; */
+            verb = telekinesis ? "획득할" : "들어올릴";
         }
     } else {
         /* lint suppression */
@@ -1382,25 +1463,47 @@ int *wt_before, *wt_after;
     /* we can carry qq of them */
     if (qq > 0) {
         if (qq < count)
+#if 0 /*KR: 원본*/
             You("can only %s %s of the %s %s.", verb,
                 (qq == 1L) ? "one" : "some", obj_nambuf, where);
+#else /*KR: KRNethack 맞춤 번역 */
+            You("%s %s 중 %s만 %s 수 있다.", where, obj_nambuf,
+                (qq == 1L) ? "하나" : "일부", verb);
+#endif
         *wt_after = wt;
         return qq;
     }
 
     if (!container)
+#if 0                              /*KR: 원본*/
         Strcpy(where, "here"); /* slightly shorter form */
+#else                              /*KR: KRNethack 맞춤 번역 */
+        Strcpy(where, "이곳에는"); /* slightly shorter form */
+#endif
     if (invent || umoney) {
+#if 0 /*KR: 원본*/
         prefx1 = "you cannot ";
         prefx2 = "";
         suffx = " any more";
+#else /*KR: KRNethack 맞춤 번역 */
+        prefx1 = "더 이상";
+#endif
     } else {
+#if 0 /*KR: 원본*/
         prefx1 = (obj->quan == 1L) ? "it " : "even one ";
         prefx2 = "is too heavy for you to ";
         suffx = "";
+#else /*KR: KRNethack 맞춤 번역 */
+        prefx1 = "너무 무거워서";
+#endif
     }
+#if 0 /*KR: 원본*/
     There("%s %s %s, but %s%s%s%s.", otense(obj, "are"), obj_nambuf, where,
           prefx1, prefx2, verb, suffx);
+#else /*KR: KRNethack 맞춤 번역 */
+    pline("%s %s 놓여 있지만, %s %s 수 없다.", where,
+          append_josa(obj_nambuf, "이"), prefx1, verb);
+#endif
 
     /* *wt_after = iw; */
     return 0L;
@@ -1417,8 +1520,13 @@ boolean telekinesis;
     int result, old_wt, new_wt, prev_encumbr, next_encumbr;
 
     if (obj->otyp == BOULDER && Sokoban) {
+#if 0 /*KR: 원본*/
         You("cannot get your %s around this %s.", body_part(HAND),
             xname(obj));
+#else /*KR: KRNethack 맞춤 번역 */
+        You("이 %s %s 감쌀 수 없다.", append_josa(xname(obj), "을"),
+            append_josa(body_part(HAND), "으로"));
+#endif
         return -1;
     }
     /* override weight consideration for loadstone picked up by anybody
@@ -1431,13 +1539,19 @@ boolean telekinesis;
             return 1; /* lift regardless of current situation */
         /* if we reach here, we're out of slots and already have at least
            one of these, so treat this one more like a normal item */
+#if 0 /*KR: 원본*/
         You("are carrying too much stuff to pick up %s %s.",
             (obj->quan == 1L) ? "another" : "more", simpleonames(obj));
+#else /*KR: KRNethack 맞춤 번역 */
+        You("물건을 너무 많이 들고 있어 %s %s 더 주울 수 없다.",
+            append_josa(simpleonames(obj), "을"),
+            (obj->quan == 1L) ? "하나" : "조금이라도");
+#endif
         return -1;
     }
 
-    *cnt_p = carry_count(obj, container, *cnt_p, telekinesis,
-                         &old_wt, &new_wt);
+    *cnt_p =
+        carry_count(obj, container, *cnt_p, telekinesis, &old_wt, &new_wt);
     if (*cnt_p < 1L) {
         result = -1; /* nothing lifted */
     } else if (obj->oclass != COIN_CLASS
@@ -1448,10 +1562,18 @@ boolean telekinesis;
            we aren't limited by the 52 item limit for it, but caller and
            "grandcaller" aren't prepared to skip stuff and then pickup
            just gold, so the best we can do here is vary the message */
+#if 0 /*KR: 원본*/
         Your("knapsack cannot accommodate any more items%s.",
              /* floor follows by nexthere, otherwise container so by nobj */
              nxtobj(obj, GOLD_PIECE, (boolean) (obj->where == OBJ_FLOOR))
                  ? " (except gold)" : "");
+#else /*KR: KRNethack 맞춤 번역 */
+        Your("배낭에는 더 이상 아이템이 들어갈 공간이 없다%s.",
+             /* floor follows by nexthere, otherwise container so by nobj */
+             nxtobj(obj, GOLD_PIECE, (boolean) (obj->where == OBJ_FLOOR))
+                 ? " (금화는 제외)"
+                 : "");
+#endif
         result = -1; /* nothing lifted */
     } else {
         result = 1;
@@ -1546,7 +1668,8 @@ boolean telekinesis; /* not picking it up directly by hand */
         return 0;
     } else if (obj->where == OBJ_MINVENT && obj->owornmask != 0L
                && u.uswallow && obj->ocarry == u.ustuck) {
-        You_cant("pick %s up.", ysimple_name(obj));
+        /*KR You_cant("pick %s up.", ysimple_name(obj)); */
+        You_cant("%s 주울 수 없다.", append_josa(ysimple_name(obj), "을"));
         return 0;
     } else if (obj->oartifact && !touch_artifact(obj, &youmonst)) {
         return 0;
@@ -1560,9 +1683,14 @@ boolean telekinesis; /* not picking it up directly by hand */
         else if (!obj->spe && !obj->cursed)
             obj->spe = 1;
         else {
+#if 0 /*KR: 원본*/
             pline_The("scroll%s %s to dust as you %s %s up.", plur(obj->quan),
                       otense(obj, "turn"), telekinesis ? "raise" : "pick",
                       (obj->quan == 1L) ? "it" : "them");
+#else /*KR: KRNethack 맞춤 번역 */
+            pline("두루마리는 당신이 %s 먼지가 되어버렸다.",
+                  telekinesis ? "들어올리자마자" : "집어들자마자");
+#endif
             if (!(objects[SCR_SCARE_MONSTER].oc_name_known)
                 && !(objects[SCR_SCARE_MONSTER].oc_uname))
                 docall(obj);
@@ -1585,20 +1713,9 @@ boolean telekinesis; /* not picking it up directly by hand */
 
     if (uwep && uwep == obj)
         mrg_to_wielded = TRUE;
-#if 0 /*KR:T*/
     nearload = near_capacity();
     prinv(nearload == SLT_ENCUMBER ? moderateloadmsg : (char *) 0, obj,
           count);
-#else
-    nearload = near_capacity();
-    /* 1. 아이템 습득 로그를 먼저 평범하게 띄웁니다 (예: s - 두루마리) */
-    prinv((char *) 0, obj, count);
-
-    /* 2. 무게가 무거울 경우 다음 줄에 경고를 자연스럽게 띄워줍니다 */
-    if (nearload == SLT_ENCUMBER) {
-        pline("짐이 무거워 들어 올리기가 약간 버겁다.");
-    }
-#endif
     mrg_to_wielded = FALSE;
     return 1;
 }
@@ -1665,35 +1782,57 @@ encumber_msg()
     if (oldcap < newcap) {
         switch (newcap) {
         case 1:
-            Your("movements are slowed slightly because of your load.");
+            /*KR Your("movements are slowed slightly because of your load.");
+             */
+            Your("움직임이 짐 때문에 약간 느려졌다.");
             break;
         case 2:
-            You("rebalance your load.  Movement is difficult.");
+            /*KR You("rebalance your load.  Movement is difficult."); */
+            You("짐의 균형을 다시 맞췄다. 움직이기가 힘들다.");
             break;
         case 3:
+#if 0 /*KR: 원본*/
             You("%s under your heavy load.  Movement is very hard.",
                 stagger(youmonst.data, "stagger"));
+#else /*KR: KRNethack 맞춤 번역 */
+            You("무거운 짐 때문에 %s. 움직이기가 매우 힘들다.",
+                stagger(youmonst.data, "비틀거렸다"));
+#endif
             break;
         default:
+#if 0 /*KR: 원본*/
             You("%s move a handspan with this load!",
                 newcap == 4 ? "can barely" : "can't even");
+#else /*KR: KRNethack 맞춤 번역 */
+            You("이 짐으로는 %s!", newcap == 4
+                                       ? "간신히 한 뼘 정도만 움직일 수 있다"
+                                       : "한 뼘조차도 움직일 수 없다");
+#endif
             break;
         }
         context.botl = 1;
     } else if (oldcap > newcap) {
         switch (newcap) {
         case 0:
-            Your("movements are now unencumbered.");
+            /*KR Your("movements are now unencumbered."); */
+            Your("움직임이 편해졌다.");
             break;
         case 1:
-            Your("movements are only slowed slightly by your load.");
+            /*KR Your("movements are only slowed slightly by your load."); */
+            Your("움직임이 짐 때문에 아주 약간만 느려졌다.");
             break;
         case 2:
-            You("rebalance your load.  Movement is still difficult.");
+            /*KR You("rebalance your load.  Movement is still difficult."); */
+            You("짐의 균형을 다시 맞췄다. 여전히 움직이기가 힘들다.");
             break;
         case 3:
+#if 0 /*KR: 원본*/
             You("%s under your load.  Movement is still very hard.",
                 stagger(youmonst.data, "stagger"));
+#else /*KR: KRNethack 맞춤 번역 */
+            You("무거운 짐 때문에 %s. 여전히 움직이기가 매우 힘들다.",
+                stagger(youmonst.data, "비틀거렸다"));
+#endif
             break;
         }
         context.botl = 1;
@@ -1728,7 +1867,8 @@ able_to_loot(x, y, looting)
 int x, y;
 boolean looting; /* loot vs tip */
 {
-    const char *verb = looting ? "loot" : "tip";
+    /*KR const char *verb = looting ? "loot" : "tip"; */
+    const char *verb = looting ? "열어보는" : "기울이는";
 
     if (!can_reach_floor(TRUE)) {
         if (u.usteed && P_SKILL(P_RIDING) < P_BASIC)
@@ -1739,15 +1879,23 @@ boolean looting; /* loot vs tip */
     } else if ((is_pool(x, y) && (looting || !Underwater)) || is_lava(x, y)) {
         /* at present, can't loot in water even when Underwater;
            can tip underwater, but not when over--or stuck in--lava */
+#if 0 /*KR: 원본*/
         You("cannot %s things that are deep in the %s.", verb,
             hliquid(is_lava(x, y) ? "lava" : "water"));
+#else /*KR: KRNethack 맞춤 번역 */
+        You("깊은 %s 속에 있는 것을 %s 것은 불가능하다.",
+            hliquid(is_lava(x, y) ? "용암" : "물"), verb);
+#endif
         return FALSE;
     } else if (nolimbs(youmonst.data)) {
-        pline("Without limbs, you cannot %s anything.", verb);
+        /*KR pline("Without limbs, you cannot %s anything.", verb); */
+        pline("사지가 없어서는 어떤 것도 %s 수 없다.", verb);
         return FALSE;
     } else if (looting && !freehand()) {
-        pline("Without a free %s, you cannot loot anything.",
-              body_part(HAND));
+        /*KR pline("Without a free %s, you cannot loot anything.",
+         * body_part(HAND)); */
+        pline("비어있는 %s 없이는 어떤 것도 열어볼 수 없다.",
+              append_josa(body_part(HAND), "이"));
         return FALSE;
     }
     return TRUE;
@@ -1780,12 +1928,20 @@ int cindex, ccount; /* index of this container (1..N), number of them (N) */
         return 0;
     if (cobj->olocked) {
         if (ccount < 2)
+#if 0 /*KR: 원본*/
             pline("%s locked.",
                   cobj->lknown ? "It is" : "Hmmm, it turns out to be");
+#else /*KR: KRNethack 맞춤 번역 */
+            pline("%s잠겨 있다.", cobj->lknown ? "" : "흠, 이것은 ");
+#endif
         else if (cobj->lknown)
-            pline("%s is locked.", The(xname(cobj)));
+            /*KR pline("%s is locked.", The(xname(cobj))); */
+            pline("%s 잠겨 있다.", append_josa(The(xname(cobj)), "은"));
         else
-            pline("Hmmm, %s turns out to be locked.", the(xname(cobj)));
+            /*KR pline("Hmmm, %s turns out to be locked.", the(xname(cobj)));
+             */
+            pline("흠, %s 잠겨 있는 것 같다.",
+                  append_josa(the(xname(cobj)), "은"));
         cobj->lknown = 1;
         return 0;
     }
@@ -1794,17 +1950,23 @@ int cindex, ccount; /* index of this container (1..N), number of them (N) */
     if (cobj->otyp == BAG_OF_TRICKS) {
         int tmp;
 
-        You("carefully open %s...", the(xname(cobj)));
-        pline("It develops a huge set of teeth and bites you!");
+        /*KR You("carefully open %s...", the(xname(cobj))); */
+        You("조심스럽게 %s 열었다...", append_josa(the(xname(cobj)), "을"));
+        /*KR pline("It develops a huge set of teeth and bites you!"); */
+        pline("그것에서 거대한 이빨이 돋아나 당신을 물었다!");
         tmp = rnd(10);
-        losehp(Maybe_Half_Phys(tmp), "carnivorous bag", KILLED_BY_AN);
+        /*KR losehp(Maybe_Half_Phys(tmp), "carnivorous bag", KILLED_BY_AN); */
+        losehp(Maybe_Half_Phys(tmp), "육식성 가방", KILLED_BY_AN);
         makeknown(BAG_OF_TRICKS);
         abort_looting = TRUE;
         return 1;
     }
 
-    You("%sopen %s...", (!cobj->cknown || !cobj->lknown) ? "carefully " : "",
-        the(xname(cobj)));
+    /*KR You("%sopen %s...", (!cobj->cknown || !cobj->lknown) ? "carefully " :
+     * "", the(xname(cobj))); */
+    You("%s %s 열었다...",
+        (!cobj->cknown || !cobj->lknown) ? "조심스럽게" : "",
+        append_josa(the(xname(cobj)), "을"));
     return use_container(cobjp, 0, (boolean) (cindex < ccount));
 }
 
@@ -1817,7 +1979,9 @@ doloot()
     int timepassed = 0;
     coord cc;
     boolean underfoot = TRUE;
+#if 0 /*KR*/ /*not used*/
     const char *dont_find_anything = "don't find anything";
+#endif
     struct monst *mtmp;
     char qbuf[BUFSZ];
     int prev_inquiry = 0;
@@ -1831,16 +1995,21 @@ doloot()
         return 0;
     }
     if (nohands(youmonst.data)) {
+#if 0 /*KR: 원본*/
         You("have no hands!"); /* not `body_part(HAND)' */
+#else /*KR: KRNethack 맞춤 번역 */
+        pline("당신은 손이 없다!");
+#endif
         return 0;
     }
     if (Confusion) {
         if (rn2(6) && reverse_loot())
             return 1;
         if (rn2(2)) {
-            pline("Being confused, you find nothing to loot.");
+            /*KR pline("Being confused, you find nothing to loot."); */
+            pline("혼란스러워서, 열어볼 만한 것을 찾지 못했다.");
             return 1; /* costs a turn */
-        }             /* else fallthrough to normal looting */
+        } /* else fallthrough to normal looting */
     }
     cc.x = u.ux;
     cc.y = u.uy;
@@ -1848,7 +2017,7 @@ doloot()
     if (iflags.menu_requested)
         goto lootmon;
 
- lootcont:
+lootcont:
     if ((num_conts = container_at(cc.x, cc.y, TRUE)) > 0) {
         boolean anyfound = FALSE;
 
@@ -1887,7 +2056,8 @@ doloot()
                     add_menu(win, NO_GLYPH, &any, 0, 0, ATR_NONE,
                              doname(cobj), MENU_UNSELECTED);
                 }
-            end_menu(win, "Loot which containers?");
+            /*KR end_menu(win, "Loot which containers?"); */
+            end_menu(win, "어떤 상자를 열어보겠습니까?");
             n = select_menu(win, PICK_ANY, &pick_list);
             destroy_nhwindow(win);
 
@@ -1910,9 +2080,15 @@ doloot()
                 nobj = cobj->nexthere;
 
                 if (Is_container(cobj)) {
+#if 0 /*KR: 원본*/
                     c = ynq(safe_qbuf(qbuf, "There is ", " here, loot it?",
                                       cobj, doname, ansimpleoname,
                                       "a container"));
+#else /*KR: KRNethack 맞춤 번역 */
+                    c = ynq(safe_qbuf(qbuf, "여기에 ", " 열어보겠습니까?",
+                                      cobj, doname, ansimpleoname,
+                                      "상자가 있다,"));
+#endif
                     if (c == 'q')
                         return timepassed;
                     if (c == 'n')
@@ -1929,16 +2105,20 @@ doloot()
                 c = 'y';
         }
     } else if (IS_GRAVE(levl[cc.x][cc.y].typ)) {
-        You("need to dig up the grave to effectively loot it...");
+        /*KR You("need to dig up the grave to effectively loot it..."); */
+        You("제대로 파헤치려면 무덤을 먼저 파야 한다...");
     }
 
     /*
      * 3.3.1 introduced directional looting for some things.
      */
- lootmon:
+lootmon:
     if (c != 'y' && mon_beside(u.ux, u.uy)) {
-        if (!get_adjacent_loc("Loot in what direction?",
-                              "Invalid loot location", u.ux, u.uy, &cc))
+        /*KR if (!get_adjacent_loc("Loot in what direction?", */
+        if (!get_adjacent_loc(
+                "어느 방향을 조사할 것인가?",
+                /*KR "Invalid loot location", u.ux, u.uy, &cc)) */
+                "유효하지 않은 조사 위치", u.ux, u.uy, &cc))
             return 0;
         if (cc.x == u.ux && cc.y == u.uy) {
             underfoot = TRUE;
@@ -1947,8 +2127,12 @@ doloot()
         } else
             underfoot = FALSE;
         if (u.dz < 0) {
+#if 0 /*KR: 원본*/
             You("%s to loot on the %s.", dont_find_anything,
                 ceiling(cc.x, cc.y));
+#else /*KR: KRNethack 맞춤 번역 */
+            You("%s 아무것도 찾지 못했다.", ceiling(cc.x, cc.y));
+#endif
             timepassed = 1;
             return timepassed;
         }
@@ -1968,21 +2152,41 @@ doloot()
         if (!underfoot) {
             if (container_at(cc.x, cc.y, FALSE)) {
                 if (mtmp) {
+#if 0 /*KR: 원본*/
                     You_cant("loot anything %sthere with %s in the way.",
                              prev_inquiry ? "else " : "", mon_nam(mtmp));
+#else /*KR: KRNethack 맞춤 번역 */
+                    pline("%s 길을 막고 있어 %s아무것도 열어볼 수 없다.",
+                          append_josa(mon_nam(mtmp), "이"),
+                          prev_inquiry ? "다른 " : "");
+#endif
                     return timepassed;
                 } else {
+#if 0 /*KR: 원본*/
                     You("have to be at a container to loot it.");
+#else /*KR: KRNethack 맞춤 번역 */
+                    You("상자를 열려면 상자와 같은 위치에 있어야 한다.");
+#endif
                 }
             } else {
+#if 0 /*KR: 원본*/
                 You("%s %sthere to loot.", dont_find_anything,
                     (prev_inquiry || prev_loot) ? "else " : "");
+#else /*KR: KRNethack 맞춤 번역 */
+                pline("거기에는 %s열어볼 만한 것이 없다.",
+                      (prev_inquiry || prev_loot) ? "다른 " : "");
+#endif
                 return timepassed;
             }
         }
     } else if (c != 'y' && c != 'n') {
+#if 0 /*KR: 원본*/
         You("%s %s to loot.", dont_find_anything,
             underfoot ? "here" : "there");
+#else /*KR: KRNethack 맞춤 번역 */
+        pline("%s 열어볼 만한 것이 없다.",
+              underfoot ? "여기에는" : "거기에는");
+#endif
     }
     return timepassed;
 }
@@ -2001,7 +2205,8 @@ reverse_loot()
          */
         for (n = inv_cnt(TRUE), otmp = invent; otmp; --n, otmp = otmp->nobj)
             if (!rn2(n + 1)) {
-                prinv("You find old loot:", otmp, 0L);
+                /*KR prinv("You find old loot:", otmp, 0L); */
+                prinv("오래된 전리품을 발견했다:", otmp, 0L);
                 return TRUE;
             }
         return FALSE;
@@ -2022,9 +2227,11 @@ reverse_loot()
         dropx(goldob);
         /* the dropped gold might have fallen to lower level */
         if (g_at(x, y))
-            pline("Ok, now there is loot here.");
+            /*KR pline("Ok, now there is loot here."); */
+            pline("좋아, 여기에 전리품을 두자.");
     } else {
-        /* find original coffers chest if present, otherwise use nearest one */
+        /* find original coffers chest if present, otherwise use nearest one
+         */
         otmp = 0;
         for (coffers = fobj; coffers; coffers = coffers->nobj)
             if (coffers->otyp == CHEST) {
@@ -2039,7 +2246,9 @@ reverse_loot()
             coffers = otmp;
 
         if (coffers) {
-            verbalize("Thank you for your contribution to reduce the debt.");
+            /*KR verbalize("Thank you for your contribution to reduce the
+             * debt."); */
+            verbalize("부채 감소를 위한 당신의 기여에 감사드립니다.");
             freeinv(goldob);
             (void) add_to_container(coffers, goldob);
             coffers->owt = weight(coffers);
@@ -2052,11 +2261,13 @@ reverse_loot()
                    && (mon = makemon(courtmon(), x, y, NO_MM_FLAGS)) != 0) {
             freeinv(goldob);
             add_to_minv(mon, goldob);
-            pline("The exchequer accepts your contribution.");
+            /*KR pline("The exchequer accepts your contribution."); */
+            pline("재무부에서 당신의 기부금을 접수했습니다.");
             if (!rn2(10))
                 levl[x][y].looted = T_LOOTED;
         } else {
-            You("drop %s.", doname(goldob));
+            /*KR You("drop %s.", doname(goldob)); */
+            You("%s 떨어뜨렸다.", append_josa(doname(goldob), "을"));
             dropx(goldob);
         }
     }
@@ -2085,18 +2296,36 @@ boolean *prev_loot;
 
         if (passed_info)
             *passed_info = 1;
+#if 0 /*KR: 원본*/
         Sprintf(qbuf, "Do you want to remove the saddle from %s?",
                 x_monnam(mtmp, ARTICLE_THE, (char *) 0,
                          SUPPRESS_SADDLE, FALSE));
+#else /*KR: KRNethack 맞춤 번역 */
+        Sprintf(qbuf, "%s 안장을 벗기겠습니까?",
+                append_josa(x_monnam(mtmp, ARTICLE_THE, (char *) 0,
+                                     SUPPRESS_SADDLE, FALSE),
+                            "에게서"));
+#endif
         if ((c = yn_function(qbuf, ynqchars, 'n')) == 'y') {
             if (nolimbs(youmonst.data)) {
+#if 0 /*KR: 원본*/
                 You_cant("do that without limbs."); /* not body_part(HAND) */
+#else /*KR: KRNethack 맞춤 번역 */
+                You_cant("사지가 없이는 할 수 없다.");
+#endif
                 return 0;
             }
             if (otmp->cursed) {
+#if 0 /*KR: 원본*/
                 You("can't.  The saddle seems to be stuck to %s.",
                     x_monnam(mtmp, ARTICLE_THE, (char *) 0,
                              SUPPRESS_SADDLE, FALSE));
+#else
+                You("할 수 없다. 안장이 %s 단단히 붙어있는 것 같다.",
+                    append_josa(x_monnam(mtmp, ARTICLE_THE, (char *) 0,
+                                         SUPPRESS_SADDLE, FALSE),
+                                "에게"));
+#endif
                 /* the attempt costs you time */
                 return 1;
             }
@@ -2106,8 +2335,14 @@ boolean *prev_loot;
                 otmp->owornmask = 0L;
                 update_mon_intrinsics(mtmp, otmp, FALSE, FALSE);
             }
+#if 0 /*KR: 원본*/
             otmp = hold_another_object(otmp, "You drop %s!", doname(otmp),
                                        (const char *) 0);
+#else
+            otmp = hold_another_object(otmp, "당신은 %s 떨어뜨렸다!",
+                                       append_josa(doname(otmp), "을"),
+                                       (const char *) 0);
+#endif
             nhUse(otmp);
             timepassed = rnd(3);
             if (prev_loot)
@@ -2188,18 +2423,24 @@ register struct obj *obj;
         impossible("<in> no current_container?");
         return 0;
     } else if (obj == uball || obj == uchain) {
-        You("must be kidding.");
+        /*KR You("must be kidding."); */
+        You("농담이지?");
         return 0;
     } else if (obj == current_container) {
-        pline("That would be an interesting topological exercise.");
+        /*KR pline("That would be an interesting topological exercise."); */
+        pline("그건 꽤 흥미로운 위상수학적 문제겠어.");
         return 0;
     } else if (obj->owornmask & (W_ARMOR | W_ACCESSORY)) {
+#if 0 /*KR: 원본*/
         Norep("You cannot %s %s you are wearing.",
               Icebox ? "refrigerate" : "stash", something);
-        return 0;
+#else /*KR: KRNethack 맞춤 번역 */
+        Norep("착용하고 있는 것을 %s 수는 없다.", Icebox ? "냉장할" : "넣을");
+#endif
     } else if ((obj->otyp == LOADSTONE) && obj->cursed) {
         set_bknown(obj, 1);
-        pline_The("stone%s won't leave your person.", plur(obj->quan));
+   /*KR pline_The("stone%s won't leave your person.", plur(obj->quan)); */
+        pline("어쩐 일인지 그 돌은 당신의 몸에서 떨어지지 않는다.");
         return 0;
     } else if (obj->otyp == AMULET_OF_YENDOR
                || obj->otyp == CANDELABRUM_OF_INVOCATION
@@ -2209,10 +2450,17 @@ register struct obj *obj;
          * steal them.  It also becomes a pain to check to see if someone
          * has the Amulet.  Ditto for the Candelabrum, the Bell and the Book.
          */
-        pline("%s cannot be confined in such trappings.", The(xname(obj)));
+        /*KR pline("%s cannot be confined in such trappings.",
+         * The(xname(obj))); */
+        pline("%s 그런 곳에 가둬둘 수 없다.",
+              append_josa(The(xname(obj)), "은"));
         return 0;
     } else if (obj->otyp == LEASH && obj->leashmon != 0) {
+#if 0 /*KR:T*/
         pline("%s attached to your pet.", Tobjnam(obj, "are"));
+#else
+        pline("%s 당신의 펫에 묶여 있다.", append_josa(xname(obj), "은"));
+#endif
         return 0;
     } else if (obj == uwep) {
         if (welded(obj)) {
@@ -2245,7 +2493,12 @@ register struct obj *obj;
          *  of evaluation of the parameters is undefined.
          */
         Strcpy(buf, the(xname(obj)));
+#if 0 /*KR: 원본*/
         You("cannot fit %s into %s.", buf, the(xname(current_container)));
+#else
+        You("%s %s 안에 밀어 넣을 수 없다.", append_josa(buf, "을"),
+            the(xname(current_container)));
+#endif
         return 0;
     }
 
@@ -2280,8 +2533,10 @@ register struct obj *obj;
         }
     } else if (Is_mbag(current_container) && mbag_explodes(obj, 0)) {
         /* explicitly mention what item is triggering the explosion */
-        pline("As you put %s inside, you are blasted by a magical explosion!",
-              doname(obj));
+        /*KR pline("As you put %s inside, you are blasted by a magical
+         * explosion!", doname(obj)); */
+        pline("%s 안에 넣자마자, 당신은 마법의 폭발에 휘말렸다!",
+              append_josa(doname(obj), "을"));
         /* did not actually insert obj yet */
         if (was_unpaid)
             addtobill(obj, FALSE, FALSE, TRUE);
@@ -2307,13 +2562,15 @@ register struct obj *obj;
         else
             panic("in_container:  bag not found.");
 
-        losehp(d(6, 6), "magical explosion", KILLED_BY_AN);
+   /*KR losehp(d(6, 6), "magical explosion", KILLED_BY_AN); */
+        losehp(d(6, 6), "마법의 폭발", KILLED_BY_AN);
         current_container = 0; /* baggone = TRUE; */
     }
 
     if (current_container) {
         Strcpy(buf, the(xname(current_container)));
-        You("put %s into %s.", doname(obj), buf);
+        /*KR You("put %s into %s.", doname(obj), buf); */
+        You("%s %s 안에 넣었다.", append_josa(doname(obj), "을"), buf);
 
         /* gold in container always needs to be added to credit */
         if (floor_container && obj->oclass == COIN_CLASS)
@@ -2399,7 +2656,7 @@ register struct obj *obj;
     prinv((char *) 0, otmp, count);
     if (loadlev) {
         pline("짐이 무거워 꺼내기가 %s 버겁다.",
-              (loadlev < MOD_ENCUMBER) ? "약간" : "많이");
+              (loadlev < MOD_ENCUMBER) ? "조금" : "많이");
     }
 #endif
 
@@ -2431,9 +2688,15 @@ struct obj *item;
     long loss = 0L;
 
     if (item->dknown)
-        pline("%s %s vanished!", Doname2(item), otense(item, "have"));
+        /*KR pline("%s %s vanished!", Doname2(item), otense(item, "have")); */
+        pline("%s 사라져버렸다!", append_josa(Doname2(item), "은"));
     else
+#if 0 /*KR: 원본*/
         You("%s %s disappear!", Blind ? "notice" : "see", doname(item));
+#else /*KR: KRNethack 맞춤 번역 */
+        You("%s 사라지는 것을 %s!", append_josa(doname(item), "이"),
+            Blind ? "알아챘다" : "보았다");
+#endif
 
     if (*u.ushops && (shkp = shop_keeper(*u.ushops)) != 0) {
         if (held ? (boolean) item->unpaid : costly_spot(u.ux, u.uy))
@@ -2450,7 +2713,8 @@ observe_quantum_cat(box, makecat, givemsg)
 struct obj *box;
 boolean makecat, givemsg;
 {
-    static NEARDATA const char sc[] = "Schroedinger's Cat";
+  /*KR static NEARDATA const char sc[] = "Schroedinger's Cat"; */
+    static NEARDATA const char sc[] = "슈뢰딩거의 고양이";
     struct obj *deadcat;
     struct monst *livecat = 0;
     xchar ox, oy;
@@ -2475,11 +2739,22 @@ boolean makecat, givemsg;
             set_malign(livecat);
             if (givemsg) {
                 if (!canspotmon(livecat))
+#if 0 /*KR: 원본*/
                     You("think %s brushed your %s.", something,
                         body_part(FOOT));
+#else /*KR: KRNethack 맞춤 번역 */
+                    You("%s 당신의 %s 스치고 지나간 것 같다.",
+                        append_josa(something, "이"),
+                        append_josa(body_part(FOOT), "을"));
+#endif
                 else
+#if 0 /*KR: 원본*/
                     pline("%s inside the box is still alive!",
                           Monnam(livecat));
+#else /*KR: KRNethack 맞춤 번역 */
+                    pline("상자 안의 %s 아직 살아있다!",
+                          append_josa(Monnam(livecat), "은"));
+#endif
             }
             (void) christen_monst(livecat, sc);
             if (deadcat) {
@@ -2500,8 +2775,15 @@ boolean makecat, givemsg;
             deadcat = oname(deadcat, sc);
         }
         if (givemsg)
+#if 0 /*KR: 원본*/
             pline_The("%s inside the box is dead!",
                       Hallucination ? rndmonnam((char *) 0) : "housecat");
+#else /*KR: KRNethack 맞춤 번역 */
+            pline("상자 안의 %s 죽어 있다!",
+                  append_josa(Hallucination ? rndmonnam((char *) 0)
+                                            : "집고양이",
+                              "는"));
+#endif
     }
     nhUse(deadcat);
     return;
@@ -2524,6 +2806,7 @@ explain_container_prompt(more_containers)
 boolean more_containers;
 {
     static const char *const explaintext[] = {
+#if 0 /*KR: 원본*/
         "Container actions:",
         "",
         " : -- Look: examine contents",
@@ -2536,6 +2819,20 @@ boolean more_containers;
         " q -- Quit: finished",
         " ? -- Help: display this text.",
         "", 0
+#else /*KR: KRNethack 맞춤 번역 */
+        "상자/가방 조작:",
+        "",
+        " : -- 살피기: 내용물을 확인한다",
+        " o -- 꺼내기: 물건을 꺼낸다",
+        " i -- 넣기: 물건을 넣는다",
+        " b -- 둘 다: 먼저 물건을 꺼내고, 그 다음 물건을 넣는다",
+        " r -- 반대로: 물건을 넣고, 그 다음 물건을 꺼낸다",
+        " s -- 하나만 넣기: 물건 딱 한 개만을 넣는다",
+        " n -- 다음: 다음으로 선택된 상자/가방을 연다",
+        " q -- 그만두기: 끝낸다",
+        " ? -- 도움말: 이 텍스트를 표시한다.",
+        "", 0
+#endif
     };
     const char *const *txtpp;
     winid win;
@@ -2556,10 +2853,15 @@ boolean
 u_handsy()
 {
     if (nohands(youmonst.data)) {
+#if 0 /*KR: 원본*/
         You("have no hands!"); /* not `body_part(HAND)' */
+#else /*KR: KRNethack 맞춤 번역 */
+        pline("당신은 손이 없다!");
+#endif
         return FALSE;
     } else if (!freehand()) {
-        You("have no free %s.", body_part(HAND));
+        /*KR You("have no free %s.", body_part(HAND)); */
+        You("비어있는 %s 없다.", append_josa(body_part(HAND), "이"));
         return FALSE;
     }
     return TRUE;
@@ -2592,18 +2894,26 @@ boolean more_containers; /* True iff #loot multiple and this isn't last one */
             update_inventory();
     }
     if (obj->olocked) {
+#if 0 /*KR: 원본*/
         pline("%s locked.", Tobjnam(obj, "are"));
+#else
+        pline("%s 잠겨 있다.", append_josa(xname(obj), "은"));
+#endif
         if (held)
-            You("must put it down to unlock.");
+            if (held)
+                /*KR You("must put it down to unlock."); */
+                pline("잠금을 해제하려면 바닥에 내려놓아야 한다.");
         return 0;
     } else if (obj->otrapped) {
         if (held)
-            You("open %s...", the(xname(obj)));
+            /*KR You("open %s...", the(xname(obj))); */
+            You("%s 열었다...", append_josa(the(xname(obj)), "을"));
         (void) chest_trap(obj, HAND, FALSE);
         /* even if the trap fails, you've used up this turn */
         if (multi >= 0) { /* in case we didn't become paralyzed */
             nomul(-1);
-            multi_reason = "opening a container";
+            /*KR multi_reason = "opening a container"; */
+            multi_reason = "상자를 여느라";
             nomovemsg = "";
         }
         abort_looting = TRUE;
@@ -2628,15 +2938,22 @@ boolean more_containers; /* True iff #loot multiple and this isn't last one */
     if (cursed_mbag
         && (loss = boh_loss(current_container, held)) != 0) {
         used = 1;
-        You("owe %ld %s for lost merchandise.", loss, currency(loss));
+        /*KR You("owe %ld %s for lost merchandise.", loss, currency(loss)); */
+        You("잃어버린 물건에 대해 %ld %s의 빚을 졌다.", loss, currency(loss));
         current_container->owt = weight(current_container);
     }
     inokay = (invent != 0
               && !(invent == current_container && !current_container->nobj));
     outokay = Has_contents(current_container);
     if (!outokay) /* preformat the empty-container message */
+#if 0             /*KR: 원본*/
         Sprintf(emptymsg, "%s is %sempty.", Ysimple_name2(current_container),
                 (quantum_cat || cursed_mbag) ? "now " : "");
+#else             /*KR: KRNethack 맞춤 번역 */
+        Sprintf(emptymsg, "%s %s비어 있다.",
+                append_josa(Ysimple_name2(current_container), "은"),
+                (quantum_cat || cursed_mbag) ? "이제 " : "");
+#endif
 
     /*
      * What-to-do prompt's list of possible actions:
@@ -2667,12 +2984,25 @@ boolean more_containers; /* True iff #loot multiple and this isn't last one */
     for (;;) { /* repeats iff '?' or ':' gets chosen */
         outmaybe = (outokay || !current_container->cknown);
         if (!outmaybe)
+#if 0 /*KR: 원본*/
             (void) safe_qbuf(qbuf, (char *) 0, " is empty.  Do what with it?",
                              current_container, Yname2, Ysimple_name2,
                              "This");
+#else /*KR: KRNethack 맞춤 번역 */
+            /* KRNethack: "상자는 비어 있다. 이것으로 무엇을 하겠는가?" */
+            (void) safe_qbuf(qbuf, (char *) 0, "비어 있다. 어떻게 하겠는가?",
+                             current_container, Yname2, Ysimple_name2,
+                             "이것은 ");
+#endif
         else
+#if 0 /*KR: 원본*/
             (void) safe_qbuf(qbuf, "Do what with ", "?", current_container,
                              yname, ysimple_name, "it");
+#else /*KR: KRNethack 맞춤 번역 */
+            /* KRNethack: "상자로 무엇을 하겠는가?" */
+            (void) safe_qbuf(qbuf, "", "어떻게 하겠는가?", current_container,
+                             yname, ysimple_name, "이것을 ");
+#endif
         /* ask player about what to do with this container */
         if (flags.menu_style == MENU_PARTIAL
             || flags.menu_style == MENU_FULL) {
@@ -2684,20 +3014,24 @@ boolean more_containers; /* True iff #loot multiple and this isn't last one */
                 c = in_or_out_menu(qbuf, current_container, outmaybe, inokay,
                                    (boolean) (used != 0), more_containers);
             }
-        } else { /* TRADITIONAL or COMBINATION */
-            xbuf[0] = '\0'; /* list of extra acceptable responses */
-            Strcpy(pbuf, ":");                   /* look inside */
-            Strcat(outmaybe ? pbuf : xbuf, "o"); /* take out */
-            Strcat(inokay ? pbuf : xbuf, "i");   /* put in */
-            Strcat(outmaybe ? pbuf : xbuf, "b"); /* both */
-            Strcat(inokay ? pbuf : xbuf, "rs");  /* reversed, stash */
-            Strcat(pbuf, " ");                   /* separator */
+        } else {               /* TRADITIONAL or COMBINATION */
+            xbuf[0] = '\0';    /* list of extra acceptable responses */
+            Strcpy(pbuf, ":"); /* look inside */
+            Strcat(outmaybe ? pbuf : xbuf, "o");        /* take out */
+            Strcat(inokay ? pbuf : xbuf, "i");          /* put in */
+            Strcat(outmaybe ? pbuf : xbuf, "b");        /* both */
+            Strcat(inokay ? pbuf : xbuf, "rs");         /* reversed, stash */
+            Strcat(pbuf, " ");                          /* separator */
             Strcat(more_containers ? pbuf : xbuf, "n"); /* next container */
-            Strcat(pbuf, "q");                   /* quit */
+            Strcat(pbuf, "q");                          /* quit */
             if (iflags.cmdassist)
-                /* this unintentionally allows user to answer with 'o' or
-                   'r'; fortunately, those are already valid choices here */
+            /* this unintentionally allows user to answer with 'o' or
+               'r'; fortunately, those are already valid choices here */
+#if 0                                    /*KR: 원본*/
                 Strcat(pbuf, " or ?"); /* help */
+#else                                    /*KR: KRNethack 맞춤 번역 */
+                Strcat(pbuf, " 혹은 ?"); /* help */
+#endif
             else
                 Strcat(xbuf, "?");
             if (*xbuf)
@@ -2743,8 +3077,13 @@ boolean more_containers; /* True iff #loot multiple and this isn't last one */
 
     if ((loot_in || stash_one)
         && (!invent || (invent == current_container && !invent->nobj))) {
+#if 0 /*KR: 원본*/
         You("don't have anything%s to %s.", invent ? " else" : "",
             stash_one ? "stash" : "put in");
+#else /*KR: KRNethack 맞춤 번역 */
+        You("%s 안에 %s 없다.", stash_one ? "넣을" : "넣을",
+            invent ? "다른 것이" : "아무것도");
+#endif
         loot_in = stash_one = FALSE;
     }
 
@@ -2792,7 +3131,7 @@ boolean more_containers; /* True iff #loot multiple and this isn't last one */
         }
     }
 
- containerdone:
+containerdone:
     if (used) {
         /* Not completely correct; if we put something in without knowing
            whatever was already inside, now we suddenly do.  That can't
@@ -2825,13 +3164,13 @@ boolean put_in;
 
     if (put_in) {
         /*KR action = "put in"; */
-        action = "넣으시겠습니까";
+        action = "넣을";
         objlist = &invent;
         actionfunc = in_container;
         checkfunc = ck_bag;
     } else {
         /*KR action = "take out"; */
-        action = "꺼내시겠습니까";
+        action = "꺼낼";
         objlist = &(current_container->cobj);
         actionfunc = out_container;
         checkfunc = (int FDECL((*), (OBJ_P))) 0;
@@ -2857,7 +3196,8 @@ boolean put_in;
     int n, i, n_looted = 0;
     boolean all_categories = TRUE, loot_everything = FALSE;
     char buf[BUFSZ];
-    const char *action = put_in ? "Put in" : "Take out";
+    /*KR const char *action = put_in ? "Put in" : "Take out"; */
+    const char *action = put_in ? "넣을" : "꺼낼";
     struct obj *otmp, *otmp2;
     menu_item *pick_list;
     int mflags, res;
@@ -2867,7 +3207,8 @@ boolean put_in;
         all_categories = (retry == -2);
     } else if (flags.menu_style == MENU_FULL) {
         all_categories = FALSE;
-        Sprintf(buf, "%s what type of objects?", action);
+        /*KR Sprintf(buf, "%s what type of objects?", action); */
+        Sprintf(buf, "어떤 종류의 물건을 %s 것인가?", action);
         mflags = (ALL_TYPES | UNPAID_TYPES | BUCX_TYPES | CHOOSE_ALL);
         n = query_category(buf, put_in ? invent : current_container->cobj,
                            mflags, &pick_list, PICK_ANY);
@@ -2909,7 +3250,8 @@ boolean put_in;
             mflags |= USE_INVLET;
         if (!put_in)
             current_container->cknown = 1;
-        Sprintf(buf, "%s what?", action);
+        /*KR Sprintf(buf, "%s what?", action); */
+        Sprintf(buf, "무엇을 %s 것인가?", action);
         n = query_objlist(buf, put_in ? &invent : &(current_container->cobj),
                           mflags, &pick_list, PICK_ANY,
                           all_categories ? allow_all : allow_category);
@@ -2941,9 +3283,8 @@ boolean put_in;
     return n_looted;
 }
 
-STATIC_OVL char
-in_or_out_menu(prompt, obj, outokay, inokay, alreadyused, more_containers)
-const char *prompt;
+STATIC_OVL char in_or_out_menu(prompt, obj, outokay, inokay, alreadyused,
+                               more_containers) const char *prompt;
 struct obj *obj;
 boolean outokay, inokay, alreadyused, more_containers;
 {
@@ -2961,35 +3302,46 @@ boolean outokay, inokay, alreadyused, more_containers;
     start_menu(win);
 
     any.a_int = 1; /* ':' */
-    Sprintf(buf, "Look inside %s", thesimpleoname(obj));
+    /*KR Sprintf(buf, "Look inside %s", thesimpleoname(obj)); */
+    Sprintf(buf, "%s 안을 살펴본다", append_josa(thesimpleoname(obj), "의"));
     add_menu(win, NO_GLYPH, &any, menuselector[any.a_int], 0, ATR_NONE, buf,
              MENU_UNSELECTED);
     if (outokay) {
         any.a_int = 2; /* 'o' */
-        Sprintf(buf, "take %s out", something);
+        /*KR Sprintf(buf, "take %s out", something); */
+        Strcpy(buf, "무언가를 꺼낸다");
         add_menu(win, NO_GLYPH, &any, menuselector[any.a_int], 0, ATR_NONE,
                  buf, MENU_UNSELECTED);
     }
     if (inokay) {
         any.a_int = 3; /* 'i' */
-        Sprintf(buf, "put %s in", something);
+        /*KR Sprintf(buf, "put %s in", something); */
+        Strcpy(buf, "무언가를 넣는다");
         add_menu(win, NO_GLYPH, &any, menuselector[any.a_int], 0, ATR_NONE,
                  buf, MENU_UNSELECTED);
     }
     if (outokay) {
         any.a_int = 4; /* 'b' */
-        Sprintf(buf, "%stake out, then put in", inokay ? "both; " : "");
+        /*KR Sprintf(buf, "%stake out, then put in", inokay ? "both; " : "");
+         */
+        Sprintf(buf, "%s꺼내고, 그다음 넣는다", inokay ? "둘 다; " : "");
         add_menu(win, NO_GLYPH, &any, menuselector[any.a_int], 0, ATR_NONE,
                  buf, MENU_UNSELECTED);
     }
     if (inokay) {
         any.a_int = 5; /* 'r' */
+#if 0                  /*KR: 원본*/
         Sprintf(buf, "%sput in, then take out",
                 outokay ? "both reversed; " : "");
+#else                  /*KR: KRNethack 맞춤 번역 */
+        Sprintf(buf, "%s넣고, 그다음 꺼낸다",
+                outokay ? "역순으로 둘 다; " : "");
+#endif
         add_menu(win, NO_GLYPH, &any, menuselector[any.a_int], 0, ATR_NONE,
                  buf, MENU_UNSELECTED);
         any.a_int = 6; /* 's' */
-        Sprintf(buf, "stash one item into %s", thesimpleoname(obj));
+        /*KR Sprintf(buf, "stash one item into %s", thesimpleoname(obj)); */
+        Sprintf(buf, "물건 한 개를 %s 안에 넣는다", thesimpleoname(obj));
         add_menu(win, NO_GLYPH, &any, menuselector[any.a_int], 0, ATR_NONE,
                  buf, MENU_UNSELECTED);
     }
@@ -2997,11 +3349,17 @@ boolean outokay, inokay, alreadyused, more_containers;
     add_menu(win, NO_GLYPH, &any, 0, 0, ATR_NONE, "", MENU_UNSELECTED);
     if (more_containers) {
         any.a_int = 7; /* 'n' */
+#if 0                  /*KR: 원본*/
         add_menu(win, NO_GLYPH, &any, menuselector[any.a_int], 0, ATR_NONE,
                  "loot next container", MENU_SELECTED);
+#else                  /*KR: KRNethack 맞춤 번역 */
+        add_menu(win, NO_GLYPH, &any, menuselector[any.a_int], 0, ATR_NONE,
+                 "다음 상자 열기", MENU_SELECTED);
+#endif
     }
     any.a_int = 8; /* 'q' */
-    Strcpy(buf, alreadyused ? "done" : "do nothing");
+    /*KR Strcpy(buf, alreadyused ? "done" : "do nothing"); */
+    Strcpy(buf, alreadyused ? "완료" : "아무것도 하지 않는다");
     add_menu(win, NO_GLYPH, &any, menuselector[any.a_int], 0, ATR_NONE, buf,
              more_containers ? MENU_UNSELECTED : MENU_SELECTED);
 
@@ -3041,11 +3399,16 @@ dotip()
 
     /* check floor container(s) first; at most one will be accessed */
     if ((boxes = container_at(cc.x, cc.y, TRUE)) > 0) {
+#if 0 /*KR: 원본*/
         Sprintf(buf, "You can't tip %s while carrying so much.",
                 !flags.verbose ? "a container" : (boxes > 1) ? "one" : "it");
+#else /*KR: KRNethack 맞춤 번역 */
+        Strcpy(buf, "짐을 너무 많이 들고 있어 상자를 열 수 없다.");
+#endif
         if (!check_capacity(buf) && able_to_loot(cc.x, cc.y, FALSE)) {
-            if (boxes > 1 && (flags.menu_style != MENU_TRADITIONAL
-                              || iflags.menu_requested)) {
+            if (boxes > 1
+                && (flags.menu_style != MENU_TRADITIONAL
+                    || iflags.menu_requested)) {
                 /* use menu to pick a container to tip */
                 int n, i;
                 winid win;
@@ -3067,16 +3430,22 @@ dotip()
                     }
                 if (invent) {
                     any = zeroany;
-                    add_menu(win, NO_GLYPH, &any, 0, 0, ATR_NONE,
-                             "", MENU_UNSELECTED);
+                    add_menu(win, NO_GLYPH, &any, 0, 0, ATR_NONE, "",
+                             MENU_UNSELECTED);
                     any.a_obj = &dummyobj;
                     /* use 'i' for inventory unless there are so many
                        containers that it's already being used */
                     i = (i <= 'i' - 'a' && !flags.lootabc) ? 'i' : 0;
+#if 0 /*KR: 원본*/
                     add_menu(win, NO_GLYPH, &any, i, 0, ATR_NONE,
                              "tip something being carried", MENU_SELECTED);
+#else /*KR: KRNethack 맞춤 번역 */
+                    add_menu(win, NO_GLYPH, &any, i, 0, ATR_NONE,
+                             "소지하고 있는 상자를 연다", MENU_SELECTED);
+#endif
                 }
-                end_menu(win, "Tip which container?");
+                /*KR end_menu(win, "Tip which container?"); */
+                end_menu(win, "어느 상자를 여시겠습니까?");
                 n = select_menu(win, PICK_ONE, &pick_list);
                 destroy_nhwindow(win);
                 /*
@@ -3103,9 +3472,14 @@ dotip()
                     nobj = cobj->nexthere;
                     if (!Is_container(cobj))
                         continue;
+#if 0 /*KR: 원본*/
                     c = ynq(safe_qbuf(qbuf, "There is ", " here, tip it?",
                                       cobj,
                                       doname, ansimpleoname, "container"));
+#else /*KR: KRNethack 맞춤 번역 */
+                    c = ynq(safe_qbuf(qbuf, "여기에 ", " 있다. 여시겠습니까?",
+                                      cobj, doname, ansimpleoname, "상자가"));
+#endif
                     if (c == 'q')
                         return 0;
                     if (c == 'n')
@@ -3131,30 +3505,46 @@ dotip()
     /* assorted other cases */
     if (Is_candle(cobj) && cobj->lamplit) {
         /* note "wax" even for tallow candles to avoid giving away info */
-        spillage = "wax";
+        /*KR spillage = "wax"; */
+        spillage = "밀랍";
     } else if ((cobj->otyp == POT_OIL && cobj->lamplit)
                || (cobj->otyp == OIL_LAMP && cobj->age != 0L)
                || (cobj->otyp == MAGIC_LAMP && cobj->spe != 0)) {
-        spillage = "oil";
+        /*KR spillage = "oil"; */
+        spillage = "기름";
         /* todo: reduce potion's remaining burn timer or oil lamp's fuel */
     } else if (cobj->otyp == CAN_OF_GREASE && cobj->spe > 0) {
         /* charged consumed below */
-        spillage = "grease";
+        /*KR spillage = "grease"; */
+        spillage = "윤활유";
     } else if (cobj->otyp == FOOD_RATION || cobj->otyp == CRAM_RATION
                || cobj->otyp == LEMBAS_WAFER) {
-        spillage = "crumbs";
+        /*KR spillage = "crumbs"; */
+        spillage = "빵 부스러기";
     } else if (cobj->oclass == VENOM_CLASS) {
-        spillage = "venom";
+        /*KR spillage = "venom"; */
+        spillage = "독액";
     }
     if (spillage) {
         buf[0] = '\0';
         if (is_pool(u.ux, u.uy))
-            Sprintf(buf, " and gradually %s", vtense(spillage, "dissipate"));
+            /*KR Sprintf(buf, " and gradually %s", vtense(spillage,
+             * "dissipate")); */
+            Strcpy(buf, " 그리고 서서히 흩어졌다.");
         else if (is_lava(u.ux, u.uy))
+#if 0 /*KR: 원본*/
             Sprintf(buf, " and immediately %s away",
                     vtense(spillage, "burn"));
+#else /*KR: KRNethack 맞춤 번역 */
+            Strcpy(buf, " 그리고 순식간에 타버렸다.");
+#endif
+#if 0 /*KR: 원본*/
         pline("Some %s %s onto the %s%s.", spillage,
               vtense(spillage, "spill"), surface(u.ux, u.uy), buf);
+#else /*KR: KRNethack 맞춤 번역 */
+        pline("%s %s 위로 쏟아졌다%s", append_josa(spillage, "이"),
+              surface(u.ux, u.uy), buf);
+#endif
         /* shop usage message comes after the spill message */
         if (cobj->otyp == CAN_OF_GREASE && cobj->spe > 0) {
             consume_obj_charge(cobj, TRUE);
@@ -3164,17 +3554,18 @@ dotip()
     }
     /* anything not covered yet */
     if (cobj->oclass == POTION_CLASS) /* can't pour potions... */
-        pline_The("%s %s securely sealed.", xname(cobj), otense(cobj, "are"));
+        /*KR pline_The("%s %s securely sealed.", xname(cobj), otense(cobj,
+         * "are")); */
+        pline("%s 단단히 밀봉되어 있다.", append_josa(xname(cobj), "은"));
     else if (cobj->otyp == STATUE)
-        pline("Nothing interesting happens.");
+        /*KR pline("Nothing interesting happens."); */
+        pline("흥미로운 일은 일어나지 않았다.");
     else
         pline1(nothing_happens);
     return 0;
 }
 
-STATIC_OVL void
-tipcontainer(box)
-struct obj *box; /* or bag */
+STATIC_OVL void tipcontainer(box) struct obj *box; /* or bag */
 {
     xchar ox = u.ux, oy = u.uy; /* #tip only works at hero's location */
     boolean empty_it = FALSE, maybeshopgoods;
@@ -3208,14 +3599,16 @@ struct obj *box; /* or bag */
             update_inventory(); /* jumping the gun slightly; hope that's ok */
     }
     if (box->olocked) {
-        pline("It's locked.");
+        /*KR pline("It's locked."); */
+        pline("그것은 잠겨 있다.");
     } else if (box->otrapped) {
         /* we're not reaching inside but we're still handling it... */
         (void) chest_trap(box, HAND, FALSE);
         /* even if the trap fails, you've used up this turn */
         if (multi >= 0) { /* in case we didn't become paralyzed */
             nomul(-1);
-            multi_reason = "tipping a container";
+            /*KR multi_reason = "tipping a container"; */
+            multi_reason = "상자를 뒤집느라";
             nomovemsg = "";
         }
     } else if (box->otyp == BAG_OF_TRICKS || box->otyp == HORN_OF_PLENTY) {
@@ -3234,9 +3627,15 @@ struct obj *box; /* or bag */
 
         if (box->spe < old_spe) {
             if (bag)
+#if 0 /*KR: 원본*/
                 pline((seen == 0) ? "Nothing seems to happen."
                                   : (seen == 1) ? "A monster appears."
                                                 : "Monsters appear!");
+#else /*KR: KRNethack 맞춤 번역 */
+                pline((seen == 0)   ? "아무 일도 일어나지 않은 것 같다."
+                      : (seen == 1) ? "몬스터 한 마리가 나타났다."
+                                    : "몬스터들이 나타났다!");
+#endif
             /* check_unpaid wants to see a non-zero charge count */
             box->spe = old_spe;
             check_unpaid_usage(box, TRUE);
@@ -3251,13 +3650,15 @@ struct obj *box; /* or bag */
         observe_quantum_cat(box, TRUE, TRUE);
         if (!Has_contents(box)) /* evidently a live cat came out */
             /* container type of "large box" is inferred */
-            pline("%sbox is now empty.", Shk_Your(yourbuf, box));
+            /*KR pline("%sbox is now empty.", Shk_Your(yourbuf, box)); */
+            pline("%s상자는 이제 비었다.", Shk_Your(yourbuf, box));
         else /* holds cat corpse */
             empty_it = TRUE;
         box->cknown = 1;
     } else if (!Has_contents(box)) {
         box->cknown = 1;
-        pline("It's empty.");
+        /*KR pline("It's empty."); */
+        pline("비어 있다.");
     } else {
         empty_it = TRUE;
     }
@@ -3265,8 +3666,8 @@ struct obj *box; /* or bag */
     if (empty_it) {
         struct obj *otmp, *nobj;
         boolean terse, highdrop = !can_reach_floor(TRUE),
-                altarizing = IS_ALTAR(levl[ox][oy].typ),
-                cursed_mbag = (Is_mbag(box) && box->cursed);
+                       altarizing = IS_ALTAR(levl[ox][oy].typ),
+                       cursed_mbag = (Is_mbag(box) && box->cursed);
         int held = carried(box);
         long loss = 0L;
 
@@ -3279,9 +3680,14 @@ struct obj *box; /* or bag */
          * If any other messages intervene between objects, we revert to
          * "ObjK drops to the floor.", "ObjL drops to the floor.", &c.
          */
+#if 0 /*KR: 원본*/
         pline("%s out%c",
               box->cobj->nobj ? "Objects spill" : "An object spills",
               terse ? ':' : '.');
+#else /*KR: KRNethack 맞춤 번역 */
+        pline("물건%s 쏟아져 나왔다%s", box->cobj->nobj ? "들이" : "이",
+              terse ? ":" : ".");
+#endif
         for (otmp = box->cobj; otmp; otmp = nobj) {
             nobj = otmp->nobj;
             obj_extract_self(otmp);
@@ -3308,10 +3714,16 @@ struct obj *box; /* or bag */
                 if (altarizing) {
                     doaltarobj(otmp);
                 } else if (!terse) {
+#if 0 /*KR: 원본*/
                     pline("%s %s to the %s.", Doname2(otmp),
                           otense(otmp, "drop"), surface(ox, oy));
+#else /*KR: KRNethack 맞춤 번역 */
+                    pline("%s %s 위로 떨어졌다.",
+                          append_josa(Doname2(otmp), "은"), surface(ox, oy));
+#endif
                 } else {
-                    pline("%s%c", doname(otmp), nobj ? ',' : '.');
+                    /*KR pline("%s%c", doname(otmp), nobj ? ',' : '.'); */
+                    pline("%s%s", doname(otmp), nobj ? ", " : ".");
                     iflags.last_msg = PLNMSG_OBJNAM_ONLY;
                 }
                 dropy(otmp);
@@ -3322,7 +3734,10 @@ struct obj *box; /* or bag */
                 iflags.suppress_price--; /* reset */
         }
         if (loss) /* magic bag lost some shop goods */
-            You("owe %ld %s for lost merchandise.", loss, currency(loss));
+            /*KR You("owe %ld %s for lost merchandise.", loss,
+             * currency(loss)); */
+            You("잃어버린 물건값으로 %ld %s의 빚을 졌다.", loss,
+                currency(loss));
         box->owt = weight(box); /* mbag_item_gone() doesn't update this */
         if (held)
             (void) encumber_msg();

@@ -4626,7 +4626,7 @@ boolean say; /* Announce out of sight hit/miss events if true */
                             pline("%s Ä¡¸íÀûÀÎ %s Èí¼öÇß´Ù!",
                                   append_josa(Monnam(mon), "Àº"),
                                   append_josa(type == ZT_BREATH(ZT_DEATH)
-                                                  ? "±¤Ç³"
+                                                  ? "ÆøÇ³"
                                                   : "±¤¼±",
                                               "À»"));
 #endif
@@ -5127,7 +5127,7 @@ short exploding_wand_typ;
        want "the blast" rather than "your blast" even if hero caused it */
     yourzap = (type >= 0 && !exploding_wand_typ);
     /*KR zapverb = "blast"; */ /* breath attack or wand explosion */
-    zapverb = "±¤Ç³";
+    zapverb = "ÆøÇ³";
     if (!exploding_wand_typ) {
         if (abs(type) < ZT_SPELL(0))
             /*KR zapverb = "bolt"; */ /* wand zap */
