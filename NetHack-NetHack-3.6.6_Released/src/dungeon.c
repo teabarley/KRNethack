@@ -954,10 +954,14 @@ init_dungeons()
     /*
      *  I hate hardwiring these names. :-(
      */
-    quest_dnum = dname_to_dnum("The Quest");
-    sokoban_dnum = dname_to_dnum("Sokoban");
-    mines_dnum = dname_to_dnum("The Gnomish Mines");
-    tower_dnum = dname_to_dnum("Vlad's Tower");
+    /*KR quest_dnum = dname_to_dnum("The Quest"); */
+    quest_dnum = dname_to_dnum("퀘스트");
+    /*KR sokoban_dnum = dname_to_dnum("Sokoban"); */
+    sokoban_dnum = dname_to_dnum("소코반");
+    /*KR mines_dnum = dname_to_dnum("The Gnomish Mines"); */
+    mines_dnum = dname_to_dnum("노움 광산");
+    /*KR tower_dnum = dname_to_dnum("Vlad's Tower"); */
+    tower_dnum = dname_to_dnum("블라드의 탑");
 
     /* one special fixup for dummy surface level */
     if ((x = find_level("dummy")) != 0) {
@@ -1655,7 +1659,9 @@ const char *nam;
     d_level dlev;
     const char *p;
     int idx, idxtoo;
+#if 0 /*KR: 원본*/
     char buf[BUFSZ];
+#endif
     mapseen *mseen;
 
     /* look at the player's custom level annotations first */
@@ -1664,6 +1670,7 @@ const char *nam;
     } else {
         /* no matching annotation, check whether they used a name we know */
 
+#if 0 /*KR: 원본*/
         /* allow strings like "the oracle level" to find "oracle" */
         if (!strncmpi(nam, "the ", 4))
             nam += 4;
@@ -1679,6 +1686,26 @@ const char *nam;
             else
                 nam = "valley";
         }
+#else /*KR: KRNethack 맞춤 번역 */
+        /* 한국어에는 "the " 관사가 없으므로 앞뒤 자르기 로직은 생략. *
+         * 대신 한글로 자주 칠 만한 지옥의 별칭 매핑을 유지/추가.     */
+
+        /* 영문으로 "vlad's tower"를 쳤을 때의 처리 *
+         * (어포스트로피 유무 모두 대응)            */
+        if (!strcmpi(nam, "vlad's tower") || !strcmpi(nam, "vlads tower")) {
+            nam = "블라드의 탑";
+        }
+
+        /* 지옥/게헨놈의 한글, 영문 입력 처리 */
+        if (!strcmp(nam, "게헨놈") || !strcmp(nam, "지옥")
+            || !strcmpi(nam, "gehennom") || !strcmpi(nam, "hell")) {
+            if (In_V_tower(&u.uz))
+                /* 탑 내부에서 지옥으로 나가려 할 때 탑 입구로 연결 */
+                nam = "블라드의 탑"; 
+            else
+                nam = "valley"; /* 내부 시스템 명칭이므로 valley 그대로 */
+        }
+#endif
 
         if ((slev = find_level(nam)) != 0)
             dlev = slev->dlevel;
@@ -1796,15 +1823,20 @@ int type;
 {
     switch (type) {
     case BR_PORTAL:
-        return "Portal";
+        /*KR return "Portal"; */
+        return "포탈";
     case BR_NO_END1:
-        return "Connection";
+        /*KR return "Connection"; */
+        return "연결 통로";
     case BR_NO_END2:
-        return "One way stair";
+        /*KR return "One way stair"; */
+        return "일방통행 계단";
     case BR_STAIR:
-        return "Stair";
+        /*KR return "Stair"; */
+        return "계단";
     }
-    return " (unknown)";
+    /*KR return " (unknown)"; */
+    return " (알 수 없음)";
 }
 
 STATIC_OVL char
@@ -1831,10 +1863,17 @@ struct lchoice *lchoices_p;
     for (br = branches; br; br = br->next) {
         if (br->end1.dnum == dnum && lower_bound < br->end1.dlevel
             && br->end1.dlevel <= upper_bound) {
+#if 0 /*KR: 원본*/
             Sprintf(buf, "%c %s to %s: %d",
                     bymenu ? chr_u_on_lvl(&br->end1) : ' ',
                     br_string(br->type),
                     dungeons[br->end2.dnum].dname, depth(&br->end1));
+#else /*KR: KRNethack 맞춤 번역 */
+            Sprintf(buf, "%c %s로 향하는 %s: %d",
+                    bymenu ? chr_u_on_lvl(&br->end1) : ' ',
+                    dungeons[br->end2.dnum].dname, br_string(br->type),
+                    depth(&br->end1));
+#endif
             if (bymenu)
                 tport_menu(win, buf, lchoices_p, &br->end1,
                            unreachable_level(&br->end1, FALSE));
@@ -1872,21 +1911,33 @@ xchar *rdgn;
         if (bymenu && In_endgame(&u.uz) && i != astral_level.dnum)
             continue;
         unplaced = unplaced_floater(dptr);
-        descr = unplaced ? "depth" : "level";
+        /*KR descr = unplaced ? "depth" : "level"; */
+        descr = unplaced ? "깊이" : "층";
         nlev = dptr->num_dunlevs;
         if (nlev > 1)
+#if 0 /*KR: 원본*/
             Sprintf(buf, "%s: %s %d to %d", dptr->dname, makeplural(descr),
                     dptr->depth_start, dptr->depth_start + nlev - 1);
+#else /*KR: KRNethack 맞춤 번역 */
+            Sprintf(buf, "%s: %s %d부터 %d까지", dptr->dname, descr,
+                    dptr->depth_start, dptr->depth_start + nlev - 1);
+#endif
         else
             Sprintf(buf, "%s: %s %d", dptr->dname, descr, dptr->depth_start);
 
         /* Most entrances are uninteresting. */
         if (dptr->entry_lev != 1) {
             if (dptr->entry_lev == nlev)
-                Strcat(buf, ", entrance from below");
+                /*KR Strcat(buf, ", entrance from below"); */
+                Strcat(buf, ", 아래쪽에서 진입함");
             else
+#if 0 /*KR: 원본*/
                 Sprintf(eos(buf), ", entrance on %d",
                         dptr->depth_start + dptr->entry_lev - 1);
+#else /*KR: KRNethack 맞춤 번역 */
+                Sprintf(eos(buf), ", 진입 층은 %d",
+                        dptr->depth_start + dptr->entry_lev - 1);
+#endif
         }
         if (bymenu) {
             any = zeroany;
@@ -1929,7 +1980,8 @@ xchar *rdgn;
         menu_item *selected;
         int idx;
 
-        end_menu(win, "Level teleport to where:");
+/*KR end_menu(win, "Level teleport to where:"); */
+        end_menu(win, "어디로 층간 텔레포트 하시겠습니까:");
         n = select_menu(win, PICK_ONE, &selected);
         destroy_nhwindow(win);
         if (n > 0) {
@@ -1949,11 +2001,17 @@ xchar *rdgn;
         if (br->end1.dnum == n_dgns) {
             if (first) {
                 putstr(win, 0, "");
-                putstr(win, 0, "Floating branches");
+                /*KR putstr(win, 0, "Floating branches"); */
+                putstr(win, 0, "유동하는 갈래");
                 first = FALSE;
             }
+#if 0 /*KR: 원본*/
             Sprintf(buf, "   %s to %s", br_string(br->type),
                     dungeons[br->end2.dnum].dname);
+#else /*KR: KRNethack 맞춤 번역 */
+            Sprintf(buf, "   %s로 향하는 %s", dungeons[br->end2.dnum].dname,
+                    br_string(br->type));
+#endif
             putstr(win, 0, buf);
         }
     }
@@ -1961,8 +2019,13 @@ xchar *rdgn;
     /* I hate searching for the invocation pos while debugging. -dean */
     if (Invocation_lev(&u.uz)) {
         putstr(win, 0, "");
+#if 0 /*KR: 원본*/
         Sprintf(buf, "Invocation position @ (%d,%d), hero @ (%d,%d)",
                 inv_pos.x, inv_pos.y, u.ux, u.uy);
+#else /*KR: KRNethack 맞춤 번역 */
+        Sprintf(buf, "발동 위치 @ (%d,%d), 플레이어 @ (%d,%d)", inv_pos.x,
+                inv_pos.y, u.ux, u.uy);
+#endif
         putstr(win, 0, buf);
     } else {
         struct trap *trap;
@@ -1978,14 +2041,21 @@ xchar *rdgn;
                 break;
 
         if (trap)
-            Sprintf(buf, "Portal @ (%d,%d), hero @ (%d,%d)",
-                    trap->tx, trap->ty, u.ux, u.uy);
+            Sprintf(buf, "Portal @ (%d,%d), hero @ (%d,%d)", trap->tx,
+                    trap->ty, u.ux, u.uy);
 
         /* only report "no portal found" when actually expecting a portal */
+#if 0 /*KR: 원본*/
         else if (Is_earthlevel(&u.uz) || Is_waterlevel(&u.uz)
                  || Is_firelevel(&u.uz) || Is_airlevel(&u.uz)
                  || Is_qstart(&u.uz) || at_dgn_entrance("The Quest")
                  || Is_knox(&u.uz))
+#else /*KR: KRNethack 맞춤 번역 */
+        else if (Is_earthlevel(&u.uz) || Is_waterlevel(&u.uz)
+                 || Is_firelevel(&u.uz) || Is_airlevel(&u.uz)
+                 || Is_qstart(&u.uz) || at_dgn_entrance("퀘스트")
+                 || Is_knox(&u.uz))
+#endif
             Strcpy(buf, "No portal found.");
 
         /* only give output if we found a portal or expected one and didn't */
@@ -2005,9 +2075,7 @@ xchar *rdgn;
  * This function should not be called for a transition done via level
  * teleport or via the Eye.
  */
-void
-recbranch_mapseen(source, dest)
-d_level *source;
+void recbranch_mapseen(source, dest) d_level *source;
 d_level *dest;
 {
     mapseen *mptr;
@@ -2070,12 +2138,18 @@ donamelevel()
     if (mptr->custom) {
         char tmpbuf[BUFSZ];
 
+#if 0 /*KR: 원본*/
         Sprintf(tmpbuf, "Replace annotation \"%.30s%s\" with?", mptr->custom,
                 (strlen(mptr->custom) > 30) ? "..." : "");
+#else /*KR: KRNethack 맞춤 번역 */
+        Sprintf(tmpbuf, "메모 \"%.30s%s\"을(를) 무엇으로 교체하겠습니까?",
+                mptr->custom, (strlen(mptr->custom) > 30) ? "..." : "");
+#endif
         getlin(tmpbuf, nbuf);
     } else
 #endif
-        getlin("What do you want to call this dungeon level?", nbuf);
+    /*KR getlin("What do you want to call this dungeon level?", nbuf); */
+    getlin("이 던전 층을 무엇이라고 부르시겠습니까?", nbuf);
 
     /* empty input or ESC means don't add or change annotation;
        space-only means discard current annotation without adding new one */
@@ -2114,7 +2188,7 @@ d_level *lev;
 }
 
 STATIC_OVL mapseen *
-find_mapseen_by_str(s)
+find_mapseen_by_str(s) 
 const char *s;
 {
     mapseen *mptr;
@@ -2127,8 +2201,8 @@ const char *s;
 }
 
 
-void
-forget_mapseen(ledger_num)
+void 
+forget_mapseen(ledger_num) 
 int ledger_num;
 {
     mapseen *mptr;
@@ -2752,11 +2826,17 @@ const char *obj;
         return "no";
     /* an() returns too much.  index is ok in this case */
     case 1:
+#if 0 /*KR:T*/
         return index(vowels, *obj) ? "an" : "a";
+#else
+        return "";
+#endif
     case 2:
-        return "some";
+        /*KR return "some"; */
+        return "몇몇 ";
     case 3:
-        return "many";
+        /*KR return "many"; */
+        return "많은 ";
     }
 
     return "(unknown)";
@@ -2768,21 +2848,28 @@ br_string2(br)
 branch *br;
 {
     /* Special case: quest portal says closed if kicked from quest */
-    boolean closed_portal = (br->end2.dnum == quest_dnum
-                             && u.uevent.qexpelled);
+    boolean closed_portal =
+        (br->end2.dnum == quest_dnum && u.uevent.qexpelled);
 
     switch (br->type) {
     case BR_PORTAL:
-        return closed_portal ? "Sealed portal" : "Portal";
+        /*KR return closed_portal ? "Sealed portal" : "Portal"; */
+        return closed_portal ? "봉인된 포탈" : "포탈";
     case BR_NO_END1:
-        return "Connection";
+        /*KR return "Connection"; */
+        return "연결 통로";
     case BR_NO_END2:
-        return br->end1_up ? "One way stairs up" : "One way stairs down";
+        /*KR return br->end1_up ? "One way stairs up" : "One way stairs down";
+         */
+        return br->end1_up ? "일방통행 올라가는 계단"
+                           : "일방통행 내려가는 계단";
     case BR_STAIR:
-        return br->end1_up ? "Stairs up" : "Stairs down";
+        /*KR return br->end1_up ? "Stairs up" : "Stairs down"; */
+        return br->end1_up ? "올라가는 계단" : "내려가는 계단";
     }
 
-    return "(unknown)";
+    /*KR return "(unknown)"; */
+    return "(알 수 없음)";
 }
 
 /* get the name of an endgame level; topten.c does something similar */
@@ -2796,23 +2883,29 @@ int indx;
     *outbuf = '\0';
     switch (indx) {
     case -5:
-        Strcpy(outbuf, "Astral Plane");
+        /*KR Strcpy(outbuf, "Astral Plane"); */
+        Strcpy(outbuf, "천상계");
         break;
     case -4:
-        planename = "Water";
+        /*KR planename = "Water"; */
+        planename = "물";
         break;
     case -3:
-        planename = "Fire";
+        /*KR planename = "Fire"; */
+        planename = "불";
         break;
     case -2:
-        planename = "Air";
+        /*KR planename = "Air"; */
+        planename = "바람";
         break;
     case -1:
-        planename = "Earth";
+        /*KR planename = "Earth"; */
+        planename = "대지";
         break;
     }
     if (planename)
-        Sprintf(outbuf, "Plane of %s", planename);
+        /*KR Sprintf(outbuf, "Plane of %s", planename); */
+        Sprintf(outbuf, "%s의 정령계", planename);
     else if (!*outbuf)
         Sprintf(outbuf, "unknown plane #%d", indx);
     return outbuf;
@@ -2822,45 +2915,61 @@ STATIC_OVL const char *
 shop_string(rtype)
 int rtype;
 {
+#if 0                         /*KR: 원본*/
     const char *str = "shop"; /* catchall */
+#else                         /*KR: KRNethack 맞춤 번역 */
+    const char *str = "상점"; /* catchall */
+#endif
 
     /* Yuck, redundancy...but shclass.name doesn't cut it as a noun */
     switch (rtype) {
     case SHOPBASE - 1:
-        str = "untended shop";
+        /*KR str = "untended shop"; */
+        str = "방치된 상점";
         break; /* see recalc_mapseen */
     case SHOPBASE:
-        str = "general store";
+        /*KR str = "general store"; */
+        str = "잡화점";
         break;
     case ARMORSHOP:
-        str = "armor shop";
+        /*KR str = "armor shop"; */
+        str = "갑옷 상점";
         break;
     case SCROLLSHOP:
-        str = "scroll shop";
+        /*KR str = "scroll shop"; */
+        str = "두루마리 상점";
         break;
     case POTIONSHOP:
-        str = "potion shop";
+        /*KR str = "potion shop"; */
+        str = "물약 상점";
         break;
     case WEAPONSHOP:
-        str = "weapon shop";
+        /*KR str = "weapon shop"; */
+        str = "무기 상점";
         break;
     case FOODSHOP:
-        str = "delicatessen";
+        /*KR str = "delicatessen"; */
+        str = "식료품점";
         break;
     case RINGSHOP:
-        str = "jewelers";
+        /*KR str = "jewelers"; */
+        str = "보석상";
         break;
     case WANDSHOP:
-        str = "wand shop";
+        /*KR str = "wand shop"; */
+        str = "마법 지팡이 상점";
         break;
     case BOOKSHOP:
-        str = "bookstore";
+        /*KR str = "bookstore"; */
+        str = "서점";
         break;
     case FODDERSHOP:
-        str = "health food store";
+        /*KR str = "health food store"; */
+        str = "건강 식품 상점";
         break;
     case CANDLESHOP:
-        str = "lighting shop";
+        /*KR str = "lighting shop"; */
+        str = "조명 상점";
         break;
     default:
         break;
@@ -2880,10 +2989,15 @@ char *outbuf;
         char tmp[BUFSZ];
 
         if (u.uevent.uheard_tune == 2)
-            Sprintf(tmp, "notes \"%s\"", tune);
+            /*KR Sprintf(tmp, "notes \"%s\"", tune); */
+            Sprintf(tmp, "음표 \"%s\"", tune);
         else
-            Strcpy(tmp, "5-note tune");
-        Sprintf(outbuf, " (play %s to open or close drawbridge)", tmp);
+            /*KR Strcpy(tmp, "5-note tune"); */
+            Strcpy(tmp, "5음계 곡");
+        /*KR Sprintf(outbuf, " (play %s to open or close drawbridge)", tmp);
+         */
+        Sprintf(outbuf, " (%s을(를) 연주하면 도개교를 열거나 닫을 수 있음)",
+                tmp);
     }
     return outbuf;
 }
@@ -2899,20 +3013,29 @@ char *outbuf;
 #endif
 #define COMMA (i++ > 0 ? ", " : PREFIX)
 /* "iterate" once; safe to use as ``if (cond) ADDTOBUF(); else whatever;'' */
+#if 0 /*KR: 원본*/
 #define ADDNTOBUF(nam, var)                                                  \
     do {                                                                     \
         if (var)                                                             \
             Sprintf(eos(buf), "%s%s %s%s", COMMA, seen_string((var), (nam)), \
                     (nam), plur(var));                                       \
     } while (0)
+#else /*KR: KRNethack 맞춤 번역 */
+#define ADDNTOBUF(nam, var)                                               \
+    do {                                                                  \
+        if (var)                                                          \
+            Sprintf(eos(buf), "%s%s%s", COMMA, seen_string((var), (nam)), \
+                    (nam));                                               \
+    } while (0)
+#endif
 #define ADDTOBUF(nam, var)                           \
     do {                                             \
         if (var)                                     \
             Sprintf(eos(buf), "%s%s", COMMA, (nam)); \
     } while (0)
 
-STATIC_OVL void
-print_mapseen(win, mptr, final, how, printdun)
+STATIC_OVL void 
+print_mapseen(win, mptr, final, how, printdun) 
 winid win;
 mapseen *mptr;
 int final; /* 0: not final; 1: game over, alive; 2: game over, dead */
@@ -2939,13 +3062,14 @@ boolean printdun;
             || In_endgame(&mptr->lev))
             Sprintf(buf, "%s:", dungeons[dnum].dname);
         else if (builds_up(&mptr->lev))
-            Sprintf(buf, "%s: levels %d up to %d",
-                    dungeons[dnum].dname,
+            /*KR Sprintf(buf, "%s: levels %d up to %d", */
+            Sprintf(buf, "%s: %d층부터 %d층까지", dungeons[dnum].dname,
                     depthstart + dungeons[dnum].entry_lev - 1,
                     depthstart + dungeons[dnum].dunlev_ureached - 1);
         else
-            Sprintf(buf, "%s: levels %d to %d",
-                    dungeons[dnum].dname, depthstart,
+            /*KR Sprintf(buf, "%s: levels %d to %d", */
+            Sprintf(buf, "%s: %d층부터 %d층까지", dungeons[dnum].dname,
+                    depthstart,
                     depthstart + dungeons[dnum].dunlev_ureached - 1);
         putstr(win, !final ? ATR_INVERSE : 0, buf);
     }
@@ -2955,7 +3079,8 @@ boolean printdun;
     if (In_endgame(&mptr->lev))
         Sprintf(buf, "%s%s:", TAB, endgamelevelname(tmpbuf, i));
     else
-        Sprintf(buf, "%sLevel %d:", TAB, i);
+        /*KR Sprintf(buf, "%sLevel %d:", TAB, i); */
+        Sprintf(buf, "%s%d층:", TAB, i);
 
     /* wizmode prints out proto dungeon names for clarity */
     if (wizard) {
@@ -2968,10 +3093,17 @@ boolean printdun;
     if (mptr->custom)
         Sprintf(eos(buf), " \"%s\"", mptr->custom);
     if (on_level(&u.uz, &mptr->lev))
+#if 0 /*KR: 원본*/
         Sprintf(eos(buf), " <- You %s here.",
                 (!final || (final == 1 && how == ASCENDED)) ? "are"
                   : (final == 1 && how == ESCAPED) ? "left from"
                     : "were");
+#else /*KR: KRNethack 맞춤 번역 */
+        Sprintf(eos(buf), " <- 당신은 여기%s.",
+                (!final || (final == 1 && how == ASCENDED)) ? "에 있다"
+                : (final == 1 && how == ESCAPED)            ? "서 떠났다"
+                                                            : "에 있었다");
+#endif
     putstr(win, !final ? ATR_BOLD : 0, buf);
 
     if (mptr->flags.forgot)
@@ -2986,7 +3118,8 @@ boolean printdun;
          */
         if (mptr->feat.nshop > 0) {
             if (mptr->feat.nshop > 1)
-                ADDNTOBUF("shop", mptr->feat.nshop);
+                /*KR ADDNTOBUF("shop", mptr->feat.nshop); */
+                ADDNTOBUF("상점", mptr->feat.nshop);
             else
                 Sprintf(eos(buf), "%s%s", COMMA,
                         an(shop_string(mptr->feat.shoptype)));
@@ -2994,19 +3127,28 @@ boolean printdun;
         if (mptr->feat.naltar > 0) {
             /* Temples + non-temple altars get munged into just "altars" */
             if (mptr->feat.ntemple != mptr->feat.naltar)
-                ADDNTOBUF("altar", mptr->feat.naltar);
+                /*KR ADDNTOBUF("altar", mptr->feat.naltar); */
+                ADDNTOBUF("제단", mptr->feat.naltar);
             else
-                ADDNTOBUF("temple", mptr->feat.ntemple);
+                /*KR ADDNTOBUF("temple", mptr->feat.ntemple); */
+                ADDNTOBUF("신전", mptr->feat.ntemple);
 
             /* only print out altar's god if they are all to your god */
             if (Amask2align(Msa2amask(mptr->feat.msalign)) == u.ualign.type)
-                Sprintf(eos(buf), " to %s", align_gname(u.ualign.type));
+                /*KR Sprintf(eos(buf), " to %s", align_gname(u.ualign.type));
+                 */
+                Sprintf(eos(buf), " (%s 소속)", align_gname(u.ualign.type));
         }
-        ADDNTOBUF("throne", mptr->feat.nthrone);
-        ADDNTOBUF("fountain", mptr->feat.nfount);
-        ADDNTOBUF("sink", mptr->feat.nsink);
-        ADDNTOBUF("grave", mptr->feat.ngrave);
-        ADDNTOBUF("tree", mptr->feat.ntree);
+        /*KR ADDNTOBUF("throne", mptr->feat.nthrone); */
+        ADDNTOBUF("왕좌", mptr->feat.nthrone);
+        /*KR ADDNTOBUF("fountain", mptr->feat.nfount); */
+        ADDNTOBUF("분수", mptr->feat.nfount);
+        /*KR ADDNTOBUF("sink", mptr->feat.nsink); */
+        ADDNTOBUF("싱크대", mptr->feat.nsink);
+        /*KR ADDNTOBUF("grave", mptr->feat.ngrave); */
+        ADDNTOBUF("무덤", mptr->feat.ngrave);
+        /*KR ADDNTOBUF("tree", mptr->feat.ntree); */
+        ADDNTOBUF("나무", mptr->feat.ntree);
 #if 0
         ADDTOBUF("water", mptr->feat.water);
         ADDTOBUF("lava", mptr->feat.lava);
@@ -3023,52 +3165,80 @@ boolean printdun;
     /* we assume that these are mutually exclusive */
     *buf = '\0';
     if (mptr->flags.oracle) {
-        Sprintf(buf, "%sOracle of Delphi.", PREFIX);
+        /*KR Sprintf(buf, "%sOracle of Delphi.", PREFIX); */
+        Sprintf(buf, "%s델파이의 신탁.", PREFIX);
     } else if (In_sokoban(&mptr->lev)) {
+#if 0 /*KR: 원본*/
         Sprintf(buf, "%s%s.", PREFIX,
                 mptr->flags.sokosolved ? "Solved" : "Unsolved");
+#else /*KR: KRNethack 맞춤 번역 */
+        Sprintf(buf, "%s%s.", PREFIX,
+                mptr->flags.sokosolved ? "클리어됨" : "클리어되지 않음");
+#endif
     } else if (mptr->flags.bigroom) {
-        Sprintf(buf, "%sA very big room.", PREFIX);
+        /*KR Sprintf(buf, "%sA very big room.", PREFIX); */
+        Sprintf(buf, "%s매우 거대한 방.", PREFIX);
     } else if (mptr->flags.roguelevel) {
-        Sprintf(buf, "%sA primitive area.", PREFIX);
+        /*KR Sprintf(buf, "%sA primitive area.", PREFIX); */
+        Sprintf(buf, "%s원시적인 구역.", PREFIX);
     } else if (on_level(&mptr->lev, &qstart_level)) {
+#if 0 /*KR: 원본*/
         Sprintf(buf, "%sHome%s.", PREFIX,
                 mptr->flags.unreachable ? " (no way back...)" : "");
+#else /*KR: KRNethack 맞춤 번역 */
+        Sprintf(buf, "%s고향%s.", PREFIX,
+                mptr->flags.unreachable ? " (돌아갈 길이 없다...)" : "");
+#endif
         if (u.uevent.qcompleted)
-            Sprintf(buf, "%sCompleted quest for %s.", PREFIX, ldrname());
+            /*KR Sprintf(buf, "%sCompleted quest for %s.", PREFIX, ldrname());
+             */
+            Sprintf(buf, "%s%s(을)를 위한 퀘스트 완료.", PREFIX, ldrname());
         else if (mptr->flags.questing)
-            Sprintf(buf, "%sGiven quest by %s.", PREFIX, ldrname());
+            /*KR Sprintf(buf, "%sGiven quest by %s.", PREFIX, ldrname()); */
+            Sprintf(buf, "%s%s에게서 퀘스트를 받음.", PREFIX, ldrname());
     } else if (mptr->flags.ludios) {
         /* presence of the ludios branch in #overview output indicates that
            the player has made it onto the level; presence of this annotation
            indicates that the fort's entrance has been seen (or mapped) */
-        Sprintf(buf, "%sFort Ludios.", PREFIX);
+        /*KR Sprintf(buf, "%sFort Ludios.", PREFIX); */
+        Sprintf(buf, "%s루디오스 요새.", PREFIX);
     } else if (mptr->flags.castle) {
-        Sprintf(buf, "%sThe castle%s.", PREFIX, tunesuffix(mptr, tmpbuf));
+        /*KR Sprintf(buf, "%sThe castle%s.", PREFIX, tunesuffix(mptr,
+         * tmpbuf)); */
+        Sprintf(buf, "%s성%s.", PREFIX, tunesuffix(mptr, tmpbuf));
     } else if (mptr->flags.valley) {
-        Sprintf(buf, "%sValley of the Dead.", PREFIX);
+        /*KR Sprintf(buf, "%sValley of the Dead.", PREFIX); */
+        Sprintf(buf, "%s죽음의 계곡.", PREFIX);
     } else if (mptr->flags.msanctum) {
-        Sprintf(buf, "%sMoloch's Sanctum.", PREFIX);
+        /*KR Sprintf(buf, "%sMoloch's Sanctum.", PREFIX); */
+        Sprintf(buf, "%s몰록의 성소.", PREFIX);
     }
     if (*buf)
         putstr(win, 0, buf);
     /* quest entrance is not mutually-exclusive with bigroom or rogue level */
     if (mptr->flags.quest_summons) {
-        Sprintf(buf, "%sSummoned by %s.", PREFIX, ldrname());
+        /*KR Sprintf(buf, "%sSummoned by %s.", PREFIX, ldrname()); */
+        Sprintf(buf, "%s%s에게 소환됨.", PREFIX, ldrname());
         putstr(win, 0, buf);
     }
 
     /* print out branches */
     if (mptr->br) {
+#if 0 /*KR: 원본*/
         Sprintf(buf, "%s%s to %s", PREFIX, br_string2(mptr->br),
                 dungeons[mptr->br->end2.dnum].dname);
+#else /*KR: KRNethack 맞춤 번역 */
+        Sprintf(buf, "%s%s(으)로 향하는 %s", PREFIX,
+                dungeons[mptr->br->end2.dnum].dname, br_string2(mptr->br));
+#endif
 
         /* Since mapseen objects are printed out in increasing order
          * of dlevel, clarify which level this branch is going to
          * if the branch goes upwards.  Unless it's the end game.
          */
         if (mptr->br->end1_up && !In_endgame(&(mptr->br->end2)))
-            Sprintf(eos(buf), ", level %d", depth(&(mptr->br->end2)));
+            /*KR Sprintf(eos(buf), ", level %d", depth(&(mptr->br->end2))); */
+            Sprintf(eos(buf), ", %d층", depth(&(mptr->br->end2)));
         Strcat(buf, ".");
         putstr(win, 0, buf);
     }
@@ -3082,19 +3252,26 @@ boolean printdun;
             if (bp->bonesknown || wizard || final)
                 ++kncnt;
         if (kncnt) {
-            Sprintf(buf, "%s%s", PREFIX, "Final resting place for");
+            /*KR Sprintf(buf, "%s%s", PREFIX, "Final resting place for"); */
+            Sprintf(buf, "%s%s", PREFIX, "최후의 안식처:");
             putstr(win, 0, buf);
             if (died_here) {
                 /* disclosure occurs before bones creation, so listing dead
                    hero here doesn't give away whether bones are produced */
                 formatkiller(tmpbuf, sizeof tmpbuf, how, TRUE);
+#if 0 /*KR: 원본*/
                 /* rephrase a few death reasons to work with "you" */
                 (void) strsubst(tmpbuf, " himself", " yourself");
                 (void) strsubst(tmpbuf, " herself", " yourself");
                 (void) strsubst(tmpbuf, " his ", " your ");
                 (void) strsubst(tmpbuf, " her ", " your ");
+
                 Sprintf(buf, "%s%syou, %s%c", PREFIX, TAB, tmpbuf,
                         --kncnt ? ',' : '.');
+#else /*KR: 한국어에서는 재귀대명사 수정이 필요 없음 */
+                Sprintf(buf, "%s%s당신, %s%c", PREFIX, TAB, tmpbuf,
+                        --kncnt ? ',' : '.');
+#endif
                 putstr(win, 0, buf);
             }
             for (bp = mptr->final_resting_place; bp; bp = bp->next) {

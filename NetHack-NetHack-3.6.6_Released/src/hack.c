@@ -121,8 +121,10 @@ moverock()
         if (Levitation || Is_airlevel(&u.uz)) {
             if (Blind)
                 feel_location(sx, sy);
-            /*KR You("don't have enough leverage to push %s.", the(xname(otmp))); */
-            You("don't have enough leverage to push %s.", the(xname(otmp)));
+            /*KR You("don't have enough leverage to push %s.",
+             * the(xname(otmp))); */
+            You("자세가 안 나와서 %s 밀 수 없다.",
+                append_josa(the(xname(otmp)), "을"));
             /* Give them a chance to climb over it? */
             return -1;
         }
@@ -130,7 +132,7 @@ moverock()
             if (Blind)
                 feel_location(sx, sy);
             /*KR pline("You're too small to push that %s.", xname(otmp)); */
-            pline("You're too small to push that %s.", xname(otmp));
+            You("너무 작아서 %s 밀 수 없다.", append_josa(xname(otmp), "을"));
             goto cannot_push;
         }
         if (isok(rx, ry) && !IS_ROCK(levl[rx][ry].typ)
@@ -144,9 +146,10 @@ moverock()
             if (Sokoban && u.dx && u.dy) {
                 if (Blind)
                     feel_location(sx, sy);
-                /*KR pline("%s won't roll diagonally on this %s.", */
-                pline("%s won't roll diagonally on this %s.",
-                      The(xname(otmp)), surface(sx, sy));
+                /*KR pline("%s won't roll diagonally on this %s.",
+                 * The(xname(otmp)), surface(sx, sy)); */
+                pline("%s 위에서는 %s 대각선으로 밀 수 없다.",
+                      surface(sx, sy), append_josa(The(xname(otmp)), "을"));
                 goto cannot_push;
             }
 
@@ -258,9 +261,10 @@ moverock()
                 case HOLE:
                 case TRAPDOOR:
                     if (Blind)
-                        /*KR pline("Kerplunk!  You no longer feel %s.", */
-                        pline("Kerplunk!  You no longer feel %s.",
-                              the(xname(otmp)));
+                        /*KR pline("Kerplunk!  You no longer feel %s.",
+                         * the(xname(otmp))); */
+                        pline("쿵! 더 이상 %s 느껴지지 않는다.",
+                              append_josa(the(xname(otmp)), "이"));
                     else
 #if 0 /*KR:T*/
                         pline("%s%s and %s a %s in the %s!",
@@ -296,13 +300,16 @@ moverock()
                             goto dopush;
                     }
                     if (u.usteed)
-                        /*KR pline("%s pushes %s and suddenly it disappears!", */
-                        pline("%s pushes %s and suddenly it disappears!",
-                              upstart(y_monnam(u.usteed)), the(xname(otmp)));
+                        /*KR pline("%s pushes %s and suddenly it disappears!",
+                         * upstart(y_monnam(u.usteed)), the(xname(otmp))); */
+                        pline("%s %s 밀자, 갑자기 그것이 사라졌다!",
+                              append_josa(upstart(y_monnam(u.usteed)), "이"),
+                              append_josa(the(xname(otmp)), "을"));
                     else
-                        /*KR You("push %s and suddenly it disappears!", */
-                        You("push %s and suddenly it disappears!",
-                            the(xname(otmp)));
+                        /*KR You("push %s and suddenly it disappears!",
+                         * the(xname(otmp))); */
+                        pline("당신이 %s 밀자, 갑자기 그것이 사라졌다!",
+                              append_josa(the(xname(otmp)), "을"));
                     if (ttmp->ttyp == TELEP_TRAP) {
                         (void) rloco(otmp);
                     } else {
@@ -408,19 +415,32 @@ moverock()
                     willpickup = (canpickup && autopick_testobj(otmp, TRUE));
 
                 if (u.usteed && P_SKILL(P_RIDING) < P_BASIC) {
+#if 0 /*KR: 원본*/
                     You("aren't skilled enough to %s %s from %s.",
                         willpickup ? "pick up" : "push aside",
                         the(xname(otmp)), y_monnam(u.usteed));
+#else /*KR: KRNethack 맞춤 번역 */
+                    You("%s 위에서 %s %s 만한 능력이 없다.",
+                        y_monnam(u.usteed),
+                        append_josa(the(xname(otmp)), "을"),
+                        willpickup ? "주워 올릴" : "옆으로 밀어낼");
+#endif
                 } else {
                     /*
                      * willpickup:  you easily pick it up
                      * canpickup:   you could easily pick it up
                      * otherwise:   you easily push it aside
                      */
+#if 0 /*KR: 원본*/
                     pline("However, you %seasily %s.",
                           (willpickup || !canpickup) ? "" : "could ",
                           (willpickup || canpickup) ? "pick it up"
                                                     : "push it aside");
+#else /*KR: KRNethack 맞춤 번역 */
+                    pline("하지만, 당신은 쉽게 그것을 %s.",
+                          (willpickup || canpickup) ? "주워 올렸다"
+                                                    : "옆으로 밀어냈다");
+#endif
                     sokoban_guilt();
                     break;
                 }
@@ -432,8 +452,9 @@ moverock()
                      && (!u.dx || !u.dy || (IS_ROCK(levl[u.ux][sy].typ)
                                             && IS_ROCK(levl[sx][u.uy].typ))))
                     || verysmall(youmonst.data))) {
-                pline(
-                   "However, you can squeeze yourself into a small opening.");
+                /*KR pline("However, you can squeeze yourself into a small
+                 * opening."); */
+                pline("하지만 당신은 좁은 틈 사이로 비집고 들어갔다.");
                 sokoban_guilt();
                 break;
             } else
@@ -465,12 +486,18 @@ xchar x, y;
         && ((IS_ROCK(lev->typ) && !may_dig(x, y))
             /* may_dig() checks W_NONDIGGABLE but doesn't handle iron bars */
             || (lev->typ == IRONBARS && (lev->wall_info & W_NONDIGGABLE)))) {
+#if 0 /*KR: 원본*/
         You("hurt your teeth on the %s.",
             (lev->typ == IRONBARS)
                 ? "bars"
-                : IS_TREE(lev->typ)
-                    ? "tree"
-                    : "hard stone");
+                : IS_TREE(lev->typ) ? "tree" : "hard stone");
+#else /*KR: KRNethack 맞춤 번역 */
+        You("%s 씹다가 이빨을 다쳤다.",
+            append_josa((lev->typ == IRONBARS) ? "쇠창살"
+                        : IS_TREE(lev->typ)    ? "나무"
+                                               : "단단한 돌",
+                        "을"));
+#endif
         nomul(0);
         return 1;
     } else if (context.digging.pos.x != x || context.digging.pos.y != y
@@ -484,34 +511,53 @@ xchar x, y;
         /* solid rock takes more work & time to dig through */
         context.digging.effort =
             (IS_ROCK(lev->typ) && !IS_TREE(lev->typ) ? 30 : 60) + u.udaminc;
+#if 0 /*KR: 원본*/
         You("start chewing %s %s.",
             (boulder || IS_TREE(lev->typ) || lev->typ == IRONBARS)
                 ? "on a"
                 : "a hole in the",
-            boulder
-                ? "boulder"
-                : IS_TREE(lev->typ)
-                    ? "tree"
-                    : IS_ROCK(lev->typ)
-                        ? "rock"
-                        : (lev->typ == IRONBARS)
-                            ? "bar"
-                            : "door");
+            boulder ? "boulder"
+                    : IS_TREE(lev->typ)
+                          ? "tree"
+                          : IS_ROCK(lev->typ) ? "rock"
+                                              : (lev->typ == IRONBARS)
+                                                    ? "bar"
+                                                    : "door");
+#else /*KR: KRNethack 맞춤 번역 */
+        You("%s %s 시작했다.",
+            append_josa(boulder                  ? "바위"
+                        : IS_TREE(lev->typ)      ? "나무"
+                        : IS_ROCK(lev->typ)      ? "암석"
+                        : (lev->typ == IRONBARS) ? "쇠창살"
+                                                 : "문",
+                        "을"),
+            (boulder || IS_TREE(lev->typ) || lev->typ == IRONBARS)
+                ? "씹어먹기"
+                : "물어뜯어 구멍을 내기");
+#endif
         watch_dig((struct monst *) 0, x, y, FALSE);
         return 1;
     } else if ((context.digging.effort += (30 + u.udaminc)) <= 100) {
         if (flags.verbose)
+#if 0 /*KR: 원본*/
             You("%s chewing on the %s.",
                 context.digging.chew ? "continue" : "begin",
-                boulder
-                    ? "boulder"
-                    : IS_TREE(lev->typ)
-                        ? "tree"
-                        : IS_ROCK(lev->typ)
-                            ? "rock"
-                            : (lev->typ == IRONBARS)
-                                ? "bars"
-                                : "door");
+                boulder ? "boulder"
+                        : IS_TREE(lev->typ)
+                              ? "tree"
+                              : IS_ROCK(lev->typ) ? "rock"
+                                                  : (lev->typ == IRONBARS)
+                                                        ? "bars"
+                                                        : "door");
+#else /*KR: KRNethack 맞춤 번역 */
+            You("%s 계속 씹어먹고 있다.",
+                append_josa(boulder                  ? "바위"
+                            : IS_TREE(lev->typ)      ? "나무"
+                            : IS_ROCK(lev->typ)      ? "암석"
+                            : (lev->typ == IRONBARS) ? "쇠창살"
+                                                     : "문",
+                            "를"));
+#endif
         context.digging.chew = TRUE;
         watch_dig((struct monst *) 0, x, y, FALSE);
         return 1;
@@ -523,7 +569,8 @@ xchar x, y;
 
     if (boulder) {
         delobj(boulder);         /* boulder goes bye-bye */
-        You("eat the boulder."); /* yum */
+        /*KR You("eat the boulder."); */
+        You("바위를 먹어치웠다."); /* yum */
 
         /*
          *  The location could still block because of
@@ -544,9 +591,11 @@ xchar x, y;
     } else if (IS_WALL(lev->typ)) {
         if (*in_rooms(x, y, SHOPBASE)) {
             add_damage(x, y, SHOP_WALL_DMG);
-            dmgtxt = "damage";
+            /*KR dmgtxt = "damage"; */
+            dmgtxt = "손상시켰다";
         }
-        digtxt = "chew a hole in the wall.";
+        /*KR digtxt = "chew a hole in the wall."; */
+        digtxt = "벽을 씹어서 구멍을 뚫었다.";
         if (level.flags.is_maze_lev) {
             lev->typ = ROOM;
         } else if (level.flags.is_cavernous_lev && !in_town(x, y)) {
@@ -556,17 +605,21 @@ xchar x, y;
             lev->doormask = D_NODOOR;
         }
     } else if (IS_TREE(lev->typ)) {
-        digtxt = "chew through the tree.";
+        /*KR digtxt = "chew through the tree."; */
+        digtxt = "나무를 물어뜯어 구멍을 냈다.";
         lev->typ = ROOM;
     } else if (lev->typ == IRONBARS) {
-        digtxt = "eat through the bars.";
+        /*KR digtxt = "eat through the bars."; */
+        digtxt = "쇠창살을 먹어치워 길을 냈다.";
         dissolve_bars(x, y);
     } else if (lev->typ == SDOOR) {
         if (lev->doormask & D_TRAPPED) {
             lev->doormask = D_NODOOR;
-            b_trapped("secret door", 0);
+            /*KR b_trapped("secret door", 0); */
+            b_trapped("비밀 문", 0);
         } else {
-            digtxt = "chew through the secret door.";
+            /*KR digtxt = "chew through the secret door."; */
+            digtxt = "비밀 문을 물어뜯어 부쉈다.";
             lev->doormask = D_BROKEN;
         }
         lev->typ = DOOR;
@@ -574,18 +627,22 @@ xchar x, y;
     } else if (IS_DOOR(lev->typ)) {
         if (*in_rooms(x, y, SHOPBASE)) {
             add_damage(x, y, SHOP_DOOR_COST);
-            dmgtxt = "break";
+            /*KR dmgtxt = "break"; */
+            dmgtxt = "부쉈다";
         }
         if (lev->doormask & D_TRAPPED) {
             lev->doormask = D_NODOOR;
-            b_trapped("door", 0);
+            /*KR b_trapped("door", 0); */
+            b_trapped("문", 0);
         } else {
-            digtxt = "chew through the door.";
+            /*KR digtxt = "chew through the door."; */
+            digtxt = "문을 물어뜯어 부쉈다.";
             lev->doormask = D_BROKEN;
         }
 
     } else { /* STONE or SCORR */
-        digtxt = "chew a passage through the rock.";
+        /*KR digtxt = "chew a passage through the rock."; */
+        digtxt = "바위를 물어뜯어 통로를 만들었다.";
         lev->typ = CORR;
     }
 
@@ -596,13 +653,11 @@ xchar x, y;
     if (dmgtxt)
         pay_for_damage(dmgtxt, FALSE);
     (void) memset((genericptr_t) &context.digging, 0,
-                  sizeof (struct dig_info));
+                  sizeof(struct dig_info));
     return 0;
 }
 
-void
-movobj(obj, ox, oy)
-register struct obj *obj;
+void movobj(obj, ox, oy) register struct obj *obj;
 register xchar ox, oy;
 {
     /* optimize by leaving on the fobj chain? */
@@ -612,7 +667,8 @@ register xchar ox, oy;
     newsym(ox, oy);
 }
 
-static NEARDATA const char fell_on_sink[] = "fell onto a sink";
+/*KR static NEARDATA const char fell_on_sink[] = "fell onto a sink"; */
+static NEARDATA const char fell_on_sink[] = "싱크대로 떨어졌다";
 
 STATIC_OVL void
 dosinkfall()
@@ -625,13 +681,18 @@ dosinkfall()
                levitate but being blocked, then moving onto adjacent sink;
                no need to worry about being blocked by terrain because we
                couldn't be over a sink at the same time */
-            blockd_lev = (BLevitation == I_SPECIAL),
+        blockd_lev = (BLevitation == I_SPECIAL),
             ufall = (!innate_lev && !blockd_lev
                      && !(HFlying || EFlying)); /* BFlying */
 
     if (!ufall) {
+#if 0 /*KR: 원본*/
         You((innate_lev || blockd_lev) ? "wobble unsteadily for a moment."
                                        : "gain control of your flight.");
+#else /*KR: KRNethack 맞춤 번역 */
+        You((innate_lev || blockd_lev) ? "잠시 불안정하게 비틀거렸다."
+                                       : "비행 제어력을 되찾았다.");
+#endif
     } else {
         long save_ELev = ELevitation, save_HLev = HLevitation;
 
@@ -640,16 +701,18 @@ dosinkfall()
            be fatal; fortunately the fact that rings and boots
            are really still worn has no effect on bones data */
         ELevitation = HLevitation = 0L;
-        You("crash to the floor!");
+        /*KR You("crash to the floor!"); */
+        You("바닥에 곤두박질쳤다!");
         dmg = rn1(8, 25 - (int) ACURR(A_CON));
-        losehp(Maybe_Half_Phys(dmg), fell_on_sink, NO_KILLER_PREFIX);
+        losehp(Maybe_Half_Phys(dmg), fell_on_sink, KILLED_BY);
         exercise(A_DEX, FALSE);
-        selftouch("Falling, you");
+        /*KR selftouch("Falling, you"); */
+        selftouch("떨어지면서 당신은");
         for (obj = level.objects[u.ux][u.uy]; obj; obj = obj->nexthere)
             if (obj->oclass == WEAPON_CLASS || is_weptool(obj)) {
-                You("fell on %s.", doname(obj));
-                losehp(Maybe_Half_Phys(rnd(3)), fell_on_sink,
-                       NO_KILLER_PREFIX);
+                /*KR You("fell on %s.", doname(obj)); */
+                You("%s 위로 떨어졌다.", append_josa(doname(obj), "의"));
+                losehp(Maybe_Half_Phys(rnd(3)), fell_on_sink, KILLED_BY);
                 exercise(A_CON, FALSE);
             }
         ELevitation = save_ELev;
@@ -723,11 +786,11 @@ bad_rock(mdat, x, y)
 struct permonst *mdat;
 register xchar x, y;
 {
-    return (boolean) ((Sokoban && sobj_at(BOULDER, x, y))
-                      || (IS_ROCK(levl[x][y].typ)
-                          && (!tunnels(mdat) || needspick(mdat)
-                              || !may_dig(x, y))
-                          && !(passes_walls(mdat) && may_passwall(x, y))));
+    return (
+        boolean) ((Sokoban && sobj_at(BOULDER, x, y))
+                  || (IS_ROCK(levl[x][y].typ)
+                      && (!tunnels(mdat) || needspick(mdat) || !may_dig(x, y))
+                      && !(passes_walls(mdat) && may_passwall(x, y))));
 }
 
 /* caller has already decided that it's a tight diagonal; check whether a
@@ -748,8 +811,8 @@ struct monst *mon;
         return 1;
 
     /* lugging too much junk? */
-    amt = (mon == &youmonst) ? inv_weight() + weight_cap()
-                             : curr_mon_load(mon);
+    amt =
+        (mon == &youmonst) ? inv_weight() + weight_cap() : curr_mon_load(mon);
     if (amt > 600)
         return 2;
 
@@ -765,8 +828,8 @@ boolean
 invocation_pos(x, y)
 xchar x, y;
 {
-    return (boolean) (Invocation_lev(&u.uz)
-                      && x == inv_pos.x && y == inv_pos.y);
+    return (boolean) (Invocation_lev(&u.uz) && x == inv_pos.x
+                      && y == inv_pos.y);
 }
 
 /* return TRUE if (dx,dy) is an OK place to move
@@ -784,7 +847,7 @@ int mode;
 
     context.door_opened = FALSE;
     /*
-     *  Check for physical obstacles.  First, the place we are going.
+     * Check for physical obstacles.  First, the place we are going.
      */
     if (IS_ROCK(tmpr->typ) || tmpr->typ == IRONBARS) {
         if (Blind && mode == DO_MOVE)
@@ -797,17 +860,19 @@ int mode;
                so we won't get here, hence don't need to worry about
                "there" being somewhere the player isn't sure of */
             if (mode == DO_MOVE)
-                pline("There is an obstacle there.");
+                /*KR pline("There is an obstacle there."); */
+                pline("그곳에 장애물이 있다.");
             return FALSE;
         } else if (tmpr->typ == IRONBARS) {
             if ((dmgtype(youmonst.data, AD_RUST)
-                 || dmgtype(youmonst.data, AD_CORR)) && mode == DO_MOVE
-                && still_chewing(x, y)) {
+                 || dmgtype(youmonst.data, AD_CORR))
+                && mode == DO_MOVE && still_chewing(x, y)) {
                 return FALSE;
             }
             if (!(Passes_walls || passes_bars(youmonst.data))) {
                 if (mode == DO_MOVE && iflags.mention_walls)
-                    You("cannot pass through the bars.");
+                    /*KR You("cannot pass through the bars."); */
+                    You("창살을 통과할 수 없다.");
                 return FALSE;
             }
         } else if (tunnels(youmonst.data) && !needspick(youmonst.data)) {
@@ -823,16 +888,26 @@ int mode;
         } else {
             if (mode == DO_MOVE) {
                 if (is_db_wall(x, y))
-                    pline("That drawbridge is up!");
+                    /*KR pline("That drawbridge is up!"); */
+                    pline("그 도개교는 올라가 있다!");
                 /* sokoban restriction stays even after puzzle is solved */
                 else if (Passes_walls && !may_passwall(x, y)
                          && In_sokoban(&u.uz))
-                    pline_The("Sokoban walls resist your ability.");
+                    /*KR pline_The("Sokoban walls resist your ability."); */
+                    pline("소코반의 벽은 당신의 능력에 저항한다.");
                 else if (iflags.mention_walls)
+#if 0 /*KR: 원본*/
                     pline("It's %s.",
                           (IS_WALL(tmpr->typ) || tmpr->typ == SDOOR) ? "a wall"
                           : IS_TREE(tmpr->typ) ? "a tree"
                           : "solid stone");
+#else /*KR: KRNethack 맞춤 번역 */
+                    pline("그것은 %s.",
+                          (IS_WALL(tmpr->typ) || tmpr->typ == SDOOR)
+                              ? "벽이다"
+                          : IS_TREE(tmpr->typ) ? "나무다"
+                                               : "단단한 돌이다");
+#endif
             }
             return FALSE;
         }
@@ -844,10 +919,12 @@ int mode;
                 ; /* do nothing */
             } else if (can_ooze(&youmonst)) {
                 if (mode == DO_MOVE)
-                    You("ooze under the door.");
+                    /*KR You("ooze under the door."); */
+                    You("문 밑으로 스며들었다.");
             } else if (Underwater) {
                 if (mode == DO_MOVE)
-                    pline("There is an obstacle there.");
+                    /*KR pline("There is an obstacle there."); */
+                    pline("그곳에 장애물이 있다.");
                 return FALSE;
             } else if (tunnels(youmonst.data) && !needspick(youmonst.data)) {
                 /* Eat the door. */
@@ -856,8 +933,10 @@ int mode;
             } else {
                 if (mode == DO_MOVE) {
                     if (amorphous(youmonst.data))
-                        You(
-   "try to ooze under the door, but can't squeeze your possessions through.");
+                        /*KR You("try to ooze under the door, but can't
+                         * squeeze your possessions through."); */
+                        You("문 밑으로 스며들려 했지만, 짐을 비집고 통과시킬 "
+                            "수 없다.");
                     if (flags.autoopen && !context.run && !Confusion
                         && !Stunned && !Fumbling) {
                         context.door_opened = context.move =
@@ -866,21 +945,26 @@ int mode;
                         if (Blind || Stunned || ACURR(A_DEX) < 10
                             || Fumbling) {
                             if (u.usteed) {
-                                You_cant("lead %s through that closed door.",
-                                         y_monnam(u.usteed));
+                                /*KR You_cant("lead %s through that closed
+                                 * door.", y_monnam(u.usteed)); */
+                                You_cant(
+                                    "%s 이끌고 닫힌 문을 통과할 수는 없다.",
+                                    append_josa(y_monnam(u.usteed), "을"));
                             } else {
-                                pline("Ouch!  You bump into a door.");
+                                /*KR pline("Ouch!  You bump into a door."); */
+                                pline("아야! 문에 부딪혔다.");
                                 exercise(A_DEX, FALSE);
                             }
                         } else
-                            pline("That door is closed.");
+                            /*KR pline("That door is closed."); */
+                            pline("그 문은 닫혀 있다.");
                     }
                 } else if (mode == TEST_TRAV || mode == TEST_TRAP)
                     goto testdiag;
                 return FALSE;
             }
         } else {
- testdiag:
+        testdiag:
             if (dx && dy && !Passes_walls
                 && (!doorless_door(x, y) || block_door(x, y))) {
                 /* Diagonal moves into a door are not allowed. */
@@ -888,7 +972,11 @@ int mode;
                     if (Blind)
                         feel_location(x, y);
                     if (Underwater || iflags.mention_walls)
-                        You_cant("move diagonally into an intact doorway.");
+                        /*KR You_cant("move diagonally into an intact
+                         * doorway.");
+                         */
+                        You_cant(
+                            "멀쩡한 문간으로 대각선 이동을 할 수는 없다.");
                 }
                 return FALSE;
             }
@@ -900,15 +988,18 @@ int mode;
         switch (cant_squeeze_thru(&youmonst)) {
         case 3:
             if (mode == DO_MOVE)
-                You("cannot pass that way.");
+                /*KR You("cannot pass that way."); */
+                You("그쪽으로는 지나갈 수 없다.");
             return FALSE;
         case 2:
             if (mode == DO_MOVE)
-                You("are carrying too much to get through.");
+                /*KR You("are carrying too much to get through."); */
+                pline("짐을 너무 많이 들고 있어서 통과할 수 없다.");
             return FALSE;
         case 1:
             if (mode == DO_MOVE)
-                Your("body is too large to fit through.");
+                /*KR Your("body is too large to fit through."); */
+                Your("몸이 너무 커서 빠져나갈 수 없다.");
             return FALSE;
         default:
             break; /* can squeeze through */
@@ -916,14 +1007,15 @@ int mode;
     } else if (dx && dy && worm_cross(ux, uy, x, y)) {
         /* consecutive long worm segments are at <ux,y> and <x,uy> */
         if (mode == DO_MOVE)
-            pline("%s is in your way.", Monnam(m_at(ux, y)));
+            /*KR pline("%s is in your way.", Monnam(m_at(ux, y))); */
+            pline("%s 당신의 길을 막고 있다.",
+                  append_josa(Monnam(m_at(ux, y)), "이"));
         return FALSE;
     }
     /* Pick travel path that does not require crossing a trap.
      * Avoid water and lava using the usual running rules.
      * (but not u.ux/u.uy because findtravelpath walks toward u.ux/u.uy) */
-    if (context.run == 8 && (mode != DO_MOVE)
-        && (x != u.ux || y != u.uy)) {
+    if (context.run == 8 && (mode != DO_MOVE) && (x != u.ux || y != u.uy)) {
         struct trap *t = t_at(x, y);
 
         if ((t && t->tseen)
@@ -942,7 +1034,8 @@ int mode;
         && (!doorless_door(ux, uy) || block_entry(x, y))) {
         /* Can't move at a diagonal out of a doorway with door. */
         if (mode == DO_MOVE && iflags.mention_walls)
-            You_cant("move diagonally out of an intact doorway.");
+            /*KR You_cant("move diagonally out of an intact doorway."); */
+            You_cant("멀쩡한 문간에서 대각선으로 나갈 수는 없다.");
         return FALSE;
     }
 
@@ -950,7 +1043,8 @@ int mode;
         if (!(Blind || Hallucination) && (context.run >= 2)
             && mode != TEST_TRAV) {
             if (mode == DO_MOVE && iflags.mention_walls)
-                pline("A boulder blocks your path.");
+                /*KR pline("A boulder blocks your path."); */
+                pline("바위가 길을 막고 있다.");
             return FALSE;
         }
         if (mode == DO_MOVE) {
@@ -1275,11 +1369,15 @@ struct trap *desttrap; /* nonnull if another trap at <x,y> */
     switch (u.utraptype) {
     case TT_BEARTRAP:
         if (flags.verbose) {
-            predicament = "caught in a bear trap";
+            /*KR predicament = "caught in a bear trap"; */
+            predicament = "곰덫에 걸려 있다";
             if (u.usteed)
-                Norep("%s is %s.", upstart(steedname), predicament);
+                /*KR Norep("%s is %s.", upstart(steedname), predicament); */
+                Norep("%s %s.", append_josa(upstart(steedname), "은"),
+                      predicament);
             else
-                Norep("You are %s.", predicament);
+                /*KR Norep("You are %s.", predicament); */
+                Norep("당신은 %s.", predicament);
         }
         /* [why does diagonal movement give quickest escape?] */
         if ((u.dx && u.dy) || !rn2(5))
@@ -1288,8 +1386,7 @@ struct trap *desttrap; /* nonnull if another trap at <x,y> */
             goto wriggle_free;
         break;
     case TT_PIT:
-        if (desttrap && desttrap->tseen
-            && is_pit(desttrap->ttyp))
+        if (desttrap && desttrap->tseen && is_pit(desttrap->ttyp))
             return TRUE; /* move into adjacent pit */
         /* try to escape; position stays same regardless of success */
         climb_pit();
@@ -1298,42 +1395,66 @@ struct trap *desttrap; /* nonnull if another trap at <x,y> */
         if (uwep && uwep->oartifact == ART_STING) {
             /* escape trap but don't move and don't destroy it */
             u.utrap = 0; /* caller will call reset_utrap() */
-            pline("Sting cuts through the web!");
+            /*KR pline("Sting cuts through the web!"); */
+            pline("스팅이 거미줄을 끊어버렸다!");
             break;
         }
         if (--u.utrap) {
             if (flags.verbose) {
-                predicament = "stuck to the web";
+                /*KR predicament = "stuck to the web"; */
+                predicament = "거미줄에 들러붙어 있다";
                 if (u.usteed)
-                    Norep("%s is %s.", upstart(steedname), predicament);
+                    /*KR Norep("%s is %s.", upstart(steedname), predicament);
+                     */
+                    Norep("%s %s.", append_josa(upstart(steedname), "은"),
+                          predicament);
                 else
-                    Norep("You are %s.", predicament);
+                    /*KR Norep("You are %s.", predicament); */
+                    Norep("당신은 %s.", predicament);
             }
         } else {
             if (u.usteed)
-                pline("%s breaks out of the web.", upstart(steedname));
+                /*KR pline("%s breaks out of the web.", upstart(steedname));
+                 */
+                pline("%s 거미줄을 끊고 나왔다.",
+                      append_josa(upstart(steedname), "은"));
             else
-                You("disentangle yourself.");
+                /*KR You("disentangle yourself."); */
+                You("스스로 얽힌 것을 풀었다.");
         }
         break;
     case TT_LAVA:
         if (flags.verbose) {
-            predicament = "stuck in the lava";
+            /*KR predicament = "stuck in the lava"; */
+            predicament = "용암에 빠져 있다";
             if (u.usteed)
-                Norep("%s is %s.", upstart(steedname), predicament);
+                /*KR Norep("%s is %s.", upstart(steedname), predicament); */
+                Norep("%s %s.", append_josa(upstart(steedname), "은"),
+                      predicament);
             else
-                Norep("You are %s.", predicament);
+                /*KR Norep("You are %s.", predicament); */
+                Norep("당신은 %s.", predicament);
         }
         if (!is_lava(x, y)) {
             u.utrap--;
             if ((u.utrap & 0xff) == 0) {
                 u.utrap = 0;
                 if (u.usteed)
+#if 0 /*KR: 원본*/
                     You("lead %s to the edge of the %s.", steedname,
                         hliquid("lava"));
+#else /*KR: KRNethack 맞춤 번역 */
+                    You("%s %s 가장자리로 이끌었다.",
+                        append_josa(steedname, "을"), hliquid("lava"));
+#endif
                 else
+#if 0 /*KR: 원본*/
                     You("pull yourself to the edge of the %s.",
                         hliquid("lava"));
+#else /*KR: KRNethack 맞춤 번역 */
+                    You("몸을 끌어당겨 %s 가장자리로 빠져나왔다.",
+                        hliquid("lava"));
+#endif
             }
         }
         u.umoved = TRUE;
@@ -1354,37 +1475,65 @@ struct trap *desttrap; /* nonnull if another trap at <x,y> */
                    after this successful move would have its
                    can't-do-that message suppressed by Norep */
                 if (flags.verbose)
-                    Norep("You move within the chain's reach.");
+                    /*KR Norep("You move within the chain's reach."); */
+                    Norep("당신은 사슬이 닿는 범위 내에서 이동했다.");
                 return TRUE;
             }
         }
         if (--u.utrap) {
             if (flags.verbose) {
                 if (anchored) {
-                    predicament = "chained to the";
-                    culprit = "buried ball";
+                    /*KR predicament = "chained to the"; */
+                    predicament = "사슬로 연결되어 있다";
+                    /*KR culprit = "buried ball"; */
+                    culprit = "파묻힌 철구와";
                 } else {
-                    predicament = "stuck in the";
+                    /*KR predicament = "stuck in the"; */
+                    predicament = "빠져 있다";
                     culprit = surface(u.ux, u.uy);
                 }
                 if (u.usteed) {
                     if (anchored)
+#if 0 /*KR: 원본*/
                         Norep("You and %s are %s %s.", steedname, predicament,
                               culprit);
+#else /*KR: KRNethack 맞춤 번역 */
+                        Norep("당신과 %s %s %s.",
+                              append_josa(steedname, "은"), culprit,
+                              predicament);
+#endif
                     else
+#if 0 /*KR: 원본*/
                         Norep("%s is %s %s.", upstart(steedname), predicament,
                               culprit);
+#else /*KR: KRNethack 맞춤 번역 */
+                        Norep("%s %s에 %s.",
+                              append_josa(upstart(steedname), "은"), culprit,
+                              predicament);
+#endif
                 } else
-                    Norep("You are %s %s.", predicament, culprit);
+                    /*KR Norep("You are %s %s.", predicament, culprit); */
+                    Norep("당신은 %s에 %s.", culprit, predicament);
             }
         } else {
- wriggle_free:
+        wriggle_free:
             if (u.usteed)
+#if 0 /*KR: 원본*/
                 pline("%s finally %s free.", upstart(steedname),
                       !anchored ? "lurches" : "wrenches the ball");
+#else /*KR: KRNethack 맞춤 번역 */
+                pline("%s 마침내 %s 자유로워졌다.",
+                      append_josa(upstart(steedname), "은"),
+                      !anchored ? "비틀거리며" : "철구를 빼내고");
+#endif
             else
+#if 0 /*KR: 원본*/
                 You("finally %s free.",
                     !anchored ? "wriggle" : "wrench the ball");
+#else /*KR: KRNethack 맞춤 번역 */
+                You("마침내 %s 자유로워졌다.",
+                    !anchored ? "몸부림친 끝에" : "철구를 빼내고");
+#endif
             if (anchored)
                 buried_ball_to_punishment();
         }
@@ -1401,10 +1550,17 @@ boolean
 u_rooted()
 {
     if (!youmonst.data->mmove) {
+#if 0 /*KR: 원본*/
         You("are rooted %s.",
             Levitation || Is_airlevel(&u.uz) || Is_waterlevel(&u.uz)
                 ? "in place"
                 : "to the ground");
+#else /*KR: KRNethack 맞춤 번역 */
+        You("%s 붙박인 듯 움직일 수 없다.",
+            Levitation || Is_airlevel(&u.uz) || Is_waterlevel(&u.uz)
+                ? "그 자리에"
+                : "땅에");
+#endif
         nomul(0);
         return TRUE;
     }
@@ -1414,14 +1570,14 @@ u_rooted()
 void
 domove()
 {
-        int ux1 = u.ux, uy1 = u.uy;
+    int ux1 = u.ux, uy1 = u.uy;
 
-        domove_succeeded = 0L;
-        domove_core();
-        /* domove_succeeded is available for making assessments now */
-        if ((domove_succeeded & (DOMOVE_RUSH | DOMOVE_WALK)) != 0)
-            maybe_smudge_engr(ux1, uy1, u.ux, u.uy);
-        domove_attempting = 0L;
+    domove_succeeded = 0L;
+    domove_core();
+    /* domove_succeeded is available for making assessments now */
+    if ((domove_succeeded & (DOMOVE_RUSH | DOMOVE_WALK)) != 0)
+        maybe_smudge_engr(ux1, uy1, u.ux, u.uy);
+    domove_attempting = 0L;
 }
 
 STATIC_OVL void
@@ -1433,11 +1589,11 @@ domove_core()
     struct trap *trap = NULL;
     int wtcap;
     boolean on_ice;
-    xchar chainx = 0, chainy = 0,
-          ballx = 0, bally = 0;         /* ball&chain new positions */
-    int bc_control = 0;                 /* control for ball&chain */
-    boolean cause_delay = FALSE,        /* dragging ball will skip a move */
-            u_with_boulder = (sobj_at(BOULDER, u.ux, u.uy) != 0);
+    xchar chainx = 0, chainy = 0, ballx = 0,
+          bally = 0;             /* ball&chain new positions */
+    int bc_control = 0;          /* control for ball&chain */
+    boolean cause_delay = FALSE, /* dragging ball will skip a move */
+        u_with_boulder = (sobj_at(BOULDER, u.ux, u.uy) != 0);
 
     if (context.travel) {
         if (!findtravelpath(FALSE))
@@ -1451,10 +1607,12 @@ domove_core()
                         : (u.uhp < 10 && u.uhp != u.uhpmax))))
         && !Is_airlevel(&u.uz)) {
         if (wtcap < OVERLOADED) {
-            You("don't have enough stamina to move.");
+            /*KR You("don't have enough stamina to move."); */
+            You("움직일 기력이 부족하다.");
             exercise(A_CON, FALSE);
         } else
-            You("collapse under your load.");
+            /*KR You("collapse under your load."); */
+            You("짐의 무게를 견디지 못하고 쓰러졌다.");
         nomul(0);
         return;
     }
@@ -1467,14 +1625,17 @@ domove_core()
         if (Is_airlevel(&u.uz) && rn2(4) && !Levitation && !Flying) {
             switch (rn2(3)) {
             case 0:
-                You("tumble in place.");
+                /*KR You("tumble in place."); */
+                You("제자리에서 굴렀다.");
                 exercise(A_DEX, FALSE);
                 break;
             case 1:
-                You_cant("control your movements very well.");
+                /*KR You_cant("control your movements very well."); */
+                You_cant("움직임을 제대로 통제할 수 없다.");
                 break;
             case 2:
-                pline("It's hard to walk in thin air.");
+                /*KR pline("It's hard to walk in thin air."); */
+                pline("허공을 걷기는 어렵다.");
                 exercise(A_DEX, TRUE);
                 break;
             }
@@ -1534,7 +1695,9 @@ domove_core()
                    doing so while encumbered is feasible; if in an aquatic
                    form, stressed or less is allowed; otherwise (magical
                    breathing), only burdened is allowed */
-                You("are carrying too much to climb out of the water.");
+                /*KR You("are carrying too much to climb out of the water.");
+                 */
+                You("물에서 기어오르기에는 너무 많은 짐을 들고 있다.");
                 nomul(0);
                 return;
             }
@@ -1552,8 +1715,13 @@ domove_core()
                     else if (isok(u.ux, y))
                         dy = 0;
                 }
+#if 0 /*KR: 원본*/
                 You("have already gone as far %s as possible.",
                     directionname(xytod(dx, dy)));
+#else /*KR: KRNethack 맞춤 번역 */
+                You("%s 방향으로는 이미 갈 수 있는 데까지 갔다.",
+                    directionname(xytod(dx, dy)));
+#endif
             }
             nomul(0);
             return;
@@ -1566,11 +1734,18 @@ domove_core()
                     if (trap && trap->tseen) {
                         int tt = what_trap(trap->ttyp, rn2_on_display_rng);
 
-                        You("stop in front of %s.",
-                            an(defsyms[trap_to_defsym(tt)].explanation));
-                    } else if (is_pool_or_lava(x,y) && levl[x][y].seenv) {
+                        /*KR You("stop in front of %s.",
+                         * an(defsyms[trap_to_defsym(tt)].explanation)); */
+                        You("%s 앞에서 멈춰 섰다.",
+                            defsyms[trap_to_defsym(tt)].explanation);
+                    } else if (is_pool_or_lava(x, y) && levl[x][y].seenv) {
+#if 0 /*KR: 원본*/
                         You("stop at the edge of the %s.",
                             hliquid(is_pool(x,y) ? "water" : "lava"));
+#else /*KR: KRNethack 맞춤 번역 */
+                        You("%s 가장자리에서 멈춰 섰다.",
+                            hliquid(is_pool(x, y) ? "물" : "용암"));
+#endif
                     }
                 }
                 nomul(0);
@@ -1588,14 +1763,15 @@ domove_core()
                 /* When polymorphed into a sticking monster,
                  * u.ustuck means it's stuck to you, not you to it.
                  */
-                You("release %s.", mon_nam(u.ustuck));
+                /*KR You("release %s.", mon_nam(u.ustuck)); */
+                You("%s 놓아주었다.", append_josa(mon_nam(u.ustuck), "을"));
                 u.ustuck = 0;
             } else {
                 /* If holder is asleep or paralyzed:
-                 *      37.5% chance of getting away,
-                 *      12.5% chance of waking/releasing it;
+                 * 37.5% chance of getting away,
+                 * 12.5% chance of waking/releasing it;
                  * otherwise:
-                 *       7.5% chance of getting away.
+                 * 7.5% chance of getting away.
                  * [strength ought to be a factor]
                  * If holder is tame and there is no conflict,
                  * guaranteed escape.
@@ -1604,8 +1780,9 @@ domove_core()
                 case 0:
                 case 1:
                 case 2:
- pull_free:
-                    You("pull free from %s.", mon_nam(u.ustuck));
+                pull_free:
+                    /*KR You("pull free from %s.", mon_nam(u.ustuck)); */
+                    You("%s 뿌리쳤다.", append_josa(mon_nam(u.ustuck), "을"));
                     u.ustuck = 0;
                     break;
                 case 3:
@@ -1618,7 +1795,9 @@ domove_core()
                 default:
                     if (u.ustuck->mtame && !Conflict && !u.ustuck->mconf)
                         goto pull_free;
-                    You("cannot escape from %s!", mon_nam(u.ustuck));
+                    /*KR You("cannot escape from %s!", mon_nam(u.ustuck)); */
+                    You("%s 벗어날 수 없다!",
+                        append_josa(mon_nam(u.ustuck), "에게서"));
                     nomul(0);
                     return;
                 }
@@ -1630,11 +1809,12 @@ domove_core()
             /* Don't attack if you're running, and can see it */
             /* It's fine to displace pets, though */
             /* We should never get here if forcefight */
-            if (context.run && ((!Blind && mon_visible(mtmp)
-                                 && ((M_AP_TYPE(mtmp) != M_AP_FURNITURE
-                                      && M_AP_TYPE(mtmp) != M_AP_OBJECT)
-                                     || Protection_from_shape_changers))
-                                || sensemon(mtmp))) {
+            if (context.run
+                && ((!Blind && mon_visible(mtmp)
+                     && ((M_AP_TYPE(mtmp) != M_AP_FURNITURE
+                          && M_AP_TYPE(mtmp) != M_AP_OBJECT)
+                         || Protection_from_shape_changers))
+                    || sensemon(mtmp))) {
                 nomul(0);
                 context.move = 0;
                 return;
@@ -1678,9 +1858,11 @@ domove_core()
             else if (mtmp->mpeaceful && !Hallucination)
                 /* m_monnam(): "dog" or "Fido", no "invisible dog" or "it" */
                 /*KR pline("Pardon me, %s.", m_monnam(mtmp)); */
-                pline("Pardon me, %s.", m_monnam(mtmp));
+                pline("실례합니다, %s.", m_monnam(mtmp));
             else
-                You("move right into %s.", mon_nam(mtmp));
+                /*KR You("move right into %s.", mon_nam(mtmp)); */
+                You("%s 바로 앞으로 이동했다.",
+                    append_josa(mon_nam(mtmp), "의"));
             return;
         }
         if (context.forcefight || !mtmp->mundetected || sensemon(mtmp)
@@ -1752,26 +1934,48 @@ domove_core()
                because you don't see remembered terrain while underwater;
                although the hero can attack an adjacent monster this way,
                assume he can't reach out far enough to distinguish terrain */
+#if 0 /*KR: 원본*/
             Sprintf(buf, (Is_waterlevel(&u.uz) && levl[x][y].typ == AIR)
                              ? "an air bubble"
                              : "nothing");
+#else /*KR: KRNethack 맞춤 번역 */
+            Sprintf(buf, (Is_waterlevel(&u.uz) && levl[x][y].typ == AIR)
+                             ? "공기 방울"
+                             : "허공");
+#endif
         } else if (solid) {
             /* glyph might indicate unseen terrain if hero is blind;
                unlike searching, this won't reveal what that terrain is
                (except for solid rock, where the glyph would otherwise
                yield ludicrous "dark part of a room") */
+#if 0 /*KR: 원본*/
             Strcpy(buf, (levl[x][y].typ == STONE) ? "solid rock"
                          : glyph_is_cmap(glyph)
                             ? the(defsyms[glyph_to_cmap(glyph)].explanation)
                             : (const char *) "an unknown obstacle");
+#else /*KR: KRNethack 맞춤 번역 */
+            Strcpy(buf, (levl[x][y].typ == STONE) ? "단단한 바위"
+                        : glyph_is_cmap(glyph)
+                            ? the(defsyms[glyph_to_cmap(glyph)].explanation)
+                            : (const char *) "정체불명의 장애물");
+#endif
             /* note: 'solid' is misleadingly named and catches pools
                of water and lava as well as rock and walls */
         } else {
-            Strcpy(buf, "thin air");
+            /*KR Strcpy(buf, "thin air"); */
+            Strcpy(buf, "허공");
         }
+#if 0 /*KR: 원본*/
         You("%s%s %s.",
             !(boulder || solid) ? "" : !explo ? "harmlessly " : "futilely ",
             explo ? "explode at" : "attack", buf);
+#else /*KR: KRNethack 맞춤 번역 */
+        You("%s %s %s.", append_josa(buf, "을"),
+            !(boulder || solid) ? ""
+            : !explo            ? "효과 없이"
+                                : "무의미하게",
+            explo ? "폭발시켰다" : "공격했다");
+#endif
 
         nomul(0);
         if (explo) {
@@ -1868,8 +2072,7 @@ domove_core()
         u.ux = mtmp->mx, u.uy = mtmp->my; /* resume swapping positions */
 
         if (mtmp->mtrapped && (trap = t_at(mtmp->mx, mtmp->my)) != 0
-            && is_pit(trap->ttyp)
-            && sobj_at(BOULDER, trap->tx, trap->ty)) {
+            && is_pit(trap->ttyp) && sobj_at(BOULDER, trap->tx, trap->ty)) {
             /* can't swap places with pet pinned in a pit by a boulder */
             u.ux = u.ux0, u.uy = u.uy0; /* didn't move after all */
             if (u.usteed)
@@ -1879,16 +2082,25 @@ domove_core()
             u.ux = u.ux0, u.uy = u.uy0;
             if (u.usteed)
                 u.usteed->mx = u.ux, u.usteed->my = u.uy;
-            You("stop.  %s can't move diagonally.", upstart(y_monnam(mtmp)));
+            /*KR You("stop.  %s can't move diagonally.",
+             * upstart(y_monnam(mtmp))); */
+            You("멈춰 섰다. %s 대각선으로 움직일 수 없다.",
+                append_josa(upstart(y_monnam(mtmp)), "은"));
         } else if (u_with_boulder
-                    && !(verysmall(mtmp->data)
-                         && (!mtmp->minvent || (curr_mon_load(mtmp) <= 600)))) {
+                   && !(
+                       verysmall(mtmp->data)
+                       && (!mtmp->minvent || (curr_mon_load(mtmp) <= 600)))) {
             /* can't swap places when pet won't fit there with the boulder */
             u.ux = u.ux0, u.uy = u.uy0; /* didn't move after all */
             if (u.usteed)
                 u.usteed->mx = u.ux, u.usteed->my = u.uy;
+#if 0 /*KR: 원본*/
             You("stop.  %s won't fit into the same spot that you're at.",
                  upstart(y_monnam(mtmp)));
+#else /*KR: KRNethack 맞춤 번역 */
+            You("멈춰 섰다. %s 당신이 있는 곳에 비집고 들어갈 수 없다.",
+                append_josa(upstart(y_monnam(mtmp)), "은"));
+#endif
         } else if (u.ux0 != x && u.uy0 != y && bad_rock(mtmp->data, x, u.uy0)
                    && bad_rock(mtmp->data, u.ux0, y)
                    && (bigmonst(mtmp->data) || (curr_mon_load(mtmp) > 600))) {
@@ -1896,7 +2108,10 @@ domove_core()
             u.ux = u.ux0, u.uy = u.uy0; /* didn't move after all */
             if (u.usteed)
                 u.usteed->mx = u.ux, u.usteed->my = u.uy;
-            You("stop.  %s won't fit through.", upstart(y_monnam(mtmp)));
+            /*KR You("stop.  %s won't fit through.", upstart(y_monnam(mtmp)));
+             */
+            You("멈춰 섰다. %s 통과할 수 없다.",
+                append_josa(upstart(y_monnam(mtmp)), "은"));
         } else {
             char pnambuf[BUFSZ];
 
@@ -1908,8 +2123,13 @@ domove_core()
             newsym(x, y);
             newsym(u.ux0, u.uy0);
 
+#if 0 /*KR: 원본*/
             You("%s %s.", mtmp->mtame ? "swap places with" : "frighten",
                 pnambuf);
+#else /*KR: KRNethack 맞춤 번역 */
+            You("%s %s.", append_josa(pnambuf, "와"),
+                mtmp->mtame ? "자리를 바꿨다" : "겁을 주었다");
+#endif
 
             /* check for displacing it into pools and traps */
             switch (minliquid(mtmp) ? 2 : mintrap(mtmp)) {
@@ -1945,7 +2165,9 @@ domove_core()
                  * patron deity care at all, let alone enough to get mad?]
                  */
                 if (rn2(4)) {
-                    You_feel("guilty about losing your pet like this.");
+                    /*KR You_feel("guilty about losing your pet like this.");
+                     */
+                    pline("이런 식으로 펫을 잃어 죄책감이 든다.");
                     u.ugangr++;
                     adjalign(-15);
                 }
@@ -1965,8 +2187,8 @@ domove_core()
                 nomul(0);
     }
 
-    if (hides_under(youmonst.data) || youmonst.data->mlet == S_EEL
-        || u.dx || u.dy)
+    if (hides_under(youmonst.data) || youmonst.data->mlet == S_EEL || u.dx
+        || u.dy)
         (void) hideunder(&youmonst);
 
     /*
@@ -1974,8 +2196,8 @@ domove_core()
      * imitating something that doesn't move.  We could extend this
      * to non-moving monsters...
      */
-    if ((u.dx || u.dy) && (U_AP_TYPE == M_AP_OBJECT
-                           || U_AP_TYPE == M_AP_FURNITURE))
+    if ((u.dx || u.dy)
+        && (U_AP_TYPE == M_AP_OBJECT || U_AP_TYPE == M_AP_FURNITURE))
         youmonst.m_ap_type = M_AP_NOTHING;
 
     check_leash(u.ux0, u.uy0);
@@ -2001,7 +2223,8 @@ domove_core()
     /* must come after we finished picking up, in spoteffects() */
     if (cause_delay) {
         nomul(-2);
-        multi_reason = "dragging an iron ball";
+        /*KR multi_reason = "dragging an iron ball"; */
+        multi_reason = "철구를 끌고 가느라";
         nomovemsg = "";
     }
 
@@ -2022,17 +2245,15 @@ domove_core()
     }
 }
 
-STATIC_OVL void
-maybe_smudge_engr(x1,y1,x2,y2)
-int x1, y1, x2, y2;
+STATIC_OVL void maybe_smudge_engr(x1, y1, x2, y2) int x1, y1, x2, y2;
 {
     struct engr *ep;
 
     if (can_reach_floor(TRUE)) {
         if ((ep = engr_at(x1, y1)) && ep->engr_type != HEADSTONE)
             wipe_engr_at(x1, y1, rnd(5), FALSE);
-        if ((x2 != x1 || y2 != y1)
-                && (ep = engr_at(x2, y2)) && ep->engr_type != HEADSTONE)
+        if ((x2 != x1 || y2 != y1) && (ep = engr_at(x2, y2))
+            && ep->engr_type != HEADSTONE)
             wipe_engr_at(x2, y2, rnd(5), FALSE);
     }
 }
@@ -2051,7 +2272,8 @@ overexertion()
         if (*hp > 1) {
             *hp -= 1;
         } else {
-            You("pass out from exertion!");
+            /*KR You("pass out from exertion!"); */
+            You("기력을 다 써서 기절했다!");
             exercise(A_CON, FALSE);
             fall_asleep(-10, FALSE);
         }
@@ -2069,17 +2291,28 @@ invocation_message()
 
         nomul(0); /* stop running or travelling */
         if (u.usteed)
-            Sprintf(buf, "beneath %s", y_monnam(u.usteed));
+            /*KR Sprintf(buf, "beneath %s", y_monnam(u.usteed)); */
+            Sprintf(buf, "%s 아래에서 ",
+                    append_josa(y_monnam(u.usteed), "의"));
         else if (Levitation || Flying)
-            Strcpy(buf, "beneath you");
+            /*KR Strcpy(buf, "beneath you"); */
+            Strcpy(buf, "당신의 아래에서 ");
         else
-            Sprintf(buf, "under your %s", makeplural(body_part(FOOT)));
+            /*KR Sprintf(buf, "under your %s", makeplural(body_part(FOOT)));
+             */
+            Sprintf(buf, "당신의 %s 아래에서 ", makeplural(body_part(FOOT)));
 
-        You_feel("a strange vibration %s.", buf);
+        /*KR You_feel("a strange vibration %s.", buf); */
+        You_feel("%s이상한 진동이 느껴진다.", buf);
         u.uevent.uvibrated = 1;
         if (otmp && otmp->spe == 7 && otmp->lamplit)
+#if 0 /*KR: 원본*/
             pline("%s %s!", The(xname(otmp)),
                   Blind ? "throbs palpably" : "glows with a strange light");
+#else /*KR: KRNethack 맞춤 번역 */
+            pline("%s %s!", append_josa(The(xname(otmp)), "은"),
+                  Blind ? "분명하게 요동친다" : "이상한 빛으로 빛난다");
+#endif
     }
 }
 
@@ -2097,7 +2330,8 @@ switch_terrain()
     if (blocklev) {
         /* called from spoteffects(), stop levitating but skip float_down() */
         if (Levitation)
-            You_cant("levitate in here.");
+            /*KR You_cant("levitate in here."); */
+            You_cant("여기서는 공중에 뜰 수 없다.");
         BLevitation |= FROMOUTSIDE;
     } else if (BLevitation) {
         BLevitation &= ~FROMOUTSIDE;
@@ -2109,7 +2343,8 @@ switch_terrain()
     /* the same terrain that blocks levitation also blocks flight */
     if (blocklev) {
         if (Flying)
-            You_cant("fly in here.");
+            /*KR You_cant("fly in here."); */
+            You_cant("여기서는 날 수 없다.");
         BFlying |= FROMOUTSIDE;
     } else if (BFlying) {
         BFlying &= ~FROMOUTSIDE;
@@ -2118,7 +2353,8 @@ switch_terrain()
            resuming it; that could be tracked so that this message could
            be adjusted to "resume flying", but isn't worth the effort...] */
         if (Flying)
-            You("start flying.");
+            /*KR You("start flying."); */
+            You("날기 시작했다.");
     }
     if ((!Levitation ^ was_levitating) || (!Flying ^ was_flying))
         context.botl = TRUE; /* update Lev/Fly status condition */
@@ -2129,7 +2365,7 @@ switch_terrain()
    returns true to skip rest of spoteffects */
 boolean
 pooleffects(newspot)
-boolean newspot;             /* true if called by spoteffects */
+boolean newspot; /* true if called by spoteffects */
 {
     /* check for leaving water */
     if (u.uinwater) {
@@ -2137,20 +2373,33 @@ boolean newspot;             /* true if called by spoteffects */
 
         if (!is_pool(u.ux, u.uy)) {
             if (Is_waterlevel(&u.uz))
-                You("pop into an air bubble.");
+                /*KR You("pop into an air bubble."); */
+                You("공기 방울 안으로 쏙 들어갔다.");
             else if (is_lava(u.ux, u.uy))
+#if 0 /*KR: 원본*/
                 You("leave the %s...", hliquid("water")); /* oops! */
+#else /*KR: KRNethack 맞춤 번역 */
+                You("%s에서 빠져나왔다...", hliquid("물")); /* oops! */
+#endif
             else
+#if 0 /*KR: 원본*/
                 You("are on solid %s again.",
                     is_ice(u.ux, u.uy) ? "ice" : "land");
+#else /*KR: KRNethack 맞춤 번역 */
+                You("다시 단단한 %s 위로 올라왔다.",
+                    is_ice(u.ux, u.uy) ? "얼음" : "땅");
+#endif
         } else if (Is_waterlevel(&u.uz)) {
             still_inwater = TRUE;
         } else if (Levitation) {
-            You("pop out of the %s like a cork!", hliquid("water"));
+            /*KR You("pop out of the %s like a cork!", hliquid("water")); */
+            You("코르크 마개처럼 %s 밖으로 튀어 올랐다!", hliquid("물"));
         } else if (Flying) {
-            You("fly out of the %s.", hliquid("water"));
+            /*KR You("fly out of the %s.", hliquid("water")); */
+            You("%s 밖으로 날아올랐다.", hliquid("물"));
         } else if (Wwalking) {
-            You("slowly rise above the surface.");
+            /*KR You("slowly rise above the surface."); */
+            You("천천히 수면 위로 떠 올랐다.");
         } else {
             still_inwater = TRUE;
         }
@@ -2295,9 +2544,15 @@ boolean pick;
     /* Warning alerts you to ice danger */
     if (Warning && is_ice(u.ux, u.uy)) {
         static const char *const icewarnings[] = {
-            "The ice seems very soft and slushy.",
-            "You feel the ice shift beneath you!",
-            "The ice, is gonna BREAK!", /* The Dead Zone */
+#if 0 /*KR: 원본*/
+                    "The ice seems very soft and slushy.",
+                    "You feel the ice shift beneath you!",
+                    "The ice, is gonna BREAK!", /* The Dead Zone */
+#else /*KR: KRNethack 맞춤 번역 */
+            "얼음이 아주 부드럽고 질척거리는 것 같다.",
+            "발 밑의 얼음이 움직이는 게 느껴진다!",
+            "얼음이 깨질 것 같아!", /* The Dead Zone */
+#endif
         };
         long time_left = spot_time_left(u.ux, u.uy, MELT_ICE_AWAY);
 
@@ -2310,21 +2565,39 @@ boolean pick;
         mtmp->mundetected = mtmp->msleeping = 0;
         switch (mtmp->data->mlet) {
         case S_PIERCER:
+#if 0 /*KR: 원본*/
             pline("%s suddenly drops from the %s!", Amonnam(mtmp),
                   ceiling(u.ux, u.uy));
+#else /*KR: KRNethack 맞춤 번역 */
+            pline("%s 갑자기 %s에서 떨어졌다!",
+                  append_josa(Amonnam(mtmp), "이"), ceiling(u.ux, u.uy));
+#endif
             if (mtmp->mtame) { /* jumps to greet you, not attack */
                 ;
             } else if (uarmh && is_metallic(uarmh)) {
-                pline("Its blow glances off your %s.",
-                      helm_simple_name(uarmh));
+                /*KR pline("Its blow glances off your %s.", */
+                pline("그 공격은 당신의 %s 빗맞혔다.",
+                      append_josa(helm_simple_name(uarmh), "을"));
             } else if (u.uac + 3 <= rnd(20)) {
+#if 0 /*KR: 원본*/
                 You("are almost hit by %s!",
                     x_monnam(mtmp, ARTICLE_A, "falling", 0, TRUE));
+#else /*KR: KRNethack 맞춤 번역 */
+                You("떨어지는 %s 맞을 뻔했다!",
+                    append_josa(x_monnam(mtmp, ARTICLE_A, "", 0, TRUE),
+                                "에"));
+#endif
             } else {
                 int dmg;
 
+#if 0 /*KR: 원본*/
                 You("are hit by %s!",
                     x_monnam(mtmp, ARTICLE_A, "falling", 0, TRUE));
+#else /*KR: KRNethack 맞춤 번역 */
+                You("떨어지는 %s 맞았다!",
+                    append_josa(x_monnam(mtmp, ARTICLE_A, "", 0, TRUE),
+                                "에"));
+#endif
                 dmg = d(4, 6);
                 if (Half_physical_damage)
                     dmg = (dmg + 1) / 2;
@@ -2333,14 +2606,24 @@ boolean pick;
             break;
         default: /* monster surprises you. */
             if (mtmp->mtame)
+#if 0 /*KR: 원본*/
                 pline("%s jumps near you from the %s.", Amonnam(mtmp),
                       ceiling(u.ux, u.uy));
+#else /*KR: KRNethack 맞춤 번역 */
+                pline("%s %s에서 당신 근처로 뛰어내렸다.",
+                      append_josa(Amonnam(mtmp), "이"), ceiling(u.ux, u.uy));
+#endif
             else if (mtmp->mpeaceful) {
-                You("surprise %s!",
-                    Blind && !sensemon(mtmp) ? something : a_monnam(mtmp));
+                /*KR You("surprise %s!", */
+                You("%s 놀라게 했다!",
+                    Blind && !sensemon(mtmp)
+                        ? "무언가를"
+                        : append_josa(a_monnam(mtmp), "을"));
                 mtmp->mpeaceful = 0;
             } else
-                pline("%s attacks you by surprise!", Amonnam(mtmp));
+           /*KR pline("%s attacks you by surprise!", Amonnam(mtmp)); */
+                pline("%s 당신을 기습했다!",
+                      append_josa(Amonnam(mtmp), "이"));
             break;
         }
         mnexto(mtmp); /* have to move the monster */
@@ -2539,8 +2822,13 @@ register boolean newlev;
             pline("데이비드의 보물 동물원에 어서오세요!");
             break;
         case SWAMP:
+#if 0 /*KR: 원본*/
             pline("It %s rather %s down here.", Blind ? "feels" : "looks",
                   Blind ? "humid" : "muddy");
+#else /*KR: KRNethack 맞춤 번역 */
+            pline("여기는 꽤 %s.",
+                  Blind ? "습하게 느껴진다" : "진흙투성이로 보인다");
+#endif
             break;
         case COURT:
             /*KR You("enter an opulent throne room!"); */
@@ -2552,37 +2840,53 @@ register boolean newlev;
             break;
         case MORGUE:
             if (midnight()) {
+#if 0 /*KR: 원본*/
                 const char *run = locomotion(youmonst.data, "Run");
                 pline("%s away!  %s away!", run, run);
+#else /*KR: KRNethack 맞춤 번역 */
+                pline("도망쳐! 도망치라고!");
+#endif
             } else
-                You("have an uncanny feeling...");
+                /*KR You("have an uncanny feeling..."); */
+                You("기분 나쁜 느낌이 들었다...");
             break;
         case BEEHIVE:
-            You("enter a giant beehive!");
+            /*KR You("enter a giant beehive!"); */
+            You("거대한 벌집에 들어왔다!");
             break;
         case COCKNEST:
-            You("enter a disgusting nest!");
+            /*KR You("enter a disgusting nest!"); */
+            You("역겨운 둥지에 들어왔다!");
             break;
         case ANTHOLE:
-            You("enter an anthole!");
+            /*KR You("enter an anthole!"); */
+            You("개미굴에 들어왔다!");
             break;
         case BARRACKS:
             if (monstinroom(&mons[PM_SOLDIER], roomno)
                 || monstinroom(&mons[PM_SERGEANT], roomno)
                 || monstinroom(&mons[PM_LIEUTENANT], roomno)
                 || monstinroom(&mons[PM_CAPTAIN], roomno))
-                You("enter a military barracks!");
+                /*KR You("enter a military barracks!"); */
+                You("군대 막사에 들어왔다!");
             else
-                You("enter an abandoned barracks.");
+                /*KR You("enter an abandoned barracks."); */
+                You("버려진 막사에 들어왔다.");
             break;
         case DELPHI: {
             struct monst *oracle = monstinroom(&mons[PM_ORACLE], roomno);
             if (oracle) {
                 if (!oracle->mpeaceful)
-                    verbalize("You're in Delphi, %s.", plname);
+                    /*KR verbalize("You're in Delphi, %s.", plname); */
+                    verbalize("여기는 델파이 신전이다, %s.", plname);
                 else
+#if 0 /*KR: 원본*/
                     verbalize("%s, %s, welcome to Delphi!",
                               Hello((struct monst *) 0), plname);
+#else /*KR: KRNethack 맞춤 번역 */
+                    verbalize("%s, %s, 델파이 신전에 온 것을 환영한다!",
+                              Hello((struct monst *) 0), plname);
+#endif
             } else
                 msg_given = FALSE;
             break;
@@ -2651,11 +2955,19 @@ pickup_checks()
     if (u.uswallow) {
         if (!u.ustuck->minvent) {
             if (is_animal(u.ustuck->data)) {
-                You("pick up %s tongue.", s_suffix(mon_nam(u.ustuck)));
-                pline("But it's kind of slimy, so you drop it.");
+                /*KR You("pick up %s tongue.", s_suffix(mon_nam(u.ustuck)));
+                 */
+                You("%s 혀를 주웠다.", append_josa(mon_nam(u.ustuck), "의"));
+                /*KR pline("But it's kind of slimy, so you drop it."); */
+                pline("하지만 미끈거려서 도로 버렸다.");
             } else
+#if 0 /*KR: 원본*/
                 You("don't %s anything in here to pick up.",
                     Blind ? "feel" : "see");
+#else /*KR: KRNethack 맞춤 번역 */
+                You("여기에 주울 만한 것이 아무것도 %s.",
+                    Blind ? "느껴지지 않는다" : "보이지 않는다");
+#endif
             return 1;
         } else {
             return -2; /* loot the monster inventory */
@@ -2664,21 +2976,29 @@ pickup_checks()
     if (is_pool(u.ux, u.uy)) {
         if (Wwalking || is_floater(youmonst.data) || is_clinger(youmonst.data)
             || (Flying && !Breathless)) {
+#if 0 /*KR: 원본*/
             You("cannot dive into the %s to pick things up.",
                 hliquid("water"));
+#else /*KR: KRNethack 맞춤 번역 */
+            You("물건을 줍기 위해 %s 뛰어들 수 없다.", append_josa(hliquid("물"), "로"));
+#endif
             return 0;
         } else if (!Underwater) {
-            You_cant("even see the bottom, let alone pick up %s.", something);
+            /*KR You_cant("even see the bottom, let alone pick up %s.",
+             * something); */
+            You_cant("물건을 줍기는커녕 바닥조차 볼 수 없다.");
             return 0;
         }
     }
     if (is_lava(u.ux, u.uy)) {
         if (Wwalking || is_floater(youmonst.data) || is_clinger(youmonst.data)
             || (Flying && !Breathless)) {
-            You_cant("reach the bottom to pick things up.");
+            /*KR You_cant("reach the bottom to pick things up."); */
+            You_cant("물건을 줍기 위해 바닥에 닿을 수 없다.");
             return 0;
         } else if (!likes_lava(youmonst.data)) {
-            You("would burn to a crisp trying to pick things up.");
+            /*KR You("would burn to a crisp trying to pick things up."); */
+            You("물건을 주우려다간 바싹 타버릴 것이다.");
             return 0;
         }
     }
@@ -2686,20 +3006,31 @@ pickup_checks()
         register struct rm *lev = &levl[u.ux][u.uy];
 
         if (IS_THRONE(lev->typ))
-            pline("It must weigh%s a ton!", lev->looted ? " almost" : "");
+            /*KR pline("It must weigh%s a ton!", lev->looted ? " almost" :
+             * ""); */
+            pline("이건 엄청나게 무거울 것이 분명하다!");
         else if (IS_SINK(lev->typ))
-            pline_The("plumbing connects it to the floor.");
+            /*KR pline_The("plumbing connects it to the floor."); */
+            pline("배관이 바닥과 연결되어 있다.");
         else if (IS_GRAVE(lev->typ))
-            You("don't need a gravestone.  Yet.");
+            /*KR You("don't need a gravestone.  Yet."); */
+            You("묘비가 필요 없다. 아직은.");
         else if (IS_FOUNTAIN(lev->typ))
-            You("could drink the %s...", hliquid("water"));
+            /*KR You("could drink the %s...", hliquid("water")); */
+            You("%s 마실 수는 있다만...", append_josa(hliquid("물"), "을"));
         else if (IS_DOOR(lev->typ) && (lev->doormask & D_ISOPEN))
-            pline("It won't come off the hinges.");
+            /*KR pline("It won't come off the hinges."); */
+            pline("경첩에서 떨어지지 않을 것이다.");
         else if (IS_ALTAR(lev->typ))
-            pline("Moving the altar would be a very bad idea.");
+            /*KR pline("Moving the altar would be a very bad idea."); */
+            pline("제단을 움직이는 것은 아주 안 좋은 생각이다.");
         else if (lev->typ == STAIRS)
+#if 0 /*KR: 원본*/
             pline_The("stairs are solidly fixed to the %s.",
                       surface(u.ux, u.uy));
+#else /*KR: KRNethack 맞춤 번역 */
+            pline("계단은 %s에 단단히 고정되어 있다.", surface(u.ux, u.uy));
+#endif
         else
             /*KR There("is nothing here to pick up."); */
             pline("여기에는 주울 것이 아무 것도 없다.");
@@ -2709,14 +3040,21 @@ pickup_checks()
         struct trap *traphere = t_at(u.ux, u.uy);
         if (traphere
             && (uteetering_at_seen_pit(traphere) || uescaped_shaft(traphere)))
+#if 0 /*KR: 원본*/
             You("cannot reach the bottom of the %s.",
                 is_pit(traphere->ttyp) ? "pit" : "abyss");
+#else /*KR: KRNethack 맞춤 번역 */
+            You("%s 바닥에 닿을 수 없다.",
+                is_pit(traphere->ttyp) ? "구덩이" : "나락");
+#endif
         else if (u.usteed && P_SKILL(P_RIDING) < P_BASIC)
             rider_cant_reach();
         else if (Blind && !can_reach_floor(TRUE))
-            You("cannot reach anything here.");
+            /*KR You("cannot reach anything here."); */
+            You("여기서는 아무것도 닿을 수 없다.");
         else
-            You("cannot reach the %s.", surface(u.ux, u.uy));
+            /*KR You("cannot reach the %s.", surface(u.ux, u.uy)); */
+            You("%s에 닿을 수 없다.", surface(u.ux, u.uy));
         return 0;
     }
     return -1; /* can do normal pickup */
@@ -2758,7 +3096,8 @@ lookaround()
     /* Grid bugs stop if trying to move diagonal, even if blind.  Maybe */
     /* they polymorphed while in the middle of a long move. */
     if (NODIAG(u.umonnum) && u.dx && u.dy) {
-        You("cannot move diagonally.");
+        /*KR You("cannot move diagonally."); */
+        You("대각선으로 이동할 수 없다.");
         nomul(0);
         return;
     }
@@ -2772,15 +3111,19 @@ lookaround()
             if (NODIAG(u.umonnum) && x != u.ux && y != u.uy)
                 continue;
 
-            if ((mtmp = m_at(x, y)) != 0
-                && M_AP_TYPE(mtmp) != M_AP_FURNITURE
+            if ((mtmp = m_at(x, y)) != 0 && M_AP_TYPE(mtmp) != M_AP_FURNITURE
                 && M_AP_TYPE(mtmp) != M_AP_OBJECT
                 && (!mtmp->minvis || See_invisible) && !mtmp->mundetected) {
                 if ((context.run != 1 && !mtmp->mtame)
                     || (x == u.ux + u.dx && y == u.uy + u.dy
                         && !context.travel)) {
                     if (iflags.mention_walls)
+#if 0 /*KR: 원본*/
                         pline("%s blocks your path.", upstart(a_monnam(mtmp)));
+#else /*KR: KRNethack 맞춤 번역 */
+                        pline("%s 길을 막고 있다.",
+                              append_josa(upstart(a_monnam(mtmp)), "이"));
+#endif
                     goto stop;
                 }
             }
@@ -2798,12 +3141,13 @@ lookaround()
                     continue;
                 if (context.run != 1) {
                     if (iflags.mention_walls)
-                        You("stop in front of the door.");
+                        /*KR You("stop in front of the door."); */
+                        You("문 앞에서 멈춰 섰다.");
                     goto stop;
                 }
                 goto bcorr;
             } else if (levl[x][y].typ == CORR) {
- bcorr:
+            bcorr:
                 if (levl[u.ux][u.uy].typ != ROOM) {
                     if (context.run == 1 || context.run == 3
                         || context.run == 8) {
@@ -2829,8 +3173,13 @@ lookaround()
                     if (iflags.mention_walls) {
                         int tt = what_trap(trap->ttyp, rn2_on_display_rng);
 
+#if 0 /*KR: 원본*/
                         You("stop in front of %s.",
                             an(defsyms[trap_to_defsym(tt)].explanation));
+#else /*KR: KRNethack 맞춤 번역 */
+                        You("%s 앞에서 멈춰 섰다.",
+                            defsyms[trap_to_defsym(tt)].explanation);
+#endif
                     }
                     goto stop;
                 }
@@ -2846,8 +3195,13 @@ lookaround()
                      * into a pool and seeing if the game allowed it
                      */
                     if (iflags.mention_walls)
+#if 0 /*KR: 원본*/
                         You("stop at the edge of the %s.",
                             hliquid(is_pool(x,y) ? "water" : "lava"));
+#else /*KR: KRNethack 맞춤 번역 */
+                        You("%s 가장자리에서 멈춰 섰다.",
+                            hliquid(is_pool(x, y) ? "물" : "용암"));
+#endif
                     goto stop;
                 }
                 continue;
@@ -2862,14 +3216,15 @@ lookaround()
                     || ((y == u.uy - u.dy) && (x != u.ux + u.dx)))
                     continue;
             }
- stop:
+        stop:
             nomul(0);
             return;
         } /* end for loops */
 
     if (corrct > 1 && context.run == 2) {
         if (iflags.mention_walls)
-            pline_The("corridor widens here.");
+            /*KR pline_The("corridor widens here."); */
+            pline("이곳에서 통로가 넓어진다.");
         goto stop;
     }
     if ((context.run == 1 || context.run == 3 || context.run == 8) && !noturn
@@ -2962,16 +3317,14 @@ monster_nearby()
                 && (!mtmp->mpeaceful || Hallucination)
                 && (!is_hider(mtmp->data) || !mtmp->mundetected)
                 && !noattacks(mtmp->data) && mtmp->mcanmove
-                && !mtmp->msleeping  /* aplvax!jcn */
+                && !mtmp->msleeping /* aplvax!jcn */
                 && !onscary(u.ux, u.uy, mtmp) && canspotmon(mtmp))
                 return 1;
         }
     return 0;
 }
 
-void
-nomul(nval)
-register int nval;
+void nomul(nval) register int nval;
 {
     if (multi < nval)
         return;              /* This is a bug fix by ab@unido */
@@ -2984,9 +3337,7 @@ register int nval;
 }
 
 /* called when a non-movement, multi-turn action has completed */
-void
-unmul(msg_override)
-const char *msg_override;
+void unmul(msg_override) const char *msg_override;
 {
     multi = 0; /* caller will usually have done this already */
     if (msg_override)
@@ -3000,8 +3351,14 @@ const char *msg_override;
            life-saving while turning into green slime but is also a reminder
            if life-saved while poly'd and Unchanging (explore or wizard mode
            declining to die since can't be both Unchanging and Lifesaved) */
+#if 0 /*KR: 원본 "You survived that" */
         if (Upolyd && !strncmpi(nomovemsg, "You survived that ", 18))
             You("are %s.", an(mons[u.umonnum].mname)); /* (ignore Hallu) */
+#else /*KR: "당신은 살아남았다" 등으로 번역됨 */
+        if (Upolyd && !strncmp(nomovemsg, "당신은 살아남았다",
+                        strlen("당신은 살아남았다")))
+            You("%s(이)다.", mons[u.umonnum].mname); /* (ignore Hallu) */
+#endif
     }
     nomovemsg = 0;
     u.usleep = 0;
@@ -3011,7 +3368,7 @@ const char *msg_override;
 
         /* clear afternmv before calling it (to override the
            encumbrance hack for levitation--see weight_cap()) */
-        afternmv = (int NDECL((*))) 0;
+        afternmv = (int NDECL((*) )) 0;
         (void) (*f)();
         /* for finishing Armor/Boots/&c_on() */
         update_inventory();
@@ -3021,9 +3378,10 @@ const char *msg_override;
 STATIC_OVL void
 maybe_wail()
 {
-    static short powers[] = { TELEPORT, SEE_INVIS, POISON_RES, COLD_RES,
-                              SHOCK_RES, FIRE_RES, SLEEP_RES, DISINT_RES,
-                              TELEPORT_CONTROL, STEALTH, FAST, INVIS };
+    static short powers[] = { TELEPORT,  SEE_INVIS,  POISON_RES,
+                              COLD_RES,  SHOCK_RES,  FIRE_RES,
+                              SLEEP_RES, DISINT_RES, TELEPORT_CONTROL,
+                              STEALTH,   FAST,       INVIS };
 
     if (moves <= wailmsg + 50)
         return;
@@ -3033,38 +3391,44 @@ maybe_wail()
         const char *who;
         int i, powercnt;
 
-#if 0 /*KR:T*/
+#if 0 /*KR: 원본*/
         who = (Role_if(PM_WIZARD) || Role_if(PM_VALKYRIE)) ? urole.name.m
                                                            : "Elf";
-#else
-        who = (Role_if(PM_WIZARD) || Role_if(PM_VALKYRIE)) ? urole.name.m
-                                                           : "엘프";
+#else /*KR: KRNethack 맞춤 번역 */
+        who = (Role_if(PM_WIZARD) || Role_if(PM_VALKYRIE))
+                  ? urole.name.m
+                  : "에스퍼"; /* 종족이름에 맞게 수정 필요시 "엘프" 사용 */
 #endif
         if (u.uhp == 1) {
-            pline("%s is about to die.", who);
+            /*KR pline("%s is about to die.", who); */
+            pline("%s 죽어가고 있다.", append_josa(who, "은"));
         } else {
             for (i = 0, powercnt = 0; i < SIZE(powers); ++i)
                 if (u.uprops[powers[i]].intrinsic & INTRINSIC)
                     ++powercnt;
 
+#if 0 /*KR: 원본*/
             pline((powercnt >= 4) ? "%s, all your powers will be lost..."
                                   : "%s, your life force is running out.",
                   who);
+#else /*KR: KRNethack 맞춤 번역 */
+            pline((powercnt >= 4) ? "%s, 당신의 모든 힘이 잃어버리고 있다..."
+                                  : "%s, 당신의 생명력이 바닥나고 있다...",
+                  who);
+#endif
         }
     } else {
-#if 0 /*KR*/
+#if 0 /*KR: 원본*/
         You_hear(u.uhp == 1 ? "the wailing of the Banshee..."
                             : "the howling of the CwnAnnwn...");
-#else
-        You_hear(u.uhp == 1 ? "the wailing of the Banshee..."
-                            : "the howling of the 쿤 아눈...");
+#else /*KR: KRNethack 맞춤 번역 */
+        You_hear(u.uhp == 1 ? "밴시의 통곡 소리가 들린다..."
+                            : "쿤 안눈의 울부짖음이 들린다...");
 #endif
     }
 }
 
-void
-losehp(n, knam, k_format)
-register int n;
+void losehp(n, knam, k_format) register int n;
 register const char *knam;
 boolean k_format;
 {
@@ -3090,7 +3454,8 @@ boolean k_format;
         killer.format = k_format;
         if (killer.name != knam) /* the thing that killed you */
             Strcpy(killer.name, knam ? knam : "");
-        You("die...");
+        /*KR You("die..."); */
+        pline("당신은 죽었습니다...");
         done(DIED);
     } else if (n > 0 && u.uhp * 10 < u.uhpmax) {
         maybe_wail();
@@ -3205,15 +3570,14 @@ max_capacity()
     return (wt - (2 * wc));
 }
 
-boolean
-check_capacity(str)
-const char *str;
+boolean check_capacity(str) const char *str;
 {
     if (near_capacity() >= EXT_ENCUMBER) {
         if (str)
             pline1(str);
         else
-            You_cant("do that while carrying so much stuff.");
+            /*KR You_cant("do that while carrying so much stuff."); */
+            You("물건을 너무 많이 들고 있어 그런 일을 할 수 없다.");
         return 1;
     }
     return 0;

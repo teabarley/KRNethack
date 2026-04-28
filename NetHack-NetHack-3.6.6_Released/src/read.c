@@ -19,21 +19,21 @@ static NEARDATA const char readable[] = { ALL_CLASSES, SCROLL_CLASS,
 static const char all_count[] = { ALLOW_COUNT, ALL_CLASSES, 0 };
 
 STATIC_DCL boolean FDECL(learnscrolltyp, (SHORT_P));
-STATIC_DCL char *FDECL(erode_obj_text, (struct obj *, char *));
+STATIC_DCL char *FDECL(erode_obj_text, (struct obj *, char *) );
 STATIC_DCL char *FDECL(apron_text, (struct obj *, char *buf));
-STATIC_DCL void FDECL(stripspe, (struct obj *));
-STATIC_DCL void FDECL(p_glow1, (struct obj *));
-STATIC_DCL void FDECL(p_glow2, (struct obj *, const char *));
-STATIC_DCL void FDECL(forget_single_object, (int));
+STATIC_DCL void FDECL(stripspe, (struct obj *) );
+STATIC_DCL void FDECL(p_glow1, (struct obj *) );
+STATIC_DCL void FDECL(p_glow2, (struct obj *, const char *) );
+STATIC_DCL void FDECL(forget_single_object, (int) );
 #if 0 /* not used */
 STATIC_DCL void FDECL(forget_objclass, (int));
 #endif
-STATIC_DCL void FDECL(randomize, (int *, int));
-STATIC_DCL void FDECL(forget, (int));
-STATIC_DCL int FDECL(maybe_tame, (struct monst *, struct obj *));
-STATIC_DCL boolean FDECL(get_valid_stinking_cloud_pos, (int, int));
+STATIC_DCL void FDECL(randomize, (int *, int) );
+STATIC_DCL void FDECL(forget, (int) );
+STATIC_DCL int FDECL(maybe_tame, (struct monst *, struct obj *) );
+STATIC_DCL boolean FDECL(get_valid_stinking_cloud_pos, (int, int) );
 STATIC_DCL boolean FDECL(is_valid_stinking_cloud_pos, (int, int, BOOLEAN_P));
-STATIC_PTR void FDECL(display_stinking_cloud_positions, (int));
+STATIC_PTR void FDECL(display_stinking_cloud_positions, (int) );
 STATIC_PTR void FDECL(set_lit, (int, int, genericptr));
 STATIC_DCL void NDECL(do_class_genocide);
 
@@ -50,9 +50,7 @@ short scrolltyp;
 }
 
 /* also called from teleport.c for scroll of teleportation */
-void
-learnscroll(sobj)
-struct obj *sobj;
+void learnscroll(sobj) struct obj *sobj;
 {
     /* it's implied that sobj->dknown is set;
        we couldn't be reading this scroll otherwise */
@@ -78,6 +76,7 @@ tshirt_text(tshirt, buf)
 struct obj *tshirt;
 char *buf;
 {
+#if 0 /*KR: 원본*/
     static const char *shirt_msgs[] = {
         /* Scott Bigham */
       "I explored the Dungeons of Doom and all I got was this lousy T-shirt!",
@@ -157,6 +156,88 @@ char *buf;
            TV show "Game of Thrones" (probably an actual T-shirt too...) */
         "/Valar morghulis/ -- /Valar dohaeris/",
     };
+#else /*KR: KRNethack 맞춤 번역 */
+    static const char *shirt_msgs[] = {
+        /* Scott Bigham */
+        "운명의 던전을 탐험하고 얻은 거라곤 이 형편없는 티셔츠뿐!",
+        "주머니에 든 거 묠니르인가요, 아니면 날 봐서 기쁜 건가요?",
+        "중요한 건 검의 크기가 아니라, 검과 얼마나 #enhance(동기화) "
+        "되었는가입니다.",
+        "마담 엘비라의 서큐버스관 평생 고객",
+        "마담 엘비라의 서큐버스관 이달의 우수 직원",
+        "루디오스 금고 경비병들은 작고 어두운 방에서 '그것'을 합니다",
+        "옌더 군대 병사들은 떼거지로 '그것'을 합니다",
+        "나는 옌더 군대 신병 훈련소에서 살아남았다",
+        "루디오스 회계학교 교내 라크로스 팀",
+        "오라클(TM) 분수 제10회 연례 젖은 티셔츠 경연대회",
+        "이봐, 블랙 드래곤! '이거나' 분해시켜 보시지!",
+        "저는 멍청이랑 일행입니다 -->",
+        "날 탓하지 마, 난 이자크에게 투표했다고!",
+        "당황하지 마시오",           /* HHGTTG */
+        "풍림관 고등학교 체육부",    /* Ranma 1/2 */
+        "안녕하세-용, 간호사 누나!", /* Animaniacs */
+        "=^.^=",
+        "고블린 털 100% - 세탁하지 마시오",
+        "아버좀비 & 피치",
+        "cK -- 코카트리스가 캅을 만지다",
+        "내게 묻지 마시오, 난 여기서 모험만 할 뿐",
+        "바지 타도!",
+        "d, 당신의 개입니까, 아니면 살인마입니까?",
+        "퍼그와 뉴트에게 자유를!",
+        "가자, 개미 팀!",
+        "뉴트 있수?",
+        "안녕, 내 사랑!", /* Charlie Drake */
+        "이봐! 님프들! 이 티셔츠를 훔쳐가!",
+        "나는 운명의 던전을 <3 (사랑)해",
+        "나는 모드를 <3 (사랑)해",
+        "나는 발키리다. 내가 뛰는 걸 본다면, 뒤처지지 않게 따라와라.",
+        "나는 짐꾼 쥐가 아니다 - 수집가다",
+        "나는 고무나무에서 튕겨 나갔다", /* Monkey Island */
+        "약탈의 섬 유황 해변 클럽",      /* Monkey Island */
+        "이 글씨가 보인다면, 내 미늘창이 닿는 거리라는 뜻이다",
+        "난 혼란스럽다!",
+        "공주랑 진도 좀 뺐지",
+        "영원히 살거나, 그러다 죽거나.",
+        "라이켄 파크",
+        "생각에 잠김 - 수색대를 보내주시오",
+        "고기는 모르도르다",
+        "광산 마을 우수 기업 협회",
+        "광산 마을 경비대",
+        "팜 부인의 거래 가능한 애정의 집 -- 매우 평판이 좋은 매음굴",
+        "보호비 갈취단",
+        "진정한 남자는 크롬을 사랑한다",
+        "누군가 내 모조를 훔쳐갔어!",
+        "헬하운드 갱",
+        "웨어울프스",
+        "그들은 스톰 자이언트일지도 모른다",
+        "무기가 사람을 죽이는 게 아니다, 내가 사람을 죽이는 거다",
+        "화이트 좀비",
+        "당신이 날 죽이고 있어요!",
+        "안후르 주립 대학교 - 파이팅 파이어 앤츠의 고향!",
+        "프리 허그",
+        "연쇄 승천마",
+        "진정한 남자는 발키리를 한다",
+        "YMCA (청년 동굴탐험가 협회)",
+        "루디오스 요새를 점령하라",
+        "이 티셔츠를 살 돈이 없어서 그냥 훔쳤다!",
+        "마인드 플레이어는 밥맛이다",
+        "난 지금 바지를 입고 있지 않다",
+        "산 자들을 타도하라!",
+        "푸딩 농부",
+        "채식주의자",
+        "안녕, 난 '전쟁'이야!",
+        "어둠을 저주하느니 촛불 하나를 켜는 것이 낫다",
+        "촛불 하나를 켜는 것보다 어둠을 저주하는 게 더 쉽다",
+        /* expanded "rock--paper--scissors" featured in TV show "Big Bang
+           Theory" although they didn't create it (and an actual T-shirt
+           with pentagonal diagram showing which choices defeat which) */
+        "가위--바위--보--도마뱀--스팍!",
+        /* "All men must die -- all men must serve" challange and response
+           from book series _A_Song_of_Ice_and_Fire_ by George R.R. Martin,
+           TV show "Game of Thrones" (probably an actual T-shirt too...) */
+        "/발라 모굴리스/ -- /발라 도하에리스/",
+    };
+#endif
 
     Strcpy(buf, shirt_msgs[tshirt->o_id % SIZE(shirt_msgs)]);
     return erode_obj_text(tshirt, buf);
@@ -167,6 +248,7 @@ apron_text(apron, buf)
 struct obj *apron;
 char *buf;
 {
+#if 0 /*KR: 원본*/
     static const char *apron_msgs[] = {
         "Kiss the cook",
         "I'm making SCIENCE!",
@@ -178,6 +260,19 @@ char *buf;
         "If we weren't meant to eat animals, why are they made out of meat?",
         "If you don't like the food, I'll stab you",
     };
+#else /*KR: KRNethack 맞춤 번역 */
+    static const char *apron_msgs[] = {
+        "요리사에게 키스를",
+        "나는 지금 '과학'을 하고 있다구!",
+        "주방장한테 까불지 마라",
+        "음식에 독 타게 만들지 마",
+        "게헨놈의 주방",
+        "쥐고기: 또 다른 백색육",
+        "열기를 견딜 수 없다면, 게헨놈에서 나가라!",
+        "동물을 먹지 말아야 한다면, 왜 동물들은 고기로 만들어져 있는 거지?",
+        "음식이 마음에 안 들면, 널 찔러버릴 테다",
+    };
+#endif
 
     Strcpy(buf, apron_msgs[apron->o_id % SIZE(apron_msgs)]);
     return erode_obj_text(apron, buf);
@@ -199,7 +294,8 @@ doread()
     /* outrumor has its own blindness check */
     if (scroll->otyp == FORTUNE_COOKIE) {
         if (flags.verbose)
-            You("break up the cookie and throw away the pieces.");
+            /*KR You("break up the cookie and throw away the pieces."); */
+            You("쿠키를 부수고 조각들을 버렸다.");
         outrumor(bcsign(scroll), BY_COOKIE);
         if (!Blind)
             u.uconduct.literate++;
@@ -210,14 +306,21 @@ doread()
         const char *endpunct;
 
         if (Blind) {
-            You_cant("feel any Braille writing.");
+            /*KR You_cant("feel any Braille writing."); */
+            You_cant("점자 같은 것은 만져지지 않는다.");
             return 0;
         }
         /* can't read shirt worn under suit (under cloak is ok though) */
         if (scroll->otyp == T_SHIRT && uarm && scroll == uarmu) {
+#if 0 /*KR: 원본*/
             pline("%s shirt is obscured by %s%s.",
                   scroll->unpaid ? "That" : "Your", shk_your(buf, uarm),
                   suit_simple_name(uarm));
+#else /*KR: KRNethack 맞춤 번역 */
+            pline("%s 셔츠는 %s에 가려져 있다.",
+                  scroll->unpaid ? "그" : "당신의",
+                  append_josa(suit_simple_name(uarm), "에"));
+#endif
             return 0;
         }
         u.uconduct.literate++;
@@ -231,11 +334,13 @@ doread()
             /* we will be displaying a sentence; need ending punctuation */
             if (ln > 0 && !index(".!?", mesg[ln - 1]))
                 endpunct = ".";
-            pline("It reads:");
+            /*KR pline("It reads:"); */
+            pline("이렇게 쓰여 있다:");
         }
         pline("\"%s\"%s", mesg, endpunct);
         return 1;
     } else if (scroll->otyp == CREDIT_CARD) {
+#if 0 /*KR: 원본*/
         static const char *card_msgs[] = {
             "Leprechaun Gold Tru$t - Shamrock Card",
             "Magic Memory Vault Charge Card",
@@ -252,58 +357,88 @@ doread()
             "Yendorian Express - Mithril Card",
             "Yendorian Express - Platinum Card", /* must be last */
         };
+#else /*KR: KRNethack 맞춤 번역 */
+        static const char *card_msgs[] = {
+            "레프리콘 황금 신탁 - 샴록 카드",
+            "마법 기억 금고 차지 카드",
+            "란 국립 은행",                   /* Larn */
+            "오메가 제일 은행",               /* Omega */
+            "조크 은행 - 프로보즈 마법 카드", /* Zork */
+            "앙크모포크 상인 길드 물물교환 카드",
+            "앙크모포크 도둑 길드 무제한 거래 카드",
+            "란스만스비 대금업자 협회",
+            "게헨놈 은행 - 99% 이자 카드",
+            "옌더리안 익스프레스 - 구리 카드",
+            "옌더리안 익스프레스 - 은 카드",
+            "옌더리안 익스프레스 - 금 카드",
+            "옌더리안 익스프레스 - 미스릴 카드",
+            "옌더리안 익스프레스 - 백금 카드", /* must be last */
+        };
+#endif
 
         if (Blind) {
-            You("feel the embossed numbers:");
+            /*KR You("feel the embossed numbers:"); */
+            You("양각된 숫자들을 만져보았다:");
         } else {
             if (flags.verbose)
-                pline("It reads:");
+                /*KR pline("It reads:"); */
+                pline("이렇게 쓰여 있다:");
             pline("\"%s\"",
                   scroll->oartifact
                       ? card_msgs[SIZE(card_msgs) - 1]
                       : card_msgs[scroll->o_id % (SIZE(card_msgs) - 1)]);
         }
         /* Make a credit card number */
-        pline("\"%d0%d %ld%d1 0%d%d0\"%s",
-              (((int) scroll->o_id % 89) + 10),
+        pline("\"%d0%d %ld%d1 0%d%d0\"%s", (((int) scroll->o_id % 89) + 10),
               ((int) scroll->o_id % 4),
               ((((long) scroll->o_id * 499L) % 899999L) + 100000L),
-              ((int) scroll->o_id % 10),
-              (!((int) scroll->o_id % 3)),
+              ((int) scroll->o_id % 10), (!((int) scroll->o_id % 3)),
               (((int) scroll->o_id * 7) % 10),
               (flags.verbose || Blind) ? "." : "");
         u.uconduct.literate++;
         return 1;
     } else if (scroll->otyp == CAN_OF_GREASE) {
-        pline("This %s has no label.", singular(scroll, xname));
+        /*KR pline("This %s has no label.", singular(scroll, xname)); */
+        pline("이 %s에는 라벨이 없다.", singular(scroll, xname));
         return 0;
     } else if (scroll->otyp == MAGIC_MARKER) {
         if (Blind) {
-            You_cant("feel any Braille writing.");
+            /*KR You_cant("feel any Braille writing."); */
+            You_cant("점자 같은 것은 만져지지 않는다.");
             return 0;
         }
         if (flags.verbose)
-            pline("It reads:");
-        pline("\"Magic Marker(TM) Red Ink Marker Pen.  Water Soluble.\"");
+            /*KR pline("It reads:"); */
+            pline("이렇게 쓰여 있다:");
+        /*KR pline("\"Magic Marker(TM) Red Ink Marker Pen.  Water
+         * Soluble.\""); */
+        pline("\"매직 마커(TM) 붉은색 잉크 마커 펜. 수용성.\"");
         u.uconduct.literate++;
         return 1;
     } else if (scroll->oclass == COIN_CLASS) {
         if (Blind)
-            You("feel the embossed words:");
+            /*KR You("feel the embossed words:"); */
+            You("양각된 글자들을 만져보았다:");
         else if (flags.verbose)
-            You("read:");
-        pline("\"1 Zorkmid.  857 GUE.  In Frobs We Trust.\"");
+            /*KR You("read:"); */
+            You("읽었다:");
+        /*KR pline("\"1 Zorkmid.  857 GUE.  In Frobs We Trust.\""); */
+        pline("\"1 조크미드. 857 GUE. 우리는 프로브를 믿는다.\"");
         u.uconduct.literate++;
         return 1;
     } else if (scroll->oartifact == ART_ORB_OF_FATE) {
         if (Blind)
-            You("feel the engraved signature:");
+            /*KR You("feel the engraved signature:"); */
+            You("새겨진 서명을 만져보았다:");
         else
-            pline("It is signed:");
-        pline("\"Odin.\"");
+            /*KR pline("It is signed:"); */
+            pline("이렇게 서명되어 있다:");
+        /*KR pline("\"Odin.\""); */
+        pline("\"오딘.\"");
         u.uconduct.literate++;
         return 1;
     } else if (scroll->otyp == CANDY_BAR) {
+#if 0 /*KR: 원본*/
         static const char *wrapper_msgs[] = {
             "Apollo",       /* Lost */
             "Moon Crunchy", /* South Park */
@@ -313,18 +448,33 @@ doread()
             "Fruity Oaty",              /* Serenity */
             "Wonka Bar" /* Charlie and the Chocolate Factory */
         };
+#else /*KR: KRNethack 맞춤 번역 */
+        static const char *wrapper_msgs[] = {
+            "아폴로",    /* Lost */
+            "문 크런치", /* South Park */
+            "스내키 케이크", "초콜릿 너기", "스몰 바",
+            "크리스피 얌얌", "닐라 크런치", "베리 바",
+            "초코 넘머",     "옴-뇸", /* Cat Macro */
+            "프루티 오티",            /* Serenity */
+            "웡카 바"                 /* Charlie and the Chocolate Factory */
+        };
+#endif
 
         if (Blind) {
-            You_cant("feel any Braille writing.");
+            /*KR You_cant("feel any Braille writing."); */
+            You_cant("점자 같은 것은 만져지지 않는다.");
             return 0;
         }
-        pline("The wrapper reads: \"%s\".",
+        /*KR pline("The wrapper reads: \"%s\".",
+         * wrapper_msgs[scroll->o_id % SIZE(wrapper_msgs)]); */
+        pline("포장지에 쓰여 있다: \"%s\".",
               wrapper_msgs[scroll->o_id % SIZE(wrapper_msgs)]);
         u.uconduct.literate++;
         return 1;
     } else if (scroll->oclass != SCROLL_CLASS
                && scroll->oclass != SPBOOK_CLASS) {
-        pline(silly_thing_to, "read");
+        /*KR pline(silly_thing_to, "read"); */
+        pline(silly_thing_to, "읽기에는");
         return 0;
     } else if (Blind && (scroll->otyp != SPE_BOOK_OF_THE_DEAD)) {
         const char *what = 0;
@@ -334,7 +484,9 @@ doread()
         else if (!scroll->dknown)
             what = "formula on the scroll";
         if (what) {
-            pline("Being blind, you cannot read the %s.", what);
+            /*KR pline("Being blind, you cannot read the %s.", what); */
+            pline("당신은 눈이 멀어서 %s 읽을 수 없다.",
+                  append_josa(what, "을"));
             return 0;
         }
     }
@@ -351,9 +503,13 @@ doread()
            maintained illiterate conduct so far, and this mail
            scroll didn't come from bones, ask for confirmation */
         if (!u.uconduct.literate) {
-            if (!scroll->spe && yn(
+            /*KR if (!scroll->spe && yn(
              "Reading mail will violate \"illiterate\" conduct.  Read anyway?"
-                                   ) != 'y')
+                                   ) != 'y') */
+            if (!scroll->spe
+                && yn("편지를 읽으면 \"문맹\" 서약을 깨게 됩니다. 그래도 "
+                      "읽으시겠습니까?")
+                       != 'y')
                 return 0;
         }
     }
@@ -375,9 +531,10 @@ doread()
 
         /* a few scroll feedback messages describe something happening
            to the scroll itself, so avoid "it disappears" for those */
-        nodisappear = (scroll->otyp == SCR_FIRE
-                       || (scroll->otyp == SCR_REMOVE_CURSE
-                           && scroll->cursed));
+        nodisappear =
+            (scroll->otyp == SCR_FIRE
+             || (scroll->otyp == SCR_REMOVE_CURSE && scroll->cursed));
+#if 0 /*KR: 원본*/
         if (Blind)
             pline(nodisappear
                       ? "You %s the formula on the scroll."
@@ -393,6 +550,22 @@ doread()
                 pline("Being confused, you %s the magic words...",
                       silently ? "misunderstand" : "mispronounce");
         }
+#else /*KR: KRNethack 맞춤 번역 */
+        if (Blind)
+            pline(nodisappear ? "당신은 두루마리에 적힌 주문을 %s."
+                              : "당신이 주문을 %s, 두루마리가 사라졌다.",
+                  silently ? "생각했다" : "발음하자");
+        else
+            pline(nodisappear ? "당신은 두루마리를 읽었다."
+                              : "당신이 두루마리를 읽자, 그것이 사라졌다.");
+        if (confused) {
+            if (Hallucination)
+                pline("너무 몽롱해서, 실수하고 말았다...");
+            else
+                pline("혼란스러워서, 당신은 마법의 단어를 %s...",
+                      silently ? "오해했다" : "잘못 발음했다");
+        }
+#endif
     }
     if (!seffects(scroll)) {
         if (!objects[scroll->otyp].oc_name_known) {
@@ -408,15 +581,17 @@ doread()
     return 1;
 }
 
-STATIC_OVL void
-stripspe(obj)
-register struct obj *obj;
+STATIC_OVL void stripspe(obj) register struct obj *obj;
 {
     if (obj->blessed || obj->spe <= 0) {
         pline1(nothing_happens);
     } else {
         /* order matters: message, shop handling, actual transformation */
+#if 0 /*KR: 원본*/
         pline("%s briefly.", Yobjnam2(obj, "vibrate"));
+#else /*KR: KRNethack 맞춤 번역 */
+        pline("%s 짧게 진동했다.", append_josa(Yname2(obj), "이"));
+#endif
         costly_alteration(obj, COST_UNCHRG);
         obj->spe = 0;
         if (obj->otyp == OIL_LAMP || obj->otyp == BRASS_LANTERN)
@@ -424,20 +599,26 @@ register struct obj *obj;
     }
 }
 
-STATIC_OVL void
-p_glow1(otmp)
-register struct obj *otmp;
+STATIC_OVL void p_glow1(otmp) register struct obj *otmp;
 {
+#if 0 /*KR: 원본*/
     pline("%s briefly.", Yobjnam2(otmp, Blind ? "vibrate" : "glow"));
+#else /*KR: KRNethack 맞춤 번역 */
+    pline("%s 짧게 %s.", append_josa(Yname2(otmp), "이"),
+          Blind ? "진동했다" : "빛났다");
+#endif
 }
 
-STATIC_OVL void
-p_glow2(otmp, color)
-register struct obj *otmp;
+STATIC_OVL void p_glow2(otmp, color) register struct obj *otmp;
 register const char *color;
 {
+#if 0 /*KR: 원본*/
     pline("%s%s%s for a moment.", Yobjnam2(otmp, Blind ? "vibrate" : "glow"),
           Blind ? "" : " ", Blind ? "" : hcolor(color));
+#else /*KR: KRNethack 맞춤 번역 */
+    pline("%s 잠시 동안 %s%s.", append_josa(Yname2(otmp), "이"),
+          Blind ? "" : hcolor(color), Blind ? "진동했다" : " 빛났다");
+#endif
 }
 
 /* Is the object chargeable?  For purposes of inventory display; it is
@@ -463,9 +644,7 @@ struct obj *obj;
 
 /* recharge an object; curse_bless is -1 if the recharging implement
    was cursed, +1 if blessed, 0 otherwise. */
-void
-recharge(obj, curse_bless)
-struct obj *obj;
+void recharge(obj, curse_bless) struct obj *obj;
 int curse_bless;
 {
     register int n;
@@ -475,9 +654,9 @@ int curse_bless;
     is_blessed = curse_bless > 0;
 
     if (obj->oclass == WAND_CLASS) {
-        int lim = (obj->otyp == WAN_WISHING)
-                      ? 3
-                      : (objects[obj->otyp].oc_dir != NODIR) ? 8 : 15;
+        int lim = (obj->otyp == WAN_WISHING)             ? 3
+                  : (objects[obj->otyp].oc_dir != NODIR) ? 8
+                                                         : 15;
 
         /* undo any prior cancellation, even when is_cursed */
         if (obj->spe == -1)
@@ -485,21 +664,22 @@ int curse_bless;
 
         /*
          * Recharging might cause wands to explode.
-         *      v = number of previous recharges
-         *            v = percentage chance to explode on this attempt
-         *                    v = cumulative odds for exploding
-         *      0 :   0       0
-         *      1 :   0.29    0.29
-         *      2 :   2.33    2.62
-         *      3 :   7.87   10.28
-         *      4 :  18.66   27.02
-         *      5 :  36.44   53.62
-         *      6 :  62.97   82.83
-         *      7 : 100     100
+         * v = number of previous recharges
+         * v = percentage chance to explode on this attempt
+         * v = cumulative odds for exploding
+         * 0 :   0        0
+         * 1 :   0.29     0.29
+         * 2 :   2.33     2.62
+         * 3 :   7.87    10.28
+         * 4 :  18.66    27.02
+         * 5 :  36.44    53.62
+         * 6 :  62.97    82.83
+         * 7 : 100      100
          */
         n = (int) obj->recharged;
-        if (n > 0 && (obj->otyp == WAN_WISHING
-                      || (n * n * n > rn2(7 * 7 * 7)))) { /* recharge_limit */
+        if (n > 0
+            && (obj->otyp == WAN_WISHING
+                || (n * n * n > rn2(7 * 7 * 7)))) { /* recharge_limit */
             wand_explode(obj, rnd(lim));
             return;
         }
@@ -538,6 +718,7 @@ int curse_bless;
         int s = is_blessed ? rnd(3) : is_cursed ? -rnd(2) : 1;
         boolean is_on = (obj == uleft || obj == uright);
 
+#if 0 /*KR: 원본*/
         /* destruction depends on current state, not adjustment */
         if (obj->spe > rn2(7) || obj->spe <= -5) {
             pline("%s momentarily, then %s!", Yobjnam2(obj, "pulsate"),
@@ -552,6 +733,22 @@ int curse_bless;
 
             pline("%s spins %sclockwise for a moment.", Yname2(obj),
                   s < 0 ? "counter" : "");
+#else /*KR: KRNethack 맞춤 번역 */
+        /* destruction depends on current state, not adjustment */
+        if (obj->spe > rn2(7) || obj->spe <= -5) {
+            pline("%s 순간적으로 맥동하더니, 이내 폭발했다!",
+                  append_josa(Yname2(obj), "이"));
+            if (is_on)
+                Ring_gone(obj);
+            s = rnd(3 * abs(obj->spe)); /* amount of damage */
+            useup(obj);
+            losehp(Maybe_Half_Phys(s), "폭발하는 반지", KILLED_BY_AN);
+        } else {
+            long mask = is_on ? (obj == uleft ? LEFT_RING : RIGHT_RING) : 0L;
+
+            pline("%s 잠시 %s시계 방향으로 돌았다.",
+                  append_josa(Yname2(obj), "이"), s < 0 ? "반" : "");
+#endif
             if (s < 0)
                 costly_alteration(obj, COST_DECHNT);
             /* cause attributes and/or properties to be updated */
@@ -596,7 +793,8 @@ int curse_bless;
                             == MAGIC_MARKER) { /* previously recharged */
                 obj->recharged = 1; /* override increment done above */
                 if (obj->spe < 3)
-                    Your("marker seems permanently dried out.");
+                    /*KR Your("marker seems permanently dried out."); */
+                    Your("마커가 영구적으로 말라버린 것 같다.");
                 else
                     pline1(nothing_happens);
             } else if (is_blessed) {
@@ -633,7 +831,8 @@ int curse_bless;
                 stripspe(obj);
                 if (obj->lamplit) {
                     if (!Blind)
-                        pline("%s out!", Tobjnam(obj, "go"));
+                        /*KR pline("%s out!", Tobjnam(obj, "go")); */
+                        pline("%s 꺼졌다!", append_josa(Yname2(obj), "이"));
                     end_burn(obj, TRUE);
                 }
             } else if (is_blessed) {
@@ -709,14 +908,13 @@ int curse_bless;
 
     } else {
     not_chargable:
-        You("have a feeling of loss.");
+        /*KR You("have a feeling of loss."); */
+        You("상실감이 느껴진다.");
     }
 }
 
 /* Forget known information about this object type. */
-STATIC_OVL void
-forget_single_object(obj_id)
-int obj_id;
+STATIC_OVL void forget_single_object(obj_id) int obj_id;
 {
     objects[obj_id].oc_name_known = 0;
     objects[obj_id].oc_pre_discovered = 0; /* a discovery when relearned */
@@ -744,9 +942,7 @@ int oclass;
 #endif
 
 /* randomize the given list of numbers  0 <= i < count */
-STATIC_OVL void
-randomize(indices, count)
-int *indices;
+STATIC_OVL void randomize(indices, count) int *indices;
 int count;
 {
     int i, iswap, temp;
@@ -761,9 +957,7 @@ int count;
 }
 
 /* Forget % of known objects. */
-void
-forget_objects(percent)
-int percent;
+void forget_objects(percent) int percent;
 {
     int i, count;
     int indices[NUM_OBJECTS];
@@ -792,9 +986,7 @@ int percent;
 }
 
 /* Forget some or all of map (depends on parameters). */
-void
-forget_map(howmuch)
-int howmuch;
+void forget_map(howmuch) int howmuch;
 {
     register int zx, zy;
 
@@ -831,9 +1023,7 @@ forget_traps()
  * Forget given % of all levels that the hero has visited and not forgotten,
  * except this one.
  */
-void
-forget_levels(percent)
-int percent;
+void forget_levels(percent) int percent;
 {
     int i, count;
     xchar maxl, this_lev;
@@ -884,17 +1074,15 @@ int percent;
 /*
  * Forget some things (e.g. after reading a scroll of amnesia).  When called,
  * the following are always forgotten:
- *      - felt ball & chain
- *      - traps
- *      - part (6 out of 7) of the map
+ * - felt ball & chain
+ * - traps
+ * - part (6 out of 7) of the map
  *
  * Other things are subject to flags:
- *      howmuch & ALL_MAP       = forget whole map
- *      howmuch & ALL_SPELLS    = forget all spells
+ * howmuch & ALL_MAP       = forget whole map
+ * howmuch & ALL_SPELLS    = forget all spells
  */
-STATIC_OVL void
-forget(howmuch)
-int howmuch;
+STATIC_OVL void forget(howmuch) int howmuch;
 {
     if (Punished)
         u.bc_felt = 0; /* forget felt ball&chain */
@@ -950,11 +1138,10 @@ struct obj *sobj;
 }
 
 STATIC_OVL boolean
-get_valid_stinking_cloud_pos(x,y)
-int x,y;
+get_valid_stinking_cloud_pos(x, y)
+int x, y;
 {
-    return (!(!isok(x,y) || !cansee(x, y)
-              || !ACCESSIBLE(levl[x][y].typ)
+    return (!(!isok(x, y) || !cansee(x, y) || !ACCESSIBLE(levl[x][y].typ)
               || distu(x, y) >= 32));
 }
 
@@ -963,17 +1150,16 @@ is_valid_stinking_cloud_pos(x, y, showmsg)
 int x, y;
 boolean showmsg;
 {
-    if (!get_valid_stinking_cloud_pos(x,y)) {
+    if (!get_valid_stinking_cloud_pos(x, y)) {
         if (showmsg)
-            You("smell rotten eggs.");
+            /*KR You("smell rotten eggs."); */
+            You("썩은 달걀 냄새가 난다.");
         return FALSE;
     }
     return TRUE;
 }
 
-STATIC_PTR void
-display_stinking_cloud_positions(state)
-int state;
+STATIC_PTR void display_stinking_cloud_positions(state) int state;
 {
     if (state == 0) {
         tmp_at(DISP_BEAM, cmap_to_glyph(S_goodpos));
@@ -985,7 +1171,7 @@ int state;
             for (dy = -dist; dy <= dist; dy++) {
                 x = u.ux + dx;
                 y = u.uy + dy;
-                if (get_valid_stinking_cloud_pos(x,y))
+                if (get_valid_stinking_cloud_pos(x, y))
                     tmp_at(x, y);
             }
     } else {
@@ -1006,7 +1192,7 @@ struct obj *sobj; /* scroll, or fake spellbook object for scroll-like spell */
     struct obj *otmp;
 
     if (objects[otyp].oc_magic)
-        exercise(A_WIS, TRUE);                       /* just for trying */
+        exercise(A_WIS, TRUE);                    /* just for trying */
     already_known = (sobj->oclass == SPBOOK_CLASS /* spell */
                      || objects[otyp].oc_name_known);
 
@@ -1016,14 +1202,17 @@ struct obj *sobj; /* scroll, or fake spellbook object for scroll-like spell */
         known = TRUE;
         if (sobj->spe == 2)
             /* "stamped scroll" created via magic marker--without a stamp */
-            pline("This scroll is marked \"postage due\".");
+            /*KR pline("This scroll is marked \"postage due\"."); */
+            pline("이 두루마리에는 \"우편 요금 부족\"이라고 적혀 있다.");
         else if (sobj->spe)
             /* scroll of mail obtained from bones file or from wishing;
              * note to the puzzled: the game Larn actually sends you junk
              * mail if you win!
              */
-            pline(
+            /*KR pline(
     "This seems to be junk mail addressed to the finder of the Eye of Larn.");
+  */
+            pline("이것은 란의 눈 발견자에게 보내는 스팸 메일인 것 같다.");
         else
             readmail(sobj);
         break;
@@ -1034,10 +1223,16 @@ struct obj *sobj; /* scroll, or fake spellbook object for scroll-like spell */
         boolean same_color;
 
         otmp = some_armor(&youmonst);
+#if 0 /*KR: 원본*/
         if (!otmp) {
             strange_feeling(sobj, !Blind
                                       ? "Your skin glows then fades."
                                       : "Your skin feels warm for a moment.");
+#else /*KR: KRNethack 맞춤 번역 */
+        if (!otmp) {
+            strange_feeling(sobj, !Blind ? "피부가 빛나더니 이내 사그라졌다."
+                                         : "피부가 잠시 따뜻하게 느껴졌다.");
+#endif
             sobj = 0; /* useup() in strange_feeling() */
             exercise(A_CON, !scursed);
             exercise(A_STR, !scursed);
@@ -1047,6 +1242,7 @@ struct obj *sobj; /* scroll, or fake spellbook object for scroll-like spell */
             old_erodeproof = (otmp->oerodeproof != 0);
             new_erodeproof = !scursed;
             otmp->oerodeproof = 0; /* for messages */
+#if 0                              /*KR: 원본*/
             if (Blind) {
                 otmp->rknown = FALSE;
                 pline("%s warm for a moment.", Yobjnam2(otmp, "feel"));
@@ -1063,6 +1259,25 @@ struct obj *sobj; /* scroll, or fake spellbook object for scroll-like spell */
                 pline("%s as good as new!",
                       Yobjnam2(otmp, Blind ? "feel" : "look"));
             }
+#else                              /*KR: KRNethack 맞춤 번역 */
+            if (Blind) {
+                otmp->rknown = FALSE;
+                pline("%s 잠시 따뜻하게 느껴졌다.",
+                      append_josa(Yname2(otmp), "이"));
+            } else {
+                otmp->rknown = TRUE;
+                pline("%s %s %s %s 덮였다!", append_josa(Yname2(otmp), "이"),
+                      scursed ? "얼룩덜룩한" : "어른거리는",
+                      hcolor(scursed ? NH_BLACK : NH_GOLDEN),
+                      scursed ? "빛으로"
+                              : (is_shield(otmp) ? "막으로" : "방패막으로"));
+            }
+            if (new_erodeproof && (otmp->oeroded || otmp->oeroded2)) {
+                otmp->oeroded = otmp->oeroded2 = 0;
+                pline("%s 새것처럼 %s!", append_josa(Yname2(otmp), "이"),
+                      Blind ? "느껴진다" : "보인다");
+            }
+#endif
             if (old_erodeproof && !new_erodeproof) {
                 /* restore old_erodeproof before shop charges */
                 otmp->oerodeproof = 1;
@@ -1087,6 +1302,7 @@ struct obj *sobj; /* scroll, or fake spellbook object for scroll-like spell */
         /* KMH -- catch underflow */
         s = scursed ? -otmp->spe : otmp->spe;
         if (s > (special_armor ? 5 : 3) && rn2(s)) {
+#if 0 /*KR: 원본*/
             otmp->in_use = TRUE;
             pline("%s violently %s%s%s for a while, then %s.", Yname2(otmp),
                   otense(otmp, Blind ? "vibrate" : "glow"),
@@ -1094,19 +1310,30 @@ struct obj *sobj; /* scroll, or fake spellbook object for scroll-like spell */
                   (Blind || same_color) ? "" : hcolor(scursed ? NH_BLACK
                                                               : NH_SILVER),
                   otense(otmp, "evaporate"));
+#else /*KR: KRNethack 맞춤 번역 */
+            otmp->in_use = TRUE;
+            pline("%s 한동안 맹렬하게 %s%s, 이내 증발했다.",
+                  append_josa(Yname2(otmp), "이"),
+                  (Blind || same_color)
+                      ? ""
+                      : hcolor(scursed ? NH_BLACK : NH_SILVER),
+                  Blind ? " 진동하더니" : " 빛나더니");
+#endif
             remove_worn_item(otmp, FALSE);
             useup(otmp);
             break;
         }
-        s = scursed ? -1
-                    : (otmp->spe >= 9)
-                       ? (rn2(otmp->spe) == 0)
-                       : sblessed
-                          ? rnd(3 - otmp->spe / 3)
-                          : 1;
+        s = scursed            ? -1
+            : (otmp->spe >= 9) ? (rn2(otmp->spe) == 0)
+            : sblessed         ? rnd(3 - otmp->spe / 3)
+                               : 1;
         if (s >= 0 && Is_dragon_scales(otmp)) {
             /* dragon scales get turned into dragon scale mail */
+#if 0 /*KR: 원본*/
             pline("%s merges and hardens!", Yname2(otmp));
+#else /*KR: KRNethack 맞춤 번역 */
+            pline("%s 융합되며 단단해졌다!", append_josa(Yname2(otmp), "이"));
+#endif
             setworn((struct obj *) 0, W_ARM);
             /* assumes same order */
             otmp->otyp += GRAY_DRAGON_SCALE_MAIL - GRAY_DRAGON_SCALES;
@@ -1122,6 +1349,7 @@ struct obj *sobj; /* scroll, or fake spellbook object for scroll-like spell */
                 alter_cost(otmp, 0L); /* shop bill */
             break;
         }
+#if 0 /*KR: 원본*/
         pline("%s %s%s%s%s for a %s.", Yname2(otmp),
               s == 0 ? "violently " : "",
               otense(otmp, Blind ? "vibrate" : "glow"),
@@ -1129,6 +1357,13 @@ struct obj *sobj; /* scroll, or fake spellbook object for scroll-like spell */
               (Blind || same_color)
                  ? "" : hcolor(scursed ? NH_BLACK : NH_SILVER),
               (s * s > 1) ? "while" : "moment");
+#else /*KR: KRNethack 맞춤 번역 */
+        pline("%s %s %s%s%s.", append_josa(Yname2(otmp), "이"),
+              (s * s > 1) ? "잠시 동안" : "잠깐", s == 0 ? "격렬하게 " : "",
+              (Blind || same_color) ? ""
+                                    : hcolor(scursed ? NH_BLACK : NH_SILVER),
+              Blind ? " 진동했다" : " 빛났다");
+#endif
         /* [this cost handling will need updating if shop pricing is
            ever changed to care about curse/bless status of armor] */
         if (s < 0)
@@ -1150,15 +1385,18 @@ struct obj *sobj; /* scroll, or fake spellbook object for scroll-like spell */
 
         if ((otmp->spe > (special_armor ? 5 : 3))
             && (special_armor || !rn2(7)))
-            pline("%s %s.", Yobjnam2(otmp, "suddenly vibrate"),
-                  Blind ? "again" : "unexpectedly");
+            /*KR pline("%s %s.", Yobjnam2(otmp, "suddenly vibrate"),
+             * Blind ? "again" : "unexpectedly"); */
+            pline("%s %s 진동했다.", append_josa(Yname2(otmp), "이"),
+                  Blind ? "다시" : "갑자기");
         break;
     }
     case SCR_DESTROY_ARMOR: {
         otmp = some_armor(&youmonst);
         if (confused) {
             if (!otmp) {
-                strange_feeling(sobj, "Your bones itch.");
+                /*KR strange_feeling(sobj, "Your bones itch."); */
+                strange_feeling(sobj, "뼈가 가려운 느낌이 든다.");
                 sobj = 0; /* useup() in strange_feeling() */
                 exercise(A_STR, FALSE);
                 exercise(A_CON, FALSE);
@@ -1178,7 +1416,8 @@ struct obj *sobj; /* scroll, or fake spellbook object for scroll-like spell */
         }
         if (!scursed || !otmp || !otmp->cursed) {
             if (!destroy_arm(otmp)) {
-                strange_feeling(sobj, "Your skin itches.");
+                /*KR strange_feeling(sobj, "Your skin itches."); */
+                strange_feeling(sobj, "피부가 가려운 느낌이 든다.");
                 sobj = 0; /* useup() in strange_feeling() */
                 exercise(A_STR, FALSE);
                 exercise(A_CON, FALSE);
@@ -1186,7 +1425,8 @@ struct obj *sobj; /* scroll, or fake spellbook object for scroll-like spell */
             } else
                 known = TRUE;
         } else { /* armor and scroll both cursed */
-            pline("%s.", Yobjnam2(otmp, "vibrate"));
+            /*KR pline("%s.", Yobjnam2(otmp, "vibrate")); */
+            pline("%s 진동했다.", append_josa(Yname2(otmp), "이"));
             if (otmp->spe >= -6) {
                 otmp->spe += -1;
                 adj_abon(otmp, -1);
@@ -1198,9 +1438,11 @@ struct obj *sobj; /* scroll, or fake spellbook object for scroll-like spell */
     case SPE_CONFUSE_MONSTER:
         if (youmonst.data->mlet != S_HUMAN || scursed) {
             if (!HConfusion)
-                You_feel("confused.");
+                /*KR You_feel("confused."); */
+                You_feel("혼란스러움을 느낀다.");
             make_confused(HConfusion + rnd(100), FALSE);
         } else if (confused) {
+#if 0 /*KR: 원본*/
             if (!sblessed) {
                 Your("%s begin to %s%s.", makeplural(body_part(HAND)),
                      Blind ? "tingle" : "glow ",
@@ -1212,7 +1454,22 @@ struct obj *sobj; /* scroll, or fake spellbook object for scroll-like spell */
                       Blind ? "faint buzz" : " glow", body_part(HEAD));
                 make_confused(0L, TRUE);
             }
+#else /*KR: KRNethack 맞춤 번역 */
+            if (!sblessed) {
+                Your("%s %s %s시작했다.",
+                     append_josa(makeplural(body_part(HAND)), "이"),
+                     Blind ? "" : hcolor(NH_PURPLE),
+                     Blind ? "따끔거리기 " : "빛나기 ");
+                make_confused(HConfusion + rnd(100), FALSE);
+            } else {
+                pline("%s%s 당신의 %s 감쌌다.", Blind ? "" : hcolor(NH_RED),
+                      Blind ? "희미한 윙윙거림이" : " 빛이",
+                      append_josa(body_part(HEAD), "을"));
+                make_confused(0L, TRUE);
+            }
+#endif
         } else {
+#if 0 /*KR: 원본*/
             if (!sblessed) {
                 Your("%s%s %s%s.", makeplural(body_part(HAND)),
                      Blind ? "" : " begin to glow",
@@ -1233,6 +1490,30 @@ struct obj *sobj; /* scroll, or fake spellbook object for scroll-like spell */
                 else
                     u.umconf += rn1(8, 2);
             }
+#else /*KR: KRNethack 맞춤 번역 */
+            if (!sblessed) {
+                Your("%s %s%s%s.",
+                     append_josa(makeplural(body_part(HAND)), "이"),
+                     Blind ? "" : hcolor(NH_RED),
+                     u.umconf ? " 더욱 더 " : " ",
+                     Blind ? "따끔거린다" : "빛나기 시작했다");
+                u.umconf++;
+            } else {
+                if (Blind)
+                    Your("%s %s 따끔거린다.",
+                         append_josa(makeplural(body_part(HAND)), "이"),
+                         u.umconf ? "더욱 더 날카롭게" : "매우 날카롭게");
+                else
+                    Your("%s %s 찬란한 %s 빛난다.",
+                         append_josa(makeplural(body_part(HAND)), "이"),
+                         u.umconf ? "더욱 더" : "", hcolor(NH_RED));
+                /* after a while, repeated uses become less effective */
+                if (u.umconf >= 40)
+                    u.umconf++;
+                else
+                    u.umconf += rn1(8, 2);
+            }
+#endif
         }
         break;
     case SCR_SCARE_MONSTER:
@@ -1254,30 +1535,42 @@ struct obj *sobj; /* scroll, or fake spellbook object for scroll-like spell */
             }
         }
         if (otyp == SCR_SCARE_MONSTER || !ct)
-            You_hear("%s %s.", (confused || scursed) ? "sad wailing"
-                                                     : "maniacal laughter",
-                     !ct ? "in the distance" : "close by");
+            /*KR You_hear("%s %s.", (confused || scursed) ? "sad wailing"
+             * : "maniacal laughter",
+             * !ct ? "in the distance" : "close by"); */
+            You_hear("%s %s 들린다.", !ct ? "멀리서" : "가까이에서",
+                     (confused || scursed) ? "슬픈 통곡 소리가"
+                                           : "광기 어린 웃음소리가");
         break;
     }
     case SCR_BLANK_PAPER:
         if (Blind)
-            You("don't remember there being any magic words on this scroll.");
+            /*KR You("don't remember there being any magic words on this
+             * scroll."); */
+            You("이 두루마리에 마법의 단어가 있었는지 기억나지 않는다.");
         else
-            pline("This scroll seems to be blank.");
+            /*KR pline("This scroll seems to be blank."); */
+            pline("이 두루마리는 백지인 것 같다.");
         known = TRUE;
         break;
     case SCR_REMOVE_CURSE:
     case SPE_REMOVE_CURSE: {
         register struct obj *obj;
 
+        /*KR You_feel(!Hallucination
+                 ? (!confused ? "like someone is helping you."
+                              : "like you need some help.")
+                 : (!confused ? "in touch with the Universal Oneness."
+                              : "the power of the Force against you!")); */
         You_feel(!Hallucination
-                     ? (!confused ? "like someone is helping you."
-                                  : "like you need some help.")
-                     : (!confused ? "in touch with the Universal Oneness."
-                                  : "the power of the Force against you!"));
+                     ? (!confused ? "누군가 당신을 돕고 있는 것 같다."
+                                  : "누군가의 도움이 필요한 것 같다.")
+                     : (!confused ? "우주의 일체감과 맞닿은 것 같다."
+                                  : "포스의 힘이 당신을 거스르는 것 같다!"));
 
         if (scursed) {
-            pline_The("scroll disintegrates.");
+            /*KR pline_The("scroll disintegrates."); */
+            pline("두루마리가 산산조각 났다.");
         } else {
             for (obj = invent; obj; obj = obj->nobj) {
                 long wornmask;
@@ -1318,7 +1611,8 @@ struct obj *sobj; /* scroll, or fake spellbook object for scroll-like spell */
                 if (sblessed || wornmask || obj->otyp == LOADSTONE
                     || (obj->otyp == LEASH && obj->leashmon)) {
                     /* water price varies by curse/bless status */
-                    boolean shop_h2o = (obj->unpaid && obj->otyp == POT_WATER);
+                    boolean shop_h2o =
+                        (obj->unpaid && obj->otyp == POT_WATER);
 
                     if (confused) {
                         blessorcurse(obj, 2);
@@ -1342,7 +1636,8 @@ struct obj *sobj; /* scroll, or fake spellbook object for scroll-like spell */
             unpunish();
         if (u.utrap && u.utraptype == TT_BURIEDBALL) {
             buried_ball_to_freedom();
-            pline_The("clasp on your %s vanishes.", body_part(LEG));
+            /*KR pline_The("clasp on your %s vanishes.", body_part(LEG)); */
+            pline("%s에 채워져 있던 수갑이 사라졌다.", body_part(LEG));
         }
         update_inventory();
         break;
@@ -1363,25 +1658,35 @@ struct obj *sobj; /* scroll, or fake spellbook object for scroll-like spell */
         /* [What about twoweapon mode?  Proofing/repairing/enchanting both
            would be too powerful, but shouldn't we choose randomly between
            primary and secondary instead of always acting on primary?] */
-        if (confused && uwep
-            && erosion_matters(uwep) && uwep->oclass != ARMOR_CLASS) {
+        if (confused && uwep && erosion_matters(uwep)
+            && uwep->oclass != ARMOR_CLASS) {
             old_erodeproof = (uwep->oerodeproof != 0);
             new_erodeproof = !scursed;
             uwep->oerodeproof = 0; /* for messages */
             if (Blind) {
                 uwep->rknown = FALSE;
-                Your("weapon feels warm for a moment.");
+                /*KR Your("weapon feels warm for a moment."); */
+                Your("무기가 잠시 따뜻하게 느껴진다.");
             } else {
                 uwep->rknown = TRUE;
+#if 0 /*KR: 원본*/
                 pline("%s covered by a %s %s %s!", Yobjnam2(uwep, "are"),
                       scursed ? "mottled" : "shimmering",
                       hcolor(scursed ? NH_PURPLE : NH_GOLDEN),
                       scursed ? "glow" : "shield");
+#else /*KR: KRNethack 맞춤 번역 */
+                pline("%s %s %s %s 덮였다!", append_josa(Yname2(uwep), "이"),
+                      scursed ? "얼룩덜룩한" : "어른거리는",
+                      hcolor(scursed ? NH_PURPLE : NH_GOLDEN),
+                      scursed ? "빛으로" : "방패막으로");
+#endif
             }
             if (new_erodeproof && (uwep->oeroded || uwep->oeroded2)) {
                 uwep->oeroded = uwep->oeroded2 = 0;
-                pline("%s as good as new!",
-                      Yobjnam2(uwep, Blind ? "feel" : "look"));
+                /*KR pline("%s as good as new!",
+                 * Yobjnam2(uwep, Blind ? "feel" : "look")); */
+                pline("%s 새것처럼 %s!", append_josa(Yname2(uwep), "이"),
+                      Blind ? "느껴진다" : "보인다");
             }
             if (old_erodeproof && !new_erodeproof) {
                 /* restore old_erodeproof before shop charges */
@@ -1391,11 +1696,11 @@ struct obj *sobj; /* scroll, or fake spellbook object for scroll-like spell */
             uwep->oerodeproof = new_erodeproof ? 1 : 0;
             break;
         }
-        if (!chwepon(sobj, scursed ? -1
-                             : !uwep ? 1
-                               : (uwep->spe >= 9) ? !rn2(uwep->spe)
-                                 : sblessed ? rnd(3 - uwep->spe / 3)
-                                   : 1))
+        if (!chwepon(sobj, scursed            ? -1
+                           : !uwep            ? 1
+                           : (uwep->spe >= 9) ? !rn2(uwep->spe)
+                           : sblessed         ? rnd(3 - uwep->spe / 3)
+                                              : 1))
             sobj = 0; /* nothing enchanted: strange_feeling -> useup */
         break;
     case SCR_TAMING:
@@ -1427,12 +1732,20 @@ struct obj *sobj; /* scroll, or fake spellbook object for scroll-like spell */
                 }
         }
         if (!results) {
-            pline("Nothing interesting %s.",
-                  !candidates ? "happens" : "seems to happen");
+            /*KR pline("Nothing interesting %s.",
+             * !candidates ? "happens" : "seems to happen"); */
+            pline("흥미로운 일은 %s.",
+                  !candidates ? "일어나지 않았다" : "일어나지 않은 것 같다");
         } else {
+#if 0 /*KR: 원본*/
             pline_The("neighborhood %s %sfriendlier.",
                       vis_results ? "is" : "seems",
                       (results < 0) ? "un" : "");
+#else /*KR: KRNethack 맞춤 번역 */
+            pline("주변이 %s %s.",
+                  (results < 0) ? "적대적으로 변한 것" : "우호적으로 변한 것",
+                  vis_results ? "같다" : "같다");
+#endif
             if (vis_results > 0)
                 known = TRUE;
         }
@@ -1440,7 +1753,8 @@ struct obj *sobj; /* scroll, or fake spellbook object for scroll-like spell */
     }
     case SCR_GENOCIDE:
         if (!already_known)
-            You("have found a scroll of genocide!");
+            /*KR You("have found a scroll of genocide!"); */
+            You("학살의 두루마리를 발견했다!");
         known = TRUE;
         if (sblessed)
             do_class_genocide();
@@ -1458,9 +1772,9 @@ struct obj *sobj; /* scroll, or fake spellbook object for scroll-like spell */
             }
         } else {
             /* could be scroll of create monster, don't set known ...*/
-            (void) create_critters(1, !scursed ? &mons[PM_YELLOW_LIGHT]
-                                               : &mons[PM_BLACK_LIGHT],
-                                   TRUE);
+            (void) create_critters(
+                1, !scursed ? &mons[PM_YELLOW_LIGHT] : &mons[PM_BLACK_LIGHT],
+                TRUE);
         }
         break;
     case SCR_TELEPORTATION:
@@ -1486,11 +1800,13 @@ struct obj *sobj; /* scroll, or fake spellbook object for scroll-like spell */
         useup(sobj);
         sobj = 0; /* it's gone */
         if (confused)
-            You("identify this as an identify scroll.");
+            /*KR You("identify this as an identify scroll."); */
+            You("이것이 식별의 두루마리라는 것을 식별해 냈다.");
         else if (!already_known || !invent)
             /* force feedback now if invent became
                empty after using up this scroll */
-            pline("This is an identify scroll.");
+            /*KR pline("This is an identify scroll."); */
+            pline("이것은 식별의 두루마리다.");
         if (!already_known)
             (void) learnscrolltyp(SCR_IDENTIFY);
         /*FALLTHRU*/
@@ -1508,16 +1824,19 @@ struct obj *sobj; /* scroll, or fake spellbook object for scroll-like spell */
             /* when casting a spell we know we're not confused,
                so inventory must be empty (another message has
                already been given above if reading a scroll) */
-            pline("You're not carrying anything to be identified.");
+            /*KR pline("You're not carrying anything to be identified."); */
+            pline("식별할 물건을 하나도 가지고 있지 않다.");
         }
         break;
     case SCR_CHARGING:
         if (confused) {
             if (scursed) {
-                You_feel("discharged.");
+                /*KR You_feel("discharged."); */
+                You_feel("방전된 기분이다.");
                 u.uen = 0;
             } else {
-                You_feel("charged up!");
+                /*KR You_feel("charged up!"); */
+                You_feel("충전된 기분이다!");
                 u.uen += d(sblessed ? 6 : 4, 4);
                 if (u.uen > u.uenmax) /* if current energy is already at   */
                     u.uenmax = u.uen; /* or near maximum, increase maximum */
@@ -1529,7 +1848,8 @@ struct obj *sobj; /* scroll, or fake spellbook object for scroll-like spell */
         }
         /* known = TRUE; -- handled inline here */
         if (!already_known) {
-            pline("This is a charging scroll.");
+            /*KR pline("This is a charging scroll."); */
+            pline("이것은 충전의 두루마리다.");
             learnscroll(sobj);
         }
         /* use it up now to prevent it from showing in the
@@ -1543,11 +1863,15 @@ struct obj *sobj; /* scroll, or fake spellbook object for scroll-like spell */
         break;
     case SCR_MAGIC_MAPPING:
         if (level.flags.nommap) {
-            Your("mind is filled with crazy lines!");
+            /*KR Your("mind is filled with crazy lines!"); */
+            Your("머릿속이 미친 듯한 선들로 가득 찼다!");
             if (Hallucination)
-                pline("Wow!  Modern art.");
+                /*KR pline("Wow!  Modern art."); */
+                pline("와! 현대 미술이네.");
             else
-                Your("%s spins in bewilderment.", body_part(HEAD));
+                /*KR Your("%s spins in bewilderment.", body_part(HEAD)); */
+                Your("%s 당혹감에 빙빙 돈다.",
+                     append_josa(body_part(HEAD), "이"));
             make_confused(HConfusion + rnd(30), FALSE);
             break;
         }
@@ -1564,25 +1888,31 @@ struct obj *sobj; /* scroll, or fake spellbook object for scroll-like spell */
         /*FALLTHRU*/
     case SPE_MAGIC_MAPPING:
         if (level.flags.nommap) {
-            Your("%s spins as %s blocks the spell!", body_part(HEAD),
-                 something);
+            /*KR Your("%s spins as %s blocks the spell!", body_part(HEAD),
+             * something); */
+            Your("%s 마법을 막아내어 %s 빙빙 돈다!",
+                 append_josa(something, "이"),
+                 append_josa(body_part(HEAD), "이"));
             make_confused(HConfusion + rnd(30), FALSE);
             break;
         }
-        pline("A map coalesces in your mind!");
+        /*KR pline("A map coalesces in your mind!"); */
+        pline("머릿속에서 지도가 그려진다!");
         cval = (scursed && !confused);
         if (cval)
             HConfusion = 1; /* to screw up map */
         do_mapping();
         if (cval) {
             HConfusion = 0; /* restore */
-            pline("Unfortunately, you can't grasp the details.");
+            /*KR pline("Unfortunately, you can't grasp the details."); */
+            pline("불행히도, 세부적인 것까지는 파악할 수 없다.");
         }
         break;
     case SCR_AMNESIA:
         known = TRUE;
         forget((!sblessed ? ALL_SPELLS : 0)
                | (!confused || scursed ? ALL_MAP : 0));
+#if 0                      /*KR: 원본*/
         if (Hallucination) /* Ommmmmm! */
             Your("mind releases itself from mundane concerns.");
         else if (!strncmpi(plname, "Maud", 4))
@@ -1592,6 +1922,17 @@ struct obj *sobj; /* scroll, or fake spellbook object for scroll-like spell */
             pline("Who was that Maud person anyway?");
         else
             pline("Thinking of Maud you forget everything else.");
+#else                      /*KR: KRNethack 맞춤 번역 */
+        if (Hallucination) /* Ommmmmm! */
+            Your("마음이 세속적인 번뇌에서 해방되었다.");
+        else if (!strncmp(plname, "Maud", 4))
+            pline("마음이 내면으로 향하면서, 당신은 다른 모든 것을 "
+                  "잊어버렸다.");
+        else if (rn2(2))
+            pline("도대체 그 모드 라는 사람은 누구였지?");
+        else
+            pline("모드를 생각하느라 당신은 다른 모든 것을 잊어버렸다.");
+#endif
         exercise(A_WIS, FALSE);
         break;
     case SCR_FIRE: {
@@ -1610,29 +1951,41 @@ struct obj *sobj; /* scroll, or fake spellbook object for scroll-like spell */
             if (Fire_resistance) {
                 shieldeff(u.ux, u.uy);
                 if (!Blind)
-                    pline("Oh, look, what a pretty fire in your %s.",
+                    /*KR pline("Oh, look, what a pretty fire in your %s.",
+                     * makeplural(body_part(HAND))); */
+                    pline("오, 이런, %s에 참 예쁜 불이 붙었네.",
                           makeplural(body_part(HAND)));
                 else
-                    You_feel("a pleasant warmth in your %s.",
+                    /*KR You_feel("a pleasant warmth in your %s.",
+                     * makeplural(body_part(HAND))); */
+                    You_feel("당신의 %s에서 기분 좋은 따뜻함이 느껴진다.",
                              makeplural(body_part(HAND)));
             } else {
-                pline_The("scroll catches fire and you burn your %s.",
-                          makeplural(body_part(HAND)));
-                losehp(1, "scroll of fire", KILLED_BY_AN);
+                /*KR pline_The("scroll catches fire and you burn your %s.",
+                 * makeplural(body_part(HAND))); */
+                pline("두루마리에 불이 붙어 %s 데었다.",
+                      makeplural(body_part(HAND)));
+                losehp(1, "불의 두루마리", KILLED_BY_AN);
             }
             break;
         }
         if (Underwater) {
-            pline_The("%s around you vaporizes violently!", hliquid("water"));
+            /*KR pline_The("%s around you vaporizes violently!",
+             * hliquid("water")); */
+            pline("당신 주변의 %s 격렬하게 증발했다!",
+                  append_josa(hliquid("water"), "이"));
         } else {
             if (sblessed) {
                 if (!already_known)
-                    pline("This is a scroll of fire!");
+                    /*KR pline("This is a scroll of fire!"); */
+                    pline("이것은 불의 두루마리다!");
                 dam *= 5;
-                pline("Where do you want to center the explosion?");
+                /*KR pline("Where do you want to center the explosion?"); */
+                pline("어디를 중심으로 폭발시키겠습니까?");
                 getpos_sethilite(display_stinking_cloud_positions,
                                  get_valid_stinking_cloud_pos);
-                (void) getpos(&cc, TRUE, "the desired position");
+                /*KR (void) getpos(&cc, TRUE, "the desired position"); */
+                (void) getpos(&cc, TRUE, "원하는 위치");
                 if (!is_valid_stinking_cloud_pos(cc.x, cc.y, FALSE)) {
                     /* try to reach too far, get burned */
                     cc.x = u.ux;
@@ -1640,7 +1993,8 @@ struct obj *sobj; /* scroll, or fake spellbook object for scroll-like spell */
                 }
             }
             if (cc.x == u.ux && cc.y == u.uy) {
-                pline_The("scroll erupts in a tower of flame!");
+                /*KR pline_The("scroll erupts in a tower of flame!"); */
+                pline("두루마리가 화염의 탑으로 분출했다!");
                 iflags.last_msg = PLNMSG_TOWER_OF_FLAME; /* for explode() */
                 burn_away_slime();
             }
@@ -1657,10 +2011,17 @@ struct obj *sobj; /* scroll, or fake spellbook object for scroll-like spell */
 
             /* Identify the scroll */
             if (u.uswallow)
-                You_hear("rumbling.");
+                /*KR You_hear("rumbling."); */
+                You_hear("우르릉거리는 소리가 들린다.");
             else
+#if 0 /*KR: 원본*/
                 pline_The("%s rumbles %s you!", ceiling(u.ux, u.uy),
                           sblessed ? "around" : "above");
+#else /*KR: KRNethack 맞춤 번역 */
+                pline("%s 당신 %s 우르릉거린다!",
+                      append_josa(ceiling(u.ux, u.uy), "이"),
+                      sblessed ? "주변에서" : "위에서");
+#endif
             known = 1;
             sokoban_guilt();
 
@@ -1682,13 +2043,15 @@ struct obj *sobj; /* scroll, or fake spellbook object for scroll-like spell */
             if (!sblessed) {
                 drop_boulder_on_player(confused, !scursed, TRUE, FALSE);
             } else if (!nboulders)
-                pline("But nothing else happens.");
+                /*KR pline("But nothing else happens."); */
+                pline("하지만 그 외엔 아무 일도 일어나지 않았다.");
         }
         break;
     case SCR_PUNISHMENT:
         known = TRUE;
         if (confused || sblessed) {
-            You_feel("guilty.");
+            /*KR You_feel("guilty."); */
+            You_feel("죄책감이 든다.");
             break;
         }
         punish(sobj);
@@ -1697,15 +2060,18 @@ struct obj *sobj; /* scroll, or fake spellbook object for scroll-like spell */
         coord cc;
 
         if (!already_known)
-            You("have found a scroll of stinking cloud!");
+            /*KR You("have found a scroll of stinking cloud!"); */
+            You("악취나는 구름의 두루마리를 찾아냈다!");
         known = TRUE;
-        pline("Where do you want to center the %scloud?",
-              already_known ? "stinking " : "");
+        /*KR pline("Where do you want to center the %scloud?",
+         * already_known ? "stinking " : ""); */
+        pline("어디를 중심으로 %s구름을 피우겠습니까?",
+              already_known ? "악취나는 " : "");
         cc.x = u.ux;
         cc.y = u.uy;
         getpos_sethilite(display_stinking_cloud_positions,
                          get_valid_stinking_cloud_pos);
-        if (getpos(&cc, TRUE, "the desired position") < 0) {
+        if (getpos(&cc, TRUE, "원하는 위치") < 0) {
             pline1(Never_mind);
             break;
         }
@@ -1726,9 +2092,9 @@ struct obj *sobj; /* scroll, or fake spellbook object for scroll-like spell */
     return sobj ? 0 : 1;
 }
 
-void
-drop_boulder_on_player(confused, helmet_protects, byu, skip_uswallow)
-boolean confused, helmet_protects, byu, skip_uswallow;
+void drop_boulder_on_player(confused, helmet_protects, byu,
+                            skip_uswallow) boolean confused,
+    helmet_protects, byu, skip_uswallow;
 {
     int dmg;
     struct obj *otmp2;
@@ -1746,6 +2112,7 @@ boolean confused, helmet_protects, byu, skip_uswallow;
     otmp2->owt = weight(otmp2);
     if (!amorphous(youmonst.data) && !Passes_walls
         && !noncorporeal(youmonst.data) && !unsolid(youmonst.data)) {
+#if 0 /*KR: 원본*/
         You("are hit by %s!", doname(otmp2));
         dmg = dmgval(otmp2, &youmonst) * otmp2->quan;
         if (uarmh && helmet_protects) {
@@ -1757,6 +2124,20 @@ boolean confused, helmet_protects, byu, skip_uswallow;
                 pline("%s does not protect you.", Yname2(uarmh));
             }
         }
+#else /*KR: KRNethack 맞춤 번역 */
+        You("%s 맞았다!", append_josa(doname(otmp2), "에"));
+        dmg = dmgval(otmp2, &youmonst) * otmp2->quan;
+        if (uarmh && helmet_protects) {
+            if (is_metallic(uarmh)) {
+                pline("다행히도, 당신은 단단한 투구를 쓰고 있다.");
+                if (dmg > 2)
+                    dmg = 2;
+            } else if (flags.verbose) {
+                pline("%s 당신을 보호해주지 못했다.",
+                      append_josa(Yname2(uarmh), "은"));
+            }
+        }
+#endif
     } else
         dmg = 0;
     wake_nearto(u.ux, u.uy, 4 * 4);
@@ -1767,7 +2148,7 @@ boolean confused, helmet_protects, byu, skip_uswallow;
         newsym(u.ux, u.uy);
     }
     if (dmg)
-        losehp(Maybe_Half_Phys(dmg), "scroll of earth", KILLED_BY_AN);
+        losehp(Maybe_Half_Phys(dmg), "대지의 두루마리", KILLED_BY_AN);
 }
 
 boolean
@@ -1792,6 +2173,7 @@ boolean confused, byu;
         struct obj *helmet = which_armor(mtmp, W_ARMH);
         int mdmg;
 
+#if 0 /*KR: 원본*/
         if (cansee(mtmp->mx, mtmp->my)) {
             pline("%s is hit by %s!", Monnam(mtmp), doname(otmp2));
             if (mtmp->minvis && !canspotmon(mtmp))
@@ -1817,12 +2199,43 @@ boolean confused, byu;
                           xname(helmet), mhim(mtmp));
             }
         }
+#else /*KR: KRNethack 맞춤 번역 */
+        if (cansee(mtmp->mx, mtmp->my)) {
+            pline("%s %s 맞았다!", append_josa(Monnam(mtmp), "은"),
+                  append_josa(doname(otmp2), "에"));
+            if (mtmp->minvis && !canspotmon(mtmp))
+                map_invisible(mtmp->mx, mtmp->my);
+        } else if (u.uswallow && mtmp == u.ustuck)
+            You_hear("당신의 %s 위에서 무언가가 %s %s 때리는 소리를 들었다!",
+                     body_part(HEAD), s_suffix(mon_nam(mtmp)),
+                     mbodypart(mtmp, STOMACH));
+
+        mdmg = dmgval(otmp2, mtmp) * otmp2->quan;
+        if (helmet) {
+            if (is_metallic(helmet)) {
+                if (canspotmon(mtmp))
+                    pline("다행히도, %s 단단한 투구를 쓰고 있다.",
+                          append_josa(mon_nam(mtmp), "은"));
+                else if (!Deaf)
+                    You_hear("쨍그랑거리는 소리가 났다.");
+                if (mdmg > 2)
+                    mdmg = 2;
+            } else {
+                if (canspotmon(mtmp))
+                    pline("%s %s %s 보호해주지 못했다.",
+                          s_suffix(Monnam(mtmp)),
+                          append_josa(xname(helmet), "은"),
+                          append_josa(mhim(mtmp), "를"));
+            }
+        }
+#endif
         mtmp->mhp -= mdmg;
         if (DEADMONSTER(mtmp)) {
             if (byu) {
                 killed(mtmp);
             } else {
-                pline("%s is killed.", Monnam(mtmp));
+                /*KR pline("%s is killed.", Monnam(mtmp)); */
+                pline("%s 죽었다.", append_josa(Monnam(mtmp), "은"));
                 mondied(mtmp);
             }
         } else {
@@ -1845,12 +2258,14 @@ boolean confused, byu;
 }
 
 /* overcharging any wand or zapping/engraving cursed wand */
-void
-wand_explode(obj, chg)
-struct obj *obj;
+void wand_explode(obj, chg) struct obj *obj;
 int chg; /* recharging */
 {
+#if 0 /*KR: 원본*/
     const char *expl = !chg ? "suddenly" : "vibrates violently and";
+#else /*KR: KRNethack 맞춤 번역 */
+    const char *expl = !chg ? "갑자기" : "격렬하게 진동하더니";
+#endif
     int dmg, n, k;
 
     /* number of damage dice */
@@ -1886,8 +2301,13 @@ int chg; /* recharging */
     /* inflict damage and destroy the wand */
     dmg = d(n, k);
     obj->in_use = TRUE; /* in case losehp() is fatal (or --More--^C) */
+#if 0                   /*KR: 원본*/
     pline("%s %s explodes!", Yname2(obj), expl);
     losehp(Maybe_Half_Phys(dmg), "exploding wand", KILLED_BY_AN);
+#else                   /*KR: KRNethack 맞춤 번역 */
+    pline("%s %s 폭발했다!", append_josa(Yname2(obj), "이"), expl);
+    losehp(Maybe_Half_Phys(dmg), "폭발하는 마법 막대", KILLED_BY_AN);
+#endif
     useup(obj);
     /* obscure side-effect */
     exercise(A_STR, FALSE);
@@ -1904,9 +2324,7 @@ STATIC_VAR struct litmon *gremlins = 0;
 /*
  * Low-level lit-field update routine.
  */
-STATIC_PTR void
-set_lit(x, y, val)
-int x, y;
+STATIC_PTR void set_lit(x, y, val) int x, y;
 genericptr_t val;
 {
     struct monst *mtmp;
@@ -1926,9 +2344,7 @@ genericptr_t val;
     }
 }
 
-void
-litroom(on, obj)
-register boolean on;
+void litroom(on, obj) register boolean on;
 struct obj *obj;
 {
     char is_lit; /* value is irrelevant; we use its address
@@ -1940,13 +2356,20 @@ struct obj *obj;
 
         if (!Blind) {
             if (u.uswallow) {
-                pline("It seems even darker in here than before.");
+                /*KR pline("It seems even darker in here than before."); */
+                pline("여기 안이 전보다 더 어두워진 것 같다.");
             } else {
                 if (uwep && artifact_light(uwep) && uwep->lamplit)
+#if 0 /*KR: 원본*/
                     pline("Suddenly, the only light left comes from %s!",
                           the(xname(uwep)));
+#else /*KR: KRNethack 맞춤 번역 */
+                    pline("갑자기, 유일하게 남은 빛은 %s 나온다!",
+                          append_josa(the(xname(uwep)), "에서"));
+#endif
                 else
-                    You("are surrounded by darkness!");
+                    /*KR You("are surrounded by darkness!"); */
+                    You("어둠에 휩싸였다!");
             }
         }
 
@@ -1959,23 +2382,34 @@ struct obj *obj;
             if (Blind)
                 ; /* no feedback */
             else if (is_animal(u.ustuck->data))
-                pline("%s %s is lit.", s_suffix(Monnam(u.ustuck)),
+                /*KR pline("%s %s is lit.", s_suffix(Monnam(u.ustuck)),
+                 * mbodypart(u.ustuck, STOMACH)); */
+                pline("%s %s 안이 밝아졌다.", s_suffix(Monnam(u.ustuck)),
                       mbodypart(u.ustuck, STOMACH));
             else if (is_whirly(u.ustuck->data))
+#if 0 /*KR: 원본*/
                 pline("%s shines briefly.", Monnam(u.ustuck));
+#else /*KR: KRNethack 맞춤 번역 */
+                pline("%s 잠시 빛났다.", append_josa(Monnam(u.ustuck), "이"));
+#endif
             else
+#if 0 /*KR: 원본*/
                 pline("%s glistens.", Monnam(u.ustuck));
+#else /*KR: KRNethack 맞춤 번역 */
+                pline("%s 반짝였다.", append_josa(Monnam(u.ustuck), "이"));
+#endif
         } else if (!Blind)
-            pline("A lit field surrounds you!");
+            /*KR pline("A lit field surrounds you!"); */
+            pline("빛의 장막이 당신을 둘러쌌다!");
     }
 
     /* No-op when swallowed or in water */
     if (u.uswallow || Underwater || Is_waterlevel(&u.uz))
         return;
     /*
-     *  If we are darkening the room and the hero is punished but not
-     *  blind, then we have to pick up and replace the ball and chain so
-     *  that we don't remember them if they are out of sight.
+     * If we are darkening the room and the hero is punished but not
+     * blind, then we have to pick up and replace the ball and chain so
+     * that we don't remember them if they are out of sight.
      */
     if (Punished && !on && !Blind)
         move_bc(1, 0, uball->ox, uball->oy, uchain->ox, uchain->oy);
@@ -1995,16 +2429,16 @@ struct obj *obj;
         }
         /* hallways remain dark on the rogue level */
     } else
-        do_clear_area(u.ux, u.uy,
-                      (obj && obj->oclass == SCROLL_CLASS && obj->blessed)
-                         ? 9 : 5,
-                      set_lit, (genericptr_t) (on ? &is_lit : (char *) 0));
+        do_clear_area(
+            u.ux, u.uy,
+            (obj && obj->oclass == SCROLL_CLASS && obj->blessed) ? 9 : 5,
+            set_lit, (genericptr_t) (on ? &is_lit : (char *) 0));
 
     /*
-     *  If we are not blind, then force a redraw on all positions in sight
-     *  by temporarily blinding the hero.  The vision recalculation will
-     *  correctly update all previously seen positions *and* correctly
-     *  set the waslit bit [could be messed up from above].
+     * If we are not blind, then force a redraw on all positions in sight
+     * by temporarily blinding the hero.  The vision recalculation will
+     * correctly update all previously seen positions *and* correctly
+     * set the waslit bit [could be messed up from above].
      */
     if (!Blind) {
         vision_recalc(2);
@@ -2044,7 +2478,9 @@ do_class_genocide()
             return;
         }
         do {
-            getlin("What class of monsters do you wish to genocide?", buf);
+            /*KR getlin("What class of monsters do you wish to genocide?",
+             * buf); */
+            getlin("어떤 종류의 몬스터를 멸종시키겠습니까?", buf);
             (void) mungspaces(buf);
         } while (!*buf);
         /* choosing "none" preserves genocideless conduct */
@@ -2068,6 +2504,7 @@ do_class_genocide()
         }
         if (!goodcnt && class != mons[urole.malenum].mlet
             && class != mons[urace.malenum].mlet) {
+#if 0 /*KR: 원본*/
             if (gonecnt)
                 pline("All such monsters are already nonexistent.");
             else if (immunecnt || class == S_invisible)
@@ -2088,6 +2525,28 @@ do_class_genocide()
             } else
                 pline("That %s does not represent any monster.",
                       strlen(buf) == 1 ? "symbol" : "response");
+#else /*KR: KRNethack 맞춤 번역 */
+            if (gonecnt)
+                pline("그러한 몬스터들은 이미 존재하지 않는다.");
+            else if (immunecnt || class == S_invisible)
+                You("그러한 몬스터들을 멸종시키는 것은 허용되지 않는다.");
+            else if (wizard && buf[0] == '*') {
+                register struct monst *mtmp, *mtmp2;
+
+                gonecnt = 0;
+                for (mtmp = fmon; mtmp; mtmp = mtmp2) {
+                    mtmp2 = mtmp->nmon;
+                    if (DEADMONSTER(mtmp))
+                        continue;
+                    mongone(mtmp);
+                    gonecnt++;
+                }
+                pline("몬스터 %d마리를 제거했다.", gonecnt);
+                return;
+            } else
+                pline("그 %s 어떤 몬스터도 나타내지 않는다.",
+                      strlen(buf) == 1 ? "기호는" : "응답은");
+#endif
             continue;
         }
 
@@ -2109,12 +2568,17 @@ do_class_genocide()
                     reset_rndmonst(i);
                     kill_genocided_monsters();
                     update_inventory(); /* eggs & tins */
+#if 0                                   /*KR: 원본*/
                     pline("Wiped out all %s.", nam);
+#else                                   /*KR: KRNethack 맞춤 번역 */
+                    pline("모든 %s 싹 쓸어버렸다.", append_josa(nam, "을"));
+#endif
                     if (Upolyd && i == u.umonnum) {
                         u.mh = -1;
                         if (Unchanging) {
                             if (!feel_dead++)
-                                You("die.");
+                                /*KR You("die."); */
+                                You("죽었다.");
                             /* finish genociding this class of
                                monsters before ultimately dying */
                             gameover = TRUE;
@@ -2128,16 +2592,23 @@ do_class_genocide()
                         u.uhp = -1;
                         if (Upolyd) {
                             if (!feel_dead++)
-                                You_feel("%s inside.", udeadinside());
+                                /*KR You_feel("%s inside.", udeadinside()); */
+                                You_feel("내면이 %s.", udeadinside());
                         } else {
                             if (!feel_dead++)
-                                You("die.");
+                                /*KR You("die."); */
+                                You("죽었다.");
                             gameover = TRUE;
                         }
                     }
                 } else if (mvitals[i].mvflags & G_GENOD) {
                     if (!gameover)
+#if 0 /*KR: 원본*/
                         pline("All %s are already nonexistent.", nam);
+#else /*KR: KRNethack 맞춤 번역 */
+                        pline("모든 %s 이미 존재하지 않는다.",
+                              append_josa(nam, "은"));
+#endif
                 } else if (!gameover) {
                     /* suppress feedback about quest beings except
                        for those applicable to our own role */
@@ -2148,7 +2619,7 @@ do_class_genocide()
                         && (mons[i].msound != MS_GUARDIAN
                             || quest_info(MS_GUARDIAN) == i)
                         /* non-leader/nemesis/guardian role-specific monster
-                           */
+                         */
                         && (i != PM_NINJA /* nuisance */
                             || Role_if(PM_SAMURAI))) {
                         boolean named, uniq;
@@ -2159,16 +2630,23 @@ do_class_genocide()
                         if (i == PM_HIGH_PRIEST)
                             uniq = FALSE;
 
+#if 0 /*KR: 원본*/
                         You("aren't permitted to genocide %s%s.",
                             (uniq && !named) ? "the " : "",
                             (uniq || named) ? mons[i].mname : nam);
+#else /*KR: KRNethack 맞춤 번역 */
+                        You("%s 멸종시키는 것은 허용되지 않는다.",
+                            append_josa((uniq || named) ? mons[i].mname : nam,
+                                        "을"));
+#endif
                     }
                 }
             }
         }
         if (gameover || u.uhp == -1) {
             killer.format = KILLED_BY_AN;
-            Strcpy(killer.name, "scroll of genocide");
+            /*KR Strcpy(killer.name, "scroll of genocide"); */
+            Strcpy(killer.name, "학살의 두루마리");
             if (gameover)
                 done(GENOCIDED);
         }
@@ -2179,9 +2657,7 @@ do_class_genocide()
 #define REALLY 1
 #define PLAYER 2
 #define ONTHRONE 4
-void
-do_genocide(how)
-int how;
+void do_genocide(how) int how;
 /* 0 = no genocide; create monsters (cursed scroll) */
 /* 1 = normal genocide */
 /* 3 = forced genocide of player */
@@ -2208,7 +2684,9 @@ int how;
                 pline1(thats_enough_tries);
                 return;
             }
-            getlin("What monster do you want to genocide? [type the name]",
+            /*KR getlin("What monster do you want to genocide? [type the
+             * name]", buf); */
+            getlin("어떤 몬스터를 멸종시키겠습니까? [이름을 입력하세요]",
                    buf);
             (void) mungspaces(buf);
             /* choosing "none" preserves genocideless conduct */
@@ -2223,8 +2701,14 @@ int how;
 
             mndx = name_to_mon(buf);
             if (mndx == NON_PM || (mvitals[mndx].mvflags & G_GENOD)) {
+#if 0 /*KR: 원본*/
                 pline("Such creatures %s exist in this world.",
                       (mndx == NON_PM) ? "do not" : "no longer");
+#else /*KR: KRNethack 맞춤 번역 */
+                pline("그런 생물은 이 세상에 %s.",
+                      (mndx == NON_PM) ? "존재하지 않는다"
+                                       : "더 이상 존재하지 않는다");
+#endif
                 continue;
             }
             ptr = &mons[mndx];
@@ -2246,9 +2730,16 @@ int how;
                      * circumstances.  Who's speaking?  Divine pronouncements
                      * aren't supposed to be hampered by deafness....
                      */
+#if 0 /*KR: 원본*/
                     if (flags.verbose)
                         pline("A thunderous voice booms through the caverns:");
                     verbalize("No, mortal!  That will not be done.");
+#else /*KR: KRNethack 맞춤 번역 */
+                    if (flags.verbose)
+                        pline("우레와 같은 목소리가 동굴을 울린다:");
+                    verbalize(
+                        "안 된다, 필멸자여! 그 일은 이루어지지 않을 것이다.");
+#endif
                 }
                 continue;
             }
@@ -2260,6 +2751,7 @@ int how;
         mndx = monsndx(ptr); /* needed for the 'no free pass' cases */
     }
 
+#if 0 /*KR: 원본*/
     which = "all ";
     if (Hallucination) {
         if (Upolyd)
@@ -2279,6 +2771,27 @@ int how;
         mvitals[mndx].mvflags |= (G_GENOD | G_NOCORPSE);
         pline("Wiped out %s%s.", which,
               (*which != 'a') ? buf : makeplural(buf));
+#else /*KR: KRNethack 맞춤 번역 */
+    which = "모든 ";
+    if (Hallucination) {
+        if (Upolyd)
+            Strcpy(buf, youmonst.data->mname);
+        else {
+            Strcpy(buf, (flags.female && urole.name.f) ? urole.name.f
+                                                       : urole.name.m);
+            buf[0] = lowc(buf[0]);
+        }
+    } else {
+        Strcpy(buf, ptr->mname); /* make sure we have standard singular */
+        if ((ptr->geno & G_UNIQ) && ptr != &mons[PM_HIGH_PRIEST])
+            which = !type_is_pname(ptr) ? "그 " : "";
+    }
+    if (how & REALLY) {
+        /* setting no-corpse affects wishing and random tin generation */
+        mvitals[mndx].mvflags |= (G_GENOD | G_NOCORPSE);
+        /* 한국어에서는 복수형 변환이 필요 없으며, which를 번역하여 붙임 */
+        pline("%s%s 싹 쓸어버렸다.", which, append_josa(buf, "을"));
+#endif
 
         if (killplayer) {
             /* might need to wipe out dual role */
@@ -2294,14 +2807,17 @@ int how;
             u.uhp = -1;
             if (how & PLAYER) {
                 killer.format = KILLED_BY;
-                Strcpy(killer.name, "genocidal confusion");
+                /*KR Strcpy(killer.name, "genocidal confusion"); */
+                Strcpy(killer.name, "학살적 혼란");
             } else if (how & ONTHRONE) {
                 /* player selected while on a throne */
                 killer.format = KILLED_BY_AN;
-                Strcpy(killer.name, "imperious order");
+                /*KR Strcpy(killer.name, "imperious order"); */
+                Strcpy(killer.name, "거만한 명령");
             } else { /* selected player deliberately, not confused */
                 killer.format = KILLED_BY_AN;
-                Strcpy(killer.name, "scroll of genocide");
+                /*KR Strcpy(killer.name, "scroll of genocide"); */
+                Strcpy(killer.name, "학살의 두루마리");
             }
 
             /* Polymorphed characters will die as soon as they're rehumanized.
@@ -2309,7 +2825,8 @@ int how;
             /* KMH -- Unchanging prevents rehumanization */
             if (Upolyd && ptr != youmonst.data) {
                 delayed_killer(POLYMORPH, killer.format, killer.name);
-                You_feel("%s inside.", udeadinside());
+                /*KR You_feel("%s inside.", udeadinside()); */
+                You_feel("내면이 %s.", udeadinside());
             } else
                 done(GENOCIDED);
         } else if (ptr == youmonst.data) {
@@ -2330,6 +2847,7 @@ int how;
                 if (mvitals[mndx].mvflags & G_EXTINCT)
                     break; /* just made last one */
             }
+#if 0 /*KR: 원본*/
         if (cnt) {
             /* accumulated 'cnt' doesn't take groups into account;
                assume bringing in new mon(s) didn't remove any old ones */
@@ -2337,18 +2855,25 @@ int how;
             pline("Sent in %s%s.", (cnt > 1) ? "some " : "",
                   (cnt > 1) ? makeplural(buf) : an(buf));
         } else
+#else /*KR: KRNethack 맞춤 번역 */
+        if (cnt) {
+            /* accumulated 'cnt' doesn't take groups into account;
+               assume bringing in new mon(s) didn't remove any old ones */
+            cnt = monster_census(FALSE) - census;
+            pline("%s %d마리를 들여보냈다.", buf, cnt);
+        } else
+#endif
             pline1(nothing_happens);
     }
 }
 
-void
-punish(sobj)
-struct obj *sobj;
+void punish(sobj) struct obj *sobj;
 {
-    struct obj *reuse_ball = (sobj && sobj->otyp == HEAVY_IRON_BALL)
-                                ? sobj : (struct obj *) 0;
+    struct obj *reuse_ball =
+        (sobj && sobj->otyp == HEAVY_IRON_BALL) ? sobj : (struct obj *) 0;
 
     /* KMH -- Punishment is still okay when you are riding */
+#if 0 /*KR: 원본*/
     if (!reuse_ball)
         You("are being punished for your misbehavior!");
     if (Punished) {
@@ -2366,6 +2891,25 @@ struct obj *sobj;
         }
         return;
     }
+#else /*KR: KRNethack 맞춤 번역 */
+    if (!reuse_ball)
+        You("비행을 저질러 벌을 받게 되었다!");
+    if (Punished) {
+        Your("철구가 더 무거워졌다.");
+        uball->owt += IRON_BALL_W_INCR * (1 + sobj->cursed);
+        return;
+    }
+    if (amorphous(youmonst.data) || is_whirly(youmonst.data)
+        || unsolid(youmonst.data)) {
+        if (!reuse_ball) {
+            pline("쇠사슬과 철구가 나타났다가, 이내 떨어져 나갔다.");
+            dropy(mkobj(BALL_CLASS, TRUE));
+        } else {
+            dropy(reuse_ball);
+        }
+        return;
+    }
+#endif
     setworn(mkobj(CHAIN_CLASS, TRUE), W_CHAIN);
     if (!reuse_ball)
         setworn(mkobj(BALL_CLASS, TRUE), W_BALL);
@@ -2374,8 +2918,8 @@ struct obj *sobj;
     uball->spe = 1; /* special ball (see save) */
 
     /*
-     *  Place ball & chain if not swallowed.  If swallowed, the ball & chain
-     *  variables will be set at the next call to placebc().
+     * Place ball & chain if not swallowed.  If swallowed, the ball & chain
+     * variables will be set at the next call to placebc().
      */
     if (!u.uswallow) {
         placebc();
@@ -2449,7 +2993,7 @@ struct _create_particular_data *d;
 
     d->monclass = MAXMCLASSES;
     d->which = urole.malenum; /* an arbitrary index into mons[] */
-    d->fem = -1; /* gender not specified */
+    d->fem = -1;              /* gender not specified */
     d->randmonst = FALSE;
     d->maketame = d->makepeaceful = d->makehostile = FALSE;
     d->sleeping = d->saddled = d->invisible = d->hidden = FALSE;
@@ -2481,18 +3025,37 @@ struct _create_particular_data *d;
     }
     bufp = mungspaces(bufp); /* after potential memset(' ') */
     /* allow the initial disposition to be specified */
+#if 0 /*KR: 원본*/
     if (!strncmpi(bufp, "tame ", 5)) {
         bufp += 5;
+#else /*KR: KRNethack 맞춤 번역 */
+    if (!strncmp(bufp, "길들여진 ", strlen("길들여진 "))) {
+        bufp += strlen("길들여진 ");
+#endif
         d->maketame = TRUE;
+#if 0 /*KR: 원본*/
     } else if (!strncmpi(bufp, "peaceful ", 9)) {
         bufp += 9;
+#else /*KR: KRNethack 맞춤 번역 */
+    } else if (!strncmp(bufp, "우호적인 ", strlen("우호적인 "))) {
+        bufp += strlen("우호적인 ");
+#endif
         d->makepeaceful = TRUE;
+#if 0 /*KR: 원본*/
     } else if (!strncmpi(bufp, "hostile ", 8)) {
         bufp += 8;
+#else /*KR: KRNethack 맞춤 번역 */
+    } else if (!strncmp(bufp, "적대적인 ", strlen("적대적인 "))) {
+        bufp += strlen("적대적인 ");
+#endif
         d->makehostile = TRUE;
     }
     /* decide whether a valid monster was chosen */
+#if 0 /*KR: 원본*/
     if (wizard && (!strcmp(bufp, "*") || !strcmp(bufp, "random"))) {
+#else /*KR: KRNethack 맞춤 번역 */
+    if (wizard && (!strcmp(bufp, "*") || !strcmp(bufp, "랜덤"))) {
+#endif
         d->randmonst = TRUE;
         return TRUE;
     }
@@ -2535,8 +3098,14 @@ struct _create_particular_data *d;
             /* wizard mode can override handling of special monsters */
             char buf[BUFSZ];
 
+#if 0 /*KR: 원본*/
             Sprintf(buf, "Creating %s instead; force %s?",
                     mons[d->which].mname, mons[firstchoice].mname);
+#else /*KR: KRNethack 맞춤 번역 */
+            Sprintf(buf, "대신 %s 생성합니다; %s 강제하겠습니까?",
+                    mons[d->which].mname,
+                    append_josa(mons[firstchoice].mname, "을"));
+#endif
             if (yn(buf) == 'y')
                 d->which = firstchoice;
         }
@@ -2578,10 +3147,10 @@ struct _create_particular_data *d;
             else
                 unblock_point(mx, my);
         }
-       if (d->hidden
-           && ((is_hider(mtmp->data) && mtmp->data->mlet != S_MIMIC)
-               || (hides_under(mtmp->data) && OBJ_AT(mx, my))
-               || (mtmp->data->mlet == S_EEL && is_pool(mx, my))))
+        if (d->hidden
+            && ((is_hider(mtmp->data) && mtmp->data->mlet != S_MIMIC)
+                || (hides_under(mtmp->data) && OBJ_AT(mx, my))
+                || (mtmp->data->mlet == S_EEL && is_pool(mx, my))))
             mtmp->mundetected = 1;
         if (d->sleeping)
             mtmp->msleeping = 1;
@@ -2628,6 +3197,7 @@ create_particular()
     int  tryct = 5;
     struct _create_particular_data d;
 
+#if 0 /*KR: 원본*/
     do {
         getlin("Create what kind of monster? [type the name or symbol]", buf);
         bufp = mungspaces(buf);
@@ -2640,6 +3210,21 @@ create_particular()
         /* no good; try again... */
         pline("I've never heard of such monsters.");
     } while (--tryct > 0);
+#else /*KR: KRNethack 맞춤 번역 */
+    do {
+        getlin("어떤 몬스터를 생성하겠습니까? [이름이나 기호를 입력하세요]",
+               buf);
+        bufp = mungspaces(buf);
+        if (*bufp == '\033')
+            return FALSE;
+
+        if (create_particular_parse(bufp, &d))
+            break;
+
+        /* no good; try again... */
+        pline("그런 몬스터는 들어본 적이 없다.");
+    } while (--tryct > 0);
+#endif
 
     if (!tryct)
         pline1(thats_enough_tries);

@@ -41,10 +41,15 @@ STATIC_DCL boolean FDECL(blocked_boulder, (int, int));
  *      responsible for the theft of the Amulet from Marduk, the Creator.
  *      Moloch is unaligned.
  */
-static const char *Moloch = "Moloch";
+/*KR static const char *Moloch = "Moloch"; */
+static const char *Moloch = "몰록";
 
 static const char *godvoices[] = {
-    "booms out", "thunders", "rings out", "booms",
+    /*KR "booms out", "thunders", "rings out", "booms", */
+    "울려 퍼졌다",
+    "천둥처럼 쳤다",
+    "메아리쳤다",
+    "울렸다",
 };
 
 /* values calculated when prayer starts, and used when completed */
@@ -284,19 +289,19 @@ worst_cursed_item()
        with taking off a ring or putting on a shield */
     if (welded(uwep) && (uright || bimanual(uwep))) { /* weapon */
         otmp = uwep;
-    /* gloves come next, due to rings */
+        /* gloves come next, due to rings */
     } else if (uarmg && uarmg->cursed) { /* gloves */
         otmp = uarmg;
-    /* then shield due to two handed weapons and spells */
+        /* then shield due to two handed weapons and spells */
     } else if (uarms && uarms->cursed) { /* shield */
         otmp = uarms;
-    /* then cloak due to body armor */
+        /* then cloak due to body armor */
     } else if (uarmc && uarmc->cursed) { /* cloak */
         otmp = uarmc;
     } else if (uarm && uarm->cursed) { /* suit */
         otmp = uarm;
-    /* if worn helmet of opposite alignment is making you an adherent
-       of the current god, he/she/it won't uncurse that for you */
+        /* if worn helmet of opposite alignment is making you an adherent
+           of the current god, he/she/it won't uncurse that for you */
     } else if (uarmh && uarmh->cursed /* helmet */
                && uarmh->otyp != HELM_OF_OPPOSITE_ALIGNMENT) {
         otmp = uarmh;
@@ -311,14 +316,14 @@ worst_cursed_item()
     } else if (uright && uright->cursed) { /* right ring */
         otmp = uright;
     } else if (ublindf && ublindf->cursed) { /* eyewear */
-        otmp = ublindf; /* must be non-blinding lenses */
-    /* if weapon wasn't handled above, do it now */
+        otmp = ublindf;                      /* must be non-blinding lenses */
+        /* if weapon wasn't handled above, do it now */
     } else if (welded(uwep)) { /* weapon */
         otmp = uwep;
-    /* active secondary weapon even though it isn't welded */
+        /* active secondary weapon even though it isn't welded */
     } else if (uswapwep && uswapwep->cursed && u.twoweap) {
         otmp = uswapwep;
-    /* all worn items ought to be handled by now */
+        /* all worn items ought to be handled by now */
     } else {
         for (otmp = invent; otmp; otmp = otmp->nobj) {
             if (!otmp->cursed)
@@ -330,34 +335,42 @@ worst_cursed_item()
     return otmp;
 }
 
-STATIC_OVL void
-fix_worst_trouble(trouble)
-int trouble;
+STATIC_OVL void fix_worst_trouble(trouble) int trouble;
 {
     int i;
     struct obj *otmp = 0;
     const char *what = (const char *) 0;
+#if 0 /*KR: 원본*/
     static NEARDATA const char leftglow[] = "Your left ring softly glows",
                                rightglow[] = "Your right ring softly glows";
+#else /*KR: KRNethack 맞춤 번역 */
+    static NEARDATA const char leftglow[] = "왼쪽 반지",
+                               rightglow[] = "오른쪽 반지";
+#endif
 
     switch (trouble) {
     case TROUBLE_STONED:
-        make_stoned(0L, "You feel more limber.", 0, (char *) 0);
+        /*KR make_stoned(0L, "You feel more limber.", 0, (char *) 0); */
+        make_stoned(0L, "몸이 좀 더 유연해진 기분이 든다.", 0, (char *) 0);
         break;
     case TROUBLE_SLIMED:
-        make_slimed(0L, "The slime disappears.");
+        /*KR make_slimed(0L, "The slime disappears."); */
+        make_slimed(0L, "슬라임이 사라졌다.");
         break;
     case TROUBLE_STRANGLED:
         if (uamul && uamul->otyp == AMULET_OF_STRANGULATION) {
-            Your("amulet vanishes!");
+            /*KR Your("amulet vanishes!"); */
+            Your("부적이 사라졌다!");
             useup(uamul);
         }
-        You("can breathe again.");
+        /*KR You("can breathe again."); */
+        You("다시 숨을 쉴 수 있다.");
         Strangled = 0;
         context.botl = 1;
         break;
     case TROUBLE_LAVA:
-        You("are back on solid ground.");
+        /*KR You("are back on solid ground."); */
+        You("단단한 땅으로 되돌아왔다.");
         /* teleport should always succeed, but if not, just untrap them */
         if (!safe_teleds(FALSE))
             reset_utrap(TRUE);
@@ -366,12 +379,14 @@ int trouble;
         /* temporarily lost strength recovery now handled by init_uhunger() */
         /*FALLTHRU*/
     case TROUBLE_HUNGRY:
-        Your("%s feels content.", body_part(STOMACH));
+        /*KR Your("%s feels content.", body_part(STOMACH)); */
+        Your("%s 든든해졌다.", append_josa(body_part(STOMACH), "이"));
         init_uhunger();
         context.botl = 1;
         break;
     case TROUBLE_SICK:
-        You_feel("better.");
+        /*KR You_feel("better."); */
+        You_feel("나아졌다.");
         make_sick(0L, (char *) 0, FALSE, SICK_ALL);
         break;
     case TROUBLE_REGION:
@@ -382,7 +397,8 @@ int trouble;
         /* "fix all troubles" will keep trying if hero has
            5 or less hit points, so make sure they're always
            boosted to be more than that */
-        You_feel("much better.");
+        /*KR You_feel("much better."); */
+        You_feel("훨씬 나아졌다.");
         if (Upolyd) {
             u.mhmax += rnd(5);
             if (u.mhmax <= 5)
@@ -398,15 +414,21 @@ int trouble;
         break;
     case TROUBLE_COLLAPSING:
         /* override Fixed_abil; uncurse that if feasible */
+#if 0 /*KR: 원본*/
         You_feel("%sstronger.",
                  (AMAX(A_STR) - ABASE(A_STR) > 6) ? "much " : "");
+#else /*KR: KRNethack 맞춤 번역 */
+        You_feel("%s강해진 기분이다.",
+                 (AMAX(A_STR) - ABASE(A_STR) > 6) ? "훨씬 " : "");
+#endif
         ABASE(A_STR) = AMAX(A_STR);
         context.botl = 1;
         if (Fixed_abil) {
             if ((otmp = stuck_ring(uleft, RIN_SUSTAIN_ABILITY)) != 0) {
                 if (otmp == uleft)
                     what = leftglow;
-            } else if ((otmp = stuck_ring(uright, RIN_SUSTAIN_ABILITY)) != 0) {
+            } else if ((otmp = stuck_ring(uright, RIN_SUSTAIN_ABILITY))
+                       != 0) {
                 if (otmp == uright)
                     what = rightglow;
             }
@@ -417,7 +439,8 @@ int trouble;
     case TROUBLE_STUCK_IN_WALL:
         /* no control, but works on no-teleport levels */
         if (safe_teleds(FALSE)) {
-            Your("surroundings change.");
+            /*KR Your("surroundings change."); */
+            Your("주변 환경이 변했다.");
         } else {
             /* safe_teleds() couldn't find a safe place; perhaps the
                level is completely full.  As a last resort, confer
@@ -429,7 +452,8 @@ int trouble;
             set_itimeout(&HPasses_walls, (long) (d(4, 4) + 4)); /* 8..20 */
             /* how else could you move between packed rocks or among
                lattice forming "solid" rock? */
-            You_feel("much slimmer.");
+            /*KR You_feel("much slimmer."); */
+            You_feel("몸이 훨씬 홀쭉해진 기분이다.");
         }
         break;
     case TROUBLE_CURSED_LEVITATION:
@@ -450,7 +474,8 @@ int trouble;
         }
         if (Upolyd && nohands(youmonst.data)) {
             if (!Unchanging) {
-                Your("shape becomes uncertain.");
+                /*KR Your("shape becomes uncertain."); */
+                Your("형태가 불분명해졌다.");
                 rehumanize(); /* "You return to {normal} form." */
             } else if ((otmp = unchanger()) != 0 && otmp->cursed) {
                 /* otmp is an amulet of unchanging */
@@ -469,7 +494,8 @@ int trouble;
     /*
      */
     case TROUBLE_PUNISHED:
-        Your("chain disappears.");
+        /*KR Your("chain disappears."); */
+        Your("쇠사슬이 사라졌다.");
         if (u.utrap && u.utraptype == TT_BURIEDBALL)
             buried_ball_to_freedom();
         else
@@ -489,21 +515,30 @@ int trouble;
             what = rightglow;
         else if (otmp == uleft)
             what = leftglow;
- decurse:
+    decurse:
         if (!otmp) {
             impossible("fix_worst_trouble: nothing to uncurse.");
             return;
         }
         if (otmp == uarmg && Glib) {
             make_glib(0);
-            Your("%s are no longer slippery.", gloves_simple_name(uarmg));
+            /*KR Your("%s are no longer slippery.",
+             * gloves_simple_name(uarmg)); */
+            Your("%s 더 이상 미끄럽지 않다.",
+                 append_josa(gloves_simple_name(uarmg), "은"));
             if (!otmp->cursed)
                 break;
         }
         if (!Blind || (otmp == ublindf && Blindfolded_only)) {
+#if 0 /*KR: 원본*/
             pline("%s %s.",
                   what ? what : (const char *) Yobjnam2(otmp, "softly glow"),
                   hcolor(NH_AMBER));
+#else /*KR: KRNethack 맞춤 번역 */
+            Your("%s %s 은은하게 빛났다.",
+                 what ? what : (const char *) xname(otmp),
+                 hcolor(NH_AMBER));
+#endif
             iflags.last_msg = PLNMSG_OBJ_GLOWS;
             otmp->bknown = !Hallucination; /* ok to skip set_bknown() */
         }
@@ -513,9 +548,12 @@ int trouble;
     case TROUBLE_POISONED:
         /* override Fixed_abil; ignore items which confer that */
         if (Hallucination)
-            pline("There's a tiger in your tank.");
+            /*KR pline("There's a tiger in your tank."); */
+            pline("주유 탱크에 호랑이가 들어갔다."); /* (호랑이표 가솔린 광고
+                                                        패러디) */
         else
-            You_feel("in good health again.");
+            /*KR You_feel("in good health again."); */
+            You_feel("다시 건강해진 기분이다.");
         for (i = 0; i < A_MAX; i++) {
             if (ABASE(i) < AMAX(i)) {
                 ABASE(i) = AMAX(i);
@@ -526,24 +564,39 @@ int trouble;
         break;
     case TROUBLE_BLIND: { /* handles deafness as well as blindness */
         char msgbuf[BUFSZ];
+#if 0 /*KR*/
         const char *eyes = body_part(EYE);
+#endif
         boolean cure_deaf = (HDeaf & TIMEOUT) ? TRUE : FALSE;
 
         msgbuf[0] = '\0';
         if (Blinded) {
+#if 0 /*KR*/
             if (eyecount(youmonst.data) != 1)
                 eyes = makeplural(eyes);
+#endif
+#if 0 /*KR: 원본*/
             Sprintf(msgbuf, "Your %s %s better", eyes, vtense(eyes, "feel"));
+#else /*KR: KRNethack 맞춤 번역 */
+            Sprintf(msgbuf, "당신의 %s 나아진 기분이 든다",
+                    append_josa(body_part(EYE), "이"));
+#endif
             u.ucreamed = 0;
             make_blinded(0L, FALSE);
         }
         if (cure_deaf) {
             make_deaf(0L, FALSE);
             if (!Deaf)
+#if 0 /*KR: 원본*/
                 Sprintf(eos(msgbuf), "%s can hear again",
                         !*msgbuf ? "You" : " and you");
+#else /*KR: KRNethack 맞춤 번역 */
+                Sprintf(eos(msgbuf), "%s다시 소리가 들린다",
+                        !*msgbuf ? "당신은 " : ", 그리고 ");
+#endif
         }
         if (*msgbuf)
+            /*KR pline("%s.", msgbuf); */
             pline("%s.", msgbuf);
         break;
     }
@@ -557,13 +610,18 @@ int trouble;
         make_confused(0L, TRUE);
         break;
     case TROUBLE_HALLUCINATION:
-        pline("Looks like you are back in Kansas.");
+        /*KR pline("Looks like you are back in Kansas."); */
+        pline("캔자스로 돌아온 것 같다."); /* (오즈의 마법사 패러디) */
         (void) make_hallucinated(0L, FALSE, 0L);
         break;
     case TROUBLE_SADDLE:
         otmp = which_armor(u.usteed, W_SADDLE);
         if (!Blind) {
-            pline("%s %s.", Yobjnam2(otmp, "softly glow"), hcolor(NH_AMBER));
+            /*KR pline("%s %s.", Yobjnam2(otmp, "softly glow"),
+             * hcolor(NH_AMBER)); */
+            pline("%s %s 은은하게 빛났다.",
+                  append_josa(y_monnam(u.usteed), "은"),
+                  hcolor(NH_AMBER));
             set_bknown(otmp, 1);
         }
         uncurse(otmp);
@@ -572,22 +630,25 @@ int trouble;
 }
 
 /* "I am sometimes shocked by... the nuns who never take a bath without
- * wearing a bathrobe all the time.  When asked why, since no man can see them,
- * they reply 'Oh, but you forget the good God'.  Apparently they conceive of
- * the Deity as a Peeping Tom, whose omnipotence enables Him to see through
- * bathroom walls, but who is foiled by bathrobes." --Bertrand Russell, 1943
- * Divine wrath, dungeon walls, and armor follow the same principle.
+ * wearing a bathrobe all the time.  When asked why, since no man can see
+ * them, they reply 'Oh, but you forget the good God'.  Apparently they
+ * conceive of the Deity as a Peeping Tom, whose omnipotence enables Him to
+ * see through bathroom walls, but who is foiled by bathrobes." --Bertrand
+ * Russell, 1943 Divine wrath, dungeon walls, and armor follow the same
+ * principle.
  */
-STATIC_OVL void
-god_zaps_you(resp_god)
-aligntyp resp_god;
+STATIC_OVL void god_zaps_you(resp_god) aligntyp resp_god;
 {
     if (u.uswallow) {
-        pline(
+        /*KR pline(
           "Suddenly a bolt of lightning comes down at you from the heavens!");
-        pline("It strikes %s!", mon_nam(u.ustuck));
+        */
+        pline("갑자기 하늘에서 당신을 향해 벼락이 떨어졌다!");
+        /*KR pline("It strikes %s!", mon_nam(u.ustuck)); */
+        pline("벼락이 %s 강타했다!", append_josa(mon_nam(u.ustuck), "을"));
         if (!resists_elec(u.ustuck)) {
-            pline("%s fries to a crisp!", Monnam(u.ustuck));
+            /*KR pline("%s fries to a crisp!", Monnam(u.ustuck)); */
+            pline("%s 바싹 타버렸다!", append_josa(Monnam(u.ustuck), "은"));
             /* Yup, you get experience.  It takes guts to successfully
              * pull off this trick on your god, anyway.
              * Other credit/blame applies (luck or alignment adjustments),
@@ -595,33 +656,48 @@ aligntyp resp_god;
              */
             xkilled(u.ustuck, XKILL_NOMSG | XKILL_NOCONDUCT);
         } else
-            pline("%s seems unaffected.", Monnam(u.ustuck));
+            /*KR pline("%s seems unaffected.", Monnam(u.ustuck)); */
+            pline("%s 아무런 영향도 받지 않은 것 같다.",
+                  append_josa(Monnam(u.ustuck), "은"));
     } else {
-        pline("Suddenly, a bolt of lightning strikes you!");
+        /*KR pline("Suddenly, a bolt of lightning strikes you!"); */
+        pline("갑자기, 벼락이 당신을 강타했다!");
         if (Reflecting) {
             shieldeff(u.ux, u.uy);
             if (Blind)
-                pline("For some reason you're unaffected.");
+                /*KR pline("For some reason you're unaffected."); */
+                pline("어째서인지 당신은 아무런 영향도 받지 않았다.");
             else
-                (void) ureflects("%s reflects from your %s.", "It");
+                /*KR (void) ureflects("%s reflects from your %s.", "It"); */
+                (void) ureflects("%s 당신의 %s 부딪혀 반사되었다.", "벼락이");
         } else if (Shock_resistance) {
             shieldeff(u.ux, u.uy);
-            pline("It seems not to affect you.");
+            /*KR pline("It seems not to affect you."); */
+            pline("당신에겐 아무런 영향도 주지 못한 것 같다.");
         } else
             fry_by_god(resp_god, FALSE);
     }
 
-    pline("%s is not deterred...", align_gname(resp_god));
+    /*KR pline("%s is not deterred...", align_gname(resp_god)); */
+    pline("%s 단념하지 않았다...", append_josa(align_gname(resp_god), "은"));
     if (u.uswallow) {
-        pline("A wide-angle disintegration beam aimed at you hits %s!",
-              mon_nam(u.ustuck));
+        /*KR pline("A wide-angle disintegration beam aimed at you hits %s!",
+         * mon_nam(u.ustuck)); */
+        pline("당신을 겨냥한 광각 붕괴 광선이 %s 명중했다!",
+              append_josa(mon_nam(u.ustuck), "에게"));
         if (!resists_disint(u.ustuck)) {
-            pline("%s disintegrates into a pile of dust!", Monnam(u.ustuck));
+            /*KR pline("%s disintegrates into a pile of dust!",
+             * Monnam(u.ustuck)); */
+            pline("%s 먼지 더미로 붕괴해버렸다!",
+                  append_josa(Monnam(u.ustuck), "은"));
             xkilled(u.ustuck, XKILL_NOMSG | XKILL_NOCORPSE | XKILL_NOCONDUCT);
         } else
-            pline("%s seems unaffected.", Monnam(u.ustuck));
+            /*KR pline("%s seems unaffected.", Monnam(u.ustuck)); */
+            pline("%s 아무런 영향도 받지 않은 것 같다.",
+                  append_josa(Monnam(u.ustuck), "은"));
     } else {
-        pline("A wide-angle disintegration beam hits you!");
+        /*KR pline("A wide-angle disintegration beam hits you!"); */
+        pline("광각 붕괴 광선이 당신에게 명중했다!");
 
         /* disintegrate shield and body armor before disintegrating
          * the impudent mortal, like black dragon breath -3.
@@ -640,35 +716,41 @@ aligntyp resp_god;
         if (!Disint_resistance) {
             fry_by_god(resp_god, TRUE);
         } else {
-            You("bask in its %s glow for a minute...", NH_BLACK);
-            godvoice(resp_god, "I believe it not!");
+            /*KR You("bask in its %s glow for a minute...", NH_BLACK); */
+            You("잠시 그 %s 빛을 쬐며 몸을 녹였다...", NH_BLACK);
+            /*KR godvoice(resp_god, "I believe it not!"); */
+            godvoice(resp_god, "믿을 수가 없군!");
         }
         if (Is_astralevel(&u.uz) || Is_sanctum(&u.uz)) {
             /* one more try for high altars */
-            verbalize("Thou cannot escape my wrath, mortal!");
+            /*KR verbalize("Thou cannot escape my wrath, mortal!"); */
+            verbalize("필멸자여, 너는 내 분노를 피할 수 없다!");
             summon_minion(resp_god, FALSE);
             summon_minion(resp_god, FALSE);
             summon_minion(resp_god, FALSE);
-            verbalize("Destroy %s, my servants!", uhim());
+            /*KR verbalize("Destroy %s, my servants!", uhim()); */
+            verbalize("나의 종들아, 저 자를 파괴해라!");
         }
     }
 }
 
-STATIC_OVL void
-fry_by_god(resp_god, via_disintegration)
-aligntyp resp_god;
+STATIC_OVL void fry_by_god(resp_god, via_disintegration) aligntyp resp_god;
 boolean via_disintegration;
 {
+#if 0 /*KR: 원본*/
     You("%s!", !via_disintegration ? "fry to a crisp"
                                    : "disintegrate into a pile of dust");
+#else /*KR: KRNethack 맞춤 번역 */
+    You("%s!",
+        !via_disintegration ? "바싹 타버렸다" : "먼지 더미로 붕괴해버렸다");
+#endif
     killer.format = KILLED_BY;
-    Sprintf(killer.name, "the wrath of %s", align_gname(resp_god));
+    /*KR Sprintf(killer.name, "the wrath of %s", align_gname(resp_god)); */
+    Sprintf(killer.name, "%s의 분노", align_gname(resp_god));
     done(DIED);
 }
 
-STATIC_OVL void
-angrygods(resp_god)
-aligntyp resp_god;
+STATIC_OVL void angrygods(resp_god) aligntyp resp_god;
 {
     int maxanger;
 
@@ -681,9 +763,9 @@ aligntyp resp_god;
     if (resp_god != u.ualign.type)
         maxanger = u.ualign.record / 2 + (Luck > 0 ? -Luck / 3 : -Luck);
     else
-        maxanger = 3 * u.ugangr + ((Luck > 0 || u.ualign.record >= STRIDENT)
-                                   ? -Luck / 3
-                                   : -Luck);
+        maxanger =
+            3 * u.ugangr
+            + ((Luck > 0 || u.ualign.record >= STRIDENT) ? -Luck / 3 : -Luck);
     if (maxanger < 1)
         maxanger = 1; /* possible if bad align & good luck */
     else if (maxanger > 15)
@@ -692,18 +774,32 @@ aligntyp resp_god;
     switch (rn2(maxanger)) {
     case 0:
     case 1:
+#if 0 /*KR: 원본*/
         You_feel("that %s is %s.", align_gname(resp_god),
                  Hallucination ? "bummed" : "displeased");
+#else /*KR: KRNethack 맞춤 번역 */
+        You_feel("%s %s 것 같다.", append_josa(align_gname(resp_god), "이"),
+                 Hallucination ? "토라진" : "언짢아하는");
+#endif
         break;
     case 2:
     case 3:
         godvoice(resp_god, (char *) 0);
+#if 0 /*KR: 원본*/
         pline("\"Thou %s, %s.\"",
               (ugod_is_angry() && resp_god == u.ualign.type)
                   ? "hast strayed from the path"
                   : "art arrogant",
               youmonst.data->mlet == S_HUMAN ? "mortal" : "creature");
-        verbalize("Thou must relearn thy lessons!");
+#else /*KR: KRNethack 맞춤 번역 */
+        pline("\"%s, %s.\"",
+              youmonst.data->mlet == S_HUMAN ? "필멸자여" : "피조물이여",
+              (ugod_is_angry() && resp_god == u.ualign.type)
+                  ? "너는 정도에서 벗어났느니라"
+                  : "너는 오만하느니라");
+#endif
+        /*KR verbalize("Thou must relearn thy lessons!"); */
+        verbalize("다시 처음부터 배워야 할 것이야!");
         (void) adjattrib(A_WIS, -1, FALSE);
         losexp((char *) 0);
         break;
@@ -717,19 +813,32 @@ aligntyp resp_god;
     case 5:
         gods_angry(resp_god);
         if (!Blind && !Antimagic)
-            pline("%s glow surrounds you.", An(hcolor(NH_BLACK)));
+            /*KR pline("%s glow surrounds you.", An(hcolor(NH_BLACK))); */
+            pline("%s 빛이 당신을 감쌌다.", hcolor(NH_BLACK));
         rndcurse();
         break;
     case 7:
     case 8:
         godvoice(resp_god, (char *) 0);
+#if 0 /*KR: 원본*/
         verbalize("Thou durst %s me?",
                   (on_altar() && (a_align(u.ux, u.uy) != resp_god))
                       ? "scorn"
                       : "call upon");
+#else /*KR: KRNethack 맞춤 번역 */
+        verbalize("감히 나를 %s?",
+                  (on_altar() && (a_align(u.ux, u.uy) != resp_god))
+                      ? "경멸하느냐"
+                      : "부르느냐");
+#endif
         /* [why isn't this using verbalize()?] */
+#if 0 /*KR: 원본*/
         pline("\"Then die, %s!\"",
               (youmonst.data->mlet == S_HUMAN) ? "mortal" : "creature");
+#else /*KR: KRNethack 맞춤 번역 */
+        pline("\"그렇다면 죽어라, %s!\"",
+              (youmonst.data->mlet == S_HUMAN) ? "필멸자여" : "피조물아");
+#endif
         summon_minion(resp_god, FALSE);
         break;
 
@@ -743,20 +852,29 @@ aligntyp resp_god;
 }
 
 /* helper to print "str appears at your feet", or appropriate */
-static void
-at_your_feet(str)
-const char *str;
+static void at_your_feet(str) const char *str;
 {
     if (Blind)
         str = Something;
     if (u.uswallow) {
         /* barrier between you and the floor */
+#if 0 /*KR: 원본*/
         pline("%s %s into %s %s.", str, vtense(str, "drop"),
               s_suffix(mon_nam(u.ustuck)), mbodypart(u.ustuck, STOMACH));
+#else /*KR: KRNethack 맞춤 번역 */
+        pline("%s %s %s 떨어졌다.", append_josa(str, "이"),
+              s_suffix(mon_nam(u.ustuck)), mbodypart(u.ustuck, STOMACH));
+#endif
     } else {
+#if 0 /*KR: 원본*/
         pline("%s %s %s your %s!", str,
               Blind ? "lands" : vtense(str, "appear"),
               Levitation ? "beneath" : "at", makeplural(body_part(FOOT)));
+#else /*KR: KRNethack 맞춤 번역 */
+        pline("%s 당신의 %s %s %s!", append_josa(str, "이"),
+              makeplural(body_part(FOOT)), Levitation ? "아래에" : "앞에",
+              Blind ? "떨어졌다" : "나타났다");
+#endif
     }
 }
 
@@ -781,8 +899,9 @@ gcrownu()
     /* 3.3.[01] had this in the A_NEUTRAL case,
        preventing chaotic wizards from receiving a spellbook */
     if (Role_if(PM_WIZARD)
-        && (!uwep || (uwep->oartifact != ART_VORPAL_BLADE
-                      && uwep->oartifact != ART_STORMBRINGER))
+        && (!uwep
+            || (uwep->oartifact != ART_VORPAL_BLADE
+                && uwep->oartifact != ART_STORMBRINGER))
         && !carrying(SPE_FINGER_OF_DEATH)) {
         class_gift = SPE_FINGER_OF_DEATH;
     } else if (Role_if(PM_MONK) && (!uwep || !uwep->oartifact)
@@ -796,24 +915,34 @@ gcrownu()
     switch (u.ualign.type) {
     case A_LAWFUL:
         u.uevent.uhand_of_elbereth = 1;
-        verbalize("I crown thee...  The Hand of Elbereth!");
+        /*KR verbalize("I crown thee...  The Hand of Elbereth!"); */
+        verbalize("너에게 왕관을 씌우노라... 엘베레스의 손이여!");
         break;
     case A_NEUTRAL:
         u.uevent.uhand_of_elbereth = 2;
         in_hand = (uwep && uwep->oartifact == ART_VORPAL_BLADE);
         already_exists =
             exist_artifact(LONG_SWORD, artiname(ART_VORPAL_BLADE));
-        verbalize("Thou shalt be my Envoy of Balance!");
+        /*KR verbalize("Thou shalt be my Envoy of Balance!"); */
+        verbalize("너는 나의 균형의 사절이 될 것이니라!");
         break;
     case A_CHAOTIC:
         u.uevent.uhand_of_elbereth = 3;
         in_hand = (uwep && uwep->oartifact == ART_STORMBRINGER);
         already_exists =
             exist_artifact(RUNESWORD, artiname(ART_STORMBRINGER));
+#if 0 /*KR: 원본*/
         verbalize("Thou art chosen to %s for My Glory!",
                   ((already_exists && !in_hand)
                    || class_gift != STRANGE_OBJECT) ? "take lives"
-                  : "steal souls");
+                                                    : "steal souls");
+#else /*KR: KRNethack 맞춤 번역 */
+        verbalize(
+            "너는 나의 영광을 위해 %s 자로 선택되었노라!",
+            ((already_exists && !in_hand) || class_gift != STRANGE_OBJECT)
+                ? "목숨을 앗아갈"
+                : "영혼을 훔칠");
+#endif
         break;
     }
 
@@ -821,7 +950,8 @@ gcrownu()
         obj = mksobj(class_gift, TRUE, FALSE);
         bless(obj);
         obj->bknown = 1; /* ok to skip set_bknown() */
-        at_your_feet("A spellbook");
+        /*KR at_your_feet("A spellbook"); */
+        at_your_feet("마법서");
         dropy(obj);
         u.ugifts++;
         /* when getting a new book for known spell, enhance
@@ -840,7 +970,8 @@ gcrownu()
             ; /* already got bonus above */
         } else if (obj && obj->otyp == LONG_SWORD && !obj->oartifact) {
             if (!Blind)
-                Your("sword shines brightly for a moment.");
+                /*KR Your("sword shines brightly for a moment."); */
+                Your("검이 잠시 밝게 빛났다.");
             obj = oname(obj, artiname(ART_EXCALIBUR));
             if (obj && obj->oartifact == ART_EXCALIBUR)
                 u.ugifts++;
@@ -854,13 +985,15 @@ gcrownu()
         if (class_gift != STRANGE_OBJECT) {
             ; /* already got bonus above */
         } else if (obj && in_hand) {
-            Your("%s goes snicker-snack!", xname(obj));
+            /*KR Your("%s goes snicker-snack!", xname(obj)); */
+            Your("%s 서걱서걱거렸다!", append_josa(xname(obj), "이"));
             obj->dknown = TRUE;
         } else if (!already_exists) {
             obj = mksobj(LONG_SWORD, FALSE, FALSE);
             obj = oname(obj, artiname(ART_VORPAL_BLADE));
             obj->spe = 1;
-            at_your_feet("A sword");
+            /*KR at_your_feet("A sword"); */
+            at_your_feet("검");
             dropy(obj);
             u.ugifts++;
         }
@@ -872,11 +1005,13 @@ gcrownu()
     case A_CHAOTIC: {
         char swordbuf[BUFSZ];
 
-        Sprintf(swordbuf, "%s sword", hcolor(NH_BLACK));
+        /*KR Sprintf(swordbuf, "%s sword", hcolor(NH_BLACK)); */
+        Sprintf(swordbuf, "%s 검", hcolor(NH_BLACK));
         if (class_gift != STRANGE_OBJECT) {
             ; /* already got bonus above */
         } else if (obj && in_hand) {
-            Your("%s hums ominously!", swordbuf);
+            /*KR Your("%s hums ominously!", swordbuf); */
+            Your("%s 불길한 소리를 낸다!", append_josa(swordbuf, "이"));
             obj->dknown = TRUE;
         } else if (!already_exists) {
             obj = mksobj(RUNESWORD, FALSE, FALSE);
@@ -909,7 +1044,8 @@ gcrownu()
         unrestrict_weapon_skill(weapon_type(obj));
     } else if (class_gift == STRANGE_OBJECT) {
         /* opportunity knocked, but there was nobody home... */
-        You_feel("unworthy.");
+        /*KR You_feel("unworthy."); */
+        You_feel("스스로가 하찮게 느껴졌다.");
     }
     update_inventory();
 
@@ -919,20 +1055,29 @@ gcrownu()
     return;
 }
 
-STATIC_OVL void
-pleased(g_align)
-aligntyp g_align;
+STATIC_OVL void pleased(g_align) aligntyp g_align;
 {
     /* don't use p_trouble, worst trouble may get fixed while praying */
     int trouble = in_trouble(); /* what's your worst difficulty? */
     int pat_on_head = 0, kick_on_butt;
 
+#if 0 /*KR: 원본*/
     You_feel("that %s is %s.", align_gname(g_align),
              (u.ualign.record >= DEVOUT)
                  ? Hallucination ? "pleased as punch" : "well-pleased"
                  : (u.ualign.record >= STRIDENT)
                        ? Hallucination ? "ticklish" : "pleased"
                        : Hallucination ? "full" : "satisfied");
+#else /*KR: KRNethack 맞춤 번역 */
+    You_feel(
+        "%s %s.", append_josa(align_gname(g_align), "이"),
+        (u.ualign.record >= DEVOUT)
+            ? Hallucination ? "방방 뜨는 것 같다" : "매우 기뻐하시는 것 같다"
+        : (u.ualign.record >= STRIDENT)
+            ? Hallucination ? "간지러워하시는 것 같다" : "기뻐하시는 것 같다"
+        : Hallucination ? "배불러하시는 것 같다"
+                        : "만족하시는 것 같다");
+#endif
 
     /* not your deity */
     if (on_altar() && p_aligntyp != u.ualign.type) {
@@ -943,11 +1088,11 @@ aligntyp g_align;
 
     /*
      * Depending on your luck & align level, the god you prayed to will:
-     *  - fix your worst problem if it's major;
-     *  - fix all your major problems;
-     *  - fix your worst problem if it's minor;
-     *  - fix all of your problems;
-     *  - do you a gratuitous favor.
+     * - fix your worst problem if it's major;
+     * - fix all your major problems;
+     * - fix your worst problem if it's minor;
+     * - fix all of your problems;
+     * - do you a gratuitous favor.
      *
      * If you make it to the last category, you roll randomly again
      * to see what they do for you.
@@ -1016,35 +1161,62 @@ aligntyp g_align;
         case 0:
             break;
         case 1:
-            if (uwep && (welded(uwep) || uwep->oclass == WEAPON_CLASS
-                         || is_weptool(uwep))) {
+            if (uwep
+                && (welded(uwep) || uwep->oclass == WEAPON_CLASS
+                    || is_weptool(uwep))) {
                 char repair_buf[BUFSZ];
 
                 *repair_buf = '\0';
                 if (uwep->oeroded || uwep->oeroded2)
+#if 0 /*KR: 원본*/
                     Sprintf(repair_buf, " and %s now as good as new",
                             otense(uwep, "are"));
+#else /*KR: KRNethack 맞춤 번역 */
+                    Sprintf(repair_buf, ", 그리고 이제 새것처럼 완벽해졌다.");
+#endif
 
                 if (uwep->cursed) {
                     if (!Blind) {
+#if 0 /*KR: 원본*/
                         pline("%s %s%s.", Yobjnam2(uwep, "softly glow"),
                               hcolor(NH_AMBER), repair_buf);
+#else /*KR: KRNethack 맞춤 번역 */
+                        Your("%s %s 은은하게 빛났다%s.",
+                             append_josa(xname(uwep), "이"),
+                             hcolor(NH_AMBER), repair_buf);
+#endif
                         iflags.last_msg = PLNMSG_OBJ_GLOWS;
                     } else
+#if 0 /*KR: 원본*/
                         You_feel("the power of %s over %s.", u_gname(),
                                  yname(uwep));
+#else /*KR: KRNethack 맞춤 번역 */
+                        You_feel("%s의 힘이 %s 깃드는 것을 느낀다.",
+                                 u_gname(), append_josa(yname(uwep), "에"));
+#endif
                     uncurse(uwep);
                     uwep->bknown = 1; /* ok to bypass set_bknown() */
                     *repair_buf = '\0';
                 } else if (!uwep->blessed) {
                     if (!Blind) {
+#if 0 /*KR: 원본*/
                         pline("%s with %s aura%s.",
                               Yobjnam2(uwep, "softly glow"),
                               an(hcolor(NH_LIGHT_BLUE)), repair_buf);
+#else /*KR: KRNethack 맞춤 번역 */
+                        Your("%s %s 오라와 함께 은은하게 빛났다%s.",
+                             append_josa(xname(uwep), "이"),
+                             an(hcolor(NH_LIGHT_BLUE)), repair_buf);
+#endif
                         iflags.last_msg = PLNMSG_OBJ_GLOWS;
                     } else
+#if 0 /*KR: 원본*/
                         You_feel("the blessing of %s over %s.", u_gname(),
                                  yname(uwep));
+#else /*KR: KRNethack 맞춤 번역 */
+                        You_feel("%s의 축복이 %s 깃드는 것을 느낀다.",
+                                 u_gname(), append_josa(yname(uwep), "에"));
+#endif
                     bless(uwep);
                     uwep->bknown = 1; /* ok to bypass set_bknown() */
                     *repair_buf = '\0';
@@ -1057,8 +1229,14 @@ aligntyp g_align;
                     /* only give this message if we didn't just bless
                        or uncurse (which has already given a message) */
                     if (*repair_buf)
+#if 0 /*KR: 원본*/
                         pline("%s as good as new!",
                               Yobjnam2(uwep, Blind ? "feel" : "look"));
+#else /*KR: KRNethack 맞춤 번역 */
+                        Your("%s 새것처럼 %s!",
+                             append_josa(xname(uwep), "이"),
+                             Blind ? "느껴진다" : "보인다");
+#endif
                 }
                 update_inventory();
             }
@@ -1071,16 +1249,27 @@ aligntyp g_align;
             if (!u.uevent.uopened_dbridge && !u.uevent.gehennom_entered) {
                 if (u.uevent.uheard_tune < 1) {
                     godvoice(g_align, (char *) 0);
+#if 0 /*KR: 원본*/
                     verbalize("Hark, %s!", youmonst.data->mlet == S_HUMAN
                                                ? "mortal"
                                                : "creature");
-                    verbalize(
+#else /*KR: KRNethack 맞춤 번역 */
+                    verbalize("들어라, %s!", youmonst.data->mlet == S_HUMAN
+                                                 ? "필멸자여"
+                                                 : "피조물이여");
+#endif
+                    /*KR verbalize(
                        "To enter the castle, thou must play the right tune!");
+                     */
+                    verbalize(
+                        "성에 들어가려면 올바른 곡조를 연주해야 하느니라!");
                     u.uevent.uheard_tune++;
                     break;
                 } else if (u.uevent.uheard_tune < 2) {
-                    You_hear("a divine music...");
-                    pline("It sounds like:  \"%s\".", tune);
+                    /*KR You_hear("a divine music..."); */
+                    You_hear("신성한 음악이 들려온다...");
+                    /*KR pline("It sounds like:  \"%s\".", tune); */
+                    pline("다음과 같이 들린다:  \"%s\".", tune);
                     u.uevent.uheard_tune++;
                     break;
                 }
@@ -1088,7 +1277,9 @@ aligntyp g_align;
             /*FALLTHRU*/
         case 2:
             if (!Blind)
-                You("are surrounded by %s glow.", an(hcolor(NH_GOLDEN)));
+                /*KR You("are surrounded by %s glow.", an(hcolor(NH_GOLDEN)));
+                 */
+                You("%s 빛에 휩싸였다.", hcolor(NH_GOLDEN));
             /* if any levels have been lost (and not yet regained),
                treat this effect like blessed full healing */
             if (u.ulevel < u.ulevelmax) {
@@ -1126,16 +1317,25 @@ aligntyp g_align;
             int any = 0;
 
             if (Blind)
-                You_feel("the power of %s.", u_gname());
+                /*KR You_feel("the power of %s.", u_gname()); */
+                You_feel("%s의 권능이 느껴진다.", u_gname());
             else
-                You("are surrounded by %s aura.", an(hcolor(NH_LIGHT_BLUE)));
+                /*KR You("are surrounded by %s aura.",
+                 * an(hcolor(NH_LIGHT_BLUE))); */
+                You("%s 오라에 휩싸였다.", hcolor(NH_LIGHT_BLUE));
             for (otmp = invent; otmp; otmp = otmp->nobj) {
                 if (otmp->cursed
                     && (otmp != uarmh /* [see worst_cursed_item()] */
                         || uarmh->otyp != HELM_OF_OPPOSITE_ALIGNMENT)) {
                     if (!Blind) {
+#if 0 /*KR: 원본*/
                         pline("%s %s.", Yobjnam2(otmp, "softly glow"),
                               hcolor(NH_AMBER));
+#else /*KR: KRNethack 맞춤 번역 */
+                        Your("%s %s 은은하게 빛났다.",
+                             append_josa(xname(otmp), "이"),
+                             hcolor(NH_AMBER));
+#endif
                         iflags.last_msg = PLNMSG_OBJ_GLOWS;
                         otmp->bknown = 1; /* ok to bypass set_bknown() */
                         ++any;
@@ -1148,22 +1348,28 @@ aligntyp g_align;
             break;
         }
         case 5: {
+            /*KR static NEARDATA const char msg[] =
+                "\"and thus I grant thee the gift of %s!\""; */
             static NEARDATA const char msg[] =
-                "\"and thus I grant thee the gift of %s!\"";
+                "\"그리하여 네게 %s의 선물을 내리노라!\"";
 
-            godvoice(u.ualign.type,
-                     "Thou hast pleased me with thy progress,");
+            /*KR godvoice(u.ualign.type,
+                     "Thou hast pleased me with thy progress,"); */
+            godvoice(u.ualign.type, "너의 성장이 나를 기쁘게 하는구나,");
             if (!(HTelepat & INTRINSIC)) {
                 HTelepat |= FROMOUTSIDE;
-                pline(msg, "Telepathy");
+                /*KR pline(msg, "Telepathy"); */
+                pline(msg, "텔레파시");
                 if (Blind)
                     see_monsters();
             } else if (!(HFast & INTRINSIC)) {
                 HFast |= FROMOUTSIDE;
-                pline(msg, "Speed");
+                /*KR pline(msg, "Speed"); */
+                pline(msg, "속도");
             } else if (!(HStealth & INTRINSIC)) {
                 HStealth |= FROMOUTSIDE;
-                pline(msg, "Stealth");
+                /*KR pline(msg, "Stealth"); */
+                pline(msg, "은신");
             } else {
                 if (!(HProtection & INTRINSIC)) {
                     HProtection |= FROMOUTSIDE;
@@ -1171,9 +1377,11 @@ aligntyp g_align;
                         u.ublessed = rn1(3, 2);
                 } else
                     u.ublessed++;
-                pline(msg, "my protection");
+                /*KR pline(msg, "my protection"); */
+                pline(msg, "나의 가호");
             }
-            verbalize("Use it wisely in my name!");
+            /*KR verbalize("Use it wisely in my name!"); */
+            verbalize("내 이름으로 지혜롭게 사용하거라!");
             break;
         }
         case 7:
@@ -1207,7 +1415,8 @@ aligntyp g_align;
                 otmp->otyp = rnd_class(bases[SPBOOK_CLASS], SPE_BLANK_PAPER);
             }
             bless(otmp);
-            at_your_feet("A spellbook");
+            /*KR at_your_feet("A spellbook"); */
+            at_your_feet("마법서");
             place_object(otmp, u.ux, u.uy);
             newsym(u.ux, u.uy);
             break;
@@ -1250,20 +1459,27 @@ boolean bless_water;
             other = TRUE;
     }
     if (!Blind && changed) {
+#if 0 /*KR: 원본*/
         pline("%s potion%s on the altar glow%s %s for a moment.",
               ((other && changed > 1L) ? "Some of the"
                                        : (other ? "One of the" : "The")),
               ((other || changed > 1L) ? "s" : ""), (changed > 1L ? "" : "s"),
               (bless_water ? hcolor(NH_LIGHT_BLUE) : hcolor(NH_BLACK)));
+#else /*KR: KRNethack 맞춤 번역 */
+        pline(
+            "제단 위의 물약%s 잠시 %s 빛났다.",
+            (other && changed > 1L) ? " 중 일부가"
+                                    : (other ? " 중 하나가" : "이"),
+            (bless_water ? hcolor(NH_LIGHT_BLUE) : hcolor(NH_BLACK)));
+#endif
     }
     return (boolean) (changed > 0L);
 }
 
-STATIC_OVL void
-godvoice(g_align, words)
-aligntyp g_align;
+STATIC_OVL void godvoice(g_align, words) aligntyp g_align;
 const char *words;
 {
+#if 0 /*KR: 원본*/
     const char *quot = "";
 
     if (words)
@@ -1273,19 +1489,24 @@ const char *words;
 
     pline_The("voice of %s %s: %s%s%s", align_gname(g_align),
               godvoices[rn2(SIZE(godvoices))], quot, words, quot);
+#else /*KR: KRNethack 맞춤 번역 */
+    if (words)
+        pline("%s의 목소리가 %s: \"%s\"", align_gname(g_align),
+              godvoices[rn2(SIZE(godvoices))], words);
+    else
+        pline("%s의 목소리가 %s:", align_gname(g_align),
+              godvoices[rn2(SIZE(godvoices))]);
+#endif
 }
 
-STATIC_OVL void
-gods_angry(g_align)
-aligntyp g_align;
+STATIC_OVL void gods_angry(g_align) aligntyp g_align;
 {
-    godvoice(g_align, "Thou hast angered me.");
+    /*KR godvoice(g_align, "Thou hast angered me."); */
+    godvoice(g_align, "네가 나를 분노하게 하였노라.");
 }
 
 /* The g_align god is upset with you. */
-STATIC_OVL void
-gods_upset(g_align)
-aligntyp g_align;
+STATIC_OVL void gods_upset(g_align) aligntyp g_align;
 {
     if (g_align == u.ualign.type)
         u.ugangr++;
@@ -1294,28 +1515,38 @@ aligntyp g_align;
     angrygods(g_align);
 }
 
-STATIC_OVL void
-consume_offering(otmp)
-register struct obj *otmp;
+STATIC_OVL void consume_offering(otmp) register struct obj *otmp;
 {
     if (Hallucination)
         switch (rn2(3)) {
         case 0:
-            Your("sacrifice sprouts wings and a propeller and roars away!");
+            /*KR Your("sacrifice sprouts wings and a propeller and roars
+             * away!"); */
+            Your("제물에 날개와 프로펠러가 돋아나더니 굉음을 내며 "
+                 "날아가버렸다!");
             break;
         case 1:
-            Your("sacrifice puffs up, swelling bigger and bigger, and pops!");
+            /*KR Your("sacrifice puffs up, swelling bigger and bigger, and
+             * pops!"); */
+            Your("제물이 부풀어오르더니, 점점 커지다가 펑 하고 터져버렸다!");
             break;
         case 2:
-            Your(
-     "sacrifice collapses into a cloud of dancing particles and fades away!");
+            /*KR Your("sacrifice collapses into a cloud of dancing particles
+             * and fades away!"); */
+            Your("제물이 춤추는 입자구름으로 무너지며 스르르 사라졌다!");
             break;
         }
     else if (Blind && u.ualign.type == A_LAWFUL)
-        Your("sacrifice disappears!");
+        /*KR Your("sacrifice disappears!"); */
+        Your("제물이 사라졌다!");
     else
+#if 0 /*KR: 원본*/
         Your("sacrifice is consumed in a %s!",
              u.ualign.type == A_LAWFUL ? "flash of light" : "burst of flame");
+#else /*KR: KRNethack 맞춤 번역 */
+        Your("제물은 %s 속에서 소멸했다!",
+             u.ualign.type == A_LAWFUL ? "번쩍이는 빛" : "타오르는 불꽃");
+#endif
     if (carried(otmp))
         useup(otmp);
     else
@@ -1326,15 +1557,18 @@ register struct obj *otmp;
 int
 dosacrifice()
 {
+    /*KR static NEARDATA const char cloud_of_smoke[] =
+        "A cloud of %s smoke surrounds you..."; */
     static NEARDATA const char cloud_of_smoke[] =
-        "A cloud of %s smoke surrounds you...";
+        "%s 연기 구름이 당신을 둘러싼다...";
     register struct obj *otmp;
     int value = 0, pm;
     boolean highaltar;
     aligntyp altaralign = a_align(u.ux, u.uy);
 
     if (!on_altar() || u.uswallow) {
-        You("are not standing on an altar.");
+        /*KR You("are not standing on an altar."); */
+        You("제단 위에 서 있지 않다.");
         return 0;
     }
     highaltar = ((Is_astralevel(&u.uz) || Is_sanctum(&u.uz))
@@ -1376,10 +1610,12 @@ dosacrifice()
 
         if (your_race(ptr)) {
             if (is_demon(youmonst.data)) {
-                You("find the idea very satisfying.");
+                /*KR You("find the idea very satisfying."); */
+                You("그 아이디어가 무척 만족스럽다.");
                 exercise(A_WIS, TRUE);
             } else if (u.ualign.type != A_CHAOTIC) {
-                pline("You'll regret this infamous offense!");
+                /*KR pline("You'll regret this infamous offense!"); */
+                pline("너는 이 끔찍한 모독을 후회하게 될 것이다!");
                 exercise(A_WIS, FALSE);
             }
 
@@ -1388,7 +1624,9 @@ dosacrifice()
                 goto desecrate_high_altar;
             } else if (altaralign != A_CHAOTIC && altaralign != A_NONE) {
                 /* curse the lawful/neutral altar */
-                pline_The("altar is stained with %s blood.", urace.adj);
+                /*KR pline_The("altar is stained with %s blood.", urace.adj);
+                 */
+                pline("제단은 %s 피로 얼룩졌다.", urace.adj);
                 levl[u.ux][u.uy].altarmask = AM_CHAOTIC;
                 angry_priest();
             } else {
@@ -1398,19 +1636,28 @@ dosacrifice()
                 /* Human sacrifice on a chaotic or unaligned altar */
                 /* is equivalent to demon summoning */
                 if (altaralign == A_CHAOTIC && u.ualign.type != A_CHAOTIC) {
+#if 0 /*KR: 원본*/
                     pline(
                     "The blood floods the altar, which vanishes in %s cloud!",
                           an(hcolor(NH_BLACK)));
+#else /*KR: KRNethack 맞춤 번역 */
+                    pline("피가 제단에 넘쳐흐르더니, 제단은 %s 구름 속으로 "
+                          "사라졌다!",
+                          hcolor(NH_BLACK));
+#endif
                     levl[u.ux][u.uy].typ = ROOM;
                     levl[u.ux][u.uy].altarmask = 0;
                     newsym(u.ux, u.uy);
                     angry_priest();
-                    demonless_msg = "cloud dissipates";
+                    /*KR demonless_msg = "cloud dissipates"; */
+                    demonless_msg = "구름이 흩어졌다";
                 } else {
                     /* either you're chaotic or altar is Moloch's or both */
-                    pline_The("blood covers the altar!");
+                    /*KR pline_The("blood covers the altar!"); */
+                    pline("피가 제단을 뒤덮었다!");
                     change_luck(altaralign == A_NONE ? -2 : 2);
-                    demonless_msg = "blood coagulates";
+                    /*KR demonless_msg = "blood coagulates"; */
+                    demonless_msg = "피가 응고되었다";
                 }
                 if ((pm = dlord(altaralign)) != NON_PM
                     && (dmon = makemon(&mons[pm], u.ux, u.uy, NO_MM_FLAGS))
@@ -1418,19 +1665,25 @@ dosacrifice()
                     char dbuf[BUFSZ];
 
                     Strcpy(dbuf, a_monnam(dmon));
-                    if (!strcmpi(dbuf, "it"))
-                        Strcpy(dbuf, "something dreadful");
+                    /*KR if (!strcmpi(dbuf, "it")) */
+                    if (!strcmpi(dbuf, "그것"))
+                        /*KR Strcpy(dbuf, "something dreadful"); */
+                        Strcpy(dbuf, "무언가 끔찍한 것");
                     else
                         dmon->mstrategy &= ~STRAT_APPEARMSG;
-                    You("have summoned %s!", dbuf);
+                    /*KR You("have summoned %s!", dbuf); */
+                    You("%s 소환했다!", append_josa(dbuf, "을"));
                     if (sgn(u.ualign.type) == sgn(dmon->data->maligntyp))
                         dmon->mpeaceful = TRUE;
-                    You("are terrified, and unable to move.");
+                    /*KR You("are terrified, and unable to move."); */
+                    You("너무 무서워서 움직일 수가 없다.");
                     nomul(-3);
-                    multi_reason = "being terrified of a demon";
+                    /*KR multi_reason = "being terrified of a demon"; */
+                    multi_reason = "악마에 대한 두려움에 빠져";
                     nomovemsg = 0;
                 } else
-                    pline_The("%s.", demonless_msg);
+                    /*KR pline_The("%s.", demonless_msg); */
+                    pline("%s.", demonless_msg);
             }
 
             if (u.ualign.type != A_CHAOTIC) {
@@ -1447,12 +1700,12 @@ dosacrifice()
             else
                 useupf(otmp, 1L);
             return 1;
-        } else if (has_omonst(otmp)
-                   && (mtmp = get_mtraits(otmp, FALSE)) != 0
+        } else if (has_omonst(otmp) && (mtmp = get_mtraits(otmp, FALSE)) != 0
                    && mtmp->mtame) {
-                /* mtmp is a temporary pointer to a tame monster's attributes,
-                 * not a real monster */
-            pline("So this is how you repay loyalty?");
+            /* mtmp is a temporary pointer to a tame monster's attributes,
+             * not a real monster */
+            /*KR pline("So this is how you repay loyalty?"); */
+            pline("이것이 네가 충성에 보답하는 방식이냐?");
             adjalign(-3);
             value = -1;
             HAggravate_monster |= FROMOUTSIDE;
@@ -1465,9 +1718,16 @@ dosacrifice()
             if (unicalign == altaralign) {
                 /* When same as altar, always a very bad action.
                  */
+#if 0 /*KR: 원본*/
                 pline("Such an action is an insult to %s!",
                       (unicalign == A_CHAOTIC) ? "chaos"
                          : unicalign ? "law" : "balance");
+#else /*KR: KRNethack 맞춤 번역 */
+                pline("그런 행동은 %s에 대한 모욕이다!",
+                      (unicalign == A_CHAOTIC) ? "혼돈"
+                      : unicalign              ? "질서"
+                                               : "균형");
+#endif
                 (void) adjattrib(A_WIS, -1, TRUE);
                 value = -5;
             } else if (u.ualign.type == altaralign) {
@@ -1475,9 +1735,14 @@ dosacrifice()
                  * it's a very good action.
                  */
                 if (u.ualign.record < ALIGNLIM)
-                    You_feel("appropriately %s.", align_str(u.ualign.type));
+                    /*KR You_feel("appropriately %s.",
+                     * align_str(u.ualign.type)); */
+                    You_feel("적절히 %s된 기분이다.",
+                             align_str(u.ualign.type));
                 else
-                    You_feel("you are thoroughly on the right path.");
+                    /*KR You_feel("you are thoroughly on the right path."); */
+                    You_feel("당신이 완벽하게 올바른 길을 걷고 있다는 기분이 "
+                             "든다.");
                 adjalign(5);
                 value += 3;
             } else if (unicalign == u.ualign.type) {
@@ -1498,13 +1763,14 @@ dosacrifice()
 
     if (otmp->otyp == AMULET_OF_YENDOR) {
         if (!highaltar) {
- too_soon:
+        too_soon:
             if (altaralign == A_NONE && Inhell)
                 /* hero has left Moloch's Sanctum so is in the process
                    of getting away with the Amulet (outside of Gehennom,
                    fall through to the "ashamed" feedback) */
                 gods_upset(A_NONE);
             else
+#if 0 /*KR: 원본*/
                 You_feel("%s.",
                          Hallucination
                             ? "homesick"
@@ -1513,6 +1779,15 @@ dosacrifice()
                                ? "an urge to return to the surface"
                                /* else headed towards celestial disgrace */
                                : "ashamed");
+#else /*KR: KRNethack 맞춤 번역 */
+                You_feel("%s.",
+                         Hallucination ? "향수병이 도지는 것 같다"
+                         /* if on track, give a big hint */
+                         : (altaralign == u.ualign.type)
+                             ? "지상으로 돌아가고픈 충동이 인다"
+                             /* else headed towards celestial disgrace */
+                             : "수치심이 든다");
+#endif
             return 1;
         } else {
             /* The final Test.  Did you win? */
@@ -1523,20 +1798,33 @@ dosacrifice()
                 useup(otmp); /* well, it's gone now */
             else
                 useupf(otmp, 1L);
-            You("offer the Amulet of Yendor to %s...", a_gname());
+            /*KR You("offer the Amulet of Yendor to %s...", a_gname()); */
+            You("%s에게 옌더의 부적을 바쳤다...", a_gname());
             if (altaralign == A_NONE) {
                 /* Moloch's high altar */
                 if (u.ualign.record > -99)
                     u.ualign.record = -99;
                 /*[apparently shrug/snarl can be sensed without being seen]*/
+#if 0 /*KR: 원본*/
                 pline("%s shrugs and retains dominion over %s,", Moloch,
                       u_gname());
-                pline("then mercilessly snuffs out your life.");
+#else /*KR: KRNethack 맞춤 번역 */
+                pline("%s 어깨를 으쓱하며 %s에 대한 지배권을 유지했고,",
+                      append_josa(Moloch, "은"), u_gname());
+#endif
+                /*KR pline("then mercilessly snuffs out your life."); */
+                pline("이내 무자비하게 당신의 목숨을 거두어 갔다.");
+#if 0 /*KR: 원본*/
                 Sprintf(killer.name, "%s indifference", s_suffix(Moloch));
+#else /*KR: KRNethack 맞춤 번역 */
+                Sprintf(killer.name, "%s 무관심", s_suffix(Moloch));
+#endif
                 killer.format = KILLED_BY;
                 done(DIED);
                 /* life-saved (or declined to die in wizard/explore mode) */
-                pline("%s snarls and tries again...", Moloch);
+                /*KR pline("%s snarls and tries again...", Moloch); */
+                pline("%s 으르렁거리며 다시 시도했다...",
+                      append_josa(Moloch, "은"));
                 fry_by_god(A_NONE, TRUE); /* wrath of Moloch */
                 /* declined to die in wizard or explore mode */
                 pline(cloud_of_smoke, hcolor(NH_BLACK));
@@ -1545,23 +1833,45 @@ dosacrifice()
                 /* And the opposing team picks you up and
                    carries you off on their shoulders */
                 adjalign(-99);
+#if 0 /*KR: 원본*/
                 pline("%s accepts your gift, and gains dominion over %s...",
                       a_gname(), u_gname());
-                pline("%s is enraged...", u_gname());
-                pline("Fortunately, %s permits you to live...", a_gname());
+#else /*KR: KRNethack 맞춤 번역 */
+                pline("%s 당신의 선물을 받아들이고, %s에 대한 지배권을 "
+                      "얻었다...",
+                      append_josa(a_gname(), "은"), u_gname());
+#endif
+                /*KR pline("%s is enraged...", u_gname()); */
+                pline("%s 격노했다...", append_josa(u_gname(), "은"));
+                /*KR pline("Fortunately, %s permits you to live...",
+                 * a_gname()); */
+                pline("다행히도, %s 당신을 살려주었다...",
+                      append_josa(a_gname(), "은"));
                 pline(cloud_of_smoke, hcolor(NH_ORANGE));
                 done(ESCAPED);
             } else { /* super big win */
                 adjalign(10);
                 u.uachieve.ascended = 1;
-                pline(
+                /*KR pline(
                "An invisible choir sings, and you are bathed in radiance...");
-                godvoice(altaralign, "Mortal, thou hast done well!");
+             */
+                pline("보이지 않는 성가대의 노랫소리가 울려퍼지며, 당신은 "
+                      "눈부신 광휘에 휩싸였다...");
+                /*KR godvoice(altaralign, "Mortal, thou hast done well!"); */
+                godvoice(altaralign, "필멸자여, 너는 참으로 잘 해내었도다!");
                 display_nhwindow(WIN_MESSAGE, FALSE);
-                verbalize(
+                /*KR verbalize(
           "In return for thy service, I grant thee the gift of Immortality!");
+        */
+                verbalize(
+                    "너의 봉사에 대한 보답으로, 영생의 선물을 하사하노라!");
+#if 0 /*KR: 원본*/
                 You("ascend to the status of Demigod%s...",
                     flags.female ? "dess" : "");
+#else /*KR: KRNethack 맞춤 번역 */
+                You("반신%s의 지위로 승천했다...",
+                    flags.female ? "(여신)" : "");
+#endif
                 done(ASCENDED);
             }
         }
@@ -1570,17 +1880,28 @@ dosacrifice()
     if (otmp->otyp == FAKE_AMULET_OF_YENDOR) {
         if (!highaltar && !otmp->known)
             goto too_soon;
-        You_hear("a nearby thunderclap.");
+        /*KR You_hear("a nearby thunderclap."); */
+        You_hear("근처에서 천둥 치는 소리가 났다.");
         if (!otmp->known) {
+#if 0 /*KR: 원본*/
             You("realize you have made a %s.",
                 Hallucination ? "boo-boo" : "mistake");
+#else /*KR: KRNethack 맞춤 번역 */
+            You("당신이 %s 깨달았다.", Hallucination
+                                           ? "실수해쪄염이라는 걸"
+                                           : "실수를 저질렀다는 것을");
+#endif
             otmp->known = TRUE;
             change_luck(-1);
             return 1;
         } else {
             /* don't you dare try to fool the gods */
             if (Deaf)
+#if 0                               /*KR: 원본*/
                 pline("Oh, no."); /* didn't hear thunderclap */
+#else                               /*KR: KRNethack 맞춤 번역 */
+                pline("오, 안돼."); /* didn't hear thunderclap */
+#endif
             change_luck(-3);
             adjalign(-1);
             u.ugangr += 3;
@@ -1594,15 +1915,21 @@ dosacrifice()
     }
 
     if (altaralign != u.ualign.type && highaltar) {
- desecrate_high_altar:
+    desecrate_high_altar:
         /*
          * REAL BAD NEWS!!! High altars cannot be converted.  Even an attempt
          * gets the god who owns it truly pissed off.
          */
-        You_feel("the air around you grow charged...");
-        pline("Suddenly, you realize that %s has noticed you...", a_gname());
+        /*KR You_feel("the air around you grow charged..."); */
+        You_feel("당신 주변의 공기가 긴장감으로 팽팽해지는 것을 느낀다...");
+        /*KR pline("Suddenly, you realize that %s has noticed you...",
+         * a_gname()); */
+        pline("갑자기, 당신은 %s 당신을 알아차렸음을 깨달았다...",
+              append_josa(a_gname(), "이"));
+        /*KR godvoice(altaralign,
+                 "So, mortal!  You dare desecrate my High Temple!"); */
         godvoice(altaralign,
-                 "So, mortal!  You dare desecrate my High Temple!");
+                 "그래, 필멸자여! 감히 나의 대성전을 더럽히다니!");
         /* Throw everything we have at the player */
         god_zaps_you(altaralign);
     } else if (value
@@ -1620,10 +1947,14 @@ dosacrifice()
             if (ugod_is_angry() || (altaralign == A_NONE && Inhell)) {
                 if (u.ualignbase[A_CURRENT] == u.ualignbase[A_ORIGINAL]
                     && altaralign != A_NONE) {
-                    You("have a strong feeling that %s is angry...",
-                        u_gname());
+                    /*KR You("have a strong feeling that %s is angry...",
+                        u_gname()); */
+                    You("%s 화가 났다는 강한 예감이 든다...",
+                        append_josa(u_gname(), "이"));
                     consume_offering(otmp);
-                    pline("%s accepts your allegiance.", a_gname());
+                    /*KR pline("%s accepts your allegiance.", a_gname()); */
+                    pline("%s 당신의 충성을 받아들였다.",
+                          append_josa(a_gname(), "은"));
 
                     uchangealign(altaralign, 0);
                     /* Beware, Conversion is costly */
@@ -1632,8 +1963,11 @@ dosacrifice()
                 } else {
                     u.ugangr += 3;
                     adjalign(-5);
-                    pline("%s rejects your sacrifice!", a_gname());
-                    godvoice(altaralign, "Suffer, infidel!");
+                    /*KR pline("%s rejects your sacrifice!", a_gname()); */
+                    pline("%s 당신의 제물을 거부했다!",
+                          append_josa(a_gname(), "은"));
+                    /*KR godvoice(altaralign, "Suffer, infidel!"); */
+                    godvoice(altaralign, "고통받아라, 이교도여!");
                     change_luck(-5);
                     (void) adjattrib(A_WIS, -2, TRUE);
                     if (!Inhell)
@@ -1642,11 +1976,17 @@ dosacrifice()
                 return 1;
             } else {
                 consume_offering(otmp);
+#if 0 /*KR: 원본*/
                 You("sense a conflict between %s and %s.", u_gname(),
                     a_gname());
+#else /*KR: KRNethack 맞춤 번역 */
+                You("%s %s 사이에 갈등이 느껴진다.",
+                    append_josa(u_gname(), "와(과)"), a_gname());
+#endif
                 if (rn2(8 + u.ulevel) > 5) {
                     struct monst *pri;
-                    You_feel("the power of %s increase.", u_gname());
+                    /*KR You_feel("the power of %s increase.", u_gname()); */
+                    You_feel("%s의 힘이 증가하는 것을 느낀다.", u_gname());
                     exercise(A_WIS, TRUE);
                     change_luck(1);
                     /* Yes, this is supposed to be &=, not |= */
@@ -1656,12 +1996,21 @@ dosacrifice()
                         levl[u.ux][u.uy].altarmask
                         | (Align2amask(u.ualign.type));
                     if (!Blind)
+#if 0 /*KR: 원본*/
                         pline_The("altar glows %s.",
                                   hcolor((u.ualign.type == A_LAWFUL)
                                             ? NH_WHITE
                                             : u.ualign.type
                                                ? NH_BLACK
                                                : (const char *) "gray"));
+#else /*KR: KRNethack 맞춤 번역 */
+                        pline("제단이 %s 빛난다.",
+                              hcolor((u.ualign.type == A_LAWFUL)
+                                             ? NH_WHITE
+                                         : u.ualign.type
+                                             ? NH_BLACK
+                                             : (const char *) "회색으로"));
+#endif
 
                     if (rnl(u.ulevel) > 6 && u.ualign.record > 0
                         && rnd(u.ualign.record) > (3 * ALIGNLIM) / 4)
@@ -1671,8 +2020,11 @@ dosacrifice()
                         && !p_coaligned(pri))
                         angry_priest();
                 } else {
-                    pline("Unluckily, you feel the power of %s decrease.",
-                          u_gname());
+                    /*KR pline("Unluckily, you feel the power of %s
+                       decrease.", u_gname()); */
+                    pline(
+                        "불운하게도, 당신은 %s의 힘이 감소하는 것을 느낀다.",
+                        u_gname());
                     change_luck(-1);
                     exercise(A_WIS, FALSE);
                     if (rnl(u.ulevel) > 6 && u.ualign.record > 0
@@ -1686,30 +2038,44 @@ dosacrifice()
         consume_offering(otmp);
         /* OK, you get brownie points. */
         if (u.ugangr) {
-            u.ugangr -= ((value * (u.ualign.type == A_CHAOTIC ? 2 : 3))
-                         / MAXVALUE);
+            u.ugangr -=
+                ((value * (u.ualign.type == A_CHAOTIC ? 2 : 3)) / MAXVALUE);
             if (u.ugangr < 0)
                 u.ugangr = 0;
             if (u.ugangr != saved_anger) {
                 if (u.ugangr) {
+#if 0 /*KR: 원본*/
                     pline("%s seems %s.", u_gname(),
                           Hallucination ? "groovy" : "slightly mollified");
+#else /*KR: KRNethack 맞춤 번역 */
+                    pline("%s %s 보인다.", append_josa(u_gname(), "은"),
+                          Hallucination ? "근사해" : "조금 누그러진 것 같아");
+#endif
 
                     if ((int) u.uluck < 0)
                         change_luck(1);
                 } else {
+#if 0 /*KR: 원본*/
                     pline("%s seems %s.", u_gname(),
                           Hallucination ? "cosmic (not a new fact)"
                                         : "mollified");
+#else /*KR: KRNethack 맞춤 번역 */
+                    pline("%s %s 보인다.", append_josa(u_gname(), "은"),
+                          Hallucination
+                              ? "우주적인 것 같아 (새로운 사실은 아님)"
+                              : "분노가 풀린 것 같아");
+#endif
 
                     if ((int) u.uluck < 0)
                         u.uluck = 0;
                 }
             } else { /* not satisfied yet */
                 if (Hallucination)
-                    pline_The("gods seem tall.");
+                    /*KR pline_The("gods seem tall."); */
+                    pline("신들이 꽤 커 보인다.");
                 else
-                    You("have a feeling of inadequacy.");
+                    /*KR You("have a feeling of inadequacy."); */
+                    You("스스로가 부족하다고 느낀다.");
             }
         } else if (ugod_is_angry()) {
             if (value > MAXVALUE)
@@ -1717,7 +2083,8 @@ dosacrifice()
             if (value > -u.ualign.record)
                 value = -u.ualign.record;
             adjalign(value);
-            You_feel("partially absolved.");
+            /*KR You_feel("partially absolved."); */
+            You_feel("죄를 부분적으로 용서받은 기분이다.");
         } else if (u.ublesscnt > 0) {
             u.ublesscnt -= ((value * (u.ualign.type == A_CHAOTIC ? 500 : 300))
                             / MAXVALUE);
@@ -1726,16 +2093,22 @@ dosacrifice()
             if (u.ublesscnt != saved_cnt) {
                 if (u.ublesscnt) {
                     if (Hallucination)
-                        You("realize that the gods are not like you and I.");
+                        /*KR You("realize that the gods are not like you and
+                         * I."); */
+                        You("신들이 당신과 나 같은 존재가 아님을 깨달았다.");
                     else
-                        You("have a hopeful feeling.");
+                        /*KR You("have a hopeful feeling."); */
+                        You("희망찬 기분이 든다.");
                     if ((int) u.uluck < 0)
                         change_luck(1);
                 } else {
                     if (Hallucination)
-                        pline("Overall, there is a smell of fried onions.");
+                        /*KR pline("Overall, there is a smell of fried
+                         * onions."); */
+                        pline("주변에서 튀긴 양파 냄새가 난다.");
                     else
-                        You("have a feeling of reconciliation.");
+                        /*KR You("have a feeling of reconciliation."); */
+                        You("화해한 기분이 든다.");
                     if ((int) u.uluck < 0)
                         u.uluck = 0;
                 }
@@ -1755,9 +2128,12 @@ dosacrifice()
                     if (otmp->cursed)
                         uncurse(otmp);
                     otmp->oerodeproof = TRUE;
-                    at_your_feet("An object");
+                    /*KR at_your_feet("An object"); */
+                    at_your_feet("물건");
                     dropy(otmp);
-                    godvoice(u.ualign.type, "Use my gift wisely!");
+                    /*KR godvoice(u.ualign.type, "Use my gift wisely!"); */
+                    godvoice(u.ualign.type,
+                             "나의 선물을 지혜롭게 사용하거라!");
                     u.ugifts++;
                     u.ublesscnt = rnz(300 + (50 * nartifacts));
                     exercise(A_WIS, TRUE);
@@ -1776,13 +2152,26 @@ dosacrifice()
                 u.uluck = 0;
             if (u.uluck != saved_luck) {
                 if (Blind)
+#if 0 /*KR: 원본*/
                     You("think %s brushed your %s.", something,
                         body_part(FOOT));
+#else /*KR: KRNethack 맞춤 번역 */
+                    You("%s 당신의 %s 스치고 지나갔다고 생각한다.",
+                        append_josa(something, "이"), body_part(FOOT));
+#endif
                 else
+#if 0 /*KR: 원본*/
                     You(Hallucination
                     ? "see crabgrass at your %s.  A funny thing in a dungeon."
                             : "glimpse a four-leaf clover at your %s.",
                         makeplural(body_part(FOOT)));
+#else /*KR: KRNethack 맞춤 번역 */
+                    You(Hallucination
+                            ? "당신의 %s 바랭이풀을 보았다. 던전치고는 "
+                              "우스운 일이다."
+                            : "당신의 %s 네잎 클로버를 흘끗 보았다.",
+                        makeplural(body_part(FOOT)));
+#endif
             }
         }
     }
@@ -1801,13 +2190,19 @@ boolean praying; /* false means no messages should be given */
 
     if (is_demon(youmonst.data) && (p_aligntyp != A_CHAOTIC)) {
         if (praying)
+#if 0 /*KR: 원본*/
             pline_The("very idea of praying to a %s god is repugnant to you.",
                       p_aligntyp ? "lawful" : "neutral");
+#else /*KR: KRNethack 맞춤 번역 */
+            pline("%s 신에게 기도한다는 생각 자체가 혐오스럽게 느껴진다.",
+                  p_aligntyp ? "질서 성향의" : "중립 성향의");
+#endif
         return FALSE;
     }
 
     if (praying)
-        You("begin praying to %s.", align_gname(p_aligntyp));
+        /*KR You("begin praying to %s.", align_gname(p_aligntyp)); */
+        You("%s에게 기도를 시작했다.", align_gname(p_aligntyp));
 
     if (u.ualign.type && u.ualign.type == -p_aligntyp)
         alignment = -u.ualign.record; /* Opposite alignment altar */
@@ -1816,10 +2211,10 @@ boolean praying; /* false means no messages should be given */
     else
         alignment = u.ualign.record;
 
-    if ((p_trouble > 0) ? (u.ublesscnt > 200)      /* big trouble */
-           : (p_trouble < 0) ? (u.ublesscnt > 100) /* minor difficulties */
-              : (u.ublesscnt > 0))                 /* not in trouble */
-        p_type = 0;                     /* too soon... */
+    if ((p_trouble > 0)   ? (u.ublesscnt > 200) /* big trouble */
+        : (p_trouble < 0) ? (u.ublesscnt > 100) /* minor difficulties */
+                          : (u.ublesscnt > 0))  /* not in trouble */
+        p_type = 0;                             /* too soon... */
     else if ((int) Luck < 0 || u.ugangr || alignment < 0)
         p_type = 1; /* too naughty... */
     else /* alignment >= 0 */ {
@@ -1844,7 +2239,8 @@ int
 dopray()
 {
     /* Confirm accidental slips of Alt-P */
-    if (ParanoidPray && yn("Are you sure you want to pray?") != 'y')
+    /*KR if (ParanoidPray && yn("Are you sure you want to pray?") != 'y') */
+    if (ParanoidPray && yn("정말로 기도하시겠습니까?") != 'y')
         return 0;
 
     u.uconduct.gnostic++;
@@ -1854,7 +2250,8 @@ dopray()
         return 0;
 
     if (wizard && p_type >= 0) {
-        if (yn("Force the gods to be pleased?") == 'y') {
+        /*KR if (yn("Force the gods to be pleased?") == 'y') { */
+        if (yn("신들을 강제로 기쁘게 하시겠습니까?") == 'y') {
             u.ublesscnt = 0;
             if (u.uluck < 0)
                 u.uluck = 0;
@@ -1866,14 +2263,17 @@ dopray()
         }
     }
     nomul(-3);
-    multi_reason = "praying";
-    nomovemsg = "You finish your prayer.";
+    /*KR multi_reason = "praying"; */
+    multi_reason = "기도하느라";
+    /*KR nomovemsg = "You finish your prayer."; */
+    nomovemsg = "기도를 마쳤다.";
     afternmv = prayer_done;
 
     if (p_type == 3 && !Inhell) {
         /* if you've been true to your god you can't die while you pray */
         if (!Blind)
-            You("are surrounded by a shimmering light.");
+            /*KR You("are surrounded by a shimmering light."); */
+            You("어른거리는 빛에 휩싸였다.");
         u.uinvulnerable = TRUE;
     }
 
@@ -1887,21 +2287,36 @@ prayer_done() /* M. Stephenson (1.0.3b) */
 
     u.uinvulnerable = FALSE;
     if (p_type == -1) {
+#if 0 /*KR: 원본*/
         godvoice(alignment,
                  (alignment == A_LAWFUL)
                     ? "Vile creature, thou durst call upon me?"
                     : "Walk no more, perversion of nature!");
-        You_feel("like you are falling apart.");
+#else /*KR: KRNethack 맞춤 번역 */
+        godvoice(alignment,
+                 (alignment == A_LAWFUL)
+                     ? "비열한 피조물이여, 감히 나를 부르느냐?"
+                     : "더 이상 걷지 마라, 자연의 이치에 어긋난 자여!");
+#endif
+        /*KR You_feel("like you are falling apart."); */
+        You_feel("몸이 산산이 조각나는 것 같다.");
         /* KMH -- Gods have mastery over unchanging */
         rehumanize();
         /* no Half_physical_damage adjustment here */
-        losehp(rnd(20), "residual undead turning effect", KILLED_BY_AN);
+        /*KR losehp(rnd(20), "residual undead turning effect", KILLED_BY_AN);
+         */
+        losehp(rnd(20), "잔류하는 언데드 퇴치 효과", KILLED_BY_AN);
         exercise(A_CON, FALSE);
         return 1;
     }
     if (Inhell) {
+#if 0 /*KR: 원본*/
         pline("Since you are in Gehennom, %s can't help you.",
               align_gname(alignment));
+#else /*KR: KRNethack 맞춤 번역 */
+        pline("당신은 게헨놈에 있으므로, %s 당신을 도와줄 수 없다.",
+              append_josa(align_gname(alignment), "은"));
+#endif
         /* haltingly aligned is least likely to anger */
         if (u.ualign.record <= 0 || rnl(u.ualign.record))
             angrygods(u.ualign.type);
@@ -1960,7 +2375,8 @@ doturn()
             else if (spl_book[sp_no].sp_id == SPE_TURN_UNDEAD)
                 return spelleffects(sp_no, FALSE);
         }
-        You("don't know how to turn undead!");
+        /*KR You("don't know how to turn undead!"); */
+        You("언데드를 물리치는 방법을 모른다!");
         return 0;
     }
     u.uconduct.gnostic++;
@@ -1969,8 +2385,13 @@ doturn()
     /* [What about needing free hands (does #turn involve any gesturing)?] */
     if (!can_chant(&youmonst)) {
         /* "evilness": "demons and undead" is too verbose and too precise */
+#if 0 /*KR: 원본*/
         You("are %s upon %s to turn aside evilness.",
             Strangled ? "not able to call" : "incapable of calling", Gname);
+#else /*KR: KRNethack 맞춤 번역 */
+        You("악을 물리치기 위해 %s 부를 수 %s.", append_josa(Gname, "을"),
+            Strangled ? "없다" : "있는 능력이 없다");
+#endif
         /* violates agnosticism due to intent; conduct tracking is not
            supposed to affect play but we make an exception here:  use a
            move if this is the first time agnostic conduct has been broken */
@@ -1979,20 +2400,31 @@ doturn()
     if ((u.ualign.type != A_CHAOTIC
          && (is_demon(youmonst.data) || is_undead(youmonst.data)))
         || u.ugangr > 6) { /* "Die, mortal!" */
-        pline("For some reason, %s seems to ignore you.", Gname);
+        /*KR pline("For some reason, %s seems to ignore you.", Gname); */
+        pline("어쩐지, %s 당신을 무시하는 것 같다.",
+              append_josa(Gname, "이"));
         aggravate();
         exercise(A_WIS, FALSE);
         return 1;
     }
     if (Inhell) {
+#if 0 /*KR: 원본*/
         pline("Since you are in Gehennom, %s %s help you.",
               /* not actually calling upon Moloch but use alternate
                  phrasing anyway if hallucinatory feedback says it's him */
               Gname, !strcmp(Gname, Moloch) ? "won't" : "can't");
+#else /*KR: KRNethack 맞춤 번역 */
+        pline("당신은 게헨놈에 있으므로, %s 당신을 도울 수 %s.",
+              /* not actually calling upon Moloch but use alternate
+                 phrasing anyway if hallucinatory feedback says it's him */
+              append_josa(Gname, "은"),
+              !strcmp(Gname, Moloch) ? "없다" : "없다");
+#endif
         aggravate();
         return 1;
     }
-    pline("Calling upon %s, you chant an arcane formula.", Gname);
+    /*KR pline("Calling upon %s, you chant an arcane formula.", Gname); */
+    pline("%s 부르며, 신비한 주문을 읊조린다.", append_josa(Gname, "을"));
     exercise(A_WIS, TRUE);
 
     /* note: does not perform unturn_dead() on victims' inventories */
@@ -2016,7 +2448,8 @@ doturn()
             mtmp->msleeping = 0;
             if (Confusion) {
                 if (!once++)
-                    pline("Unfortunately, your voice falters.");
+                    /*KR pline("Unfortunately, your voice falters."); */
+                    pline("불행하게도, 당신의 목소리가 떨린다.");
                 mtmp->mflee = 0;
                 mtmp->mfrozen = 0;
                 mtmp->mcanmove = 1;
@@ -2060,22 +2493,23 @@ doturn()
     }
 
     /*
-     *  There is no detrimental effect on self for successful #turn
-     *  while in demon or undead form.  That can only be done while
-     *  chaotic oneself (see "For some reason" above) and chaotic
-     *  turning only makes targets peaceful.
+     * There is no detrimental effect on self for successful #turn
+     * while in demon or undead form.  That can only be done while
+     * chaotic oneself (see "For some reason" above) and chaotic
+     * turning only makes targets peaceful.
      *
-     *  Paralysis duration probably ought to be based on the strengh
-     *  of turned creatures rather than on turner's level.
-     *  Why doesn't this honor Free_action?  [Because being able to
-     *  repeat #turn every turn would be too powerful.  Maybe instead
-     *  of nomul(-N) we should add the equivalent of mon->mspec_used
-     *  for the hero and refuse to #turn when it's non-zero?  Or have
-     *  both and u.uspec_used only matters when Free_action prevents
-     *  the brief paralysis?]
+     * Paralysis duration probably ought to be based on the strengh
+     * of turned creatures rather than on turner's level.
+     * Why doesn't this honor Free_action?  [Because being able to
+     * repeat #turn every turn would be too powerful.  Maybe instead
+     * of nomul(-N) we should add the equivalent of mon->mspec_used
+     * for the hero and refuse to #turn when it's non-zero?  Or have
+     * both and u.uspec_used only matters when Free_action prevents
+     * the brief paralysis?]
      */
     nomul(-(5 - ((u.ulevel - 1) / 6))); /* -5 .. -1 */
-    multi_reason = "trying to turn the monsters";
+    /*KR multi_reason = "trying to turn the monsters"; */
+    multi_reason = "몬스터들을 물리치려 애쓰는 중이라";
     nomovemsg = You_can_move_again;
     return 1;
 }
@@ -2125,7 +2559,8 @@ aligntyp alignment;
         break;
     default:
         impossible("unknown alignment.");
-        gnam = "someone";
+        /*KR gnam = "someone"; */
+        gnam = "누군가";
         break;
     }
     if (*gnam == '_')
@@ -2134,6 +2569,7 @@ aligntyp alignment;
 }
 
 static const char *hallu_gods[] = {
+#if 0                           /*KR: 원본*/
     "the Flying Spaghetti Monster", /* Church of the FSM */
     "Eris",                         /* Discordianism */
     "the Martians",                 /* every science fiction ever */
@@ -2148,6 +2584,22 @@ static const char *hallu_gods[] = {
     "the Ori",                      /* Stargate */
     "destiny",                      /* why not? */
     "your Friend the Computer",     /* Paranoia */
+#else                           /*KR: KRNethack 맞춤 번역 */
+    "날아다니는 스파게티 괴물", /* Church of the FSM */
+    "에리스",                   /* Discordianism */
+    "화성인들",                 /* every science fiction ever */
+    "좀",                       /* Crawl */
+    "안도르 드라콘",            /* ADOM */
+    "옌더 중앙은행",            /* economics */
+    "이빨 요정",                /* real world(?) */
+    "옴",                       /* Discworld */
+    "야그모쓰",                 /* Magic: the Gathering */
+    "모르고스",                 /* LoTR */
+    "크툴루",                   /* Lovecraft */
+    "오라이",                   /* Stargate */
+    "운명",                     /* why not? */
+    "친애하는 컴퓨터",          /* Paranoia */
+#endif
 };
 
 /* hallucination handling for priest/minion names: select a random god
@@ -2196,7 +2648,11 @@ aligntyp alignment;
     }
     if (!gnam) {
         impossible("No random god name?");
+#if 0                             /*KR: 원본*/
         gnam = "your Friend the Computer"; /* Paranoia */
+#else                             /*KR: KRNethack 맞춤 번역 */
+        gnam = "친애하는 컴퓨터"; /* Paranoia */
+#endif
     }
     if (*gnam == '_')
         ++gnam;
@@ -2208,7 +2664,8 @@ const char *
 align_gtitle(alignment)
 aligntyp alignment;
 {
-    const char *gnam, *result = "god";
+    /*KR const char *gnam, *result = "god"; */
+    const char *gnam, *result = "신";
 
     switch (alignment) {
     case A_LAWFUL:
@@ -2225,27 +2682,34 @@ aligntyp alignment;
         break;
     }
     if (gnam && *gnam == '_')
-        result = "goddess";
+        /*KR result = "goddess"; */
+        result = "여신";
     return result;
 }
 
-void
-altar_wrath(x, y)
-register int x, y;
+void altar_wrath(x, y) register int x, y;
 {
     aligntyp altaralign = a_align(x, y);
 
     if (u.ualign.type == altaralign && u.ualign.record > -rn2(4)) {
-        godvoice(altaralign, "How darest thou desecrate my altar!");
+        /*KR godvoice(altaralign, "How darest thou desecrate my altar!"); */
+        godvoice(altaralign, "감히 내 제단을 더럽히다니!");
         (void) adjattrib(A_WIS, -1, FALSE);
         u.ualign.record--;
     } else {
+#if 0 /*KR: 원본*/
         pline("%s %s%s:",
               !Deaf ? "A voice (could it be"
                     : "Despite your deafness, you seem to hear",
               align_gname(altaralign),
               !Deaf ? "?) whispers" : " say");
-        verbalize("Thou shalt pay, infidel!");
+#else /*KR: KRNethack 맞춤 번역 */
+        pline("%s %s%s:", !Deaf ? "(설마" : "귀가 들리지 않음에도 불구하고,",
+              align_gname(altaralign),
+              !Deaf ? "?)의 속삭임이 들린다" : "의 목소리가 들리는 듯하다");
+#endif
+        /*KR verbalize("Thou shalt pay, infidel!"); */
+        verbalize("대가를 치를 것이다, 이교도여!");
         /* higher luck is more likely to be reduced; as it approaches -5
            the chance to lose another point drops down, eventually to 0 */
         if (Luck > -5 && rn2(Luck + 6))
@@ -2279,7 +2743,7 @@ int dx, dy;
     case 2:
         /* this is only approximate since multiple boulders might sink */
         if (is_pool_or_lava(nx, ny)) /* does its own isok() check */
-            break; /* still need Sokoban check below */
+            break;                   /* still need Sokoban check below */
         /*FALLTHRU*/
     default:
         /* more than one boulder--blocked after they push the top one;

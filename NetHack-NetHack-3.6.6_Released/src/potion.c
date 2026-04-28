@@ -69,7 +69,12 @@ boolean talk;
 
     if (!xtime && old) {
         if (talk)
+#if 0 /*KR: 원본*/
             You_feel("less %s now.", Hallucination ? "trippy" : "confused");
+#else /*KR: KRNethack 맞춤 번역 */
+            You("%s 가라앉은 것을 느낀다.",
+                Hallucination ? "몽롱함이" : "혼란이");
+#endif
     }
     if ((xtime && !old) || (!xtime && old))
         context.botl = TRUE;
@@ -77,9 +82,7 @@ boolean talk;
     set_itimeout(&HConfusion, xtime);
 }
 
-void
-make_stunned(xtime, talk)
-long xtime;
+void make_stunned(xtime, talk) long xtime;
 boolean talk;
 {
     long old = HStun;
@@ -89,15 +92,22 @@ boolean talk;
 
     if (!xtime && old) {
         if (talk)
+#if 0 /*KR: 원본*/
             You_feel("%s now.",
                      Hallucination ? "less wobbly" : "a bit steadier");
+#else /*KR: KRNethack 맞춤 번역 */
+            You_feel("%s.", Hallucination ? "흔들거림이 줄어든 것 같다"
+                                          : "안정을 되찾은 것 같다");
+#endif
     }
     if (xtime && !old) {
         if (talk) {
             if (u.usteed)
-                You("wobble in the saddle.");
+                /*KR You("wobble in the saddle."); */
+                You("안장 위에서 비틀거렸다.");
             else
-                You("%s...", stagger(youmonst.data, "stagger"));
+                /*KR You("%s...", stagger(youmonst.data, "stagger")); */
+                You("%s...", stagger(youmonst.data, "비틀거렸다"));
         }
     }
     if ((!xtime && old) || (xtime && !old))
@@ -109,9 +119,7 @@ boolean talk;
 /* Sick is overloaded with both fatal illness and food poisoning (via
    u.usick_type bit mask), but delayed killer can only support one or
    the other at a time.  They should become separate intrinsics.... */
-void
-make_sick(xtime, cause, talk, type)
-long xtime;
+void make_sick(xtime, cause, talk, type) long xtime;
 const char *cause; /* sickness cause */
 boolean talk;
 int type;
@@ -119,7 +127,7 @@ int type;
     struct kinfo *kptr;
     long old = Sick;
 
-#if 0   /* tell player even if hero is unconscious */
+#if 0 /* tell player even if hero is unconscious */
     if (Unaware)
         talk = FALSE;
 #endif
@@ -128,11 +136,15 @@ int type;
             return;
         if (!old) {
             /* newly sick */
-            You_feel("deathly sick.");
+            /*KR You_feel("deathly sick."); */
+            You_feel("죽을 것 같이 아프다.");
         } else {
             /* already sick */
             if (talk)
-                You_feel("%s worse.", xtime <= Sick / 2L ? "much" : "even");
+                /*KR You_feel("%s worse.", xtime <= Sick / 2L ? "much" :
+                 * "even"); */
+                You_feel("%s 악화된 것 같다.",
+                         xtime <= Sick / 2L ? "훨씬" : "조금 더");
         }
         set_itimeout(&Sick, xtime);
         u.usick_type |= type;
@@ -142,11 +154,13 @@ int type;
         u.usick_type &= ~type;
         if (u.usick_type) { /* only partly cured */
             if (talk)
-                You_feel("somewhat better.");
+                /*KR You_feel("somewhat better."); */
+                You_feel("몸이 조금 나아졌다.");
             set_itimeout(&Sick, Sick * 2); /* approximation */
         } else {
             if (talk)
-                You_feel("cured.  What a relief!");
+                /*KR You_feel("cured.  What a relief!"); */
+                pline("병이 나았다. 아, 다행이다!");
             Sick = 0L; /* set_itimeout(&Sick, 0L) */
         }
         context.botl = TRUE;
@@ -159,8 +173,9 @@ int type;
            not right when make_sick(0) is called to cure food poisoning
            if hero was also fatally ill; this is only approximate */
         if (xtime || !old || !kptr) {
-            int kpfx = ((cause && !strcmp(cause, "#wizintrinsic"))
-                        ? KILLED_BY : KILLED_BY_AN);
+            int kpfx =
+                ((cause && !strcmp(cause, "#wizintrinsic")) ? KILLED_BY
+                                                            : KILLED_BY_AN);
 
             delayed_killer(SICK, kpfx, cause);
         }
@@ -168,14 +183,12 @@ int type;
         dealloc_killer(kptr);
 }
 
-void
-make_slimed(xtime, msg)
-long xtime;
+void make_slimed(xtime, msg) long xtime;
 const char *msg;
 {
     long old = Slimed;
 
-#if 0   /* tell player even if hero is unconscious */
+#if 0 /* tell player even if hero is unconscious */
     if (Unaware)
         msg = 0;
 #endif
@@ -197,16 +210,14 @@ const char *msg;
 }
 
 /* start or stop petrification */
-void
-make_stoned(xtime, msg, killedby, killername)
-long xtime;
+void make_stoned(xtime, msg, killedby, killername) long xtime;
 const char *msg;
 int killedby;
 const char *killername;
 {
     long old = Stoned;
 
-#if 0   /* tell player even if hero is unconscious */
+#if 0 /* tell player even if hero is unconscious */
     if (Unaware)
         msg = 0;
 #endif
@@ -222,9 +233,7 @@ const char *killername;
         delayed_killer(STONED, killedby, killername);
 }
 
-void
-make_vomiting(xtime, talk)
-long xtime;
+void make_vomiting(xtime, talk) long xtime;
 boolean talk;
 {
     long old = Vomiting;
@@ -236,20 +245,24 @@ boolean talk;
     context.botl = TRUE;
     if (!xtime && old)
         if (talk)
-            You_feel("much less nauseated now.");
+            /*KR You_feel("much less nauseated now."); */
+            You("구역질이 가라앉았다.");
 }
 
-static const char vismsg[] = "vision seems to %s for a moment but is %s now.";
-static const char eyemsg[] = "%s momentarily %s.";
+/*KR static const char vismsg[] = "vision seems to %s for a moment but is %s
+ * now."; */
+static const char vismsg[] = "시야가 잠시 %s만, 이제 %s.";
+/*KR static const char eyemsg[] = "%s momentarily %s."; */
+static const char eyemsg[] = "%s 순간적으로 %s.";
 
-void
-make_blinded(xtime, talk)
-long xtime;
+void make_blinded(xtime, talk) long xtime;
 boolean talk;
 {
     long old = Blinded;
     boolean u_could_see, can_see_now;
+#if 0 /*KR*/
     const char *eyes;
+#endif
 
     /* we need to probe ahead in case the Eyes of the Overworld
        are or will be overriding blindness */
@@ -264,9 +277,11 @@ boolean talk;
     if (can_see_now && !u_could_see) { /* regaining sight */
         if (talk) {
             if (Hallucination)
-                pline("Far out!  Everything is all cosmic again!");
+                /*KR pline("Far out!  Everything is all cosmic again!"); */
+                pline("우와! 세상 모든 게 다시 우주적으로 보여!");
             else
-                You("can see again.");
+                /*KR You("can see again."); */
+                You("다시 앞이 보인다.");
         }
     } else if (old && !xtime) {
         /* clearing temporary blindness without toggling blindness */
@@ -274,12 +289,19 @@ boolean talk;
             if (!haseyes(youmonst.data)) {
                 strange_feeling((struct obj *) 0, (char *) 0);
             } else if (Blindfolded) {
+#if 0 /*KR: 원본*/
                 eyes = body_part(EYE);
                 if (eyecount(youmonst.data) != 1)
                     eyes = makeplural(eyes);
                 Your(eyemsg, eyes, vtense(eyes, "itch"));
+#else /*KR: KRNethack 맞춤 번역 */
+                Your(eyemsg, append_josa(body_part(EYE), "이"), "가려워졌다");
+#endif
             } else { /* Eyes of the Overworld */
-                Your(vismsg, "brighten", Hallucination ? "sadder" : "normal");
+                /*KR Your(vismsg, "brighten", Hallucination ? "sadder" :
+                 * "normal"); */
+                Your(vismsg, "밝아진 것 같았지",
+                     Hallucination ? "슬퍼졌다" : "정상으로 돌아왔다");
             }
         }
     }
@@ -287,9 +309,11 @@ boolean talk;
     if (u_could_see && !can_see_now) { /* losing sight */
         if (talk) {
             if (Hallucination)
-                pline("Oh, bummer!  Everything is dark!  Help!");
+                /*KR pline("Oh, bummer!  Everything is dark!  Help!"); */
+                pline("오, 맙소사! 세상이 온통 깜깜해졌어! 사람 살려!");
             else
-                pline("A cloud of darkness falls upon you.");
+                /*KR pline("A cloud of darkness falls upon you."); */
+                pline("어둠의 장막이 당신을 뒤덮었다.");
         }
         /* Before the hero goes blind, set the ball&chain variables. */
         if (Punished)
@@ -300,12 +324,19 @@ boolean talk;
             if (!haseyes(youmonst.data)) {
                 strange_feeling((struct obj *) 0, (char *) 0);
             } else if (Blindfolded) {
+#if 0 /*KR: 원본*/
                 eyes = body_part(EYE);
                 if (eyecount(youmonst.data) != 1)
                     eyes = makeplural(eyes);
                 Your(eyemsg, eyes, vtense(eyes, "twitch"));
+#else /*KR: KRNethack 맞춤 번역 */
+                Your(eyemsg, append_josa(body_part(EYE), "이"), "씰룩거렸다");
+#endif
             } else { /* Eyes of the Overworld */
-                Your(vismsg, "dim", Hallucination ? "happier" : "normal");
+                /*KR Your(vismsg, "dim", Hallucination ? "happier" :
+                 * "normal"); */
+                Your(vismsg, "어두워진 것 같았지",
+                     Hallucination ? "더 행복해졌다" : "정상으로 돌아왔다");
             }
         }
     }
@@ -325,7 +356,7 @@ toggle_blindness()
     boolean Stinging = (uwep && (EWarn_of_mon & W_WEP) != 0L);
 
     /* blindness has just been toggled */
-    context.botl = TRUE; /* status conditions need update */
+    context.botl = TRUE;    /* status conditions need update */
     vision_full_recalc = 1; /* vision has changed */
     /* this vision recalculation used to be deferred until moveloop(),
        but that made it possible for vision irregularities to occur
@@ -363,9 +394,15 @@ long mask; /* nonzero if resistance status should change by mask */
     if (Unaware)
         talk = FALSE;
 
+#if 0 /*KR: 원본*/
     message = (!xtime) ? "Everything %s SO boring now."
                        : "Oh wow!  Everything %s so cosmic!";
-    verb = (!Blind) ? "looks" : "feels";
+#else /*KR: KRNethack 맞춤 번역 */
+    message = (!xtime) ? "모든 것이 다시 *무척이나* 따분해%s."
+                       : "우와! 모든 것이 너무나도 우주적으로 %s!";
+#endif
+    /*KR verb = (!Blind) ? "looks" : "feels"; */
+    verb = (!Blind) ? "보인다" : "느껴진다";
 
     if (mask) {
         if (HHallucination)
@@ -385,13 +422,18 @@ long mask; /* nonzero if resistance status should change by mask */
             if (!haseyes(youmonst.data)) {
                 strange_feeling((struct obj *) 0, (char *) 0);
             } else if (Blind) {
+#if 0 /*KR: 원본*/
                 const char *eyes = body_part(EYE);
 
                 if (eyecount(youmonst.data) != 1)
                     eyes = makeplural(eyes);
                 Your(eyemsg, eyes, vtense(eyes, "itch"));
+#else /*KR: KRNethack 맞춤 번역 */
+                Your(eyemsg, append_josa(body_part(EYE), "이"), "가려워졌다");
+#endif
             } else { /* Grayswandir */
-                Your(vismsg, "flatten", "normal");
+                /*KR Your(vismsg, "flatten", "normal"); */
+                Your(vismsg, "이상해진 것 같았지", "정상으로 돌아왔다");
             }
         }
     }
@@ -422,9 +464,7 @@ long mask; /* nonzero if resistance status should change by mask */
     return changed;
 }
 
-void
-make_deaf(xtime, talk)
-long xtime;
+void make_deaf(xtime, talk) long xtime;
 boolean talk;
 {
     long old = HDeaf;
@@ -436,14 +476,14 @@ boolean talk;
     if ((xtime != 0L) ^ (old != 0L)) {
         context.botl = TRUE;
         if (talk)
-            You(old ? "can hear again." : "are unable to hear anything.");
+            /*KR You(old ? "can hear again." : "are unable to hear
+             * anything."); */
+            You(old ? "다시 소리가 들린다." : "아무 소리도 들을 수 없다.");
     }
 }
 
 /* set or clear "slippery fingers" */
-void
-make_glib(xtime)
-int xtime;
+void make_glib(xtime) int xtime;
 {
     set_itimeout(&Glib, xtime);
     /* may change "(being worn)" to "(being worn; slippery)" or vice versa */
@@ -454,11 +494,17 @@ int xtime;
 void
 self_invis_message()
 {
+#if 0 /*KR: 원본*/
     pline("%s %s.",
           Hallucination ? "Far out, man!  You"
                         : "Gee!  All of a sudden, you",
           See_invisible ? "can see right through yourself"
                         : "can't see yourself");
+#else /*KR: KRNethack 맞춤 번역 */
+    pline("%s 당신은 자기 자신이 %s.",
+          Hallucination ? "와우!" : "이런! 갑자기",
+          See_invisible ? "투명하게 보인다" : "보이지 않는다");
+#endif
 }
 
 STATIC_OVL void
@@ -467,20 +513,31 @@ ghost_from_bottle()
     struct monst *mtmp = makemon(&mons[PM_GHOST], u.ux, u.uy, NO_MM_FLAGS);
 
     if (!mtmp) {
-        pline("This bottle turns out to be empty.");
+        /*KR pline("This bottle turns out to be empty."); */
+        pline("물약 병은 빈 병인 것으로 판명되었다.");
         return;
     }
     if (Blind) {
-        pline("As you open the bottle, %s emerges.", something);
+        /*KR pline("As you open the bottle, %s emerges.", something); */
+        pline("병을 열자, %s 나왔다.", append_josa(something, "이"));
         return;
     }
+#if 0 /*KR: 원본*/
     pline("As you open the bottle, an enormous %s emerges!",
           Hallucination ? rndmonnam(NULL) : (const char *) "ghost");
+#else /*KR: KRNethack 맞춤 번역 */
+    pline("병을 열자, 거대한 %s 튀어나왔다!",
+          append_josa(Hallucination ? rndmonnam(NULL) : (const char *) "유령",
+                      "이"));
+#endif
     if (flags.verbose)
-        You("are frightened to death, and unable to move.");
+        /*KR You("are frightened to death, and unable to move."); */
+        You("너무 무서워서 움직일 수가 없다.");
     nomul(-3);
-    multi_reason = "being frightened to death";
-    nomovemsg = "You regain your composure.";
+    /*KR multi_reason = "being frightened to death"; */
+    multi_reason = "무서움에 질려";
+    /*KR nomovemsg = "You regain your composure."; */
+    nomovemsg = "당신은 평정심을 되찾았다.";
 }
 
 /* "Quaffing is like drinking, except you spill more." - Terry Pratchett */
@@ -491,14 +548,16 @@ dodrink()
     const char *potion_descr;
 
     if (Strangled) {
-        pline("If you can't breathe air, how can you drink liquid?");
+        /*KR pline("If you can't breathe air, how can you drink liquid?"); */
+        pline("숨도 쉴 수 없는데, 어떻게 액체를 마시겠다는 건가?");
         return 0;
     }
     /* Is there a fountain to drink from here? */
     if (IS_FOUNTAIN(levl[u.ux][u.uy].typ)
         /* not as low as floor level but similar restrictions apply */
         && can_reach_floor(FALSE)) {
-        if (yn("Drink from the fountain?") == 'y') {
+        /*KR if (yn("Drink from the fountain?") == 'y') { */
+        if (yn("분수에서 물을 마시겠습니까?") == 'y') {
             drinkfountain();
             return 1;
         }
@@ -507,15 +566,18 @@ dodrink()
     if (IS_SINK(levl[u.ux][u.uy].typ)
         /* not as low as floor level but similar restrictions apply */
         && can_reach_floor(FALSE)) {
-        if (yn("Drink from the sink?") == 'y') {
+        /*KR if (yn("Drink from the sink?") == 'y') { */
+        if (yn("싱크대에서 물을 마시겠습니까?") == 'y') {
             drinksink();
             return 1;
         }
     }
     /* Or are you surrounded by water? */
     if (Underwater && !u.uswallow) {
-        if (yn("Drink the water around you?") == 'y') {
-            pline("Do you know what lives in this water?");
+        /*KR if (yn("Drink the water around you?") == 'y') { */
+        if (yn("주변의 물을 마시겠습니까?") == 'y') {
+            /*KR pline("Do you know what lives in this water?"); */
+            pline("이 물속에 뭐가 살고 있는지 아는가?");
             return 1;
         }
     }
@@ -542,13 +604,15 @@ dodrink()
 
     potion_descr = OBJ_DESCR(objects[otmp->otyp]);
     if (potion_descr) {
-        if (!strcmp(potion_descr, "milky")
+        /*KR if (!strcmp(potion_descr, "milky") */
+        if (!strcmp(potion_descr, "우윳빛의")
             && !(mvitals[PM_GHOST].mvflags & G_GONE)
             && !rn2(POTION_OCCUPANT_CHANCE(mvitals[PM_GHOST].born))) {
             ghost_from_bottle();
             useup(otmp);
             return 1;
-        } else if (!strcmp(potion_descr, "smoky")
+            /*KR } else if (!strcmp(potion_descr, "smoky") */
+        } else if (!strcmp(potion_descr, "연기가 나는")
                    && !(mvitals[PM_DJINNI].mvflags & G_GONE)
                    && !rn2(POTION_OCCUPANT_CHANCE(mvitals[PM_DJINNI].born))) {
             djinni_from_bottle(otmp);
@@ -572,8 +636,13 @@ register struct obj *otmp;
 
     if (nothing) {
         unkn++;
+#if 0 /*KR: 원본*/
         You("have a %s feeling for a moment, then it passes.",
             Hallucination ? "normal" : "peculiar");
+#else /*KR: KRNethack 맞춤 번역 */
+        You("잠시 %s 기분이 들었지만, 이내 사라졌다.",
+            Hallucination ? "정상적인" : "기묘한");
+#endif
     }
     if (otmp->dknown && !objects[otmp->otyp].oc_name_known) {
         if (!unkn) {
@@ -597,14 +666,23 @@ register struct obj *otmp;
     case SPE_RESTORE_ABILITY:
         unkn++;
         if (otmp->cursed) {
-            pline("Ulch!  This makes you feel mediocre!");
+            /*KR pline("Ulch!  This makes you feel mediocre!"); */
+            pline("우웩! 기분이 별로 안 좋아졌다!");
             break;
         } else {
             /* unlike unicorn horn, overrides Fixed_abil */
+#if 0 /*KR: 원본*/
             pline("Wow!  This makes you feel %s!",
                   (otmp->blessed)
                       ? (unfixable_trouble_count(FALSE) ? "better" : "great")
                       : "good");
+#else /*KR: KRNethack 맞춤 번역 */
+            pline("와우! 기분이 %s!",
+                  (otmp->blessed)
+                      ? (unfixable_trouble_count(FALSE) ? "나아졌다"
+                                                        : "끝내주게 좋아졌다")
+                      : "좋아졌다");
+#endif
             i = rn2(A_MAX); /* start at a random point */
             for (ii = 0; ii < A_MAX; ii++) {
                 lim = AMAX(i);
@@ -636,13 +714,14 @@ register struct obj *otmp;
     case POT_HALLUCINATION:
         if (Hallucination || Halluc_resistance)
             nothing++;
-        (void) make_hallucinated(itimeout_incr(HHallucination,
-                                          rn1(200, 600 - 300 * bcsign(otmp))),
-                                 TRUE, 0L);
+        (void) make_hallucinated(
+            itimeout_incr(HHallucination, rn1(200, 600 - 300 * bcsign(otmp))),
+            TRUE, 0L);
         break;
     case POT_WATER:
         if (!otmp->blessed && !otmp->cursed) {
-            pline("This tastes like %s.", hliquid("water"));
+            /*KR pline("This tastes like %s.", hliquid("water")); */
+            pline("이것은 %s 맛이 난다.", hliquid("물"));
             u.uhunger += rnd(10);
             newuhs(FALSE);
             break;
@@ -651,19 +730,25 @@ register struct obj *otmp;
         if (is_undead(youmonst.data) || is_demon(youmonst.data)
             || u.ualign.type == A_CHAOTIC) {
             if (otmp->blessed) {
-                pline("This burns like %s!", hliquid("acid"));
+                /*KR pline("This burns like %s!", hliquid("acid")); */
+                pline("이것은 마치 %s처럼 타는 듯한 느낌이다!",
+                      hliquid("산"));
                 exercise(A_CON, FALSE);
                 if (u.ulycn >= LOW_PM) {
-                    Your("affinity to %s disappears!",
+                    /*KR Your("affinity to %s disappears!",
+                     * makeplural(mons[u.ulycn].mname)); */
+                    Your("%s에 대한 친밀감이 사라졌다!",
                          makeplural(mons[u.ulycn].mname));
                     if (youmonst.data == &mons[u.ulycn])
                         you_unwere(FALSE);
                     set_ulycn(NON_PM); /* cure lycanthropy */
                 }
-                losehp(Maybe_Half_Phys(d(2, 6)), "potion of holy water",
-                       KILLED_BY_AN);
+                /*KR losehp(Maybe_Half_Phys(d(2, 6)), "potion of holy water",
+                 * KILLED_BY_AN); */
+                losehp(Maybe_Half_Phys(d(2, 6)), "성수", KILLED_BY_AN);
             } else if (otmp->cursed) {
-                You_feel("quite proud of yourself.");
+                /*KR You_feel("quite proud of yourself."); */
+                You_feel("스스로가 무척 자랑스럽다.");
                 healup(d(2, 6), 0, 0, 0);
                 if (u.ulycn >= LOW_PM && !Upolyd)
                     you_were();
@@ -671,7 +756,8 @@ register struct obj *otmp;
             }
         } else {
             if (otmp->blessed) {
-                You_feel("full of awe.");
+                /*KR You_feel("full of awe."); */
+                You_feel("경외감으로 가득 찼다.");
                 make_sick(0L, (char *) 0, TRUE, SICK_ALL);
                 exercise(A_WIS, TRUE);
                 exercise(A_CON, TRUE);
@@ -680,11 +766,16 @@ register struct obj *otmp;
                 /* make_confused(0L, TRUE); */
             } else {
                 if (u.ualign.type == A_LAWFUL) {
-                    pline("This burns like %s!", hliquid("acid"));
-                    losehp(Maybe_Half_Phys(d(2, 6)), "potion of unholy water",
+                    /*KR pline("This burns like %s!", hliquid("acid")); */
+                    pline("이것은 마치 %s처럼 타는 듯한 느낌이다!",
+                          hliquid("산"));
+                    /*KR losehp(Maybe_Half_Phys(d(2, 6)), "potion of unholy
+                     * water", KILLED_BY_AN); */
+                    losehp(Maybe_Half_Phys(d(2, 6)), "불경한 물",
                            KILLED_BY_AN);
                 } else
-                    You_feel("full of dread.");
+                    /*KR You_feel("full of dread."); */
+                    You_feel("공포감으로 가득 찼다.");
                 if (u.ulycn >= LOW_PM && !Upolyd)
                     you_were();
                 exercise(A_CON, FALSE);
@@ -693,9 +784,14 @@ register struct obj *otmp;
         break;
     case POT_BOOZE:
         unkn++;
+#if 0 /*KR: 원본*/
         pline("Ooph!  This tastes like %s%s!",
               otmp->odiluted ? "watered down " : "",
               Hallucination ? "dandelion wine" : "liquid fire");
+#else /*KR: KRNethack 맞춤 번역 */
+        pline("우웩! 이것은 %s%s 맛이 난다!", otmp->odiluted ? "물 탄 " : "",
+              Hallucination ? "민들레 와인" : "액체 불꽃");
+#endif
         if (!otmp->blessed)
             make_confused(itimeout_incr(HConfusion, d(3, 8)), FALSE);
         /* the whiskey makes us feel better */
@@ -705,32 +801,39 @@ register struct obj *otmp;
         newuhs(FALSE);
         exercise(A_WIS, FALSE);
         if (otmp->cursed) {
-            You("pass out.");
+            /*KR You("pass out."); */
+            You("기절했다.");
             multi = -rnd(15);
-            nomovemsg = "You awake with a headache.";
+            /*KR nomovemsg = "You awake with a headache."; */
+            nomovemsg = "두통과 함께 깨어났다.";
         }
         break;
     case POT_ENLIGHTENMENT:
         if (otmp->cursed) {
             unkn++;
-            You("have an uneasy feeling...");
+            /*KR You("have an uneasy feeling..."); */
+            You("불안한 기분이 든다...");
             exercise(A_WIS, FALSE);
         } else {
             if (otmp->blessed) {
                 (void) adjattrib(A_INT, 1, FALSE);
                 (void) adjattrib(A_WIS, 1, FALSE);
             }
-            You_feel("self-knowledgeable...");
+            /*KR You_feel("self-knowledgeable..."); */
+            You_feel("스스로에 대해 깨달은 것 같다...");
             display_nhwindow(WIN_MESSAGE, FALSE);
             enlightenment(MAGICENLIGHTENMENT, ENL_GAMEINPROGRESS);
-            pline_The("feeling subsides.");
+            /*KR pline_The("feeling subsides."); */
+            pline("그 기분은 가라앉았다.");
             exercise(A_WIS, TRUE);
         }
         break;
     case SPE_INVISIBILITY:
         /* spell cannot penetrate mummy wrapping */
         if (BInvis && uarmc->otyp == MUMMY_WRAPPING) {
-            You_feel("rather itchy under %s.", yname(uarmc));
+            /*KR You_feel("rather itchy under %s.", yname(uarmc)); */
+            You_feel("%s 아래가 다소 가렵다.",
+                     append_josa(yname(uarmc), "의"));
             break;
         }
         /* FALLTHRU */
@@ -746,7 +849,10 @@ register struct obj *otmp;
             incr_itimeout(&HInvis, rn1(15, 31));
         newsym(u.ux, u.uy); /* update position */
         if (otmp->cursed) {
-            pline("For some reason, you feel your presence is known.");
+            /*KR pline("For some reason, you feel your presence is known.");
+             */
+            pline("어떤 이유에서인지, 당신은 자신의 존재가 드러난 것 같은 "
+                  "기분이 든다.");
             aggravate();
         }
         break;
@@ -756,14 +862,25 @@ register struct obj *otmp;
 
         unkn++;
         if (otmp->cursed)
+#if 0 /*KR: 원본*/
             pline("Yecch!  This tastes %s.",
                   Hallucination ? "overripe" : "rotten");
+#else /*KR: KRNethack 맞춤 번역 */
+            pline("우웩! 이것은 %s 맛이 난다.",
+                  Hallucination ? "너무 익은" : "썩은");
+#endif
         else
+#if 0 /*KR: 원본*/
             pline(
                 Hallucination
                     ? "This tastes like 10%% real %s%s all-natural beverage."
                     : "This tastes like %s%s.",
                 otmp->odiluted ? "reconstituted " : "", fruitname(TRUE));
+#else /*KR: KRNethack 맞춤 번역 */
+            pline(Hallucination ? "이것은 10%% 진짜 %s%s 천연 음료 맛이 난다."
+                                : "이것은 %s%s 맛이 난다.",
+                  otmp->odiluted ? "농축 환원된 " : "", fruitname(TRUE));
+#endif
         if (otmp->otyp == POT_FRUIT_JUICE) {
             u.uhunger += (otmp->odiluted ? 5 : 10) * (2 + bcsign(otmp));
             newuhs(FALSE);
@@ -783,33 +900,46 @@ register struct obj *otmp;
         see_monsters();       /* see invisible monsters */
         newsym(u.ux, u.uy);   /* see yourself! */
         if (msg && !Blind) {  /* Blind possible if polymorphed */
-            You("can see through yourself, but you are visible!");
+            /*KR You("can see through yourself, but you are visible!"); */
+            You("당신의 몸을 투과해서 볼 수 있지만, 모습은 보인다!");
             unkn--;
         }
         break;
     }
     case POT_PARALYSIS:
         if (Free_action) {
-            You("stiffen momentarily.");
+            /*KR You("stiffen momentarily."); */
+            You("순간적으로 몸이 굳었다.");
         } else {
             if (Levitation || Is_airlevel(&u.uz) || Is_waterlevel(&u.uz))
-                You("are motionlessly suspended.");
+                /*KR You("are motionlessly suspended."); */
+                You("미동도 없이 매달려 있다.");
             else if (u.usteed)
-                You("are frozen in place!");
+                /*KR You("are frozen in place!"); */
+                You("그 자리에 얼어붙었다!");
             else
+#if 0 /*KR: 원본*/
                 Your("%s are frozen to the %s!", makeplural(body_part(FOOT)),
                      surface(u.ux, u.uy));
+#else /*KR: KRNethack 맞춤 번역 */
+                Your("%s %s에 얼어붙었다!",
+                     append_josa(makeplural(body_part(FOOT)), "이"),
+                     surface(u.ux, u.uy));
+#endif
             nomul(-(rn1(10, 25 - 12 * bcsign(otmp))));
-            multi_reason = "frozen by a potion";
+            /*KR multi_reason = "frozen by a potion"; */
+            multi_reason = "물약으로 인해 얼어붙어서";
             nomovemsg = You_can_move_again;
             exercise(A_DEX, FALSE);
         }
         break;
     case POT_SLEEPING:
         if (Sleep_resistance || Free_action) {
-            You("yawn.");
+            /*KR You("yawn."); */
+            You("하품을 했다.");
         } else {
-            You("suddenly fall asleep!");
+            /*KR You("suddenly fall asleep!"); */
+            You("갑자기 잠이 들었다!");
             fall_asleep(-rn1(10, 25 - 12 * bcsign(otmp)), TRUE);
         }
         break;
@@ -839,7 +969,8 @@ register struct obj *otmp;
             }
             see_monsters();
             if (unkn)
-                You_feel("lonely.");
+                /*KR You_feel("lonely."); */
+                You_feel("외로워졌다.");
             break;
         }
         if (monster_detect(otmp, 0))
@@ -853,27 +984,41 @@ register struct obj *otmp;
         exercise(A_WIS, TRUE);
         break;
     case POT_SICKNESS:
-        pline("Yecch!  This stuff tastes like poison.");
+        /*KR pline("Yecch!  This stuff tastes like poison."); */
+        pline("우웩! 이것은 독 같은 맛이 난다.");
         if (otmp->blessed) {
-            pline("(But in fact it was mildly stale %s.)", fruitname(TRUE));
+            /*KR pline("(But in fact it was mildly stale %s.)",
+             * fruitname(TRUE)); */
+            pline("(하지만 사실 이것은 약간 상한 %s(이)다.)",
+                  fruitname(TRUE));
             if (!Role_if(PM_HEALER)) {
                 /* NB: blessed otmp->fromsink is not possible */
-                losehp(1, "mildly contaminated potion", KILLED_BY_AN);
+                /*KR losehp(1, "mildly contaminated potion", KILLED_BY_AN); */
+                losehp(1, "약간 오염된 물약", KILLED_BY_AN);
             }
         } else {
             if (Poison_resistance)
-                pline("(But in fact it was biologically contaminated %s.)",
+                /*KR pline("(But in fact it was biologically contaminated
+                 * %s.)", fruitname(TRUE)); */
+                pline("(하지만 사실 이것은 생물학적으로 오염된 %s(이)다.)",
                       fruitname(TRUE));
             if (Role_if(PM_HEALER)) {
-                pline("Fortunately, you have been immunized.");
+                /*KR pline("Fortunately, you have been immunized."); */
+                pline("다행히도, 당신은 면역이 되어 있다.");
             } else {
                 char contaminant[BUFSZ];
                 int typ = rn2(A_MAX);
 
+#if 0 /*KR: 원본*/
                 Sprintf(contaminant, "%s%s",
                         (Poison_resistance) ? "mildly " : "",
                         (otmp->fromsink) ? "contaminated tap water"
                                          : "contaminated potion");
+#else /*KR: KRNethack 맞춤 번역 */
+                Sprintf(contaminant, "%s오염된 %s",
+                        (Poison_resistance) ? "가볍게 " : "",
+                        (otmp->fromsink) ? "수돗물" : "물약");
+#endif
                 if (!Fixed_abil) {
                     poisontell(typ, FALSE);
                     (void) adjattrib(typ, Poison_resistance ? -1 : -rn1(4, 3),
@@ -895,33 +1040,36 @@ register struct obj *otmp;
             }
         }
         if (Hallucination) {
-            You("are shocked back to your senses!");
+            /*KR You("are shocked back to your senses!"); */
+            You("당신은 충격으로 제정신을 차렸다!");
             (void) make_hallucinated(0L, FALSE, 0L);
         }
         break;
     case POT_CONFUSION:
         if (!Confusion) {
             if (Hallucination) {
-                pline("What a trippy feeling!");
+                /*KR pline("What a trippy feeling!"); */
+                pline("기분이 묘한걸!");
                 unkn++;
             } else
-                pline("Huh, What?  Where am I?");
+                /*KR pline("Huh, What?  Where am I?"); */
+                pline("어, 뭐야? 여긴 어디지?");
         } else
             nothing++;
-        make_confused(itimeout_incr(HConfusion,
-                                    rn1(7, 16 - 8 * bcsign(otmp))),
-                      FALSE);
+        make_confused(
+            itimeout_incr(HConfusion, rn1(7, 16 - 8 * bcsign(otmp))), FALSE);
         break;
     case POT_GAIN_ABILITY:
         if (otmp->cursed) {
-            pline("Ulch!  That potion tasted foul!");
+            /*KR pline("Ulch!  That potion tasted foul!"); */
+            pline("우웩! 그 물약은 끔찍한 맛이 났다!");
             unkn++;
         } else if (Fixed_abil) {
             nothing++;
         } else {      /* If blessed, increase all; if not, try up to */
             int itmp; /* 6 times to find one which can be increased. */
 
-            i = -1;   /* increment to 0 */
+            i = -1; /* increment to 0 */
             for (ii = A_MAX; ii > 0; ii--) {
                 i = (otmp->blessed ? i + 1 : rn2(A_MAX));
                 /* only give "your X is already as high as it can get"
@@ -942,9 +1090,12 @@ register struct obj *otmp;
         /* FALLTHRU */
     case SPE_HASTE_SELF:
         if (!Very_fast) { /* wwf@doe.carleton.ca */
-            You("are suddenly moving %sfaster.", Fast ? "" : "much ");
+            /*KR You("are suddenly moving %sfaster.", Fast ? "" : "much "); */
+            You("갑자기 %s더 빠르게 움직일 수 있다.", Fast ? "" : "훨씬 ");
         } else {
-            Your("%s get new energy.", makeplural(body_part(LEG)));
+            /*KR Your("%s get new energy.", makeplural(body_part(LEG))); */
+            Your("%s 새로운 기운을 얻었다.",
+                 append_josa(makeplural(body_part(LEG)), "이"));
             unkn++;
         }
         exercise(A_DEX, TRUE);
@@ -953,9 +1104,9 @@ register struct obj *otmp;
     case POT_BLINDNESS:
         if (Blind)
             nothing++;
-        make_blinded(itimeout_incr(Blinded,
-                                   rn1(200, 250 - 125 * bcsign(otmp))),
-                     (boolean) !Blind);
+        make_blinded(
+            itimeout_incr(Blinded, rn1(200, 250 - 125 * bcsign(otmp))),
+            (boolean) !Blind);
         break;
     case POT_GAIN_LEVEL:
         if (otmp->cursed) {
@@ -963,10 +1114,11 @@ register struct obj *otmp;
             /* they went up a level */
             if ((ledger_no(&u.uz) == 1 && u.uhave.amulet)
                 || Can_rise_up(u.ux, u.uy, &u.uz)) {
-                const char *riseup = "rise up, through the %s!";
+                /*KR const char *riseup = "rise up, through the %s!"; */
+                const char *riseup = "솟아올라, %s 뚫고 지나갔다!";
 
                 if (ledger_no(&u.uz) == 1) {
-                    You(riseup, ceiling(u.ux, u.uy));
+                    You(riseup, append_josa(ceiling(u.ux, u.uy), "을"));
                     goto_level(&earth_level, FALSE, FALSE, FALSE);
                 } else {
                     register int newlev = depth(&u.uz) - 1;
@@ -974,14 +1126,16 @@ register struct obj *otmp;
 
                     get_level(&newlevel, newlev);
                     if (on_level(&newlevel, &u.uz)) {
-                        pline("It tasted bad.");
+                        /*KR pline("It tasted bad."); */
+                        pline("그것은 맛이 없었다.");
                         break;
                     } else
-                        You(riseup, ceiling(u.ux, u.uy));
+                        You(riseup, append_josa(ceiling(u.ux, u.uy), "을"));
                     goto_level(&newlevel, FALSE, FALSE, FALSE);
                 }
             } else
-                You("have an uneasy feeling.");
+                /*KR You("have an uneasy feeling."); */
+                You("불안한 기분이 든다.");
             break;
         }
         pluslvl(FALSE);
@@ -991,22 +1145,27 @@ register struct obj *otmp;
             u.uexp = rndexp(TRUE);
         break;
     case POT_HEALING:
-        You_feel("better.");
+        /*KR You_feel("better."); */
+        You_feel("기분이 나아졌다.");
         healup(d(6 + 2 * bcsign(otmp), 4), !otmp->cursed ? 1 : 0,
                !!otmp->blessed, !otmp->cursed);
         exercise(A_CON, TRUE);
         break;
     case POT_EXTRA_HEALING:
-        You_feel("much better.");
+        /*KR You_feel("much better."); */
+        You_feel("기분이 훨씬 나아졌다.");
         healup(d(6 + 2 * bcsign(otmp), 8),
-               otmp->blessed ? 5 : !otmp->cursed ? 2 : 0, !otmp->cursed,
-               TRUE);
+               otmp->blessed   ? 5
+               : !otmp->cursed ? 2
+                               : 0,
+               !otmp->cursed, TRUE);
         (void) make_hallucinated(0L, TRUE, 0L);
         exercise(A_CON, TRUE);
         exercise(A_STR, TRUE);
         break;
     case POT_FULL_HEALING:
-        You_feel("completely healed.");
+        /*KR You_feel("completely healed."); */
+        You_feel("완전히 치유되었다.");
         healup(400, 4 + 4 * bcsign(otmp), !otmp->cursed, TRUE);
         /* Restore one lost level if blessed */
         if (otmp->blessed && u.ulevel < u.ulevelmax) {
@@ -1047,8 +1206,10 @@ register struct obj *otmp;
             if (BLevitation) {
                 ; /* rising via levitation is blocked */
             } else if ((u.ux == xupstair && u.uy == yupstair)
-                    || (sstairs.up && u.ux == sstairs.sx && u.uy == sstairs.sy)
-                    || (xupladder && u.ux == xupladder && u.uy == yupladder)) {
+                       || (sstairs.up && u.ux == sstairs.sx
+                           && u.uy == sstairs.sy)
+                       || (xupladder && u.ux == xupladder
+                           && u.uy == yupladder)) {
                 (void) doup();
                 /* in case we're already Levitating, which would have
                    resulted in incrementing 'nothing' */
@@ -1056,10 +1217,16 @@ register struct obj *otmp;
             } else if (has_ceiling(&u.uz)) {
                 int dmg = rnd(!uarmh ? 10 : !is_metallic(uarmh) ? 6 : 3);
 
+#if 0 /*KR: 원본*/
                 You("hit your %s on the %s.", body_part(HEAD),
                     ceiling(u.ux, u.uy));
-                losehp(Maybe_Half_Phys(dmg), "colliding with the ceiling",
-                       KILLED_BY);
+#else /*KR: KRNethack 맞춤 번역 */
+                You("당신의 %s %s에 부딪혔다.",
+                    append_josa(body_part(HEAD), "을"), ceiling(u.ux, u.uy));
+#endif
+                /*KR losehp(Maybe_Half_Phys(dmg), "colliding with the
+                 * ceiling", KILLED_BY); */
+                losehp(Maybe_Half_Phys(dmg), "천장에 충돌하여", KILLED_BY);
                 nothing = 0; /* not nothing after all */
             }
         } else if (otmp->blessed) {
@@ -1080,9 +1247,11 @@ register struct obj *otmp;
         int num;
 
         if (otmp->cursed)
-            You_feel("lackluster.");
+            /*KR You_feel("lackluster."); */
+            You_feel("활기가 없다.");
         else
-            pline("Magical energies course through your body.");
+            /*KR pline("Magical energies course through your body."); */
+            pline("마법의 에너지가 당신의 몸을 타고 흐른다.");
 
         /* old: num = rnd(5) + 5 * otmp->blessed + 1;
          *      blessed:  +7..11 max & current (+9 avg)
@@ -1113,33 +1282,57 @@ register struct obj *otmp;
 
         if (otmp->lamplit) {
             if (likes_fire(youmonst.data)) {
+#if 0 /*KR: 원본*/
                 pline("Ahh, a refreshing drink.");
+#else /*KR: KRNethack 맞춤 번역 */
+                pline("아아, 상쾌한 음료다.");
+#endif
                 good_for_you = TRUE;
             } else {
+#if 0 /*KR: 원본*/
                 You("burn your %s.", body_part(FACE));
+#else /*KR: KRNethack 맞춤 번역 */
+                Your("%s 까맣게 타버렸다.",
+                     append_josa(body_part(FACE), "이"));
+#endif
                 /* fire damage */
-                losehp(d(Fire_resistance ? 1 : 3, 4), "burning potion of oil",
+                /*KR losehp(d(Fire_resistance ? 1 : 3, 4), "burning potion of
+                 * oil", KILLED_BY_AN); */
+                losehp(d(Fire_resistance ? 1 : 3, 4), "불타는 기름 물약",
                        KILLED_BY_AN);
             }
         } else if (otmp->cursed)
-            pline("This tastes like castor oil.");
+            /*KR pline("This tastes like castor oil."); */
+            pline("이것은 피마자유 같은 맛이 난다.");
         else
-            pline("That was smooth!");
+            /*KR pline("That was smooth!"); */
+            pline("부드러운 맛이다!");
         exercise(A_WIS, good_for_you);
         break;
     }
     case POT_ACID:
         if (Acid_resistance) {
             /* Not necessarily a creature who _likes_ acid */
-            pline("This tastes %s.", Hallucination ? "tangy" : "sour");
+            /*KR pline("This tastes %s.", Hallucination ? "tangy" : "sour");
+             */
+            pline("이것은 %s 맛이 난다.", Hallucination ? "톡 쏘는" : "신");
         } else {
             int dmg;
 
+#if 0 /*KR: 원본*/
             pline("This burns%s!",
                   otmp->blessed ? " a little" : otmp->cursed ? " a lot"
                                                              : " like acid");
+#else /*KR: KRNethack 맞춤 번역 */
+            pline("%s타오르는 듯한 느낌이 든다!", otmp->blessed ? "약간 "
+                                                  : otmp->cursed
+                                                      ? "몹시 "
+                                                      : "산성액처럼 ");
+#endif
             dmg = d(otmp->cursed ? 2 : 1, otmp->blessed ? 4 : 8);
-            losehp(Maybe_Half_Phys(dmg), "potion of acid", KILLED_BY_AN);
+            /*KR losehp(Maybe_Half_Phys(dmg), "potion of acid", KILLED_BY_AN);
+             */
+            losehp(Maybe_Half_Phys(dmg), "산성 물약", KILLED_BY_AN);
             exercise(A_CON, FALSE);
         }
         if (Stoned)
@@ -1147,7 +1340,9 @@ register struct obj *otmp;
         unkn++; /* holy/unholy water can burn like acid too */
         break;
     case POT_POLYMORPH:
-        You_feel("a little %s.", Hallucination ? "normal" : "strange");
+        /*KR You_feel("a little %s.", Hallucination ? "normal" : "strange");
+         */
+        You("조금 %s 기분이 든다.", Hallucination ? "정상적인" : "이상한");
         if (!Unchanging)
             polyself(0);
         break;
@@ -1158,9 +1353,24 @@ register struct obj *otmp;
     return -1;
 }
 
-void
-healup(nhp, nxtra, curesick, cureblind)
-int nhp, nxtra;
+#ifdef JPEXTENSION
+void make_totter(xtime, talk) long xtime; /* nonzero if this is an attempt to
+                                             turn on hallucination */
+boolean talk;
+{
+    const char *message = 0;
+
+    if (!xtime)
+        message = "방향 감각이 정상으로 돌아왔다.";
+    else
+        message = "방향 감각이 마비되었다.";
+
+    set_itimeout(&Totter, xtime);
+    pline(message);
+}
+#endif
+
+void healup(nhp, nxtra, curesick, cureblind) int nhp, nxtra;
 register boolean curesick, cureblind;
 {
     if (nhp) {
@@ -1190,14 +1400,17 @@ register boolean curesick, cureblind;
     return;
 }
 
-void
-strange_feeling(obj, txt)
-struct obj *obj;
+void strange_feeling(obj, txt) struct obj *obj;
 const char *txt;
 {
     if (flags.beginner || !txt)
+#if 0 /*KR: 원본*/
         You("have a %s feeling for a moment, then it passes.",
             Hallucination ? "normal" : "strange");
+#else /*KR: KRNethack 맞춤 번역 */
+        You("잠시 %s 기분이 들었지만, 이내 사라졌다.",
+            Hallucination ? "정상적인" : "기묘한");
+#endif
     else
         pline1(txt);
 
@@ -1211,8 +1424,13 @@ const char *txt;
     useup(obj);
 }
 
+#if 0 /*KR: 원본*/
 const char *bottlenames[] = { "bottle", "phial", "flagon", "carafe",
                               "flask",  "jar",   "vial" };
+#else /*KR: KRNethack 맞춤 번역 */
+const char *bottlenames[] = { "병",       "작은 병", "큰 병", "물병",
+                              "플라스크", "단지",    "유리병" };
+#endif
 
 const char *
 bottlename()
@@ -1251,7 +1469,8 @@ const char *objphrase; /* "Your widget glows" or "Steed's saddle glows" */
     } else if (potion->cursed) {
         if (targobj->blessed) {
             func = unbless;
-            glowcolor = "brown";
+            /*KR glowcolor = "brown"; */
+            glowcolor = "갈색";
             costchange = COST_UNBLSS;
         } else if (!targobj->cursed) {
             func = curse;
@@ -1274,9 +1493,19 @@ const char *objphrase; /* "Your widget glows" or "Steed's saddle glows" */
         if (useeit) {
             glowcolor = hcolor(glowcolor);
             if (altfmt)
+#if 0 /*KR: 원본*/
                 pline("%s with %s aura.", objphrase, an(glowcolor));
+#else /*KR: KRNethack 맞춤 번역 */
+                pline("%s %s 오라에 휩싸였다.", append_josa(objphrase, "은"),
+                      glowcolor);
+#endif
             else
+#if 0 /*KR: 원본*/
                 pline("%s %s.", objphrase, glowcolor);
+#else /*KR: KRNethack 맞춤 번역 */
+                pline("%s %s 빛났다.", append_josa(objphrase, "은"),
+                      glowcolor);
+#endif
             iflags.last_msg = PLNMSG_OBJ_GLOWS;
             targobj->bknown = !Hallucination;
         } else {
@@ -1309,9 +1538,7 @@ const char *objphrase; /* "Your widget glows" or "Steed's saddle glows" */
 }
 
 /* potion obj hits monster mon, which might be youmonst; obj always used up */
-void
-potionhit(mon, obj, how)
-struct monst *mon;
+void potionhit(mon, obj, how) struct monst *mon;
 struct obj *obj;
 int how;
 {
@@ -1324,12 +1551,17 @@ int how;
     if (isyou) {
         tx = u.ux, ty = u.uy;
         distance = 0;
+#if 0 /*KR: 원본*/
         pline_The("%s crashes on your %s and breaks into shards.", botlnam,
                   body_part(HEAD));
-        losehp(Maybe_Half_Phys(rnd(2)),
-               (how == POTHIT_OTHER_THROW) ? "propelled potion" /* scatter */
-                                           : "thrown potion",
-               KILLED_BY_AN);
+#else /*KR: KRNethack 맞춤 번역 */
+        pline("%s 당신의 %s에 부딪혀 산산조각 났다.",
+              append_josa(botlnam, "이"), body_part(HEAD));
+#endif
+        /*KR losehp(Maybe_Half_Phys(rnd(2)),
+               (how == POTHIT_OTHER_THROW) ? "propelled potion" : "thrown
+           potion", KILLED_BY_AN); */
+        losehp(Maybe_Half_Phys(rnd(2)), "던져진 물약", KILLED_BY_AN);
     } else {
         tx = mon->mx, ty = mon->my;
         /* sometimes it hits the saddle */
@@ -1342,24 +1574,40 @@ int how;
             hit_saddle = TRUE;
         distance = distu(tx, ty);
         if (!cansee(tx, ty)) {
-            pline("Crash!");
+            /*KR pline("Crash!"); */
+            pline("쨍그랑!");
         } else {
             char *mnam = mon_nam(mon);
             char buf[BUFSZ];
 
             if (hit_saddle && saddle) {
+#if 0 /*KR: 원본*/
                 Sprintf(buf, "%s saddle",
                         s_suffix(x_monnam(mon, ARTICLE_THE, (char *) 0,
                                           (SUPPRESS_IT | SUPPRESS_SADDLE),
                                           FALSE)));
+#else /*KR: KRNethack 맞춤 번역 */
+                Sprintf(buf, "%s의 안장",
+                        x_monnam(mon, ARTICLE_THE, (char *) 0,
+                                 (SUPPRESS_IT | SUPPRESS_SADDLE), FALSE));
+#endif
             } else if (has_head(mon->data)) {
+#if 0 /*KR: 원본*/
                 Sprintf(buf, "%s %s", s_suffix(mnam),
                         (notonhead ? "body" : "head"));
+#else /*KR: KRNethack 맞춤 번역 */
+                Sprintf(buf, "%s의 %s", mnam, (notonhead ? "몸" : "머리"));
+#endif
             } else {
                 Strcpy(buf, mnam);
             }
+#if 0 /*KR: 원본*/
             pline_The("%s crashes on %s and breaks into shards.", botlnam,
                       buf);
+#else /*KR: KRNethack 맞춤 번역 */
+            pline("%s %s에 부딪혀 산산조각 났다.", append_josa(botlnam, "이"),
+                  buf);
+#endif
         }
         if (rn2(5) && mon->mhp > 1 && !hit_saddle)
             mon->mhp--;
@@ -1367,7 +1615,8 @@ int how;
 
     /* oil doesn't instantly evaporate; Neither does a saddle hit */
     if (obj->otyp != POT_OIL && !hit_saddle && cansee(tx, ty))
-        pline("%s.", Tobjnam(obj, "evaporate"));
+        /*KR pline("%s.", Tobjnam(obj, "evaporate")); */
+        pline("%s 증발했다.", append_josa(xname(obj), "은"));
 
     if (isyou) {
         switch (obj->otyp) {
@@ -1376,7 +1625,10 @@ int how;
                 explode_oil(obj, u.ux, u.uy);
             break;
         case POT_POLYMORPH:
-            You_feel("a little %s.", Hallucination ? "normal" : "strange");
+            /*KR You_feel("a little %s.", Hallucination ? "normal" :
+             * "strange"); */
+            You("조금 %s 기분이 든다.",
+                Hallucination ? "정상적인" : "이상한");
             if (!Unchanging && !Antimagic)
                 polyself(0);
             break;
@@ -1384,11 +1636,19 @@ int how;
             if (!Acid_resistance) {
                 int dmg;
 
+#if 0 /*KR: 원본*/
                 pline("This burns%s!",
                       obj->blessed ? " a little"
                                    : obj->cursed ? " a lot" : "");
+#else /*KR: KRNethack 맞춤 번역 */
+                pline("%s타오르는 듯한 느낌이 든다!", obj->blessed  ? "약간 "
+                                                      : obj->cursed ? "몹시 "
+                                                                    : "");
+#endif
                 dmg = d(obj->cursed ? 2 : 1, obj->blessed ? 4 : 8);
-                losehp(Maybe_Half_Phys(dmg), "potion of acid", KILLED_BY_AN);
+                /*KR losehp(Maybe_Half_Phys(dmg), "potion of acid",
+                 * KILLED_BY_AN); */
+                losehp(Maybe_Half_Phys(dmg), "산성 물약", KILLED_BY_AN);
             }
             break;
         }
@@ -1403,7 +1663,9 @@ int how;
 
         switch (obj->otyp) {
         case POT_WATER:
-            Sprintf(saddle_glows, "%s %s", buf, aobjnam(saddle, "glow"));
+            /*KR Sprintf(saddle_glows, "%s %s", buf, aobjnam(saddle, "glow"));
+             */
+            Sprintf(saddle_glows, "%s", buf);
             affected = H2Opotion_dip(obj, saddle, useeit, saddle_glows);
             break;
         case POT_POLYMORPH:
@@ -1411,7 +1673,8 @@ int how;
             break;
         }
         if (useeit && !affected)
-            pline("%s %s wet.", buf, aobjnam(saddle, "get"));
+            /*KR pline("%s %s wet.", buf, aobjnam(saddle, "get")); */
+            pline("%s 젖었다.", append_josa(buf, "은"));
     } else {
         boolean angermon = your_fault, cureblind = FALSE;
 
@@ -1431,12 +1694,15 @@ int how;
             /*FALLTHRU*/
         case POT_RESTORE_ABILITY:
         case POT_GAIN_ABILITY:
- do_healing:
+        do_healing:
             angermon = FALSE;
             if (mon->mhp < mon->mhpmax) {
                 mon->mhp = mon->mhpmax;
                 if (canseemon(mon))
-                    pline("%s looks sound and hale again.", Monnam(mon));
+                    /*KR pline("%s looks sound and hale again.", Monnam(mon));
+                     */
+                    pline("%s 다시 건강해진 것처럼 보인다.",
+                          append_josa(Monnam(mon), "은"));
             }
             if (cureblind)
                 mcureblindness(mon, canseemon(mon));
@@ -1450,10 +1716,15 @@ int how;
                 /* most common case */
                 || resists_poison(mon)) {
                 if (canseemon(mon))
+#if 0 /*KR: 원본*/
                     pline("%s looks unharmed.", Monnam(mon));
+#else /*KR: KRNethack 맞춤 번역 */
+                    pline("%s 아무렇지도 않아 보인다.",
+                          append_josa(Monnam(mon), "은"));
+#endif
                 break;
             }
- do_illness:
+        do_illness:
             if ((mon->mhpmax > 3) && !resist(mon, POTION_CLASS, 0, NOTELL))
                 mon->mhpmax /= 2;
             if ((mon->mhp > 2) && !resist(mon, POTION_CLASS, 0, NOTELL))
@@ -1461,7 +1732,8 @@ int how;
             if (mon->mhp > mon->mhpmax)
                 mon->mhp = mon->mhpmax;
             if (canseemon(mon))
-                pline("%s looks rather ill.", Monnam(mon));
+                /*KR pline("%s looks rather ill.", Monnam(mon)); */
+                pline("%s 다소 아파 보인다.", append_josa(Monnam(mon), "은"));
             break;
         case POT_CONFUSION:
         case POT_BOOZE:
@@ -1480,7 +1752,8 @@ int how;
         case POT_SLEEPING:
             /* wakeup() doesn't rouse victims of temporary sleep */
             if (sleep_monst(mon, rnd(12), POTION_CLASS)) {
-                pline("%s falls asleep.", Monnam(mon));
+                /*KR pline("%s falls asleep.", Monnam(mon)); */
+                pline("%s 잠들었다.", append_josa(Monnam(mon), "은"));
                 slept_monst(mon);
             }
             break;
@@ -1499,7 +1772,7 @@ int how;
         case POT_BLINDNESS:
             if (haseyes(mon->data)) {
                 int btmp = 64 + rn2(32)
-                            + rn2(32) * !resist(mon, POTION_CLASS, 0, NOTELL);
+                           + rn2(32) * !resist(mon, POTION_CLASS, 0, NOTELL);
 
                 btmp += mon->mblinded;
                 mon->mblinded = min(btmp, 127);
@@ -1510,8 +1783,14 @@ int how;
             if (is_undead(mon->data) || is_demon(mon->data)
                 || is_were(mon->data) || is_vampshifter(mon)) {
                 if (obj->blessed) {
+#if 0 /*KR: 원본*/
                     pline("%s %s in pain!", Monnam(mon),
                           is_silent(mon->data) ? "writhes" : "shrieks");
+#else /*KR: KRNethack 맞춤 번역 */
+                    pline("%s 고통에 %s!", append_josa(Monnam(mon), "은"),
+                          is_silent(mon->data) ? "몸부림쳤다"
+                                               : "비명을 질렀다");
+#endif
                     if (!is_silent(mon->data))
                         wake_nearto(tx, ty, mon->data->mlevel * 10);
                     mon->mhp -= d(2, 6);
@@ -1523,7 +1802,9 @@ int how;
                 } else if (obj->cursed) {
                     angermon = FALSE;
                     if (canseemon(mon))
-                        pline("%s looks healthier.", Monnam(mon));
+                        /*KR pline("%s looks healthier.", Monnam(mon)); */
+                        pline("%s 더 건강해진 것처럼 보인다.",
+                              append_josa(Monnam(mon), "은"));
                     mon->mhp += d(2, 6);
                     if (mon->mhp > mon->mhpmax)
                         mon->mhp = mon->mhpmax;
@@ -1536,7 +1817,8 @@ int how;
                 (void) split_mon(mon, (struct monst *) 0);
             } else if (mon->data == &mons[PM_IRON_GOLEM]) {
                 if (canseemon(mon))
-                    pline("%s rusts.", Monnam(mon));
+                    /*KR pline("%s rusts.", Monnam(mon)); */
+                    pline("%s 녹슬었다.", append_josa(Monnam(mon), "은"));
                 mon->mhp -= d(1, 6);
                 /* should only be by you */
                 if (DEADMONSTER(mon))
@@ -1549,8 +1831,13 @@ int how;
             break;
         case POT_ACID:
             if (!resists_acid(mon) && !resist(mon, POTION_CLASS, 0, NOTELL)) {
+#if 0 /*KR: 원본*/
                 pline("%s %s in pain!", Monnam(mon),
                       is_silent(mon->data) ? "writhes" : "shrieks");
+#else /*KR: KRNethack 맞춤 번역 */
+                pline("%s 고통에 %s!", append_josa(Monnam(mon), "은"),
+                      is_silent(mon->data) ? "몸부림쳤다" : "비명을 질렀다");
+#endif
                 if (!is_silent(mon->data))
                     wake_nearto(tx, ty, mon->data->mlevel * 10);
                 mon->mhp -= d(obj->cursed ? 2 : 1, obj->blessed ? 4 : 8);
@@ -1565,14 +1852,14 @@ int how;
         case POT_POLYMORPH:
             (void) bhitm(mon, obj);
             break;
-        /*
-        case POT_GAIN_LEVEL:
-        case POT_LEVITATION:
-        case POT_FRUIT_JUICE:
-        case POT_MONSTER_DETECTION:
-        case POT_OBJECT_DETECTION:
-            break;
-        */
+            /*
+            case POT_GAIN_LEVEL:
+            case POT_LEVITATION:
+            case POT_FRUIT_JUICE:
+            case POT_MONSTER_DETECTION:
+            case POT_OBJECT_DETECTION:
+                break;
+            */
         }
         /* target might have been killed */
         if (!DEADMONSTER(mon)) {
@@ -1609,9 +1896,7 @@ int how;
 }
 
 /* vapors are inhaled or get in your eyes */
-void
-potionbreathe(obj)
-register struct obj *obj;
+void potionbreathe(obj) register struct obj *obj;
 {
     int i, ii, isdone, kn = 0;
     boolean cureblind = FALSE;
@@ -1626,13 +1911,18 @@ register struct obj *obj;
     case POT_GAIN_ABILITY:
         if (obj->cursed) {
             if (!breathless(youmonst.data))
-                pline("Ulch!  That potion smells terrible!");
+                /*KR pline("Ulch!  That potion smells terrible!"); */
+                pline("우웩! 그 물약은 끔찍한 냄새가 난다!");
             else if (haseyes(youmonst.data)) {
+#if 0 /*KR: 원본*/
                 const char *eyes = body_part(EYE);
 
                 if (eyecount(youmonst.data) != 1)
                     eyes = makeplural(eyes);
                 Your("%s %s!", eyes, vtense(eyes, "sting"));
+#else /*KR: KRNethack 맞춤 번역 */
+                Your("%s 따끔거린다!", append_josa(body_part(EYE), "이"));
+#endif
             }
             break;
         } else {
@@ -1695,54 +1985,71 @@ register struct obj *obj;
         }
         break;
     case POT_HALLUCINATION:
-        You("have a momentary vision.");
+        /*KR You("have a momentary vision."); */
+        You("순간적으로 환영이 보였다.");
         break;
     case POT_CONFUSION:
     case POT_BOOZE:
         if (!Confusion)
-            You_feel("somewhat dizzy.");
+            /*KR You_feel("somewhat dizzy."); */
+            You_feel("약간 어지럽다.");
         make_confused(itimeout_incr(HConfusion, rnd(5)), FALSE);
         break;
     case POT_INVISIBILITY:
         if (!Blind && !Invis) {
             kn++;
+#if 0 /*KR: 원본*/
             pline("For an instant you %s!",
                   See_invisible ? "could see right through yourself"
                                 : "couldn't see yourself");
+#else /*KR: KRNethack 맞춤 번역 */
+            pline("당신은 순식간에 자기 자신이 %s!",
+                  See_invisible ? "투명하게 보이게 되었다"
+                                : "보이지 않게 되었다");
+#endif
         }
         break;
     case POT_PARALYSIS:
         kn++;
         if (!Free_action) {
-            pline("%s seems to be holding you.", Something);
+            /*KR pline("%s seems to be holding you.", Something); */
+            pline("%s 당신을 붙잡고 있는 것 같다.",
+                  append_josa(Something, "이"));
             nomul(-rnd(5));
-            multi_reason = "frozen by a potion";
+            /*KR multi_reason = "frozen by a potion"; */
+            multi_reason = "물약에 의해 얼어붙어서";
             nomovemsg = You_can_move_again;
             exercise(A_DEX, FALSE);
         } else
-            You("stiffen momentarily.");
+            /*KR You("stiffen momentarily."); */
+            You("순간적으로 몸이 굳었다.");
         break;
     case POT_SLEEPING:
         kn++;
         if (!Free_action && !Sleep_resistance) {
-            You_feel("rather tired.");
+            /*KR You_feel("rather tired."); */
+            You_feel("다소 피곤하다.");
             nomul(-rnd(5));
-            multi_reason = "sleeping off a magical draught";
+            /*KR multi_reason = "sleeping off a magical draught"; */
+            multi_reason = "마법의 물약으로 인해 잠들어서";
             nomovemsg = You_can_move_again;
             exercise(A_DEX, FALSE);
         } else
-            You("yawn.");
+            /*KR You("yawn."); */
+            You("하품을 했다.");
         break;
     case POT_SPEED:
         if (!Fast)
-            Your("knees seem more flexible now.");
+            /*KR Your("knees seem more flexible now."); */
+            Your("무릎이 전보다 유연해진 것 같다.");
         incr_itimeout(&HFast, rnd(5));
         exercise(A_DEX, TRUE);
         break;
     case POT_BLINDNESS:
         if (!Blind && !Unaware) {
             kn++;
-            pline("It suddenly gets dark.");
+            /*KR pline("It suddenly gets dark."); */
+            pline("갑자기 어두워졌다.");
         }
         make_blinded(itimeout_incr(Blinded, rnd(5)), FALSE);
         if (!Blind && !Unaware)
@@ -1764,15 +2071,15 @@ register struct obj *obj;
     case POT_POLYMORPH:
         exercise(A_CON, FALSE);
         break;
-    /*
-    case POT_GAIN_LEVEL:
-    case POT_LEVITATION:
-    case POT_FRUIT_JUICE:
-    case POT_MONSTER_DETECTION:
-    case POT_OBJECT_DETECTION:
-    case POT_OIL:
-        break;
-     */
+        /*
+        case POT_GAIN_LEVEL:
+        case POT_LEVITATION:
+        case POT_FRUIT_JUICE:
+        case POT_MONSTER_DETECTION:
+        case POT_OBJECT_DETECTION:
+        case POT_OIL:
+            break;
+         */
     }
     /* note: no obfree() -- that's our caller's responsibility */
     if (obj->dknown) {
@@ -1810,9 +2117,9 @@ register struct obj *o1, *o2;
     case POT_EXTRA_HEALING:
     case POT_FULL_HEALING:
         if (o2typ == POT_GAIN_LEVEL || o2typ == POT_GAIN_ENERGY)
-            return (o1typ == POT_HEALING) ? POT_EXTRA_HEALING
+            return (o1typ == POT_HEALING)         ? POT_EXTRA_HEALING
                    : (o1typ == POT_EXTRA_HEALING) ? POT_FULL_HEALING
-                     : POT_GAIN_ABILITY;
+                                                  : POT_GAIN_ABILITY;
         /*FALLTHRU*/
     case UNICORN_HORN:
         switch (o2typ) {
@@ -1878,23 +2185,29 @@ register struct obj *o1, *o2;
 int
 dodip()
 {
-    static const char Dip_[] = "Dip ";
+    /*KR static const char Dip_[] = "Dip "; */
+    static const char Dip_[] = "담그다";
     register struct obj *potion, *obj;
     struct obj *singlepotion;
     uchar here;
     char allowall[2];
     short mixture;
     char qbuf[QBUFSZ], obuf[QBUFSZ];
+#if 0 /*KR: 원본*/
     const char *shortestname; /* last resort obj name for prompt */
+#endif
 
     allowall[0] = ALL_CLASSES;
     allowall[1] = '\0';
     if (!(obj = getobj(allowall, "dip")))
         return 0;
-    if (inaccessible_equipment(obj, "dip", FALSE))
+    /*KR if (inaccessible_equipment(obj, "dip", FALSE)) */
+    if (inaccessible_equipment(obj, "담그기", FALSE))
         return 0;
 
+#if 0 /*KR: 원본*/
     shortestname = (is_plural(obj) || pair_of(obj)) ? "them" : "it";
+#endif
     /*
      * Bypass safe_qbuf() since it doesn't handle varying suffix without
      * an awful lot of support work.  Format the object once, even though
@@ -1912,8 +2225,12 @@ dodip()
     here = levl[u.ux][u.uy].typ;
     /* Is there a fountain to dip into here? */
     if (IS_FOUNTAIN(here)) {
+#if 0 /*KR: 원본*/
         Sprintf(qbuf, "%s%s into the fountain?", Dip_,
                 flags.verbose ? obuf : shortestname);
+#else /*KR: KRNethack 맞춤 번역 */
+        Sprintf(qbuf, "%s 분수에 담그겠습니까?", append_josa(obuf, "을"));
+#endif
         /* "Dip <the object> into the fountain?" */
         if (yn(qbuf) == 'y') {
             dipfountain(obj);
@@ -1922,8 +2239,13 @@ dodip()
     } else if (is_pool(u.ux, u.uy)) {
         const char *pooltype = waterbody_name(u.ux, u.uy);
 
+#if 0 /*KR: 원본*/
         Sprintf(qbuf, "%s%s into the %s?", Dip_,
                 flags.verbose ? obuf : shortestname, pooltype);
+#else /*KR: KRNethack 맞춤 번역 */
+        Sprintf(qbuf, "%s %s에 담그겠습니까?", append_josa(obuf, "을"),
+                pooltype);
+#endif
         /* "Dip <the object> into the {pool, moat, &c}?" */
         if (yn(qbuf) == 'y') {
             if (Levitation) {
@@ -1941,19 +2263,29 @@ dodip()
         }
     }
 
+#if 0 /*KR: 원본*/
     /* "What do you want to dip <the object> into? [xyz or ?*] " */
     Sprintf(qbuf, "dip %s into", flags.verbose ? obuf : shortestname);
+#else /*KR: KRNethack 맞춤 번역 */
+    /* "What do you want to dip into? [xyz or ?*] " */
+    Sprintf(qbuf, "어디에 담그겠습니까?");
+#endif
     potion = getobj(beverages, qbuf);
     if (!potion)
         return 0;
     if (potion == obj && potion->quan == 1L) {
-        pline("That is a potion bottle, not a Klein bottle!");
+        /*KR pline("That is a potion bottle, not a Klein bottle!"); */
+        pline("그것은 물약 병이지, 클라인의 병이 아니다!");
         return 0;
     }
     potion->in_use = TRUE; /* assume it will be used up */
     if (potion->otyp == POT_WATER) {
         boolean useeit = !Blind || (obj == ublindf && Blindfolded_only);
+#if 0 /*KR: 원본*/
         const char *obj_glows = Yobjnam2(obj, "glow");
+#else /*KR: KRNethack 맞춤 번역 */
+        const char *obj_glows = cxname(obj);
+#endif
 
         if (H2Opotion_dip(potion, obj, useeit, obj_glows))
             goto poof;
@@ -1962,8 +2294,8 @@ dodip()
         if (obj->otyp == potion->otyp /* both POT_POLY */
             || obj->otyp == WAN_POLYMORPH || obj->otyp == SPE_POLYMORPH
             || obj == uball || obj == uskin
-            || obj_resists(obj->otyp == POT_POLYMORPH ? potion : obj,
-                           5, 95)) {
+            || obj_resists(obj->otyp == POT_POLYMORPH ? potion : obj, 5,
+                           95)) {
             pline1(nothing_happens);
         } else {
             short save_otyp = obj->otyp;
@@ -1975,7 +2307,7 @@ dodip()
 
             /*
              * obj might be gone:
-             *  poly_obj() -> set_wear() -> Amulet_on() -> useup()
+             * poly_obj() -> set_wear() -> Amulet_on() -> useup()
              * if obj->otyp is worn amulet and becomes AMULET_OF_CHANGE.
              */
             if (!obj) {
@@ -1987,7 +2319,8 @@ dodip()
                 prinv((char *) 0, obj, 0L);
                 return 1;
             } else {
-                pline("Nothing seems to happen.");
+                /*KR pline("Nothing seems to happen."); */
+                pline("아무 일도 일어나지 않은 것 같다.");
                 goto poof;
             }
         }
@@ -1999,9 +2332,15 @@ dodip()
 
         mixture = mixtype(obj, potion);
 
-        magic = (mixture != STRANGE_OBJECT) ? objects[mixture].oc_magic
-            : (objects[obj->otyp].oc_magic || objects[potion->otyp].oc_magic);
+        magic = (mixture != STRANGE_OBJECT)
+                    ? objects[mixture].oc_magic
+                    : (objects[obj->otyp].oc_magic
+                       || objects[potion->otyp].oc_magic);
+#if 0 /*KR: 원본*/
         Strcpy(qbuf, "The"); /* assume full stack */
+#else /*KR: KRNethack 맞춤 번역 */
+        Strcpy(qbuf, "");
+#endif
         if (amt > (magic ? 3 : 7)) {
             /* trying to dip multiple potions will usually affect only a
                subset; pick an amount between 3 and 8, inclusive, for magic
@@ -2013,13 +2352,20 @@ dodip()
 
             if ((long) amt < obj->quan) {
                 obj = splitobj(obj, (long) amt);
-                Sprintf(qbuf, "%ld of the", obj->quan);
+                /*KR Sprintf(qbuf, "%ld of the", obj->quan); */
+                Sprintf(qbuf, "%ld개의 ", obj->quan);
             }
         }
         /* [N of] the {obj(s)} mix(es) with [one of] {the potion}... */
+#if 0 /*KR: 원본*/
         pline("%s %s %s with %s%s...", qbuf, simpleonames(obj),
               otense(obj, "mix"), (potion->quan > 1L) ? "one of " : "",
               thesimpleoname(potion));
+#else /*KR: KRNethack 맞춤 번역 */
+        pline("%s%s %s%s 섞었다...", qbuf,
+              append_josa(simpleonames(obj), "을"), thesimpleoname(potion),
+              (potion->quan > 1L) ? " 중 하나와" : "와");
+#endif
         /* get rid of 'dippee' before potential perm_invent updates */
         useup(potion); /* now gone */
         /* Mixing potions is dangerous...
@@ -2030,14 +2376,16 @@ dodip()
                around for potionbreathe() [and we can't set obj->in_use
                to 'amt' because that's not implemented] */
             obj->in_use = 1;
-            pline("%sThey explode!", !Deaf ? "BOOM!  " : "");
+            /*KR pline("%sThey explode!", !Deaf ? "BOOM!  " : ""); */
+            pline("%s폭발했다!", !Deaf ? "쾅! " : "");
             wake_nearto(u.ux, u.uy, (BOLT_LIM + 1) * (BOLT_LIM + 1));
             exercise(A_STR, FALSE);
             if (!breathless(youmonst.data) || haseyes(youmonst.data))
                 potionbreathe(obj);
             useupall(obj);
             losehp(amt + rnd(9), /* not physical damage */
-                   "alchemic blast", KILLED_BY_AN);
+                   /*KR "alchemic blast", KILLED_BY_AN); */
+                   "연금술 폭발", KILLED_BY_AN);
             return 1;
         }
 
@@ -2065,18 +2413,28 @@ dodip()
                 break;
             default:
                 useupall(obj);
+#if 0 /*KR: 원본*/
                 pline_The("mixture %sevaporates.",
                           !Blind ? "glows brightly and " : "");
+#else /*KR: KRNethack 맞춤 번역 */
+                pline("혼합물은 %s증발해 버렸다.",
+                      !Blind ? "밝게 빛나더니 " : "");
+#endif
                 return 1;
             }
         }
         obj->odiluted = (obj->otyp != POT_WATER);
 
         if (obj->otyp == POT_WATER && !Hallucination) {
-            pline_The("mixture bubbles%s.", Blind ? "" : ", then clears");
+            /*KR pline_The("mixture bubbles%s.", Blind ? "" : ", then
+             * clears"); */
+            pline("혼합물이 %s.", Blind ? "거품을 일으킨다"
+                                        : "거품을 일으키더니 이내 맑아졌다");
         } else if (!Blind) {
-            pline_The("mixture looks %s.",
-                      hcolor(OBJ_DESCR(objects[obj->otyp])));
+            /*KR pline_The("mixture looks %s.",
+             * hcolor(OBJ_DESCR(objects[obj->otyp]))); */
+            pline("혼합물은 %s 띤다.",
+                  append_josa(hcolor(OBJ_DESCR(objects[obj->otyp])), "을"));
         }
 
         /* this is required when 'obj' was split off from a bigger stack,
@@ -2086,27 +2444,40 @@ dodip()
            been made in order to get the merge result for both cases;
            as a consequence, mixing while Fumbling drops the mixture */
         freeinv(obj);
+#if 0 /*KR: 원본*/
         (void) hold_another_object(obj, "You drop %s!", doname(obj),
                                    (const char *) 0);
+#else /*KR: KRNethack 맞춤 번역 */
+        (void) hold_another_object(obj, "당신은 %s 떨어뜨렸다!",
+                                   append_josa(doname(obj), "을"),
+                                   (const char *) 0);
+#endif
         return 1;
     }
 
     if (potion->otyp == POT_ACID && obj->otyp == CORPSE
         && obj->corpsenm == PM_LICHEN) {
+#if 0 /*KR: 원본*/
         pline("%s %s %s around the edges.", The(cxname(obj)),
               otense(obj, "turn"), Blind ? "wrinkled"
                                    : potion->odiluted ? hcolor(NH_ORANGE)
                                      : hcolor(NH_RED));
+#else /*KR: KRNethack 맞춤 번역 */
+        pline("%s 가장자리가 %s 변했다.", append_josa(The(cxname(obj)), "의"),
+              Blind              ? "쭈글쭈글하게"
+              : potion->odiluted ? hcolor(NH_ORANGE)
+                                 : hcolor(NH_RED));
+#endif
         potion->in_use = FALSE; /* didn't go poof */
-        if (potion->dknown
-            && !objects[potion->otyp].oc_name_known
+        if (potion->dknown && !objects[potion->otyp].oc_name_known
             && !objects[potion->otyp].oc_uname)
             docall(potion);
         return 1;
     }
 
     if (potion->otyp == POT_WATER && obj->otyp == TOWEL) {
-        pline_The("towel soaks it up!");
+        /*KR pline_The("towel soaks it up!"); */
+        pline("수건이 그것을 모두 흡수했다!");
         /* wetting towel already done via water_damage() in H2Opotion_dip */
         goto poof;
     }
@@ -2116,16 +2487,22 @@ dodip()
             char buf[BUFSZ];
 
             if (potion->quan > 1L)
-                Sprintf(buf, "One of %s", the(xname(potion)));
+                /*KR Sprintf(buf, "One of %s", the(xname(potion))); */
+                Sprintf(buf, "%s 중 하나", the(xname(potion)));
             else
                 Strcpy(buf, The(xname(potion)));
-            pline("%s forms a coating on %s.", buf, the(xname(obj)));
+            /*KR pline("%s forms a coating on %s.", buf, the(xname(obj))); */
+            pline("%s %s 위에 코팅막을 형성했다.", append_josa(buf, "이"),
+                  the(xname(obj)));
             obj->opoisoned = TRUE;
             goto poof;
-        } else if (obj->opoisoned && (potion->otyp == POT_HEALING
-                                      || potion->otyp == POT_EXTRA_HEALING
-                                      || potion->otyp == POT_FULL_HEALING)) {
-            pline("A coating wears off %s.", the(xname(obj)));
+        } else if (obj->opoisoned
+                   && (potion->otyp == POT_HEALING
+                       || potion->otyp == POT_EXTRA_HEALING
+                       || potion->otyp == POT_FULL_HEALING)) {
+            /*KR pline("A coating wears off %s.", the(xname(obj))); */
+            pline("코팅막이 %s 벗겨져 나갔다.",
+                  append_josa(the(xname(obj)), "에서"));
             obj->opoisoned = 0;
             goto poof;
         }
@@ -2142,8 +2519,10 @@ dodip()
         if (potion->lamplit) { /* burning */
             fire_damage(obj, TRUE, u.ux, u.uy);
         } else if (potion->cursed) {
-            pline_The("potion spills and covers your %s with oil.",
-                      fingers_or_gloves(TRUE));
+            /*KR pline_The("potion spills and covers your %s with oil.",
+             * fingers_or_gloves(TRUE)); */
+            pline("물약이 엎질러져 당신의 %s 기름 범벅으로 만들었다.",
+                  append_josa(fingers_or_gloves(TRUE), "을"));
             make_glib((int) (Glib & TIMEOUT) + d(2, 10));
         } else if (obj->oclass != WEAPON_CLASS && !is_weptool(obj)) {
             /* the following cases apply only to weapons */
@@ -2156,16 +2535,32 @@ dodip()
                    || is_ammo(obj) || (!obj->oeroded && !obj->oeroded2)) {
             /* uses up potion, doesn't set obj->greased */
             if (!Blind)
+#if 0 /*KR: 원본*/
                 pline("%s %s with an oily sheen.", Yname2(obj),
                       otense(obj, "gleam"));
+#else /*KR: KRNethack 맞춤 번역 */
+                pline("%s 기름진 광택을 내며 번쩍였다.",
+                      append_josa(Yname2(obj), "이"));
+#endif
             else /*if (!uarmg)*/
-                pline("%s %s oily.", Yname2(obj), otense(obj, "feel"));
+                /*KR pline("%s %s oily.", Yname2(obj), otense(obj, "feel"));
+                 */
+                pline("%s 기름지게 느껴진다.",
+                      append_josa(Yname2(obj), "이"));
         } else {
+#if 0 /*KR: 원본*/
             pline("%s %s less %s.", Yname2(obj),
                   otense(obj, !Blind ? "are" : "feel"),
                   (obj->oeroded && obj->oeroded2)
                       ? "corroded and rusty"
                       : obj->oeroded ? "rusty" : "corroded");
+#else /*KR: KRNethack 맞춤 번역 */
+            pline("%s %s 덜 %s.", append_josa(Yname2(obj), "은"),
+                  !Blind ? "보인다" : "느껴진다",
+                  (obj->oeroded && obj->oeroded2) ? "부식되고 녹슨 것처럼"
+                  : obj->oeroded                  ? "녹슨 것처럼"
+                                                  : "부식된 것처럼");
+#endif
             if (obj->oeroded > 0)
                 obj->oeroded--;
             if (obj->oeroded2 > 0)
@@ -2178,7 +2573,7 @@ dodip()
         useup(potion);
         return 1;
     }
- more_dips:
+more_dips:
 
     /* Allow filling of MAGIC_LAMPs to prevent identification by player */
     if ((obj->otyp == OIL_LAMP || obj->otyp == MAGIC_LAMP)
@@ -2196,11 +2591,13 @@ dodip()
             obj->age = 0;
         }
         if (obj->age > 1000L) {
-            pline("%s %s full.", Yname2(obj), otense(obj, "are"));
+            /*KR pline("%s %s full.", Yname2(obj), otense(obj, "are")); */
+            pline("%s 가득 차 있다.", append_josa(Yname2(obj), "은"));
             potion->in_use = FALSE; /* didn't go poof */
         } else {
-            You("fill %s with oil.", yname(obj));
-            check_unpaid(potion);        /* Yendorian Fuel Tax */
+            /*KR You("fill %s with oil.", yname(obj)); */
+            You("%s 기름으로 채웠다.", append_josa(yname(obj), "을"));
+            check_unpaid(potion); /* Yendorian Fuel Tax */
             /* burns more efficiently in a lamp than in a bottle;
                diluted potion provides less benefit but we don't attempt
                to track that the lamp now also has some non-oil in it */
@@ -2228,6 +2625,8 @@ dodip()
         oldbuf[0] = '\0';
         if (potion->dknown) {
             old_dknown = TRUE;
+            /*KR Sprintf(oldbuf, "%s ",
+             * hcolor(OBJ_DESCR(objects[potion->otyp]))); */
             Sprintf(oldbuf, "%s ", hcolor(OBJ_DESCR(objects[potion->otyp])));
         }
         /* with multiple merged potions, split off one and
@@ -2251,19 +2650,29 @@ dodip()
             singlepotion->dknown = !Hallucination;
             *newbuf = '\0';
             if (mixture == POT_WATER && singlepotion->dknown)
-                Sprintf(newbuf, "clears");
+                /*KR Sprintf(newbuf, "clears"); */
+                Sprintf(newbuf, "투명한");
             else if (!Blind)
+#if 0 /*KR: 원본*/
                 Sprintf(newbuf, "turns %s",
                         hcolor(OBJ_DESCR(objects[mixture])));
+#else /*KR: KRNethack 맞춤 번역 */
+                Sprintf(newbuf, "%s", hcolor(OBJ_DESCR(objects[mixture])));
+#endif
             if (*newbuf)
+#if 0 /*KR: 원본*/
                 pline_The("%spotion%s %s.", oldbuf,
                           more_than_one ? " that you dipped into" : "",
                           newbuf);
+#else /*KR: KRNethack 맞춤 번역 */
+                pline("%s물약은%s %s 색으로 변했다.", oldbuf,
+                      more_than_one ? " (담갔던 것 하나만)" : "", newbuf);
+#endif
             else
-                pline("Something happens.");
+                /*KR pline("Something happens."); */
+                pline("무언가 일어났다.");
 
-            if (old_dknown
-                && !objects[old_otyp].oc_name_known
+            if (old_dknown && !objects[old_otyp].oc_name_known
                 && !objects[old_otyp].oc_uname) {
                 struct obj fakeobj;
 
@@ -2275,21 +2684,22 @@ dodip()
             }
         }
         obj_extract_self(singlepotion);
-        singlepotion = hold_another_object(singlepotion,
-                                           "You juggle and drop %s!",
-                                           doname(singlepotion),
-                                           (const char *) 0);
+        singlepotion =
+            hold_another_object(singlepotion,
+                                /*KR "You juggle and drop %s!", */
+                                "당신은 손을 허우적대다 %s 떨어뜨렸다!",
+                                doname(singlepotion), (const char *) 0);
         nhUse(singlepotion);
         update_inventory();
         return 1;
     }
 
-    pline("Interesting...");
+    /*KR pline("Interesting..."); */
+    pline("흥미롭군...");
     return 1;
 
- poof:
-    if (potion->dknown
-        && !objects[potion->otyp].oc_name_known
+poof:
+    if (potion->dknown && !objects[potion->otyp].oc_name_known
         && !objects[potion->otyp].oc_uname)
         docall(potion);
     useup(potion);
@@ -2297,9 +2707,7 @@ dodip()
 }
 
 /* *monp grants a wish and then leaves the game */
-void
-mongrantswish(monp)
-struct monst **monp;
+void mongrantswish(monp) struct monst **monp;
 {
     struct monst *mon = *monp;
     int mx = mon->mx, my = mon->my, glyph = glyph_at(mx, my);
@@ -2317,24 +2725,35 @@ struct monst **monp;
     tmp_at(DISP_END, 0);
 }
 
-void
-djinni_from_bottle(obj)
-struct obj *obj;
+void djinni_from_bottle(obj) struct obj *obj;
 {
     struct monst *mtmp;
     int chance;
 
     if (!(mtmp = makemon(&mons[PM_DJINNI], u.ux, u.uy, NO_MM_FLAGS))) {
+#if 0 /*KR: 원본*/
         pline("It turns out to be empty.");
+#else /*KR: KRNethack 맞춤 번역 */
+        if (obj->otyp == MAGIC_LAMP) {
+            pline("램프는 텅 비어 있었다.");
+        } else {
+            pline("물약 병은 텅 비어 있었다.");
+        }
+#endif
         return;
     }
 
     if (!Blind) {
-        pline("In a cloud of smoke, %s emerges!", a_monnam(mtmp));
-        pline("%s speaks.", Monnam(mtmp));
+        /*KR pline("In a cloud of smoke, %s emerges!", a_monnam(mtmp)); */
+        pline("연기 구름 속에서, %s 나타났다!",
+              append_josa(a_monnam(mtmp), "이"));
+        /*KR pline("%s speaks.", Monnam(mtmp)); */
+        pline("%s 말했다.", append_josa(Monnam(mtmp), "은"));
     } else {
-        You("smell acrid fumes.");
-        pline("%s speaks.", Something);
+        /*KR You("smell acrid fumes."); */
+        You("매캐한 연기 냄새를 맡았다.");
+        /*KR pline("%s speaks.", Something); */
+        pline("%s 말했다.", append_josa(Something, "이"));
     }
 
     chance = rn2(5);
@@ -2346,27 +2765,33 @@ struct obj *obj;
 
     switch (chance) {
     case 0:
-        verbalize("I am in your debt.  I will grant one wish!");
+        /*KR verbalize("I am in your debt.  I will grant one wish!"); */
+        verbalize("당신에게 빚을 졌소. 한 가지 소원을 들어주겠소!");
         /* give a wish and discard the monster (mtmp set to null) */
         mongrantswish(&mtmp);
         break;
     case 1:
-        verbalize("Thank you for freeing me!");
+        /*KR verbalize("Thank you for freeing me!"); */
+        verbalize("저를 해방시켜 주셔서 감사합니다!");
         (void) tamedog(mtmp, (struct obj *) 0);
         break;
     case 2:
-        verbalize("You freed me!");
+        /*KR verbalize("You freed me!"); */
+        verbalize("당신이 날 해방시켰군!");
         mtmp->mpeaceful = TRUE;
         set_malign(mtmp);
         break;
     case 3:
-        verbalize("It is about time!");
+        /*KR verbalize("It is about time!"); */
+        verbalize("이제야 풀려났군!");
         if (canspotmon(mtmp))
-            pline("%s vanishes.", Monnam(mtmp));
+            /*KR pline("%s vanishes.", Monnam(mtmp)); */
+            pline("%s 사라졌다.", append_josa(Monnam(mtmp), "은"));
         mongone(mtmp);
         break;
     default:
-        verbalize("You disturbed me, fool!");
+        /*KR verbalize("You disturbed me, fool!"); */
+        verbalize("내 휴식을 방해하다니, 어리석은 놈!");
         mtmp->mpeaceful = FALSE;
         set_malign(mtmp);
         break;
@@ -2377,17 +2802,23 @@ struct obj *obj;
    hit points are cut in half (odd HP stays with original) */
 struct monst *
 split_mon(mon, mtmp)
-struct monst *mon,  /* monster being split */
-             *mtmp; /* optional attacker whose heat triggered it */
+struct monst *mon, /* monster being split */
+    *mtmp;         /* optional attacker whose heat triggered it */
 {
     struct monst *mtmp2;
     char reason[BUFSZ];
 
     reason[0] = '\0';
     if (mtmp)
+#if 0 /*KR: 원본*/
         Sprintf(reason, " from %s heat",
                 (mtmp == &youmonst) ? the_your[1]
                                     : (const char *) s_suffix(mon_nam(mtmp)));
+#else /*KR: KRNethack 맞춤 번역 */
+        Sprintf(reason, "%s 열기로 인해 ",
+                (mtmp == &youmonst) ? "당신의"
+                                    : (const char *) s_suffix(mon_nam(mtmp)));
+#endif
 
     if (mon == &youmonst) {
         mtmp2 = cloneu();
@@ -2395,7 +2826,8 @@ struct monst *mon,  /* monster being split */
             mtmp2->mhpmax = u.mhmax / 2;
             u.mhmax -= mtmp2->mhpmax;
             context.botl = 1;
-            You("multiply%s!", reason);
+            /*KR You("multiply%s!", reason); */
+            You("%s분열했다!", reason);
         }
     } else {
         mtmp2 = clone_mon(mon, 0, 0);
@@ -2403,7 +2835,9 @@ struct monst *mon,  /* monster being split */
             mtmp2->mhpmax = mon->mhpmax / 2;
             mon->mhpmax -= mtmp2->mhpmax;
             if (canspotmon(mon))
-                pline("%s multiplies%s!", Monnam(mon), reason);
+                /*KR pline("%s multiplies%s!", Monnam(mon), reason); */
+                pline("%s %s분열했다!", append_josa(Monnam(mon), "은"),
+                      reason);
         }
     }
     return mtmp2;

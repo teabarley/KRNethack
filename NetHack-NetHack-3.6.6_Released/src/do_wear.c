@@ -74,7 +74,8 @@ off_msg(otmp)
 struct obj *otmp;
 {
     if (flags.verbose)
-        You("were wearing %s.", doname(otmp));
+        /*KR You("were wearing %s.", doname(otmp)); */
+        You("%s 장비하고 있었다.", append_josa(doname(otmp), "을"));
 }
 
 /* for items that involve no delay */
@@ -90,9 +91,17 @@ struct obj *otmp;
 
         how[0] = '\0';
         if (otmp->otyp == TOWEL)
-            Sprintf(how, " around your %s", body_part(HEAD));
+            /*KR Sprintf(how, " around your %s", body_part(HEAD)); */
+            Sprintf(how, " 당신의 %s에", body_part(HEAD));
+#if 0 /*KR: 원본*/
         You("are now wearing %s%s.",
             obj_is_pname(otmp) ? the(otmp_name) : an(otmp_name), how);
+#else /*KR: KRNethack 맞춤 번역 */
+        You("이제 %s%s 장비했다.",
+            append_josa(obj_is_pname(otmp) ? the(otmp_name) : an(otmp_name),
+                        "을"),
+            how);
+#endif
     }
 }
 
@@ -167,12 +176,12 @@ boolean on;
                 || Detect_monsters))) {
         makeknown(obj->otyp);
 
-#if 0 /*KR:T*/
+#if 0 /*KR: 원본*/
         You_feel("that monsters%s have difficulty pinpointing your location.",
                  on ? "" : " no longer");
-#else
-        pline("괴물들이 당신의 위치를 확실히 알 %s 된 것 같다.",
-                 on ? "수 없게" : "수 있게");
+#else /*KR: KRNethack 맞춤 번역 */
+        pline("몬스터들이 당신의 위치를 정확히 파악하기가 %s 것 같다.",
+              on ? "어려워진" : "더 이상 어렵지 않은");
 #endif
     }
 }
@@ -212,7 +221,7 @@ Boots_on(VOID_ARGS)
                      (oldprop || HFast) ? " a bit more" : "");
 #else
             You("%s빨라진 기분이 든다.",
-                     (oldprop || HFast) ? "훨씬 더 " : "");
+                     (oldprop || HFast) ? "조금 더 " : "");
 #endif
         }
         break;
@@ -359,7 +368,7 @@ Cloak_on(VOID_ARGS)
         break;
     case OILSKIN_CLOAK:
         /*KR pline("%s very tightly.", Tobjnam(uarmc, "fit")); */
-        pline("%s 너무 딱 조인다.", append_josa(xname(uarmc), "은"));
+        pline("%s 매우 꽉 낀다.", append_josa(xname(uarmc), "이"));
         break;
     /* Alchemy smock gives poison _and_ acid resistance */
     case ALCHEMY_SMOCK:
@@ -401,12 +410,12 @@ Cloak_off(VOID_ARGS)
     case MUMMY_WRAPPING:
         if (Invis && !Blind) {
             newsym(u.ux, u.uy);
-#if 0 /*KR:T*/
+#if 0 /*KR: 원본*/
             You("can %s.", See_invisible ? "see through yourself"
                                          : "no longer see yourself");
-#else
-            You("can %s.", See_invisible ? "see through yourself"
-                                         : "no longer see yourself");
+#else /*KR: KRNethack 맞춤 번역 */
+            You("자기 자신이 %s.",
+                See_invisible ? "투명하게 보인다" : "더 이상 보이지 않는다");
 #endif
         }
         break;
@@ -414,13 +423,13 @@ Cloak_off(VOID_ARGS)
         if (!oldprop && !HInvis && !Blind) {
             makeknown(CLOAK_OF_INVISIBILITY);
             newsym(u.ux, u.uy);
-#if 0 /*KR:T*/
+#if 0 /*KR: 원본*/
             pline("Suddenly you can %s.",
                   See_invisible ? "no longer see through yourself"
                                 : see_yourself);
-#else
-            pline("갑자기, 당신은 자기 자신이 %s.",
-                  See_invisible ? "보이지 않게 되었다"
+#else /*KR: KRNethack 맞춤 번역 */
+            pline("갑자기 당신은 자기 자신이 %s.",
+                  See_invisible ? "더 이상 투명하게 보이지 않는다"
                                 : "보이게 되었다");
 #endif    
         }
@@ -474,21 +483,37 @@ Helmet_on(VOID_ARGS)
     case DUNCE_CAP:
         if (uarmh && !uarmh->cursed) {
             if (Blind)
-                pline("%s for a moment.", Tobjnam(uarmh, "vibrate"));
+                /*KR pline("%s for a moment.", Tobjnam(uarmh, "vibrate")); */
+                pline("%s 잠시 진동했다.", append_josa(xname(uarmh), "이"));
             else
+#if 0 /*KR: 원본*/
                 pline("%s %s for a moment.", Tobjnam(uarmh, "glow"),
                       hcolor(NH_BLACK));
+#else /*KR: KRNethack 맞춤 번역 */
+                pline("%s 잠시 %s 빛났다.", append_josa(xname(uarmh), "이"),
+                      hcolor(NH_BLACK));
+#endif
             curse(uarmh);
         }
         context.botl = 1; /* reveal new alignment or INT & WIS */
         if (Hallucination) {
-            pline("My brain hurts!"); /* Monty Python's Flying Circus */
+            /*KR pline("My brain hurts!"); */ /* Monty Python's Flying Circus
+                                               */
+            pline("뇌가 아파!");
         } else if (uarmh && uarmh->otyp == DUNCE_CAP) {
+#if 0                       /*KR: 원본*/
             You_feel("%s.", /* track INT change; ignore WIS */
                      ACURR(A_INT)
                              <= (ABASE(A_INT) + ABON(A_INT) + ATEMP(A_INT))
                          ? "like sitting in a corner"
                          : "giddy");
+#else                       /*KR: KRNethack 맞춤 번역 */
+            You_feel("%s.", /* track INT change; ignore WIS */
+                     ACURR(A_INT)
+                             <= (ABASE(A_INT) + ABON(A_INT) + ATEMP(A_INT))
+                         ? "구석에 앉아 있고 싶어졌다"
+                         : "어지럽다");
+#endif
         } else {
             /* [message formerly given here moved to uchangealign()] */
             makeknown(HELM_OF_OPPOSITE_ALIGNMENT);
@@ -590,11 +615,23 @@ boolean voluntary; /* taking gloves off on purpose? */
         return;
 
     if (touch_petrifies(&mons[obj->corpsenm]) && !Stone_resistance) {
+#if 0 /*KR: 원본*/
         You("now wield %s in your bare %s.",
             corpse_xname(obj, (const char *) 0, CXN_ARTICLE),
             makeplural(body_part(HAND)));
+#else /*KR: KRNethack 맞춤 번역 */
+        You("맨손으로 %s 쥐었다.",
+            append_josa(corpse_xname(obj, (const char *) 0, CXN_ARTICLE),
+                        "을"));
+#endif
+#if 0 /*KR: 원본*/
         Sprintf(kbuf, "%s gloves while wielding %s",
                 voluntary ? "removing" : "losing", killer_xname(obj));
+#else /*KR: KRNethack 맞춤 번역 */
+        Sprintf(kbuf, "%s 쥐고 있는 상태에서 장갑을 %s",
+                append_josa(killer_xname(obj), "을"),
+                voluntary ? "벗은 것" : "잃은 것");
+#endif
         instapetrify(kbuf);
         /* life-saved; can't continue wielding cockatrice corpse though */
         remove_worn_item(obj, FALSE);
@@ -808,14 +845,21 @@ Amulet_on()
         /* Don't use same message as polymorph */
         if (orig_sex != poly_gender()) {
             makeknown(AMULET_OF_CHANGE);
+#if 0 /*KR: 원본*/
             You("are suddenly very %s!",
                 flags.female ? "feminine" : "masculine");
+#else /*KR: KRNethack 맞춤 번역 */
+            You("갑자기 매우 %s 변했다!",
+                flags.female ? "여성스럽게" : "남성스럽게");
+#endif
             context.botl = 1;
         } else
             /* already polymorphed into single-gender monster; only
                changed the character's base sex */
-            You("don't feel like yourself.");
-        pline_The("amulet disintegrates!");
+            /*KR You("don't feel like yourself."); */
+            You("평소의 당신 같지 않은 느낌이다.");
+        /*KR pline_The("amulet disintegrates!"); */
+        pline("부적이 산산조각 났다!");
         if (orig_sex == poly_gender() && uamul->dknown
             && !objects[AMULET_OF_CHANGE].oc_name_known
             && !objects[AMULET_OF_CHANGE].oc_uname)
@@ -828,7 +872,8 @@ Amulet_on()
             makeknown(AMULET_OF_STRANGULATION);
             Strangled = 6L;
             context.botl = TRUE;
-            pline("It constricts your throat!");
+            /*KR pline("It constricts your throat!"); */
+            pline("이것이 당신의 목을 조른다!");
         }
         break;
     case AMULET_OF_RESTFUL_SLEEP: {
@@ -869,8 +914,13 @@ Amulet_off()
             setworn((struct obj *) 0, W_AMUL);
             if (!breathless(youmonst.data) && !amphibious(youmonst.data)
                 && !Swimming) {
+#if 0 /*KR: 원본*/
                 You("suddenly inhale an unhealthy amount of %s!",
                     hliquid("water"));
+#else /*KR: KRNethack 맞춤 번역 */
+                You("갑자기 엄청난 양의 %s 들이마셨다!",
+                    append_josa(hliquid("water"), "을"));
+#endif
                 (void) drown();
             }
             return;
@@ -881,9 +931,15 @@ Amulet_off()
             Strangled = 0L;
             context.botl = TRUE;
             if (Breathless)
+#if 0 /*KR: 원본*/
                 Your("%s is no longer constricted!", body_part(NECK));
+#else /*KR: KRNethack 맞춤 번역 */
+                pline("당신의 %s 더 이상 조이지 않는다!",
+                      append_josa(body_part(NECK), "은"));
+#endif
             else
-                You("can breathe more easily!");
+                /*KR You("can breathe more easily!"); */
+                You("숨쉬기가 한결 편해졌다!");
         }
         break;
     case AMULET_OF_RESTFUL_SLEEP:
@@ -900,8 +956,8 @@ Amulet_off()
 }
 
 /* handle ring discovery; comparable to learnwand() */
-STATIC_OVL void
-learnring(ring, observed)
+STATIC_OVL void 
+learnring(ring, observed) 
 struct obj *ring;
 boolean observed;
 {
@@ -932,8 +988,8 @@ boolean observed;
     }
 }
 
-void
-Ring_on(obj)
+void 
+Ring_on(obj) 
 register struct obj *obj;
 {
     long oldprop = u.uprops[objects[obj->otyp].oc_oprop].extrinsic;
@@ -986,7 +1042,8 @@ register struct obj *obj;
 
         if (Invis && !oldprop && !HSee_invisible && !Blind) {
             newsym(u.ux, u.uy);
-            pline("Suddenly you are transparent, but there!");
+            /*KR pline("Suddenly you are transparent, but there!"); */
+            pline("갑자기 당신은 투명해졌지만, 여전히 거기에 있다!");
             learnring(obj, TRUE);
         }
         break;
@@ -1100,15 +1157,24 @@ boolean gone;
 
         if (Invisible && !Blind) {
             newsym(u.ux, u.uy);
+#if 0 /*KR: 원본*/
             pline("Suddenly you cannot see yourself.");
+#else /*KR: KRNethack 맞춤 번역 */
+            pline("갑자기 자기 자신이 보이지 않게 되었다.");
+#endif
             learnring(obj, TRUE);
         }
         break;
     case RIN_INVISIBILITY:
         if (!Invis && !BInvis && !Blind) {
             newsym(u.ux, u.uy);
+#if 0 /*KR: 원본*/
             Your("body seems to unfade%s.",
                  See_invisible ? " completely" : "..");
+#else /*KR: KRNethack 맞춤 번역 */
+            Your("몸이 %s 다시 나타나는 것 같다.",
+                 See_invisible ? "완전히" : "서서히");
+#endif
             learnring(obj, TRUE);
         }
         break;
@@ -1129,7 +1195,7 @@ boolean gone;
         goto adjust_attrib;
     case RIN_ADORNMENT:
         which = A_CHA;
- adjust_attrib:
+    adjust_attrib:
         old_attrib = ACURR(which);
         ABON(which) -= obj->spe;
         observable = (old_attrib != ACURR(which));
@@ -1161,23 +1227,17 @@ boolean gone;
     }
 }
 
-void
-Ring_off(obj)
-struct obj *obj;
+void Ring_off(obj) struct obj *obj;
 {
     Ring_off_or_gone(obj, FALSE);
 }
 
-void
-Ring_gone(obj)
-struct obj *obj;
+void Ring_gone(obj) struct obj *obj;
 {
     Ring_off_or_gone(obj, TRUE);
 }
 
-void
-Blindf_on(otmp)
-struct obj *otmp;
+void Blindf_on(otmp) struct obj *otmp;
 {
     boolean already_blind = Blind, changed = FALSE;
 
@@ -1190,7 +1250,8 @@ struct obj *otmp;
     if (Blind && !already_blind) {
         changed = TRUE;
         if (flags.verbose)
-            You_cant("see any more.");
+            /*KR You_cant("see any more."); */
+            You("더 이상 아무것도 보이지 않는다.");
         /* set ball&chain variables before the hero goes blind */
         if (Punished)
             set_bc(0);
@@ -1201,19 +1262,20 @@ struct obj *otmp;
             /* this can only happen by putting on the Eyes of the Overworld;
                that shouldn't actually produce a permanent cure, but we
                can't let the "blind from birth" conduct remain intact */
-            pline("For the first time in your life, you can see!");
+            /*KR pline("For the first time in your life, you can see!"); */
+            pline(
+                "당신은 태어나서 처음으로 눈앞의 풍경을 볼 수 있게 되었다!");
             u.uroleplay.blind = FALSE;
         } else
-            You("can see!");
+            /*KR You("can see!"); */
+            You("눈이 보인다!");
     }
     if (changed) {
         toggle_blindness(); /* potion.c */
     }
 }
 
-void
-Blindf_off(otmp)
-struct obj *otmp;
+void Blindf_off(otmp) struct obj *otmp;
 {
     boolean was_blind = Blind, changed = FALSE;
 
@@ -1230,11 +1292,13 @@ struct obj *otmp;
             /* "still cannot see" makes no sense when removing lenses
                since they can't have been the cause of your blindness */
             if (otmp->otyp != LENSES)
-                You("still cannot see.");
+                /*KR You("still cannot see."); */
+                You("아직 눈이 보이지 않는다.");
         } else {
             changed = TRUE; /* !was_blind */
             /* "You were wearing the Eyes of the Overworld." */
-            You_cant("see anything now!");
+            /*KR You_cant("see anything now!"); */
+            You("이제 아무것도 보이지 않는다!");
             /* set ball&chain variables before the hero goes blind */
             if (Punished)
                 set_bc(0);
@@ -1242,7 +1306,8 @@ struct obj *otmp;
     } else if (was_blind) {
         if (!gulp_blnd_check()) {
             changed = TRUE; /* !Blind */
-            You("can see again.");
+            /*KR You("can see again."); */
+            You("다시 앞이 보인다.");
         }
     }
     if (changed) {
@@ -1252,9 +1317,8 @@ struct obj *otmp;
 
 /* called in moveloop()'s prologue to set side-effects of worn start-up items;
    also used by poly_obj() when a worn item gets transformed */
-void
-set_wear(obj)
-struct obj *obj; /* if null, do all worn items; otherwise just obj itself */
+void set_wear(obj) struct obj
+    *obj; /* if null, do all worn items; otherwise just obj itself */
 {
     initial_don = !obj;
 
@@ -1360,9 +1424,7 @@ struct obj *otmp;
 
 /* despite their names, cancel_don() and cancel_doff() both apply to both
    donning and doffing... */
-void
-cancel_doff(obj, slotmask)
-struct obj *obj;
+void cancel_doff(obj, slotmask) struct obj *obj;
 long slotmask;
 {
     /* Called by setworn() for old item in specified slot or by setnotworn()
@@ -1391,7 +1453,7 @@ cancel_don()
     context.takeoff.cancelled_don =
         (afternmv == Boots_on || afternmv == Helmet_on
          || afternmv == Gloves_on || afternmv == Armor_on);
-    afternmv = (int NDECL((*))) 0;
+    afternmv = (int NDECL((*) )) 0;
     nomovemsg = (char *) 0;
     multi = 0;
     context.takeoff.delay = 0;
@@ -1421,11 +1483,17 @@ struct obj *stolenobj; /* no message if stolenobj is already being doffing */
     cancel_don();
     /* don't want <armor>_on() or <armor>_off() being called
        by unmul() since the on or off action isn't completing */
-    afternmv = (int NDECL((*))) 0;
+    afternmv = (int NDECL((*) )) 0;
     if (putting_on || otmp != stolenobj) {
+#if 0 /*KR: 원본*/
         Sprintf(buf, "You stop %s %s.",
                 putting_on ? "putting on" : "taking off",
                 thesimpleoname(otmp));
+#else /*KR: KRNethack 맞춤 번역 */
+        Sprintf(buf, "당신은 %s %s 것을 멈췄다.",
+                append_josa(thesimpleoname(otmp), "을"),
+                putting_on ? "입는" : "벗는");
+#endif
     } else {
         buf[0] = '\0';   /* silently stop doffing stolenobj */
         result = -multi; /* remember this before calling unmul() */
@@ -1443,25 +1511,31 @@ struct obj *stolenobj; /* no message if stolenobj is already being doffing */
 
 /* both 'clothes' and 'accessories' now include both armor and accessories;
    TOOL_CLASS is for eyewear, FOOD_CLASS is for MEAT_RING */
-static NEARDATA const char clothes[] = {
-    ARMOR_CLASS, RING_CLASS, AMULET_CLASS, TOOL_CLASS, FOOD_CLASS, 0
-};
-static NEARDATA const char accessories[] = {
-    RING_CLASS, AMULET_CLASS, TOOL_CLASS, FOOD_CLASS, ARMOR_CLASS, 0
-};
+static NEARDATA const char clothes[] = { ARMOR_CLASS,  RING_CLASS,
+                                         AMULET_CLASS, TOOL_CLASS,
+                                         FOOD_CLASS,   0 };
+static NEARDATA const char accessories[] = { RING_CLASS,  AMULET_CLASS,
+                                             TOOL_CLASS,  FOOD_CLASS,
+                                             ARMOR_CLASS, 0 };
 STATIC_VAR NEARDATA int Narmorpieces, Naccessories;
 
 /* assign values to Narmorpieces and Naccessories */
-STATIC_OVL void
-count_worn_stuff(which, accessorizing)
-struct obj **which; /* caller wants this when count is 1 */
+STATIC_OVL void count_worn_stuff(
+    which,
+    accessorizing) struct obj **which; /* caller wants this when count is 1 */
 boolean accessorizing;
 {
     struct obj *otmp;
 
     Narmorpieces = Naccessories = 0;
 
-#define MOREWORN(x,wtyp) do { if (x) { wtyp++; otmp = x; } } while (0)
+#define MOREWORN(x, wtyp) \
+    do {                  \
+        if (x) {          \
+            wtyp++;       \
+            otmp = x;     \
+        }                 \
+    } while (0)
     otmp = 0;
     MOREWORN(uarmh, Narmorpieces);
     MOREWORN(uarms, Narmorpieces);
@@ -1495,11 +1569,11 @@ armor_or_accessory_off(obj)
 struct obj *obj;
 {
     if (!(obj->owornmask & (W_ARMOR | W_ACCESSORY))) {
-        You("are not wearing that.");
+        /*KR You("are not wearing that."); */
+        You("그것은 장비하고 있지 않다.");
         return 0;
     }
-    if (obj == uskin
-        || ((obj == uarm) && uarmc)
+    if (obj == uskin || ((obj == uarm) && uarmc)
         || ((obj == uarmu) && (uarmc || uarm))) {
         char why[QBUFSZ], what[QBUFSZ];
 
@@ -1509,14 +1583,24 @@ struct obj *obj;
                 Strcat(what, cloak_simple_name(uarmc));
             if ((obj == uarmu) && uarm) {
                 if (uarmc)
-                    Strcat(what, " and ");
+                    /*KR Strcat(what, " and "); */
+                    Strcat(what, "(와)과 ");
                 Strcat(what, suit_simple_name(uarm));
             }
+#if 0 /*KR: 원본*/
             Sprintf(why, " without taking off your %s first", what);
+#else /*KR: KRNethack 맞춤 번역 */
+            Sprintf(why, " 먼저 %s 벗어야 한다", append_josa(what, "을"));
+#endif
         } else {
-            Strcpy(why, "; it's embedded");
+            /*KR Strcpy(why, "; it's embedded"); */
+            Strcpy(why, " 그것은 피부와 융합되어 있다");
         }
+#if 0 /*KR: 원본*/
         You_cant("take that off%s.", why);
+#else /*KR: KRNethack 맞춤 번역 */
+        pline("그것을 벗을 수는 없다;%s.", why);
+#endif
         return 0;
     }
 
@@ -1524,7 +1608,8 @@ struct obj *obj;
     (void) select_off(obj);
     if (!context.takeoff.mask)
         return 0;
-    /* none of armoroff()/Ring_/Amulet/Blindf_off() use context.takeoff.mask */
+    /* none of armoroff()/Ring_/Amulet/Blindf_off() use context.takeoff.mask
+     */
     reset_remarm();
 
     if (obj->owornmask & W_ARMOR) {
@@ -1561,12 +1646,18 @@ dotakeoff()
     if (!Narmorpieces && !Naccessories) {
         /* assert( GRAY_DRAGON_SCALES > YELLOW_DRAGON_SCALE_MAIL ); */
         if (uskin)
+#if 0 /*KR: 원본*/
             pline_The("%s merged with your skin!",
                       uskin->otyp >= GRAY_DRAGON_SCALES
                           ? "dragon scales are"
                           : "dragon scale mail is");
+#else /*KR: KRNethack 맞춤 번역 */
+            pline("드래곤 비늘%s 피부와 융합되어 있다!",
+                  uskin->otyp >= GRAY_DRAGON_SCALES ? "이" : " 갑옷이");
+#endif
         else
-            pline("Not wearing any armor or accessories.");
+            /*KR pline("Not wearing any armor or accessories."); */
+            pline("어떤 갑옷이나 장신구도 착용하고 있지 않다.");
         return 0;
     }
     if (Narmorpieces != 1 || ParanoidRemove)
@@ -1585,7 +1676,8 @@ doremring()
 
     count_worn_stuff(&otmp, TRUE);
     if (!Naccessories && !Narmorpieces) {
-        pline("Not wearing any accessories or armor.");
+        /*KR pline("Not wearing any accessories or armor."); */
+        pline("어떤 장신구나 갑옷도 착용하고 있지 않다.");
         return 0;
     }
     if (Naccessories != 1 || ParanoidRemove)
@@ -1607,18 +1699,28 @@ struct obj *otmp;
     }
     /* Curses, like chickens, come home to roost. */
     if ((otmp == uwep) ? welded(otmp) : (int) otmp->cursed) {
-        boolean use_plural = (is_boots(otmp) || is_gloves(otmp)
-                              || otmp->otyp == LENSES || otmp->quan > 1L);
+        /* boolean use_plural = (is_boots(otmp) || is_gloves(otmp)
+                              || otmp->otyp == LENSES || otmp->quan > 1L); */
 
         /* might be trying again after applying grease to hands */
-        if (Glib && otmp->bknown
+        if (Glib
+            && otmp->bknown
             /* for weapon, we'll only get here via 'A )' */
             && (uarmg ? (otmp == uwep)
                       : ((otmp->owornmask & (W_WEP | W_RING)) != 0)))
+#if 0 /*KR: 원본*/
             pline("Despite your slippery %s, you can't.",
                   fingers_or_gloves(TRUE));
+#else /*KR: KRNethack 맞춤 번역 */
+            pline("%s 미끄러운데도 뺄 수 없다.",
+                  append_josa(fingers_or_gloves(TRUE), "이"));
+#endif
         else
+#if 0 /*KR:T*/
             You("can't.  %s cursed.", use_plural ? "They are" : "It is");
+#else
+            pline("무리다. 그것은 저주받았다.");
+#endif
         set_bknown(otmp, 1);
         return 1;
     }
@@ -1639,7 +1741,8 @@ struct obj *otmp;
        delays and which didn't; now both are handled for all types */
     if (delay) {
         nomul(delay);
-        multi_reason = "disrobing";
+        /*KR multi_reason = "dressing up"; */
+        multi_reason = "옷을 입느라";
         if (is_helmet(otmp)) {
             what = helm_simple_name(otmp);
             afternmv = Helmet_off;
@@ -1666,7 +1769,12 @@ struct obj *otmp;
                        otmp->otyp, objects[otmp->otyp].oc_armcat, delay);
         }
         if (what) {
-            Sprintf(offdelaybuf, "You finish taking off your %s.", what);
+            /*KR Sprintf(offdelaybuf, "You finish taking off your %s.", what);
+             */
+            Sprintf(offdelaybuf, "%s 벗기를 마쳤다.",
+                    append_josa(what, "을"));
+            /*KR nomovemsg = "You finish your dressing maneuver."; */
+            nomovemsg = "옷 입기를 마쳤다.";
             nomovemsg = offdelaybuf;
         }
     } else {
@@ -1865,14 +1973,23 @@ boolean noisy;
             err++;
         } else if (uwep && bimanual(uwep)) {
             if (noisy)
+#if 0 /*KR: 원본*/
                 You("cannot wear a shield while wielding a two-handed %s.",
-                    is_sword(uwep) ? c_sword : (uwep->otyp == BATTLE_AXE)
-                                                   ? c_axe
-                                                   : c_weapon);
+                    is_sword(uwep) ? c_sword 
+                                   : (uwep->otyp == BATTLE_AXE) ? c_axe
+                                                                : c_weapon);
+#else /*KR: KRNethack 맞춤 번역 */
+                You("양손 %s 쥐고 있는 동안에는 방패를 들 수 없다.",
+                    append_josa(is_sword(uwep)               ? c_sword
+                                : (uwep->otyp == BATTLE_AXE) ? c_axe
+                                                             : c_weapon,
+                                "을"));
+#endif
             err++;
         } else if (u.twoweap) {
             if (noisy)
-                You("cannot wear a shield while wielding two weapons.");
+         /*KR You("cannot wear a shield while wielding two weapons."); */
+                You("이도류를 사용하는 동안에는 방패를 들 수 없다.");
             err++;
         } else
             *mask = W_ARMS;
@@ -1887,15 +2004,22 @@ boolean noisy;
             err++;
         } else if (Upolyd && slithy(youmonst.data)) {
             if (noisy)
-                You("have no feet..."); /* not body_part(FOOT) */
+                /*KR You("have no feet..."); */
+                You("발이 없다..."); /* not body_part(FOOT) */
             err++;
         } else if (Upolyd && youmonst.data->mlet == S_CENTAUR) {
             /* break_armor() pushes boots off for centaurs,
                so don't let dowear() put them back on... */
             if (noisy)
+#if 0 /*KR:T*/
                 pline("You have too many hooves to wear %s.",
                       c_boots); /* makeplural(body_part(FOOT)) yields
                                    "rear hooves" which sounds odd */
+#else
+                pline("발굽이 너무 많아서 %s 신을 수 없다.",
+                      append_josa(c_boots, "을"));
+#endif
+
             err++;
         } else if (u.utrap
                    && (u.utraptype == TT_BEARTRAP || u.utraptype == TT_INFLOOR
@@ -1903,15 +2027,31 @@ boolean noisy;
                        || u.utraptype == TT_BURIEDBALL)) {
             if (u.utraptype == TT_BEARTRAP) {
                 if (noisy)
+#if 0 /*KR:T*/
                     Your("%s is trapped!", body_part(FOOT));
+#else
+                    Your("%s 덫에 걸려 있다!",
+                         append_josa(body_part(FOOT), "이"));
+#endif
             } else if (u.utraptype == TT_INFLOOR || u.utraptype == TT_LAVA) {
                 if (noisy)
+#if 0 /*KR: 원본*/
                     Your("%s are stuck in the %s!",
                          makeplural(body_part(FOOT)), surface(u.ux, u.uy));
+#else /*KR: KRNethack 맞춤 번역 */
+                    Your("%s %s에 빠져 있다!",
+                         append_josa(makeplural(body_part(FOOT)), "이"),
+                         surface(u.ux, u.uy));
+#endif
             } else { /*TT_BURIEDBALL*/
                 if (noisy)
-                    Your("%s is attached to the buried ball!",
-                         body_part(LEG));
+#if 0 /*KR:T*/
+                     Your("%s is attached to the buried ball!",
+                          body_part(LEG));
+#else
+                     Your("%s 묻힌 철구에 연결되어 있다!",
+                          append_josa(body_part(LEG), "이"));
+#endif
             }
             err++;
         } else
@@ -1927,15 +2067,27 @@ boolean noisy;
             err++;
         } else if (welded(uwep)) {
             if (noisy)
-                You("cannot wear gloves over your %s.",
-                    is_sword(uwep) ? c_sword : c_weapon);
+#if 0 /*KR: 원본*/
+                 You("cannot wear gloves over your %s.",
+                     is_sword(uwep) ? c_sword : c_weapon);
+#else            
+                 You("%s 위로 장갑을 낄 수 없다.",
+                     append_josa(is_sword(uwep) ? c_sword 
+                                                : c_weapon, "을"));
+#endif
             err++;
         } else if (Glib) {
             /* prevent slippery bare fingers from transferring to
                gloved fingers */
             if (noisy)
+#if 0 /*KR: 원본*/
                 Your("%s are too slippery to pull on %s.",
                      fingers_or_gloves(FALSE), gloves_simple_name(otmp));
+#else /*KR: KRNethack 맞춤 번역 */
+                Your("%s 너무 미끄러워서 %s 낄 수 없다.",
+                     append_josa(fingers_or_gloves(FALSE), "이"),
+                     append_josa(gloves_simple_name(otmp), "을"));
+#endif
             err++;
         } else
             *mask = W_ARMG;
@@ -1950,9 +2102,15 @@ boolean noisy;
 #endif
             } else {
                 if (noisy)
+#if 0 /*KR:T*/
                     You_cant("wear that over your %s.",
                              (uarm && !uarmc) ? c_armor
                                               : cloak_simple_name(uarmc));
+#else
+                    You("%s 위로 그것을 입을 수 없다.",
+                        (uarm && !uarmc) ? c_armor
+                                         : cloak_simple_name(uarmc));
+#endif
             }
             err++;
         } else
@@ -1960,20 +2118,28 @@ boolean noisy;
     } else if (is_cloak(otmp)) {
         if (uarmc) {
             if (noisy)
-           /*KR already_wearing(an(cloak_simple_name(uarmc))); */
+#if 0 /*KR:T*/
+                already_wearing(an(cloak_simple_name(uarmc)));
+#else
                 already_wearing(cloak_simple_name(uarmc), otmp);
+#endif
             err++;
         } else
             *mask = W_ARMC;
     } else if (is_suit(otmp)) {
         if (uarmc) {
             if (noisy)
-                You("cannot wear armor over a %s.", cloak_simple_name(uarmc));
+                /*KR You("cannot wear armor over a %s.",
+                 * cloak_simple_name(uarmc)); */
+                You("%s 위에 갑옷을 입을 수 없다.", cloak_simple_name(uarmc));
             err++;
         } else if (uarm) {
             if (noisy)
-                /*KR already_wearing("some armor"); */
+#if 0 /*KR: 원본*/
+                already_wearing("some armor");
+#else /*KR: KRNethack 맞춤 번역 */
                 already_wearing("갑옷", uarm);
+#endif
             err++;
         } else
             *mask = W_ARM;
@@ -1982,7 +2148,8 @@ boolean noisy;
            happens if you have armor for slots that are covered up or
            extra armor for slots that are filled */
         if (noisy)
-            silly_thing("wear", otmp);
+            /*KR silly_thing("wear", otmp); */
+            silly_thing("장비하기에는", otmp);
         err++;
     }
     /* Unnecessary since now only weapons and special items like pick-axes get
@@ -2023,9 +2190,12 @@ struct obj *obj;
         if (obj->otyp == HELM_OF_OPPOSITE_ALIGNMENT
             && qstart_level.dnum == u.uz.dnum) { /* in quest */
             if (u.ualignbase[A_CURRENT] == u.ualignbase[A_ORIGINAL])
-                You("narrowly avoid losing all chance at your goal.");
+           /*KR You("narrowly avoid losing all chance at your goal."); */
+                You("가까스로 목표를 이룰 기회를 잃는 것을 피했다.");
             else /* converted */
-                You("are suddenly overcome with shame and change your mind.");
+           /*KR You("are suddenly overcome with shame and change your
+                 * mind."); */
+                You("갑자기 수치심이 밀려와 마음을 바꿨다.");
             u.ublessed = 0; /* lose your god's protection */
             makeknown(obj->otyp);
             context.botl = 1; /*for AC after zeroing u.ublessed */
@@ -2038,13 +2208,19 @@ struct obj *obj;
             int res = 0;
 
             if (nolimbs(youmonst.data)) {
-                You("cannot make the ring stick to your body.");
+                /*KR You("cannot make the ring stick to your body."); */
+                You("반지를 몸에 고정할 수 없다.");
                 return 0;
             }
             if (uleft && uright) {
+#if 0 /*KR: 원본*/
                 There("are no more %s%s to fill.",
                       humanoid(youmonst.data) ? "ring-" : "",
                       fingers_or_gloves(FALSE));
+#else /*KR: KRNethack 맞춤 번역 */
+                pline("더 이상 반지를 낄 %s 없다.",
+                      append_josa(fingers_or_gloves(FALSE), "이"));
+#endif
                 return 0;
             }
             if (uleft) {
@@ -2053,9 +2229,15 @@ struct obj *obj;
                 mask = LEFT_RING;
             } else {
                 do {
+#if 0 /*KR: 원본*/
                     Sprintf(qbuf, "Which %s%s, Right or Left?",
                             humanoid(youmonst.data) ? "ring-" : "",
                             body_part(FINGER));
+#else /*KR: KRNethack 맞춤 번역 */
+                    Sprintf(qbuf,
+                            "어느 쪽 %s에 끼겠습니까, 오른쪽 아니면 왼쪽?",
+                            body_part(FINGER));
+#endif
                     answer = yn_function(qbuf, "rl", '\0');
                     switch (answer) {
                     case '\0':
@@ -2072,15 +2254,23 @@ struct obj *obj;
                 } while (!mask);
             }
             if (uarmg && Glib) {
-                Your(
-              "%s are too slippery to remove, so you cannot put on the ring.",
+#if 0 /*KR: 원본*/
+                Your("%s are too slippery to remove, so you cannot put on the ring.",
                      gloves_simple_name(uarmg));
+#else /*KR: KRNethack 맞춤 번역 */
+                Your("%s 너무 미끄러워서 벗을 수 없기 때문에, 반지를 낄 수 "
+                     "없다.",
+                     append_josa(gloves_simple_name(uarmg), "이"));
+#endif
                 return 1; /* always uses move */
             }
             if (uarmg && uarmg->cursed) {
                 res = !uarmg->bknown;
                 set_bknown(uarmg, 1);
-                You("cannot remove your %s to put on the ring.", c_gloves);
+                /*KR You("cannot remove your %s to put on the ring.",
+                 * c_gloves); */
+                You("반지를 끼기 위해 %s 벗을 수 없다.",
+                    append_josa(c_gloves, "을"));
                 return res; /* uses move iff we learned gloves are cursed */
             }
             if (uwep) {
@@ -2091,46 +2281,59 @@ struct obj *obj;
                     /* welded will set bknown */
                     if (bimanual(uwep))
                         hand = makeplural(hand);
-                    You("cannot free your weapon %s to put on the ring.",
-                        hand);
-                    return res; /* uses move iff we learned weapon is cursed */
+#if 0 /*KR: 원본*/
+                    You("cannot free your weapon %s to put on the ring.", hand);
+#else /*KR: KRNethack 맞춤 번역 */
+                    You("반지를 끼기 위해 무기를 쥔 %s 자유롭게 할 수 없다.",
+                        append_josa(hand, "을"));
+#endif
+                    return res; /* uses move iff we learned weapon is cursed
+                                 */
                 }
             }
         } else if (obj->oclass == AMULET_CLASS) {
             if (uamul) {
-                /*KR already_wearing("an amulet"); */
+#if 0 /*KR: 원본*/
+                already_wearing("an amulet");
+#else /*KR: KRNethack 맞춤 번역 */
                 already_wearing("부적", uamul);
+#endif
                 return 0;
             }
         } else if (eyewear) {
             if (ublindf) {
                 if (ublindf->otyp == TOWEL)
-                    Your("%s is already covered by a towel.",
-                         body_part(FACE));
+#if 0 /*KR: 원본*/
+                    Your("%s is already covered by a towel.", body_part(FACE));
+#else /*KR: KRNethack 맞춤 번역 */
+                    Your("%s 이미 수건으로 덮여 있다.",
+                         append_josa(body_part(FACE), "은"));
+#endif
                 else if (ublindf->otyp == BLINDFOLD) {
                     if (obj->otyp == LENSES)
                         /*KR already_wearing2("lenses", "a blindfold"); */
                         already_wearing2("렌즈", "눈가리개");
                     else
-#if 0 /*KR*/
+#if 0 /*KR: 원본*/
                         already_wearing("a blindfold");
-#else
+#else /*KR: KRNethack 맞춤 번역 */
                         already_wearing("눈가리개", ublindf);
 #endif
                 } else if (ublindf->otyp == LENSES) {
                     if (obj->otyp == BLINDFOLD)
-                        /*KR already_wearing2("a blindfold", "some lenses"); */
+                        /*KR already_wearing2("a blindfold", "some lenses");
+                         */
                         already_wearing2("눈가리개", "렌즈");
                     else
-#if 0 /*KR*/
+#if 0 /*KR: 원본*/
                         already_wearing("some lenses");
-#else
+#else /*KR: KRNethack 맞춤 번역 */
                         already_wearing("렌즈", ublindf);
 #endif
                 } else {
-#if 0 /*KR*/
+#if 0 /*KR: 원본*/
                     already_wearing(something); /* ??? */
-#else
+#else /*KR: KRNethack 맞춤 번역 */
                     already_wearing("무언가", ublindf); /* ??? */
 #endif
                 }
@@ -2138,7 +2341,8 @@ struct obj *obj;
             }
         } else {
             /* neither armor nor accessory */
-            You_cant("wear that!");
+            /*KR You_cant("wear that!"); */
+            You_cant("그것을 장비할 수 없다!");
             return 0;
         }
     }
@@ -2161,7 +2365,7 @@ struct obj *obj;
          * until the aftermv action.  The player may still know this armor's
          * +/- amount if donning gets interrupted, but the hero won't.
          *
-        obj->known = 1;
+         * obj->known = 1;
          */
         setworn(obj, mask);
         /* if there's no delay, we'll execute 'aftermv' immediately */
@@ -2185,8 +2389,10 @@ struct obj *obj;
         delay = -objects[obj->otyp].oc_delay;
         if (delay) {
             nomul(delay);
-            multi_reason = "dressing up";
-            nomovemsg = "You finish your dressing maneuver.";
+            /*KR multi_reason = "dressing up"; */
+            multi_reason = "장비하느라";
+            /*KR nomovemsg = "You finish your dressing maneuver."; */
+            nomovemsg = "장비하기를 마쳤다.";
         } else {
             unmul(""); /* call (*aftermv)(), clear it+nomovemsg+multi_reason */
             on_msg(obj);
@@ -2226,13 +2432,15 @@ dowear()
     /* cantweararm() checks for suits of armor, not what we want here;
        verysmall() or nohands() checks for shields, gloves, etc... */
     if (verysmall(youmonst.data) || nohands(youmonst.data)) {
-        pline("Don't even bother.");
+        /*KR pline("Don't even bother."); */
+        pline("애쓸 필요 없다.");
         return 0;
     }
-    if (uarm && uarmu && uarmc && uarmh && uarms && uarmg && uarmf
-        && uleft && uright && uamul && ublindf) {
+    if (uarm && uarmu && uarmc && uarmh && uarms && uarmg && uarmf && uleft
+        && uright && uamul && ublindf) {
         /* 'W' message doesn't mention accessories */
-        You("are already wearing a full complement of armor.");
+        /*KR You("are already wearing a full complement of armor."); */
+        You("이미 장비할 수 있는 모든 방어구를 갖추고 있다.");
         return 0;
     }
     otmp = getobj(clothes, "wear");
@@ -2245,13 +2453,20 @@ doputon()
 {
     struct obj *otmp;
 
-    if (uleft && uright && uamul && ublindf
-        && uarm && uarmu && uarmc && uarmh && uarms && uarmg && uarmf) {
+    if (uleft && uright && uamul && ublindf && uarm && uarmu && uarmc && uarmh
+        && uarms && uarmg && uarmf) {
         /* 'P' message doesn't mention armor */
+#if 0 /*KR: 원본*/
         Your("%s%s are full, and you're already wearing an amulet and %s.",
              humanoid(youmonst.data) ? "ring-" : "",
              fingers_or_gloves(FALSE),
              (ublindf->otyp == LENSES) ? "some lenses" : "a blindfold");
+#else /*KR: KRNethack 맞춤 번역 */
+        pline(
+            "손가락에는 이미 반지가 가득하고, 이미 부적과 %s 장비하고 있다.",
+            append_josa((ublindf->otyp == LENSES) ? "렌즈" : "눈가리개",
+                        "를"));
+#endif
         return 0;
     }
     otmp = getobj(accessories, "put on");
@@ -2318,10 +2533,18 @@ glibr()
     rightfall = (uright && !uright->cursed && (!welded(uwep)));
     if (!uarmg && (leftfall || rightfall) && !nolimbs(youmonst.data)) {
         /* changed so cursed rings don't fall off, GAN 10/30/86 */
+#if 0 /*KR: 원본*/
         Your("%s off your %s.",
              (leftfall && rightfall) ? "rings slip" : "ring slips",
              (leftfall && rightfall) ? fingers_or_gloves(FALSE)
                                      : body_part(FINGER));
+#else /*KR: KRNethack 맞춤 번역 */
+        Your("%s 당신의 %s 빠져나갔다.",
+             (leftfall && rightfall) ? "반지들이" : "반지가",
+             append_josa((leftfall && rightfall) ? fingers_or_gloves(FALSE)
+                                                 : body_part(FINGER),
+                         "에서"));
+#endif
         xfl++;
         if (leftfall) {
             otmp = uleft;
@@ -2346,9 +2569,15 @@ glibr()
         if (otmp->quan > 1L)
             otherwep = makeplural(otherwep);
         hand = body_part(HAND);
-        which = "left ";
+        /*KR which = "left "; */
+        which = "왼쪽 ";
+#if 0 /*KR: 원본*/
         Your("%s %s%s from your %s%s.", otherwep, xfl ? "also " : "",
              otense(otmp, "slip"), which, hand);
+#else /*KR: KRNethack 맞춤 번역 */
+        Your("%s %s당신의 %s%s에서 미끄러졌다.", append_josa(otherwep, "도"),
+             xfl ? "역시 " : "", which, hand);
+#endif
         xfl++;
         wastwoweap = TRUE;
         setuswapwep((struct obj *) 0); /* clears u.twoweap */
@@ -2379,11 +2608,19 @@ glibr()
         if (bimanual(otmp))
             hand = makeplural(hand);
         else if (wastwoweap)
-            which = "right "; /* preceding msg was about left */
+            /*KR which = "right "; */ /* preceding msg was about left */
+            which = "오른쪽 ";
+#if 0 /*KR: 원본*/
         pline("%s %s%s %s%s from your %s%s.",
               !strncmp(thiswep, "corpse", 6) ? "The" : "Your",
               otherwep ? "other " : "", thiswep, xfl ? "also " : "",
               otense(otmp, "slip"), which, hand);
+#else /*KR: KRNethack 맞춤 번역 */
+        pline("%s %s%s%s 당신의 %s%s에서 미끄러졌다.",
+              !strncmp(thiswep, "corpse", 6) ? "그" : "당신의",
+              otherwep ? "다른 " : "", append_josa(thiswep, "이"),
+              xfl ? " 역시" : "", which, hand);
+#endif
         /* xfl++; */
         otmp->quan = savequan;
         setuwep((struct obj *) 0);
@@ -2477,11 +2714,13 @@ register struct obj *otmp;
         struct obj glibdummy;
 
         if (nolimbs(youmonst.data)) {
-            pline_The("ring is stuck.");
+            /*KR pline_The("ring is stuck."); */
+            pline("반지가 끼어 있다.");
             return 0;
         }
         glibdummy = zeroobj;
         why = 0; /* the item which prevents ring removal */
+#if 0            /*KR: 원본*/
         if (welded(uwep) && (otmp == uright || bimanual(uwep))) {
             Sprintf(buf, "free a weapon %s", body_part(HAND));
             why = uwep;
@@ -2495,36 +2734,68 @@ register struct obj *otmp;
             set_bknown(why, 1);
             return 0;
         }
+#else            /*KR: KRNethack 맞춤 번역 */
+        if (welded(uwep) && (otmp == uright || bimanual(uwep))) {
+            Sprintf(buf, "무기를 쥔 %s 자유롭게 할",
+                    append_josa(body_part(HAND), "을"));
+            why = uwep;
+        } else if (uarmg && (uarmg->cursed || Glib)) {
+            Sprintf(buf, "%s%s 벗을", Glib ? "미끄러운 " : "",
+                    append_josa(gloves_simple_name(uarmg), "을"));
+            why = !Glib ? uarmg : &glibdummy;
+        }
+        if (why) {
+            You("반지를 빼기 위해 %s 수 없다.", buf);
+            set_bknown(why, 1);
+            return 0;
+        }
+#endif
     }
     /* special glove checks */
     if (otmp == uarmg) {
         if (welded(uwep)) {
+#if 0 /*KR: 원본*/
             You("are unable to take off your %s while wielding that %s.",
                 c_gloves, is_sword(uwep) ? c_sword : c_weapon);
+#else /*KR: KRNethack 맞춤 번역 */
+            You("%s 쥐고 있는 동안에는 %s 벗을 수 없다.",
+                append_josa(is_sword(uwep) ? c_sword : c_weapon, "을"),
+                append_josa(c_gloves, "을"));
+#endif
             set_bknown(uwep, 1);
             return 0;
         } else if (Glib) {
+#if 0 /*KR: 원본*/
             pline("%s %s are too slippery to take off.",
                   uarmg->unpaid ? "The" : "Your", /* simplified Shk_Your() */
                   gloves_simple_name(uarmg));
+#else /*KR: KRNethack 맞춤 번역 */
+            pline("%s 너무 미끄러워서 벗을 수 없다.",
+                  append_josa(gloves_simple_name(uarmg), "은"));
+#endif
             return 0;
         }
     }
     /* special boot checks */
     if (otmp == uarmf) {
         if (u.utrap && u.utraptype == TT_BEARTRAP) {
-            pline_The("bear trap prevents you from pulling your %s out.",
-                      body_part(FOOT));
+            /*KR pline_The("bear trap prevents you from pulling your %s out.",
+             * body_part(FOOT)); */
+            pline("곰덫 때문에 %s 빼낼 수 없다.",
+                  append_josa(body_part(FOOT), "을"));
             return 0;
         } else if (u.utrap && u.utraptype == TT_INFLOOR) {
-            You("are stuck in the %s, and cannot pull your %s out.",
-                surface(u.ux, u.uy), makeplural(body_part(FOOT)));
+            /*KR You("are stuck in the %s, and cannot pull your %s out.",
+             * surface(u.ux, u.uy), makeplural(body_part(FOOT))); */
+            You("%s에 갇혀 있어서, %s 빼낼 수 없다.", surface(u.ux, u.uy),
+                append_josa(makeplural(body_part(FOOT)), "을"));
             return 0;
         }
     }
     /* special suit and shirt checks */
     if (otmp == uarm || otmp == uarmu) {
         why = 0; /* the item which prevents disrobing */
+#if 0            /*KR: 원본*/
         if (uarmc && uarmc->cursed) {
             Sprintf(buf, "remove your %s", cloak_simple_name(uarmc));
             why = uarmc;
@@ -2543,6 +2814,29 @@ register struct obj *otmp;
             set_bknown(why, 1);
             return 0;
         }
+#else            /*KR: KRNethack 맞춤 번역 */
+        if (uarmc && uarmc->cursed) {
+            Sprintf(buf, "%s 벗을",
+                    append_josa(cloak_simple_name(uarmc), "을"));
+            why = uarmc;
+        } else if (otmp == uarmu && uarm && uarm->cursed) {
+            Sprintf(buf, "%s 벗을", append_josa(c_suit, "을"));
+            why = uarm;
+        } else if (welded(uwep) && bimanual(uwep)) {
+            Sprintf(buf, "%s 놓을",
+                    append_josa(is_sword(uwep)               ? c_sword
+                                : (uwep->otyp == BATTLE_AXE) ? c_axe
+                                                             : c_weapon,
+                                "을"));
+            why = uwep;
+        }
+        if (why) {
+            You("%s 벗기 위해 %s 수 없다.",
+                append_josa(the(xname(otmp)), "을"), buf);
+            set_bknown(why, 1);
+            return 0;
+        }
+#endif
     }
     /* basic curse check */
     if (otmp == uquiver || (otmp == uswapwep && !u.twoweap)) {
@@ -2598,16 +2892,19 @@ do_takeoff()
     if (doff->what == W_WEP) {
         if (!cursed(uwep)) {
             setuwep((struct obj *) 0);
-            You("are empty %s.", body_part(HANDED));
+            /*KR You("are empty %s.", body_part(HANDED)); */
+            You("맨손이 되었다.");
             u.twoweap = FALSE;
         }
     } else if (doff->what == W_SWAPWEP) {
         setuswapwep((struct obj *) 0);
-        You("no longer have a second weapon readied.");
+        /*KR You("no longer have a second weapon readied."); */
+        You("더 이상 두 번째 무기를 준비하지 않는다.");
         u.twoweap = FALSE;
     } else if (doff->what == W_QUIVER) {
         setuqwep((struct obj *) 0);
-        You("no longer have ammunition readied.");
+        /*KR You("no longer have ammunition readied."); */
+        You("더 이상 탄약을 장전하지 않는다.");
     } else if (doff->what == WORN_ARMOR) {
         otmp = uarm;
         if (!cursed(otmp))
@@ -2689,7 +2986,8 @@ take_off(VOID_ARGS)
     doff->delay = 0;
 
     if (doff->what == 0L) {
-        You("finish %s.", doff->disrobing);
+        /*KR You("finish %s.", doff->disrobing); */
+        You("%s 마쳤다.", append_josa(doff->disrobing, "을"));
         return 0;
     } else if (doff->what == W_WEP) {
         doff->delay = 1;
@@ -2766,29 +3064,41 @@ doddoremarm()
     int result = 0;
 
     if (context.takeoff.what || context.takeoff.mask) {
-        You("continue %s.", context.takeoff.disrobing);
+        /*KR You("continue %s.", context.takeoff.disrobing); */
+        You("계속해서 %s 한다.",
+            append_josa(context.takeoff.disrobing, "을"));
         set_occupation(take_off, context.takeoff.disrobing, 0);
         return 0;
     } else if (!uwep && !uswapwep && !uquiver && !uamul && !ublindf && !uleft
                && !uright && !wearing_armor()) {
-        You("are not wearing anything.");
+        /*KR You("are not wearing anything."); */
+        You("아무것도 장비하고 있지 않다.");
         return 0;
     }
 
     add_valid_menu_class(0); /* reset */
     if (flags.menu_style != MENU_TRADITIONAL
-        || (result = ggetobj("take off", select_off, 0, FALSE,
-                             (unsigned *) 0)) < -1)
+        || (result =
+                ggetobj("take off", select_off, 0, FALSE, (unsigned *) 0))
+               < -1)
         result = menu_remarm(result);
 
     if (context.takeoff.mask) {
         /* default activity for armor and/or accessories,
            possibly combined with weapons */
+#if 0 /*KR: 원본*/
         (void) strncpy(context.takeoff.disrobing, "disrobing", CONTEXTVERBSZ);
         /* specific activity when handling weapons only */
         if (!(context.takeoff.mask & ~W_WEAPONS))
             (void) strncpy(context.takeoff.disrobing, "disarming",
                            CONTEXTVERBSZ);
+#else /*KR: KRNethack 맞춤 번역 */
+        (void) strncpy(context.takeoff.disrobing, "옷 벗기", CONTEXTVERBSZ);
+        /* specific activity when handling weapons only */
+        if (!(context.takeoff.mask & ~W_WEAPONS))
+            (void) strncpy(context.takeoff.disrobing, "무기 해제",
+                           CONTEXTVERBSZ);
+#endif
         (void) take_off();
     }
     /* The time to perform the command is already completely accounted for
@@ -2810,10 +3120,17 @@ int retry;
         all_worn_categories = (retry == -2);
     } else if (flags.menu_style == MENU_FULL) {
         all_worn_categories = FALSE;
+#if 0 /*KR: 원본*/
         n = query_category("What type of things do you want to take off?",
                            invent, (WORN_TYPES | ALL_TYPES
                                     | UNPAID_TYPES | BUCX_TYPES),
                            &pick_list, PICK_ANY);
+#else /*KR: KRNethack 맞춤 번역 */
+        n = query_category(
+            "어떤 종류의 물건을 벗거나 빼겠습니까?", invent,
+            (WORN_TYPES | ALL_TYPES | UNPAID_TYPES | BUCX_TYPES), &pick_list,
+            PICK_ANY);
+#endif
         if (!n)
             return 0;
         for (i = 0; i < n; i++) {
@@ -2831,21 +3148,29 @@ int retry;
             return 0;
         all_worn_categories = (i == -2);
     }
-    if (menu_class_present('u')
-        || menu_class_present('B') || menu_class_present('U')
-        || menu_class_present('C') || menu_class_present('X'))
+    if (menu_class_present('u') || menu_class_present('B')
+        || menu_class_present('U') || menu_class_present('C')
+        || menu_class_present('X'))
         all_worn_categories = FALSE;
 
+#if 0 /*KR: 원본*/
     n = query_objlist("What do you want to take off?", &invent,
                       (SIGNAL_NOMENU | USE_INVLET | INVORDER_SORT),
                       &pick_list, PICK_ANY,
                       all_worn_categories ? is_worn : is_worn_by_type);
+#else /*KR: KRNethack 맞춤 번역 */
+    n = query_objlist("무엇을 벗거나 빼겠습니까?", &invent,
+                      (SIGNAL_NOMENU | USE_INVLET | INVORDER_SORT),
+                      &pick_list, PICK_ANY,
+                      all_worn_categories ? is_worn : is_worn_by_type);
+#endif
     if (n > 0) {
         for (i = 0; i < n; i++)
             (void) select_off(pick_list[i].item.a_obj);
         free((genericptr_t) pick_list);
     } else if (n < 0 && flags.menu_style != MENU_COMBINATION) {
-        There("is nothing else you can remove or unwield.");
+        /*KR There("is nothing else you can remove or unwield."); */
+        pline("더 이상 벗거나 해제할 수 있는 물건이 없다.");
     }
     return 0;
 }
@@ -2865,44 +3190,57 @@ register struct obj *atmp;
     if (DESTROY_ARM(uarmc)) {
         if (donning(otmp))
             cancel_don();
-        Your("%s crumbles and turns to dust!", cloak_simple_name(uarmc));
+        /*KR Your("%s crumbles and turns to dust!", cloak_simple_name(uarmc));
+         */
+        Your("%s 부스러지더니 먼지가 되어버렸다!",
+             append_josa(cloak_simple_name(uarmc), "이"));
         (void) Cloak_off();
         useup(otmp);
     } else if (DESTROY_ARM(uarm)) {
         if (donning(otmp))
             cancel_don();
-        Your("armor turns to dust and falls to the %s!", surface(u.ux, u.uy));
+        /*KR Your("armor turns to dust and falls to the %s!", surface(u.ux,
+         * u.uy)); */
+        Your("갑옷이 먼지가 되어 %s 떨어졌다!",
+             append_josa(surface(u.ux, u.uy), "로"));
         (void) Armor_gone();
         useup(otmp);
     } else if (DESTROY_ARM(uarmu)) {
         if (donning(otmp))
             cancel_don();
-        Your("shirt crumbles into tiny threads and falls apart!");
+        /*KR Your("shirt crumbles into tiny threads and falls apart!"); */
+        Your("셔츠가 작은 실오라기들로 부스러지며 분해되었다!");
         (void) Shirt_off();
         useup(otmp);
     } else if (DESTROY_ARM(uarmh)) {
         if (donning(otmp))
             cancel_don();
-        Your("%s turns to dust and is blown away!", helm_simple_name(uarmh));
+        /*KR Your("%s turns to dust and is blown away!",
+         * helm_simple_name(uarmh)); */
+        Your("%s 먼지가 되어 날아갔다!",
+             append_josa(helm_simple_name(uarmh), "이"));
         (void) Helmet_off();
         useup(otmp);
     } else if (DESTROY_ARM(uarmg)) {
         if (donning(otmp))
             cancel_don();
-        Your("gloves vanish!");
+        /*KR Your("gloves vanish!"); */
+        Your("장갑이 사라졌다!");
         (void) Gloves_off();
         useup(otmp);
-        selftouch("You");
+        selftouch("당신은");
     } else if (DESTROY_ARM(uarmf)) {
         if (donning(otmp))
             cancel_don();
-        Your("boots disintegrate!");
+        /*KR Your("boots disintegrate!"); */
+        Your("신발이 붕괴되었다!");
         (void) Boots_off();
         useup(otmp);
     } else if (DESTROY_ARM(uarms)) {
         if (donning(otmp))
             cancel_don();
-        Your("shield crumbles away!");
+        /*KR Your("shield crumbles away!"); */
+        Your("방패가 부스러져 버렸다!");
         (void) Shield_off();
         useup(otmp);
     } else {
@@ -2914,9 +3252,7 @@ register struct obj *atmp;
     return 1;
 }
 
-void
-adj_abon(otmp, delta)
-register struct obj *otmp;
+void adj_abon(otmp, delta) register struct obj *otmp;
 register schar delta;
 {
     if (uarmg && uarmg == otmp && otmp->otyp == GAUNTLETS_OF_DEXTERITY) {
@@ -2945,8 +3281,13 @@ struct obj *obj;
 const char *verb; /* "dip" or "grease", or null to avoid messages */
 boolean only_if_known_cursed; /* ignore covering unless known to be cursed */
 {
+#if 0 /*KR: 원본*/
     static NEARDATA const char need_to_take_off_outer_armor[] =
         "need to take off %s to %s %s.";
+#else /*KR: KRNethack 맞춤 번역 */
+    static NEARDATA const char need_to_take_off_outer_armor[] =
+        "%s %s 위해서는 %s 벗어야 한다.";
+#endif
     char buf[BUFSZ];
     boolean anycovering = !only_if_known_cursed; /* more comprehensible... */
 #define BLOCKSACCESS(x) (anycovering || ((x)->cursed && (x)->bknown))
@@ -2958,7 +3299,9 @@ boolean only_if_known_cursed; /* ignore covering unless known to be cursed */
     if (obj == uarm && uarmc && BLOCKSACCESS(uarmc)) {
         if (verb) {
             Strcpy(buf, yname(uarmc));
-            You(need_to_take_off_outer_armor, buf, verb, yname(obj));
+            /*KR You(need_to_take_off_outer_armor, buf, verb, yname(obj)); */
+            You(need_to_take_off_outer_armor, append_josa(yname(obj), "을"),
+                verb, append_josa(buf, "을"));
         }
         return TRUE;
     }
@@ -2978,10 +3321,16 @@ boolean only_if_known_cursed; /* ignore covering unless known to be cursed */
             if (uarmc)
                 Strcat(buf, yname(uarmc));
             if (uarm && uarmc)
-                Strcat(buf, " and ");
+                /*KR Strcat(buf, " and "); */
+                Strcat(buf, " 그리고 ");
             if (uarm)
                 Strcat(buf, sameprefix ? xname(uarm) : yname(uarm));
+#if 0 /*KR:T*/
             You(need_to_take_off_outer_armor, buf, verb, yname(obj));
+#else
+            You(need_to_take_off_outer_armor, append_josa(yname(obj), "을"),
+                verb, append_josa(buf, "을"));
+#endif
         }
         return TRUE;
     }
@@ -2989,7 +3338,12 @@ boolean only_if_known_cursed; /* ignore covering unless known to be cursed */
     if ((obj == uleft || obj == uright) && uarmg && BLOCKSACCESS(uarmg)) {
         if (verb) {
             Strcpy(buf, yname(uarmg));
+#if 0 /*KR:T*/
             You(need_to_take_off_outer_armor, buf, verb, yname(obj));
+#else
+            You(need_to_take_off_outer_armor, append_josa(yname(obj), "을"),
+                verb, append_josa(buf, "을"));
+#endif
         }
         return TRUE;
     }
