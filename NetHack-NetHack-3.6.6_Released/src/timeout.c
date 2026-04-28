@@ -21,6 +21,7 @@ STATIC_DCL void FDECL(cleanup_burn, (ANY_P *, long));
 
 /* used by wizard mode #timeout and #wizintrinsic; order by 'interest'
    for timeout countdown, where most won't occur in normal play */
+/*KR 마법사 모드에서만 사용되므로 번역하지 않음 */
 const struct propname {
     int prop_num;
     const char *prop_name;
@@ -95,16 +96,24 @@ const struct propname {
     { FREE_ACTION, "free action" },
     { FIXED_ABIL, "fixed abilities" },
     { LIFESAVED, "life will be saved" },
-    {  0, 0 },
+    { 0, 0 },
 };
 
 /* He is being petrified - dialogue by inmet!tower */
 static NEARDATA const char *const stoned_texts[] = {
+#if 0                                 /*KR: 원본*/
     "You are slowing down.",            /* 5 */
     "Your limbs are stiffening.",       /* 4 */
     "Your limbs have turned to stone.", /* 3 */
     "You have turned to stone.",        /* 2 */
     "You are a statue."                 /* 1 */
+#else                                 /*KR: KRNethack 맞춤 번역 */
+    "당신의 몸이 느려지고 있다.",     /* 5 */
+    "당신의 사지가 뻣뻣해지고 있다.", /* 4 */
+    "당신의 사지가 돌로 변했다.",     /* 3 */
+    "당신은 돌로 변했다.",            /* 2 */
+    "당신은 조각상이 되었다."         /* 1 */
+#endif
 };
 
 STATIC_OVL void
@@ -116,8 +125,13 @@ stoned_dialogue()
         char buf[BUFSZ];
 
         Strcpy(buf, stoned_texts[SIZE(stoned_texts) - i]);
+#if 0 /*KR: 원본*/
         if (nolimbs(youmonst.data) && strstri(buf, "limbs"))
             (void) strsubst(buf, "limbs", "extremities");
+#else /*KR: KRNethack 맞춤 번역 */
+        if (nolimbs(youmonst.data) && strstri(buf, "사지"))
+            (void) strsubst(buf, "사지", "끝부분");
+#endif
         pline1(buf);
     }
     switch ((int) i) {
@@ -137,7 +151,8 @@ stoned_dialogue()
     case 3: /* limbs turned to stone */
         stop_occupation();
         nomul(-3); /* can't move anymore */
-        multi_reason = "getting stoned";
+        /*KR multi_reason = "getting stoned"; */
+        multi_reason = "돌로 변해가는 중에";
         nomovemsg = You_can_move_again; /* not unconscious */
         /* "your limbs have turned to stone" so terminate wounded legs */
         if (Wounded_legs && !u.usteed)
@@ -160,11 +175,19 @@ stoned_dialogue()
 
 /* hero is getting sicker and sicker prior to vomiting */
 static NEARDATA const char *const vomiting_texts[] = {
+#if 0                            /*KR: 원본*/
     "are feeling mildly nauseated.", /* 14 */
     "feel slightly confused.",       /* 11 */
     "can't seem to think straight.", /* 8 */
     "feel incredibly sick.",         /* 5 */
     "are about to vomit."            /* 2 */
+#else                            /*KR: KRNethack 맞춤 번역 */
+    "가벼운 구역질이 느껴진다.", /* 14 */
+    "조금 혼란스럽다.",          /* 11 */
+    "제대로 생각할 수가 없다.",  /* 8 */
+    "속이 엄청나게 안 좋다.",    /* 5 */
+    "당장이라도 토할 것 같다."   /* 2 */
+#endif
 };
 
 STATIC_OVL void
@@ -201,11 +224,13 @@ vomiting_dialogue()
     case 2:
         txt = vomiting_texts[4];
         if (cantvomit(youmonst.data))
-            txt = "gag uncontrollably.";
+            /*KR txt = "gag uncontrollably."; */
+            txt = "구역질을 멈출 수가 없다.";
         else if (Hallucination)
             /* "hurl" is short for "hurl chunks" which is slang for
                relatively violent vomiting... */
-            txt = "are about to hurl!";
+            /*KR txt = "are about to hurl!"; */
+            txt = "당장이라도 게워낼 것 같다!";
         break;
     case 0:
         stop_occupation();
@@ -220,7 +245,8 @@ vomiting_dialogue()
                [vomit() issues its own message for the cantvomit() case
                and for the FAINTING-or-worse case where stomach is empty] */
             if (u.uhs < FAINTING)
-                You("%s!", !Hallucination ? "vomit" : "hurl chunks");
+                /*KR You("%s!", !Hallucination ? "vomit" : "hurl chunks"); */
+                You("%s!", !Hallucination ? "토했다" : "게워냈다");
         }
         vomit();
         break;
@@ -233,19 +259,30 @@ vomiting_dialogue()
 }
 
 static NEARDATA const char *const choke_texts[] = {
+#if 0 /*KR: 원본*/
     "You find it hard to breathe.",
     "You're gasping for air.",
     "You can no longer breathe.",
     "You're turning %s.",
     "You suffocate."
+#else /*KR: KRNethack 맞춤 번역 */
+    "숨쉬기가 힘들다.", "숨을 헐떡이고 있다.", "더 이상 숨을 쉴 수가 없다.",
+    "얼굴이 %s 변하고 있다.", "당신은 질식했다."
+#endif
 };
 
 static NEARDATA const char *const choke_texts2[] = {
+#if 0 /*KR: 원본*/
     "Your %s is becoming constricted.",
     "Your blood is having trouble reaching your brain.",
     "The pressure on your %s increases.",
     "Your consciousness is fading.",
     "You suffocate."
+#else /*KR: KRNethack 맞춤 번역 */
+    "당신의 %s 조여온다.", "뇌로 피가 잘 통하지 않는다.",
+    "당신의 %s에 가해지는 압력이 커진다.", "의식이 희미해진다.",
+    "당신은 질식했다."
+#endif
 };
 
 STATIC_OVL void
@@ -255,12 +292,21 @@ choke_dialogue()
 
     if (i > 0 && i <= SIZE(choke_texts)) {
         if (Breathless || !rn2(50))
+#if 0 /*KR: 원본*/
             pline(choke_texts2[SIZE(choke_texts2) - i], body_part(NECK));
+#else /*KR: KRNethack 맞춤 번역 */
+            pline(choke_texts2[SIZE(choke_texts2) - i],
+                  append_josa(body_part(NECK), "이"));
+#endif
         else {
             const char *str = choke_texts[SIZE(choke_texts) - i];
 
             if (index(str, '%'))
+#if 0 /*KR: 원본*/
                 pline(str, hcolor(NH_BLUE));
+#else /*KR: KRNethack 맞춤 번역 */
+                pline(str, "파랗게");
+#endif
             else
                 pline1(str);
         }
@@ -269,8 +315,12 @@ choke_dialogue()
 }
 
 static NEARDATA const char *const levi_texts[] = {
+#if 0 /*KR: 원본*/
     "You float slightly lower.",
     "You wobble unsteadily %s the %s."
+#else /*KR: KRNethack 맞춤 번역 */
+    "당신의 몸이 조금 가라앉았다.", "당신은 %s 위에서 불안정하게 흔들거렸다."
+#endif
 };
 
 STATIC_OVL void
@@ -282,13 +332,13 @@ levitation_dialogue()
     if (ELevitation)
         return;
 
-    if (!ACCESSIBLE(levl[u.ux][u.uy].typ)
-        && !is_pool_or_lava(u.ux,u.uy))
+    if (!ACCESSIBLE(levl[u.ux][u.uy].typ) && !is_pool_or_lava(u.ux, u.uy))
         return;
 
     if (((HLevitation & TIMEOUT) % 2L) && i > 0L && i <= SIZE(levi_texts)) {
         const char *s = levi_texts[SIZE(levi_texts) - i];
 
+#if 0 /*KR: 원본*/
         if (index(s, '%')) {
             boolean danger = (is_pool_or_lava(u.ux, u.uy)
                               && !Is_waterlevel(&u.uz));
@@ -296,16 +346,32 @@ levitation_dialogue()
             pline(s, danger ? "over" : "in",
                   danger ? surface(u.ux, u.uy) : "air");
         } else
+#else /*KR: KRNethack 맞춤 번역 */
+        if (index(s, '%')) {
+            boolean danger =
+                (is_pool_or_lava(u.ux, u.uy) && !Is_waterlevel(&u.uz));
+
+            pline(s, danger ? surface(u.ux, u.uy) : "공중");
+        } else
+#endif
             pline1(s);
     }
 }
 
 static NEARDATA const char *const slime_texts[] = {
+#if 0                            /*KR: 원본*/
     "You are turning a little %s.",   /* 5 */
     "Your limbs are getting oozy.",   /* 4 */
     "Your skin begins to peel away.", /* 3 */
     "You are turning into %s.",       /* 2 */
     "You have become %s."             /* 1 */
+#else                            /*KR: KRNethack 맞춤 번역 */
+    "조금씩 %s 변하고 있다.",    /* 5 */
+    "사지가 흐물거린다.",        /* 4 */
+    "피부가 벗겨지기 시작한다.", /* 3 */
+    "%s 변하고 있다.",           /* 2 */
+    "%s 변해버렸다."             /* 1 */
+#endif
 };
 
 STATIC_OVL void
@@ -324,22 +390,37 @@ slime_dialogue()
         char buf[BUFSZ];
 
         Strcpy(buf, slime_texts[SIZE(slime_texts) - i - 1L]);
+#if 0 /*KR: 원본*/
         if (nolimbs(youmonst.data) && strstri(buf, "limbs"))
             (void) strsubst(buf, "limbs", "extremities");
+#else /*KR: KRNethack 맞춤 번역 */
+        if (nolimbs(youmonst.data) && strstri(buf, "사지"))
+            (void) strsubst(buf, "사지", "끝부분");
+#endif
 
         if (index(buf, '%')) {
             if (i == 4L) {  /* "you are turning green" */
                 if (!Blind) /* [what if you're already green?] */
+#if 0                       /*KR: 원본*/
                     pline(buf, hcolor(NH_GREEN));
+#else                       /*KR: KRNethack 맞춤 번역 */
+                    pline(buf, "녹색으로");
+#endif
             } else
+#if 0 /*KR: 원본*/
                 pline(buf,
                       an(Hallucination ? rndmonnam(NULL) : "green slime"));
+#else /*KR: KRNethack 맞춤 번역 */
+                pline(buf, append_josa(Hallucination ? rndmonnam(NULL)
+                                                     : "녹색 슬라임",
+                                       "으로"));
+#endif
         } else
             pline1(buf);
     }
 
     switch (i) {
-    case 3L:  /* limbs becoming oozy */
+    case 3L:        /* limbs becoming oozy */
         HFast = 0L; /* lose intrinsic speed */
         if (!Popeye(SLIMED))
             stop_occupation();
@@ -363,14 +444,13 @@ void
 burn_away_slime()
 {
     if (Slimed) {
-        make_slimed(0L, "The slime that covers you is burned away!");
+        /*KR make_slimed(0L, "The slime that covers you is burned away!"); */
+        make_slimed(0L, "당신을 뒤덮고 있던 슬라임이 불타 없어졌다!");
     }
 }
 
 /* countdown timer for turning into green slime has run out; kill our hero */
-STATIC_OVL void
-slimed_to_death(kptr)
-struct kinfo *kptr;
+STATIC_OVL void slimed_to_death(kptr) struct kinfo *kptr;
 {
     uchar save_mvflags;
 
@@ -385,7 +465,8 @@ struct kinfo *kptr;
         Strcpy(killer.name, kptr->name);
     } else {
         killer.format = NO_KILLER_PREFIX;
-        Strcpy(killer.name, "turned into green slime");
+        /*KR Strcpy(killer.name, "turned into green slime"); */
+        Strcpy(killer.name, "녹색 슬라임으로 변해서");
     }
     dealloc_killer(kptr);
 
@@ -416,16 +497,20 @@ struct kinfo *kptr;
         char slimebuf[BUFSZ];
 
         killer.format = KILLED_BY;
-        Strcpy(killer.name, "slimicide");
+        /*KR Strcpy(killer.name, "slimicide"); */
+        Strcpy(killer.name, "슬라임 살해");
         /* vary the message depending upon whether life-save was due to
            amulet or due to declining to die in explore or wizard mode */
-        Strcpy(slimebuf, "green slime has been genocided...");
+        /*KR Strcpy(slimebuf, "green slime has been genocided..."); */
+        Strcpy(slimebuf, "녹색 슬라임은 멸종되었다...");
         if (iflags.last_msg == PLNMSG_OK_DONT_DIE)
             /* follows "OK, so you don't die." and arg is second sentence */
-            pline("Yes, you do.  %s", upstart(slimebuf));
+            /*KR pline("Yes, you do.  %s", upstart(slimebuf)); */
+            pline("아니, 죽는다. %s", upstart(slimebuf));
         else
             /* follows "The medallion crumbles to dust." */
-            pline("Unfortunately, %s", slimebuf);
+            /*KR pline("Unfortunately, %s", slimebuf); */
+            pline("불행히도, %s", slimebuf);
         /* die again; no possibility of amulet this time */
         done(GENOCIDED); /* [should it be done_timeout(GENOCIDED, SLIMED)?] */
         /* could be life-saved again (only in explore or wizard mode)
@@ -442,8 +527,13 @@ struct kinfo *kptr;
    move between things which are closely packed--like the substance of
    solid rock! */
 static NEARDATA const char *const phaze_texts[] = {
+#if 0 /*KR: 원본*/
     "You start to feel bloated.",
     "You are feeling rather flabby.",
+#else /*KR: KRNethack 맞춤 번역 */
+    "몸이 부어오르는 느낌이 든다.",
+    "몸이 꽤 축 늘어지는 느낌이 든다.",
+#endif
 };
 
 STATIC_OVL void
@@ -461,9 +551,7 @@ phaze_dialogue()
 /* when a status timeout is fatal, keep the status line indicator shown
    during end of game rundown (and potential dumplog);
    timeout has already counted down to 0 by the time we get here */
-STATIC_OVL void
-done_timeout(how, which)
-int how, which;
+STATIC_OVL void done_timeout(how, which) int how, which;
 {
     long *intrinsic_p = &u.uprops[which].intrinsic;
 
@@ -535,14 +623,21 @@ nh_timeout()
             u.uspellprot--;
             find_ac();
             if (!Blind)
+#if 0 /*KR: 원본*/
                 Norep("The %s haze around you %s.", hcolor(NH_GOLDEN),
                       u.uspellprot ? "becomes less dense" : "disappears");
+#else /*KR: KRNethack 맞춤 번역 */
+                Norep("당신을 둘러싼 %s 아지랑이가 %s.",
+                      hcolor(NH_GOLDEN),
+                      u.uspellprot ? "옅어졌다" : "사라졌다");
+#endif
         }
     }
 
     if (u.ugallop) {
         if (--u.ugallop == 0L && u.usteed)
-            pline("%s stops galloping.", Monnam(u.usteed));
+            /*KR pline("%s stops galloping.", Monnam(u.usteed)); */
+            pline("%s 질주를 멈췄다.", append_josa(Monnam(u.usteed), "은"));
     }
 
     was_flying = Flying;
@@ -553,11 +648,19 @@ nh_timeout()
             case STONED:
                 if (kptr && kptr->name[0]) {
                     killer.format = kptr->format;
+#if 0 /*KR: 원본*/
                     Strcpy(killer.name, kptr->name);
                 } else {
                     killer.format = NO_KILLER_PREFIX;
                     Strcpy(killer.name, "killed by petrification");
                 }
+#else /*KR: KRNethack 맞춤 번역 */
+                    Strcpy(killer.name, kptr->name);
+                } else {
+                    killer.format = NO_KILLER_PREFIX;
+                    Strcpy(killer.name, "석화되어");
+                }
+#endif
                 dealloc_killer(kptr);
                 /* (unlike sliming, you aren't changing form here) */
                 done_timeout(STONING, STONED);
@@ -569,7 +672,8 @@ nh_timeout()
                 make_vomiting(0L, TRUE);
                 break;
             case SICK:
-                You("die from your illness.");
+                /*KR You("die from your illness."); */
+                You("병으로 사망했다.");
                 if (kptr && kptr->name[0]) {
                     killer.format = kptr->format;
                     Strcpy(killer.name, kptr->name);
@@ -592,8 +696,13 @@ nh_timeout()
                 break;
             case FAST:
                 if (!Very_fast)
+#if 0 /*KR: 원본*/
                     You_feel("yourself slowing down%s.",
                              Fast ? " a bit" : "");
+#else /*KR: KRNethack 맞춤 번역 */
+                    You_feel("몸이 %s느려지는 것을 느낀다.",
+                             Fast ? "조금 " : "");
+#endif
                 break;
             case CONFUSION:
                 /* So make_confused works properly */
@@ -624,9 +733,15 @@ nh_timeout()
             case INVIS:
                 newsym(u.ux, u.uy);
                 if (!Invis && !BInvis && !Blind) {
+#if 0 /*KR: 원본*/
                     You(!See_invisible
                             ? "are no longer invisible."
                             : "can no longer see through yourself.");
+#else /*KR: KRNethack 맞춤 번역 */
+                    You(!See_invisible
+                            ? "더 이상 투명하지 않다."
+                            : "더 이상 자신의 몸을 투과해서 볼 수 없다.");
+#endif
                     stop_occupation();
                 }
                 break;
@@ -640,6 +755,13 @@ nh_timeout()
                 heal_legs(0);
                 stop_occupation();
                 break;
+#ifdef JPEXTENSION
+            case TOTTER:
+                Totter = 0;
+                make_totter(0L, TRUE);
+                stop_occupation();
+                break;
+#endif
             case HALLUC:
                 set_itimeout(&HHallucination, 1L);
                 (void) make_hallucinated(0L, TRUE, 0L);
@@ -650,7 +772,8 @@ nh_timeout()
                 if (unconscious() || Sleep_resistance) {
                     incr_itimeout(&HSleepy, rnd(100));
                 } else if (Sleepy) {
-                    You("fall asleep.");
+                    /*KR You("fall asleep."); */
+                    You("잠이 들었다.");
                     sleeptime = rnd(20);
                     fall_asleep(-sleeptime, TRUE);
                     incr_itimeout(&HSleepy, sleeptime + rnd(100));
@@ -663,7 +786,8 @@ nh_timeout()
                 /* timed Flying is via #wizintrinsic only */
                 if (was_flying && !Flying) {
                     context.botl = 1;
-                    You("land.");
+                    /*KR You("land."); */
+                    You("착지했다.");
                     spoteffects(TRUE);
                 }
                 break;
@@ -672,8 +796,13 @@ nh_timeout()
                 if (!Warn_of_mon) {
                     context.warntype.speciesidx = NON_PM;
                     if (context.warntype.species) {
+#if 0 /*KR: 원본*/
                         You("are no longer warned about %s.",
                             makeplural(context.warntype.species->mname));
+#else /*KR: KRNethack 맞춤 번역 */
+                        You("더 이상 %s에 대한 경고를 받지 않는다.",
+                            makeplural(context.warntype.species->mname));
+#endif
                         context.warntype.species = (struct permonst *) 0;
                     }
                 }
@@ -681,21 +810,32 @@ nh_timeout()
             case PASSES_WALLS:
                 if (!Passes_walls) {
                     if (stuck_in_wall())
-                        You_feel("hemmed in again.");
+                        /*KR You_feel("hemmed in again."); */
+                        You_feel("다시 갇힌 기분이다.");
                     else
+#if 0 /*KR: 원본*/
                         pline("You're back to your %s self again.",
                               !Upolyd ? "normal" : "unusual");
+#else /*KR: KRNethack 맞춤 번역 */
+                        pline("다시 %s원래 모습으로 돌아왔다.",
+                              !Upolyd ? "" : "평소와 다른 ");
+#endif
                 }
                 break;
             case STRANGLED:
                 killer.format = KILLED_BY;
+#if 0 /*KR: 원본*/
                 Strcpy(killer.name,
                        (u.uburied) ? "suffocation" : "strangulation");
+#else /*KR: KRNethack 맞춤 번역 */
+                Strcpy(killer.name, (u.uburied) ? "질식해서" : "목이 졸려서");
+#endif
                 done_timeout(DIED, STRANGLED);
                 /* must be declining to die in explore|wizard mode;
                    treat like being cured of strangulation by prayer */
                 if (uamul && uamul->otyp == AMULET_OF_STRANGULATION) {
-                    Your("amulet vanishes!");
+                    /*KR Your("amulet vanishes!"); */
+                    Your("부적이 사라졌다!");
                     useup(uamul);
                 }
                 break;
@@ -705,14 +845,16 @@ nh_timeout()
                 if (u.umoved && !Levitation) {
                     slip_or_trip();
                     nomul(-2);
-                    multi_reason = "fumbling";
+                    /*KR multi_reason = "fumbling"; */
+                    multi_reason = "헛디딘 틈에";
                     nomovemsg = "";
                     /* The more you are carrying the more likely you
                      * are to make noise when you fumble.  Adjustments
                      * to this number must be thoroughly play tested.
                      */
                     if ((inv_weight() > -500)) {
-                        You("make a lot of noise!");
+                        /*KR You("make a lot of noise!"); */
+                        You("큰 소리를 냈다!");
                         wake_nearby();
                     }
                 }
@@ -734,14 +876,13 @@ nh_timeout()
     run_timers();
 }
 
-void
-fall_asleep(how_long, wakeup_msg)
-int how_long;
+void fall_asleep(how_long, wakeup_msg) int how_long;
 boolean wakeup_msg;
 {
     stop_occupation();
     nomul(how_long);
-    multi_reason = "sleeping";
+    /*KR multi_reason = "sleeping"; */
+    multi_reason = "잠든 사이에";
     /* generally don't notice sounds while sleeping */
     if (wakeup_msg && multi == how_long) {
         /* caller can follow with a direct call to Hear_again() if
@@ -752,16 +893,15 @@ boolean wakeup_msg;
     }
     /* early wakeup from combat won't be possible until next monster turn */
     u.usleep = monstermoves;
-    nomovemsg = wakeup_msg ? "You wake up." : You_can_move_again;
+    /*KR nomovemsg = wakeup_msg ? "You wake up." : You_can_move_again; */
+    nomovemsg = wakeup_msg ? "잠에서 깨어났다." : You_can_move_again;
 }
 
 /* Attach an egg hatch timeout to the given egg.
- *      when = Time to hatch, usually only passed if re-creating an
- *             existing hatch timer. Pass 0L for random hatch time.
+ * when = Time to hatch, usually only passed if re-creating an
+ * existing hatch timer. Pass 0L for random hatch time.
  */
-void
-attach_egg_hatch_timeout(egg, when)
-struct obj *egg;
+void attach_egg_hatch_timeout(egg, when) struct obj *egg;
 long when;
 {
     int i;
@@ -789,18 +929,14 @@ long when;
 }
 
 /* prevent an egg from ever hatching */
-void
-kill_egg(egg)
-struct obj *egg;
+void kill_egg(egg) struct obj *egg;
 {
     /* stop previous timer, if any */
     (void) stop_timer(HATCH_EGG, obj_to_any(egg));
 }
 
 /* timer callback routine: hatch the given egg */
-void
-hatch_egg(arg, timeout)
-anything *arg;
+void hatch_egg(arg, timeout) anything *arg;
 long timeout;
 {
     struct obj *egg;
@@ -861,13 +997,13 @@ long timeout;
          * We can do several things.  The first ones that come to
          * mind are:
          * + Create the hatched monster then place it on the migrating
-         *   mons list.  This is tough because all makemon() is made
-         *   to place the monster as well.  Makemon() also doesn't lend
-         *   itself well to splitting off a "not yet placed" subroutine.
+         * mons list.  This is tough because all makemon() is made
+         * to place the monster as well.  Makemon() also doesn't lend
+         * itself well to splitting off a "not yet placed" subroutine.
          * + Mark the egg as hatched, then place the monster when we
-         *   place the migrating objects.
+         * place the migrating objects.
          * + Or just kill any egg which gets sent to another level.
-         *   Falling is the usual reason such transportation occurs.
+         * Falling is the usual reason such transportation occurs.
          */
         cansee_hatchspot = FALSE;
         mon = ???;
@@ -881,8 +1017,13 @@ long timeout;
         if (cansee_hatchspot) {
             /* [bug?  m_monnam() yields accurate monster type
                regardless of hallucination] */
+#if 0 /*KR: 원본*/
             Sprintf(monnambuf, "%s%s", siblings ? "some " : "",
                     siblings ? makeplural(m_monnam(mon)) : an(m_monnam(mon)));
+#else /*KR: KRNethack 맞춤 번역 */
+            Sprintf(monnambuf, "%s%s", siblings ? "몇 마리의 " : "",
+                    a_monnam(mon));
+#endif
             /* we don't learn the egg type here because learning
                an egg type requires either seeing the egg hatch
                or being familiar with the egg already,
@@ -894,24 +1035,41 @@ long timeout;
         case OBJ_INVENT:
             knows_egg = TRUE; /* true even if you are blind */
             if (!cansee_hatchspot)
+#if 0 /*KR: 원본*/
                 You_feel("%s %s from your pack!", something,
                          locomotion(mon->data, "drop"));
+#else /*KR: KRNethack 맞춤 번역 */
+                You_feel("무언가가 배낭에서 빠져나온 것 같은 느낌이 든다!");
+#endif
             else
+#if 0 /*KR: 원본*/
                 You_see("%s %s out of your pack!", monnambuf,
                         locomotion(mon->data, "drop"));
+#else /*KR: KRNethack 맞춤 번역 */
+                You("%s 배낭 밖으로 빠져나오는 것을 보았다!",
+                    append_josa(monnambuf, "이"));
+#endif
             if (yours) {
+#if 0 /*KR: 원본*/
                 pline("%s cries sound like \"%s%s\"",
                       siblings ? "Their" : "Its",
                       flags.female ? "mommy" : "daddy", egg->spe ? "." : "?");
+#else /*KR: KRNethack 맞춤 번역 */
+                pline("그 울음소리는 \"%s%s\"처럼 들린다.",
+                      flags.female ? "엄마" : "아빠", egg->spe ? "" : "?");
+#endif
             } else if (mon->data->mlet == S_DRAGON && !Deaf) {
-                verbalize("Gleep!"); /* Mything eggs :-) */
+                /*KR verbalize("Gleep!"); */ /* Mything eggs :-) */
+                verbalize("삐약!");          /* Mything eggs :-) */
             }
             break;
 
         case OBJ_FLOOR:
             if (cansee_hatchspot) {
                 knows_egg = TRUE;
-                You_see("%s hatch.", monnambuf);
+                /*KR You_see("%s hatch.", monnambuf); */
+                You("%s 알에서 깨어나는 것을 보았다.",
+                    append_josa(monnambuf, "이"));
                 redraw = TRUE; /* update egg's map location */
             }
             break;
@@ -922,16 +1080,28 @@ long timeout;
                 mon2 = egg->ocarry;
                 if (canseemon(mon2)
                     && (!mon2->wormno || cansee(mon2->mx, mon2->my))) {
+#if 0 /*KR: 원본*/
                     Sprintf(carriedby, "%s pack",
                             s_suffix(a_monnam(mon2)));
+#else /*KR: KRNethack 맞춤 번역 */
+                    Sprintf(carriedby, "%s 짐 속에서",
+                            s_suffix(a_monnam(mon2)));
+#endif
                     knows_egg = TRUE;
                 } else if (is_pool(mon->mx, mon->my)) {
-                    Strcpy(carriedby, "empty water");
+                    /*KR Strcpy(carriedby, "empty water"); */
+                    Strcpy(carriedby, "텅 빈 물속에서");
                 } else {
-                    Strcpy(carriedby, "thin air");
+                    /*KR Strcpy(carriedby, "thin air"); */
+                    Strcpy(carriedby, "허공에서");
                 }
+#if 0 /*KR: 원본*/
                 You_see("%s %s out of %s!", monnambuf,
                         locomotion(mon->data, "drop"), carriedby);
+#else /*KR: KRNethack 맞춤 번역 */
+                You("%s %s 빠져나오는 것을 보았다!",
+                    append_josa(monnambuf, "이"), carriedby);
+#endif
             }
             break;
 #if 0
@@ -963,9 +1133,7 @@ long timeout;
 }
 
 /* Learn to recognize eggs of the given type. */
-void
-learn_egg_type(mnum)
-int mnum;
+void learn_egg_type(mnum) int mnum;
 {
     /* baby monsters hatch from grown-up eggs */
     mnum = little_to_big(mnum);
@@ -975,9 +1143,7 @@ int mnum;
 }
 
 /* Attach a fig_transform timeout to the given figurine. */
-void
-attach_fig_transform_timeout(figurine)
-struct obj *figurine;
+void attach_fig_transform_timeout(figurine) struct obj *figurine;
 {
     int i;
 
@@ -1008,13 +1174,14 @@ slip_or_trip()
         otmp = 0;
 
     if (otmp && on_foot) { /* trip over something in particular */
-        /*
-          If there is only one item, it will have just been named
-          during the move, so refer to by via pronoun; otherwise,
-          if the top item has been or can be seen, refer to it by
-          name; if not, look for rocks to trip over; trip over
-          anonymous "something" if there aren't any rocks.
-        */
+                           /*
+                             If there is only one item, it will have just been named
+                             during the move, so refer to by via pronoun; otherwise,
+                             if the top item has been or can be seen, refer to it by
+                             name; if not, look for rocks to trip over; trip over
+                             anonymous "something" if there aren't any rocks.
+                           */
+#if 0                      /*KR: 원본*/
         what = (iflags.last_msg == PLNMSG_ONE_ITEM_HERE)
                 ? ((otmp->quan == 1L) ? "it"
                       : Hallucination ? "they" : "them")
@@ -1023,21 +1190,40 @@ slip_or_trip()
                       : ((otmp2 = sobj_at(ROCK, u.ux, u.uy)) == 0
                              ? something
                              : (otmp2->quan == 1L ? "a rock" : "some rocks"));
+#else                      /*KR: KRNethack 맞춤 번역 */
+        what = (iflags.last_msg == PLNMSG_ONE_ITEM_HERE) ? "그것"
+               : (otmp->dknown || !Blind)
+                   ? doname(otmp)
+                   : ((otmp2 = sobj_at(ROCK, u.ux, u.uy)) == 0 ? something
+                                                               : "돌");
+#endif
         if (Hallucination) {
             what = strcpy(buf, what);
             buf[0] = highc(buf[0]);
+#if 0 /*KR: 원본*/
             pline("Egads!  %s bite%s your %s!", what,
                   (!otmp || otmp->quan == 1L) ? "s" : "", body_part(FOOT));
+#else /*KR: KRNethack 맞춤 번역 */
+            pline("이런! %s 당신의 %s 물었다!", append_josa(what, "이"),
+                  body_part(FOOT));
+#endif
         } else {
-            You("trip over %s.", what);
+            /*KR You("trip over %s.", what); */
+            You("%s 걸려 넘어졌다.", append_josa(what, "에"));
         }
         if (!uarmf && otmp->otyp == CORPSE
             && touch_petrifies(&mons[otmp->corpsenm]) && !Stone_resistance) {
+#if 0 /*KR: 원본*/
             Sprintf(killer.name, "tripping over %s corpse",
                     an(mons[otmp->corpsenm].mname));
+#else /*KR: KRNethack 맞춤 번역 */
+            Sprintf(killer.name, "%s 시체에 걸려 넘어져",
+                    mons[otmp->corpsenm].mname);
+#endif
             instapetrify(killer.name);
         }
     } else if (rn2(3) && is_ice(u.ux, u.uy)) {
+#if 0 /*KR: 원본*/
         pline("%s %s%s on the ice.",
               u.usteed ? upstart(x_monnam(u.usteed,
                                           (has_mname(u.usteed)) ? ARTICLE_NONE
@@ -1045,38 +1231,65 @@ slip_or_trip()
                                           (char *) 0, SUPPRESS_SADDLE, FALSE))
                        : "You",
               rn2(2) ? "slip" : "slide", on_foot ? "" : "s");
+#else /*KR: KRNethack 맞춤 번역 */
+        pline("%s 얼음 위에서 미끄러졌다.",
+              u.usteed ? upstart(x_monnam(u.usteed,
+                                          (has_mname(u.usteed)) ? ARTICLE_NONE
+                                                                : ARTICLE_THE,
+                                          (char *) 0, SUPPRESS_SADDLE, FALSE))
+                       : "당신은");
+#endif
     } else {
         if (on_foot) {
             switch (rn2(4)) {
             case 1:
+#if 0 /*KR: 원본*/
                 You("trip over your own %s.",
                     Hallucination ? "elbow" : makeplural(body_part(FOOT)));
+#else /*KR: KRNethack 맞춤 번역 */
+                You("자신의 %s에 걸려 넘어졌다.",
+                    Hallucination ? "팔꿈치" : makeplural(body_part(FOOT)));
+#endif
                 break;
             case 2:
+#if 0 /*KR: 원본*/
                 You("slip %s.",
                     Hallucination ? "on a banana peel" : "and nearly fall");
+#else /*KR: KRNethack 맞춤 번역 */
+                You("%s.", Hallucination ? "바나나 껍질을 밟고 미끄러졌다"
+                                         : "미끄러져 넘어질 뻔했다");
+#endif
                 break;
             case 3:
-                You("flounder.");
+                /*KR You("flounder."); */
+                You("버둥거렸다.");
                 break;
             default:
-                You("stumble.");
+                /*KR You("stumble."); */
+                You("비틀거렸다.");
                 break;
             }
         } else {
             switch (rn2(4)) {
             case 1:
+#if 0 /*KR: 원본*/
                 Your("%s slip out of the stirrups.",
                      makeplural(body_part(FOOT)));
+#else /*KR: KRNethack 맞춤 번역 */
+                You("등자에서 발이 미끄러졌다.");
+#endif
                 break;
             case 2:
-                You("let go of the reins.");
+                /*KR You("let go of the reins."); */
+                You("고삐를 놓쳐버렸다.");
                 break;
             case 3:
-                You("bang into the saddle-horn.");
+                /*KR You("bang into the saddle-horn."); */
+                You("안장 머리에 부딪혔다.");
                 break;
             default:
-                You("slide to one side of the saddle.");
+                /*KR You("slide to one side of the saddle."); */
+                You("안장 한쪽으로 미끄러졌다.");
                 break;
             }
             dismount_steed(DISMOUNT_FELL);
@@ -1085,39 +1298,43 @@ slip_or_trip()
 }
 
 /* Print a lamp flicker message with tailer. */
-STATIC_OVL void
-see_lamp_flicker(obj, tailer)
-struct obj *obj;
+STATIC_OVL void see_lamp_flicker(obj, tailer) struct obj *obj;
 const char *tailer;
 {
     switch (obj->where) {
     case OBJ_INVENT:
     case OBJ_MINVENT:
-        pline("%s flickers%s.", Yname2(obj), tailer);
+        /*KR pline("%s flickers%s.", Yname2(obj), tailer); */
+        pline("%s %s 깜빡였다.", append_josa(Yname2(obj), "이"), tailer);
         break;
     case OBJ_FLOOR:
-        You_see("%s flicker%s.", an(xname(obj)), tailer);
+        /*KR You_see("%s flicker%s.", an(xname(obj)), tailer); */
+        You("%s %s 깜빡이는 것을 보았다.", append_josa(an(xname(obj)), "이"),
+            tailer);
         break;
     }
 }
 
 /* Print a dimming message for brass lanterns. */
-STATIC_OVL void
-lantern_message(obj)
-struct obj *obj;
+STATIC_OVL void lantern_message(obj) struct obj *obj;
 {
     /* from adventure */
     switch (obj->where) {
     case OBJ_INVENT:
-        Your("lantern is getting dim.");
+        /*KR Your("lantern is getting dim."); */
+        Your("랜턴이 어두워지고 있다.");
         if (Hallucination)
-            pline("Batteries have not been invented yet.");
+            /*KR pline("Batteries have not been invented yet."); */
+            pline("아직 배터리가 발명되지 않았는데.");
         break;
     case OBJ_FLOOR:
-        You_see("a lantern getting dim.");
+        /*KR You_see("a lantern getting dim."); */
+        pline("랜턴이 어두워지는 것을 보았다.");
         break;
     case OBJ_MINVENT:
-        pline("%s lantern is getting dim.", s_suffix(Monnam(obj->ocarry)));
+        /*KR pline("%s lantern is getting dim.",
+         * s_suffix(Monnam(obj->ocarry))); */
+        pline("%s 랜턴이 어두워지고 있다.", s_suffix(Monnam(obj->ocarry)));
         break;
     }
 }
@@ -1126,18 +1343,22 @@ struct obj *obj;
  * Timeout callback for for objects that are burning. E.g. lamps, candles.
  * See begin_burn() for meanings of obj->age and obj->spe.
  */
-void
-burn_object(arg, timeout)
-anything *arg;
+void burn_object(arg, timeout) anything *arg;
 long timeout;
 {
     struct obj *obj = arg->a_obj;
+#if 0 /*KR: 원본*/
     boolean canseeit, many, menorah, need_newsym, need_invupdate;
+#else /*KR: KRNethack 맞춤 번역 */
+    boolean canseeit, menorah, need_newsym, need_invupdate;
+#endif
     xchar x, y;
     char whose[BUFSZ];
 
     menorah = obj->otyp == CANDELABRUM_OF_INVOCATION;
+#if 0 /*KR*/
     many = menorah ? obj->spe > 1 : obj->quan > 1L;
+#endif
 
     /* timeout while away */
     if (timeout != monstermoves) {
@@ -1186,10 +1407,12 @@ long timeout;
                 need_invupdate = TRUE;
                 /*FALLTHRU*/
             case OBJ_MINVENT:
-                pline("%spotion of oil has burnt away.", whose);
+                /*KR pline("%spotion of oil has burnt away.", whose); */
+                pline("%s기름 물약이 다 타버렸다.", whose);
                 break;
             case OBJ_FLOOR:
-                You_see("a burning potion of oil go out.");
+                /*KR You_see("a burning potion of oil go out."); */
+                You("불타던 기름 물약이 꺼지는 것을 보았다.");
                 need_newsym = TRUE;
                 break;
             }
@@ -1218,8 +1441,10 @@ long timeout;
                 if (obj->otyp == BRASS_LANTERN)
                     lantern_message(obj);
                 else
-                    see_lamp_flicker(obj,
-                                     obj->age == 50L ? " considerably" : "");
+                    see_lamp_flicker(
+                        obj,
+                        /*KR obj->age == 50L ? " considerably" : ""); */
+                        obj->age == 50L ? "심하게" : "");
             }
             break;
 
@@ -1231,10 +1456,16 @@ long timeout;
                     switch (obj->where) {
                     case OBJ_INVENT:
                     case OBJ_MINVENT:
-                        pline("%s seems about to go out.", Yname2(obj));
+                        /*KR pline("%s seems about to go out.", Yname2(obj));
+                         */
+                        pline("%s 곧 꺼질 것 같다.",
+                              append_josa(Yname2(obj), "이"));
                         break;
                     case OBJ_FLOOR:
-                        You_see("%s about to go out.", an(xname(obj)));
+                        /*KR You_see("%s about to go out.", an(xname(obj)));
+                         */
+                        pline("%s 곧 꺼질 듯한 모습을 보았다.",
+                              append_josa(an(xname(obj)), "이"));
                         break;
                     }
                 }
@@ -1250,15 +1481,21 @@ long timeout;
                     /*FALLTHRU*/
                 case OBJ_MINVENT:
                     if (obj->otyp == BRASS_LANTERN)
-                        pline("%slantern has run out of power.", whose);
+                        /*KR pline("%slantern has run out of power.", whose);
+                         */
+                        pline("%s랜턴의 불빛이 다했다.", whose);
                     else
-                        pline("%s has gone out.", Yname2(obj));
+                        /*KR pline("%s has gone out.", Yname2(obj)); */
+                        pline("%s 꺼졌다.", append_josa(Yname2(obj), "이"));
                     break;
                 case OBJ_FLOOR:
                     if (obj->otyp == BRASS_LANTERN)
-                        You_see("a lantern run out of power.");
+                        /*KR You_see("a lantern run out of power."); */
+                        You("랜턴의 불빛이 꺼지는 것을 보았다.");
                     else
-                        You_see("%s go out.", an(xname(obj)));
+                        /*KR You_see("%s go out.", an(xname(obj))); */
+                        You("%s 꺼지는 것을 보았다.",
+                            append_josa(an(xname(obj)), "이"));
                     break;
                 }
             }
@@ -1288,15 +1525,25 @@ long timeout;
                 switch (obj->where) {
                 case OBJ_INVENT:
                 case OBJ_MINVENT:
+#if 0 /*KR: 원본*/
                     pline("%s%scandle%s getting short.", whose,
                           menorah ? "candelabrum's " : "",
                           many ? "s are" : " is");
+#else /*KR: KRNethack 맞춤 번역 */
+                    pline("%s%s양초가 짧아졌다.", whose,
+                          menorah ? "촛대의 " : "");
+#endif
                     break;
                 case OBJ_FLOOR:
+#if 0 /*KR: 원본*/
                     You_see("%scandle%s getting short.",
                             menorah ? "a candelabrum's " : many ? "some "
                                                                 : "a ",
                             many ? "s" : "");
+#else /*KR: KRNethack 맞춤 번역 */
+                    You("%s양초가 짧아지는 것을 보았다.",
+                        menorah ? "촛대의 " : "");
+#endif
                     break;
                 }
             break;
@@ -1306,15 +1553,25 @@ long timeout;
                 switch (obj->where) {
                 case OBJ_INVENT:
                 case OBJ_MINVENT:
+#if 0 /*KR: 원본*/
                     pline("%s%scandle%s flame%s flicker%s low!", whose,
                           menorah ? "candelabrum's " : "", many ? "s'" : "'s",
                           many ? "s" : "", many ? "" : "s");
+#else /*KR: KRNethack 맞춤 번역 */
+                    pline("%s%s양초 불꽃이 깜박이며 약해졌다!", whose,
+                          menorah ? "촛대의 " : "");
+#endif
                     break;
                 case OBJ_FLOOR:
+#if 0 /*KR: 원본*/
                     You_see("%scandle%s flame%s flicker low!",
                             menorah ? "a candelabrum's " : many ? "some "
                                                                 : "a ",
                             many ? "s'" : "'s", many ? "s" : "");
+#else /*KR: KRNethack 맞춤 번역 */
+                    You("%s양초 불꽃이 깜박이며 약해지는 것을 보았다!",
+                        menorah ? "촛대의 " : "");
+#endif
                     break;
                 }
             break;
@@ -1328,12 +1585,20 @@ long timeout;
                         need_invupdate = TRUE;
                         /*FALLTHRU*/
                     case OBJ_MINVENT:
+#if 0 /*KR: 원본*/
                         pline("%scandelabrum's flame%s.", whose,
                               many ? "s die" : " dies");
+#else /*KR: KRNethack 맞춤 번역 */
+                        pline("%s촛대의 불꽃이 꺼졌다.", whose);
+#endif
                         break;
                     case OBJ_FLOOR:
+#if 0 /*KR: 원본*/
                         You_see("a candelabrum's flame%s die.",
                                 many ? "s" : "");
+#else /*KR: KRNethack 맞춤 번역 */
+                        You("촛대의 불꽃이 꺼지는 것을 보았다.");
+#endif
                         break;
                     }
                 } else {
@@ -1343,25 +1608,41 @@ long timeout;
                            useupall() -> freeinv() handles it */
                         /*FALLTHRU*/
                     case OBJ_MINVENT:
+#if 0 /*KR: 원본*/
                         pline("%s %s consumed!", Yname2(obj),
                               many ? "are" : "is");
+#else /*KR: KRNethack 맞춤 번역 */
+                        pline("%s 다 타버렸다!",
+                              append_josa(Yname2(obj), "이"));
+#endif
                         break;
                     case OBJ_FLOOR:
                         /*
                           You see some wax candles consumed!
                           You see a wax candle consumed!
                          */
+#if 0 /*KR: 원본*/
                         You_see("%s%s consumed!", many ? "some " : "",
                                 many ? xname(obj) : an(xname(obj)));
+#else /*KR: KRNethack 맞춤 번역 */
+                        You("%s 다 타버리는 것을 보았다!",
+                            append_josa(xname(obj), "이"));
+#endif
                         need_newsym = TRUE;
                         break;
                     }
 
                     /* post message */
+#if 0 /*KR: 원본*/
                     pline(Hallucination
                               ? (many ? "They shriek!" : "It shrieks!")
                               : Blind ? "" : (many ? "Their flames die."
                                                    : "Its flame dies."));
+#else /*KR: KRNethack 맞춤 번역 */
+                    pline(Hallucination ? "그것은 비명을 지른다!"
+                          : Blind       ? ""
+                                        : "불꽃이 사그라들었다.");
+#endif
                 }
             }
             end_burn(obj, FALSE);
@@ -1416,15 +1697,15 @@ long timeout;
  * a timer.
  *
  * Burn rules:
- *      potions of oil, lamps & candles:
- *              age = # of turns of fuel left
- *              spe = <unused>
- *      magic lamps:
- *              age = <unused>
- *              spe = 0 not lightable, 1 lightable forever
- *      candelabrum:
- *              age = # of turns of fuel left
- *              spe = # of candles
+ * potions of oil, lamps & candles:
+ * age = # of turns of fuel left
+ * spe = <unused>
+ * magic lamps:
+ * age = <unused>
+ * spe = 0 not lightable, 1 lightable forever
+ * candelabrum:
+ * age = # of turns of fuel left
+ * spe = # of candles
  *
  * Once the burn begins, the age will be set to the amount of fuel
  * remaining _once_the_burn_finishes_.  If the burn is terminated
@@ -1436,9 +1717,7 @@ long timeout;
  *
  * This is a "silent" routine - it should not print anything out.
  */
-void
-begin_burn(obj, already_lit)
-struct obj *obj;
+void begin_burn(obj, already_lit) struct obj *obj;
 boolean already_lit;
 {
     int radius = 3;
@@ -1530,9 +1809,7 @@ boolean already_lit;
  * Stop a burn timeout on the given object if timer attached.  Darken
  * light source.
  */
-void
-end_burn(obj, timer_attached)
-struct obj *obj;
+void end_burn(obj, timer_attached) struct obj *obj;
 boolean timer_attached;
 {
     if (!obj->lamplit) {
@@ -1556,9 +1833,7 @@ boolean timer_attached;
 /*
  * Cleanup a burning object if timer stopped.
  */
-static void
-cleanup_burn(arg, expire_time)
-anything *arg;
+static void cleanup_burn(arg, expire_time) anything *arg;
 long expire_time;
 {
     struct obj *obj = arg->a_obj;
@@ -1610,17 +1885,20 @@ do_storms()
     if (levl[u.ux][u.uy].typ == CLOUD) {
         /* Inside a cloud during a thunder storm is deafening. */
         /* Even if already deaf, we sense the thunder's vibrations. */
-        pline("Kaboom!!!  Boom!!  Boom!!");
+        /*KR pline("Kaboom!!!  Boom!!  Boom!!"); */
+        pline("쾅!!! 쾅!! 쾅!!");
         incr_itimeout(&HDeaf, rn1(20, 30));
         context.botl = TRUE;
         if (!u.uinvulnerable) {
             stop_occupation();
             nomul(-3);
-            multi_reason = "hiding from thunderstorm";
+            /*KR multi_reason = "hiding from thunderstorm"; */
+            multi_reason = "뇌우를 피해 숨는 중에";
             nomovemsg = 0;
         }
     } else
-        You_hear("a rumbling noise.");
+        /*KR You_hear("a rumbling noise."); */
+        You_hear("우르릉거리는 소리가 들린다.");
 }
 
 /* -------------------------------------------------------------------------

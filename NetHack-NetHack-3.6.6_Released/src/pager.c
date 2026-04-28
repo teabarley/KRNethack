@@ -59,17 +59,27 @@ append_str(buf, new_str)
 char *buf;
 const char *new_str;
 {
-    int space_left; /* space remaining in buf */
+    /*KR static const char sep[] = " or "; */
+    static const char sep[] = " 또는 ";
+    size_t oldlen, space_left;
 
     if (strstri(buf, new_str))
-        return 0;
+        return 0; /* already present */
 
-    space_left = BUFSZ - strlen(buf) - 1;
-    if (space_left < 1)
-        return 0;
-    (void) strncat(buf, " or ", space_left);
-    (void) strncat(buf, new_str, space_left - 4);
-    return 1;
+    oldlen = strlen(buf);
+    if (oldlen >= BUFSZ - 1) {
+        if (oldlen > BUFSZ - 1)
+            impossible("append_str: 'buf' contains %lu characters.",
+                       (unsigned long) oldlen);
+        return 0; /* no space available */
+    }
+
+    /* some space available, but not necessarily enough for full append */
+    space_left = BUFSZ - 1 - oldlen; /* space remaining in buf */
+    (void) strncat(buf, sep, space_left);
+    if (space_left > sizeof sep - 1)
+        (void) strncat(buf, new_str, space_left - (sizeof sep - 1));
+    return 1; /* something was appended, possibly just part of " or " */
 }
 
 /* shared by monster probing (via query_objlist!) as well as lookat() */
@@ -82,13 +92,21 @@ char *outbuf;
     /* include race with role unless polymorphed */
     race[0] = '\0';
     if (!Upolyd)
+        /*KR Sprintf(race, "%s ", urace.adj); */
         Sprintf(race, "%s ", urace.adj);
+#if 0 /*KR: 원본*/
     Sprintf(outbuf, "%s%s%s called %s",
             /* being blinded may hide invisibility from self */
             (Invis && (senseself() || !Blind)) ? "invisible " : "", race,
             mons[u.umonnum].mname, plname);
+#else /*KR: KRNethack 맞춤 번역 */
+    Sprintf(outbuf, "%s%s%s(이)라는 이름의 %s",
+            (Invis && (senseself() || !Blind)) ? "보이지 않는 " : "", race,
+            plname, mons[u.umonnum].mname);
+#endif
     if (u.usteed)
-        Sprintf(eos(outbuf), ", mounted on %s", y_monnam(u.usteed));
+        /*KR Sprintf(eos(outbuf), ", mounted on %s", y_monnam(u.usteed)); */
+        Sprintf(eos(outbuf), ", %s에 타고 있다", y_monnam(u.usteed));
     if (u.uundetected || (Upolyd && U_AP_TYPE))
         mhidden_description(&youmonst, FALSE, eos(outbuf));
     return outbuf;
@@ -96,9 +114,7 @@ char *outbuf;
 
 /* describe a hidden monster; used for look_at during extended monster
    detection and for probing; also when looking at self */
-void
-mhidden_description(mon, altmon, outbuf)
-struct monst *mon;
+void mhidden_description(mon, altmon, outbuf) struct monst *mon;
 boolean altmon; /* for probing: if mimicking a monster, say so */
 char *outbuf;
 {
@@ -107,22 +123,31 @@ char *outbuf;
     int x = isyou ? u.ux : mon->mx, y = isyou ? u.uy : mon->my,
         glyph = (level.flags.hero_memory && !isyou) ? levl[x][y].glyph
                                                     : glyph_at(x, y);
+#if 1 /*KR*/
+    char suffixbuf[QBUFSZ];
+#endif
 
     *outbuf = '\0';
-    if (M_AP_TYPE(mon) == M_AP_FURNITURE
-        || M_AP_TYPE(mon) == M_AP_OBJECT) {
+#if 1 /*KR*/
+    suffixbuf[0] = '\0';
+#endif
+    if (M_AP_TYPE(mon) == M_AP_FURNITURE || M_AP_TYPE(mon) == M_AP_OBJECT) {
+#if 0 /*KR: 원본*/
         Strcpy(outbuf, ", mimicking ");
+#else /*KR: KRNethack 맞춤 번역 */
+        Strcpy(suffixbuf, "의 흉내를 내는 중이다");
+#endif
         if (M_AP_TYPE(mon) == M_AP_FURNITURE) {
             Strcat(outbuf, an(defsyms[mon->mappearance].explanation));
         } else if (M_AP_TYPE(mon) == M_AP_OBJECT
                    /* remembered glyph, not glyph_at() which is 'mon' */
                    && glyph_is_object(glyph)) {
- objfrommap:
+        objfrommap:
             otmp = (struct obj *) 0;
             fakeobj = object_from_map(glyph, x, y, &otmp);
             Strcat(outbuf, (otmp && otmp->otyp != STRANGE_OBJECT)
-                              ? ansimpleoname(otmp)
-                              : an(obj_descr[STRANGE_OBJECT].oc_name));
+                               ? ansimpleoname(otmp)
+                               : an(obj_descr[STRANGE_OBJECT].oc_name));
             if (fakeobj) {
                 otmp->where = OBJ_FREE; /* object_from_map set to OBJ_FLOOR */
                 dealloc_obj(otmp);
@@ -130,27 +155,56 @@ char *outbuf;
         } else {
             Strcat(outbuf, something);
         }
+#if 1 /*KR*/
+        Strcat(outbuf, suffixbuf);
+#endif
     } else if (M_AP_TYPE(mon) == M_AP_MONSTER) {
         if (altmon)
+#if 0 /*KR: 원본*/
             Sprintf(outbuf, ", masquerading as %s",
                     an(mons[mon->mappearance].mname));
+#else /*KR: KRNethack 맞춤 번역 */
+            Sprintf(outbuf, ", %s 행세를 하고 있다",
+                    mons[mon->mappearance].mname);
+#endif
     } else if (isyou ? u.uundetected : mon->mundetected) {
+#if 0 /*KR: 원본*/
         Strcpy(outbuf, ", hiding");
+#else /*KR: KRNethack 맞춤 번역 */
+        Strcpy(suffixbuf, "에 숨어 있다");
+#endif
         if (hides_under(mon->data)) {
+#if 0 /*KR: 원본*/
             Strcat(outbuf, " under ");
+#endif
             /* remembered glyph, not glyph_at() which is 'mon' */
             if (glyph_is_object(glyph))
                 goto objfrommap;
             Strcat(outbuf, something);
+            /*KR Strcpy(suffixbuf, " 아래에 숨어 있다"); */
         } else if (is_hider(mon->data)) {
+#if 0 /*KR: 원본*/
             Sprintf(eos(outbuf), " on the %s",
                     (is_flyer(mon->data) || mon->data->mlet == S_PIERCER)
                        ? "ceiling"
                        : surface(x, y)); /* trapper */
+#else /*KR: KRNethack 맞춤 번역 */
+            Sprintf(eos(outbuf), " %s",
+                    (is_flyer(mon->data) || mon->data->mlet == S_PIERCER)
+                        ? "천장"
+                        : surface(x, y)); /* trapper */
+#endif
         } else {
             if (mon->data->mlet == S_EEL && is_pool(x, y))
+#if 0 /*KR: 원본*/
                 Strcat(outbuf, " in murky water");
+#else /*KR: KRNethack 맞춤 번역 */
+                Strcat(outbuf, " 탁한 물속");
+#endif
         }
+#if 1 /*KR*/
+        Strcat(outbuf, suffixbuf);
+#endif
     }
 }
 
@@ -190,7 +244,7 @@ struct obj **obj_p;
             otmp->quan = 2L; /* to force pluralization */
         else if (otmp->otyp == SLIME_MOLD)
             otmp->spe = context.current_fruit; /* give it a type */
-        if (mtmp && has_mcorpsenm(mtmp)) { /* mimic as corpse/statue */
+        if (mtmp && has_mcorpsenm(mtmp)) {     /* mimic as corpse/statue */
             if (otmp->otyp == SLIME_MOLD)
                 /* override context.current_fruit to avoid
                      look, use 'O' to make new named fruit, look again
@@ -213,7 +267,8 @@ struct obj **obj_p;
     /* if located at adjacent spot, mark it as having been seen up close
        (corpse type will be known even if dknown is 0, so we don't need a
        touch check for cockatrice corpse--we're looking without touching) */
-    if (otmp && distu(x, y) <= 2 && !Blind && !Hallucination
+    if (otmp && distu(x, y) <= 2 && !Blind
+        && !Hallucination
         /* redundant: we only look for an object which matches current
            glyph among floor and buried objects; when !Blind, any buried
            object's glyph will have been replaced by whatever is present
@@ -221,19 +276,18 @@ struct obj **obj_p;
         && (fakeobj || otmp->where == OBJ_FLOOR) /* not buried */
         /* terrain mode views what's already known, doesn't learn new stuff */
         && !iflags.terrainmode) /* so don't set dknown when in terrain mode */
-        otmp->dknown = 1; /* if a pile, clearly see the top item only */
-    if (fakeobj && mtmp && mimic_obj &&
-        (otmp->dknown || (M_AP_FLAG(mtmp) & M_AP_F_DKNOWN))) {
-            mtmp->m_ap_type |= M_AP_F_DKNOWN;
-            otmp->dknown = 1;
+        otmp->dknown = 1;       /* if a pile, clearly see the top item only */
+    if (fakeobj && mtmp && mimic_obj
+        && (otmp->dknown || (M_AP_FLAG(mtmp) & M_AP_F_DKNOWN))) {
+        mtmp->m_ap_type |= M_AP_F_DKNOWN;
+        otmp->dknown = 1;
     }
     *obj_p = otmp;
     return fakeobj; /* when True, caller needs to dealloc *obj_p */
 }
 
-STATIC_OVL void
-look_at_object(buf, x, y, glyph)
-char *buf; /* output buffer */
+STATIC_OVL void look_at_object(buf, x, y,
+                               glyph) char *buf; /* output buffer */
 int x, y, glyph;
 {
     struct obj *otmp = 0;
@@ -241,9 +295,9 @@ int x, y, glyph;
 
     if (otmp) {
         Strcpy(buf, (otmp->otyp != STRANGE_OBJECT)
-                     ? distant_name(otmp, otmp->dknown ? doname_with_price
-                                                       : doname_vague_quan)
-                     : obj_descr[STRANGE_OBJECT].oc_name);
+                        ? distant_name(otmp, otmp->dknown ? doname_with_price
+                                                          : doname_vague_quan)
+                        : obj_descr[STRANGE_OBJECT].oc_name);
         if (fakeobj) {
             otmp->where = OBJ_FREE; /* object_from_map set it to OBJ_FLOOR */
             dealloc_obj(otmp), otmp = 0;
@@ -252,23 +306,31 @@ int x, y, glyph;
         Strcpy(buf, something); /* sanity precaution */
 
     if (otmp && otmp->where == OBJ_BURIED)
-        Strcat(buf, " (buried)");
+        /*KR Strcat(buf, " (buried)"); */
+        Strcat(buf, " (묻혀 있음)");
     else if (levl[x][y].typ == STONE || levl[x][y].typ == SCORR)
-        Strcat(buf, " embedded in stone");
+        /*KR Strcat(buf, " embedded in stone"); */
+        Strcat(buf, ", 암석에 박혀 있다");
     else if (IS_WALL(levl[x][y].typ) || levl[x][y].typ == SDOOR)
-        Strcat(buf, " embedded in a wall");
+        /*KR Strcat(buf, " embedded in a wall"); */
+        Strcat(buf, ", 벽에 박혀 있다");
     else if (closed_door(x, y))
-        Strcat(buf, " embedded in a door");
+        /*KR Strcat(buf, " embedded in a door"); */
+        Strcat(buf, ", 문에 박혀 있다");
     else if (is_pool(x, y))
-        Strcat(buf, " in water");
+        /*KR Strcat(buf, " in water"); */
+        Strcat(buf, ", 물속에 있다");
     else if (is_lava(x, y))
+#if 0                                    /*KR: 원본*/
         Strcat(buf, " in molten lava"); /* [can this ever happen?] */
+#else                                    /*KR: KRNethack 맞춤 번역 */
+        Strcat(buf, ", 용암 속에 있다"); /* [can this ever happen?] */
+#endif
     return;
 }
 
-STATIC_OVL void
-look_at_monster(buf, monbuf, mtmp, x, y)
-char *buf, *monbuf; /* buf: output, monbuf: optional output */
+STATIC_OVL void look_at_monster(buf, monbuf, mtmp, x, y) char *buf,
+    *monbuf; /* buf: output, monbuf: optional output */
 struct monst *mtmp;
 int x, y;
 {
@@ -276,8 +338,9 @@ int x, y;
     boolean accurate = !Hallucination;
 
     name = (mtmp->data == &mons[PM_COYOTE] && accurate)
-              ? coyotename(mtmp, monnambuf)
-              : distant_monnam(mtmp, ARTICLE_NONE, monnambuf);
+               ? coyotename(mtmp, monnambuf)
+               : distant_monnam(mtmp, ARTICLE_NONE, monnambuf);
+#if 0 /*KR: 원본*/
     Sprintf(buf, "%s%s%s",
             (mtmp->mx != x || mtmp->my != y)
                 ? ((mtmp->isshk && accurate) ? "tail of " : "tail of a ")
@@ -288,16 +351,30 @@ int x, y;
                     ? "peaceful "
                     : "",
             name);
+#else /*KR: KRNethack 맞춤 번역 */
+    Sprintf(buf, "%s%s%s",
+            (mtmp->mtame && accurate)       ? "길들여진 "
+            : (mtmp->mpeaceful && accurate) ? "우호적인 "
+                                            : "",
+            name, (mtmp->mx != x || mtmp->my != y) ? "의 꼬리" : "");
+#endif
     if (u.ustuck == mtmp) {
         if (u.uswallow || iflags.save_uswallow) /* monster detection */
+#if 0                                           /*KR: 원본*/
             Strcat(buf, is_animal(mtmp->data)
                           ? ", swallowing you" : ", engulfing you");
+#else                                           /*KR: KRNethack 맞춤 번역 */
+            Strcat(buf, ", 당신을 삼키고 있다");
+#endif
         else
             Strcat(buf, (Upolyd && sticks(youmonst.data))
-                          ? ", being held" : ", holding you");
+                            /*KR ? ", being held" : ", holding you"); */
+                            ? ", 당신이 붙잡고 있다"
+                            : ", 당신을 붙잡고 있다");
     }
     if (mtmp->mleashed)
-        Strcat(buf, ", leashed to you");
+        /*KR Strcat(buf, ", leashed to you"); */
+        Strcat(buf, ", 목줄로 연결되어 있다");
 
     if (mtmp->mtrapped && cansee(mtmp->mx, mtmp->my)) {
         struct trap *t = t_at(mtmp->mx, mtmp->my);
@@ -305,8 +382,10 @@ int x, y;
 
         /* newsym lets you know of the trap, so mention it here */
         if (tt == BEAR_TRAP || is_pit(tt) || tt == WEB) {
-            Sprintf(eos(buf), ", trapped in %s",
-                    an(defsyms[trap_to_defsym(tt)].explanation));
+            /*KR Sprintf(eos(buf), ", trapped in %s",
+             * an(defsyms[trap_to_defsym(tt)].explanation)); */
+            Sprintf(eos(buf), ", %s에 갇혀 있다",
+                    defsyms[trap_to_defsym(tt)].explanation);
             t->tseen = 1;
         }
     }
@@ -322,57 +401,75 @@ int x, y;
         monbuf[0] = '\0';
         if (how_seen != 0 && how_seen != MONSEEN_NORMAL) {
             if (how_seen & MONSEEN_NORMAL) {
-                Strcat(monbuf, "normal vision");
+                /*KR Strcat(monbuf, "normal vision"); */
+                Strcat(monbuf, "일반적인 시야");
                 how_seen &= ~MONSEEN_NORMAL;
                 /* how_seen can't be 0 yet... */
                 if (how_seen)
                     Strcat(monbuf, ", ");
             }
             if (how_seen & MONSEEN_SEEINVIS) {
-                Strcat(monbuf, "see invisible");
+                /*KR Strcat(monbuf, "see invisible"); */
+                Strcat(monbuf, "투명한 것 보기");
                 how_seen &= ~MONSEEN_SEEINVIS;
                 if (how_seen)
                     Strcat(monbuf, ", ");
             }
             if (how_seen & MONSEEN_INFRAVIS) {
-                Strcat(monbuf, "infravision");
+                /*KR Strcat(monbuf, "infravision"); */
+                Strcat(monbuf, "적외선 시야");
                 how_seen &= ~MONSEEN_INFRAVIS;
                 if (how_seen)
                     Strcat(monbuf, ", ");
             }
             if (how_seen & MONSEEN_TELEPAT) {
-                Strcat(monbuf, "telepathy");
+                /*KR Strcat(monbuf, "telepathy"); */
+                Strcat(monbuf, "텔레파시");
                 how_seen &= ~MONSEEN_TELEPAT;
                 if (how_seen)
                     Strcat(monbuf, ", ");
             }
             if (how_seen & MONSEEN_XRAYVIS) {
                 /* Eyes of the Overworld */
-                Strcat(monbuf, "astral vision");
+                /*KR Strcat(monbuf, "astral vision"); */
+                Strcat(monbuf, "투시력");
                 how_seen &= ~MONSEEN_XRAYVIS;
                 if (how_seen)
                     Strcat(monbuf, ", ");
             }
             if (how_seen & MONSEEN_DETECT) {
-                Strcat(monbuf, "monster detection");
+                /*KR Strcat(monbuf, "monster detection"); */
+                Strcat(monbuf, "몬스터 감지");
                 how_seen &= ~MONSEEN_DETECT;
                 if (how_seen)
                     Strcat(monbuf, ", ");
             }
             if (how_seen & MONSEEN_WARNMON) {
                 if (Hallucination) {
-                    Strcat(monbuf, "paranoid delusion");
+                    /*KR Strcat(monbuf, "paranoid delusion"); */
+                    Strcat(monbuf, "편집증적 망상");
                 } else {
                     unsigned long mW = (context.warntype.obj
                                         | context.warntype.polyd),
                                   m2 = mtmp->data->mflags2;
+#if 0 /*KR: 원본*/
                     const char *whom = ((mW & M2_HUMAN & m2) ? "human"
                                         : (mW & M2_ELF & m2) ? "elf"
                                           : (mW & M2_ORC & m2) ? "orc"
                                             : (mW & M2_DEMON & m2) ? "demon"
                                               : mtmp->data->mname);
+#else /*KR: KRNethack 맞춤 번역 */
+                    const char *whom =
+                        ((mW & M2_HUMAN & m2)   ? "인간"
+                         : (mW & M2_ELF & m2)   ? "엘프"
+                         : (mW & M2_ORC & m2)   ? "오크"
+                         : (mW & M2_DEMON & m2) ? "악마"
+                                                : mtmp->data->mname);
+#endif
 
-                    Sprintf(eos(monbuf), "warned of %s", makeplural(whom));
+                    /*KR Sprintf(eos(monbuf), "warned of %s",
+                     * makeplural(whom)); */
+                    Sprintf(eos(monbuf), "%s 경고", whom);
                 }
                 how_seen &= ~MONSEEN_WARNMON;
                 if (how_seen)
@@ -403,8 +500,8 @@ char *buf, *monbuf;
     buf[0] = monbuf[0] = '\0';
     glyph = glyph_at(x, y);
     if (u.ux == x && u.uy == y && canspotself()
-        && !(iflags.save_uswallow &&
-             glyph == mon_to_glyph(u.ustuck, rn2_on_display_rng))
+        && !(iflags.save_uswallow
+             && glyph == mon_to_glyph(u.ustuck, rn2_on_display_rng))
         && (!iflags.terrainmode || (iflags.terrainmode & TER_MON) != 0)) {
         /* fill in buf[] */
         (void) self_lookat(buf);
@@ -431,6 +528,7 @@ char *buf, *monbuf;
                 how |= 4;
 
             if (how)
+#if 0 /*KR: 원본*/
                 Sprintf(eos(buf), " [seen: %s%s%s%s%s]",
                         (how & 1) ? "infravision" : "",
                         /* add comma if telep and infrav */
@@ -439,11 +537,22 @@ char *buf, *monbuf;
                         /* add comma if detect and (infrav or telep or both) */
                         ((how & 7) > 4) ? ", " : "",
                         (how & 4) ? "monster detection" : "");
+#else /*KR: KRNethack 맞춤 번역 */
+                Sprintf(
+                    eos(buf), " [감지: %s%s%s%s%s]",
+                    (how & 1) ? "적외선 시야" : "",
+                    /* add comma if telep and infrav */
+                    ((how & 3) > 2) ? ", " : "", (how & 2) ? "텔레파시" : "",
+                    /* add comma if detect and (infrav or telep or both) */
+                    ((how & 7) > 4) ? ", " : "",
+                    (how & 4) ? "몬스터 감지" : "");
+#endif
         }
     } else if (u.uswallow) {
         /* when swallowed, we're only called for spots adjacent to hero,
            and blindness doesn't prevent hero from feeling what holds him */
-        Sprintf(buf, "interior of %s", a_monnam(u.ustuck));
+        /*KR Sprintf(buf, "interior of %s", a_monnam(u.ustuck)); */
+        Sprintf(buf, "%s의 내부", a_monnam(u.ustuck));
         pm = u.ustuck->data;
     } else if (glyph_is_monster(glyph)) {
         bhitpos.x = x;
@@ -466,9 +575,12 @@ char *buf, *monbuf;
          * chests so that they can have their own glyphs and tiles.
          */
         if (trapped_chest_at(tnum, x, y))
-            Strcpy(buf, "trapped chest"); /* might actually be a large box */
+            /*KR Strcpy(buf, "trapped chest"); */ /* might actually be a large
+                                                     box */
+            Strcpy(buf, "함정이 설치된 상자");
         else if (trapped_door_at(tnum, x, y))
-            Strcpy(buf, "trapped door"); /* not "trap door"... */
+            /*KR Strcpy(buf, "trapped door"); */ /* not "trap door"... */
+            Strcpy(buf, "함정이 설치된 문");
         else
             Strcpy(buf, defsyms[trap_to_defsym(tnum)].explanation);
     } else if (glyph_is_warning(glyph)) {
@@ -476,7 +588,8 @@ char *buf, *monbuf;
 
         Strcpy(buf, def_warnsyms[warnindx].explanation);
     } else if (!glyph_is_cmap(glyph)) {
-        Strcpy(buf, "unexplored area");
+        /*KR Strcpy(buf, "unexplored area"); */
+        Strcpy(buf, "미탐사 구역");
     } else {
         int amsk;
         aligntyp algn;
@@ -485,43 +598,55 @@ char *buf, *monbuf;
         case S_altar:
             amsk = ((mtmp = m_at(x, y)) != 0 && has_mcorpsenm(mtmp)
                     && M_AP_TYPE(mtmp) == M_AP_FURNITURE
-                    && mtmp->mappearance == S_altar) ? MCORPSENM(mtmp)
-                   : levl[x][y].altarmask;
+                    && mtmp->mappearance == S_altar)
+                       ? MCORPSENM(mtmp)
+                       : levl[x][y].altarmask;
             algn = Amask2align(amsk & ~AM_SHRINE);
-            Sprintf(buf, "%s %saltar",
+            /*KR Sprintf(buf, "%s %saltar", */
+            Sprintf(buf, "%s%s제단",
                     /* like endgame high priests, endgame high altars
                        are only recognizable when immediately adjacent */
                     (Is_astralevel(&u.uz) && distu(x, y) > 2)
-                        ? "aligned"
+                        /*KR ? "aligned" */
+                        ? "성향의 "
                         : align_str(algn),
                     ((amsk & AM_SHRINE) != 0
                      && (Is_astralevel(&u.uz) || Is_sanctum(&u.uz)))
-                        ? "high "
+                        /*KR ? "high " */
+                        ? "고위 "
                         : "");
             break;
         case S_ndoor:
             if (is_drawbridge_wall(x, y) >= 0)
-                Strcpy(buf, "open drawbridge portcullis");
+                /*KR Strcpy(buf, "open drawbridge portcullis"); */
+                Strcpy(buf, "열린 도개교의 철격자");
             else if ((levl[x][y].doormask & ~D_TRAPPED) == D_BROKEN)
-                Strcpy(buf, "broken door");
+                /*KR Strcpy(buf, "broken door"); */
+                Strcpy(buf, "부서진 문");
             else
-                Strcpy(buf, "doorway");
+                /*KR Strcpy(buf, "doorway"); */
+                Strcpy(buf, "출입구");
             break;
         case S_cloud:
+            /*KR Strcpy(buf, Is_airlevel(&u.uz) ? "cloudy area" : "fog/vapor
+             * cloud"); */
             Strcpy(buf,
-                   Is_airlevel(&u.uz) ? "cloudy area" : "fog/vapor cloud");
+                   Is_airlevel(&u.uz) ? "구름 낀 지역" : "안개/증기 구름");
             break;
         case S_stone:
             if (!levl[x][y].seenv) {
-                Strcpy(buf, "unexplored");
+                /*KR Strcpy(buf, "unexplored"); */
+                Strcpy(buf, "미탐사");
                 break;
             } else if (Underwater && !Is_waterlevel(&u.uz)) {
                 /* "unknown" == previously mapped but not visible when
                    submerged; better terminology appreciated... */
-                Strcpy(buf, (distu(x, y) <= 2) ? "land" : "unknown");
+                /*KR Strcpy(buf, (distu(x, y) <= 2) ? "land" : "unknown"); */
+                Strcpy(buf, (distu(x, y) <= 2) ? "육지" : "알 수 없음");
                 break;
             } else if (levl[x][y].typ == STONE || levl[x][y].typ == SCORR) {
-                Strcpy(buf, "stone");
+                /*KR Strcpy(buf, "stone"); */
+                Strcpy(buf, "암석");
                 break;
             }
             /*FALLTHRU*/
@@ -539,13 +664,12 @@ char *buf, *monbuf;
  * with a character/glyph and flags.help is TRUE.
  *
  * NOTE: when (user_typed_name == FALSE), inp is considered read-only and
- *       must not be changed directly, e.g. via lcase(). We want to force
- *       lcase() for data.base lookup so that we can have a clean key.
- *       Therefore, we create a copy of inp _just_ for data.base lookup.
+ * must not be changed directly, e.g. via lcase(). We want to force
+ * lcase() for data.base lookup so that we can have a clean key.
+ * Therefore, we create a copy of inp _just_ for data.base lookup.
  */
-STATIC_OVL void
-checkfile(inp, pm, user_typed_name, without_asking, supplemental_name)
-char *inp;
+STATIC_OVL void checkfile(inp, pm, user_typed_name, without_asking,
+                          supplemental_name) char *inp;
 struct permonst *pm;
 boolean user_typed_name, without_asking;
 char *supplemental_name;
@@ -558,7 +682,8 @@ char *supplemental_name;
 
     fp = dlb_fopen(DATAFILE, "r");
     if (!fp) {
-        pline("Cannot open 'data' file!");
+        /*KR pline("Cannot open 'data' file!"); */
+        pline("'data' 파일을 열 수 없다!");
         return;
     }
     /* If someone passed us garbage, prevent fault. */
@@ -656,7 +781,7 @@ char *supplemental_name;
         long pass1offset = -1L;
         int chk_skip, pass = 1;
         boolean yes_to_moreinfo, found_in_file, pass1found_in_file,
-                skipping_entry;
+            skipping_entry;
         char *sp, *ap, *alt = 0; /* alternate description */
 
         /* adjust the input to remove "named " and "called " */
@@ -677,9 +802,9 @@ char *supplemental_name;
            The Eyes of the Overworld" simplified above to "lenses named
            The Eyes of the Overworld", now reduced to "The Eyes of the
            Overworld", skip "The" as with base name processing) */
-        if (alt && (!strncmpi(alt, "a ", 2)
-                    || !strncmpi(alt, "an ", 3)
-                    || !strncmpi(alt, "the ", 4)))
+        if (alt
+            && (!strncmpi(alt, "a ", 2) || !strncmpi(alt, "an ", 3)
+                || !strncmpi(alt, "the ", 4)))
             alt = index(alt, ' ') + 1;
         /* remove charges or "(lit)" or wizmode "(N aum)" */
         if ((ep = strstri(dbase_str, " (")) != 0 && ep > dbase_str)
@@ -701,7 +826,7 @@ char *supplemental_name;
         for (pass = !strcmp(alt, dbase_str) ? 0 : 1; pass >= 0; --pass) {
             found_in_file = skipping_entry = FALSE;
             txt_offset = 0L;
-            if (dlb_fseek(fp, txt_offset, SEEK_SET) < 0 ) {
+            if (dlb_fseek(fp, txt_offset, SEEK_SET) < 0) {
                 impossible("can't get to start of 'data' file");
                 goto checkfile_done;
             }
@@ -729,7 +854,8 @@ char *supplemental_name;
                        this entry */
                     chk_skip = (*buf == '~') ? 1 : 0;
                     if ((pass == 0 && pmatch(&buf[chk_skip], dbase_str))
-                        || (pass == 1 && alt && pmatch(&buf[chk_skip], alt))) {
+                        || (pass == 1 && alt
+                            && pmatch(&buf[chk_skip], alt))) {
                         if (chk_skip) {
                             skipping_entry = TRUE;
                             continue;
@@ -765,19 +891,29 @@ char *supplemental_name;
                     char *entrytext = pass ? alt : dbase_str;
                     char question[QBUFSZ];
 
+#if 0 /*KR: 원본*/
                     Strcpy(question, "More info about \"");
                     /* +2 => length of "\"?" */
                     copynchars(eos(question), entrytext,
                                (int) (sizeof question - 1
                                       - (strlen(question) + 2)));
                     Strcat(question, "\"?");
+#else /*KR: KRNethack 맞춤 번역 */
+                    Strcpy(question, "\"");
+                    /* +2 => length of "\"?" */
+                    copynchars(eos(question), entrytext,
+                               (int) (sizeof question - 1
+                                      - (strlen(question) + 16)));
+                    Strcat(question, "\"에 대해 더 알아보겠습니까?");
+#endif
                     if (yn(question) == 'y')
                         yes_to_moreinfo = TRUE;
                 }
 
                 if (user_typed_name || without_asking || yes_to_moreinfo) {
                     if (dlb_fseek(fp, fseekoffset, SEEK_SET) < 0) {
-                        pline("? Seek error on 'data' file!");
+                        /*KR pline("? Seek error on 'data' file!"); */
+                        pline("? 'data' 파일에서 탐색 에러 발생!");
                         goto checkfile_done;
                     }
                     datawin = create_nhwindow(NHW_MENU);
@@ -793,14 +929,16 @@ char *supplemental_name;
                     destroy_nhwindow(datawin), datawin = WIN_ERR;
                 }
             } else if (user_typed_name && pass == 0 && !pass1found_in_file)
-                pline("I don't have any information on those things.");
+                /*KR pline("I don't have any information on those things.");
+                 */
+                pline("그것에 대한 정보가 없다.");
         }
     }
     goto checkfile_done; /* skip error feedback */
 
- bad_data_file:
+bad_data_file:
     impossible("'data' file in wrong format or corrupted");
- checkfile_done:
+checkfile_done:
     if (datawin != WIN_ERR)
         destroy_nhwindow(datawin);
     (void) dlb_fclose(fp);
@@ -816,14 +954,16 @@ char *out_str;
 const char **firstmatch;
 struct permonst **for_supplement;
 {
-    static const char mon_interior[] = "the interior of a monster",
-                      unreconnoitered[] = "unreconnoitered";
+    /*KR static const char mon_interior[] = "the interior of a monster",
+                         unreconnoitered[] = "unreconnoitered"; */
+    static const char mon_interior[] = "몬스터의 내부",
+                      unreconnoitered[] = "미정찰 구역";
     static char look_buf[BUFSZ];
     char prefix[BUFSZ];
-    int i, alt_i, j, glyph = NO_GLYPH,
-        skipped_venom = 0, found = 0; /* count of matching syms found */
+    int i, alt_i, j, glyph = NO_GLYPH, skipped_venom = 0,
+                     found = 0; /* count of matching syms found */
     boolean hit_trap, need_to_look = FALSE,
-            submerged = (Underwater && !Is_waterlevel(&u.uz));
+                      submerged = (Underwater && !Is_waterlevel(&u.uz));
     const char *x_str;
     nhsym tmpsym;
 
@@ -889,7 +1029,7 @@ struct permonst **for_supplement;
         if (x_str == unreconnoitered)
             goto didlook;
     }
- check_monsters:
+check_monsters:
     /* Check for monsters */
     if (!iflags.terrainmode || (iflags.terrainmode & TER_MON) != 0) {
         for (i = 1; i < MAXMCLASSES; i++) {
@@ -897,8 +1037,8 @@ struct permonst **for_supplement;
                 && def_monsyms[i].explain && *def_monsyms[i].explain) {
                 need_to_look = TRUE;
                 if (!found) {
-                    Sprintf(out_str, "%s%s",
-                            prefix, an(def_monsyms[i].explain));
+                    Sprintf(out_str, "%s%s", prefix,
+                            an(def_monsyms[i].explain));
                     *firstmatch = def_monsyms[i].explain;
                     found++;
                 } else {
@@ -909,18 +1049,21 @@ struct permonst **for_supplement;
         /* handle '@' as a special case if it refers to you and you're
            playing a character which isn't normally displayed by that
            symbol; firstmatch is assumed to already be set for '@' */
-        if ((looked ? (sym == showsyms[S_HUMAN + SYM_OFF_M]
-                       && cc.x == u.ux && cc.y == u.uy)
+        if ((looked ? (sym == showsyms[S_HUMAN + SYM_OFF_M] && cc.x == u.ux
+                       && cc.y == u.uy)
                     : (sym == def_monsyms[S_HUMAN].sym && !flags.showrace))
             && !(Race_if(PM_HUMAN) || Race_if(PM_ELF)) && !Upolyd)
+#if 0                                             /*KR: 원본*/
             found += append_str(out_str, "you"); /* tack on "or you" */
+#else                                             /*KR: KRNethack 맞춤 번역 */
+            found += append_str(out_str, "당신"); /* tack on "or you" */
+#endif
     }
 
     /* Now check for objects */
     if (!iflags.terrainmode || (iflags.terrainmode & TER_OBJ) != 0) {
         for (i = 1; i < MAXOCLASSES; i++) {
-            if (sym == (looked ? showsyms[i + SYM_OFF_O]
-                               : def_oc_syms[i].sym)
+            if (sym == (looked ? showsyms[i + SYM_OFF_O] : def_oc_syms[i].sym)
                 || (looked && i == ROCK_CLASS && glyph_is_statue(glyph))) {
                 need_to_look = TRUE;
                 if (looked && i == VENOM_CLASS) {
@@ -928,8 +1071,8 @@ struct permonst **for_supplement;
                     continue;
                 }
                 if (!found) {
-                    Sprintf(out_str, "%s%s",
-                            prefix, an(def_oc_syms[i].explain));
+                    Sprintf(out_str, "%s%s", prefix,
+                            an(def_oc_syms[i].explain));
                     *firstmatch = def_oc_syms[i].explain;
                     found++;
                 } else {
@@ -960,7 +1103,11 @@ struct permonst **for_supplement;
         /* when sym is the default background character, we process
            i == 0 three times: unexplored, stone, dark part of a room */
         if (alt_i < 2) {
-            x_str = !alt_i++ ? "unexplored" : submerged ? "unknown" : "stone";
+            /*KR x_str = !alt_i++ ? "unexplored" : submerged ? "unknown" :
+             * "stone"; */
+            x_str = !alt_i++    ? "미탐사 구역"
+                    : submerged ? "알 수 없음"
+                                : "암석";
             i = 0; /* for second iteration, undo loop increment */
             /* alt_i is now 1 or 2 */
         } else {
@@ -968,7 +1115,8 @@ struct permonst **for_supplement;
                 i = 0; /* undo loop increment */
             x_str = defsyms[i].explanation;
             if (submerged && !strcmp(x_str, defsyms[0].explanation))
-                x_str = "land"; /* replace "dark part of a room" */
+                /*KR x_str = "land"; */ /* replace "dark part of a room" */
+                x_str = "육지";         /* replace "dark part of a room" */
             /* alt_i is now 3 or more and no longer of interest */
         }
         if (sym == (looked ? showsyms[i] : defsyms[i].sym) && *x_str) {
@@ -983,12 +1131,17 @@ struct permonst **for_supplement;
 
             if (!found) {
                 if (is_cmap_trap(i)) {
-                    Sprintf(out_str, "%sa trap", prefix);
+                    /*KR Sprintf(out_str, "%sa trap", prefix); */
+                    Sprintf(out_str, "%s함정", prefix);
                     hit_trap = TRUE;
                 } else {
+#if 0 /*KR: 원본*/
                     Sprintf(out_str, "%s%s", prefix,
                             article == 2 ? the(x_str)
                             : article == 1 ? an(x_str) : x_str);
+#else /*KR: KRNethack 맞춤 번역 */
+                    Sprintf(out_str, "%s%s", prefix, x_str);
+#endif
                 }
                 *firstmatch = x_str;
                 found++;
@@ -998,10 +1151,15 @@ struct permonst **for_supplement;
                           unless this happens to be one (hallucination?) */
                        && (i != S_vibrating_square || Inhell
                            || (looked && glyph_is_trap(glyph)
-                               && glyph_to_trap(glyph) == VIBRATING_SQUARE))) {
+                               && glyph_to_trap(glyph)
+                                      == VIBRATING_SQUARE))) {
+#if 0 /*KR: 원본*/
                 found += append_str(out_str, (article == 2) ? the(x_str)
                                              : (article == 1) ? an(x_str)
                                                : x_str);
+#else /*KR: KRNethack 맞춤 번역 */
+                found += append_str(out_str, x_str);
+#endif
                 if (is_cmap_trap(i))
                     hit_trap = TRUE;
             }
@@ -1025,7 +1183,8 @@ struct permonst **for_supplement;
             /* Kludge: warning trumps boulders on the display.
                Reveal the boulder too or player can get confused */
             if (looked && sobj_at(BOULDER, cc.x, cc.y))
-                Strcat(out_str, " co-located with a boulder");
+                /*KR Strcat(out_str, " co-located with a boulder"); */
+                Strcat(out_str, " (바위와 같은 위치에 있음)");
             break; /* out of for loop*/
         }
     }
@@ -1045,18 +1204,21 @@ struct permonst **for_supplement;
     /* Finally, handle some optional overriding symbols */
     for (j = SYM_OFF_X; j < SYM_MAX; ++j) {
         if (j == (SYM_INVISIBLE + SYM_OFF_X))
-            continue;       /* already handled above */
-        tmpsym = Is_rogue_level(&u.uz) ? ov_rogue_syms[j]
-                                       : ov_primary_syms[j];
+            continue; /* already handled above */
+        tmpsym =
+            Is_rogue_level(&u.uz) ? ov_rogue_syms[j] : ov_primary_syms[j];
         if (tmpsym && sym == tmpsym) {
             switch (j) {
             case SYM_BOULDER + SYM_OFF_X:
                 if (!found) {
-                    *firstmatch = "boulder";
-                    Sprintf(out_str, "%s%s", prefix, an(*firstmatch));
+                    /*KR *firstmatch = "boulder"; */
+                    *firstmatch = "바위";
+                    /*KR Sprintf(out_str, "%s%s", prefix, an(*firstmatch)); */
+                    Sprintf(out_str, "%s%s", prefix, *firstmatch);
                     found++;
                 } else {
-                    found += append_str(out_str, "boulder");
+                    /*KR found += append_str(out_str, "boulder"); */
+                    found += append_str(out_str, "바위");
                 }
                 break;
             case SYM_PET_OVERRIDE + SYM_OFF_X:
@@ -1065,8 +1227,8 @@ struct permonst **for_supplement;
                     unsigned os = 0;
 
                     /* convert to symbol without override in effect */
-                    (void) mapglyph(glyph, &sym, &oc, &os,
-                                    cc.x, cc.y, MG_FLAG_NOOVERRIDE);
+                    (void) mapglyph(glyph, &sym, &oc, &os, cc.x, cc.y,
+                                    MG_FLAG_NOOVERRIDE);
                     goto check_monsters;
                 }
                 break;
@@ -1099,11 +1261,12 @@ struct permonst **for_supplement;
         /* 3.6.3: this used to be "That can be many things" (without prefix)
            which turned it into a sentence that lacked its terminating period;
            we could add one below but reinstating the prefix here is better */
-        Sprintf(out_str, "%scan be many things", prefix);
+        /*KR Sprintf(out_str, "%scan be many things", prefix); */
+        Sprintf(out_str, "%s이것은 여러 가지일 수 있다", prefix);
 
- didlook:
+didlook:
     if (looked) {
-        struct permonst *pm = (struct permonst *)0;
+        struct permonst *pm = (struct permonst *) 0;
 
         if (found > 1 || need_to_look) {
             char monbuf[BUFSZ];
@@ -1120,7 +1283,8 @@ struct permonst **for_supplement;
                 found = 1; /* we have something to look up */
             }
             if (monbuf[0]) {
-                Sprintf(temp_buf, " [seen: %s]", monbuf);
+                /*KR Sprintf(temp_buf, " [seen: %s]", monbuf); */
+                Sprintf(temp_buf, " [감지: %s]", monbuf);
                 (void) strncat(out_str, temp_buf,
                                BUFSZ - strlen(out_str) - 1);
             }
@@ -1131,14 +1295,16 @@ struct permonst **for_supplement;
 }
 
 /* also used by getpos hack in do_name.c */
-const char what_is_an_unknown_object[] = "an unknown object";
+/*KR const char what_is_an_unknown_object[] = "an unknown object"; */
+const char what_is_an_unknown_object[] = "미지의 물체";
 
 int
 do_look(mode, click_cc)
 int mode;
 coord *click_cc;
 {
-    boolean quick = (mode == 1); /* use cursor; don't search for "more info" */
+    boolean quick =
+        (mode == 1); /* use cursor; don't search for "more info" */
     boolean clicklook = (mode == 2); /* right mouse-click method */
     char out_str[BUFSZ] = DUMMY;
     const char *firstmatch = 0;
@@ -1168,44 +1334,54 @@ coord *click_cc;
             any.a_char = '/';
             /* 'y' and 'n' to keep backwards compatibility with previous
                versions: "Specify unknown object by cursor?" */
-            add_menu(win, NO_GLYPH, &any,
-                     flags.lootabc ? 0 : any.a_char, 'y', ATR_NONE,
-                     "something on the map", MENU_UNSELECTED);
+            add_menu(win, NO_GLYPH, &any, flags.lootabc ? 0 : any.a_char, 'y',
+                     ATR_NONE,
+                     /*KR "something on the map", MENU_UNSELECTED); */
+                     "지도상의 무언가", MENU_UNSELECTED);
             any.a_char = 'i';
-            add_menu(win, NO_GLYPH, &any,
-                     flags.lootabc ? 0 : any.a_char, 0, ATR_NONE,
-                     "something you're carrying", MENU_UNSELECTED);
+            add_menu(win, NO_GLYPH, &any, flags.lootabc ? 0 : any.a_char, 0,
+                     ATR_NONE,
+                     /*KR "something you're carrying", MENU_UNSELECTED); */
+                     "당신이 소지하고 있는 것", MENU_UNSELECTED);
             any.a_char = '?';
-            add_menu(win, NO_GLYPH, &any,
-                     flags.lootabc ? 0 : any.a_char, 'n', ATR_NONE,
-                     "something else (by symbol or name)", MENU_UNSELECTED);
+            add_menu(win, NO_GLYPH, &any, flags.lootabc ? 0 : any.a_char, 'n',
+                     ATR_NONE,
+                     /*KR "something else (by symbol or name)",
+                        MENU_UNSELECTED); */
+                     "기타 (기호 또는 이름으로 지정)", MENU_UNSELECTED);
             if (!u.uswallow && !Hallucination) {
                 any = zeroany;
-                add_menu(win, NO_GLYPH, &any, 0, 0, ATR_NONE,
-                         "", MENU_UNSELECTED);
+                add_menu(win, NO_GLYPH, &any, 0, 0, ATR_NONE, "",
+                         MENU_UNSELECTED);
                 /* these options work sensibly for the swallowed case,
                    but there's no reason for the player to use them then;
                    objects work fine when hallucinating, but screen
                    symbol/monster class letter doesn't match up with
                    bogus monster type, so suppress when hallucinating */
                 any.a_char = 'm';
-                add_menu(win, NO_GLYPH, &any,
-                         flags.lootabc ? 0 : any.a_char, 0, ATR_NONE,
-                         "nearby monsters", MENU_UNSELECTED);
+                add_menu(win, NO_GLYPH, &any, flags.lootabc ? 0 : any.a_char,
+                         0, ATR_NONE,
+                         /*KR "nearby monsters", MENU_UNSELECTED); */
+                         "근처의 몬스터들", MENU_UNSELECTED);
                 any.a_char = 'M';
-                add_menu(win, NO_GLYPH, &any,
-                         flags.lootabc ? 0 : any.a_char, 0, ATR_NONE,
-                         "all monsters shown on map", MENU_UNSELECTED);
+                add_menu(
+                    win, NO_GLYPH, &any, flags.lootabc ? 0 : any.a_char, 0,
+                    ATR_NONE,
+                    /*KR "all monsters shown on map", MENU_UNSELECTED); */
+                    "지도에 보이는 모든 몬스터", MENU_UNSELECTED);
                 any.a_char = 'o';
-                add_menu(win, NO_GLYPH, &any,
-                         flags.lootabc ? 0 : any.a_char, 0, ATR_NONE,
-                         "nearby objects", MENU_UNSELECTED);
+                add_menu(win, NO_GLYPH, &any, flags.lootabc ? 0 : any.a_char,
+                         0, ATR_NONE,
+                         /*KR "nearby objects", MENU_UNSELECTED); */
+                         "근처의 물건들", MENU_UNSELECTED);
                 any.a_char = 'O';
-                add_menu(win, NO_GLYPH, &any,
-                         flags.lootabc ? 0 : any.a_char, 0, ATR_NONE,
-                         "all objects shown on map", MENU_UNSELECTED);
+                add_menu(win, NO_GLYPH, &any, flags.lootabc ? 0 : any.a_char,
+                         0, ATR_NONE,
+                         /*KR "all objects shown on map", MENU_UNSELECTED); */
+                         "지도에 보이는 모든 물건", MENU_UNSELECTED);
             }
-            end_menu(win, "What do you want to look at:");
+            /*KR end_menu(win, "What do you want to look at:"); */
+            end_menu(win, "무엇을 보시겠습니까?");
             if (select_menu(win, PICK_ONE, &pick_list) > 0) {
                 i = pick_list->item.a_char;
                 free((genericptr_t) pick_list);
@@ -1224,8 +1400,7 @@ coord *click_cc;
             cc.x = u.ux;
             cc.y = u.uy;
             break;
-        case 'i':
-          {
+        case 'i': {
             char invlet;
             struct obj *invobj;
 
@@ -1241,10 +1416,11 @@ coord *click_cc;
             if (*out_str)
                 checkfile(out_str, pm, TRUE, TRUE, (char *) 0);
             return 0;
-          }
+        }
         case '?':
             from_screen = FALSE;
-            getlin("Specify what? (type the word)", out_str);
+            /*KR getlin("Specify what? (type the word)", out_str); */
+            getlin("무엇을 지정하겠습니까? (단어를 입력하세요)", out_str);
             if (strcmp(out_str, " ")) /* keep single space as-is */
                 /* remove leading and trailing whitespace and
                    condense consecutive internal whitespace */
@@ -1293,14 +1469,17 @@ coord *click_cc;
         if (from_screen || clicklook) {
             if (from_screen) {
                 if (flags.verbose)
-                    pline("Please move the cursor to %s.",
+                    /*KR pline("Please move the cursor to %s.",
+                          what_is_an_unknown_object); */
+                    pline("커서를 %s(으)로 이동시켜주세요.",
                           what_is_an_unknown_object);
                 else
-                    pline("Pick an object.");
+                    /*KR pline("Pick an object."); */
+                    pline("물체를 선택하세요.");
 
                 ans = getpos(&cc, quick, what_is_an_unknown_object);
                 if (ans < 0 || cc.x < 0)
-                    break; /* done */
+                    break;             /* done */
                 flags.verbose = FALSE; /* only print long question once */
             }
         }
@@ -1343,7 +1522,8 @@ coord *click_cc;
                                          (boolean) (ans == LOOK_VERBOSE));
             }
         } else {
-            pline("I've never heard of such things.");
+            /*KR pline("I've never heard of such things."); */
+            pline("그런 것은 들어본 적도 없다.");
         }
     } while (from_screen && !quick && ans != LOOK_ONCE && !clicklook);
 
@@ -1351,10 +1531,9 @@ coord *click_cc;
     return 0;
 }
 
-STATIC_OVL void
-look_all(nearby, do_mons)
-boolean nearby; /* True => within BOLTLIM, False => entire map */
-boolean do_mons; /* True => monsters, False => objects */
+STATIC_OVL void look_all(nearby, do_mons)
+    boolean nearby; /* True => within BOLTLIM, False => entire map */
+boolean do_mons;    /* True => monsters, False => objects */
 {
     winid win;
     int x, y, lo_x, lo_y, hi_x, hi_y, glyph, count = 0;
@@ -1402,25 +1581,27 @@ boolean do_mons; /* True => monsters, False => objects */
                 char coordbuf[20], which[12], cmode;
 
                 cmode = (iflags.getpos_coords != GPCOORDS_NONE)
-                           ? iflags.getpos_coords : GPCOORDS_MAP;
+                            ? iflags.getpos_coords
+                            : GPCOORDS_MAP;
                 if (count == 1) {
-                    Strcpy(which, do_mons ? "monsters" : "objects");
+                    Strcpy(which, do_mons ? "몬스터" : "물건");
                     if (nearby)
-                        Sprintf(outbuf, "%s currently shown near %s:",
-                                upstart(which),
+                        Sprintf(outbuf, "현재 %s 근처에 보이는 %s:",
                                 (cmode != GPCOORDS_COMPASS)
-                                  ? coord_desc(u.ux, u.uy, coordbuf, cmode)
-                                  : !canspotself() ? "your position" : "you");
-                    else
-                        Sprintf(outbuf, "All %s currently shown on the map:",
+                                    ? coord_desc(u.ux, u.uy, coordbuf, cmode)
+                                : !canspotself() ? "당신의 위치"
+                                                 : "당신",
                                 which);
+                    else
+                        Sprintf(outbuf, "현재 지도에 보이는 모든 %s:", which);
                     putstr(win, 0, outbuf);
                     putstr(win, 0, "");
                 }
                 /* prefix: "coords  C  " where 'C' is mon or obj symbol */
-                Sprintf(outbuf, (cmode == GPCOORDS_SCREEN) ? "%s  "
-                                  : (cmode == GPCOORDS_MAP) ? "%8s  "
-                                      : "%12s  ",
+                Sprintf(outbuf,
+                        (cmode == GPCOORDS_SCREEN) ? "%s  "
+                        : (cmode == GPCOORDS_MAP)  ? "%8s  "
+                                                   : "%12s  ",
                         coord_desc(x, y, coordbuf, cmode));
                 Sprintf(eos(outbuf), "%s  ", encglyph(glyph));
                 /* guard against potential overflow */
@@ -1433,13 +1614,19 @@ boolean do_mons; /* True => monsters, False => objects */
     if (count)
         display_nhwindow(win, TRUE);
     else
+#if 0 /*KR: 원본*/
         pline("No %s are currently shown %s.",
               do_mons ? "monsters" : "objects",
               nearby ? "nearby" : "on the map");
+#else /*KR: KRNethack 맞춤 번역 */
+        pline("현재 %s에 %s 보이지 않는다.", nearby ? "근처" : "지도상",
+              do_mons ? "몬스터가" : "물건이");
+#endif
     destroy_nhwindow(win);
 }
 
 static const char *suptext1[] = {
+#if 0 /*KR: 원본*/
     "%s is a member of a marauding horde of orcs",
     "rumored to have brutally attacked and plundered",
     "the ordinarily sheltered town that is located ",
@@ -1449,9 +1636,20 @@ static const char *suptext1[] = {
     "defiantly acclaim their allegiance to their",
     "leader %s in their names.",
     (char *) 0,
+#else /*KR: KRNethack 맞춤 번역 */
+    "%s(은)는 노움의 광산 깊숙한 곳에 위치한 평화로운",
+    "마을을 잔인하게 공격하고 약탈했다고 소문난",
+    "오크 약탈 무리의 일원이다.",
+    "",
+    "그 악랄한 무리의 일원들은 자신의 이름에",
+    "지도자 %s에 대한 충성을",
+    "자랑스럽고 반항적으로 나타내고 있다.",
+    (char *) 0,
+#endif
 };
 
 static const char *suptext2[] = {
+#if 0 /*KR: 원본*/
     "\"%s\" is the common dungeon name of",
     "a nefarious orc who is known to acquire property",
     "from thieves and sell it off for profit.",
@@ -1459,11 +1657,18 @@ static const char *suptext2[] = {
     "The perpetrator was last seen hanging around the",
     "stairs leading to the Gnomish Mines.",
     (char *) 0,
+#else /*KR: KRNethack 맞춤 번역 */
+    "\"%s\"(은)는 도둑들로부터 물건을 구해",
+    "이익을 남기고 파는 것으로 알려진",
+    "사악한 오크의 흔한 던전 이름이다.",
+    "",
+    "이 범죄자는 노움의 광산으로 이어지는",
+    "계단 주변을 서성이는 것이 마지막으로 목격되었다.",
+    (char *) 0,
+#endif
 };
 
-STATIC_OVL void
-do_supplemental_info(name, pm, without_asking)
-char *name;
+STATIC_OVL void do_supplemental_info(name, pm, without_asking) char *name;
 struct permonst *pm;
 boolean without_asking;
 {
@@ -1488,13 +1693,16 @@ boolean without_asking;
         if (bp || bp2) {
             Strcpy(fullname, name);
             if (!without_asking) {
-                Strcpy(question, "More info about \"");
+                /*KR Strcpy(question, "More info about \""); */
+                Strcpy(question, "\"");
                 /* +2 => length of "\"?" */
-                copynchars(eos(question), entrytext,
-                    (int) (sizeof question - 1 - (strlen(question) + 2)));
-                Strcat(question, "\"?");
+                copynchars(
+                    eos(question), entrytext,
+                    (int) (sizeof question - 1 - (strlen(question) + 16)));
+                /*KR Strcat(question, "\"?"); */
+                Strcat(question, "\"에 대해 더 알아보겠습니까?");
                 if (yn(question) == 'y')
-                yes_to_moreinfo = TRUE;
+                    yes_to_moreinfo = TRUE;
             }
             if (yes_to_moreinfo) {
                 int i, subs = 0;
@@ -1559,7 +1767,9 @@ doidtrap()
         boolean chesttrap = trapped_chest_at(tt, x, y);
 
         if (chesttrap || trapped_door_at(tt, x, y)) {
-            pline("That is a trapped %s.", chesttrap ? "chest" : "door");
+            /*KR pline("That is a trapped %s.", chesttrap ? "chest" : "door");
+             */
+            pline("그것은 함정이 설치된 %s다.", chesttrap ? "상자" : "문");
             return 0; /* trap ID'd, but no time elapses */
         }
     }
@@ -1574,6 +1784,7 @@ doidtrap()
                     break;
             }
             tt = what_trap(tt, rn2_on_display_rng);
+#if 0 /*KR: 원본*/
             pline("That is %s%s%s.",
                   an(defsyms[trap_to_defsym(tt)].explanation),
                   !trap->madeby_u
@@ -1587,24 +1798,33 @@ doidtrap()
                            ? " dug"
                            : " set",
                   !trap->madeby_u ? "" : " by you");
+#else /*KR: KRNethack 맞춤 번역 */
+            pline("그것은 %s%s다.",
+                  !trap->madeby_u             ? ""
+                  : (tt == WEB)               ? "당신이 친 "
+                  : (tt == HOLE || tt == PIT) ? "당신이 판 "
+                                              : "당신이 설치한 ",
+                  defsyms[trap_to_defsym(tt)].explanation);
+#endif
             return 0;
         }
-    pline("I can't see a trap there.");
+    /*KR pline("I can't see a trap there."); */
+    pline("그곳에선 어떤 함정도 보이지 않는다.");
     return 0;
 }
 
 /*
-    Implements a rudimentary if/elif/else/endif interpretor and use
-    conditionals in dat/cmdhelp to describe what command each keystroke
-    currently invokes, so that there isn't a lot of "(debug mode only)"
-    and "(if number_pad is off)" cluttering the feedback that the user
-    sees.  (The conditionals add quite a bit of clutter to the raw data
-    but users don't see that.  number_pad produces a lot of conditional
-    commands:  basic letters vs digits, 'g' vs 'G' for '5', phone
-    keypad vs normal layout of digits, and QWERTZ keyboard swap between
-    y/Y/^Y/M-y/M-Y/M-^Y and z/Z/^Z/M-z/M-Z/M-^Z.)
+   Implements a rudimentary if/elif/else/endif interpretor and use
+   conditionals in dat/cmdhelp to describe what command each keystroke
+   currently invokes, so that there isn't a lot of "(debug mode only)"
+   and "(if number_pad is off)" cluttering the feedback that the user
+   sees.  (The conditionals add quite a bit of clutter to the raw data
+   but users don't see that.  number_pad produces a lot of conditional
+   commands:  basic letters vs digits, 'g' vs 'G' for '5', phone
+   keypad vs normal layout of digits, and QWERTZ keyboard swap between
+   y/Y/^Y/M-y/M-Y/M-^Y and z/Z/^Z/M-z/M-Z/M-^Z.)
 
-    The interpretor understands
+   The interpretor understands
      '&#' for comment,
      '&? option' for 'if' (also '&? !option'
                            or '&? option=value[,value2,...]'
@@ -1615,11 +1835,11 @@ doidtrap()
                       0 or 1 instance for a given 'if'), and
      '&.' for 'endif' (also '&. #comment'; required for each 'if').
 
-    The option handling is a bit of a mess, with no generality for
-    which options to deal with and only a comma separated list of
-    integer values for the '=value' part.  number_pad is the only
-    supported option that has a value; the few others (wizard/debug,
-    rest_on_space, #if SHELL, #if SUSPEND) are booleans.
+   The option handling is a bit of a mess, with no generality for
+   which options to deal with and only a comma separated list of
+   integer values for the '=value' part.  number_pad is the only
+   supported option that has a value; the few others (wizard/debug,
+   rest_on_space, #if SHELL, #if SUSPEND) are booleans.
 */
 
 STATIC_DCL void
@@ -1631,7 +1851,8 @@ whatdoes_help()
 
     fp = dlb_fopen(KEYHELP, "r");
     if (!fp) {
-        pline("Cannot open \"%s\" data file!", KEYHELP);
+        /*KR pline("Cannot open \"%s\" data file!", KEYHELP); */
+        pline("\"%s\" 데이터 파일을 열 수 없다!", KEYHELP);
         display_nhwindow(WIN_MESSAGE, TRUE);
         return;
     }
@@ -1871,17 +2092,26 @@ dowhatdoes()
     char q, *reslt;
 
     if (!once) {
+#if 0 /*KR: 원본*/
         pline("Ask about '&' or '?' to get more info.%s",
 #ifdef ALTMETA
               iflags.altmeta ? "  (For ESC, type it twice.)" :
 #endif
               "");
+#else /*KR: KRNethack 맞춤 번역 */
+        pline("더 많은 정보를 원한다면 '&' 또는 '?'에 대해 물어보세요.%s",
+#ifdef ALTMETA
+              iflags.altmeta ? "  (ESC를 원하면 두 번 입력하세요.)" :
+#endif
+                             "");
+#endif
         once = TRUE;
     }
 #if defined(UNIX) || defined(VMS)
     introff(); /* disables ^C but not ^\ */
 #endif
-    q = yn_function("What command?", (char *) 0, '\0');
+    /*KR q = yn_function("What command?", (char *) 0, '\0'); */
+    q = yn_function("어떤 명령어입니까?", (char *) 0, '\0');
 #ifdef ALTMETA
     if (q == '\033' && iflags.altmeta) {
         /* in an ideal world, we would know whether another keystroke
@@ -1902,8 +2132,14 @@ dowhatdoes()
             whatdoes_help();
         pline("%s", reslt);
     } else {
+#if 0 /*KR: 원본*/
         pline("No such command '%s', char code %d (0%03o or 0x%02x).",
               visctrl(q), (uchar) q, (uchar) q, (uchar) q);
+#else /*KR: KRNethack 맞춤 번역 */
+        pline("'%s'와(과) 같은 명령어는 없다, 문자 코드 %d (0%03o 또는 "
+              "0x%02x).",
+              visctrl(q), (uchar) q, (uchar) q, (uchar) q);
+#endif
     }
     return 0;
 }
@@ -2073,7 +2309,8 @@ dohelp()
         add_menu(tmpwin, NO_GLYPH, &any, 0, 0, ATR_NONE,
                  helpbuf, MENU_UNSELECTED);
     }
-    end_menu(tmpwin, "Select one item:");
+    /*KR end_menu(tmpwin, "Select one item:"); */
+    end_menu(tmpwin, "하나 선택하십시오:");
     n = select_menu(tmpwin, PICK_ONE, &selected);
     destroy_nhwindow(tmpwin);
     if (n > 0) {

@@ -1,5 +1,5 @@
 /* NetHack 3.6	polyself.c	$NHDT-Date: 1573290419 2019/11/09 09:06:59 $  $NHDT-Branch: NetHack-3.6 $:$NHDT-Revision: 1.135 $ */
-/*      Copyright (C) 1987, 1988, 1989 by Ken Arromdee */
+/* Copyright (C) 1987, 1988, 1989 by Ken Arromdee */
 /* NetHack may be freely redistributed.  See license for details. */
 
 /*
@@ -10,28 +10,29 @@
  * player polymorphed into a light-emitting monster.
  *
  * Transformation sequences:
- *              /-> polymon                 poly into monster form
- *    polyself =
- *              \-> newman -> polyman       fail to poly, get human form
+ * /-> polymon                 poly into monster form
+ * polyself =
+ * \-> newman -> polyman       fail to poly, get human form
  *
- *    rehumanize -> polyman                 return to original form
+ * rehumanize -> polyman                  return to original form
  *
- *    polymon (called directly)             usually golem petrification
+ * polymon (called directly)              usually golem petrification
  */
 
 #include "hack.h"
 
 STATIC_DCL void FDECL(check_strangling, (BOOLEAN_P));
-STATIC_DCL void FDECL(polyman, (const char *, const char *));
-STATIC_DCL void FDECL(dropp, (struct obj *));
+STATIC_DCL void FDECL(polyman, (const char *, const char *) );
+STATIC_DCL void FDECL(dropp, (struct obj *) );
 STATIC_DCL void NDECL(break_armor);
-STATIC_DCL void FDECL(drop_weapon, (int));
-STATIC_DCL int FDECL(armor_to_dragon, (int));
+STATIC_DCL void FDECL(drop_weapon, (int) );
+STATIC_DCL int FDECL(armor_to_dragon, (int) );
 STATIC_DCL void NDECL(newman);
 STATIC_DCL void NDECL(polysense);
 
 STATIC_VAR const char no_longer_petrify_resistant[] =
-    "No longer petrify-resistant, you";
+    /*KR "No longer petrify-resistant, you"; */
+    "더 이상 석화에 대한 내성이 없는 당신은";
 
 /* controls whether taking on new form or becoming new man can also
    change sex (ought to be an arg to polymon() and newman() instead) */
@@ -71,9 +72,9 @@ set_uasmon()
     }
     /* resists_magm() takes wielded, worn, and carried equipment into
        into account; cheat and duplicate its monster-specific part */
-    PROPSET(ANTIMAGIC, (dmgtype(mdat, AD_MAGM)
-                        || mdat == &mons[PM_BABY_GRAY_DRAGON]
-                        || dmgtype(mdat, AD_RBRE)));
+    PROPSET(ANTIMAGIC,
+            (dmgtype(mdat, AD_MAGM) || mdat == &mons[PM_BABY_GRAY_DRAGON]
+             || dmgtype(mdat, AD_RBRE)));
     PROPSET(SICK_RES, (mdat->mlet == S_FUNGUS || mdat == &mons[PM_GHOUL]));
 
     PROPSET(STUNNED, (mdat == &mons[PM_STALKER] || is_bat(mdat)));
@@ -130,9 +131,7 @@ float_vs_flight()
 }
 
 /* for changing into form that's immune to strangulation */
-STATIC_OVL void
-check_strangling(on)
-boolean on;
+STATIC_OVL void check_strangling(on) boolean on;
 {
     /* on -- maybe resume strangling */
     if (on) {
@@ -142,26 +141,28 @@ boolean on;
             && can_be_strangled(&youmonst)) {
             Strangled = 6L;
             context.botl = TRUE;
-            Your("%s %s your %s!", simpleonames(uamul),
+            /*KR Your("%s %s your %s!", simpleonames(uamul),
                  Strangled ? "still constricts" : "begins constricting",
-                 body_part(NECK)); /* "throat" */
+                 body_part(NECK)); */ /* "throat" */
+            Your("%s 당신의 %s %s!", append_josa(simpleonames(uamul), "이"),
+                 append_josa(body_part(NECK), "을"),
+                 Strangled ? "여전히 조이고 있다" : "조이기 시작한다");
             makeknown(AMULET_OF_STRANGULATION);
         }
 
-    /* off -- maybe block strangling */
+        /* off -- maybe block strangling */
     } else {
         if (Strangled && !can_be_strangled(&youmonst)) {
             Strangled = 0L;
             context.botl = TRUE;
-            You("are no longer being strangled.");
+            /*KR You("are no longer being strangled."); */
+            You("더 이상 목이 조이지 않는다.");
         }
     }
 }
 
 /* make a (new) human out of the player */
-STATIC_OVL void
-polyman(fmt, arg)
-const char *fmt, *arg;
+STATIC_OVL void polyman(fmt, arg) const char *fmt, *arg;
 {
     boolean sticky = (sticks(youmonst.data) && u.ustuck && !u.uswallow),
             was_mimicking = (U_AP_TYPE != M_AP_NOTHING);
@@ -203,7 +204,8 @@ const char *fmt, *arg;
             Strcpy(killer.name, kptr->name);
         } else {
             killer.format = KILLED_BY;
-            Strcpy(killer.name, "self-genocide");
+            /*KR Strcpy(killer.name, "self-genocide"); */
+            Strcpy(killer.name, "스스로를 학살함");
         }
         dealloc_killer(kptr);
         done(GENOCIDED);
@@ -303,10 +305,10 @@ newman()
 
     /*
      * New hit points:
-     *  remove level-gain based HP from any extra HP accumulated
-     *  (the "extra" might actually be negative);
-     *  modify the extra, retaining {80%, 90%, 100%, or 110%};
-     *  add in newly generated set of level-gain HP.
+     * remove level-gain based HP from any extra HP accumulated
+     * (the "extra" might actually be negative);
+     * modify the extra, retaining {80%, 90%, 100%, or 110%};
+     * add in newly generated set of level-gain HP.
      *
      * (This used to calculate new HP in direct proportion to old HP,
      * but that was subject to abuse:  accumulate a large amount of
@@ -355,15 +357,18 @@ newman()
         } else {
         dead: /* we come directly here if their experience level went to 0 or
                  less */
-            Your("new form doesn't seem healthy enough to survive.");
+            /*KR Your("new form doesn't seem healthy enough to survive."); */
+            Your("새로운 몸은 살아남을 수 있을 만큼 건강해 보이지 않는다.");
             killer.format = KILLED_BY_AN;
-            Strcpy(killer.name, "unsuccessful polymorph");
+            /*KR Strcpy(killer.name, "unsuccessful polymorph"); */
+            Strcpy(killer.name, "실패한 변이");
             done(DIED);
             newuhs(FALSE);
             return; /* lifesaved */
         }
     }
     newuhs(FALSE);
+#if 0 /*KR: 원본*/
     polyman("feel like a new %s!",
             /* use saved gender we're about to revert to, not current */
             ((Upolyd ? u.mfemale : flags.female) && urace.individual.f)
@@ -371,8 +376,17 @@ newman()
                 : (urace.individual.m)
                    ? urace.individual.m
                    : urace.noun);
+#else /*KR: KRNethack 맞춤 번역 */
+    polyman("새로운 %s(이)가 된 기분이다!",
+            /* use saved gender we're about to revert to, not current */
+            ((Upolyd ? u.mfemale : flags.female) && urace.individual.f)
+                ? urace.individual.f
+            : (urace.individual.m) ? urace.individual.m
+                                   : urace.noun);
+#endif
     if (Slimed) {
-        Your("body transforms, but there is still slime on you.");
+        /*KR Your("body transforms, but there is still slime on you."); */
+        Your("몸은 변했지만, 여전히 슬라임이 묻어 있다.");
         make_slimed(10L, (const char *) 0);
     }
 
@@ -385,9 +399,7 @@ newman()
         selftouch(no_longer_petrify_resistant);
 }
 
-void
-polyself(psflags)
-int psflags;
+void polyself(psflags) int psflags;
 {
     char buf[BUFSZ] = DUMMY;
     int old_light, new_light, mntmp, class, tryct;
@@ -397,7 +409,8 @@ int psflags;
             controllable_poly = Polymorph_control && !(Stunned || Unaware);
 
     if (Unchanging) {
-        pline("You fail to transform!");
+        /*KR pline("You fail to transform!"); */
+        pline("당신은 변이하는 데 실패했다!");
         return;
     }
     /* being Stunned|Unaware doesn't negate this aspect of Poly_control */
@@ -405,7 +418,8 @@ int psflags;
         && !isvamp) {
         if (rn2(20) > ACURR(A_CON)) {
             You1(shudder_for_moment);
-            losehp(rnd(30), "system shock", KILLED_BY_AN);
+            /*KR losehp(rnd(30), "system shock", KILLED_BY_AN); */
+            losehp(rnd(30), "시스템 쇼크", KILLED_BY_AN);
             exercise(A_CON, FALSE);
             return;
         }
@@ -420,7 +434,10 @@ int psflags;
         tryct = 5;
         do {
             mntmp = NON_PM;
-            getlin("Become what kind of monster? [type the name]", buf);
+            /*KR getlin("Become what kind of monster? [type the name]", buf);
+             */
+            getlin("어떤 종류의 몬스터가 되겠습니까? [이름을 입력하세요]",
+                   buf);
             (void) mungspaces(buf);
             if (*buf == '\033') {
                 /* user is cancelling controlled poly */
@@ -430,7 +447,11 @@ int psflags;
                 }
                 Strcpy(buf, "*"); /* resort to random */
             }
+#if 0 /*KR: 원본*/
             if (!strcmp(buf, "*") || !strcmp(buf, "random")) {
+#else /*KR: KRNethack 맞춤 번역 */
+            if (!strcmp(buf, "*") || !strcmp(buf, "랜덤")) {
+#endif
                 /* explicitly requesting random result */
                 tryct = 0; /* will skip thats_enough_tries */
                 continue;  /* end do-while(--tryct > 0) loop */
@@ -445,12 +466,15 @@ int psflags;
             }
             if (mntmp < LOW_PM) {
                 if (!class)
-                    pline("I've never heard of such monsters.");
+                    /*KR pline("I've never heard of such monsters."); */
+                    pline("그런 몬스터는 들어본 적도 없다.");
                 else
-                    You_cant("polymorph into any of those.");
-            } else if (iswere && (were_beastie(mntmp) == u.ulycn
-                                  || mntmp == counter_were(u.ulycn)
-                                  || (Upolyd && mntmp == PM_HUMAN))) {
+                    /*KR You_cant("polymorph into any of those."); */
+                    You_cant("그러한 것들 중 어떤 것으로도 변이할 수 없다.");
+            } else if (iswere
+                       && (were_beastie(mntmp) == u.ulycn
+                           || mntmp == counter_were(u.ulycn)
+                           || (Upolyd && mntmp == PM_HUMAN))) {
                 goto do_shift;
                 /* Note:  humans are illegal as monsters, but an
                  * illegal monster forces newman(), which is what we
@@ -476,7 +500,8 @@ int psflags;
                     pm_name = the(pm_name);
                 else if (!type_is_pname(&mons[mntmp]))
                     pm_name = an(pm_name);
-                You_cant("polymorph into %s.", pm_name);
+                /*KR You_cant("polymorph into %s.", pm_name); */
+                You_cant("%s(으)로 변이할 수 없다.", pm_name);
             } else
                 break;
         } while (--tryct > 0);
@@ -485,8 +510,9 @@ int psflags;
         /* allow skin merging, even when polymorph is controlled */
         if (draconian && (tryct <= 0 || mntmp == armor_to_dragon(uarm->otyp)))
             goto do_merge;
-        if (isvamp && (tryct <= 0 || mntmp == PM_WOLF || mntmp == PM_FOG_CLOUD
-                       || is_bat(&mons[mntmp])))
+        if (isvamp
+            && (tryct <= 0 || mntmp == PM_WOLF || mntmp == PM_FOG_CLOUD
+                || is_bat(&mons[mntmp])))
             goto do_vampyr;
     } else if (draconian || iswere || isvamp) {
         /* special changes that don't require polyok() */
@@ -497,7 +523,8 @@ int psflags;
                 /* allow G_EXTINCT */
                 if (Is_dragon_scales(uarm)) {
                     /* dragon scales remain intact as uskin */
-                    You("merge with your scaly armor.");
+                    /*KR You("merge with your scaly armor."); */
+                    You("당신의 비늘 갑옷과 하나가 되었다.");
                 } else { /* dragon scale mail */
                     /* d.scale mail first reverts to scales */
                     char *p, *dsmail;
@@ -505,13 +532,19 @@ int psflags;
                     /* similar to noarmor(invent.c),
                        shorten to "<color> scale mail" */
                     dsmail = strcpy(buf, simpleonames(uarm));
-                    if ((p = strstri(dsmail, " dragon ")) != 0)
+                    /*KR if ((p = strstri(dsmail, " dragon ")) != 0) */
+                    if ((p = strstri(dsmail, " 드래곤 ")) != 0)
                         while ((p[1] = p[8]) != '\0')
                             ++p;
                     /* tricky phrasing; dragon scale mail
                        is singular, dragon scales are plural */
+#if 0 /*KR: 원본*/
                     Your("%s reverts to scales as you merge with them.",
                          dsmail);
+#else /*KR: KRNethack 맞춤 번역 */
+                    Your("%s 하나로 융합되면서 다시 비늘로 변했다.",
+                         append_josa(dsmail, "이"));
+#endif
                     /* uarm->spe enchantment remains unchanged;
                        re-converting scales to mail poses risk
                        of evaporation due to over enchanting */
@@ -536,9 +569,14 @@ int psflags;
             if (mntmp < LOW_PM || (mons[mntmp].geno & G_UNIQ))
                 mntmp = (youmonst.data != &mons[PM_VAMPIRE] && !rn2(10))
                             ? PM_WOLF
-                            : !rn2(4) ? PM_FOG_CLOUD : PM_VAMPIRE_BAT;
+                        : !rn2(4) ? PM_FOG_CLOUD
+                                  : PM_VAMPIRE_BAT;
             if (controllable_poly) {
+#if 0 /*KR: 원본*/
                 Sprintf(buf, "Become %s?", an(mons[mntmp].mname));
+#else /*KR: KRNethack 맞춤 번역 */
+                Sprintf(buf, "%s(이)가 되시겠습니까?", mons[mntmp].mname);
+#endif
                 if (yn(buf) != 'y')
                     return;
             }
@@ -600,7 +638,8 @@ int mntmp;
     int mlvl;
 
     if (mvitals[mntmp].mvflags & G_GENOD) { /* allow G_EXTINCT */
-        You_feel("rather %s-ish.", mons[mntmp].mname);
+        /*KR You_feel("rather %s-ish.", mons[mntmp].mname); */
+        You_feel("다소 %s 같아진 기분이다.", mons[mntmp].mname);
         exercise(A_WIS, TRUE);
         return 0;
     }
@@ -648,19 +687,29 @@ int mntmp;
             dochange = TRUE;
     }
 
-    Strcpy(buf, (u.umonnum != mntmp) ? "" : "new ");
+    /*KR Strcpy(buf, (u.umonnum != mntmp) ? "" : "new "); */
+    Strcpy(buf, (u.umonnum != mntmp) ? "" : "새로운 ");
     if (dochange) {
         flags.female = !flags.female;
-        Strcat(buf, (is_male(&mons[mntmp]) || is_female(&mons[mntmp]))
-                       ? "" : flags.female ? "female " : "male ");
+        /*KR Strcat(buf, (is_male(&mons[mntmp]) || is_female(&mons[mntmp]))
+                       ? "" : flags.female ? "female " : "male "); */
+        Strcat(buf, (is_male(&mons[mntmp]) || is_female(&mons[mntmp])) ? ""
+                    : flags.female ? "암컷 "
+                                   : "수컷 ");
     }
     Strcat(buf, mons[mntmp].mname);
+#if 0 /*KR: 원본*/
     You("%s %s!", (u.umonnum != mntmp) ? "turn into" : "feel like", an(buf));
+#else /*KR: KRNethack 맞춤 번역 */
+    You("%s %s!", append_josa(buf, "으(로)"),
+        (u.umonnum != mntmp) ? "변했다" : "된 기분이다");
+#endif
 
     if (Stoned && poly_when_stoned(&mons[mntmp])) {
         /* poly_when_stoned already checked stone golem genocide */
         mntmp = PM_STONE_GOLEM;
-        make_stoned(0L, "You turn to stone!", 0, (char *) 0);
+        /*KR make_stoned(0L, "You turn to stone!", 0, (char *) 0); */
+        make_stoned(0L, "당신은 돌로 변했다!", 0, (char *) 0);
     }
 
     u.mtimedone = rn1(500, 500);
@@ -674,16 +723,19 @@ int mntmp;
         ABASE(A_STR) = AMAX(A_STR) = STR18(100);
 
     if (Stone_resistance && Stoned) { /* parnes@eniac.seas.upenn.edu */
-        make_stoned(0L, "You no longer seem to be petrifying.", 0,
-                    (char *) 0);
+        /*KR make_stoned(0L, "You no longer seem to be petrifying.", 0,
+                    (char *) 0); */
+        make_stoned(0L, "더 이상 돌로 굳어지지 않는 것 같다.", 0, (char *) 0);
     }
     if (Sick_resistance && Sick) {
         make_sick(0L, (char *) 0, FALSE, SICK_ALL);
-        You("no longer feel sick.");
+        /*KR You("no longer feel sick."); */
+        You("더 이상 아프지 않다.");
     }
     if (Slimed) {
         if (flaming(youmonst.data)) {
-            make_slimed(0L, "The slime burns away!");
+            /*KR make_slimed(0L, "The slime burns away!"); */
+            make_slimed(0L, "슬라임이 불타 없어졌다!");
         } else if (mntmp == PM_GREEN_SLIME) {
             /* do it silently */
             make_slimed(0L, (char *) 0);
@@ -752,7 +804,9 @@ int mntmp;
         if (touch_petrifies(u.usteed->data) && !Stone_resistance && rnl(3)) {
             pline("%s touch %s.", no_longer_petrify_resistant,
                   mon_nam(u.usteed));
-            Sprintf(buf, "riding %s", an(u.usteed->data->mname));
+            /*KR Sprintf(buf, "riding %s", an(u.usteed->data->mname)); */
+            Sprintf(buf, "%s 타다가",
+                    append_josa(u.usteed->data->mname, "을"));
             instapetrify(buf);
         }
         if (!can_ride(u.usteed))
@@ -760,6 +814,7 @@ int mntmp;
     }
 
     if (flags.verbose) {
+#if 0 /*KR: 원본*/
         static const char use_thec[] = "Use the command #%s to %s.";
         static const char monsterc[] = "monster";
 
@@ -794,6 +849,41 @@ int mntmp;
             pline(use_thec, "sit",
                   eggs_in_water(youmonst.data) ?
                       "spawn in the water" : "lay an egg");
+#else /*KR: KRNethack 맞춤 번역 */
+        static const char use_thec[] = "#%s 명령어를 사용하여 %s할 수 있다.";
+        static const char monsterc[] = "monster";
+
+        if (can_breathe(youmonst.data))
+            pline(use_thec, monsterc, "브레스 무기를 발사");
+        if (attacktype(youmonst.data, AT_SPIT))
+            pline(use_thec, monsterc, "독을 뱉어낼");
+        if (youmonst.data->mlet == S_NYMPH)
+            pline(use_thec, monsterc, "철구를 벗어던질");
+        if (attacktype(youmonst.data, AT_GAZE))
+            pline(use_thec, monsterc, "괴물을 응시");
+        if (is_hider(youmonst.data))
+            pline(use_thec, monsterc, "숨을");
+        if (is_were(youmonst.data))
+            pline(use_thec, monsterc, "도움을 소환");
+        if (webmaker(youmonst.data))
+            pline(use_thec, monsterc, "거미줄을 칠");
+        if (u.umonnum == PM_GREMLIN)
+            pline(use_thec, monsterc, "분수에서 분열");
+        if (is_unicorn(youmonst.data))
+            pline(use_thec, monsterc, "뿔을 사용");
+        if (is_mind_flayer(youmonst.data))
+            pline(use_thec, monsterc, "정신 분열파를 쏠");
+        if (youmonst.data->msound == MS_SHRIEK) /* worthless, actually */
+            pline(use_thec, monsterc, "비명을 지를");
+        if (is_vampire(youmonst.data))
+            pline(use_thec, monsterc, "형태를 변형");
+
+        if (lays_eggs(youmonst.data) && flags.female
+            && !(youmonst.data == &mons[PM_GIANT_EEL]
+                 || youmonst.data == &mons[PM_ELECTRIC_EEL]))
+            pline(use_thec, "sit",
+                  eggs_in_water(youmonst.data) ? "수중에 산란" : "알을 낳을");
+#endif
     }
 
     /* you now know what an egg of your type looks like */
@@ -809,38 +899,48 @@ int mntmp;
     if (Passes_walls && u.utrap
         && (u.utraptype == TT_INFLOOR || u.utraptype == TT_BURIEDBALL)) {
         if (u.utraptype == TT_INFLOOR) {
-            pline_The("rock seems to no longer trap you.");
+            /*KR pline_The("rock seems to no longer trap you."); */
+            pline("이제 더 이상 바위가 당신을 가두지 못하는 것 같다.");
         } else {
-            pline_The("buried ball is no longer bound to you.");
+            /*KR pline_The("buried ball is no longer bound to you."); */
+            pline("파묻혀 있던 철구는 더 이상 당신을 묶어두지 못한다.");
             buried_ball_to_freedom();
         }
         reset_utrap(TRUE);
     } else if (likes_lava(youmonst.data) && u.utrap
                && u.utraptype == TT_LAVA) {
-        pline_The("%s now feels soothing.", hliquid("lava"));
+        /*KR pline_The("%s now feels soothing.", hliquid("lava")); */
+        pline("이제 %s 부드럽게 느껴진다.",
+              append_josa(hliquid("용암"), "이"));
         reset_utrap(TRUE);
     }
     if (amorphous(youmonst.data) || is_whirly(youmonst.data)
         || unsolid(youmonst.data)) {
         if (Punished) {
-            You("slip out of the iron chain.");
+            /*KR You("slip out of the iron chain."); */
+            You("쇠사슬에서 빠져나왔다.");
             unpunish();
         } else if (u.utrap && u.utraptype == TT_BURIEDBALL) {
-            You("slip free of the buried ball and chain.");
+            /*KR You("slip free of the buried ball and chain."); */
+            You("파묻힌 철구와 쇠사슬에서 무사히 빠져나왔다.");
             buried_ball_to_freedom();
         }
     }
     if (u.utrap && (u.utraptype == TT_WEB || u.utraptype == TT_BEARTRAP)
         && (amorphous(youmonst.data) || is_whirly(youmonst.data)
-            || unsolid(youmonst.data) || (youmonst.data->msize <= MZ_SMALL
-                                          && u.utraptype == TT_BEARTRAP))) {
-        You("are no longer stuck in the %s.",
-            u.utraptype == TT_WEB ? "web" : "bear trap");
+            || unsolid(youmonst.data)
+            || (youmonst.data->msize <= MZ_SMALL
+                && u.utraptype == TT_BEARTRAP))) {
+        /*KR You("are no longer stuck in the %s.",
+            u.utraptype == TT_WEB ? "web" : "bear trap"); */
+        You("더 이상 %s 갇혀 있지 않다.",
+            append_josa(u.utraptype == TT_WEB ? "거미줄" : "곰 덫", "에"));
         /* probably should burn webs too if PM_FIRE_ELEMENTAL */
         reset_utrap(TRUE);
     }
     if (webmaker(youmonst.data) && u.utrap && u.utraptype == TT_WEB) {
-        You("orient yourself on the web.");
+        /*KR You("orient yourself on the web."); */
+        You("거미줄 위에서 균형을 잡았다.");
         reset_utrap(TRUE);
     }
     check_strangling(TRUE); /* maybe start strangling */
@@ -860,9 +960,7 @@ int mntmp;
 }
 
 /* dropx() jacket for break_armor() */
-STATIC_OVL void
-dropp(obj)
-struct obj *obj;
+STATIC_OVL void dropp(obj) struct obj *obj;
 {
     struct obj *otmp;
 
@@ -895,47 +993,62 @@ break_armor()
         if ((otmp = uarm) != 0) {
             if (donning(otmp))
                 cancel_don();
-            You("break out of your armor!");
+            /*KR You("break out of your armor!"); */
+            You("갑옷을 뚫고 튀어나왔다!");
             exercise(A_STR, FALSE);
             (void) Armor_gone();
             useup(otmp);
         }
         if ((otmp = uarmc) != 0) {
             if (otmp->oartifact) {
-                Your("%s falls off!", cloak_simple_name(otmp));
+                /*KR Your("%s falls off!", cloak_simple_name(otmp)); */
+                Your("%s 떨어져 나갔다!",
+                     append_josa(cloak_simple_name(otmp), "이"));
                 (void) Cloak_off();
                 dropp(otmp);
             } else {
-                Your("%s tears apart!", cloak_simple_name(otmp));
+                /*KR Your("%s tears apart!", cloak_simple_name(otmp)); */
+                Your("%s 찢어져버렸다!",
+                     append_josa(cloak_simple_name(otmp), "이"));
                 (void) Cloak_off();
                 useup(otmp);
             }
         }
         if (uarmu) {
-            Your("shirt rips to shreds!");
+            /*KR Your("shirt rips to shreds!"); */
+            Your("셔츠가 산산조각이 나버렸다!");
             useup(uarmu);
         }
     } else if (sliparm(youmonst.data)) {
         if (((otmp = uarm) != 0) && (racial_exception(&youmonst, otmp) < 1)) {
             if (donning(otmp))
                 cancel_don();
-            Your("armor falls around you!");
+            /*KR Your("armor falls around you!"); */
+            Your("갑옷이 흘러내렸다!");
             (void) Armor_gone();
             dropp(otmp);
         }
         if ((otmp = uarmc) != 0) {
             if (is_whirly(youmonst.data))
-                Your("%s falls, unsupported!", cloak_simple_name(otmp));
+                /*KR Your("%s falls, unsupported!", cloak_simple_name(otmp));
+                 */
+                Your("%s 지탱을 잃고 떨어져 나갔다!",
+                     append_josa(cloak_simple_name(otmp), "이"));
             else
-                You("shrink out of your %s!", cloak_simple_name(otmp));
+                /*KR You("shrink out of your %s!", cloak_simple_name(otmp));
+                 */
+                You("몸이 줄어들어 %s 빠져나왔다!",
+                    append_josa(cloak_simple_name(otmp), "에서"));
             (void) Cloak_off();
             dropp(otmp);
         }
         if ((otmp = uarmu) != 0) {
             if (is_whirly(youmonst.data))
-                You("seep right through your shirt!");
+                /*KR You("seep right through your shirt!"); */
+                You("셔츠를 그대로 통과해 흘러나왔다!");
             else
-                You("become much too small for your shirt!");
+                /*KR You("become much too small for your shirt!"); */
+                You("셔츠를 입기엔 몸이 너무 작아졌다!");
             setworn((struct obj *) 0, otmp->owornmask & W_ARMU);
             dropp(otmp);
         }
@@ -946,14 +1059,24 @@ break_armor()
                 char hornbuf[BUFSZ];
 
                 /* Future possibilities: This could damage/destroy helmet */
-                Sprintf(hornbuf, "horn%s", plur(num_horns(youmonst.data)));
+                /*KR Sprintf(hornbuf, "horn%s",
+                 * plur(num_horns(youmonst.data))); */
+                Sprintf(hornbuf, "뿔");
+#if 0 /*KR: 원본*/
                 Your("%s %s through %s.", hornbuf, vtense(hornbuf, "pierce"),
                      yname(otmp));
+#else /*KR: KRNethack 맞춤 번역 */
+                Your("%s %s 꿰뚫고 튀어나왔다.", append_josa(hornbuf, "이"),
+                     yname(otmp));
+#endif
             } else {
                 if (donning(otmp))
                     cancel_don();
-                Your("%s falls to the %s!", helm_simple_name(otmp),
-                     surface(u.ux, u.uy));
+                /*KR Your("%s falls to the %s!", helm_simple_name(otmp),
+                     surface(u.ux, u.uy)); */
+                Your("%s %s 떨어졌다!",
+                     append_josa(helm_simple_name(otmp), "이"),
+                     append_josa(surface(u.ux, u.uy), "로"));
                 (void) Helmet_off();
                 dropp(otmp);
             }
@@ -964,22 +1087,26 @@ break_armor()
             if (donning(otmp))
                 cancel_don();
             /* Drop weapon along with gloves */
-            You("drop your gloves%s!", uwep ? " and weapon" : "");
+            /*KR You("drop your gloves%s!", uwep ? " and weapon" : ""); */
+            You("장갑%s 떨어뜨렸다!", uwep ? "과 무기를" : "을");
             drop_weapon(0);
             (void) Gloves_off();
             /* Glib manipulation (ends immediately) handled by Gloves_off */
             dropp(otmp);
         }
         if ((otmp = uarms) != 0) {
-            You("can no longer hold your shield!");
+            /*KR You("can no longer hold your shield!"); */
+            You("더 이상 방패를 들 수 없다!");
             (void) Shield_off();
             dropp(otmp);
         }
         if ((otmp = uarmh) != 0) {
             if (donning(otmp))
                 cancel_don();
-            Your("%s falls to the %s!", helm_simple_name(otmp),
-                 surface(u.ux, u.uy));
+            /*KR Your("%s falls to the %s!", helm_simple_name(otmp),
+                 surface(u.ux, u.uy)); */
+            Your("%s %s 떨어졌다!", append_josa(helm_simple_name(otmp), "이"),
+                 append_josa(surface(u.ux, u.uy), "로"));
             (void) Helmet_off();
             dropp(otmp);
         }
@@ -990,19 +1117,21 @@ break_armor()
             if (donning(otmp))
                 cancel_don();
             if (is_whirly(youmonst.data))
-                Your("boots fall away!");
+                /*KR Your("boots fall away!"); */
+                Your("신발이 떨어져 나갔다!");
             else
-                Your("boots %s off your feet!",
-                     verysmall(youmonst.data) ? "slide" : "are pushed");
+                /*KR Your("boots %s off your feet!",
+                     verysmall(youmonst.data) ? "slide" : "are pushed"); */
+                Your("신발이 발에서 %s!", verysmall(youmonst.data)
+                                              ? "미끄러져 빠졌다"
+                                              : "밀려났다");
             (void) Boots_off();
             dropp(otmp);
         }
     }
 }
 
-STATIC_OVL void
-drop_weapon(alone)
-int alone;
+STATIC_OVL void drop_weapon(alone) int alone;
 {
     struct obj *otmp;
     const char *what, *which, *whichtoo;
@@ -1017,19 +1146,25 @@ int alone;
             candropwep = canletgo(uwep, "");
             candropswapwep = !u.twoweap || canletgo(uswapwep, "");
             if (alone) {
-                what = (candropwep && candropswapwep) ? "drop" : "release";
-                which = is_sword(uwep) ? "sword" : weapon_descr(uwep);
+                what =
+                    (candropwep && candropswapwep) ? "놓아버려야" : "놓아야";
+                which = is_sword(uwep) ? "검" : weapon_descr(uwep);
                 if (u.twoweap) {
                     whichtoo =
-                        is_sword(uswapwep) ? "sword" : weapon_descr(uswapwep);
+                        is_sword(uswapwep) ? "검" : weapon_descr(uswapwep);
                     if (strcmp(which, whichtoo))
-                        which = "weapon";
+                        which = "무기";
                 }
+#if 0 /*KR: 원본*/
                 if (uwep->quan != 1L || u.twoweap)
                     which = makeplural(which);
 
                 You("find you must %s %s %s!", what,
                     the_your[!!strncmp(which, "corpse", 6)], which);
+#else /*KR: KRNethack 맞춤 번역 */
+                You("당신의 %s %s 한다는 걸 깨달았다!",
+                    append_josa(which, "을"), what);
+#endif
             }
             /* if either uwep or wielded uswapwep is flagged as 'in_use'
                then don't drop it or explicitly update inventory; leave
@@ -1070,10 +1205,17 @@ rehumanize()
     if (Unchanging) {
         if (u.mh < 1) {
             killer.format = NO_KILLER_PREFIX;
-            Strcpy(killer.name, "killed while stuck in creature form");
+            /*KR Strcpy(killer.name, "killed while stuck in creature form");
+             */
+            Strcpy(killer.name, "괴물 형태에서 갇혀 죽음");
             done(DIED);
         } else if (uamul && uamul->otyp == AMULET_OF_UNCHANGING) {
+#if 0 /*KR: 원본*/
             Your("%s %s!", simpleonames(uamul), otense(uamul, "fail"));
+#else /*KR: KRNethack 맞춤 번역 */
+            Your("%s 효과를 발휘하지 못했다!",
+                 append_josa(simpleonames(uamul), "이"));
+#endif
             uamul->dknown = 1;
             makeknown(AMULET_OF_UNCHANGING);
         }
@@ -1081,13 +1223,21 @@ rehumanize()
 
     if (emits_light(youmonst.data))
         del_light_source(LS_MONSTER, monst_to_any(&youmonst));
+#if 0 /*KR: 원본*/
     polyman("return to %s form!", urace.adj);
+#else /*KR: KRNethack 맞춤 번역 */
+    polyman("%s의 모습으로 되돌아왔다!", urace.adj);
+#endif
 
     if (u.uhp < 1) {
         /* can only happen if some bit of code reduces u.uhp
            instead of u.mh while poly'd */
-        Your("old form was not healthy enough to survive.");
-        Sprintf(killer.name, "reverting to unhealthy %s form", urace.adj);
+        /*KR Your("old form was not healthy enough to survive."); */
+        Your("본래의 모습은 살아남을 수 있을 만큼 건강하지 않았다.");
+        /*KR Sprintf(killer.name, "reverting to unhealthy %s form",
+         * urace.adj); */
+        Sprintf(killer.name, "건강하지 못한 %s의 모습으로 돌아온 것",
+                urace.adj);
         killer.format = KILLED_BY;
         done(DIED);
     }
@@ -1097,8 +1247,13 @@ rehumanize()
     vision_full_recalc = 1;
     (void) encumber_msg();
     if (was_flying && !Flying && u.usteed)
+#if 0 /*KR: 원본*/
         You("and %s return gently to the %s.",
             mon_nam(u.usteed), surface(u.ux, u.uy));
+#else /*KR: KRNethack 맞춤 번역 */
+        You("%s 함께 %s 위로 사뿐히 내려앉았다.",
+            append_josa(mon_nam(u.usteed), "와(과)"), surface(u.ux, u.uy));
+#endif
     retouch_equipment(2);
     if (!uarmg)
         selftouch(no_longer_petrify_resistant);
@@ -1110,11 +1265,13 @@ dobreathe()
     struct attack *mattk;
 
     if (Strangled) {
-        You_cant("breathe.  Sorry.");
+        /*KR You_cant("breathe.  Sorry."); */
+        You_cant("숨을 쉴 수 없다. 유감이다.");
         return 0;
     }
     if (u.uen < 15) {
-        You("don't have enough energy to breathe!");
+        /*KR You("don't have enough energy to breathe!"); */
+        You("브레스를 쏠 만한 마력이 부족하다!");
         return 0;
     }
     u.uen -= 15;
@@ -1169,11 +1326,14 @@ doremove()
 {
     if (!Punished) {
         if (u.utrap && u.utraptype == TT_BURIEDBALL) {
-            pline_The("ball and chain are buried firmly in the %s.",
-                      surface(u.ux, u.uy));
+            /*KR pline_The("ball and chain are buried firmly in the %s.",
+                      surface(u.ux, u.uy)); */
+            pline("철구와 쇠사슬이 %s 단단히 묻혀 있다.",
+                  append_josa(surface(u.ux, u.uy), "에"));
             return 0;
         }
-        You("are not chained to anything!");
+        /*KR You("are not chained to anything!"); */
+        You("아무것에도 묶여있지 않다!");
         return 0;
     }
     unpunish();
@@ -1187,11 +1347,13 @@ dospinweb()
 
     if (Levitation || Is_airlevel(&u.uz) || Underwater
         || Is_waterlevel(&u.uz)) {
-        You("must be on the ground to spin a web.");
+        /*KR You("must be on the ground to spin a web."); */
+        You("거미줄을 치려면 땅에 있어야만 한다.");
         return 0;
     }
     if (u.uswallow) {
-        You("release web fluid inside %s.", mon_nam(u.ustuck));
+        /*KR You("release web fluid inside %s.", mon_nam(u.ustuck)); */
+        You("%s의 내부에서 거미줄 액을 내뿜었다.", mon_nam(u.ustuck));
         if (is_animal(u.ustuck->data)) {
             expels(u.ustuck, u.ustuck->data, TRUE);
             return 0;
@@ -1210,24 +1372,33 @@ dospinweb()
                 sweep[0] = '\0';
                 switch (u.ustuck->data->mattk[i].adtyp) {
                 case AD_FIRE:
-                    Strcpy(sweep, "ignites and ");
+                    /*KR Strcpy(sweep, "ignites and "); */
+                    Strcpy(sweep, "발화되어 ");
                     break;
                 case AD_ELEC:
-                    Strcpy(sweep, "fries and ");
+                    /*KR Strcpy(sweep, "fries and "); */
+                    Strcpy(sweep, "타버려서 ");
                     break;
                 case AD_COLD:
-                    Strcpy(sweep, "freezes, shatters and ");
+                    /*KR Strcpy(sweep, "freezes, shatters and "); */
+                    Strcpy(sweep, "얼어붙어 부서지며 ");
                     break;
                 }
+#if 0 /*KR: 원본*/
                 pline_The("web %sis swept away!", sweep);
+#else /*KR: KRNethack 맞춤 번역 */
+                pline("거미줄은 %s쓸려나가 버렸다!", sweep);
+#endif
             }
             return 0;
         } /* default: a nasty jelly-like creature */
-        pline_The("web dissolves into %s.", mon_nam(u.ustuck));
+        /*KR pline_The("web dissolves into %s.", mon_nam(u.ustuck)); */
+        pline("거미줄은 %s 속으로 녹아버렸다.", mon_nam(u.ustuck));
         return 0;
     }
     if (u.utrap) {
-        You("cannot spin webs while stuck in a trap.");
+        /*KR You("cannot spin webs while stuck in a trap."); */
+        You("함정에 걸린 상태로는 거미줄을 칠 수 없다.");
         return 0;
     }
     exercise(A_DEX, TRUE);
@@ -1235,13 +1406,15 @@ dospinweb()
         switch (ttmp->ttyp) {
         case PIT:
         case SPIKED_PIT:
-            You("spin a web, covering up the pit.");
+            /*KR You("spin a web, covering up the pit."); */
+            You("거미줄을 쳐서, 구덩이를 덮었다.");
             deltrap(ttmp);
             bury_objs(u.ux, u.uy);
             newsym(u.ux, u.uy);
             return 1;
         case SQKY_BOARD:
-            pline_The("squeaky board is muffled.");
+            /*KR pline_The("squeaky board is muffled."); */
+            pline("삐걱거리는 널빤지 소리가 잦아들었다.");
             deltrap(ttmp);
             newsym(u.ux, u.uy);
             return 1;
@@ -1249,20 +1422,28 @@ dospinweb()
         case LEVEL_TELEP:
         case MAGIC_PORTAL:
         case VIBRATING_SQUARE:
-            Your("webbing vanishes!");
+            /*KR Your("webbing vanishes!"); */
+            Your("거미줄이 사라졌다!");
             return 0;
         case WEB:
-            You("make the web thicker.");
+            /*KR You("make the web thicker."); */
+            You("거미줄을 더 두껍게 만들었다.");
             return 1;
         case HOLE:
         case TRAPDOOR:
+#if 0 /*KR: 원본*/
             You("web over the %s.",
                 (ttmp->ttyp == TRAPDOOR) ? "trap door" : "hole");
+#else /*KR: KRNethack 맞춤 번역 */
+            You("%s 위에 거미줄을 쳤다.",
+                (ttmp->ttyp == TRAPDOOR) ? "트랩도어" : "구멍");
+#endif
             deltrap(ttmp);
             newsym(u.ux, u.uy);
             return 1;
         case ROLLING_BOULDER_TRAP:
-            You("spin a web, jamming the trigger.");
+            /*KR You("spin a web, jamming the trigger."); */
+            You("거미줄을 쳐서, 스위치를 작동하지 않게 막았다.");
             deltrap(ttmp);
             newsym(u.ux, u.uy);
             return 1;
@@ -1277,7 +1458,8 @@ dospinweb()
         case MAGIC_TRAP:
         case ANTI_MAGIC:
         case POLY_TRAP:
-            You("have triggered a trap!");
+            /*KR You("have triggered a trap!"); */
+            You("함정을 건드리고 말았다!");
             dotrap(ttmp, 0);
             return 1;
         default:
@@ -1286,8 +1468,10 @@ dospinweb()
         }
     } else if (On_stairs(u.ux, u.uy)) {
         /* cop out: don't let them hide the stairs */
-        Your("web fails to impede access to the %s.",
-             (levl[u.ux][u.uy].typ == STAIRS) ? "stairs" : "ladder");
+        /*KR Your("web fails to impede access to the %s.",
+             (levl[u.ux][u.uy].typ == STAIRS) ? "stairs" : "ladder"); */
+        Your("거미줄은 %s로 가는 통로를 가로막는 데 실패했다.",
+             (levl[u.ux][u.uy].typ == STAIRS) ? "계단" : "사다리");
         return 1;
     }
     ttmp = maketrap(u.ux, u.uy, WEB);
@@ -1303,16 +1487,19 @@ dosummon()
 {
     int placeholder;
     if (u.uen < 10) {
-        You("lack the energy to send forth a call for help!");
+        /*KR You("lack the energy to send forth a call for help!"); */
+        You("지원을 부를 만한 마력이 부족하다!");
         return 0;
     }
     u.uen -= 10;
     context.botl = 1;
 
-    You("call upon your brethren for help!");
+    /*KR You("call upon your brethren for help!"); */
+    You("동족들에게 도움을 요청했다!");
     exercise(A_WIS, TRUE);
     if (!were_summon(youmonst.data, TRUE, &placeholder, (char *) 0))
-        pline("But none arrive.");
+        /*KR pline("But none arrive."); */
+        pline("하지만 아무도 오지 않았다.");
     return 1;
 }
 
@@ -1337,14 +1524,17 @@ dogaze()
     }
 
     if (Blind) {
-        You_cant("see anything to gaze at.");
+        /*KR You_cant("see anything to gaze at."); */
+        You_cant("응시할 대상을 전혀 볼 수 없다.");
         return 0;
     } else if (Hallucination) {
-        You_cant("gaze at anything you can see.");
+        /*KR You_cant("gaze at anything you can see."); */
+        You_cant("보이는 것에 제대로 집중해서 응시할 수 없다.");
         return 0;
     }
     if (u.uen < 15) {
-        You("lack the energy to use your special gaze!");
+        /*KR You("lack the energy to use your special gaze!"); */
+        You("특수 응시 능력을 사용하기엔 마력이 부족하다!");
         return 0;
     }
     u.uen -= 15;
@@ -1356,20 +1546,34 @@ dogaze()
         if (canseemon(mtmp) && couldsee(mtmp->mx, mtmp->my)) {
             looked++;
             if (Invis && !perceives(mtmp->data)) {
-                pline("%s seems not to notice your gaze.", Monnam(mtmp));
+                /*KR pline("%s seems not to notice your gaze.", Monnam(mtmp));
+                 */
+                pline("%s 당신의 시선을 알아차리지 못한 것 같다.",
+                      append_josa(Monnam(mtmp), "은"));
             } else if (mtmp->minvis && !See_invisible) {
-                You_cant("see where to gaze at %s.", Monnam(mtmp));
+                /*KR You_cant("see where to gaze at %s.", Monnam(mtmp)); */
+                You_cant("%s 응시해야 할지 보이지 않는다.",
+                         append_josa(Monnam(mtmp), "의 어디를"));
             } else if (M_AP_TYPE(mtmp) == M_AP_FURNITURE
                        || M_AP_TYPE(mtmp) == M_AP_OBJECT) {
                 looked--;
                 continue;
             } else if (flags.safe_dog && mtmp->mtame && !Confusion) {
-                You("avoid gazing at %s.", y_monnam(mtmp));
+                /*KR You("avoid gazing at %s.", y_monnam(mtmp)); */
+                You("%s 응시하는 것을 피했다.",
+                    append_josa(y_monnam(mtmp), "을"));
             } else {
                 if (flags.confirm && mtmp->mpeaceful && !Confusion) {
+#if 0 /*KR: 원본*/
                     Sprintf(qbuf, "Really %s %s?",
                             (adtyp == AD_CONF) ? "confuse" : "attack",
                             mon_nam(mtmp));
+#else /*KR: KRNethack 맞춤 번역 */
+                    Sprintf(qbuf, "정말로 %s %s?",
+                            append_josa(mon_nam(mtmp), "을"),
+                            (adtyp == AD_CONF) ? "혼란시키겠습니까"
+                                               : "공격하시겠습니까");
+#endif
                     if (yn(qbuf) != 'y')
                         continue;
                 }
@@ -1384,17 +1588,27 @@ dogaze()
                  */
                 if (adtyp == AD_CONF) {
                     if (!mtmp->mconf)
-                        Your("gaze confuses %s!", mon_nam(mtmp));
+                        /*KR Your("gaze confuses %s!", mon_nam(mtmp)); */
+                        Your("시선이 %s 혼란스럽게 했다!",
+                             append_josa(mon_nam(mtmp), "을"));
                     else
-                        pline("%s is getting more and more confused.",
-                              Monnam(mtmp));
+                        /*KR pline("%s is getting more and more confused.",
+                              Monnam(mtmp)); */
+                        pline("%s 점점 더 혼란스러워하고 있다.",
+                              append_josa(Monnam(mtmp), "은"));
                     mtmp->mconf = 1;
                 } else if (adtyp == AD_FIRE) {
                     int dmg = d(2, 6), lev = (int) u.ulevel;
 
-                    You("attack %s with a fiery gaze!", mon_nam(mtmp));
+                    /*KR You("attack %s with a fiery gaze!", mon_nam(mtmp));
+                     */
+                    You("불타는 시선으로 %s 공격했다!",
+                        append_josa(mon_nam(mtmp), "을"));
                     if (resists_fire(mtmp)) {
-                        pline_The("fire doesn't burn %s!", mon_nam(mtmp));
+                        /*KR pline_The("fire doesn't burn %s!",
+                         * mon_nam(mtmp)); */
+                        pline("불은 %s 태우지 못했다!",
+                              append_josa(mon_nam(mtmp), "을"));
                         dmg = 0;
                     }
                     if (lev > rn2(20))
@@ -1416,18 +1630,26 @@ dogaze()
 
                 if (mtmp->data == &mons[PM_FLOATING_EYE] && !mtmp->mcan) {
                     if (!Free_action) {
+#if 0 /*KR: 원본*/
                         You("are frozen by %s gaze!",
                             s_suffix(mon_nam(mtmp)));
+#else /*KR: KRNethack 맞춤 번역 */
+                        You("%s 시선에 얼어붙었다!",
+                            append_josa(mon_nam(mtmp), "의"));
+#endif
                         nomul((u.ulevel > 6 || rn2(4))
                                   ? -d((int) mtmp->m_lev + 1,
                                        (int) mtmp->data->mattk[0].damd)
                                   : -200);
-                        multi_reason = "frozen by a monster's gaze";
+                        /*KR multi_reason = "frozen by a monster's gaze"; */
+                        multi_reason = "괴물의 시선에 얼어붙은 동안에";
                         nomovemsg = 0;
                         return 1;
                     } else
-                        You("stiffen momentarily under %s gaze.",
-                            s_suffix(mon_nam(mtmp)));
+                        /*KR You("stiffen momentarily under %s gaze.",
+                            s_suffix(mon_nam(mtmp))); */
+                        You("%s 시선을 받고 순간적으로 굳어졌다.",
+                            append_josa(mon_nam(mtmp), "의"));
                 }
                 /* Technically this one shouldn't affect you at all because
                  * the Medusa gaze is an active monster attack that only
@@ -1435,19 +1657,25 @@ dogaze()
                  * effect would be too weird.
                  */
                 if (mtmp->data == &mons[PM_MEDUSA] && !mtmp->mcan) {
-                    pline("Gazing at the awake %s is not a very good idea.",
-                          l_monnam(mtmp));
+                    /*KR pline("Gazing at the awake %s is not a very good
+                       idea.", l_monnam(mtmp)); */
+                    pline("깨어있는 %s 응시하는 건 별로 좋은 생각이 아니다.",
+                          append_josa(l_monnam(mtmp), "을"));
                     /* as if gazing at a sleeping anything is fruitful... */
-                    You("turn to stone...");
+                    /*KR You("turn to stone..."); */
+                    You("돌로 변했다...");
                     killer.format = KILLED_BY;
-                    Strcpy(killer.name, "deliberately meeting Medusa's gaze");
+                    /*KR Strcpy(killer.name, "deliberately meeting Medusa's
+                     * gaze"); */
+                    Strcpy(killer.name, "메두사의 시선과 고의로 마주침");
                     done(STONING);
                 }
             }
         }
     }
     if (!looked)
-        You("gaze at no place in particular.");
+        /*KR You("gaze at no place in particular."); */
+        You("특별한 곳을 응시하지 않았다.");
     return 1;
 }
 
@@ -1460,6 +1688,7 @@ dohide()
     /* can't hide while being held (or holding) or while trapped
        (except for floor hiders [trapper or mimic] in pits) */
     if (u.ustuck || (u.utrap && (u.utraptype != TT_PIT || on_ceiling))) {
+#if 0 /*KR: 원본*/
         You_cant("hide while you're %s.",
                  !u.ustuck ? "trapped"
                    : u.uswallow ? (is_animal(u.ustuck->data) ? "swallowed"
@@ -1467,8 +1696,17 @@ dohide()
                      : !sticks(youmonst.data) ? "being held"
                        : (humanoid(u.ustuck->data) ? "holding someone"
                                                    : "holding that creature"));
-        if (u.uundetected
-            || (ismimic && U_AP_TYPE != M_AP_NOTHING)) {
+#else /*KR: KRNethack 맞춤 번역 */
+        You_cant("%s 있는 동안에는 숨을 수 없다.",
+                 !u.ustuck ? "함정에 빠져"
+                 : u.uswallow
+                     ? (is_animal(u.ustuck->data) ? "삼켜져" : "휩싸여")
+                 : !sticks(youmonst.data)
+                     ? "붙잡혀"
+                     : (humanoid(u.ustuck->data) ? "누군가를 붙잡고"
+                                                 : "그 생물을 붙잡고"));
+#endif
+        if (u.uundetected || (ismimic && U_AP_TYPE != M_AP_NOTHING)) {
             u.uundetected = 0;
             youmonst.m_ap_type = M_AP_NOTHING;
             newsym(u.ux, u.uy);
@@ -1479,26 +1717,32 @@ dohide()
        such critters aren't offered the option of hiding via #monster */
     if (youmonst.data->mlet == S_EEL && !is_pool(u.ux, u.uy)) {
         if (IS_FOUNTAIN(levl[u.ux][u.uy].typ))
-            The("fountain is not deep enough to hide in.");
+            /*KR The("fountain is not deep enough to hide in."); */
+            pline("이 분수는 몸을 숨기기에 충분히 깊지 않다.");
         else
-            There("is no %s to hide in here.", hliquid("water"));
+            /*KR There("is no %s to hide in here.", hliquid("water")); */
+            pline("이곳에는 몸을 숨길 %s 없다.",
+                  append_josa(hliquid("물"), "이"));
         u.uundetected = 0;
         return 0;
     }
     if (hides_under(youmonst.data) && !level.objects[u.ux][u.uy]) {
-        There("is nothing to hide under here.");
+        /*KR There("is nothing to hide under here."); */
+        pline("이곳에는 아래에 숨을 만한 것이 아무것도 없다.");
         u.uundetected = 0;
         return 0;
     }
     /* Planes of Air and Water */
     if (on_ceiling && !has_ceiling(&u.uz)) {
-        There("is nowhere to hide above you.");
+        /*KR There("is nowhere to hide above you."); */
+        pline("머리 위쪽에는 몸을 숨길 곳이 전혀 없다.");
         u.uundetected = 0;
         return 0;
     }
     if ((is_hider(youmonst.data) && !Flying) /* floor hider */
         && (Is_airlevel(&u.uz) || Is_waterlevel(&u.uz))) {
-        There("is nowhere to hide beneath you.");
+        /*KR There("is nowhere to hide beneath you."); */
+        pline("발아래에는 몸을 숨길 곳이 전혀 없다.");
         u.uundetected = 0;
         return 0;
     }
@@ -1530,7 +1774,8 @@ dopoly()
     if (is_vampire(youmonst.data)) {
         polyself(2);
         if (savedat != youmonst.data) {
-            You("transform into %s.", an(youmonst.data->mname));
+            /*KR You("transform into %s.", an(youmonst.data->mname)); */
+            You("%s 변이했다.", append_josa(youmonst.data->mname, "으로"));
             newsym(u.ux, u.uy);
         }
     }
@@ -1543,14 +1788,17 @@ domindblast()
     struct monst *mtmp, *nmon;
 
     if (u.uen < 10) {
-        You("concentrate but lack the energy to maintain doing so.");
+        /*KR You("concentrate but lack the energy to maintain doing so."); */
+        You("집중하려 했으나, 유지할 마력이 부족하다.");
         return 0;
     }
     u.uen -= 10;
     context.botl = 1;
 
-    You("concentrate.");
-    pline("A wave of psychic energy pours out.");
+    /*KR You("concentrate."); */
+    You("집중했다.");
+    /*KR pline("A wave of psychic energy pours out."); */
+    pline("정신 에너지의 파동이 뿜어져 나왔다.");
     for (mtmp = fmon; mtmp; mtmp = nmon) {
         int u_sen;
 
@@ -1563,9 +1811,16 @@ domindblast()
             continue;
         u_sen = telepathic(mtmp->data) && !mtmp->mcansee;
         if (u_sen || (telepathic(mtmp->data) && rn2(2)) || !rn2(10)) {
+#if 0 /*KR: 원본*/
             You("lock in on %s %s.", s_suffix(mon_nam(mtmp)),
                 u_sen ? "telepathy"
                       : telepathic(mtmp->data) ? "latent telepathy" : "mind");
+#else /*KR: KRNethack 맞춤 번역 */
+            You("%s %s에 정신을 집중했다.", append_josa(mon_nam(mtmp), "의"),
+                u_sen                    ? "텔레파시"
+                : telepathic(mtmp->data) ? "잠재적 텔레파시"
+                                         : "마음");
+#endif
             mtmp->mhp -= rnd(15);
             if (DEADMONSTER(mtmp))
                 killed(mtmp);
@@ -1581,17 +1836,18 @@ uunstick()
         impossible("uunstick: no ustuck?");
         return;
     }
-    pline("%s is no longer in your clutches.", Monnam(u.ustuck));
+    /*KR pline("%s is no longer in your clutches.", Monnam(u.ustuck)); */
+    pline("%s 이제 당신의 손아귀에서 벗어났다.",
+          append_josa(Monnam(u.ustuck), "은"));
     u.ustuck = 0;
 }
 
-void
-skinback(silently)
-boolean silently;
+void skinback(silently) boolean silently;
 {
     if (uskin) {
         if (!silently)
-            Your("skin returns to its original form.");
+            /*KR Your("skin returns to its original form."); */
+            Your("피부가 원래의 형태로 돌아왔다.");
         uarm = uskin;
         uskin = (struct obj *) 0;
         /* undo save/restore hack */
@@ -1604,6 +1860,7 @@ mbodypart(mon, part)
 struct monst *mon;
 int part;
 {
+#if 0 /*KR: 원본*/
     static NEARDATA const char
         *humanoid_parts[] = { "arm",       "eye",  "face",         "finger",
                               "fingertip", "foot", "hand",         "handed",
@@ -1617,24 +1874,24 @@ int part;
                            "middle", "surface", "pseudopod extremity",
                            "ripples", "juices", "surface", "sensor",
                            "stomach" },
-        *animal_parts[] = { "forelimb",  "eye",           "face",
-                            "foreclaw",  "claw tip",      "rear claw",
-                            "foreclaw",  "clawed",        "head",
-                            "rear limb", "light headed",  "neck",
-                            "spine",     "rear claw tip", "fur",
-                            "blood",     "lung",          "nose",
+        *animal_parts[] = { "forelimb",  "eye",            "face",
+                            "foreclaw",  "claw tip",       "rear claw",
+                            "foreclaw",  "clawed",         "head",
+                            "rear limb", "light headed",   "neck",
+                            "spine",     "rear claw tip",  "fur",
+                            "blood",     "lung",           "nose",
                             "stomach" },
         *bird_parts[] = { "wing",     "eye",  "face",         "wing",
                           "wing tip", "foot", "wing",         "winged",
                           "head",     "leg",  "light headed", "neck",
                           "spine",    "toe",  "feathers",     "blood",
                           "lung",     "bill", "stomach" },
-        *horse_parts[] = { "foreleg",  "eye",           "face",
-                           "forehoof", "hoof tip",      "rear hoof",
-                           "forehoof", "hooved",        "head",
-                           "rear leg", "light headed",  "neck",
-                           "backbone", "rear hoof tip", "mane",
-                           "blood",    "lung",          "nose",
+        *horse_parts[] = { "foreleg",  "eye",            "face",
+                           "forehoof", "hoof tip",       "rear hoof",
+                           "forehoof", "hooved",         "head",
+                           "rear leg", "light headed",   "neck",
+                           "backbone", "rear hoof tip",  "mane",
+                           "blood",    "lung",           "nose",
                            "stomach" },
         *sphere_parts[] = { "appendage", "optic nerve", "body", "tentacle",
                             "tentacle tip", "lower appendage", "tentacle",
@@ -1673,6 +1930,74 @@ int part;
                           "head", "peduncle", "played out", "gills",
                           "dorsal fin", "caudal fin", "scales", "blood",
                           "gill", "nostril", "stomach" };
+#else
+    static NEARDATA const char *
+        humanoid_parts[] = { "팔",       "눈",   "얼굴", "손가락", "손끝",
+                             "발",       "손",   "손의", "머리",   "다리",
+                             "어지러운", "목",   "척추", "발가락", "머리카락",
+                             "피",       "허파", "코",   "배" },
+       *jelly_parts[] = { "위족",        "검은 점",   "앞쪽",
+                          "위족 확장부", "위족 끝",   "위족 뿌리",
+                          "잡는 곳",     "잡힌",      "뇌 영역",
+                          "아래쪽 위족", "점성 있는", "가운데",
+                          "표면",        "위족 끝",   "물결무늬",
+                          "즙",          "표면",      "감각기",
+                          "배" },
+       *animal_parts[] = { "앞다리",  "눈",        "얼굴",     "앞발톱",
+                           "발톱 끝", "뒷발톱",    "앞발톱",   "발톱이 있는",
+                           "머리",    "뒷다리",    "어지러운", "목",
+                           "척추",    "뒷발톱 끝", "털",       "피",
+                           "허파",    "코",        "배" },
+       *bird_parts[] = { "날개",    "눈",     "얼굴",     "날개",
+                         "날개 끝", "발",     "날개",     "날개가 있는",
+                         "머리",    "다리",   "어지러운", "목",
+                         "척추",    "발가락", "깃털",     "피",
+                         "허파",    "부리",   "배" },
+       *horse_parts[] = { "앞다리",  "눈",        "얼굴",     "앞발굽",
+                          "발굽 끝", "뒷발굽",    "앞발굽",   "발굽이 있는",
+                          "머리",    "뒷다리",    "어지러운", "목",
+                          "등뼈",    "뒷발굽 끝", "갈기",     "피",
+                          "허파",    "코",        "배" },
+       *sphere_parts[] = { "부속지",    "시신경",       "몸통",
+                           "촉수",      "촉수 끝",      "하단 부속지",
+                           "촉수",      "촉수가 있는",  "몸통",
+                           "하단 촉수", "회전하는",     "적도",
+                           "몸통",      "하단 촉수 끝", "섬모",
+                           "생명력",    "망막",         "후각 신경",
+                           "내부" },
+       *fungus_parts[] = { "균사체",   "시각 영역",   "앞쪽",
+                           "균사",     "균사",        "뿌리",
+                           "가닥",     "가닥이 있는", "갓 부위",
+                           "뿌리줄기", "포자 형성",   "줄기",
+                           "뿌리",     "뿌리줄기 끝", "포자",
+                           "수액",     "주름",        "주름", 
+                           "내부" },
+       *vortex_parts[] = { "구역",        "눈",           "앞쪽",
+                           "작은 흐름",   "작은 흐름",    "아래쪽 흐름",
+                           "소용돌이",    "소용돌이치는", "중심핵",
+                           "아래쪽 흐름", "혼란스러운",   "중심",
+                           "기류",        "가장자리",     "기류",
+                           "생명력",      "중심",         "앞쪽 가장자리",
+                           "내부" },
+       *snake_parts[] = { "퇴화된 사지", "눈", 
+                          "얼굴",        "큰 비늘",
+                          "큰 비늘 끝",  "뒤쪽 부위",
+                          "비늘 틈",     "비늘 틈이 있는",
+                          "머리",        "뒤쪽 부위",
+                          "어지러운",    "목",
+                          "몸길이",      "뒷 비늘",
+                          "비늘",        "피",
+                          "허파",        "갈라진 혀", "배" },
+       *worm_parts[] = { "앞쪽 체절", "광수용 세포", "환대", "강모", "강모",
+                         "뒤쪽 체절", "체절", "체절로 된", "앞쪽 체절", "뒤쪽",
+                         "지나치게 늘어난", "환대", "몸길이", "뒤쪽 강모", 
+                         "강모", "피", "피부", "구전엽", "배" },
+       *fish_parts[] = { "지느러미", "눈", "전상악골", "배지느러미 기부",
+                         "배지느러미", "뒷지느러미", "가슴지느러미",
+                         "지느러미가 있는", "머리", "꼬리자루", "지친",
+                         "아가미", "등지느러미", "꼬리지느러미", "비늘",
+                         "피", "아가미", "콧구멍", "배" };
+#endif
     /* claw attacks are overloaded in mons[]; most humanoids with
        such attacks should still reference hands rather than claws */
     static const char not_claws[] = {
@@ -1687,11 +2012,14 @@ int part;
         || mptr->mlet == S_RODENT || mptr == &mons[PM_OWLBEAR]) {
         switch (part) {
         case HAND:
-            return "paw";
+            /*KR return "paw"; */
+            return "발";
         case HANDED:
-            return "pawed";
+            /*KR return "pawed"; */
+            return "발이 달린";
         case FOOT:
-            return "rear paw";
+            /*KR return "rear paw"; */
+            return "뒷발";
         case ARM:
         case LEG:
             return horse_parts[part]; /* "foreleg", "rear leg" */
@@ -1706,20 +2034,26 @@ int part;
         && (humanoid(mptr) && attacktype(mptr, AT_CLAW)
             && !index(not_claws, mptr->mlet) && mptr != &mons[PM_STONE_GOLEM]
             && mptr != &mons[PM_INCUBUS] && mptr != &mons[PM_SUCCUBUS]))
-        return (part == HAND) ? "claw" : "clawed";
+        /*KR return (part == HAND) ? "claw" : "clawed"; */
+        return (part == HAND) ? "발톱" : "발톱이 달린";
     if ((mptr == &mons[PM_MUMAK] || mptr == &mons[PM_MASTODON])
         && part == NOSE)
-        return "trunk";
+        /*KR return "trunk"; */
+        return "코끼리 코";
     if (mptr == &mons[PM_SHARK] && part == HAIR)
-        return "skin"; /* sharks don't have scales */
+        /*KR return "skin"; */ /* sharks don't have scales */
+        return "피부";
     if ((mptr == &mons[PM_JELLYFISH] || mptr == &mons[PM_KRAKEN])
         && (part == ARM || part == FINGER || part == HAND || part == FOOT
             || part == TOE))
-        return "tentacle";
+        /*KR return "tentacle"; */
+        return "촉수";
     if (mptr == &mons[PM_FLOATING_EYE] && part == EYE)
-        return "cornea";
-    if (humanoid(mptr) && (part == ARM || part == FINGER || part == FINGERTIP
-                           || part == HAND || part == HANDED))
+        /*KR return "cornea"; */
+        return "각막";
+    if (humanoid(mptr)
+        && (part == ARM || part == FINGER || part == FINGERTIP || part == HAND
+            || part == HANDED))
         return humanoid_parts[part];
     if (mptr == &mons[PM_RAVEN])
         return bird_parts[part];
@@ -1728,15 +2062,19 @@ int part;
         return horse_parts[part];
     if (mptr->mlet == S_LIGHT) {
         if (part == HANDED)
-            return "rayed";
+            /*KR return "rayed"; */
+            return "빛살이 뻗은";
         else if (part == ARM || part == FINGER || part == FINGERTIP
                  || part == HAND)
-            return "ray";
+            /*KR return "ray"; */
+            return "빛살";
         else
-            return "beam";
+            /*KR return "beam"; */
+            return "광선";
     }
     if (mptr == &mons[PM_STALKER] && part == HEAD)
-        return "head";
+        /*KR return "head"; */
+        return "머리";
     if (mptr->mlet == S_EEL && mptr != &mons[PM_JELLYFISH])
         return fish_parts[part];
     if (mptr->mlet == S_WORM)
@@ -1775,9 +2113,7 @@ poly_gender()
     return flags.female;
 }
 
-void
-ugolemeffects(damtype, dam)
-int damtype, dam;
+void ugolemeffects(damtype, dam) int damtype, dam;
 {
     int heal = 0;
 
@@ -1802,7 +2138,8 @@ int damtype, dam;
         if (u.mh > u.mhmax)
             u.mh = u.mhmax;
         context.botl = 1;
-        pline("Strangely, you feel better than before.");
+        /*KR pline("Strangely, you feel better than before."); */
+        pline("이상하게도, 이전보다 기분이 훨씬 좋아진 것을 느낀다.");
         exercise(A_STR, TRUE);
     }
 }
@@ -1898,10 +2235,13 @@ udeadinside()
        monkilled() distinguishes between living (killed) and non (destroyed)
        for monster death message; we refine the nonliving aspect a bit */
     return !nonliving(youmonst.data)
-             ? "dead"          /* living, including demons */
-             : !weirdnonliving(youmonst.data)
-                 ? "condemned" /* undead plus manes */
-                 : "empty";    /* golems plus vortices */
+               /*KR ? "dead" */ /* living, including demons */
+               ? "죽은 것 같다" /* living, including demons */
+               : !weirdnonliving(youmonst.data)
+                     /*KR ? "condemned" */  /* undead plus manes */
+                     ? "저주받은 것 같다"   /* undead plus manes */
+                     /*KR : "empty"; */     /* golems plus vortices */
+                     : "공허하게 느껴진다"; /* golems plus vortices */
 }
 
 /*polyself.c*/

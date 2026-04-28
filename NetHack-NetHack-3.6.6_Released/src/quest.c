@@ -76,8 +76,8 @@ on_goal()
          * Note: if hero is already carrying it, it is treated as
          * being absent from the level for quest message purposes.
          */
-        unsigned whichobjchains = ((1 << OBJ_FLOOR)
-                                   | (1 << OBJ_MINVENT)
+        unsigned whichobjchains = ((1 << OBJ_FLOOR) 
+                                   | (1 << OBJ_MINVENT) 
                                    | (1 << OBJ_BURIED));
         struct obj *qarti = find_quest_artifact(whichobjchains);
 
@@ -113,8 +113,8 @@ nemdead()
     }
 }
 
-void
-artitouch(obj)
+void 
+artitouch(obj) 
 struct obj *obj;
 {
     if (!Qstat(touched_artifact)) {
@@ -151,14 +151,23 @@ boolean talk;
 
     if (wizard && talk) {
         if (u.ualign.type != original_alignment) {
-            You("are currently %s instead of %s.", align_str(u.ualign.type),
-                align_str(original_alignment));
+#if 0 /*KR:T*/
+            You("are currently %s instead of %s.",
+                align_str(u.ualign.type), align_str(original_alignment));
+#else
+            You("원래 성향인 %s 아니라 현재 %s 상태입니다.",
+                append_josa(align_str(original_alignment), "이"), align_str(u.ualign.type));
+#endif
         } else if (u.ualignbase[A_CURRENT] != original_alignment) {
-            You("have converted.");
+            /*KR You("have converted."); */
+            You("개종했습니다.");
         } else if (u.ualign.record < MIN_QUEST_ALIGN) {
-            You("are currently %d and require %d.", u.ualign.record,
-                MIN_QUEST_ALIGN);
-            if (yn_function("adjust?", (char *) 0, 'y') == 'y')
+            /*KR You("are currently %d and require %d.", u.ualign.record,
+                MIN_QUEST_ALIGN); */
+            You("현재 우호도는 %d이며, 최소 %d이 필요합니다.",
+                u.ualign.record, MIN_QUEST_ALIGN);
+            /*KR if (yn_function("adjust?", (char *) 0, 'y') == 'y') */
+            if (yn_function("조정하시겠습니까?", (char *) 0, 'y') == 'y')
                 u.ualign.record = MIN_QUEST_ALIGN;
         }
     }
@@ -166,7 +175,8 @@ boolean talk;
               && u.ualign.type == original_alignment
               && u.ualignbase[A_CURRENT] == original_alignment)
                  ? 1
-                 : (u.ualignbase[A_CURRENT] != original_alignment) ? -1 : 0;
+             : (u.ualignbase[A_CURRENT] != original_alignment) ? -1
+                                                               : 0;
     return purity;
 }
 
@@ -176,19 +186,19 @@ boolean talk;
  * This assumes that the hero is currently _in_ the quest dungeon and that
  * there is a single branch to and from it.
  */
-STATIC_OVL void
-expulsion(seal)
-boolean seal;
+STATIC_OVL void expulsion(seal) boolean seal;
 {
     branch *br;
     d_level *dest;
     struct trap *t;
     int portal_flag;
 
-    br = dungeon_branch("The Quest");
+    /*KR br = dungeon_branch("The Quest"); */
+    br = dungeon_branch("퀘스트");
     dest = (br->end1.dnum == u.uz.dnum) ? &br->end2 : &br->end1;
     portal_flag = u.uevent.qexpelled ? 0 /* returned via artifact? */
-                                     : !seal ? 1 : -1;
+                  : !seal            ? 1
+                                     : -1;
     schedule_goto(dest, FALSE, FALSE, portal_flag, (char *) 0, (char *) 0);
     if (seal) { /* remove the portal to the quest - sealing it off */
         int reexpelled = u.uevent.qexpelled;
@@ -214,9 +224,8 @@ boolean seal;
    completion text hasn't been given yet, give it now.  Otherwise
    give another message about the character keeping the artifact
    and using the magic portal to return to the dungeon. */
-void
-finish_quest(obj)
-struct obj *obj; /* quest artifact; possibly null if carrying Amulet */
+void finish_quest(obj) struct obj
+    *obj; /* quest artifact; possibly null if carrying Amulet */
 {
     struct obj *otmp;
 
@@ -246,12 +255,12 @@ struct obj *obj; /* quest artifact; possibly null if carrying Amulet */
 STATIC_OVL void
 chat_with_leader()
 {
-    /*  Rule 0: Cheater checks. */
+    /* Rule 0: Cheater checks. */
     if (u.uhave.questart && !Qstat(met_nemesis))
         Qstat(cheater) = TRUE;
 
-    /*  It is possible for you to get the amulet without completing
-     *  the quest.  If so, try to induce the player to quest.
+    /* It is possible for you to get the amulet without completing
+     * the quest.  If so, try to induce the player to quest.
      */
     if (Qstat(got_thanks)) {
         /* Rule 1: You've gone back with/without the amulet. */
@@ -262,7 +271,7 @@ chat_with_leader()
         else
             qt_pager(QT_POSTHANKS);
 
-    /* Rule 3: You've got the artifact and are back to return it. */
+        /* Rule 3: You've got the artifact and are back to return it. */
     } else if (u.uhave.questart) {
         struct obj *otmp;
 
@@ -272,11 +281,11 @@ chat_with_leader()
 
         finish_quest(otmp);
 
-    /* Rule 4: You haven't got the artifact yet. */
+        /* Rule 4: You haven't got the artifact yet. */
     } else if (Qstat(got_quest)) {
         qt_pager(rn1(10, QT_ENCOURAGE));
 
-    /* Rule 5: You aren't yet acceptable - or are you? */
+        /* Rule 5: You aren't yet acceptable - or are you? */
     } else {
         if (!Qstat(met_leader)) {
             qt_pager(QT_FIRSTLEADER);
@@ -315,9 +324,7 @@ chat_with_leader()
     }
 }
 
-void
-leader_speaks(mtmp)
-struct monst *mtmp;
+void leader_speaks(mtmp) struct monst *mtmp;
 {
     /* maybe you attacked leader? */
     if (!mtmp->mpeaceful) {
@@ -339,7 +346,7 @@ struct monst *mtmp;
 STATIC_OVL void
 chat_with_nemesis()
 {
-    /*  The nemesis will do most of the talking, but... */
+    /* The nemesis will do most of the talking, but... */
     qt_pager(rn1(10, QT_DISCOURAGE));
     if (!Qstat(met_nemesis))
         Qstat(met_nemesis++);
@@ -364,29 +371,29 @@ nemesis_speaks()
         Qstat(met_nemesis) = TRUE;
     } else /* he will spit out random maledictions */
         if (!rn2(5))
-        qt_pager(rn1(10, QT_DISCOURAGE));
+            qt_pager(rn1(10, QT_DISCOURAGE));
 }
 
 STATIC_OVL void
 chat_with_guardian()
 {
-    /*  These guys/gals really don't have much to say... */
+    /* These guys/gals really don't have much to say... */
     if (u.uhave.questart && Qstat(killed_nemesis))
         qt_pager(rn1(5, QT_GUARDTALK2));
     else
         qt_pager(rn1(5, QT_GUARDTALK));
 }
 
-STATIC_OVL void
-prisoner_speaks(mtmp)
-struct monst *mtmp;
+STATIC_OVL void prisoner_speaks(mtmp) struct monst *mtmp;
 {
     if (mtmp->data == &mons[PM_PRISONER]
         && (mtmp->mstrategy & STRAT_WAITMASK)) {
         /* Awaken the prisoner */
         if (canseemon(mtmp))
-            pline("%s speaks:", Monnam(mtmp));
-        verbalize("I'm finally free!");
+            /*KR pline("%s speaks:", Monnam(mtmp)); */
+            pline("%s 말한다:", append_josa(Monnam(mtmp), "이"));
+        /*KR verbalize("I'm finally free!"); */
+        verbalize("드디어 자유다!");
         mtmp->mstrategy &= ~STRAT_WAITMASK;
         mtmp->mpeaceful = 1;
 
@@ -399,9 +406,7 @@ struct monst *mtmp;
     return;
 }
 
-void
-quest_chat(mtmp)
-register struct monst *mtmp;
+void quest_chat(mtmp) register struct monst *mtmp;
 {
     if (mtmp->m_id == Qstat(leader_m_id)) {
         chat_with_leader();
@@ -419,9 +424,7 @@ register struct monst *mtmp;
     }
 }
 
-void
-quest_talk(mtmp)
-struct monst *mtmp;
+void quest_talk(mtmp) struct monst *mtmp;
 {
     if (mtmp->m_id == Qstat(leader_m_id)) {
         leader_speaks(mtmp);
@@ -439,13 +442,11 @@ struct monst *mtmp;
     }
 }
 
-void
-quest_stat_check(mtmp)
-struct monst *mtmp;
+void quest_stat_check(mtmp) struct monst *mtmp;
 {
     if (mtmp->data->msound == MS_NEMESIS)
-        Qstat(in_battle) = (mtmp->mcanmove && !mtmp->msleeping
-                            && monnear(mtmp, u.ux, u.uy));
+        Qstat(in_battle) =
+            (mtmp->mcanmove && !mtmp->msleeping && monnear(mtmp, u.ux, u.uy));
 }
 
 /*quest.c*/

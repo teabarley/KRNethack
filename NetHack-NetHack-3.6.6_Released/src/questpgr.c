@@ -1,5 +1,5 @@
 /* NetHack 3.6	questpgr.c	$NHDT-Date: 1505172128 2017/09/11 23:22:08 $  $NHDT-Branch: NetHack-3.6.0 $:$NHDT-Revision: 1.38 $ */
-/*      Copyright 1991, M. Stephenson                             */
+/* Copyright 1991, M. Stephenson                             */
 /* NetHack may be freely redistributed.  See license for details. */
 
 #include "hack.h"
@@ -29,7 +29,7 @@ STATIC_DCL const char *NDECL(homebase);
 STATIC_DCL void FDECL(qtext_pronoun, (CHAR_P, CHAR_P));
 STATIC_DCL struct qtmsg *FDECL(msg_in, (struct qtmsg *, int));
 STATIC_DCL void FDECL(convert_arg, (CHAR_P));
-STATIC_DCL void FDECL(convert_line, (char *,char *));
+STATIC_DCL void FDECL(convert_line, (char *, char *));
 STATIC_DCL void FDECL(deliver_by_pline, (struct qtmsg *));
 STATIC_DCL void FDECL(deliver_by_window, (struct qtmsg *, int));
 STATIC_DCL boolean FDECL(skip_pager, (BOOLEAN_P));
@@ -60,8 +60,8 @@ dump_qtlist()
     return;
 }
 
-static void
-Fread(ptr, size, nitems, stream)
+static void 
+Fread(ptr, size, nitems, stream) 
 genericptr_t ptr;
 int size, nitems;
 dlb *stream;
@@ -284,9 +284,8 @@ homebase() /* return your role leader's location */
 
 /* replace deity, leader, nemesis, or artifact name with pronoun;
    overwrites cvt_buf[] */
-STATIC_OVL void
-qtext_pronoun(who, which)
-char who,  /* 'd' => deity, 'l' => leader, 'n' => nemesis, 'o' => artifact */
+STATIC_OVL void qtext_pronoun(who, which) char who
+    ,      /* 'd' => deity, 'l' => leader, 'n' => nemesis, 'o' => artifact */
     which; /* 'h'|'H'|'i'|'I'|'j'|'J' */
 {
     const char *pnoun;
@@ -302,20 +301,31 @@ char who,  /* 'd' => deity, 'l' => leader, 'n' => nemesis, 'o' => artifact */
     if (who == 'o'
         && (strstri(cvt_buf, "Eyes ")
             || strcmpi(cvt_buf, makesingular(cvt_buf)))) {
+        /* 한국어에서는 'they', 'them', 'their'가 사물에 쓰일 때 '그것들',
+         * '그것들을', '그것들의' 등으로 쓰이지만, 번역 구조상 크게 중요하지
+         * 않음. */
+#if 0 /*KR:T*/
         pnoun = (lwhich == 'h') ? "they"
                 : (lwhich == 'i') ? "them"
                 : (lwhich == 'j') ? "their" : "?";
+#else
+        pnoun = (lwhich == 'h')   ? "그것들"
+                : (lwhich == 'i') ? "그것들을"
+                : (lwhich == 'j') ? "그것들의"
+                                  : "?";
+#endif
     } else {
-        g = (who == 'd') ? quest_status.godgend
+        g = (who == 'd')   ? quest_status.godgend
             : (who == 'l') ? quest_status.ldrgend
             : (who == 'n') ? quest_status.nemgend
-            : 2; /* default to neuter */
-        pnoun = (lwhich == 'h') ? genders[g].he
+                           : 2; /* default to neuter */
+        pnoun = (lwhich == 'h')   ? genders[g].he
                 : (lwhich == 'i') ? genders[g].him
-                : (lwhich == 'j') ? genders[g].his : "?";
+                : (lwhich == 'j') ? genders[g].his
+                                  : "?";
     }
     Strcpy(cvt_buf, pnoun);
-#if 0 /*KR*/
+#if 0 /*KR: 원본*/
     /* capitalize for H,I,J */
     if (lwhich != which)
         cvt_buf[0] = highc(cvt_buf[0]);
@@ -337,8 +347,8 @@ int msgnum;
     return (struct qtmsg *) 0;
 }
 
-STATIC_OVL void
-convert_arg(c)
+STATIC_OVL void 
+convert_arg(c) 
 char c;
 {
     register const char *str;
@@ -372,8 +382,9 @@ char c;
         break;
     case 'O':
     case 'o':
-        str = the(artiname(urole.questarti));
-#if 0 /*KR*/
+        /*KR str = the(artiname(urole.questarti)); */
+        str = artiname(urole.questarti);
+#if 0 /*KR: 원본*/
         if (c == 'O') {
             /* shorten "the Foo of Bar" to "the Foo"
                (buffer returned by the() is modifiable) */
@@ -437,9 +448,7 @@ char c;
     Strcpy(cvt_buf, str);
 }
 
-STATIC_OVL void
-convert_line(in_line, out_line)
-char *in_line, *out_line;
+STATIC_OVL void convert_line(in_line, out_line) char *in_line, *out_line;
 {
     char *c, *cc;
     char xbuf[BUFSZ];
@@ -463,7 +472,8 @@ char *in_line, *out_line;
                     cc += strlen(cc);
                     continue; /* for */
                 case 'a':
-                    Strcat(cc, an(cvt_buf));
+                    /*KR Strcat(cc, an(cvt_buf)); */
+                    Strcat(cc, cvt_buf);
                     cc += strlen(cc);
                     continue; /* for */
 
@@ -495,7 +505,7 @@ char *in_line, *out_line;
 #endif
                     /*FALLTHRU*/
                 case 'p':
-                    Strcpy(cvt_buf, makeplural(cvt_buf));
+                    /*KR Strcpy(cvt_buf, makeplural(cvt_buf)); */
                     break;
 
                 /* append possessive suffix */
@@ -505,8 +515,10 @@ char *in_line, *out_line;
 #endif
                     /*FALLTHRU*/
                 case 's':
-#if 0 /*KR*/
+#if 0 /*KR: 원본*/
                     Strcpy(cvt_buf, s_suffix(cvt_buf));
+#else /*KR: KRNethack 맞춤 번역 */
+                    Strcpy(cvt_buf, append_josa(cvt_buf, "의"));
 #endif
                     break;
 
@@ -535,14 +547,14 @@ char *in_line, *out_line;
             break;
         }
     }
-    if (cc > &out_line[BUFSZ-1])
+    if (cc > &out_line[BUFSZ - 1])
         panic("convert_line: overflow");
     *cc = 0;
     return;
 }
 
-STATIC_OVL void
-deliver_by_pline(qt_msg)
+STATIC_OVL void 
+deliver_by_pline(qt_msg) 
 struct qtmsg *qt_msg;
 {
     long size;
@@ -556,9 +568,7 @@ struct qtmsg *qt_msg;
     }
 }
 
-STATIC_OVL void
-deliver_by_window(qt_msg, how)
-struct qtmsg *qt_msg;
+STATIC_OVL void deliver_by_window(qt_msg, how) struct qtmsg *qt_msg;
 int how;
 {
     long size;
@@ -573,8 +583,8 @@ int how;
         /* when dumping quest messages at startup, all of them are passed to
          * deliver_by_window(), even if normally given to deliver_by_pline()
          */
-        Sprintf(buf, "msgnum: %d, delivery: %c",
-                qt_msg->msgnum, qt_msg->delivery);
+        Sprintf(buf, "msgnum: %d, delivery: %c", qt_msg->msgnum,
+                qt_msg->delivery);
         putstr(datawin, 0, buf);
         putstr(datawin, 0, "");
     }
@@ -623,9 +633,7 @@ boolean common;
     return FALSE;
 }
 
-void
-com_pager(msgnum)
-int msgnum;
+void com_pager(msgnum) int msgnum;
 {
     struct qtmsg *qt_msg;
 
@@ -647,9 +655,7 @@ int msgnum;
     return;
 }
 
-void
-qt_pager(msgnum)
-int msgnum;
+void qt_pager(msgnum) int msgnum;
 {
     struct qtmsg *qt_msg;
 

@@ -7,18 +7,18 @@
 
 #include "hack.h"
 
-STATIC_DCL int FDECL(throw_obj, (struct obj *, int));
-STATIC_DCL boolean FDECL(ok_to_throw, (int *));
+STATIC_DCL int FDECL(throw_obj, (struct obj *, int) );
+STATIC_DCL boolean FDECL(ok_to_throw, (int *) );
 STATIC_DCL void NDECL(autoquiver);
-STATIC_DCL int FDECL(gem_accept, (struct monst *, struct obj *));
+STATIC_DCL int FDECL(gem_accept, (struct monst *, struct obj *) );
 STATIC_DCL void FDECL(tmiss, (struct obj *, struct monst *, BOOLEAN_P));
-STATIC_DCL int FDECL(throw_gold, (struct obj *));
-STATIC_DCL void FDECL(check_shop_obj, (struct obj *, XCHAR_P, XCHAR_P,
-                                       BOOLEAN_P));
+STATIC_DCL int FDECL(throw_gold, (struct obj *) );
+STATIC_DCL void FDECL(check_shop_obj,
+                      (struct obj *, XCHAR_P, XCHAR_P, BOOLEAN_P));
 STATIC_DCL void FDECL(breakmsg, (struct obj *, BOOLEAN_P));
 STATIC_DCL boolean FDECL(toss_up, (struct obj *, BOOLEAN_P));
 STATIC_DCL void FDECL(sho_obj_return_to_u, (struct obj * obj));
-STATIC_DCL boolean FDECL(mhurtle_step, (genericptr_t, int, int));
+STATIC_DCL boolean FDECL(mhurtle_step, (genericptr_t, int, int) );
 
 static NEARDATA const char toss_objs[] = { ALLOW_COUNT, COIN_CLASS,
                                            ALL_CLASSES, WEAPON_CLASS, 0 };
@@ -68,30 +68,45 @@ int shotlimit;
     if (obj->oclass == COIN_CLASS && obj != uquiver)
         return throw_gold(obj);
 
-    if (!canletgo(obj, "throw"))
+    /*KR if (!canletgo(obj, "throw")) */
+    if (!canletgo(obj, "던지기"))
         return 0;
     if (obj->oartifact == ART_MJOLLNIR && obj != uwep) {
-        pline("%s must be wielded before it can be thrown.", The(xname(obj)));
+        /*KR pline("%s must be wielded before it can be thrown.",
+         * The(xname(obj))); */
+        pline("던지려면 먼저 %s 장비해야 한다.",
+              append_josa(The(xname(obj)), "을"));
         return 0;
     }
     if ((obj->oartifact == ART_MJOLLNIR && ACURR(A_STR) < STR19(25))
         || (obj->otyp == BOULDER && !throws_rocks(youmonst.data))) {
-        pline("It's too heavy.");
+        /*KR pline("It's too heavy."); */
+        pline("너무 무겁다.");
         return 1;
     }
     if (!u.dx && !u.dy && !u.dz) {
-        You("cannot throw an object at yourself.");
+        /*KR You("cannot throw an object at yourself."); */
+        You("스스로에게 물건을 던질 수는 없다.");
         return 0;
     }
     u_wipe_engr(2);
     if (!uarmg && obj->otyp == CORPSE && touch_petrifies(&mons[obj->corpsenm])
         && !Stone_resistance) {
+#if 0 /*KR: 원본*/
         You("throw %s with your bare %s.",
             corpse_xname(obj, (const char *) 0, CXN_PFX_THE),
             /* throwing with one hand, but pluralize since the
                expression "with your bare hands" sounds better */
             makeplural(body_part(HAND)));
-        Sprintf(killer.name, "throwing %s bare-handed", killer_xname(obj));
+#else /*KR: KRNethack 맞춤 번역 */
+        You("맨손으로 %s 던졌다.",
+            append_josa(corpse_xname(obj, (const char *) 0, CXN_PFX_THE),
+                        "을"));
+#endif
+        /*KR Sprintf(killer.name, "throwing %s bare-handed",
+         * killer_xname(obj)); */
+        Sprintf(killer.name, "%s 맨손으로 던진 것",
+                append_josa(killer_xname(obj), "을"));
         instapetrify(killer.name);
     }
     if (welded(obj)) {
@@ -205,9 +220,14 @@ int shotlimit;
        attempted to specify a count */
     if (multishot > 1 || shotlimit > 0) {
         /* "You shoot N arrows." or "You throw N daggers." */
+#if 0 /*KR: 원본*/
         You("%s %d %s.", m_shot.s ? "shoot" : "throw",
             multishot, /* (might be 1 if player gave shotlimit) */
             (multishot == 1) ? singular(obj, xname) : xname(obj));
+#else /*KR: KRNethack 맞춤 번역 */
+        You("%d개의 %s %s.", multishot, append_josa(xname(obj), "을"),
+            m_shot.s ? "쏘았다" : "던졌다");
+#endif
     }
 
     wep_mask = obj->owornmask;
@@ -243,10 +263,16 @@ int *shotlimit_p; /* (see dothrow()) */
     multi = 0; /* reset; it's been used up */
 
     if (notake(youmonst.data)) {
-        You("are physically incapable of throwing or shooting anything.");
+        /*KR You("are physically incapable of throwing or shooting
+         * anything."); */
+        You("물리적으로 무언가를 던지거나 쏠 수 없는 상태다.");
         return FALSE;
     } else if (nohands(youmonst.data)) {
+#if 0                      /*KR: 원본*/
         You_cant("throw or shoot without hands."); /* not body_part(HAND) */
+#else                      /*KR: KRNethack 맞춤 번역 */
+        You("손이 없다."); /* not body_part(HAND) */
+#endif
         return FALSE;
         /*[what about !freehand(), aside from cursed missile launcher?]*/
     }
@@ -375,11 +401,13 @@ dofire()
 
     if ((obj = uquiver) == 0) {
         if (!flags.autoquiver) {
-            You("have no ammunition readied.");
+            /*KR You("have no ammunition readied."); */
+            You("준비된 탄약이 없다.");
         } else {
             autoquiver();
             if ((obj = uquiver) == 0)
-                You("have nothing appropriate for your quiver.");
+                /*KR You("have nothing appropriate for your quiver."); */
+                You("장전할 만한 적당한 물건이 없다.");
         }
         /* if autoquiver is disabled or has failed, prompt for missile;
            fill quiver with it if it's not wielded or worn */
@@ -396,7 +424,8 @@ dofire()
         /* give feedback if quiver has now been filled */
         if (uquiver) {
             uquiver->owornmask &= ~W_QUIVER; /* less verbose */
-            prinv("You ready:", uquiver, 0L);
+            /*KR prinv("You ready:", uquiver, 0L); */
+            prinv("준비:", uquiver, 0L);
             uquiver->owornmask |= W_QUIVER;
         }
     }
@@ -414,8 +443,8 @@ void endmultishot(verbose) boolean verbose;
                 m_shot.s ? "firing" : "throwing", m_shot.i, ordin(m_shot.i),
                 m_shot.s ? "shot" : "toss");
 #else /*KR: KRNethack 맞춤 번역 */
-            You("%d번째 %s 이후에 %s 멈췄다.", m_shot.i,
-                m_shot.s ? "발사" : "투척", m_shot.s ? "사격을" : "던지기를");
+            You("%d번째로 %s 후 멈췄다.", m_shot.i,
+                m_shot.s ? "쏘고 난" : "던지고 난");
 #endif
         }
         m_shot.n = m_shot.i; /* make current shot be the last */
@@ -424,9 +453,7 @@ void endmultishot(verbose) boolean verbose;
 
 /* Object hits floor at hero's feet.
    Called from drop(), throwit(), hold_another_object(). */
-void
-hitfloor(obj, verbosely)
-struct obj *obj;
+void hitfloor(obj, verbosely) struct obj *obj;
 boolean verbosely; /* usually True; False if caller has given drop message */
 {
     if (IS_SOFT(levl[u.ux][u.uy].typ) || u.uinwater || u.uswallow) {
@@ -436,8 +463,13 @@ boolean verbosely; /* usually True; False if caller has given drop message */
     if (IS_ALTAR(levl[u.ux][u.uy].typ))
         doaltarobj(obj);
     else if (verbosely)
+#if 0 /*KR: 원본*/
         pline("%s %s the %s.", Doname2(obj), otense(obj, "hit"),
               surface(u.ux, u.uy));
+#else /*KR: KRNethack 맞춤 번역 */
+        pline("%s %s에 부딪혔다.", append_josa(Doname2(obj), "은"),
+              surface(u.ux, u.uy));
+#endif
 
     if (hero_breaks(obj, u.ux, u.uy, TRUE))
         return;
@@ -456,7 +488,7 @@ boolean
 walk_path(src_cc, dest_cc, check_proc, arg)
 coord *src_cc;
 coord *dest_cc;
-boolean FDECL((*check_proc), (genericptr_t, int, int));
+boolean FDECL((*check_proc), (genericptr_t, int, int) );
 genericptr_t arg;
 {
     int x, y, dx, dy, x_change, y_change, err, i, prev_x, prev_y;
@@ -469,8 +501,8 @@ genericptr_t arg;
      * Going from 'x' to 'y' needs to pass through 'z', and will
      * fail if there's an obstable there, but it could choose to
      * pass through 'Z' instead if that way imposes no obstacle.
-     *     ..y          .Zy
-     *     xz.    vs    x..
+     * ..y          .Zy
+     * xz.    vs    x..
      * Perhaps we should check both paths and accept whichever
      * one isn't blocked.  But then multiple zigs and zags could
      * potentially produce a meandering path rather than the best
@@ -563,12 +595,12 @@ int x, y;
  * your movements at the time.
  *
  * Possible additions/changes:
- *      o really attack monster if we hit one
- *      o set stunned if we hit a wall or door
- *      o reset nomul when we stop
- *      o creepy feeling if pass through monster (if ever implemented...)
- *      o bounce off walls
- *      o let jumps go over boulders
+ * o really attack monster if we hit one
+ * o set stunned if we hit a wall or door
+ * o reset nomul when we stop
+ * o creepy feeling if pass through monster (if ever implemented...)
+ * o bounce off walls
+ * o let jumps go over boulders
  */
 boolean
 hurtle_step(arg, x, y)
@@ -583,7 +615,8 @@ int x, y;
     int dmg = 0;
 
     if (!isok(x, y)) {
-        You_feel("the spirits holding you back.");
+        /*KR You_feel("the spirits holding you back."); */
+        You_feel("정령들이 당신을 가로막는 것을 느낀다.");
         return FALSE;
     } else if (!in_out_region(x, y)) {
         return FALSE;
@@ -594,91 +627,127 @@ int x, y;
     stopping_short = (via_jumping && *range < 2);
 
     if (!Passes_walls || !(may_pass = may_passwall(x, y))) {
-        boolean odoor_diag = (IS_DOOR(levl[x][y].typ)
-                              && (levl[x][y].doormask & D_ISOPEN)
-                              && (u.ux - x) && (u.uy - y));
+        boolean odoor_diag =
+            (IS_DOOR(levl[x][y].typ) && (levl[x][y].doormask & D_ISOPEN)
+             && (u.ux - x) && (u.uy - y));
 
         if (IS_ROCK(levl[x][y].typ) || closed_door(x, y) || odoor_diag) {
             const char *s;
 
             if (odoor_diag)
-                You("hit the door edge!");
-            pline("Ouch!");
+                /*KR You("hit the door edge!"); */
+                You("문의 가장자리에 부딪혔다!");
+            /*KR pline("Ouch!"); */
+            pline("아야!");
             if (IS_TREE(levl[x][y].typ))
-                s = "bumping into a tree";
+                /*KR s = "bumping into a tree"; */
+                s = "나무에 부딪혀서";
             else if (IS_ROCK(levl[x][y].typ))
-                s = "bumping into a wall";
+                /*KR s = "bumping into a wall"; */
+                s = "벽에 부딪혀서";
             else
-                s = "bumping into a door";
+                /*KR s = "bumping into a door"; */
+                s = "문에 부딪혀서";
             dmg = rnd(2 + *range);
             losehp(Maybe_Half_Phys(dmg), s, KILLED_BY);
-            wake_nearto(x,y, 10);
+            wake_nearto(x, y, 10);
             return FALSE;
         }
         if (levl[x][y].typ == IRONBARS) {
-            You("crash into some iron bars.  Ouch!");
+            /*KR You("crash into some iron bars.  Ouch!"); */
+            You("쇠창살에 부딪혔다. 아야!");
             dmg = rnd(2 + *range);
+#if 0 /*KR: 원본*/
             losehp(Maybe_Half_Phys(dmg), "crashing into iron bars",
                    KILLED_BY);
-            wake_nearto(x,y, 20);
+#else /*KR: KRNethack 맞춤 번역 */
+            losehp(Maybe_Half_Phys(dmg), "쇠창살에 부딪혀서", KILLED_BY);
+#endif
+            wake_nearto(x, y, 20);
             return FALSE;
         }
         if ((obj = sobj_at(BOULDER, x, y)) != 0) {
-            You("bump into a %s.  Ouch!", xname(obj));
+            /*KR You("bump into a %s.  Ouch!", xname(obj)); */
+            You("%s 부딪혔다. 아야!", append_josa(xname(obj), "에"));
             dmg = rnd(2 + *range);
-            losehp(Maybe_Half_Phys(dmg), "bumping into a boulder", KILLED_BY);
-            wake_nearto(x,y, 10);
+            /*KR losehp(Maybe_Half_Phys(dmg), "bumping into a boulder",
+             * KILLED_BY); */
+            losehp(Maybe_Half_Phys(dmg), "바위에 부딪혀서", KILLED_BY);
+            wake_nearto(x, y, 10);
             return FALSE;
         }
         if (!may_pass) {
             /* did we hit a no-dig non-wall position? */
-            You("smack into something!");
+            /*KR You("smack into something!"); */
+            You("무언가에 세게 부딪혔다!");
             dmg = rnd(2 + *range);
+#if 0 /*KR: 원본*/
             losehp(Maybe_Half_Phys(dmg), "touching the edge of the universe",
                    KILLED_BY);
-            wake_nearto(x,y, 10);
+#else /*KR: KRNethack 맞춤 번역 */
+            losehp(Maybe_Half_Phys(dmg), "우주의 끝에 부딪혀서", KILLED_BY);
+#endif
+            wake_nearto(x, y, 10);
             return FALSE;
         }
         if ((u.ux - x) && (u.uy - y) && bad_rock(youmonst.data, u.ux, y)
             && bad_rock(youmonst.data, x, u.uy)) {
-            boolean too_much = (invent && (inv_weight() + weight_cap() > 600));
+            boolean too_much =
+                (invent && (inv_weight() + weight_cap() > 600));
 
             /* Move at a diagonal. */
             if (bigmonst(youmonst.data) || too_much) {
+#if 0 /*KR: 원본*/
                 You("%sget forcefully wedged into a crevice.",
                     too_much ? "and all your belongings " : "");
+#else /*KR: KRNethack 맞춤 번역 */
+                You("%s 좁은 틈새에 꽉 끼었다.",
+                    too_much ? "모든 소지품과 함께" : "");
+#endif
                 dmg = rnd(2 + *range);
+#if 0 /*KR: 원본*/
                 losehp(Maybe_Half_Phys(dmg), "wedging into a narrow crevice",
                        KILLED_BY);
-                wake_nearto(x,y, 10);
+#else /*KR: KRNethack 맞춤 번역 */
+                losehp(Maybe_Half_Phys(dmg), "좁은 틈새에 끼어서", KILLED_BY);
+#endif
+                wake_nearto(x, y, 10);
                 return FALSE;
             }
         }
     }
 
     if ((mon = m_at(x, y)) != 0
-#if 0   /* we can't include these two exceptions unless we know we're
-         * going to end up past the current spot rather than on it;
-         * for that, we need to know that the range is not exhausted
-         * and also that the next spot doesn't contain an obstacle */
+#if 0 /* we can't include these two exceptions unless we know we're \
+       * going to end up past the current spot rather than on it;   \
+       * for that, we need to know that the range is not exhausted  \
+       * and also that the next spot doesn't contain an obstacle */
         && !(mon->mundetected && hides_under(mon) && (Flying || Levitation))
         && !(mon->mundetected && mon->data->mlet == S_EEL
              && (Flying || Levitation || Wwalking))
 #endif
-        ) {
+    ) {
         const char *mnam, *pronoun;
         int glyph = glyph_at(x, y);
 
         mon->mundetected = 0; /* wakeup() will handle mimic */
         mnam = a_monnam(mon); /* after unhiding */
         pronoun = noit_mhim(mon);
-        if (!strcmp(mnam, "it")) {
-            mnam = !strcmp(pronoun, "it") ? "something" : "someone";
+        /*KR if (!strcmp(mnam, "it")) { */
+        if (!strcmp(mnam, "그것")) {
+            /*KR mnam = !strcmp(pronoun, "it") ? "something" : "someone"; */
+            mnam = !strcmp(pronoun, "그것") ? "무언가" : "누군가";
         }
         if (!glyph_is_monster(glyph) && !glyph_is_invisible(glyph))
+#if 0 /*KR: 원본*/
             You("find %s by bumping into %s.", mnam, pronoun);
+#else /*KR: KRNethack 맞춤 번역 */
+            You("%s 부딪혀 %s 찾아냈다.", append_josa(pronoun, "에"),
+                append_josa(mnam, "을"));
+#endif
         else
-            You("bump into %s.", mnam);
+            /*KR You("bump into %s.", mnam); */
+            You("%s 부딪혔다.", append_josa(mnam, "에"));
         wakeup(mon, FALSE);
         if (!canspotmon(mon))
             map_invisible(mon->mx, mon->my);
@@ -687,12 +756,12 @@ int x, y;
         return FALSE;
     }
 
-    if ((u.ux - x) && (u.uy - y)
-        && bad_rock(youmonst.data, u.ux, y)
+    if ((u.ux - x) && (u.uy - y) && bad_rock(youmonst.data, u.ux, y)
         && bad_rock(youmonst.data, x, u.uy)) {
         /* Move at a diagonal. */
         if (Sokoban) {
-            You("come to an abrupt halt!");
+            /*KR You("come to an abrupt halt!"); */
+            You("갑자기 멈춰 섰다!");
             return FALSE;
         }
     }
@@ -703,8 +772,8 @@ int x, y;
         xchar ballx, bally, chainx, chainy;
         boolean cause_delay;
 
-        if (drag_ball(x, y, &bc_control, &ballx, &bally, &chainx,
-                      &chainy, &cause_delay, TRUE))
+        if (drag_ball(x, y, &bc_control, &ballx, &bally, &chainx, &chainy,
+                      &cause_delay, TRUE))
             move_bc(0, bc_control, ballx, bally, chainx, chainy);
     }
 
@@ -727,10 +796,14 @@ int x, y;
             (void) drown();
             return FALSE;
         } else if (!Is_waterlevel(&u.uz) && !stopping_short) {
-            Norep("You move over %s.", an(is_moat(x, y) ? "moat" : "pool"));
-       }
+            /*KR Norep("You move over %s.", an(is_moat(x, y) ? "moat" :
+             * "pool")); */
+            Norep("당신은 %s 위를 이동했다.",
+                  is_moat(x, y) ? "해자" : "웅덩이");
+        }
     } else if (is_lava(x, y) && !stopping_short) {
-        Norep("You move over some lava.");
+        /*KR Norep("You move over some lava."); */
+        Norep("당신은 용암 위를 이동했다.");
     }
 
     /* FIXME:
@@ -747,12 +820,12 @@ int x, y;
             dotrap(ttmp, 0);
             return FALSE;
         } else if (ttmp->ttyp == VIBRATING_SQUARE) {
-            pline("The ground vibrates as you pass it.");
+            /*KR pline("The ground vibrates as you pass it."); */
+            pline("지나갈 때 땅이 진동했다.");
             dotrap(ttmp, 0); /* doesn't print messages */
         } else if (ttmp->ttyp == FIRE_TRAP) {
             dotrap(ttmp, 0);
-        } else if ((is_pit(ttmp->ttyp) || is_hole(ttmp->ttyp))
-                   && Sokoban) {
+        } else if ((is_pit(ttmp->ttyp) || is_hole(ttmp->ttyp)) && Sokoban) {
             /* air currents overcome the recoil in Sokoban;
                when jumping, caller performs last step and enters trap */
             if (!via_jumping)
@@ -761,8 +834,13 @@ int x, y;
             return TRUE;
         } else {
             if (ttmp->tseen)
+#if 0 /*KR: 원본*/
                 You("pass right over %s.",
                     an(defsyms[trap_to_defsym(ttmp->ttyp)].explanation));
+#else /*KR: KRNethack 맞춤 번역 */
+                You("%s 바로 위를 지나갔다.",
+                    defsyms[trap_to_defsym(ttmp->ttyp)].explanation);
+#endif
         }
     }
     if (--*range < 0) /* make sure our range never goes negative */
@@ -801,9 +879,7 @@ int x, y;
  * dx and dy should be the direction of the hurtle, not of the original
  * kick or throw and be only.
  */
-void
-hurtle(dx, dy, range, verbose)
-int dx, dy, range;
+void hurtle(dx, dy, range, verbose) int dx, dy, range;
 boolean verbose;
 {
     coord uc, cc;
@@ -817,10 +893,12 @@ boolean verbose;
      * for diagonal movement, give the player a message and return.
      */
     if (Punished && !carried(uball)) {
-        You_feel("a tug from the iron ball.");
+        /*KR You_feel("a tug from the iron ball."); */
+        You_feel("철구에서 무언가 당기는 느낌이 든다.");
         nomul(0);
         return;
     } else if (u.utrap) {
+#if 0 /*KR: 원본*/
         You("are anchored by the %s.",
             u.utraptype == TT_WEB
                 ? "web"
@@ -830,6 +908,15 @@ boolean verbose;
                             ? surface(u.ux, u.uy)
                             : u.utraptype == TT_BURIEDBALL ? "buried ball"
                                                            : "trap");
+#else /*KR: KRNethack 맞춤 번역 */
+        You("%s 꽉 묶여 있다.",
+            append_josa(u.utraptype == TT_WEB          ? "거미줄"
+                        : u.utraptype == TT_LAVA       ? hliquid("용암")
+                        : u.utraptype == TT_INFLOOR    ? surface(u.ux, u.uy)
+                        : u.utraptype == TT_BURIEDBALL ? "묻힌 철구"
+                                                       : "함정",
+                        "에"));
+#endif
         nomul(0);
         return;
     }
@@ -842,10 +929,13 @@ boolean verbose;
         return; /* paranoia */
 
     nomul(-range);
-    multi_reason = "moving through the air";
+    /*KR multi_reason = "moving through the air"; */
+    multi_reason = "공중으로 날아가는 중이라";
     nomovemsg = ""; /* it just happens */
     if (verbose)
-        You("%s in the opposite direction.", range > 1 ? "hurtle" : "float");
+        /*KR You("%s in the opposite direction.", range > 1 ? "hurtle" :
+         * "float"); */
+        You("반대 방향으로 %s.", range > 1 ? "날아갔다" : "떠올랐다");
     /* if we're in the midst of shooting multiple projectiles, stop */
     endmultishot(TRUE);
     sokoban_guilt();
@@ -858,9 +948,7 @@ boolean verbose;
 }
 
 /* Move a monster through the air for a few squares. */
-void
-mhurtle(mon, dx, dy, range)
-struct monst *mon;
+void mhurtle(mon, dx, dy, range) struct monst *mon;
 int dx, dy, range;
 {
     coord mc, cc;
@@ -893,9 +981,7 @@ int dx, dy, range;
     return;
 }
 
-STATIC_OVL void
-check_shop_obj(obj, x, y, broken)
-struct obj *obj;
+STATIC_OVL void check_shop_obj(obj, x, y, broken) struct obj *obj;
 xchar x, y;
 boolean broken;
 {
@@ -943,20 +1029,34 @@ boolean hitsroof;
     /* note: obj->quan == 1 */
 
     if (!has_ceiling(&u.uz)) {
-        action = "flies up into"; /* into "the sky" or "the water above" */
+        /*KR action = "flies up into"; */ /* into "the sky" or "the water
+                                             above" */
+        action =
+            "향해 솟아올랐다가"; /* into "the sky" or "the water above" */
     } else if (hitsroof) {
         if (breaktest(obj)) {
-            pline("%s hits the %s.", Doname2(obj), ceiling(u.ux, u.uy));
+            /*KR pline("%s hits the %s.", Doname2(obj), ceiling(u.ux, u.uy));
+             */
+            pline("%s %s에 부딪혔다.", append_josa(Doname2(obj), "은"),
+                  ceiling(u.ux, u.uy));
             breakmsg(obj, !Blind);
             breakobj(obj, u.ux, u.uy, TRUE, TRUE);
             return FALSE;
         }
-        action = "hits";
+        /*KR action = "hits"; */
+        action = "부딪히고는";
     } else {
-        action = "almost hits";
+        /*KR action = "almost hits"; */
+        action = "간발의 차로 부딪히지 않고";
     }
+#if 0 /*KR: 원본*/
     pline("%s %s the %s, then falls back on top of your %s.", Doname2(obj),
           action, ceiling(u.ux, u.uy), body_part(HEAD));
+#else /*KR: KRNethack 맞춤 번역 */
+    pline("%s %s %s 당신의 %s 위로 떨어졌다.",
+          append_josa(Doname2(obj), "은"), ceiling(u.ux, u.uy), action,
+          body_part(HEAD));
+#endif
 
     /* object now hits you */
 
@@ -983,16 +1083,21 @@ boolean hitsroof;
                 /* egg ends up "all over your face"; perhaps
                    visored helmet should still save you here */
                 if (uarmh)
-                    Your("%s fails to protect you.", helm_simple_name(uarmh));
+                    /*KR Your("%s fails to protect you.",
+                     * helm_simple_name(uarmh)); */
+                    Your("%s 당신을 보호해주지 못했다.",
+                         append_josa(helm_simple_name(uarmh), "은"));
                 goto petrify;
             }
             /*FALLTHRU*/
         case CREAM_PIE:
         case BLINDING_VENOM:
-            pline("You've got it all over your %s!", body_part(FACE));
+            /*KR pline("You've got it all over your %s!", body_part(FACE)); */
+            pline("그것이 당신의 %s에 잔뜩 묻었다!", body_part(FACE));
             if (blindinc) {
                 if (otyp == BLINDING_VENOM && !Blind)
-                    pline("It blinds you!");
+                    /*KR pline("It blinds you!"); */
+                    pline("눈이 멀었다!");
                 u.ucreamed += blindinc;
                 make_blinded(Blinded + (long) blindinc, FALSE);
                 if (!Blind)
@@ -1033,20 +1138,31 @@ boolean hitsroof;
         if (uarmh) {
             if (less_damage && dmg < (Upolyd ? u.mh : u.uhp)) {
                 if (!artimsg)
-                    pline("Fortunately, you are wearing a hard helmet.");
+                    /*KR pline("Fortunately, you are wearing a hard helmet.");
+                     */
+                    pline("다행히도, 당신은 단단한 투구를 쓰고 있다.");
                 /* helmet definitely protects you when it blocks petrification
                  */
             } else if (!petrifier) {
                 if (flags.verbose)
-                    Your("%s does not protect you.", helm_simple_name(uarmh));
+                    /*KR Your("%s does not protect you.",
+                     * helm_simple_name(uarmh)); */
+                    Your("%s 당신을 보호해주지 못했다.",
+                         append_josa(helm_simple_name(uarmh), "은"));
             }
         } else if (petrifier && !Stone_resistance
                    && !(poly_when_stoned(youmonst.data)
                         && polymon(PM_STONE_GOLEM))) {
- petrify:
+        petrify:
             killer.format = KILLED_BY;
+#if 0 /*KR: 원본*/
             Strcpy(killer.name, "elementary physics"); /* "what goes up..." */
-            You("turn to stone.");
+#else /*KR: KRNethack 맞춤 번역 */
+            Strcpy(killer.name,
+                   "초급 물리학"); /* "올라간 것은 반드시 내려온다..." */
+#endif
+            /*KR You("turn to stone."); */
+            You("돌로 변했다.");
             if (obj)
                 dropy(obj); /* bypass most of hitfloor() */
             thrownobj = 0;  /* now either gone or on floor */
@@ -1055,7 +1171,11 @@ boolean hitsroof;
         }
         hitfloor(obj, TRUE);
         thrownobj = 0;
+#if 0 /*KR: 원본*/
         losehp(Maybe_Half_Phys(dmg), "falling object", KILLED_BY_AN);
+#else /*KR: KRNethack 맞춤 번역 */
+        losehp(Maybe_Half_Phys(dmg), "떨어지는 물체", KILLED_BY_AN);
+#endif
     }
     return TRUE;
 }
@@ -1065,7 +1185,8 @@ boolean
 throwing_weapon(obj)
 struct obj *obj;
 {
-    return (boolean) (is_missile(obj) || is_spear(obj)
+    return (boolean) (is_missile(obj)
+                      || is_spear(obj)
                       /* daggers and knife (excludes scalpel) */
                       || (is_blade(obj) && !is_sword(obj)
                           && (objects[obj->otyp].oc_dir & PIERCE))
@@ -1074,16 +1195,14 @@ struct obj *obj;
 }
 
 /* the currently thrown object is returning to you (not for boomerangs) */
-STATIC_OVL void
-sho_obj_return_to_u(obj)
-struct obj *obj;
+STATIC_OVL void sho_obj_return_to_u(obj) struct obj *obj;
 {
     /* might already be our location (bounced off a wall) */
     if ((u.dx || u.dy) && (bhitpos.x != u.ux || bhitpos.y != u.uy)) {
         int x = bhitpos.x - u.dx, y = bhitpos.y - u.dy;
 
         tmp_at(DISP_FLASH, obj_to_glyph(obj, rn2_on_display_rng));
-        while (isok(x,y) && (x != u.ux || y != u.uy)) {
+        while (isok(x, y) && (x != u.ux || y != u.uy)) {
             tmp_at(x, y);
             delay_output();
             x -= u.dx;
@@ -1094,31 +1213,34 @@ struct obj *obj;
 }
 
 /* throw an object, NB: obj may be consumed in the process */
-void
-throwit(obj, wep_mask, twoweap)
-struct obj *obj;
+void throwit(obj, wep_mask, twoweap) struct obj *obj;
 long wep_mask; /* used to re-equip returning boomerang */
-boolean twoweap; /* used to restore twoweapon mode if wielded weapon returns */
+boolean
+    twoweap; /* used to restore twoweapon mode if wielded weapon returns */
 {
     register struct monst *mon;
     int range, urange;
-    boolean crossbowing, clear_thrownobj = FALSE,
-            impaired = (Confusion || Stunned || Blind
-                        || Hallucination || Fumbling),
-            tethered_weapon = (obj->otyp == AKLYS && (wep_mask & W_WEP) != 0);
+    boolean crossbowing,
+        clear_thrownobj = FALSE,
+        impaired =
+            (Confusion || Stunned || Blind || Hallucination || Fumbling),
+        tethered_weapon = (obj->otyp == AKLYS && (wep_mask & W_WEP) != 0);
 
     notonhead = FALSE; /* reset potentially stale value */
     if ((obj->cursed || obj->greased) && (u.dx || u.dy) && !rn2(7)) {
         boolean slipok = TRUE;
 
         if (ammo_and_launcher(obj, uwep)) {
-            pline("%s!", Tobjnam(obj, "misfire"));
+            /*KR pline("%s!", Tobjnam(obj, "misfire")); */
+            pline("%s 불발되었다!", append_josa(xname(obj), "은"));
         } else {
             /* only slip if it's greased or meant to be thrown */
             if (obj->greased || throwing_weapon(obj))
                 /* BUG: this message is grammatically incorrect if obj has
                    a plural name; greased gloves or boots for instance. */
-                pline("%s as you throw it!", Tobjnam(obj, "slip"));
+                /*KR pline("%s as you throw it!", Tobjnam(obj, "slip")); */
+                pline("당신이 %s 던지려는 순간, 미끄러졌다!",
+                      append_josa(xname(obj), "을"));
             else
                 slipok = FALSE;
         }
@@ -1137,8 +1259,10 @@ boolean twoweap; /* used to restore twoweapon mode if wielded weapon returns */
                    : (u.uhp < 10 && u.uhp != u.uhpmax))
         && obj->owt > (unsigned) ((Upolyd ? u.mh : u.uhp) * 2)
         && !Is_airlevel(&u.uz)) {
-        You("have so little stamina, %s drops from your grasp.",
-            the(xname(obj)));
+        /*KR You("have so little stamina, %s drops from your grasp.",
+            the(xname(obj))); */
+        You("스태미너가 부족하여, 쥐고 있던 %s 떨어뜨렸다.",
+            append_josa(the(xname(obj)), "을"));
         exercise(A_CON, FALSE);
         u.dx = u.dy = 0;
         u.dz = 1;
@@ -1146,10 +1270,11 @@ boolean twoweap; /* used to restore twoweapon mode if wielded weapon returns */
 
     thrownobj = obj;
     thrownobj->was_thrown = 1;
-    iflags.returning_missile = ((obj->oartifact == ART_MJOLLNIR
-                                 && Role_if(PM_VALKYRIE))
-                                || tethered_weapon) ? (genericptr_t) obj
-                                                    : (genericptr_t) 0;
+    iflags.returning_missile =
+        ((obj->oartifact == ART_MJOLLNIR && Role_if(PM_VALKYRIE))
+         || tethered_weapon)
+            ? (genericptr_t) obj
+            : (genericptr_t) 0;
     /* NOTE:  No early returns after this point or returning_missile
        will be left with a stale pointer. */
 
@@ -1167,10 +1292,14 @@ boolean twoweap; /* used to restore twoweapon mode if wielded weapon returns */
         if (u.dz < 0
             /* Mjollnir must we wielded to be thrown--caller verifies this;
                aklys must we wielded as primary to return when thrown */
-            && iflags.returning_missile
-            && !impaired) {
+            && iflags.returning_missile && !impaired) {
+#if 0 /*KR: 원본*/
             pline("%s the %s and returns to your hand!", Tobjnam(obj, "hit"),
                   ceiling(u.ux, u.uy));
+#else /*KR: KRNethack 맞춤 번역 */
+            pline("%s %s에 부딪히고는 당신의 손으로 돌아왔다!",
+                  append_josa(xname(obj), "은"), ceiling(u.ux, u.uy));
+#endif
             obj = addinv(obj);
             (void) encumber_msg();
             if (obj->owornmask & W_QUIVER) /* in case addinv() autoquivered */
@@ -1207,8 +1336,8 @@ boolean twoweap; /* used to restore twoweapon mode if wielded weapon returns */
         }
     } else {
         /* crossbow range is independent of strength */
-        crossbowing = (ammo_and_launcher(obj, uwep)
-                       && weapon_type(uwep) == P_CROSSBOW);
+        crossbowing =
+            (ammo_and_launcher(obj, uwep) && weapon_type(uwep) == P_CROSSBOW);
         urange = (crossbowing ? 18 : (int) ACURRSTR) / 2;
         /* balls are easy to throw or at least roll;
          * also, this insures the maximum range of a ball is greater
@@ -1252,7 +1381,7 @@ boolean twoweap; /* used to restore twoweapon mode if wielded weapon returns */
             range = 20; /* you must be giant */
         else if (obj->oartifact == ART_MJOLLNIR)
             range = (range + 1) / 2; /* it's heavy */
-        else if (tethered_weapon) /* primary weapon is aklys */
+        else if (tethered_weapon)    /* primary weapon is aklys */
             /* if an aklys is going to return, range is limited by the
                length of the attached cord [implicit aspect of item] */
             range = min(range, BOLT_LIM / 2);
@@ -1310,7 +1439,7 @@ boolean twoweap; /* used to restore twoweapon mode if wielded weapon returns */
         if (tethered_weapon)
             tmp_at(DISP_END, 0);
     } else if (u.uswallow && !iflags.returning_missile) {
- swallowit:
+    swallowit:
         if (obj != uball)
             (void) mpickobj(u.ustuck, obj); /* clears 'thrownobj' */
         else
@@ -1327,7 +1456,9 @@ boolean twoweap; /* used to restore twoweapon mode if wielded weapon returns */
                     sho_obj_return_to_u(obj); /* display its flight */
 
                 if (!impaired && rn2(100)) {
-                    pline("%s to your hand!", Tobjnam(obj, "return"));
+                    /*KR pline("%s to your hand!", Tobjnam(obj, "return")); */
+                    pline("%s 당신의 손으로 돌아왔다!",
+                          append_josa(xname(obj), "이"));
                     obj = addinv(obj);
                     (void) encumber_msg();
                     /* addinv autoquivers an aklys if quiver is empty;
@@ -1342,20 +1473,35 @@ boolean twoweap; /* used to restore twoweapon mode if wielded weapon returns */
                     int dmg = rn2(2);
 
                     if (!dmg) {
+#if 0 /*KR: 원본*/
                         pline(Blind ? "%s lands %s your %s."
                                     : "%s back to you, landing %s your %s.",
                               Blind ? Something : Tobjnam(obj, "return"),
                               Levitation ? "beneath" : "at",
                               makeplural(body_part(FOOT)));
+#else /*KR: KRNethack 맞춤 번역 */
+                        pline("%s당신의 %s %s 떨어졌다.",
+                              Blind ? "무언가가 " : "그것이 되돌아와서 ",
+                              makeplural(body_part(FOOT)),
+                              Levitation ? "밑으로" : "앞에");
+#endif
                     } else {
                         dmg += rnd(3);
+#if 0 /*KR: 원본*/
                         pline(Blind ? "%s your %s!"
                                     : "%s back toward you, hitting your %s!",
                               Tobjnam(obj, Blind ? "hit" : "fly"),
                               body_part(ARM));
+#else /*KR: KRNethack 맞춤 번역 */
+                        pline("%s 당신의 %s 강타했다!",
+                              Blind ? "무언가가" : "그것이 되돌아와서",
+                              append_josa(body_part(ARM), "을"));
+#endif
                         if (obj->oartifact)
                             (void) artifact_hit((struct monst *) 0, &youmonst,
                                                 obj, &dmg, 0);
+                        /*KR losehp(Maybe_Half_Phys(dmg), killer_xname(obj),
+                               KILLED_BY); */
                         losehp(Maybe_Half_Phys(dmg), killer_xname(obj),
                                KILLED_BY);
                     }
@@ -1377,7 +1523,8 @@ boolean twoweap; /* used to restore twoweapon mode if wielded weapon returns */
                    that slot is empty at the time; since hero will need to
                    explicitly rewield the weapon to get throw-and-return
                    capability back anyway, quivered or not shouldn't matter */
-                pline("%s to return!", Tobjnam(obj, "fail"));
+                /*KR pline("%s to return!", Tobjnam(obj, "fail")); */
+                pline("%s 돌아오지 못했다!", append_josa(xname(obj), "은"));
 
                 if (u.uswallow)
                     goto swallowit;
@@ -1398,14 +1545,18 @@ boolean twoweap; /* used to restore twoweapon mode if wielded weapon returns */
             clear_thrownobj = TRUE;
             goto throwit_return;
         }
-        if (flooreffects(obj, bhitpos.x, bhitpos.y, "fall")) {
+        /*KR if (flooreffects(obj, bhitpos.x, bhitpos.y, "fall")) { */
+        if (flooreffects(obj, bhitpos.x, bhitpos.y, "떨어지기")) {
             clear_thrownobj = TRUE;
             goto throwit_return;
         }
         obj_no_longer_held(obj);
         if (mon && mon->isshk && is_pick(obj)) {
             if (cansee(bhitpos.x, bhitpos.y))
-                pline("%s snatches up %s.", Monnam(mon), the(xname(obj)));
+                /*KR pline("%s snatches up %s.", Monnam(mon),
+                 * the(xname(obj))); */
+                pline("%s %s 낚아챘다.", append_josa(Monnam(mon), "은"),
+                      append_josa(the(xname(obj)), "을"));
             if (*u.ushops || obj->unpaid)
                 check_shop_obj(obj, bhitpos.x, bhitpos.y, FALSE);
             (void) mpickobj(mon, obj); /* may merge and free obj */
@@ -1439,7 +1590,7 @@ boolean twoweap; /* used to restore twoweapon mode if wielded weapon returns */
             vision_full_recalc = 1;
     }
 
- throwit_return:
+throwit_return:
     iflags.returning_missile = (genericptr_t) 0;
     if (clear_thrownobj)
         thrownobj = (struct obj *) 0;
@@ -1490,9 +1641,7 @@ boolean mon_notices;
 }
 
 /* thrown object misses target monster */
-STATIC_OVL void
-tmiss(obj, mon, maybe_wakeup)
-struct obj *obj;
+STATIC_OVL void tmiss(obj, mon, maybe_wakeup) struct obj *obj;
 struct monst *mon;
 boolean maybe_wakeup;
 {
@@ -1504,7 +1653,8 @@ boolean maybe_wakeup;
        an arrow just landing short of any target (no message in that case),
        so will realize that there is a valid target here anyway. */
     if (!canseemon(mon) || (M_AP_TYPE(mon) && M_AP_TYPE(mon) != M_AP_MONSTER))
-        pline("%s %s.", The(missile), otense(obj, "miss"));
+        /*KR pline("%s %s.", The(missile), otense(obj, "miss")); */
+        pline("%s 빗나갔다.", append_josa(The(missile), "은"));
     else
         miss(missile, mon);
     if (maybe_wakeup && !rn2(3))
@@ -1533,9 +1683,9 @@ register struct obj *obj; /* thrownobj or kickedobj or uwep */
     boolean guaranteed_hit = (u.uswallow && mon == u.ustuck);
     int dieroll;
 
-    hmode = (obj == uwep) ? HMON_APPLIED
-              : (obj == kickedobj) ? HMON_KICKED
-                : HMON_THROWN;
+    hmode = (obj == uwep)        ? HMON_APPLIED
+            : (obj == kickedobj) ? HMON_KICKED
+                                 : HMON_THROWN;
 
     /* Differences from melee weapons:
      *
@@ -1543,7 +1693,7 @@ register struct obj *obj; /* thrownobj or kickedobj or uwep */
      * Polymorphed players lacking attacks may still throw.
      * There's a base -1 to hit.
      * No bonuses for fleeing or stunned targets (they don't dodge
-     *    melee blows as readily, but dodging arrows is hard anyway).
+     * melee blows as readily, but dodging arrows is hard anyway).
      * Not affected by traps, etc.
      * Certain items which don't in themselves do damage ignore 'tmp'.
      * Distance and monster size affect chance to hit.
@@ -1599,10 +1749,16 @@ register struct obj *obj; /* thrownobj or kickedobj or uwep */
             tmiss(obj, mon, FALSE);
             return 0;
         } else if (mon->mtame) {
-            pline("%s catches and drops %s.", Monnam(mon), the(xname(obj)));
+            /*KR pline("%s catches and drops %s.", Monnam(mon),
+             * the(xname(obj))); */
+            pline("%s %s 잡았다가 떨어뜨렸다.",
+                  append_josa(Monnam(mon), "은"),
+                  append_josa(the(xname(obj)), "을"));
             return 0;
         } else {
-            pline("%s catches %s.", Monnam(mon), the(xname(obj)));
+            /*KR pline("%s catches %s.", Monnam(mon), the(xname(obj))); */
+            pline("%s %s 잡았다.", append_josa(Monnam(mon), "은"),
+                  append_josa(the(xname(obj)), "을"));
             return gem_accept(mon, obj);
         }
     }
@@ -1611,19 +1767,28 @@ register struct obj *obj; /* thrownobj or kickedobj or uwep */
        at leader... (kicked artifact is ok too; HMON_APPLIED could
        occur if quest artifact polearm or grapnel ever gets added) */
     if (hmode != HMON_APPLIED && quest_arti_hits_leader(obj, mon)) {
-        /* AIS: changes to wakeup() means that it's now less inappropriate here
-           than it used to be, but the manual version works just as well */
+        /* AIS: changes to wakeup() means that it's now less inappropriate
+           here than it used to be, but the manual version works just as well
+         */
         mon->msleeping = 0;
         mon->mstrategy &= ~STRAT_WAITMASK;
 
         if (mon->mcanmove) {
-            pline("%s catches %s.", Monnam(mon), the(xname(obj)));
+            /*KR pline("%s catches %s.", Monnam(mon), the(xname(obj))); */
+            pline("%s %s 붙잡았다.", append_josa(Monnam(mon), "은"),
+                  append_josa(the(xname(obj)), "을"));
             if (mon->mpeaceful) {
                 boolean next2u = monnear(mon, u.ux, u.uy);
 
                 finish_quest(obj); /* acknowledge quest completion */
+#if 0                              /*KR: 원본*/
                 pline("%s %s %s back to you.", Monnam(mon),
                       (next2u ? "hands" : "tosses"), the(xname(obj)));
+#else                              /*KR: KRNethack 맞춤 번역 */
+                pline("%s %s 당신에게 %s.", append_josa(Monnam(mon), "은"),
+                      append_josa(the(xname(obj)), "을"),
+                      (next2u ? "건네주었다" : "던져주었다"));
+#endif
                 if (!next2u)
                     sho_obj_return_to_u(obj);
                 obj = addinv(obj); /* back into your inventory */
@@ -1684,7 +1849,7 @@ register struct obj *obj; /* thrownobj or kickedobj or uwep */
         if (tmp >= dieroll) {
             boolean wasthrown = (thrownobj != 0),
                     /* remember weapon attribute; hmon() might destroy obj */
-                    chopper = is_axe(obj);
+                chopper = is_axe(obj);
 
             /* attack hits mon */
             if (hmode == HMON_APPLIED)
@@ -1791,9 +1956,15 @@ register struct obj *obj; /* thrownobj or kickedobj or uwep */
                 }
             }
         }
+#if 0 /*KR: 원본*/
         pline("%s into %s %s.", Tobjnam(obj, "vanish"),
               s_suffix(mon_nam(mon)),
               is_animal(u.ustuck->data) ? "entrails" : "currents");
+#else /*KR: KRNethack 맞춤 번역 */
+        pline("%s %s %s 속으로 사라졌다.", append_josa(xname(obj), "은"),
+              s_suffix(mon_nam(mon)),
+              is_animal(u.ustuck->data) ? "내장" : "흐름");
+#endif
     } else {
         tmiss(obj, mon, TRUE);
     }
@@ -1810,13 +1981,21 @@ register struct obj *obj;
     boolean is_buddy = sgn(mon->data->maligntyp) == sgn(u.ualign.type);
     boolean is_gem = objects[obj->otyp].oc_material == GEMSTONE;
     int ret = 0;
-    static NEARDATA const char nogood[] = " is not interested in your junk.";
-    static NEARDATA const char acceptgift[] = " accepts your gift.";
-    static NEARDATA const char maybeluck[] = " hesitatingly";
-    static NEARDATA const char noluck[] = " graciously";
-    static NEARDATA const char addluck[] = " gratefully";
+    /*KR static NEARDATA const char nogood[] = " is not interested in your
+     * junk."; */
+    static NEARDATA const char nogood[] = " 당신의 잡동사니에는 관심이 없다.";
+    /*KR static NEARDATA const char acceptgift[] = " accepts your gift."; */
+    static NEARDATA const char acceptgift[] = " 당신의 선물을 받아들였다.";
+    /*KR static NEARDATA const char maybeluck[] = " hesitatingly"; */
+    static NEARDATA const char maybeluck[] = " 주저하며";
+    /*KR static NEARDATA const char noluck[] = " graciously"; */
+    static NEARDATA const char noluck[] = " 우아하게";
+    /*KR static NEARDATA const char addluck[] = " gratefully"; */
+    static NEARDATA const char addluck[] = " 고마워하며";
 
     Strcpy(buf, Monnam(mon));
+    /* 한국어는 주격 조사가 붙으므로 append_josa 사용 */
+    Strcpy(buf, append_josa(Monnam(mon), "은"));
     mon->mpeaceful = 1;
     mon->mavenge = 0;
 
@@ -1868,7 +2047,7 @@ register struct obj *obj;
     (void) mpickobj(mon, obj); /* may merge and free obj */
     ret = 1;
 
- nopick:
+nopick:
     if (!Blind)
         pline1(buf);
     if (!tele_restrict(mon))
@@ -1880,28 +2059,28 @@ register struct obj *obj;
  * Comments about the restructuring of the old breaks() routine.
  *
  * There are now three distinct phases to object breaking:
- *     breaktest() - which makes the check/decision about whether the
- *                   object is going to break.
- *     breakmsg()  - which outputs a message about the breakage,
- *                   appropriate for that particular object. Should
- *                   only be called after a positive breaktest().
- *                   on the object and, if it going to be called,
- *                   it must be called before calling breakobj().
- *                   Calling breakmsg() is optional.
- *     breakobj()  - which actually does the breakage and the side-effects
- *                   of breaking that particular object. This should
- *                   only be called after a positive breaktest() on the
- *                   object.
+ * breaktest() - which makes the check/decision about whether the
+ * object is going to break.
+ * breakmsg()  - which outputs a message about the breakage,
+ * appropriate for that particular object. Should
+ * only be called after a positive breaktest().
+ * on the object and, if it going to be called,
+ * it must be called before calling breakobj().
+ * Calling breakmsg() is optional.
+ * breakobj()  - which actually does the breakage and the side-effects
+ * of breaking that particular object. This should
+ * only be called after a positive breaktest() on the
+ * object.
  *
  * Each of the above routines is currently static to this source module.
  * There are two routines callable from outside this source module which
  * perform the routines above in the correct sequence.
  *
- *   hero_breaks() - called when an object is to be broken as a result
- *                   of something that the hero has done. (throwing it,
- *                   kicking it, etc.)
- *   breaks()      - called when an object is to be broken for some
- *                   reason other than the hero doing something to it.
+ * hero_breaks() - called when an object is to be broken as a result
+ * of something that the hero has done. (throwing it,
+ * kicking it, etc.)
+ * breaks()      - called when an object is to be broken for some
+ * reason other than the hero doing something to it.
  */
 
 /*
@@ -1942,19 +2121,25 @@ xchar x, y; /* object location (ox, oy may not be right) */
     return 1;
 }
 
-void
-release_camera_demon(obj, x, y)
-struct obj *obj;
+void release_camera_demon(obj, x, y) struct obj *obj;
 xchar x, y;
 {
     struct monst *mtmp;
     if (!rn2(3)
         && (mtmp = makemon(&mons[rn2(3) ? PM_HOMUNCULUS : PM_IMP], x, y,
-                           NO_MM_FLAGS)) != 0) {
+                           NO_MM_FLAGS))
+               != 0) {
         if (canspotmon(mtmp))
+#if 0 /*KR: 원본*/
             pline("%s is released!", Hallucination
                                          ? An(rndmonnam(NULL))
                                          : "The picture-painting demon");
+#else /*KR: KRNethack 맞춤 번역 */
+            pline("%s 풀려났다!",
+                  append_josa(Hallucination ? rndmonnam(NULL)
+                                            : "그림 그리는 악마",
+                              "이"));
+#endif
         mtmp->mpeaceful = !obj->cursed;
         set_malign(mtmp);
     }
@@ -1964,9 +2149,7 @@ xchar x, y;
  * Unconditionally break an object. Assumes all resistance checks
  * and break messages have been delivered prior to getting here.
  */
-void
-breakobj(obj, x, y, hero_caused, from_invent)
-struct obj *obj;
+void breakobj(obj, x, y, hero_caused, from_invent) struct obj *obj;
 xchar x, y;          /* object location (ox, oy may not be right) */
 boolean hero_caused; /* is this the hero's fault? */
 boolean from_invent;
@@ -1987,13 +2170,19 @@ boolean from_invent;
                 if (obj->otyp != POT_WATER) {
                     if (!breathless(youmonst.data)) {
                         /* [what about "familiar odor" when known?] */
-                        You("smell a peculiar odor...");
+                        /*KR You("smell a peculiar odor..."); */
+                        You("기이한 냄새를 맡았다...");
                     } else {
+#if 0 /*KR: 원본*/
                         const char *eyes = body_part(EYE);
 
                         if (eyecount(youmonst.data) != 1)
                             eyes = makeplural(eyes);
                         Your("%s %s.", eyes, vtense(eyes, "water"));
+#else /*KR: KRNethack 맞춤 번역 */
+                        Your("%s 눈물이 고였다.",
+                             append_josa(body_part(EYE), "에"));
+#endif
                     }
                 }
                 potionbreathe(obj);
@@ -2031,7 +2220,7 @@ boolean from_invent;
             if (shkp) { /* (implies *o_shop != '\0') */
                 static NEARDATA long lastmovetime = 0L;
                 static NEARDATA boolean peaceful_shk = FALSE;
-                /*  We want to base shk actions on her peacefulness
+                /* We want to base shk actions on her peacefulness
                     at start of this turn, so that "simultaneous"
                     multiple breakage isn't drastically worse than
                     single breakage.  (ought to be done via ESHK)  */
@@ -2076,14 +2265,17 @@ struct obj *obj;
     }
 }
 
-STATIC_OVL void
-breakmsg(obj, in_view)
+STATIC_OVL void 
+breakmsg(obj, in_view) 
 struct obj *obj;
 boolean in_view;
 {
     const char *to_pieces;
 
-    to_pieces = "";
+    /* "shatter" → "산산조각 났다"
+       "shatter into a thousand pieces" → "수천 조각으로 부서졌다" */
+    /*KR to_pieces = ""; */
+    to_pieces = "산산조각";
     switch (obj->oclass == POTION_CLASS ? POT_WATER : obj->otyp) {
     default: /* glass or crystal wand */
         if (obj->oclass != WAND_CLASS)
@@ -2094,26 +2286,36 @@ boolean in_view;
     case MIRROR:
     case CRYSTAL_BALL:
     case EXPENSIVE_CAMERA:
-        to_pieces = " into a thousand pieces";
+        /*KR to_pieces = " into a thousand pieces"; */
+        to_pieces = "수천 조각으로";
     /*FALLTHRU*/
     case POT_WATER: /* really, all potions */
         if (!in_view)
-            You_hear("%s shatter!", something);
+            /*KR You_hear("%s shatter!", something); */
+            You_hear("%s 산산조각 나는 소리가 들린다!",
+                     append_josa(something, "이"));
         else
+#if 0 /*KR: 원본*/
             pline("%s shatter%s%s!", Doname2(obj),
                   (obj->quan == 1L) ? "s" : "", to_pieces);
+#else /*KR: KRNethack 맞춤 번역 */
+            pline("%s %s 났다!", append_josa(Doname2(obj), "은"), to_pieces);
+#endif
         break;
     case EGG:
     case MELON:
-        pline("Splat!");
+        /*KR pline("Splat!"); */
+        pline("철퍽!");
         break;
     case CREAM_PIE:
         if (in_view)
-            pline("What a mess!");
+            /*KR pline("What a mess!"); */
+            pline("이게 웬 난장판이야!");
         break;
     case ACID_VENOM:
     case BLINDING_VENOM:
-        pline("Splash!");
+        /*KR pline("Splash!"); */
+        pline("철썩!");
         break;
     }
 }
@@ -2126,14 +2328,21 @@ struct obj *obj;
     register struct monst *mon;
 
     if (!u.dx && !u.dy && !u.dz) {
-        You("cannot throw gold at yourself.");
+        /*KR You("cannot throw gold at yourself."); */
+        You("자신에게 금화를 던질 수는 없다.");
         return 0;
     }
     freeinv(obj);
     if (u.uswallow) {
+#if 0 /*KR: 원본*/
         pline(is_animal(u.ustuck->data) ? "%s in the %s's entrails."
                                         : "%s into %s.",
               "The money disappears", mon_nam(u.ustuck));
+#else /*KR: KRNethack 맞춤 번역 */
+        pline(is_animal(u.ustuck->data) ? "돈이 %s의 내장 속으로 사라졌다."
+                                        : "돈이 %s 속으로 사라졌다.",
+              mon_nam(u.ustuck));
+#endif
         add_to_minv(u.ustuck, obj);
         return 1;
     }
@@ -2141,12 +2350,19 @@ struct obj *obj;
     if (u.dz) {
         if (u.dz < 0 && !Is_airlevel(&u.uz) && !Underwater
             && !Is_waterlevel(&u.uz)) {
+#if 0 /*KR: 원본*/
             pline_The("gold hits the %s, then falls back on top of your %s.",
                       ceiling(u.ux, u.uy), body_part(HEAD));
+#else /*KR: KRNethack 맞춤 번역 */
+            pline("금화가 %s에 부딪히고는, 당신의 %s 위로 떨어졌다.",
+                  ceiling(u.ux, u.uy), body_part(HEAD));
+#endif
             /* some self damage? */
             if (uarmh)
-                pline("Fortunately, you are wearing %s!",
-                      an(helm_simple_name(uarmh)));
+                /*KR pline("Fortunately, you are wearing %s!",
+                 * an(helm_simple_name(uarmh))); */
+                pline("다행히도, 당신은 %s 쓰고 있다!",
+                      append_josa(helm_simple_name(uarmh), "을"));
         }
         bhitpos.x = u.ux;
         bhitpos.y = u.uy;
@@ -2176,10 +2392,12 @@ struct obj *obj;
         }
     }
 
-    if (flooreffects(obj, bhitpos.x, bhitpos.y, "fall"))
+    /*KR if (flooreffects(obj, bhitpos.x, bhitpos.y, "fall")) */
+    if (flooreffects(obj, bhitpos.x, bhitpos.y, "떨어졌다"))
         return 1;
     if (u.dz > 0)
-        pline_The("gold hits the %s.", surface(bhitpos.x, bhitpos.y));
+        /*KR pline_The("gold hits the %s.", surface(bhitpos.x, bhitpos.y)); */
+        pline("금화가 %s에 명중했다.", surface(bhitpos.x, bhitpos.y));
     place_object(obj, bhitpos.x, bhitpos.y);
     if (*u.ushops)
         sellobj(obj, bhitpos.x, bhitpos.y);

@@ -41,32 +41,32 @@ static struct val_list {
                   { 0, 0 } };
 
 #ifndef NO_SIGNAL
-STATIC_PTR void FDECL(done_intr, (int));
+STATIC_PTR void FDECL(done_intr, (int) );
 #if defined(UNIX) || defined(VMS) || defined(__EMX__)
-static void FDECL(done_hangup, (int));
+static void FDECL(done_hangup, (int) );
 #endif
 #endif
 STATIC_DCL void FDECL(disclose, (int, BOOLEAN_P));
-STATIC_DCL void FDECL(get_valuables, (struct obj *));
-STATIC_DCL void FDECL(sort_valuables, (struct valuable_data *, int));
+STATIC_DCL void FDECL(get_valuables, (struct obj *) );
+STATIC_DCL void FDECL(sort_valuables, (struct valuable_data *, int) );
 STATIC_DCL void NDECL(done_object_cleanup);
 STATIC_DCL void FDECL(artifact_score, (struct obj *, BOOLEAN_P, winid));
-STATIC_DCL void FDECL(really_done, (int)) NORETURN;
-STATIC_DCL void FDECL(savelife, (int));
-STATIC_PTR int FDECL(CFDECLSPEC vanqsort_cmp, (const genericptr,
-                                               const genericptr));
+STATIC_DCL void FDECL(really_done, (int) ) NORETURN;
+STATIC_DCL void FDECL(savelife, (int) );
+STATIC_PTR int FDECL(CFDECLSPEC vanqsort_cmp,
+                     (const genericptr, const genericptr));
 STATIC_DCL int NDECL(set_vanq_order);
 STATIC_DCL void FDECL(list_vanquished, (CHAR_P, BOOLEAN_P));
 STATIC_DCL void FDECL(list_genocided, (CHAR_P, BOOLEAN_P));
-STATIC_DCL boolean FDECL(should_query_disclose_option, (int, char *));
+STATIC_DCL boolean FDECL(should_query_disclose_option, (int, char *) );
 #ifdef DUMPLOG
 STATIC_DCL void NDECL(dump_plines);
 #endif
-STATIC_DCL void FDECL(dump_everything, (int, time_t));
+STATIC_DCL void FDECL(dump_everything, (int, time_t) );
 STATIC_DCL int NDECL(num_extinct);
 
 #if defined(__BEOS__) || defined(MICRO) || defined(OS2)
-extern void FDECL(nethack_exit, (int));
+extern void FDECL(nethack_exit, (int) );
 #else
 #define nethack_exit exit
 #endif
@@ -99,11 +99,11 @@ extern void FDECL(nethack_exit, (int));
 
 /* What do we try and in what order?  Tradeoffs:
  * libc: +no external programs required
- *        -requires newish libc/glibc
- *        -requires -rdynamic
- * gdb:   +gives more detailed information
- *        +works on more OS versions
- *        -requires -g, which may preclude -O on some compilers
+ * -requires newish libc/glibc
+ * -requires -rdynamic
+ * gdb:  +gives more detailed information
+ * +works on more OS versions
+ * -requires -g, which may preclude -O on some compilers
  */
 #ifdef SYSCF
 #define SYSOPT_PANICTRACE_GDB sysopt.panictrace_gdb
@@ -123,7 +123,7 @@ extern void FDECL(nethack_exit, (int));
 
 static void NDECL(NH_abort);
 #ifndef NO_SIGNAL
-static void FDECL(panictrace_handler, (int));
+static void FDECL(panictrace_handler, (int) );
 #endif
 static boolean NDECL(NH_panictrace_libc);
 static boolean NDECL(NH_panictrace_gdb);
@@ -131,21 +131,17 @@ static boolean NDECL(NH_panictrace_gdb);
 #ifndef NO_SIGNAL
 /* called as signal() handler, so sent at least one arg */
 /*ARGUSED*/
-void
-panictrace_handler(sig_unused)
-int sig_unused UNUSED;
+void panictrace_handler(sig_unused) int sig_unused UNUSED;
 {
 #define SIG_MSG "\nSignal received.\n"
     int f2;
-    
+
     f2 = (int) write(2, SIG_MSG, sizeof SIG_MSG - 1);
     nhUse(f2);  /* what could we do if write to fd#2 (stderr) fails  */
     NH_abort(); /* ... and we're already in the process of quitting? */
 }
 
-void
-panictrace_setsignals(set)
-boolean set;
+void panictrace_setsignals(set) boolean set;
 {
 #define SETSIGNAL(sig) \
     (void) signal(sig, set ? (SIG_RET_TYPE) panictrace_handler : SIG_DFL);
@@ -238,8 +234,8 @@ NH_panictrace_libc()
 }
 
 /*
- *   fooPATH  file system path for foo
- *   fooVAR   (possibly const) variable containing fooPATH
+ * fooPATH  file system path for foo
+ * fooVAR   (possibly const) variable containing fooPATH
  */
 #ifdef PANICTRACE_GDB
 #ifdef SYSCF
@@ -267,8 +263,8 @@ NH_panictrace_gdb()
     if (greppath == NULL || greppath[0] == 0)
         return FALSE;
 
-    sprintf(buf, "%s -n -q %s %d 2>&1 | %s '^#'",
-            gdbpath, ARGV0, getpid(), greppath);
+    sprintf(buf, "%s -n -q %s %d 2>&1 | %s '^#'", gdbpath, ARGV0, getpid(),
+            greppath);
     gdb = popen(buf, "w");
     if (gdb) {
         raw_print("Generating more information you may report:\n");
@@ -298,7 +294,8 @@ static NEARDATA const char *deaths[] = {
 };
 
 static NEARDATA const char *ends[] = {
-    /* "when you %s" */
+/* "when you %s" */
+#if 0 /*KR: 원본*/
     "died", "choked", "were poisoned",
     "starved", "drowned", "burned",
     "dissolved in the lava",
@@ -306,14 +303,22 @@ static NEARDATA const char *ends[] = {
     "turned into slime", "were genocided",
     "panicked", "were tricked", "quit",
     "escaped", "ascended"
+#else /*KR: KRNethack 맞춤 번역 */
+    "사망했다",          "질식했다",        "중독되었다",
+    "아사했다",          "익사했다",        "불에 탔다",
+    "용암에 녹아내렸다", "압사당했다",      "돌로 변했다",
+    "슬라임으로 변했다", "멸종되었다",      "공황 상태에 빠졌다",
+    "속임수에 당했다",   "게임을 포기했다", "탈출했다",
+    "승천했다"
+#endif
 };
 
 static boolean Schroedingers_cat = FALSE;
 
 /*ARGSUSED*/
-void
-done1(sig_unused) /* called as signal() handler, so sent at least one arg */
-int sig_unused UNUSED;
+void done1(
+    sig_unused) /* called as signal() handler, so sent at least one arg */
+    int sig_unused UNUSED;
 {
 #ifndef NO_SIGNAL
     (void) signal(SIGINT, SIG_IGN);
@@ -338,7 +343,11 @@ done2()
 {
     if (iflags.debug_fuzzer)
         return 0;
+#if 0 /*KR: 원본*/
     if (!paranoid_query(ParanoidQuit, "Really quit?")) {
+#else /*KR: KRNethack 맞춤 번역 */
+    if (!paranoid_query(ParanoidQuit, "정말 게임을 종료하시겠습니까?")) {
+#endif
 #ifndef NO_SIGNAL
         (void) signal(SIGINT, (SIG_RET_TYPE) done1);
 #endif
@@ -385,9 +394,9 @@ done2()
 
 #ifndef NO_SIGNAL
 /*ARGSUSED*/
-STATIC_PTR void
-done_intr(sig_unused) /* called as signal() handler, so sent at least 1 arg */
-int sig_unused UNUSED;
+STATIC_PTR void done_intr(
+    sig_unused) /* called as signal() handler, so sent at least 1 arg */
+    int sig_unused UNUSED;
 {
     done_stopprint++;
     (void) signal(SIGINT, SIG_IGN);
@@ -399,9 +408,7 @@ int sig_unused UNUSED;
 
 #if defined(UNIX) || defined(VMS) || defined(__EMX__)
 /* signal() handler */
-static void
-done_hangup(sig)
-int sig;
+static void done_hangup(sig) int sig;
 {
     program_state.done_hup++;
     sethanguphandler((void FDECL((*), (int) )) SIG_IGN);
@@ -411,21 +418,22 @@ int sig;
 #endif
 #endif /* NO_SIGNAL */
 
-void
-done_in_by(mtmp, how)
-struct monst *mtmp;
+void done_in_by(mtmp, how) struct monst *mtmp;
 int how;
 {
     char buf[BUFSZ];
     struct permonst *mptr = mtmp->data,
-                    *champtr = ((mtmp->cham >= LOW_PM)
-                                   ? &mons[mtmp->cham]
-                                   : mptr);
+                    *champtr =
+                        ((mtmp->cham >= LOW_PM) ? &mons[mtmp->cham] : mptr);
     boolean distorted = (boolean) (Hallucination && canspotmon(mtmp)),
             mimicker = (M_AP_TYPE(mtmp) == M_AP_MONSTER),
             imitator = (mptr != champtr || mimicker);
 
+#if 0 /*KR: 원본*/
     You((how == STONING) ? "turn to stone..." : "die...");
+#else /*KR: KRNethack 맞춤 번역 */
+    You((how == STONING) ? "돌로 변했다..." : "사망했다...");
+#endif
     mark_synch(); /* flush buffered screen output */
     buf[0] = '\0';
     killer.format = KILLED_BY_AN;
@@ -443,9 +451,11 @@ int how;
         killer.format = KILLED_BY;
     }
     if (mtmp->minvis)
-        Strcat(buf, "invisible ");
+        /*KR Strcat(buf, "invisible "); */
+        Strcat(buf, "투명한 ");
     if (distorted)
-        Strcat(buf, "hallucinogen-distorted ");
+        /*KR Strcat(buf, "hallucinogen-distorted "); */
+        Strcat(buf, "환각으로 일그러진 ");
 
     if (imitator) {
         char shape[BUFSZ];
@@ -473,22 +483,37 @@ int how;
         else /* "a"/"an" */
             Strcpy(shape, an(fakenm));
         /* omit "called" to avoid excessive verbosity */
+#if 0 /*KR: 원본*/
         Sprintf(eos(buf),
                 alt ? "%s in %s form"
                     : mimicker ? "%s disguised as %s"
                                : "%s imitating %s",
                 realnm, shape);
+#else /*KR: KRNethack 맞춤 번역 */
+        Sprintf(eos(buf),
+                alt        ? "%s의 모습을 한 %s"
+                : mimicker ? "%s(으)로 위장한 %s"
+                           : "%s(을)를 흉내내는 %s",
+                shape, realnm);
+#endif
         mptr = mtmp->data; /* reset for mimicker case */
     } else if (mptr == &mons[PM_GHOST]) {
-        Strcat(buf, "ghost");
+        /*KR Strcat(buf, "ghost"); */
+        Strcat(buf, "유령");
         if (has_mname(mtmp))
-            Sprintf(eos(buf), " of %s", MNAME(mtmp));
+            /*KR Sprintf(eos(buf), " of %s", MNAME(mtmp)); */
+            Sprintf(eos(buf), " (%s의 유령)", MNAME(mtmp));
     } else if (mtmp->isshk) {
         const char *shknm = shkname(mtmp),
                    *honorific = shkname_is_pname(mtmp) ? ""
-                                   : mtmp->female ? "Ms. " : "Mr. ";
+                                : mtmp->female         ? "Ms. "
+                                                       : "Mr. ";
 
+#if 0 /*KR: 원본*/
         Sprintf(eos(buf), "%s%s, the shopkeeper", honorific, shknm);
+#else /*KR: KRNethack 맞춤 번역 */
+        Sprintf(eos(buf), "%s%s 상점주인", honorific, shknm);
+#endif
         killer.format = KILLED_BY;
     } else if (mtmp->ispriest || mtmp->isminion) {
         /* m_monnam() suppresses "the" prefix plus "invisible", and
@@ -497,18 +522,19 @@ int how;
     } else {
         Strcat(buf, mptr->mname);
         if (has_mname(mtmp))
-            Sprintf(eos(buf), " called %s", MNAME(mtmp));
+            /*KR Sprintf(eos(buf), " called %s", MNAME(mtmp)); */
+            Sprintf(eos(buf), " (이름: %s)", MNAME(mtmp));
     }
 
     Strcpy(killer.name, buf);
     /*
      * Chicken and egg issue:
-     *  Ordinarily Unchanging ought to override something like this,
-     *  but the transformation occurs at death.  With the current code,
-     *  the effectiveness of Unchanging stops first, but a case could
-     *  be made that it should last long enough to prevent undead
-     *  transformation.  (Turning to slime isn't an issue here because
-     *  Unchanging prevents that from happening.)
+     * Ordinarily Unchanging ought to override something like this,
+     * but the transformation occurs at death.  With the current code,
+     * the effectiveness of Unchanging stops first, but a case could
+     * be made that it should last long enough to prevent undead
+     * transformation.  (Turning to slime isn't an issue here because
+     * Unchanging prevents that from happening.)
      */
     if (mptr->mlet == S_WRAITH)
         u.ugrave_arise = PM_WRAITH;
@@ -545,9 +571,7 @@ static const struct {
 
 /* clear away while-helpless when the cause of death caused that
    helplessness (ie, "petrified by <foo> while getting stoned") */
-STATIC_DCL void
-fixup_death(how)
-int how;
+STATIC_DCL void fixup_death(how) int how;
 {
     int i;
 
@@ -587,11 +611,19 @@ VA_DECL(const char *, str)
         iflags.window_inited = 0; /* they're gone; force raw_print()ing */
     }
 
+#if 0 /*KR: 원본*/
     raw_print(program_state.gameover
                   ? "Postgame wrapup disrupted."
                   : !program_state.something_worth_saving
                         ? "Program initialization has failed."
                         : "Suddenly, the dungeon collapses.");
+#else /*KR: KRNethack 맞춤 번역 */
+    raw_print(program_state.gameover
+                  ? "게임 종료 처리 중 문제가 발생했습니다."
+              : !program_state.something_worth_saving
+                  ? "프로그램 초기화에 실패했습니다."
+                  : "갑자기 던전이 무너져 내립니다.");
+#endif
 #ifndef MICRO
 #ifdef NOTIFY_NETHACK_BUGS
     if (!wizard)
@@ -601,9 +633,16 @@ VA_DECL(const char *, str)
         raw_print("\nError save file being written.\n");
 #else /* !NOTIFY_NETHACK_BUGS */
     if (!wizard) {
+#if 0 /*KR: 원본*/
         const char *maybe_rebuild = !program_state.something_worth_saving
                                      ? "."
                                      : "\nand it may be possible to rebuild.";
+#else /*KR: KRNethack 맞춤 번역 */
+        const char *maybe_rebuild =
+            !program_state.something_worth_saving
+                ? "."
+                : "\n또한 복구할 수 있을지도 모릅니다.";
+#endif
 
         if (sysopt.support)
             raw_printf("To report this error, %s%s", sysopt.support,
@@ -663,8 +702,8 @@ char *defquery;
         idx = (int) (dop - disclosure_options);
         if (idx < 0 || idx >= NUM_DISCLOSURE_OPTIONS) {
             impossible(
-                   "should_query_disclose_option: bad disclosure index %d %c",
-                       idx, category);
+                "should_query_disclose_option: bad disclosure index %d %c",
+                idx, category);
             *defquery = DISCLOSE_PROMPT_DEFAULT_YES;
             return TRUE;
         }
@@ -703,7 +742,8 @@ dump_plines()
     extern unsigned saved_pline_index;
 
     Strcpy(buf, " "); /* one space for indentation */
-    putstr(0, 0, "Latest messages:");
+    /*KR putstr(0, 0, "Latest messages:"); */
+    putstr(0, 0, "최근 메시지:");
     for (i = 0, j = (int) saved_pline_index; i < DUMPLOG_MSG_COUNT;
          ++i, j = (j + 1) % DUMPLOG_MSG_COUNT) {
         strp = &saved_plines[j];
@@ -719,9 +759,7 @@ dump_plines()
 #endif
 
 /*ARGSUSED*/
-STATIC_OVL void
-dump_everything(how, when)
-int how;
+STATIC_OVL void dump_everything(how, when) int how;
 time_t when; /* date+time at end of game */
 {
 #ifdef DUMPLOG
@@ -742,21 +780,31 @@ time_t when; /* date+time at end of game */
 
     /* game start and end date+time to disambiguate version date+time */
     Strcpy(datetimebuf, yyyymmddhhmmss(ubirthday));
+#if 0 /*KR: 원본*/
     Sprintf(pbuf, "Game began %4.4s-%2.2s-%2.2s %2.2s:%2.2s:%2.2s",
             &datetimebuf[0], &datetimebuf[4], &datetimebuf[6],
             &datetimebuf[8], &datetimebuf[10], &datetimebuf[12]);
+#else /*KR: KRNethack 맞춤 번역 */
+    Sprintf(pbuf, "게임 시작: %4.4s-%2.2s-%2.2s %2.2s:%2.2s:%2.2s",
+            &datetimebuf[0], &datetimebuf[4], &datetimebuf[6],
+            &datetimebuf[8], &datetimebuf[10], &datetimebuf[12]);
+#endif
     Strcpy(datetimebuf, yyyymmddhhmmss(when));
+#if 0 /*KR: 원본*/
     Sprintf(eos(pbuf), ", ended %4.4s-%2.2s-%2.2s %2.2s:%2.2s:%2.2s.",
             &datetimebuf[0], &datetimebuf[4], &datetimebuf[6],
             &datetimebuf[8], &datetimebuf[10], &datetimebuf[12]);
+#else /*KR: KRNethack 맞춤 번역 */
+    Sprintf(eos(pbuf), ", 종료: %4.4s-%2.2s-%2.2s %2.2s:%2.2s:%2.2s.",
+            &datetimebuf[0], &datetimebuf[4], &datetimebuf[6],
+            &datetimebuf[8], &datetimebuf[10], &datetimebuf[12]);
+#endif
     putstr(0, 0, pbuf);
     putstr(0, 0, "");
 
     /* character name and basic role info */
-    Sprintf(pbuf, "%s, %s %s %s %s", plname,
-            aligns[1 - u.ualign.type].adj,
-            genders[flags.female].adj,
-            urace.adj,
+    Sprintf(pbuf, "%s, %s %s %s %s", plname, aligns[1 - u.ualign.type].adj,
+            genders[flags.female].adj, urace.adj,
             (flags.female && urole.name.f) ? urole.name.f : urole.name.m);
     putstr(0, 0, pbuf);
     putstr(0, 0, "");
@@ -768,7 +816,8 @@ time_t when; /* date+time at end of game */
 
     dump_plines();
     putstr(0, 0, "");
-    putstr(0, 0, "Inventory:");
+    /*KR putstr(0, 0, "Inventory:"); */
+    putstr(0, 0, "소지품:");
     (void) display_inventory((char *) 0, TRUE);
     container_contents(invent, TRUE, TRUE, FALSE);
     enlightenment((BASICENLIGHTENMENT | MAGICENLIGHTENMENT),
@@ -789,9 +838,7 @@ time_t when; /* date+time at end of game */
 #endif
 }
 
-STATIC_OVL void
-disclose(how, taken)
-int how;
+STATIC_OVL void disclose(how, taken) int how;
 boolean taken;
 {
     char c = '\0', defquery;
@@ -800,10 +847,16 @@ boolean taken;
 
     if (invent && !done_stopprint) {
         if (taken)
+#if 0 /*KR: 원본*/
             Sprintf(qbuf, "Do you want to see what you had when you %s?",
                     (how == QUIT) ? "quit" : "died");
+#else /*KR: KRNethack 맞춤 번역 */
+            Sprintf(qbuf, "%s 당시 무엇을 가지고 있었는지 보시겠습니까?",
+                    (how == QUIT) ? "게임을 포기했을" : "사망했을");
+#endif
         else
-            Strcpy(qbuf, "Do you want your possessions identified?");
+            /*KR Strcpy(qbuf, "Do you want your possessions identified?"); */
+            Strcpy(qbuf, "소지품을 감정하시겠습니까?");
 
         ask = should_query_disclose_option('i', &defquery);
         c = ask ? yn_function(qbuf, ynqchars, defquery) : defquery;
@@ -818,9 +871,15 @@ boolean taken;
 
     if (!done_stopprint) {
         ask = should_query_disclose_option('a', &defquery);
+#if 0 /*KR: 원본*/
         c = ask ? yn_function("Do you want to see your attributes?", ynqchars,
                               defquery)
                 : defquery;
+#else /*KR: KRNethack 맞춤 번역 */
+        c = ask ? yn_function("당신의 속성을 보시겠습니까?", ynqchars,
+                              defquery)
+                : defquery;
+#endif
         if (c == 'y')
             enlightenment((BASICENLIGHTENMENT | MAGICENLIGHTENMENT),
                           (how >= PANICKED) ? ENL_GAMEOVERALIVE
@@ -841,9 +900,15 @@ boolean taken;
 
     if (!done_stopprint) {
         ask = should_query_disclose_option('c', &defquery);
+#if 0 /*KR: 원본*/
         c = ask ? yn_function("Do you want to see your conduct?", ynqchars,
                               defquery)
                 : defquery;
+#else /*KR: KRNethack 맞춤 번역 */
+        c = ask ? yn_function("어떤 자발적 도전과제를 지켰는지 보시겠습니까?",
+                              ynqchars, defquery)
+                : defquery;
+#endif
         if (c == 'y')
             show_conduct((how >= PANICKED) ? 1 : 2);
         if (c == 'q')
@@ -852,9 +917,14 @@ boolean taken;
 
     if (!done_stopprint) {
         ask = should_query_disclose_option('o', &defquery);
+#if 0 /*KR: 원본*/
         c = ask ? yn_function("Do you want to see the dungeon overview?",
                               ynqchars, defquery)
                 : defquery;
+#else /*KR: KRNethack 맞춤 번역 */
+        c = ask ? yn_function("던전 개요를 보시겠습니까?", ynqchars, defquery)
+                : defquery;
+#endif
         if (c == 'y')
             show_overview((how >= PANICKED) ? 1 : 2, how);
         if (c == 'q')
@@ -863,9 +933,7 @@ boolean taken;
 }
 
 /* try to get the player back in a viable state after being killed */
-STATIC_OVL void
-savelife(how)
-int how;
+STATIC_OVL void savelife(how) int how;
 {
     int uhpmin = max(2 * u.ulevel, 10);
 
@@ -881,7 +949,8 @@ int how;
     if ((Sick & TIMEOUT) == 1L) {
         make_sick(0L, (char *) 0, FALSE, SICK_ALL);
     }
-    nomovemsg = "You survived that attempt on your life.";
+    /*KR nomovemsg = "You survived that attempt on your life."; */
+    nomovemsg = "당신은 죽음의 위기를 극복해냈다.";
     context.move = 0;
     if (multi > 0)
         multi = 0;
@@ -900,9 +969,12 @@ int how;
         expels(u.ustuck, u.ustuck->data, TRUE);
     } else if (u.ustuck) {
         if (Upolyd && sticks(youmonst.data))
-            You("release %s.", mon_nam(u.ustuck));
+            /*KR You("release %s.", mon_nam(u.ustuck)); */
+            You("%s 놓아주었다.", append_josa(mon_nam(u.ustuck), "을"));
         else
-            pline("%s releases you.", Monnam(u.ustuck));
+            /*KR pline("%s releases you.", Monnam(u.ustuck)); */
+            pline("%s 당신을 놓아주었다.",
+                  append_josa(Monnam(u.ustuck), "이"));
         unstuck(u.ustuck);
     }
 }
@@ -911,9 +983,8 @@ int how;
  * Get valuables from the given list.  Revised code: the list always remains
  * intact.
  */
-STATIC_OVL void
-get_valuables(list)
-struct obj *list; /* inventory or container contents */
+STATIC_OVL void get_valuables(
+    list) struct obj *list; /* inventory or container contents */
 {
     register struct obj *obj;
     register int i;
@@ -943,12 +1014,10 @@ struct obj *list; /* inventory or container contents */
 }
 
 /*
- *  Sort collected valuables, most frequent to least.  We could just
- *  as easily use qsort, but we don't care about efficiency here.
+ * Sort collected valuables, most frequent to least.  We could just
+ * as easily use qsort, but we don't care about efficiency here.
  */
-STATIC_OVL void
-sort_valuables(list, size)
-struct valuable_data list[];
+STATIC_OVL void sort_valuables(list, size) struct valuable_data list[];
 int size; /* max value is less than 20 */
 {
     register int i, j;
@@ -1058,9 +1127,7 @@ done_object_cleanup()
 }
 
 /* called twice; first to calculate total, then to list relevant items */
-STATIC_OVL void
-artifact_score(list, counting, endwin)
-struct obj *list;
+STATIC_OVL void artifact_score(list, counting, endwin) struct obj *list;
 boolean counting; /* true => add up points; false => display them */
 winid endwin;
 {
@@ -1081,11 +1148,18 @@ winid endwin;
                 discover_object(otmp->otyp, TRUE, FALSE);
                 otmp->known = otmp->dknown = otmp->bknown = otmp->rknown = 1;
                 /* assumes artifacts don't have quan > 1 */
+#if 0 /*KR: 원본*/
                 Sprintf(pbuf, "%s%s (worth %ld %s and %ld points)",
                         the_unique_obj(otmp) ? "The " : "",
                         otmp->oartifact ? artifact_name(xname(otmp), &dummy)
                                         : OBJ_NAME(objects[otmp->otyp]),
                         value, currency(value), points);
+#else /*KR: KRNethack 맞춤 번역 */
+                Sprintf(pbuf, "%s (가치: %ld%s, %ld포인트)",
+                        otmp->oartifact ? artifact_name(xname(otmp), &dummy)
+                                        : OBJ_NAME(objects[otmp->otyp]),
+                        value, currency(value), points);
+#endif
                 putstr(endwin, 0, pbuf);
             }
         }
@@ -1095,9 +1169,7 @@ winid endwin;
 }
 
 /* Be careful not to call panic from here! */
-void
-done(how)
-int how;
+void done(how) int how;
 {
     boolean survive = FALSE;
 
@@ -1107,7 +1179,8 @@ int how;
             killer.name[0] = '\0';
         }
         if (wizard) {
-            You("are a very tricky wizard, it seems.");
+            /*KR You("are a very tricky wizard, it seems."); */
+            You("당신은 매우 교활한 마법사인 것 같군요.");
             killer.format = KILLED_BY_AN; /* reset to 0 */
             return;
         }
@@ -1116,7 +1189,7 @@ int how;
 #ifdef HANGUPHANDLING
         || program_state.done_hup
 #endif
-        ) {
+    ) {
         /* skip status update if panicking or disconnected */
         context.botl = context.botlx = iflags.time_botl = FALSE;
     } else {
@@ -1132,7 +1205,8 @@ int how;
                or cure lycanthropy */
             if (!rn2(10)) {
                 struct obj *potion = mksobj((u.ulycn > LOW_PM && !rn2(3))
-                                            ? POT_WATER : POT_RESTORE_ABILITY,
+                                                ? POT_WATER
+                                                : POT_RESTORE_ABILITY,
                                             TRUE, FALSE);
 
                 bless(potion);
@@ -1144,14 +1218,14 @@ int how;
             killer.format = 0;
             return;
         }
-    } else
-    if (how == ASCENDED || (!killer.name[0] && how == GENOCIDED))
+    } else if (how == ASCENDED || (!killer.name[0] && how == GENOCIDED))
         killer.format = NO_KILLER_PREFIX;
     /* Avoid killed by "a" burning or "a" starvation */
     if (!killer.name[0] && (how == STARVING || how == BURNING))
         killer.format = KILLED_BY;
     if (!killer.name[0] || how >= PANICKED)
-        Strcpy(killer.name, deaths[how]);
+        /*KR Strcpy(killer.name, deaths[how]); */
+        Strcpy(killer.name, ends[how]);
 
     if (how < PANICKED) {
         u.umortality++;
@@ -1166,28 +1240,43 @@ int how;
         }
     }
     if (Lifesaved && (how <= GENOCIDED)) {
-        pline("But wait...");
+        /*KR pline("But wait..."); */
+        pline("하지만 잠깐...");
         makeknown(AMULET_OF_LIFE_SAVING);
-        Your("medallion %s!", !Blind ? "begins to glow" : "feels warm");
+        /*KR Your("medallion %s!", !Blind ? "begins to glow" : "feels warm");
+         */
+        Your("메달이 %s!", !Blind ? "빛나기 시작했다" : "따뜻하게 느껴진다");
         if (how == CHOKING)
-            You("vomit ...");
-        You_feel("much better!");
-        pline_The("medallion crumbles to dust!");
+            /*KR You("vomit ..."); */
+            You("게워냈다...");
+        /*KR You_feel("much better!"); */
+        You_feel("훨씬 나아졌다!");
+        /*KR pline_The("medallion crumbles to dust!"); */
+        pline("메달은 부서져 먼지가 되었다!");
         if (uamul)
             useup(uamul);
 
         (void) adjattrib(A_CON, -1, TRUE);
         savelife(how);
         if (how == GENOCIDED) {
-            pline("Unfortunately you are still genocided...");
+            /*KR pline("Unfortunately you are still genocided..."); */
+            pline("불행히도, 당신은 여전히 멸종된 상태다...");
         } else {
             survive = TRUE;
         }
     }
     /* explore and wizard modes offer player the option to keep playing */
+#if 0 /*KR: 원본*/
     if (!survive && (wizard || discover) && how <= GENOCIDED
         && !paranoid_query(ParanoidDie, "Die?")) {
-        pline("OK, so you don't %s.", (how == CHOKING) ? "choke" : "die");
+#else /*KR: KRNethack 맞춤 번역 */
+    if (!survive && (wizard || discover) && how <= GENOCIDED
+        && !paranoid_query(ParanoidDie, "이대로 죽으시겠습니까?")) {
+#endif
+        /*KR pline("OK, so you don't %s.", (how == CHOKING) ? "choke" :
+         * "die"); */
+        pline("좋습니다. 당신은 %s.",
+              (how == CHOKING) ? "질식하지 않았습니다" : "죽지 않았습니다");
         iflags.last_msg = PLNMSG_OK_DONT_DIE;
         savelife(how);
         survive = TRUE;
@@ -1203,9 +1292,7 @@ int how;
 }
 
 /* separated from done() in order to specify the __noreturn__ attribute */
-STATIC_OVL void
-really_done(how)
-int how;
+STATIC_OVL void really_done(how) int how;
 {
     boolean taken;
     char pbuf[BUFSZ];
@@ -1217,7 +1304,7 @@ int how;
     long tmp;
 
     /*
-     *  The game is now over...
+     * The game is now over...
      */
     program_state.gameover = 1;
     /* in case of a subsequent panic(), there's no point trying to save */
@@ -1251,7 +1338,10 @@ int how;
      * smiling... :-)  -3.
      */
     if (moves <= 1 && how < PANICKED && !done_stopprint)
-        pline("Do not pass Go.  Do not collect 200 %s.", currency(200L));
+        /*KR pline("Do not pass Go.  Do not collect 200 %s.", currency(200L));
+         */
+        pline("출발선을 지나치지 마시오. 200 %s(을)를 받지 마시오.",
+              currency(200L)); /* (모노폴리 게임 패러디) */
 
     if (have_windows)
         wait_synch(); /* flush screen output */
@@ -1270,9 +1360,9 @@ int how;
 
     /* maintain ugrave_arise even for !bones_ok */
     if (how == PANICKED)
-        u.ugrave_arise = (NON_PM - 3); /* no corpse, no grave */
+        u.ugrave_arise = (NON_PM - 3);           /* no corpse, no grave */
     else if (how == BURNING || how == DISSOLVED) /* corpse burns up too */
-        u.ugrave_arise = (NON_PM - 2); /* leave no corpse */
+        u.ugrave_arise = (NON_PM - 2);           /* leave no corpse */
     else if (how == STONING)
         u.ugrave_arise = (NON_PM - 1); /* statue instead of corpse */
     else if (how == TURNED_SLIME
@@ -1288,7 +1378,11 @@ int how;
         if (u.uhp < 1) {
             how = DIED;
             u.umortality++; /* skipped above when how==QUIT */
-            Strcpy(killer.name, "quit while already on Charon's boat");
+            /*KR Strcpy(killer.name, "quit while already on Charon's boat");
+             */
+            Strcpy(
+                killer.name,
+                "이미 저승의 뱃사공 카론의 배에 탄 상태에서 게임을 종료했다");
         }
     }
     if (how == ESCAPED || how == PANICKED)
@@ -1371,7 +1465,8 @@ int how;
                        : urace.malenum;
         }
         corpse = mk_named_object(CORPSE, &mons[mnum], u.ux, u.uy, plname);
-        Sprintf(pbuf, "%s, ", plname);
+        /*KR Sprintf(pbuf, "%s, ", plname); */
+        Sprintf(pbuf, "%s의 묘, ", plname);
         formatkiller(eos(pbuf), sizeof pbuf - strlen(pbuf), how, TRUE);
         make_grave(u.ux, u.uy, pbuf);
     }
@@ -1410,19 +1505,28 @@ int how;
         /* give this feedback even if bones aren't going to be created,
            so that its presence or absence doesn't tip off the player to
            new bones or their lack; it might be a lie if makemon fails */
+#if 0 /*KR: 원본*/
         Your("%s as %s...",
              (u.ugrave_arise != PM_GREEN_SLIME)
                  ? "body rises from the dead"
                  : "revenant persists",
              an(mons[u.ugrave_arise].mname));
+#else /*KR: KRNethack 맞춤 번역 */
+        Your("%s %s(으)로 일어났다...",
+             (u.ugrave_arise != PM_GREEN_SLIME) ? "시체가 죽음에서 깨어나"
+                                                : "망령이",
+             mons[u.ugrave_arise].mname);
+#endif
         display_nhwindow(WIN_MESSAGE, FALSE);
     }
 
     if (bones_ok) {
-        if (!wizard || paranoid_query(ParanoidBones, "Save bones?"))
+        /*KR if (!wizard || paranoid_query(ParanoidBones, "Save bones?")) */
+        if (!wizard
+            || paranoid_query(ParanoidBones, "유골을 저장하시겠습니까?"))
             savebones(how, endtime, corpse);
         /* corpse may be invalid pointer now so
-            ensure that it isn't used again */
+           ensure that it isn't used again */
         corpse = (struct obj *) 0;
     }
 
@@ -1435,15 +1539,15 @@ int how;
         wait_synch();
         free_pickinv_cache(); /* extra persistent window if perm_invent */
         if (WIN_INVEN != WIN_ERR) {
-            destroy_nhwindow(WIN_INVEN),  WIN_INVEN = WIN_ERR;
+            destroy_nhwindow(WIN_INVEN), WIN_INVEN = WIN_ERR;
             /* precaution in case any late update_inventory() calls occur */
             iflags.perm_invent = 0;
         }
         display_nhwindow(WIN_MESSAGE, TRUE);
-        destroy_nhwindow(WIN_MAP),  WIN_MAP = WIN_ERR;
+        destroy_nhwindow(WIN_MAP), WIN_MAP = WIN_ERR;
         if (WIN_STATUS != WIN_ERR)
-            destroy_nhwindow(WIN_STATUS),  WIN_STATUS = WIN_ERR;
-        destroy_nhwindow(WIN_MESSAGE),  WIN_MESSAGE = WIN_ERR;
+            destroy_nhwindow(WIN_STATUS), WIN_STATUS = WIN_ERR;
+        destroy_nhwindow(WIN_MESSAGE), WIN_MESSAGE = WIN_ERR;
 
         if (!done_stopprint || flags.tombstone)
             endwin = create_nhwindow(NHW_TEXT);
@@ -1464,21 +1568,34 @@ int how;
     }
 #endif
     if (u.uhave.amulet) {
-        Strcat(killer.name, " (with the Amulet)");
+        /*KR Strcat(killer.name, " (with the Amulet)"); */
+        Strcat(killer.name, " (부적을 가진 채로)");
     } else if (how == ESCAPED) {
         if (Is_astralevel(&u.uz)) /* offered Amulet to wrong deity */
-            Strcat(killer.name, " (in celestial disgrace)");
+            /*KR Strcat(killer.name, " (in celestial disgrace)"); */
+            Strcat(killer.name, " (천상계에서 불명예스럽게)");
         else if (carrying(FAKE_AMULET_OF_YENDOR))
-            Strcat(killer.name, " (with a fake Amulet)");
+            /*KR Strcat(killer.name, " (with a fake Amulet)"); */
+            Strcat(killer.name, " (가짜 부적을 가진 채로)");
         /* don't bother counting to see whether it should be plural */
     }
 
+#if 0 /*KR: 원본*/
     Sprintf(pbuf, "%s %s the %s...", Goodbye(), plname,
             (how != ASCENDED)
                 ? (const char *) ((flags.female && urole.name.f)
                     ? urole.name.f
                     : urole.name.m)
                 : (const char *) (flags.female ? "Demigoddess" : "Demigod"));
+#else /*KR: KRNethack 맞춤 번역 */
+    Sprintf(pbuf, "%s, %s %s...", Goodbye(),
+            (how != ASCENDED)
+                ? (const char *) ((flags.female && urole.name.f)
+                                      ? urole.name.f
+                                      : urole.name.m)
+                : (const char *) (flags.female ? "반신(여신)" : "반신(신)"),
+            plname);
+#endif
     dump_forward_putstr(endwin, 0, pbuf, done_stopprint);
     dump_forward_putstr(endwin, 0, "", done_stopprint);
 
@@ -1508,10 +1625,12 @@ int how;
 
         viz_array[0][0] |= IN_SIGHT; /* need visibility for naming */
         mtmp = mydogs;
-        Strcpy(pbuf, "You");
+        /*KR Strcpy(pbuf, "You"); */
+        Strcpy(pbuf, "당신");
         if (mtmp || Schroedingers_cat) {
             while (mtmp) {
-                Sprintf(eos(pbuf), " and %s", mon_nam(mtmp));
+                /*KR Sprintf(eos(pbuf), " and %s", mon_nam(mtmp)); */
+                Sprintf(eos(pbuf), " 그리고 %s", mon_nam(mtmp));
                 if (mtmp->mtame)
                     nowrap_add(u.urexp, mtmp->mhp);
                 mtmp = mtmp->nmon;
@@ -1523,17 +1642,28 @@ int how;
 
                 mhp = d(m_lev, 8);
                 nowrap_add(u.urexp, mhp);
-                Strcat(eos(pbuf), " and Schroedinger's cat");
+                /*KR Strcat(eos(pbuf), " and Schroedinger's cat"); */
+                Strcat(eos(pbuf), " 그리고 슈뢰딩거의 고양이");
             }
+#if 1 /*KR*/
+            if (!done_stopprint)
+                Strcat(pbuf, "는");
+#endif
             dump_forward_putstr(endwin, 0, pbuf, done_stopprint);
             pbuf[0] = '\0';
         } else {
-            Strcat(pbuf, " ");
+            /*KR Strcat(pbuf, " "); */
+            Strcat(pbuf, "은(는) ");
         }
+#if 0 /*KR: 원본*/
         Sprintf(eos(pbuf), "%s with %ld point%s,",
                 how == ASCENDED ? "went to your reward"
                                  : "escaped from the dungeon",
                 u.urexp, plur(u.urexp));
+#else /*KR: KRNethack 맞춤 번역 */
+        Sprintf(eos(pbuf), "%ld 포인트로 %s,", u.urexp,
+                how == ASCENDED ? "승천했다" : "던전에서 탈출했다");
+#endif
         dump_forward_putstr(endwin, 0, pbuf, done_stopprint);
 
         if (!done_stopprint)
@@ -1562,13 +1692,23 @@ int how;
                     if (has_oname(otmp))
                         free_oname(otmp);
                     otmp->quan = count;
+#if 0 /*KR: 원본*/
                     Sprintf(pbuf, "%8ld %s (worth %ld %s),", count,
                             xname(otmp), count * (long) objects[typ].oc_cost,
                             currency(2L));
+#else /*KR: KRNethack 맞춤 번역 */
+                    Sprintf(pbuf, "%8ld개의 %s (가치: %ld %s),", count,
+                            xname(otmp), count * (long) objects[typ].oc_cost,
+                            currency(2L));
+#endif
                     obfree(otmp, (struct obj *) 0);
                 } else {
+#if 0 /*KR: 원본*/
                     Sprintf(pbuf, "%8ld worthless piece%s of colored glass,",
                             count, plur(count));
+#else /*KR: KRNethack 맞춤 번역 */
+                    Sprintf(pbuf, "%8ld개의 가치 없는 색유리 조각,", count);
+#endif
                 }
                 dump_forward_putstr(endwin, 0, pbuf, 0);
             }
@@ -1579,30 +1719,55 @@ int how;
         if (u.uz.dnum == 0 && u.uz.dlevel <= 0) {
             /* level teleported out of the dungeon; `how' is DIED,
                due to falling or to "arriving at heaven prematurely" */
+#if 0 /*KR: 원본*/
             Sprintf(pbuf, "You %s beyond the confines of the dungeon",
                     (u.uz.dlevel < 0) ? "passed away" : ends[how]);
+#else /*KR: KRNethack 맞춤 번역 */
+            Sprintf(pbuf, "당신은 던전의 경계를 넘어서 %s",
+                    (u.uz.dlevel < 0) ? "사망했다" : ends[how]);
+#endif
         } else {
             /* more conventional demise */
             const char *where = dungeons[u.uz.dnum].dname;
 
             if (Is_astralevel(&u.uz))
-                where = "The Astral Plane";
+                /*KR where = "The Astral Plane"; */
+                where = "아스트랄 차원";
+#if 0 /*KR: 원본*/
             Sprintf(pbuf, "You %s in %s", ends[how], where);
             if (!In_endgame(&u.uz) && !Is_knox(&u.uz))
                 Sprintf(eos(pbuf), " on dungeon level %d",
                         In_quest(&u.uz) ? dunlev(&u.uz) : depth(&u.uz));
+#else /*KR: KRNethack 맞춤 번역 */
+            Sprintf(pbuf, "당신은 %s", where);
+            if (!In_endgame(&u.uz) && !Is_knox(&u.uz))
+                Sprintf(eos(pbuf), " 지하 %d층",
+                        In_quest(&u.uz) ? dunlev(&u.uz) : depth(&u.uz));
+            Sprintf(eos(pbuf), "에서 %s", ends[how]);
+#endif
         }
 
-        Sprintf(eos(pbuf), " with %ld point%s,", u.urexp, plur(u.urexp));
+        /*KR Sprintf(eos(pbuf), " with %ld point%s,", u.urexp, plur(u.urexp));
+         */
+        Sprintf(eos(pbuf), " (점수: %ld),", u.urexp);
         dump_forward_putstr(endwin, 0, pbuf, done_stopprint);
     }
 
+#if 0 /*KR: 원본*/
     Sprintf(pbuf, "and %ld piece%s of gold, after %ld move%s.", umoney,
             plur(umoney), moves, plur(moves));
+#else /*KR: KRNethack 맞춤 번역 */
+    Sprintf(pbuf, "금화 %ld개를 가졌으며, %ld턴을 소모했다.", umoney, moves);
+#endif
     dump_forward_putstr(endwin, 0, pbuf, done_stopprint);
+#if 0 /*KR: 원본*/
     Sprintf(pbuf,
             "You were level %d with a maximum of %d hit point%s when you %s.",
             u.ulevel, u.uhpmax, plur(u.uhpmax), ends[how]);
+#else /*KR: KRNethack 맞춤 번역 */
+    Sprintf(pbuf, "%s 당시, 당신의 레벨은 %d, 최대 체력은 %d이었다.",
+            ends[how], u.ulevel, u.uhpmax);
+#endif
     dump_forward_putstr(endwin, 0, pbuf, done_stopprint);
     dump_forward_putstr(endwin, 0, "", done_stopprint);
     if (!done_stopprint)
@@ -1626,9 +1791,8 @@ int how;
     nh_terminate(EXIT_SUCCESS);
 }
 
-void
-container_contents(list, identified, all_containers, reportempty)
-struct obj *list;
+void container_contents(list, identified, all_containers,
+                        reportempty) struct obj *list;
 boolean identified, all_containers, reportempty;
 {
     register struct obj *box, *obj;
@@ -1658,23 +1822,26 @@ boolean identified, all_containers, reportempty;
                    reports the box as containing "1 item" */
                 cat = SchroedingersBox(box);
 
-                Sprintf(buf, "Contents of %s:", the(xname(box)));
+                /*KR Sprintf(buf, "Contents of %s:", the(xname(box))); */
+                Sprintf(buf, "%s의 내용물:", the(xname(box)));
                 putstr(tmpwin, 0, buf);
                 if (!dumping)
                     putstr(tmpwin, 0, "");
                 buf[0] = buf[1] = ' '; /* two leading spaces */
                 if (box->cobj && !cat) {
-                    sortflags = (((flags.sortloot == 'l'
-                                   || flags.sortloot == 'f')
-                                     ? SORTLOOT_LOOT : 0)
-                                 | (flags.sortpack ? SORTLOOT_PACK : 0));
+                    sortflags =
+                        (((flags.sortloot == 'l' || flags.sortloot == 'f')
+                              ? SORTLOOT_LOOT
+                              : 0)
+                         | (flags.sortpack ? SORTLOOT_PACK : 0));
                     sortedcobj = sortloot(&box->cobj, sortflags, FALSE,
                                           (boolean FDECL((*), (OBJ_P))) 0);
-                    for (srtc = sortedcobj; ((obj = srtc->obj) != 0); ++srtc) {
+                    for (srtc = sortedcobj; ((obj = srtc->obj) != 0);
+                         ++srtc) {
                         if (identified) {
                             discover_object(obj->otyp, TRUE, FALSE);
-                            obj->known = obj->bknown = obj->dknown
-                                = obj->rknown = 1;
+                            obj->known = obj->bknown = obj->dknown =
+                                obj->rknown = 1;
                             if (Is_container(obj) || obj->otyp == STATUE)
                                 obj->cknown = obj->lknown = 1;
                         }
@@ -1683,7 +1850,8 @@ boolean identified, all_containers, reportempty;
                     }
                     unsortloot(&sortedcobj);
                 } else if (cat) {
-                    Strcpy(&buf[2], "Schroedinger's cat!");
+                    /*KR Strcpy(&buf[2], "Schroedinger's cat!"); */
+                    Strcpy(&buf[2], "슈뢰딩거의 고양이!");
                     putstr(tmpwin, 0, buf);
                 }
                 if (dumping)
@@ -1694,7 +1862,9 @@ boolean identified, all_containers, reportempty;
                     container_contents(box->cobj, identified, TRUE,
                                        reportempty);
             } else if (reportempty) {
-                pline("%s is empty.", upstart(thesimpleoname(box)));
+                /*KR pline("%s is empty.", upstart(thesimpleoname(box))); */
+                pline("%s 텅 비어 있다.",
+                      append_josa(thesimpleoname(box), "은"));
                 display_nhwindow(WIN_MESSAGE, FALSE);
             }
         }
@@ -1759,13 +1929,11 @@ static const char *vanqorders[NUM_VANQ_ORDER_MODES] = {
 };
 static int vanq_sortmode = VANQ_MLVL_MNDX;
 
-STATIC_PTR int CFDECLSPEC
-vanqsort_cmp(vptr1, vptr2)
-const genericptr vptr1;
+STATIC_PTR int CFDECLSPEC vanqsort_cmp(vptr1, vptr2) const genericptr vptr1;
 const genericptr vptr2;
 {
-    int indx1 = *(short *) vptr1, indx2 = *(short *) vptr2,
-        mlev1, mlev2, mstr1, mstr2, uniq1, uniq2, died1, died2, res;
+    int indx1 = *(short *) vptr1, indx2 = *(short *) vptr2, mlev1, mlev2,
+        mstr1, mstr2, uniq1, uniq2, died1, died2, res;
     const char *name1, *name2, *punct;
     schar mcls1, mcls2;
 
@@ -1808,9 +1976,9 @@ const genericptr vptr2;
                different from the internal order;
                internal order is ok if neither or just one is punctuation
                since letters have lower values so come out before punct */
-            static const char punctclasses[] = {
-                S_LIZARD, S_EEL, S_GOLEM, S_GHOST, S_DEMON, S_HUMAN, '\0'
-            };
+            static const char punctclasses[] = { S_LIZARD, S_EEL,   S_GOLEM,
+                                                 S_GHOST,  S_DEMON, S_HUMAN,
+                                                 '\0' };
 
             if ((punct = index(punctclasses, mcls1)) != 0)
                 mcls1 = (schar) (S_ZOMBIE + 1 + (int) (punct - punctclasses));
@@ -1858,7 +2026,8 @@ set_vanq_order()
         add_menu(tmpwin, NO_GLYPH, &any, 0, 0, ATR_NONE, vanqorders[i],
                  (i == vanq_sortmode) ? MENU_SELECTED : MENU_UNSELECTED);
     }
-    end_menu(tmpwin, "Sort order for vanquished monster counts");
+    /*KR end_menu(tmpwin, "Sort order for vanquished monster counts"); */
+    end_menu(tmpwin, "처치한 몬스터 정렬 순서");
 
     n = select_menu(tmpwin, PICK_ONE, &selected);
     destroy_nhwindow(tmpwin);
@@ -1882,12 +2051,10 @@ dovanquished()
 }
 
 /* high priests aren't unique but are flagged as such to simplify something */
-#define UniqCritterIndx(mndx) ((mons[mndx].geno & G_UNIQ) \
-                               && mndx != PM_HIGH_PRIEST)
+#define UniqCritterIndx(mndx) \
+    ((mons[mndx].geno & G_UNIQ) && mndx != PM_HIGH_PRIEST)
 
-STATIC_OVL void
-list_vanquished(defquery, ask)
-char defquery;
+STATIC_OVL void list_vanquished(defquery, ask) char defquery;
 boolean ask;
 {
     register int i;
@@ -1919,10 +2086,16 @@ boolean ask;
         char mlet, prev_mlet = 0; /* used as small integer, not character */
         boolean class_header, uniq_header, was_uniq = FALSE;
 
+#if 0 /*KR: 원본*/
         c = ask ? yn_function(
                             "Do you want an account of creatures vanquished?",
                               ynaqchars, defquery)
                 : defquery;
+#else /*KR: KRNethack 맞춤 번역 */
+        c = ask ? yn_function("처치한 생물들의 목록을 보시겠습니까?",
+                              ynqchars, defquery)
+                : defquery;
+#endif
         if (c == 'q')
             done_stopprint++;
         if (c == 'y' || c == 'a') {
@@ -1937,7 +2110,8 @@ boolean ask;
                             || vanq_sortmode == VANQ_MCLS_HTOL);
 
             klwin = create_nhwindow(NHW_MENU);
-            putstr(klwin, 0, "Vanquished creatures:");
+            /*KR putstr(klwin, 0, "Vanquished creatures:"); */
+            putstr(klwin, 0, "처치한 생물들:");
             if (!dumping)
                 putstr(klwin, 0, "");
 
@@ -1953,10 +2127,15 @@ boolean ask;
                     prev_mlet = mlet;
                 }
                 if (UniqCritterIndx(i)) {
+#if 0 /*KR: 원본*/
                     Sprintf(buf, "%s%s",
                             !type_is_pname(&mons[i]) ? "the " : "",
                             mons[i].mname);
+#else /*KR: KRNethack 맞춤 번역 */
+                    Sprintf(buf, "%s", mons[i].mname);
+#endif
                     if (nkilled > 1) {
+#if 0 /*KR: 원본*/
                         switch (nkilled) {
                         case 2:
                             Sprintf(eos(buf), " (twice)");
@@ -1968,6 +2147,9 @@ boolean ask;
                             Sprintf(eos(buf), " (%d times)", nkilled);
                             break;
                         }
+#else /*KR: KRNethack 맞춤 번역 */
+                        Sprintf(eos(buf), " (%d번)", nkilled);
+#endif
                     }
                     was_uniq = TRUE;
                 } else {
@@ -1980,14 +2162,15 @@ boolean ask;
                     if (nkilled == 1)
                         Strcpy(buf, an(mons[i].mname));
                     else
+#if 0 /*KR: 원본*/
                         Sprintf(buf, "%3d %s", nkilled,
                                 makeplural(mons[i].mname));
+#else /*KR: KRNethack 맞춤 번역 */
+                        Sprintf(buf, "%3d마리의 %s", nkilled, mons[i].mname);
+#endif
                 }
                 /* number of leading spaces to match 3 digit prefix */
-                pfx = !strncmpi(buf, "the ", 3) ? 0
-                      : !strncmpi(buf, "an ", 3) ? 1
-                        : !strncmpi(buf, "a ", 2) ? 2
-                          : !digit(buf[2]) ? 4 : 0;
+                pfx = !digit(buf[2]) ? 4 : 0;
                 if (class_header)
                     ++pfx;
                 Sprintf(buftoo, "%*s%s", pfx, "", buf);
@@ -1995,12 +2178,15 @@ boolean ask;
             }
             /*
              * if (Hallucination)
-             *     putstr(klwin, 0, "and a partridge in a pear tree");
+             * putstr(klwin, 0, "and a partridge in a pear tree");
              */
             if (ntypes > 1) {
                 if (!dumping)
                     putstr(klwin, 0, "");
-                Sprintf(buf, "%ld creatures vanquished.", total_killed);
+                /*KR Sprintf(buf, "%ld creatures vanquished.", total_killed);
+                 */
+                Sprintf(buf, "모두 합쳐 %ld마리의 생물을 물리쳤다.",
+                        total_killed);
                 putstr(klwin, 0, buf);
             }
             display_nhwindow(klwin, TRUE);
@@ -2008,10 +2194,13 @@ boolean ask;
         }
     } else if (defquery == 'a') {
         /* #dovanquished rather than final disclosure, so pline() is ok */
-        pline("No creatures have been vanquished.");
+        /*KR pline("No creatures have been vanquished."); */
+        pline("아무 생물도 물리치지 못했다.");
 #ifdef DUMPLOG
     } else if (dumping) {
-        putstr(0, 0, "No creatures were vanquished."); /* not pline() */
+        /*KR putstr(0, 0, "No creatures were vanquished."); */ /* not pline()
+                                                                */
+        putstr(0, 0, "아무 생물도 물리치지 못했다."); /* not pline() */
 #endif
     }
 }
@@ -2026,8 +2215,8 @@ num_genocides()
         if (mvitals[i].mvflags & G_GENOD) {
             ++n;
             if (UniqCritterIndx(i))
-                impossible("unique creature '%d: %s' genocided?",
-                           i, mons[i].mname);
+                impossible("unique creature '%d: %s' genocided?", i,
+                           mons[i].mname);
         }
     }
     return n;
@@ -2047,9 +2236,7 @@ num_extinct()
     return n;
 }
 
-STATIC_OVL void
-list_genocided(defquery, ask)
-char defquery;
+STATIC_OVL void list_genocided(defquery, ask) char defquery;
 boolean ask;
 {
     register int i;
@@ -2068,18 +2255,30 @@ boolean ask;
 
     /* genocided or extinct species list */
     if (ngenocided != 0 || nextinct != 0) {
+#if 0 /*KR: 원본*/
         Sprintf(buf, "Do you want a list of %sspecies%s%s?",
                 (nextinct && !ngenocided) ? "extinct " : "",
                 (ngenocided) ? " genocided" : "",
                 (nextinct && ngenocided) ? " and extinct" : "");
+#else /*KR: KRNethack 맞춤 번역 */
+        Sprintf(buf, "%s%s%s 종들의 목록을 보시겠습니까?",
+                (nextinct && !ngenocided) ? "멸종된" : "",
+                (ngenocided) ? "학살된" : "",
+                (nextinct && ngenocided) ? " 및 멸종된" : "");
+#endif
         c = ask ? yn_function(buf, ynqchars, defquery) : defquery;
         if (c == 'q')
             done_stopprint++;
         if (c == 'y') {
             klwin = create_nhwindow(NHW_MENU);
+#if 0 /*KR: 원본*/
             Sprintf(buf, "%s%s species:",
                     (ngenocided) ? "Genocided" : "Extinct",
                     (nextinct && ngenocided) ? " or extinct" : "");
+#else /*KR: KRNethack 맞춤 번역 */
+            Sprintf(buf, "%s%s 종들:", (ngenocided) ? "학살된" : "멸종된",
+                    (nextinct && ngenocided) ? " 또는 멸종된" : "");
+#endif
             putstr(klwin, 0, buf);
             if (!dumping)
                 putstr(klwin, 0, "");
@@ -2098,18 +2297,21 @@ boolean ask;
                      * alive, contradicting the meaning of the word.
                      */
                     if ((mvitals[i].mvflags & G_GONE) == G_EXTINCT)
-                        Strcat(buf, " (extinct)");
+                        /*KR Strcat(buf, " (extinct)"); */
+                        Strcat(buf, " (멸종됨)");
                     putstr(klwin, 0, buf);
                 }
             }
             if (!dumping)
                 putstr(klwin, 0, "");
             if (ngenocided > 0) {
-                Sprintf(buf, "%d species genocided.", ngenocided);
+                /*KR Sprintf(buf, "%d species genocided.", ngenocided); */
+                Sprintf(buf, "%d종이 학살되었다.", ngenocided);
                 putstr(klwin, 0, buf);
             }
             if (nextinct > 0) {
-                Sprintf(buf, "%d species extinct.", nextinct);
+                /*KR Sprintf(buf, "%d species extinct.", nextinct); */
+                Sprintf(buf, "%d종이 멸종되었다.", nextinct);
                 putstr(klwin, 0, buf);
             }
 
@@ -2118,15 +2320,14 @@ boolean ask;
         }
 #ifdef DUMPLOG
     } else if (dumping) {
-        putstr(0, 0, "No species were genocided or became extinct.");
+        /*KR putstr(0, 0, "No species were genocided or became extinct."); */
+        putstr(0, 0, "학살되거나 멸종된 종은 하나도 없다.");
 #endif
     }
 }
 
 /* set a delayed killer, ensure non-delayed killer is cleared out */
-void
-delayed_killer(id, format, killername)
-int id;
+void delayed_killer(id, format, killername) int id;
 int format;
 const char *killername;
 {
@@ -2134,8 +2335,8 @@ const char *killername;
 
     if (!k) {
         /* no match, add a new delayed killer to the list */
-        k = (struct kinfo *) alloc(sizeof (struct kinfo));
-        (void) memset((genericptr_t) k, 0, sizeof (struct kinfo));
+        k = (struct kinfo *) alloc(sizeof(struct kinfo));
+        (void) memset((genericptr_t) k, 0, sizeof(struct kinfo));
         k->id = id;
         k->next = killer.next;
         killer.next = k;
@@ -2159,9 +2360,7 @@ int id;
     return k;
 }
 
-void
-dealloc_killer(kptr)
-struct kinfo *kptr;
+void dealloc_killer(kptr) struct kinfo *kptr;
 {
     struct kinfo *prev = &killer, *k;
 
@@ -2182,16 +2381,14 @@ struct kinfo *kptr;
     }
 }
 
-void
-save_killers(fd, mode)
-int fd;
+void save_killers(fd, mode) int fd;
 int mode;
 {
     struct kinfo *kptr;
 
     if (perform_bwrite(mode)) {
         for (kptr = &killer; kptr != (struct kinfo *) 0; kptr = kptr->next) {
-            bwrite(fd, (genericptr_t) kptr, sizeof (struct kinfo));
+            bwrite(fd, (genericptr_t) kptr, sizeof(struct kinfo));
         }
     }
     if (release_data(mode)) {
@@ -2203,16 +2400,14 @@ int mode;
     }
 }
 
-void
-restore_killers(fd)
-int fd;
+void restore_killers(fd) int fd;
 {
     struct kinfo *kptr;
 
     for (kptr = &killer; kptr != (struct kinfo *) 0; kptr = kptr->next) {
-        mread(fd, (genericptr_t) kptr, sizeof (struct kinfo));
+        mread(fd, (genericptr_t) kptr, sizeof(struct kinfo));
         if (kptr->next) {
-            kptr->next = (struct kinfo *) alloc(sizeof (struct kinfo));
+            kptr->next = (struct kinfo *) alloc(sizeof(struct kinfo));
         }
     }
 }
@@ -2234,9 +2429,7 @@ char *p;
     return words;
 }
 
-static void
-bel_copy1(inp, out)
-char **inp, *out;
+static void bel_copy1(inp, out) char **inp, *out;
 {
     char *in = *inp;
 
@@ -2257,8 +2450,9 @@ char *in;
     int len = (int) strlen(p), words = wordcount(p);
 
     /* +3: " or " - " "; +(words - 1): (N-1)*(", " - " ") */
+    /* KR: " 또는 " length is 8 (UTF-8) */
     if (words > 1)
-        len += 3 + (words - 1);
+        len += 8 + (words - 1);
     out = (char *) alloc(len + 1);
     *out = '\0'; /* bel_copy1() appends */
 
@@ -2282,7 +2476,8 @@ char *in;
                 Strcat(out, ", ");
             } while (--words > 1);
         }
-        Strcat(out, "or ");
+        /*KR Strcat(out, "or "); */
+        Strcat(out, "또는 ");
         bel_copy1(&p, out);
         break;
     }
