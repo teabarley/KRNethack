@@ -2430,7 +2430,11 @@ dozap()
 
     if (check_capacity((char *) 0))
         return 0;
+#if 0 /*KR: ¿øº»*/
     obj = getobj(zap_syms, "zap");
+#else /*KR: KRNethack ¸ÂÃã ¹ø¿ª */
+    obj = getobj(zap_syms, "¹ß»ç");
+#endif
     if (!obj)
         return 0;
 
@@ -3546,7 +3550,7 @@ register struct monst *mtmp;
             : "it");
 #else /*KR: KRNethack ¸ÂÃã ¹ø¿ª */
     pline(
-        "%s %s ºø¸ÂÇû´Ù.", The(str),
+        "%s %s ºø¸ÂÇû´Ù.", append_josa(The(str), "ÀÌ"),
         ((cansee(bhitpos.x, bhitpos.y) || canspotmon(mtmp)) && flags.verbose)
             ? append_josa(mon_nam(mtmp), "À»")
             : "±×°ÍÀ»");

@@ -2470,7 +2470,7 @@ int final;
 
     Sprintf(buf, "%d", u.uac);
     /*KR enl_msg("Your armor class ", "is ", "was ", buf, ""); */
-    enl_msg("당신의 아머 클래스는 ", "이다", "이었다", buf, "");
+    enl_msg("당신의 AC는 ", "이다", "이었다", buf, "");
 
     /* gold; similar to doprgold(#seegold) but without shop billing info;
        same amount as shown on status line which ignores container contents */
@@ -2485,12 +2485,20 @@ int final;
         } else {
             Sprintf(buf, "%ld %s", umoney, currency(umoney));
             enl_msg(Your_wallet, "contains ", "contained ", buf, "");
-#else /*KR 텅 비어 (있다) or 지갑에는 150금화(이)가 들어 (있다) */
+#else /*KR: KRNethack 맞춤 번역 */
         if (!umoney) {
-            enl_msg(Your_wallet, "있다", "있었다", "은 텅 비어 ", "");
+            enl_msg(Your_wallet, " 텅 비어 있다", " 텅 비어 있었다", "은",
+                    "");
         } else {
-            Sprintf(buf, "에는 %ld%s(이)가 ", umoney, currency(umoney));
-            enl_msg(Your_wallet, "들어 있다", "들어 있었다", buf, "");
+            char coinbuf[BUFSZ];
+            /* 금액과 단위를 먼저 합침 (예: "61 조크미드") */
+            Sprintf(coinbuf, "%ld %s", umoney, currency(umoney));
+            /* 합친 단어에 자연스러운 조사를 붙임 (예: "61 조크미드가") */
+            Sprintf(buf, "에는 %s", append_josa(coinbuf, "이"));
+
+            /* 동사 앞에 공백을 넣어서 띄어쓰기가 무시되는 것을 원천 차단 ("
+             * 들어 있다") */
+            enl_msg(Your_wallet, " 들어 있다", " 들어 있었다", buf, "");
 #endif
         }
     }
@@ -3868,7 +3876,7 @@ int final;
     }
     if (lays_eggs(youmonst.data) && flags.female) /* Upolyd */
         /*KR you_can("lay eggs", ""); */
-        you_can("알을 낳을", "");
+        you_can("산란", "");
     if (u.ulycn >= LOW_PM) {
         /* "you are a werecreature [in beast form]" */
 #if 0 /*KR: 원본 (변수 호출 구조 변경)*/

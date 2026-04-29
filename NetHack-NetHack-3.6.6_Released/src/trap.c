@@ -299,12 +299,16 @@ int ef_flags;
                           : !vismon ? "The" /* visobj */
                                     : s_suffix(Monnam(victim)),
                   ostr, vtense(ostr, action[type]), adverb);
-#else
-            pline("%s %s %s%s!",
-                  uvictim ? "당신의"
-                          : !vismon ? "" /* visobj */
-                                    : s_suffix(Monnam(victim)),
-                  ostr, adverb, action[type]);
+#else /*KR: KRNethack 맞춤 번역 */
+            if (uvictim)
+                pline("당신의 %s %s%s!", append_josa(ostr, "이"), adverb,
+                      action[type]);
+            else if (!vismon) /* visobj */
+                pline("%s %s%s!", append_josa(ostr, "이"), adverb,
+                      action[type]);
+            else
+                pline("%s %s %s%s!", s_suffix(Monnam(victim)),
+                      append_josa(ostr, "이"), adverb, action[type]);
 #endif
 
         if (ef_flags & EF_PAY)
@@ -328,11 +332,15 @@ int ef_flags;
                                     : s_suffix(Monnam(victim)),
                   ostr, vtense(ostr, action[type]));
 #else /*KR: KRNethack 맞춤 번역 */
-            pline("%s %s 완전히 %s!",
-                  uvictim   ? "당신의"
-                            : !vismon ? "" /* visobj */
-                                      : s_suffix(Monnam(victim)),
-                  ostr, action[type]);
+            if (uvictim)
+                pline("당신의 %s 완전히 %s!", append_josa(ostr, "이"),
+                      action[type]);
+            else if (!vismon) /* visobj */
+                pline("%s 완전히 %s!", append_josa(ostr, "이"),
+                      action[type]);
+            else
+                pline("%s %s 완전히 %s!", s_suffix(Monnam(victim)),
+                      append_josa(ostr, "이"), action[type]);
 #endif
 
         if (ef_flags & EF_PAY)
@@ -348,8 +356,8 @@ int ef_flags;
                 Your("%s %s completely %s.",
                      ostr, vtense(ostr, Blind ? "feel" : "look"), msg[type]);
 #else /*KR: KRNethack 맞춤 번역 */
-                Your("%s 완전히 %s%s.", 
-                     ostr, msg[type], Blind ? " 같다" : "");
+                pline("당신의 %s 완전히 %s 것 같다.",
+                      append_josa(ostr, "이"), msg[type]);
 #endif
             else if (vismon || visobj)
 #if 0 /*KR: 원본*/
@@ -357,9 +365,13 @@ int ef_flags;
                       !vismon ? "The" : s_suffix(Monnam(victim)),
                       ostr, vtense(ostr, "look"), msg[type]);
 #else /*KR: KRNethack 맞춤 번역 */
-                pline("%s%s 완전히 %s 같다.",
-                      !vismon ? "" : s_suffix(Monnam(victim)), 
-                      ostr, msg[type]);
+                if (!vismon)
+                    pline("%s 완전히 %s 것 같다.",
+                          append_josa(ostr, "이(가)"), msg[type]);
+                else
+                    pline("%s %s 완전히 %s 것 같다.",
+                          s_suffix(Monnam(victim)),
+                          append_josa(ostr, "이"), msg[type]);
 #endif
         }
         return ER_NOTHING;
@@ -2014,7 +2026,7 @@ boolean noprefix;
                 (*tn == 'A' || *tn == 'E' || *tn == 'F') ? "an" : "a");
     Sprintf(eos(tnbuf), "%s", tn);
 #else /*KR: KRNethack 맞춤 번역 */
-        Sprintf(tnbuf, "%s 소리", tn);
+        Sprintf(tnbuf, "%s 음", tn);
 #endif
         return tnbuf;
 }
@@ -2057,7 +2069,7 @@ boolean noprefix;
                     /* no in_sight check here; you can feel it even if blind
                      */
                     /*KR pline("%s suddenly falls asleep!", Monnam(steed)); */
-                    pline("%s 갑자기 잠들었다!", Monnam(steed));
+                    pline("%s 갑자기 잠들었다!", append_josa(Monnam(steed), "이"));
             }
             steedhit = TRUE;
             break;
@@ -2751,7 +2763,7 @@ boolean noprefix;
                              (distu(mtmp->mx, mtmp->my) <= range * range)
                                  ? "nearby" : "in the distance");
 #else /*KR: KRNethack 맞춤 번역 */
-                    You_hear("%s 곳에서 %s 삐걱거리는 소리가 들렸다.",
+                    You_hear("%s 곳에서 %s으로 삐걱거리는 소리가 들렸다.",
                              (distu(mtmp->mx, mtmp->my) <= range * range)
                                  ? "가까운" : "먼", trapnote(trap, 1));
 #endif
@@ -2800,7 +2812,7 @@ boolean noprefix;
                     && !mtmp->msleeping && mtmp->mcanmove) {
                     if (sleep_monst(mtmp, rnd(25), -1) && in_sight) {
                    /*KR pline("%s suddenly falls asleep!", Monnam(mtmp)); */
-                        pline("%s 갑자기 잠들었다!", Monnam(mtmp));
+                        pline("%s 갑자기 잠들었다!", append_josa(Monnam(mtmp), "이"));
                         seetrap(trap);
                     }
                 }
@@ -3271,7 +3283,7 @@ boolean noprefix;
                     pline("Click!  %s triggers %s.", Monnam(mtmp),
                           trap->tseen ? "a rolling boulder trap" : "something");
 #else /*KR: KRNethack 맞춤 번역 */
-                        pline("딸깍! %s %s 작동시켰다.", Monnam(mtmp),
+                        pline("딸깍! %s %s 작동시켰다.", append_josa(Monnam(mtmp), "이"),
                               trap->tseen ? "구르는 바위 함정을"
                                           : "무언가를");
 #endif

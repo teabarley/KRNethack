@@ -1818,7 +1818,7 @@ int how;
             } else if (mon->data == &mons[PM_IRON_GOLEM]) {
                 if (canseemon(mon))
                     /*KR pline("%s rusts.", Monnam(mon)); */
-                    pline("%s ³ì½½¾ú´Ù.", append_josa(Monnam(mon), "Àº"));
+                    pline("%s ³ì½½¾ú´Ù.", append_josa(Monnam(mon), "°¡"));
                 mon->mhp -= d(1, 6);
                 /* should only be by you */
                 if (DEADMONSTER(mon))

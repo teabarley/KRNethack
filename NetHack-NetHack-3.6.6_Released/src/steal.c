@@ -7,25 +7,28 @@
 
 STATIC_PTR int NDECL(stealarm);
 
-STATIC_DCL const char *FDECL(equipname, (struct obj *));
+STATIC_DCL const char *FDECL(equipname, (struct obj *) );
 
 STATIC_OVL const char *
 equipname(otmp)
 register struct obj *otmp;
 {
     return ((otmp == uarmu)
-                ? "shirt"
+                /*KR ? "shirt" */
+                ? "셔츠"
                 : (otmp == uarmf)
-                      ? "boots"
+                      /*KR ? "boots" */
+                      ? "신발"
                       : (otmp == uarms)
-                            ? "shield"
+                            /*KR ? "shield" */
+                            ? "방패"
                             : (otmp == uarmg)
-                                  ? "gloves"
-                                  : (otmp == uarmc)
-                                        ? cloak_simple_name(otmp)
-                                        : (otmp == uarmh)
-                                              ? helm_simple_name(otmp)
-                                              : suit_simple_name(otmp));
+                                  /*KR ? "gloves" */
+                                  ? "장갑"
+                                  : (otmp == uarmc) ? cloak_simple_name(otmp)
+                                    : (otmp == uarmh)
+                                        ? helm_simple_name(otmp)
+                                        : suit_simple_name(otmp));
 }
 
 /* proportional subset of gold; return value actually fits in an int */
@@ -64,7 +67,7 @@ long lmoney;
  * be seized without further searching.
  * May search containers too.
  * Deals in gold only, as leprechauns don't care for lesser coins.
-*/
+ */
 struct obj *
 findgold(chain)
 register struct obj *chain;
@@ -76,16 +79,16 @@ register struct obj *chain;
 
 /*
  * Steal gold coins only.  Leprechauns don't care for lesser coins.
-*/
-void
-stealgold(mtmp)
-register struct monst *mtmp;
+ */
+void stealgold(mtmp) register struct monst *mtmp;
 {
     register struct obj *fgold = g_at(u.ux, u.uy);
     register struct obj *ygold;
     register long tmp;
+#if 0 /*KR*/
     struct monst *who;
     const char *whose, *what;
+#endif
 
     /* skip lesser coins on the floor */
     while (fgold && fgold->otyp != GOLD_PIECE)
@@ -98,6 +101,7 @@ register struct monst *mtmp;
         obj_extract_self(fgold);
         add_to_minv(mtmp, fgold);
         newsym(u.ux, u.uy);
+#if 0 /*KR: 원본*/
         if (u.usteed) {
             who = u.usteed;
             whose = s_suffix(y_monnam(who));
@@ -115,6 +119,13 @@ register struct monst *mtmp;
             what += 5;
         pline("%s quickly snatches some gold from %s %s %s!", Monnam(mtmp),
               (Levitation || Flying) ? "beneath" : "between", whose, what);
+#else /*KR: KRNethack 맞춤 번역 */
+        pline("%s 재빠르게 당신의 %s에서 금화를 나꿔챘다!",
+              append_josa(Monnam(mtmp), "이"),
+              (Levitation || Flying)
+                  ? "발밑"
+                  : "발밑"); /* 다리 여부와 상관없이 직관적으로 처리 */
+#endif
         if (!ygold || !rn2(5)) {
             if (!tele_restrict(mtmp))
                 (void) rloc(mtmp, TRUE);
@@ -131,7 +142,8 @@ register struct monst *mtmp;
             setnotworn(ygold);
         freeinv(ygold);
         add_to_minv(mtmp, ygold);
-        Your("purse feels lighter.");
+        /*KR Your("purse feels lighter."); */
+        Your("지갑이 가벼워진 느낌이다.");
         if (!tele_restrict(mtmp))
             (void) rloc(mtmp, TRUE);
         monflee(mtmp, 0, FALSE, FALSE);
@@ -160,7 +172,11 @@ stealarm(VOID_ARGS)
                     if (otmp->unpaid)
                         subfrombill(otmp, shop_keeper(*u.ushops));
                     freeinv(otmp);
-                    pline("%s steals %s!", Monnam(mtmp), doname(otmp));
+                    /*KR pline("%s steals %s!", Monnam(mtmp), doname(otmp));
+                     */
+                    pline("%s %s 훔쳐갔다!",
+                          append_josa(Monnam(mtmp), "이"),
+                          append_josa(doname(otmp), "을"));
                     (void) mpickobj(mtmp, otmp); /* may free otmp */
                     /* Implies seduction, "you gladly hand over ..."
                        so we don't set mavenge bit here. */
@@ -173,16 +189,14 @@ stealarm(VOID_ARGS)
             break;
         }
     }
- botm:
+botm:
     stealoid = 0;
     return 0;
 }
 
 /* An object you're wearing has been taken off by a monster (theft or
    seduction).  Also used if a worn item gets transformed (stone to flesh). */
-void
-remove_worn_item(obj, unchain_ball)
-struct obj *obj;
+void remove_worn_item(obj, unchain_ball) struct obj *obj;
 boolean unchain_ball; /* whether to unpunish or just unwield */
 {
     if (donning(obj))
@@ -247,10 +261,10 @@ struct monst *mtmp;
 char *objnambuf;
 {
     struct obj *otmp;
-    int tmp, could_petrify, armordelay, olddelay, icnt,
-        named = 0, retrycnt = 0;
+    int tmp, could_petrify, armordelay, olddelay, icnt, named = 0,
+                                                        retrycnt = 0;
     boolean monkey_business, /* true iff an animal is doing the thievery */
-            was_doffing, was_punished = Punished;
+        was_doffing, was_punished = Punished;
 
     if (objnambuf)
         *objnambuf = '\0';
@@ -266,16 +280,24 @@ char *objnambuf;
 
     icnt = inv_cnt(FALSE); /* don't include gold */
     if (!icnt || (icnt == 1 && uskin)) {
- nothing_to_steal:
+    nothing_to_steal:
         /* Not even a thousand men in armor can strip a naked man. */
         if (Blind)
-            pline("Somebody tries to rob you, but finds nothing to steal.");
+            /*KR pline("Somebody tries to rob you, but finds nothing to
+             * steal."); */
+            pline("누군가 당신의 물건을 훔치려 했으나, 훔칠 만한 게 아무것도 "
+                  "없다는 것을 깨달았다.");
         else if (inv_cnt(TRUE) > inv_cnt(FALSE)) /* ('icnt' might be stale) */
-            pline("%s tries to rob you, but isn't interested in gold.",
-                  Monnam(mtmp));
+            /*KR pline("%s tries to rob you, but isn't interested in gold.",
+                  Monnam(mtmp)); */
+            pline("%s 당신의 물건을 훔치려 했으나, 금화에는 관심이 없는 것 "
+                  "같다.",
+                  append_josa(Monnam(mtmp), "은"));
         else
-            pline("%s tries to rob you, but there is nothing to steal!",
-                  Monnam(mtmp));
+            /*KR pline("%s tries to rob you, but there is nothing to steal!",
+                  Monnam(mtmp)); */
+            pline("%s 당신의 물건을 훔치려 했으나, 훔칠 게 없다!",
+                  append_josa(Monnam(mtmp), "은"));
         return 1; /* let her flee */
     }
 
@@ -290,7 +312,7 @@ char *objnambuf;
         goto gotobj;
     }
 
- retry:
+retry:
     tmp = 0;
     for (otmp = invent; otmp; otmp = otmp->nobj)
         if ((!uarm || otmp != uarmc) && otmp != uskin
@@ -325,7 +347,7 @@ char *objnambuf;
     else if (otmp == uarmu && uarm)
         otmp = uarm;
 
- gotobj:
+gotobj:
     if (otmp->o_id == stealoid)
         return 0;
 
@@ -352,6 +374,7 @@ char *objnambuf;
                       || (otmp == uleft && welded(uwep) && bimanual(uwep)));
 
         if (ostuck || can_carry(mtmp, otmp) == 0) {
+#if 0 /*KR: 원본*/
             static const char *const how[] = { "steal", "snatch", "grab",
                                                "take" };
  cant_take:
@@ -360,6 +383,14 @@ char *objnambuf;
                   (otmp->owornmask & W_ARMOR) ? "your " : "",
                   (otmp->owornmask & W_ARMOR) ? equipname(otmp)
                                               : yname(otmp));
+#else /*KR: KRNethack 맞춤 번역 */
+        cant_take:
+            pline("%s %s 훔치려 했으나 단념했다.",
+                  append_josa(Monnam(mtmp), "은"),
+                  append_josa((otmp->owornmask & W_ARMOR) ? equipname(otmp)
+                                                          : yname(otmp),
+                              "을"));
+#endif
             /* the fewer items you have, the less likely the thief
                is going to stick around to try again (0) instead of
                running away (1) */
@@ -410,6 +441,7 @@ char *objnambuf;
                     unmul((char *) 0);
                 slowly = (armordelay >= 1 || multi < 0);
                 if (flags.female)
+#if 0 /*KR: 원본*/
                     pline("%s charms you.  You gladly %s your %s.",
                           !seen ? "She" : Monnam(mtmp),
                           curssv ? "let her take"
@@ -417,7 +449,18 @@ char *objnambuf;
                                            : was_doffing ? "continue removing"
                                                          : "start removing",
                           equipname(otmp));
+#else /*KR: KRNethack 맞춤 번역 */
+                    pline("%s 당신을 매혹했다. 당신은 기꺼이 %s %s.",
+                          !seen ? "그녀는"
+                                : append_josa(Monnam(mtmp), "은"),
+                          append_josa(equipname(otmp), "을"),
+                          curssv        ? "가져가게 놔뒀다"
+                          : !slowly     ? "넘겨주었다"
+                          : was_doffing ? "계속해서 벗기 시작했다"
+                                        : "벗기 시작했다");
+#endif
                 else
+#if 0 /*KR: 원본*/
                     pline("%s seduces you and %s off your %s.",
                           !seen ? "She" : Adjmonnam(mtmp, "beautiful"),
                           curssv
@@ -426,10 +469,22 @@ char *objnambuf;
                                         : was_doffing ? "you continue taking"
                                                       : "you start taking",
                           equipname(otmp));
+#else /*KR: KRNethack 맞춤 번역 */
+                    pline("%s 당신을 유혹했다. 당신은 %s %s.",
+                          !seen ? "그녀는"
+                                : append_josa(Adjmonnam(mtmp, "아름다운"),
+                                              "은"),
+                          append_josa(equipname(otmp), "을"),
+                          curssv        ? "벗을 수 있게 도와주었다"
+                          : !slowly     ? "벗었다"
+                          : was_doffing ? "계속해서 벗기 시작했다"
+                                        : "벗기 시작했다");
+#endif
                 named++;
                 /* the following is to set multi for later on */
                 nomul(-armordelay);
-                multi_reason = "taking off clothes";
+                /*KR multi_reason = "taking off clothes"; */
+                multi_reason = "옷을 벗는 동안에";
                 nomovemsg = 0;
                 remove_worn_item(otmp, TRUE);
                 otmp->cursed = curssv;
@@ -464,11 +519,18 @@ char *objnambuf;
         subfrombill(otmp, shop_keeper(*u.ushops));
     freeinv(otmp);
     /* if attached ball was taken, uball and uchain are now Null */
+#if 0 /*KR: 원본*/
     pline("%s%s stole %s.", named ? "She" : Monnam(mtmp),
           (was_punished && !Punished) ? " removed your chain and" : "",
           doname(otmp));
-    could_petrify = (otmp->otyp == CORPSE
-                     && touch_petrifies(&mons[otmp->corpsenm]));
+#else /*KR: KRNethack 맞춤 번역 */
+    pline("%s %s%s 훔쳐갔다.",
+          named ? "그녀가" : append_josa(Monnam(mtmp), "이"),
+          (was_punished && !Punished) ? "당신의 사슬을 풀고 " : "",
+          append_josa(doname(otmp), "을"));
+#endif
+    could_petrify =
+        (otmp->otyp == CORPSE && touch_petrifies(&mons[otmp->corpsenm]));
     (void) mpickobj(mtmp, otmp); /* may free otmp */
     if (could_petrify && !(mtmp->misc_worn_check & W_ARMG)) {
         minstapetrify(mtmp, TRUE);
@@ -492,8 +554,8 @@ register struct obj *otmp;
         return 1;
     } else if (otmp == uball || otmp == uchain) {
         impossible("monster (%s) taking or picking up attached %s (%s)?",
-                   mtmp->data->mname,
-                   (otmp == uchain) ? "chain" : "ball", simpleonames(otmp));
+                   mtmp->data->mname, (otmp == uchain) ? "chain" : "ball",
+                   simpleonames(otmp));
         return 0;
     }
     /* if monster is acquiring a thrown or kicked object, the throwing
@@ -508,7 +570,8 @@ register struct obj *otmp;
     if (obj_sheds_light(otmp) && attacktype(mtmp->data, AT_ENGL)) {
         /* this is probably a burning object that you dropped or threw */
         if (u.uswallow && mtmp == u.ustuck && !Blind)
-            pline("%s out.", Tobjnam(otmp, "go"));
+            /*KR pline("%s out.", Tobjnam(otmp, "go")); */
+            pline("%s 꺼졌다.", append_josa(xname(otmp), "이"));
         snuff_otmp = TRUE;
     }
     /* for hero owned object on shop floor, mtmp is taking possession
@@ -527,9 +590,7 @@ register struct obj *otmp;
 }
 
 /* called for AD_SAMU (the Wizard and quest nemeses) */
-void
-stealamulet(mtmp)
-struct monst *mtmp;
+void stealamulet(mtmp) struct monst *mtmp;
 {
     char buf[BUFSZ];
     struct obj *otmp = 0, *obj = 0;
@@ -571,7 +632,8 @@ struct monst *mtmp;
             n = rnd(n);
             for (otmp = invent; otmp; otmp = otmp->nobj)
                 if ((otmp->otyp == real
-                     || (otmp->otyp == fake && !mtmp->iswiz)) && !--n)
+                     || (otmp->otyp == fake && !mtmp->iswiz))
+                    && !--n)
                     break;
         }
     }
@@ -586,7 +648,7 @@ struct monst *mtmp;
         if ((otmp == uarmg || ((otmp == uright || otmp == uleft) && uarmg))
             && uwep) {
             /* gloves are about to be unworn; unwield weapon(s) first */
-            if (u.twoweap)    /* remove_worn_item(uswapwep) indirectly */
+            if (u.twoweap) /* remove_worn_item(uswapwep) indirectly */
                 remove_worn_item(uswapwep, FALSE); /* clears u.twoweap */
             remove_worn_item(uwep, FALSE);
         }
@@ -602,7 +664,9 @@ struct monst *mtmp;
         freeinv(otmp);
         Strcpy(buf, doname(otmp));
         (void) mpickobj(mtmp, otmp); /* could merge and free otmp but won't */
-        pline("%s steals %s!", Monnam(mtmp), buf);
+        /*KR pline("%s steals %s!", Monnam(mtmp), buf); */
+        pline("%s %s 훔쳐갔다!", append_josa(Monnam(mtmp), "이"),
+              append_josa(buf, "을"));
         if (can_teleport(mtmp->data) && !tele_restrict(mtmp))
             (void) rloc(mtmp, TRUE);
     }
@@ -610,9 +674,7 @@ struct monst *mtmp;
 
 /* when a mimic gets poked with something, it might take that thing
    (at present, only implemented for when the hero does the poking) */
-void
-maybe_absorb_item(mon, obj, ochance, achance)
-struct monst *mon;
+void maybe_absorb_item(mon, obj, ochance, achance) struct monst *mon;
 struct obj *obj;
 int ochance, achance; /* percent chance for ordinary item, artifact */
 {
@@ -629,33 +691,47 @@ int ochance, achance; /* percent chance for ordinary item, artifact */
         if (cansee(mon->mx, mon->my)) {
             const char *MonName = Monnam(mon);
 
+#if 0 /*KR: 원본*/
             /* mon might be invisible; avoid "It pulls ... and absorbs it!" */
             if (!strcmp(MonName, "It"))
                 MonName = "Something";
             pline("%s pulls %s away from you and absorbs %s!", MonName,
                   yname(obj), (obj->quan > 1L) ? "them" : "it");
+#else /*KR: KRNethack 맞춤 번역 */
+            /* mon might be invisible; avoid "그것이 ... and absorbs it!" */
+            if (!strcmp(MonName, "그것"))
+                MonName = "무언가";
+            pline("%s 당신에게서 %s 확 끌어당겨 흡수해버렸다!",
+                  append_josa(MonName, "이"),
+                  append_josa(yname(obj), "을"));
+#endif
         } else {
             const char *hand_s = body_part(HAND);
 
             if (bimanual(obj))
                 hand_s = makeplural(hand_s);
+#if 0 /*KR: 원본*/
             pline("%s %s pulled from your %s!", upstart(yname(obj)),
                   otense(obj, "are"), hand_s);
+#else /*KR: KRNethack 맞춤 번역 */
+            pline("%s 당신의 %s에서 끌려 나갔다!",
+                  append_josa(upstart(yname(obj)), "이"), hand_s);
+#endif
         }
         freeinv(obj);
     } else {
         /* not carried; presumably thrown or kicked */
         if (canspotmon(mon))
-            pline("%s absorbs %s!", Monnam(mon), yname(obj));
+            /*KR pline("%s absorbs %s!", Monnam(mon), yname(obj)); */
+            pline("%s %s 흡수했다!", append_josa(Monnam(mon), "이"),
+                  append_josa(yname(obj), "을"));
     }
     /* add to mon's inventory */
     (void) mpickobj(mon, obj);
 }
 
 /* drop one object taken from a (possibly dead) monster's inventory */
-void
-mdrop_obj(mon, obj, verbosely)
-struct monst *mon;
+void mdrop_obj(mon, obj, verbosely) struct monst *mon;
 struct obj *obj;
 boolean verbosely;
 {
@@ -668,10 +744,11 @@ boolean verbosely;
             mon->misc_worn_check &= ~obj->owornmask;
             update_mon = TRUE;
 
-        /* don't charge for an owned saddle on dead steed (provided
-           that the hero is within the same shop at the time) */
+            /* don't charge for an owned saddle on dead steed (provided
+               that the hero is within the same shop at the time) */
         } else if (mon->mtame && (obj->owornmask & W_SADDLE) != 0L
-                   && !obj->unpaid && costly_spot(omx, omy)
+                   && !obj->unpaid
+                   && costly_spot(omx, omy)
                    /* being at costly_spot guarantees lev->roomno is not 0 */
                    && index(in_rooms(u.ux, u.uy, SHOPBASE),
                             levl[omx][omy].roomno)) {
@@ -686,9 +763,9 @@ boolean verbosely;
     if (verbosely && cansee(omx, omy))
         /*KR pline("%s drops %s.", Monnam(mon), distant_name(obj, doname)); */
         pline("%s %s 떨어뜨렸다.", append_josa(Monnam(mon), "이"),
-              append_josa(distant_name(obj, doname), "를"));
-   /*KR if (!flooreffects(obj, omx, omy, "fall")) { */
-    if (!flooreffects(obj, omx, omy, "떨어진다")) {
+              append_josa(distant_name(obj, doname), "을"));
+    /*KR if (!flooreffects(obj, omx, omy, "fall")) { */
+    if (!flooreffects(obj, omx, omy, "떨어지는")) {
         place_object(obj, omx, omy);
         stackobj(obj);
     }
@@ -701,9 +778,7 @@ boolean verbosely;
 /* some monsters bypass the normal rules for moving between levels or
    even leaving the game entirely; when that happens, prevent them from
    taking the Amulet, invocation items, or quest artifact with them */
-void
-mdrop_special_objs(mon)
-struct monst *mon;
+void mdrop_special_objs(mon) struct monst *mon;
 {
     struct obj *obj, *otmp;
 
@@ -731,9 +806,7 @@ struct monst *mon;
 }
 
 /* release the objects the creature is carrying */
-void
-relobj(mtmp, show, is_pet)
-struct monst *mtmp;
+void relobj(mtmp, show, is_pet) struct monst *mtmp;
 int show;
 boolean is_pet; /* If true, pet should keep wielded/worn items */
 {
@@ -743,8 +816,13 @@ boolean is_pet; /* If true, pet should keep wielded/worn items */
     /* vault guard's gold goes away rather than be dropped... */
     if (mtmp->isgd && (otmp = findgold(mtmp->minvent)) != 0) {
         if (canspotmon(mtmp))
+#if 0 /*KR: 원본*/
             pline("%s gold %s.", s_suffix(Monnam(mtmp)),
                   canseemon(mtmp) ? "vanishes" : "seems to vanish");
+#else /*KR: KRNethack 맞춤 번역 */
+            pline("%s 금화가 사라진 것 %s.", append_josa(Monnam(mtmp), "의"),
+                  canseemon(mtmp) ? "같다" : "같다");
+#endif
         obj_extract_self(otmp);
         obfree(otmp, (struct obj *) 0);
     } /* isgd && has gold */

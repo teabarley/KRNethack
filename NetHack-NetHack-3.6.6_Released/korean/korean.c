@@ -2361,6 +2361,50 @@ get_kr_name(const char *en_name)
     if (!strcmp(en_name, "gold piece"))
         return "금화";
 
+    /* [신체 부위 - Body Parts] */
+    if (!strcmp(en_name, "head"))
+        return "머리";
+    if (!strcmp(en_name, "eye"))
+        return "눈";
+    if (!strcmp(en_name, "face"))
+        return "얼굴";
+    if (!strcmp(en_name, "jaw"))
+        return "턱";
+    if (!strcmp(en_name, "nose"))
+        return "코";
+    if (!strcmp(en_name, "neck"))
+        return "목";
+    if (!strcmp(en_name, "stomach"))
+        return "위장";
+    if (!strcmp(en_name, "spine"))
+        return "척추";
+    if (!strcmp(en_name, "arm"))
+        return "팔";
+    if (!strcmp(en_name, "hand"))
+        return "손";
+    if (!strcmp(en_name, "fingertip"))
+        return "손가락 끝";
+    if (!strcmp(en_name, "finger"))
+        return "손가락";
+    if (!strcmp(en_name, "leg"))
+        return "다리";
+    if (!strcmp(en_name, "foot"))
+        return "발";
+    if (!strcmp(en_name, "fingertips"))
+        return "손가락 끝";
+    if (!strcmp(en_name, "fingers"))
+        return "손가락";
+    if (!strcmp(en_name, "legs"))
+        return "다리";
+    if (!strcmp(en_name, "feet"))
+        return "발";
+    if (!strcmp(en_name, "arms"))
+        return "팔";
+    if (!strcmp(en_name, "hands"))
+        return "손";
+    if (!strcmp(en_name, "eyes"))
+        return "눈";
+
     return (char *) en_name; /* 사전에 없으면 원래 영어 반환 */
 }
 /* --- KRNethack 번역 사전 끝 --- */

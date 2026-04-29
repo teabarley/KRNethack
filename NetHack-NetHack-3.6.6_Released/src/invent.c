@@ -3791,8 +3791,8 @@ boolean picked_some;
                 picked_some ? "Other things" : "Things",
                 Blind ? "you feel" : "are");
 #else /*KR: KRNethack 맞춤 번역*/
-        Sprintf(buf, "여기에 %s %s 것들:", 
-                picked_some ? "더" : "",
+        Sprintf(buf, "여기에 %s%s 것들:", 
+                picked_some ? "더 " : "",
                 Blind ? "만져지는" : "있는");
 #endif
         putstr(tmpwin, 0, buf);

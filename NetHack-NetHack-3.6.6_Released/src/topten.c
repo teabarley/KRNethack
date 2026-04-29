@@ -29,7 +29,7 @@ static long final_fpos;
 
 #define done_stopprint program_state.stopprint
 
-#define newttentry() (struct toptenentry *) alloc(sizeof (struct toptenentry))
+#define newttentry() (struct toptenentry *) alloc(sizeof(struct toptenentry))
 #define dealloc_ttentry(ttent) free((genericptr_t) (ttent))
 #ifndef NAMSZ
 /* Changing NAMSZ can break your existing record/logfile */
@@ -55,36 +55,37 @@ struct toptenentry {
     char plalign[ROLESZ + 1];
     char name[NAMSZ + 1];
     char death[DTHSZ + 1];
-} * tt_head;
+} *tt_head;
 /* size big enough to read in all the string fields at once; includes
    room for separating space or trailing newline plus string terminator */
 #define SCANBUFSZ (4 * (ROLESZ + 1) + (NAMSZ + 1) + (DTHSZ + 1) + 1)
 
-STATIC_DCL void FDECL(topten_print, (const char *));
-STATIC_DCL void FDECL(topten_print_bold, (const char *));
+STATIC_DCL void FDECL(topten_print, (const char *) );
+STATIC_DCL void FDECL(topten_print_bold, (const char *) );
 STATIC_DCL void NDECL(outheader);
 STATIC_DCL void FDECL(outentry, (int, struct toptenentry *, BOOLEAN_P));
-STATIC_DCL void FDECL(discardexcess, (FILE *));
-STATIC_DCL void FDECL(readentry, (FILE *, struct toptenentry *));
-STATIC_DCL void FDECL(writeentry, (FILE *, struct toptenentry *));
+STATIC_DCL void FDECL(discardexcess, (FILE *) );
+STATIC_DCL void FDECL(readentry, (FILE *, struct toptenentry *) );
+STATIC_DCL void FDECL(writeentry, (FILE *, struct toptenentry *) );
 #ifdef XLOGFILE
-STATIC_DCL void FDECL(writexlentry, (FILE *, struct toptenentry *, int));
+STATIC_DCL void FDECL(writexlentry, (FILE *, struct toptenentry *, int) );
 STATIC_DCL long NDECL(encodexlogflags);
 STATIC_DCL long NDECL(encodeconduct);
 STATIC_DCL long NDECL(encodeachieve);
 #endif
-STATIC_DCL void FDECL(free_ttlist, (struct toptenentry *));
+STATIC_DCL void FDECL(free_ttlist, (struct toptenentry *) );
 STATIC_DCL int FDECL(classmon, (char *, BOOLEAN_P));
 STATIC_DCL int FDECL(score_wanted, (BOOLEAN_P, int, struct toptenentry *, int,
-                                    const char **, int));
+                                    const char **, int) );
 #ifdef NO_SCAN_BRACK
-STATIC_DCL void FDECL(nsb_mung_line, (char *));
-STATIC_DCL void FDECL(nsb_unmung_line, (char *));
+STATIC_DCL void FDECL(nsb_mung_line, (char *) );
+STATIC_DCL void FDECL(nsb_unmung_line, (char *) );
 #endif
 
 static winid toptenwin = WIN_ERR;
 
 /* "killed by",&c ["an"] 'killer.name' */
+#if 0 /*KR: 원본*/
 void
 formatkiller(buf, siz, how, incl_helpless)
 char *buf;
@@ -156,10 +157,61 @@ boolean incl_helpless;
         /* else extra death info won't fit, so leave it out */
     }
 }
+#else /*KR: KRNethack 맞춤 번역 */
+void formatkiller(buf, siz, how, incl_helpless) char *buf;
+unsigned siz;
+int how;
+boolean incl_helpless;
+{
+    static NEARDATA const char *const killed_by_suffix[] = {
+        /* DIED, CHOKING, POISONING, STARVING, */
+        "에게 살해당했다", " 때문에 질식했다", "의 독으로 죽었다",
+        "로 굶어 죽었다",
+        /* DROWNING, BURNING, DISSOLVED, CRUSHING, */
+        "에서 익사했다", "에 타 죽었다", "에 녹아내렸다", "에 압사했다",
+        /* STONING, TURNED_SLIME, GENOCIDED, */
+        "에 의해 돌이 되었다", "에 의해 슬라임이 되었다", "에게 절멸당했다",
+        /* PANICKED, TRICKED, QUIT, ESCAPED, ASCENDED */
+        "", "", "", "", ""
+    };
+    char c, *kname = killer.name;
+    char *buf_start = buf;
 
-STATIC_OVL void
-topten_print(x)
-const char *x;
+    buf[0] = '\0';
+    if (incl_helpless && multi) {
+        if (multi_reason && strlen(multi_reason) + sizeof " 동안, " <= siz)
+            Sprintf(buf, "%s 동안, ", multi_reason);
+        else if (sizeof "무방비 상태인 동안, " <= siz)
+            Strcpy(buf, "무방비 상태인 동안, ");
+        buf += strlen(buf);
+        siz -= (unsigned) (buf - buf_start);
+    }
+
+    while (--siz > 0) {
+        c = *kname++;
+        if (!c)
+            break;
+        else if (c == ',')
+            c = ';';
+        else if (c == '=')
+            c = '_';
+        else if (c == '\t')
+            c = ' ';
+        *buf++ = c;
+    }
+    *buf = '\0';
+
+    if (killer.format != NO_KILLER_PREFIX) {
+        if (how == DIED || how == GENOCIDED) {
+            strncat(buf_start, "에게 살해당했다", siz - 1);
+        } else {
+            strncat(buf_start, killed_by_suffix[how], siz - 1);
+        }
+    }
+}
+#endif
+
+STATIC_OVL void topten_print(x) const char *x;
 {
     if (toptenwin == WIN_ERR)
         raw_print(x);
@@ -167,9 +219,7 @@ const char *x;
         putstr(toptenwin, ATR_NONE, x);
 }
 
-STATIC_OVL void
-topten_print_bold(x)
-const char *x;
+STATIC_OVL void topten_print_bold(x) const char *x;
 {
     if (toptenwin == WIN_ERR)
         raw_print_bold(x);
@@ -203,9 +253,7 @@ d_level *lev;
 }
 
 /* throw away characters until current record has been entirely consumed */
-STATIC_OVL void
-discardexcess(rfile)
-FILE *rfile;
+STATIC_OVL void discardexcess(rfile) FILE *rfile;
 {
     int c;
 
@@ -214,9 +262,7 @@ FILE *rfile;
     } while (c != '\n' && c != EOF);
 }
 
-STATIC_OVL void
-readentry(rfile, tt)
-FILE *rfile;
+STATIC_OVL void readentry(rfile, tt) FILE *rfile;
 struct toptenentry *tt;
 {
     char inbuf[SCANBUFSZ], s1[SCANBUFSZ], s2[SCANBUFSZ], s3[SCANBUFSZ],
@@ -240,7 +286,8 @@ struct toptenentry *tt;
     if (fscanf(rfile, fmt, &tt->ver_major, &tt->ver_minor, &tt->patchlevel,
                &tt->points, &tt->deathdnum, &tt->deathlev, &tt->maxlvl,
                &tt->hp, &tt->maxhp, &tt->deaths, &tt->deathdate,
-               &tt->birthdate, &tt->uid) != TTFIELDS) {
+               &tt->birthdate, &tt->uid)
+        != TTFIELDS) {
 #undef TTFIELDS
         tt->points = 0;
         discardexcess(rfile);
@@ -297,9 +344,7 @@ struct toptenentry *tt;
     }
 }
 
-STATIC_OVL void
-writeentry(rfile, tt)
-FILE *rfile;
+STATIC_OVL void writeentry(rfile, tt) FILE *rfile;
 struct toptenentry *tt;
 {
     static const char fmt32[] = "%c%c ";        /* role,gender */
@@ -336,9 +381,7 @@ struct toptenentry *tt;
 #ifdef XLOGFILE
 
 /* as tab is never used in eg. plname or death, no need to mangle those. */
-STATIC_OVL void
-writexlentry(rfile, tt, how)
-FILE *rfile;
+STATIC_OVL void writexlentry(rfile, tt, how) FILE *rfile;
 struct toptenentry *tt;
 int how;
 {
@@ -365,13 +408,18 @@ int how;
             buf, /* (already includes separator) */
             XLOG_SEP, plname, XLOG_SEP, tmpbuf);
     if (multi)
+#if 0 /*KR: 원본*/
         Fprintf(rfile, "%cwhile=%s", XLOG_SEP,
                 multi_reason ? multi_reason : "helpless");
+#else /*KR: KRNethack 맞춤 번역 */
+        Fprintf(rfile, "%cwhile=%s", XLOG_SEP,
+                multi_reason ? multi_reason : "무력한 상태에서");
+#endif
     Fprintf(rfile, "%cconduct=0x%lx%cturns=%ld%cachieve=0x%lx", XLOG_SEP,
             encodeconduct(), XLOG_SEP, moves, XLOG_SEP, encodeachieve());
     Fprintf(rfile, "%crealtime=%ld%cstarttime=%ld%cendtime=%ld", XLOG_SEP,
-            (long) urealtime.realtime, XLOG_SEP,
-            (long) ubirthday, XLOG_SEP, (long) urealtime.finish_time);
+            (long) urealtime.realtime, XLOG_SEP, (long) ubirthday, XLOG_SEP,
+            (long) urealtime.finish_time);
     Fprintf(rfile, "%cgender0=%s%calign0=%s", XLOG_SEP,
             genders[flags.initgend].filecode, XLOG_SEP,
             aligns[1 - u.ualignbase[A_ORIGINAL]].filecode);
@@ -467,9 +515,7 @@ encodeachieve()
 
 #endif /* XLOGFILE */
 
-STATIC_OVL void
-free_ttlist(tt)
-struct toptenentry *tt;
+STATIC_OVL void free_ttlist(tt) struct toptenentry *tt;
 {
     struct toptenentry *ttnext;
 
@@ -481,9 +527,7 @@ struct toptenentry *tt;
     dealloc_ttentry(tt);
 }
 
-void
-topten(how, when)
-int how;
+void topten(how, when) int how;
 time_t when;
 {
     int uid = getuid();
@@ -587,13 +631,21 @@ time_t when;
 
     if (wizard || discover) {
         if (how != PANICKED)
-            HUP {
+            HUP
+            {
                 char pbuf[BUFSZ];
 
                 topten_print("");
+#if 0 /*KR: 원본*/
                 Sprintf(pbuf,
              "Since you were in %s mode, the score list will not be checked.",
                         wizard ? "wizard" : "discover");
+#else /*KR: KRNethack 맞춤 번역 */
+                Sprintf(pbuf,
+                        "%s 모드로 플레이했기 때문에 점수 목록에는 등록되지 "
+                        "않습니다.",
+                        wizard ? "위자드" : "탐험");
+#endif
                 topten_print(pbuf);
             }
         goto showwin;
@@ -651,12 +703,18 @@ time_t when;
             if (rank0 < 0) {
                 rank0 = 0;
                 rank1 = rank;
-                HUP {
+                HUP
+                {
                     char pbuf[BUFSZ];
 
+#if 0 /*KR: 원본*/
                     Sprintf(pbuf,
                         "You didn't beat your previous score of %ld points.",
                             t1->points);
+#else /*KR: KRNethack 맞춤 번역 */
+                    Sprintf(pbuf, "이전 최고 점수인 %ld점을 넘지 못했습니다.",
+                            t1->points);
+#endif
                     topten_print(pbuf);
                     topten_print("");
                 }
@@ -692,13 +750,22 @@ time_t when;
         if (!done_stopprint)
             if (rank0 > 0) {
                 if (rank0 <= 10) {
+#if 0 /*KR: 원본*/
                     topten_print("You made the top ten list!");
+#else /*KR: KRNethack 맞춤 번역 */
+                    topten_print("명예의 전당 Top 10에 등록되었습니다!");
+#endif
                 } else {
                     char pbuf[BUFSZ];
 
+#if 0 /*KR: 원본*/
                     Sprintf(pbuf,
                             "You reached the %d%s place on the top %d list.",
                             rank0, ordin(rank0), sysopt.entrymax);
+#else /*KR: KRNethack 맞춤 번역 */
+                    Sprintf(pbuf, "상위 %d위 명단 중 %d위를 달성했습니다.",
+                            sysopt.entrymax, rank0);
+#endif
                     topten_print(pbuf);
                 }
                 topten_print("");
@@ -716,12 +783,13 @@ time_t when;
 #ifdef UPDATE_RECORD_IN_PLACE
             && rank >= rank0
 #endif
-            )
+        )
             writeentry(rfile, t1);
         if (done_stopprint)
             continue;
-        if (rank > flags.end_top && (rank < rank0 - flags.end_around
-                                     || rank > rank0 + flags.end_around)
+        if (rank > flags.end_top
+            && (rank < rank0 - flags.end_around
+                || rank > rank0 + flags.end_around)
             && (!flags.end_own
                 || (sysopt.pers_is_uid
                         ? t1->uid == t0->uid
@@ -794,6 +862,7 @@ outheader()
 }
 
 /* so>0: standout line; so=0: ordinary line */
+#if 0 /*KR: 원본*/
 STATIC_OVL void
 outentry(rank, t1, so)
 struct toptenentry *t1;
@@ -956,6 +1025,150 @@ boolean so;
     } else
         topten_print(linebuf);
 }
+#else /*KR: KRNethack 맞춤 번역 */
+STATIC_OVL void outentry(rank, t1, so) struct toptenentry *t1;
+int rank;
+boolean so;
+{
+    char linebuf[BUFSZ];
+    char *bp, hpbuf[24], linebuf3[BUFSZ];
+    int hppos, lngr;
+    char where[BUFSZ], action[BUFSZ];
+
+    linebuf[0] = '\0';
+    where[0] = '\0';
+    action[0] = '\0';
+
+    if (rank)
+        Sprintf(eos(linebuf), "%3d", rank);
+    else
+        Strcat(linebuf, "   ");
+
+    Sprintf(eos(linebuf), " %10ld  %.10s", t1->points ? t1->points : u.urexp,
+            t1->name);
+    Sprintf(eos(linebuf), "-%s", t1->plrole);
+    if (t1->plrace[0] != '?')
+        Sprintf(eos(linebuf), "-%s", t1->plrace);
+    Sprintf(eos(linebuf), "-%s", t1->plgend);
+    if (t1->plalign[0] != '?')
+        Sprintf(eos(linebuf), "-%s ", t1->plalign);
+    else
+        Strcat(linebuf, " ");
+
+    Strcat(linebuf, "은(는) ");
+
+    if (!strncmp("escaped", t1->death, 7)
+        || !strncmp("탈출했다", t1->death, 12)) {
+        /* jbuf 생략하고 간략하게 출력 */
+        Sprintf(action, "던전에서 탈출했다[최대 지하 %d층]", t1->maxlvl);
+    } else if (!strncmp("ascended", t1->death, 8)
+               || !strncmp("승천했다", t1->death, 12)) {
+        Sprintf(action, "승천하여 반신%s이 되었다",
+                (t1->plgend[0] == 'F') ? "녀" : "");
+    } else {
+        if (!strncmp(t1->death, "quit", 4)
+            || !strncmp("종료했다", t1->death, 12)) {
+            Strcat(action, "종료했다");
+        } else {
+            Strcat(action, t1->death);
+        }
+
+        if (t1->deathdnum == astral_level.dnum) {
+            const char *arg;
+            switch (t1->deathlev) {
+            case -5:
+                arg = "천상계";
+                break;
+            case -4:
+                arg = "물의 정령계";
+                break;
+            case -3:
+                arg = "불의 정령계";
+                break;
+            case -2:
+                arg = "바람의 정령계";
+                break;
+            case -1:
+                arg = "대지의 정령계";
+                break;
+            default:
+                arg = "공허";
+                break;
+            }
+            Sprintf(where, "%s에서 ", arg);
+        } else {
+            Sprintf(where, "%s", dungeons[t1->deathdnum].dname);
+            if (t1->deathdnum != knox_level.dnum)
+                Sprintf(eos(where), " 지하 %d층에서 ", t1->deathlev);
+            if (t1->deathlev != t1->maxlvl)
+                Sprintf(eos(where), "[최대 지하 %d층] ", t1->maxlvl);
+        }
+    }
+
+    Sprintf(eos(linebuf), "%s%s", where, action);
+
+    lngr = (int) strlen(linebuf);
+    if (t1->hp <= 0)
+        hpbuf[0] = '-', hpbuf[1] = '\0';
+    else
+        Sprintf(hpbuf, "%d", t1->hp);
+
+    hppos = COLNO - (sizeof("  Hp [max]") - 1);
+
+    while (lngr >= hppos) {
+        for (bp = eos(linebuf); !(*bp == ' ' && (bp - linebuf < hppos)); bp--)
+            ;
+        /* special case: word is too long, wrap in the middle */
+        if (linebuf + 15 >= bp)
+            bp = linebuf + hppos - 1;
+        /* special case: if about to wrap in the middle of maximum
+           dungeon depth reached, wrap in front of it instead */
+        if (bp > linebuf + 5 && !strncmp(bp - 5, " [max", 5))
+            bp -= 5;
+        if (*bp != ' ')
+            Strcpy(linebuf3, bp);
+        else
+            Strcpy(linebuf3, bp + 1);
+        *bp = 0;
+        if (so) {
+            while (bp < linebuf + (COLNO - 1))
+                *bp++ = ' ';
+            *bp = 0;
+            topten_print_bold(linebuf);
+        } else
+            topten_print(linebuf);
+        Sprintf(linebuf, "%15s %s", "", linebuf3);
+        lngr = strlen(linebuf);
+    }
+
+    /* beginning of hp column not including padding */
+    hppos = COLNO - 7 - (int) strlen(hpbuf);
+    bp = eos(linebuf);
+
+    if (bp <= linebuf + hppos) {
+        /* pad any necessary blanks to the hit point entry */
+        while (bp < linebuf + hppos)
+            *bp++ = ' ';
+        Strcpy(bp, hpbuf);
+        Sprintf(eos(bp), " %s[%d]",
+                (t1->maxhp < 10)    ? "  "
+                : (t1->maxhp < 100) ? " "
+                                    : "",
+                t1->maxhp);
+    }
+
+    if (so) {
+        bp = eos(linebuf);
+        if (so >= COLNO)
+            so = COLNO - 1;
+        while (bp < linebuf + so)
+            *bp++ = ' ';
+        *bp = 0;
+        topten_print_bold(linebuf);
+    } else
+        topten_print(linebuf);
+}
+#endif
 
 STATIC_OVL int
 score_wanted(current_ver, rank, t1, playerct, players, uid)
@@ -1002,9 +1215,7 @@ int uid;
  * and argv[1] starting with "-s".
  * caveat: some shells might allow argv elements to be arbitrarily long.
  */
-void
-prscore(argc, argv)
-int argc;
+void prscore(argc, argv) int argc;
 char **argv;
 {
     const char **players;
@@ -1106,6 +1317,7 @@ char **argv;
                 (void) outentry(rank, t1, FALSE);
         }
     } else {
+#if 0 /*KR: 원본*/
         Sprintf(pbuf, "Cannot find any %sentries for ",
                 current_ver ? "current " : "");
         if (playerct < 1)
@@ -1132,6 +1344,31 @@ char **argv;
                 }
             }
         }
+#else /*KR: KRNethack 맞춤 번역 */
+        Sprintf(pbuf, "해당하는 %s기록을 찾을 수 없습니다: ",
+                current_ver ? "현재 버전의 " : "");
+        if (playerct < 1)
+            Strcat(pbuf, "당신.");
+        else {
+            for (i = 0; i < playerct; i++) {
+                if (strlen(pbuf) + strlen(players[i]) + 2 >= BUFSZ) {
+                    if (strlen(pbuf) < BUFSZ - 4)
+                        Strcat(pbuf, "...");
+                    else
+                        Strcpy(pbuf + strlen(pbuf) - 4, "...");
+                    break;
+                }
+                Strcat(pbuf, players[i]);
+                if (i < playerct - 1) {
+                    if (players[i][0] == '-' && index("pr", players[i][1])
+                        && players[i][2] == 0)
+                        Strcat(pbuf, " ");
+                    else
+                        Strcat(pbuf, ", ");
+                }
+            }
+        }
+#endif
         raw_print(pbuf);
         raw_printf("Usage: %s -s [-v] <playertypes> [maxrank] [playernames]",
 
@@ -1172,7 +1409,7 @@ boolean fem;
         return PM_RANGER;
 
     impossible("What weird role is this? (%s)", plch);
-    return  PM_HUMAN_MUMMY;
+    return PM_HUMAN_MUMMY;
 }
 
 /*
@@ -1242,17 +1479,13 @@ struct obj *otmp;
 /* Lattice scanf isn't up to reading the scorefile.  What */
 /* follows deals with that; I admit it's ugly. (KL) */
 /* Now generally available (KL) */
-STATIC_OVL void
-nsb_mung_line(p)
-char *p;
+STATIC_OVL void nsb_mung_line(p) char *p;
 {
     while ((p = index(p, ' ')) != 0)
         *p = '|';
 }
 
-STATIC_OVL void
-nsb_unmung_line(p)
-char *p;
+STATIC_OVL void nsb_unmung_line(p) char *p;
 {
     while ((p = index(p, '|')) != 0)
         *p = ' ';

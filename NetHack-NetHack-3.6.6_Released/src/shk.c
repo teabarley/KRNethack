@@ -4991,8 +4991,33 @@ boolean cant_mollify;
                 verbalize("How dare you %s my %s?", dmgstr,
                           dugwall ? "shop" : "door");
 #else /*KR: KRNethack 맞춤 번역 */
+            {
+                const char *kr_dmg = "망가뜨리다니"; /* 기본값 */
+
+                if (!strcmp(dmgstr, "break") || !strcmp(dmgstr, "부순"))
+                    kr_dmg = "부수다니";
+                else if (!strcmp(dmgstr, "damage")
+                         || !strcmp(dmgstr, "손상시킨"))
+                    kr_dmg = "손상시키다니";
+                else if (!strcmp(dmgstr, "destroy")
+                         || !strcmp(dmgstr, "파괴한"))
+                    kr_dmg = "파괴하다니";
+                else if (!strcmp(dmgstr, "shatter")
+                         || !strcmp(dmgstr, "산산조각 낸"))
+                    kr_dmg = "산산조각 내다니";
+                else if (!strcmp(dmgstr, "burn away")
+                         || !strcmp(dmgstr, "태워버린"))
+                    kr_dmg = "태워버리다니";
+                else if (!strcmp(dmgstr, "disintegrate")
+                         || !strcmp(dmgstr, "분해한"))
+                    kr_dmg = "분해하다니";
+                else if (!strcmp(dmgstr, "melt")
+                         || !strcmp(dmgstr, "녹여버린"))
+                    kr_dmg = "녹여버리다니";
+
                 verbalize("감히 내 %s %s?", dugwall ? "상점을" : "문을",
-                          dmgstr);
+                          kr_dmg);
+            }
 #endif
             else
 #if 0 /*KR: 원본*/

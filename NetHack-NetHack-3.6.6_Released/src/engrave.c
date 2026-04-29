@@ -576,7 +576,7 @@ doengrave()
     }
     if (Is_airlevel(&u.uz) || Is_waterlevel(&u.uz) /* in bubble */) {
         /*KR You_cant("write in thin air!"); */
-        You("공중에 쓸 수 없다!");
+        You("허공에 쓸 수 없다!");
         return 0;
     } else if (!accessible(u.ux, u.uy)) {
         /* stone, tree, wall, secret corridor, pool, lava, bars */

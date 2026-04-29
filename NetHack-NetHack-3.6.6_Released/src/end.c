@@ -1765,8 +1765,24 @@ STATIC_OVL void really_done(how) int how;
             "You were level %d with a maximum of %d hit point%s when you %s.",
             u.ulevel, u.uhpmax, plur(u.uhpmax), ends[how]);
 #else /*KR: KRNethack 맞춤 번역 */
-    Sprintf(pbuf, "%s 당시, 당신의 레벨은 %d, 최대 체력은 %d이었다.",
-            ends[how], u.ulevel, u.uhpmax);
+    Sprintf(pbuf, "%s 때, 당신의 레벨은 %d, 최대 체력은 %d이었다.",
+            (how == ASCENDED)       ? "승천했을"
+            : (how == ESCAPED)      ? "탈출했을"
+            : (how == STONING)      ? "돌로 변했을"
+            : (how == CHOKING)      ? "질식했을"
+            : (how == POISONING)    ? "중독되었을"
+            : (how == STARVING)     ? "아사했을"
+            : (how == DROWNING)     ? "익사했을"
+            : (how == BURNING)      ? "불에 탔을"
+            : (how == DISSOLVED)    ? "용암에 녹아내렸을"
+            : (how == CRUSHING)     ? "압사당했을"
+            : (how == TURNED_SLIME) ? "슬라임으로 변했을"
+            : (how == GENOCIDED)    ? "멸종되었을"
+            : (how == PANICKED)     ? "공황 상태에 빠졌을"
+            : (how == TRICKED)      ? "속임수에 당했을"
+            : (how == QUIT)         ? "게임을 포기했을"
+                                    : "사망했을",
+            u.ulevel, u.uhpmax);
 #endif
     dump_forward_putstr(endwin, 0, pbuf, done_stopprint);
     dump_forward_putstr(endwin, 0, "", done_stopprint);

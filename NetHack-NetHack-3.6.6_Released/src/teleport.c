@@ -5,11 +5,11 @@
 
 #include "hack.h"
 
-STATIC_DCL boolean FDECL(tele_jump_ok, (int, int, int, int));
+STATIC_DCL boolean FDECL(tele_jump_ok, (int, int, int, int) );
 STATIC_DCL boolean FDECL(teleok, (int, int, BOOLEAN_P));
 STATIC_DCL void NDECL(vault_tele);
-STATIC_DCL boolean FDECL(rloc_pos_ok, (int, int, struct monst *));
-STATIC_DCL void FDECL(mvault_tele, (struct monst *));
+STATIC_DCL boolean FDECL(rloc_pos_ok, (int, int, struct monst *) );
+STATIC_DCL void FDECL(mvault_tele, (struct monst *) );
 
 /* non-null when teleporting via having read this scroll */
 STATIC_VAR struct obj *telescroll = 0;
@@ -39,8 +39,8 @@ unsigned gpflags;
      * which could be co-located and thus get restricted a bit too much.
      * oh well.
      */
-    if (x == u.ux && y == u.uy
-        && mtmp != &youmonst && (mtmp != u.ustuck || !u.uswallow)
+    if (x == u.ux && y == u.uy && mtmp != &youmonst
+        && (mtmp != u.ustuck || !u.uswallow)
         && (!u.usteed || mtmp != u.usteed))
         return FALSE;
 
@@ -210,7 +210,7 @@ unsigned entflags;
         }
     }
 
- full:
+full:
     /* we've got between 1 and SIZE(good) candidates; choose one */
     i = rn2((int) (good_ptr - good));
     cc->x = good[i].x;
@@ -279,9 +279,7 @@ boolean trapok;
     return TRUE;
 }
 
-void
-teleds(nux, nuy, allow_drag)
-register int nux, nuy;
+void teleds(nux, nuy, allow_drag) register int nux, nuy;
 boolean allow_drag;
 {
     boolean ball_active, ball_still_in_range;
@@ -300,9 +298,9 @@ boolean allow_drag;
      * not allow_drag is true, because we are calling that function, not
      * to drag, but to move the chain.  *However* there are some dumb
      * special cases:
-     *    0                          0
-     *   _X  move east       ----->  X_
-     *    @                           @
+     * 0                         0
+     * _X  move east      ----->  X_
+     * @                            @
      * These are permissible if teleporting, but not if dragging.  As a
      * result, drag_ball() needs to know about allow_drag and might end
      * up dragging the ball anyway.  Also, drag_ball() might find that
@@ -354,7 +352,7 @@ boolean allow_drag;
             } else {
                 /* dragging fails if hero is encumbered beyond 'burdened' */
                 allow_drag = FALSE; /* teleport b&c to hero's new spot */
-                unplacebc(); /* to match placebc() below */
+                unplacebc();        /* to match placebc() below */
             }
         }
     }
@@ -369,10 +367,10 @@ boolean allow_drag;
     initrack(); /* teleports mess up tracking monsters without this */
     update_player_regions();
     /*
-     *  Make sure the hero disappears from the old location.  This will
-     *  not happen if she is teleported within sight of her previous
-     *  location.  Force a full vision recalculation because the hero
-     *  is now in a new location.
+     * Make sure the hero disappears from the old location.  This will
+     * not happen if she is teleported within sight of her previous
+     * location.  Force a full vision recalculation because the hero
+     * is now in a new location.
      */
     newsym(u.ux0, u.uy0);
     see_monsters();
@@ -463,8 +461,9 @@ boolean force_it;
             yelp(mtmp);
             return FALSE;
         } else {
-            Your("leash goes slack.");
- release_it:
+            /*KR Your("leash goes slack."); */
+            Your("목줄이 느슨해졌다.");
+        release_it:
             m_unleash(mtmp, FALSE);
             return TRUE;
         }
@@ -493,7 +492,9 @@ struct obj *scroll;
     /* Disable teleportation in stronghold && Vlad's Tower */
     if (level.flags.noteleport) {
         if (!wizard) {
-            pline("A mysterious force prevents you from teleporting!");
+            /*KR pline("A mysterious force prevents you from teleporting!");
+             */
+            pline("신비한 힘이 당신의 순간이동을 막았다!");
             return TRUE;
         }
     }
@@ -503,23 +504,31 @@ struct obj *scroll;
         make_blinded(0L, FALSE);
 
     if ((u.uhave.amulet || On_W_tower_level(&u.uz)) && !rn2(3)) {
-        You_feel("disoriented for a moment.");
+        /*KR You_feel("disoriented for a moment."); */
+        You_feel("잠시 방향 감각을 상실한 것 같다.");
         if (!wizard || yn("Override?") != 'y')
             return FALSE;
     }
     if ((Teleport_control && !Stunned) || wizard) {
         if (unconscious()) {
-            pline("Being unconscious, you cannot control your teleport.");
+            /*KR pline("Being unconscious, you cannot control your
+             * teleport."); */
+            pline("의식이 없어 순간이동을 제어할 수 없다.");
         } else {
+#if 0 /*KR: 원본*/
             char whobuf[BUFSZ];
 
             Strcpy(whobuf, "you");
             if (u.usteed)
                 Sprintf(eos(whobuf), " and %s", mon_nam(u.usteed));
             pline("Where do %s want to be teleported?", whobuf);
+#else /*KR: KRNethack 맞춤 번역 */
+            pline("어디로 순간이동 하시겠습니까?");
+#endif
             cc.x = u.ux;
             cc.y = u.uy;
-            if (getpos(&cc, TRUE, "the desired position") < 0)
+            /*KR if (getpos(&cc, TRUE, "the desired position") < 0) */
+            if (getpos(&cc, TRUE, "이동하고 싶은 위치") < 0)
                 return TRUE; /* abort */
             /* possible extensions: introduce a small error if
                magic power is low; allow transfer to solid rock */
@@ -530,12 +539,14 @@ struct obj *scroll;
                 teleds(cc.x, cc.y, FALSE);
                 return TRUE;
             }
-            pline("Sorry...");
+            /*KR pline("Sorry..."); */
+            pline("미안하지만 안 되겠군...");
             result = TRUE;
         }
     } else if (scroll && scroll->blessed) {
         /* (this used to be handled in seffects()) */
-        if (yn("Do you wish to teleport?") == 'n')
+        /*KR if (yn("Do you wish to teleport?") == 'n') */
+        if (yn("순간이동 하시겠습니까?") == 'n')
             return TRUE;
         result = TRUE;
     }
@@ -558,9 +569,9 @@ dotelecmd()
     int res, added, hidden;
     boolean ignore_restrictions = FALSE;
 /* also defined in spell.c */
-#define NOOP_SPELL  0
-#define HIDE_SPELL  1
-#define ADD_SPELL   2
+#define NOOP_SPELL 0
+#define HIDE_SPELL 1
+#define ADD_SPELL 2
 #define UNHIDESPELL 3
 #define REMOVESPELL 4
 
@@ -579,15 +590,15 @@ dotelecmd()
         } tports[] = {
             /*
              * Potential combinations:
-             *  1) attempt ^T without intrinsic, not know spell;
-             *  2) via intrinsic, not know spell, obey restrictions;
-             *  3) via intrinsic, not know spell, ignore restrictions;
-             *  4) via intrinsic, know spell, obey restrictions;
-             *  5) via intrinsic, know spell, ignore restrictions;
-             *  6) via spell, not have intrinsic, obey restrictions;
-             *  7) via spell, not have intrinsic, ignore restrictions;
-             *  8) force, obey other restrictions;
-             *  9) force, ignore restrictions.
+             * 1) attempt ^T without intrinsic, not know spell;
+             * 2) via intrinsic, not know spell, obey restrictions;
+             * 3) via intrinsic, not know spell, ignore restrictions;
+             * 4) via intrinsic, know spell, obey restrictions;
+             * 5) via intrinsic, know spell, ignore restrictions;
+             * 6) via spell, not have intrinsic, obey restrictions;
+             * 7) via spell, not have intrinsic, ignore restrictions;
+             * 8) force, obey other restrictions;
+             * 9) force, ignore restrictions.
              * We only support the 1st (t), 2nd (n), 6th (s), and 9th (w).
              *
              * This ignores the fact that there is an experience level
@@ -635,11 +646,11 @@ dotelecmd()
             break;
         case 's':
             HTeleportation = ETeleportation = 0L; /* suppress intrinsic */
-            added = tport_spell(ADD_SPELL); /* add teleport-away */
+            added = tport_spell(ADD_SPELL);       /* add teleport-away */
             break;
         case 't':
             HTeleportation = ETeleportation = 0L; /* suppress intrinsic */
-            hidden = tport_spell(HIDE_SPELL); /* hide teleport-away */
+            hidden = tport_spell(HIDE_SPELL);     /* hide teleport-away */
             break;
         case 'w':
             ignore_restrictions = TRUE;
@@ -676,8 +687,10 @@ boolean break_the_rules; /* True: wizard mode ^T */
     if (trap) {
         trap_once = trap->once; /* trap may get deleted, save this */
         if (trap->once) {
-            pline("This is a vault teleport, usable once only.");
-            if (yn("Jump in?") == 'n') {
+            /*KR pline("This is a vault teleport, usable once only."); */
+            pline("이것은 비밀 창고로 가는 텔레포터다. 한 번만 쓸 수 있다.");
+            /*KR if (yn("Jump in?") == 'n') { */
+            if (yn("뛰어들겠습니까?") == 'n') {
                 trap = 0;
             } else {
                 deltrap(trap);
@@ -685,15 +698,20 @@ boolean break_the_rules; /* True: wizard mode ^T */
             }
         }
         if (trap)
+#if 0 /*KR: 원본*/
             You("%s onto the teleportation trap.",
                 locomotion(youmonst.data, "jump"));
+#else /*KR: KRNethack 맞춤 번역 */
+            You("순간이동 함정 위로 뛰어들었다.");
+#endif
     }
     if (!trap) {
         boolean castit = FALSE;
         register int sp_no = 0, energy = 0;
 
-        if (!Teleportation || (u.ulevel < (Role_if(PM_WIZARD) ? 8 : 12)
-                               && !can_teleport(youmonst.data))) {
+        if (!Teleportation
+            || (u.ulevel < (Role_if(PM_WIZARD) ? 8 : 12)
+                && !can_teleport(youmonst.data))) {
             /* Try to use teleport away spell.
                Prior to 3.6.2 this used to require that you know the spellbook
                (probably just intended as an optimization to skip the
@@ -705,11 +723,19 @@ boolean break_the_rules; /* True: wizard mode ^T */
             /* casting isn't inhibited by being Stunned (...it ought to be) */
             castit = (sp_no < MAXSPELL && !Confusion);
             if (!castit && !break_the_rules) {
+#if 0 /*KR: 원본*/
                 You("%s.",
                     !Teleportation ? ((sp_no < MAXSPELL)
                                         ? "can't cast that spell"
                                         : "don't know that spell")
                                    : "are not able to teleport at will");
+#else /*KR: KRNethack 맞춤 번역 */
+                You("%s.",
+                    !Teleportation
+                        ? ((sp_no < MAXSPELL) ? "그 주문을 시전할 수 없다"
+                                              : "그런 주문은 모른다")
+                        : "원하는 대로 순간이동할 능력이 없다");
+#endif
                 return 0;
             }
         }
@@ -734,18 +760,28 @@ boolean break_the_rules; /* True: wizard mode ^T */
             else if (u.uen < energy)
                 u.uen = energy;
         } else if (u.uhunger <= 10) {
-            cantdoit = "are too weak from hunger";
+            /*KR cantdoit = "are too weak from hunger"; */
+            cantdoit = "허기 때문에 너무 허약해져서";
         } else if (ACURR(A_STR) < 4) {
-            cantdoit = "lack the strength";
+            /*KR cantdoit = "lack the strength"; */
+            cantdoit = "힘이 부족해서";
         } else if (energy > u.uen) {
-            cantdoit = "lack the energy";
+            /*KR cantdoit = "lack the energy"; */
+            cantdoit = "마력이 부족해서";
         }
         if (cantdoit) {
+#if 0 /*KR: 원본*/
             You("%s %s.", cantdoit,
                 castit ? "for a teleport spell" : "to teleport");
+#else /*KR: KRNethack 맞춤 번역 */
+            You("%s %s 없다.", cantdoit,
+                castit ? "순간이동 주문을 시전할 수" : "순간이동할 수");
+#endif
             return 0;
         } else if (check_capacity(
-                       "Your concentration falters from carrying so much.")) {
+                       /*KR "Your concentration falters from carrying so
+                          much.")) { */
+                       "짐이 너무 많아서 집중력이 흐트러졌다.")) {
             return 1; /* this failure in spelleffects() also uses the move */
         }
 
@@ -791,14 +827,16 @@ level_tele()
         goto random_levtport;
     if ((u.uhave.amulet || In_endgame(&u.uz) || In_sokoban(&u.uz))
         && !wizard) {
-        You_feel("very disoriented for a moment.");
+        /*KR You_feel("very disoriented for a moment."); */
+        You_feel("일순간 방향 감각을 완전히 잃은 것 같다.");
         return;
     }
     if ((Teleport_control && !Stunned) || wizard) {
         char qbuf[BUFSZ];
         int trycnt = 0;
 
-        Strcpy(qbuf, "To what level do you want to teleport?");
+        /*KR Strcpy(qbuf, "To what level do you want to teleport?"); */
+        Strcpy(qbuf, "몇 층으로 순간이동 하시겠습니까?");
         do {
             if (iflags.menu_requested) {
                 /* wizard mode 'm ^V' skips prompting on first pass
@@ -809,9 +847,13 @@ level_tele()
             }
             if (++trycnt == 2) {
                 if (wizard)
-                    Strcat(qbuf, " [type a number, name, or ? for a menu]");
+                    /*KR Strcat(qbuf, " [type a number, name, or ? for a
+                     * menu]"); */
+                    Strcat(qbuf,
+                           " [숫자나 이름, 또는 ?를 입력하면 메뉴 표시]");
                 else
-                    Strcat(qbuf, " [type a number or name]");
+                    /*KR Strcat(qbuf, " [type a number or name]"); */
+                    Strcat(qbuf, " [숫자나 이름을 입력]");
             }
             *buf = '\0'; /* EDIT_GETLIN: if we're on second or later pass,
                             the previous input was invalid so don't use it
@@ -819,21 +861,23 @@ level_tele()
             getlin(qbuf, buf);
             if (!strcmp(buf, "\033")) { /* cancelled */
                 if (Confusion && rnl(5)) {
-                    pline("Oops...");
+                    /*KR pline("Oops..."); */
+                    pline("이런...");
                     goto random_levtport;
                 }
                 return;
             } else if (!strcmp(buf, "*")) {
                 goto random_levtport;
             } else if (Confusion && rnl(5)) {
-                pline("Oops...");
+                /*KR pline("Oops..."); */
+                pline("이런...");
                 goto random_levtport;
             }
             if (wizard && !strcmp(buf, "?")) {
                 schar destlev;
                 xchar destdnum;
 
- levTport_menu:
+            levTport_menu:
                 destlev = 0;
                 destdnum = 0;
                 newlev = (int) print_dungeon(TRUE, &destlev, &destdnum);
@@ -865,21 +909,37 @@ level_tele()
         if (newlev == 0) {
             if (trycnt >= 10)
                 goto random_levtport;
-            if (ynq("Go to Nowhere.  Are you sure?") != 'y')
+            /*KR if (ynq("Go to Nowhere.  Are you sure?") != 'y') */
+            if (ynq("존재하지 않는 곳으로 갑니다. 정말로 가시겠습니까?")
+                != 'y')
                 return;
+#if 0 /*KR: 원본*/
             You("%s in agony as your body begins to warp...",
                 is_silent(youmonst.data) ? "writhe" : "scream");
+#else /*KR: KRNethack 맞춤 번역 */
+            You("몸이 뒤틀리기 시작하자 고통에 겨워 %s...",
+                is_silent(youmonst.data) ? "몸부림친다" : "비명을 지른다");
+#endif
             display_nhwindow(WIN_MESSAGE, FALSE);
-            You("cease to exist.");
+            /*KR You("cease to exist."); */
+            Your("존재가 소멸되었다.");
             if (invent)
-                Your("possessions land on the %s with a thud.",
+                /*KR Your("possessions land on the %s with a thud.", */
+                Your("소지품이 쿵 소리와 함께 %s에 떨어졌다.",
                      surface(u.ux, u.uy));
             killer.format = NO_KILLER_PREFIX;
-            Strcpy(killer.name, "committed suicide");
+            /*KR Strcpy(killer.name, "committed suicide"); */
+            Strcpy(killer.name, "자살했다");
             done(DIED);
-            pline("An energized cloud of dust begins to coalesce.");
+            /*KR pline("An energized cloud of dust begins to coalesce."); */
+            pline("에너지로 가득 찬 먼지구름이 뭉치기 시작한다.");
+#if 0 /*KR: 원본*/
             Your("body rematerializes%s.",
                  invent ? ", and you gather up all your possessions" : "");
+#else /*KR: KRNethack 맞춤 번역 */
+            Your("몸이 다시 형체를 갖추었다%s.",
+                 invent ? ", 그리고 모든 소지품을 챙겨들었다" : "");
+#endif
             return;
         }
 
@@ -901,7 +961,7 @@ level_tele()
         if (In_quest(&u.uz) && newlev > 0)
             newlev = newlev + dungeons[u.uz.dnum].depth_start - 1;
     } else { /* involuntary level tele */
- random_levtport:
+    random_levtport:
         newlev = random_teleport_level();
         if (newlev == depth(&u.uz)) {
             You1(shudder_for_moment);
@@ -920,7 +980,8 @@ level_tele()
         int llimit = dunlevs_in_dungeon(&u.uz);
 
         if (newlev >= 0 || newlev <= -llimit) {
-            You_cant("get there from here.");
+            /*KR You_cant("get there from here."); */
+            You_cant("여기선 거기로 갈 수 없다.");
             return;
         }
         newlevel.dnum = u.uz.dnum;
@@ -943,30 +1004,45 @@ level_tele()
             in_mklev = FALSE;
         }
         if (newlev <= -10) {
-            You("arrive in heaven.");
-            verbalize("Thou art early, but we'll admit thee.");
+            /*KR You("arrive in heaven."); */
+            You("천국에 도착했다.");
+            /*KR verbalize("Thou art early, but we'll admit thee."); */
+            verbalize("오기엔 아직 이르건만, 특별히 들여보내 주마.");
             killer.format = NO_KILLER_PREFIX;
-            Strcpy(killer.name, "went to heaven prematurely");
+            /*KR Strcpy(killer.name, "went to heaven prematurely"); */
+            Strcpy(killer.name, "너무 일찍 천국에 가버렸다");
         } else if (newlev == -9) {
-            You_feel("deliriously happy.");
-            pline("(In fact, you're on Cloud 9!)");
+            /*KR You_feel("deliriously happy."); */
+            You_feel("무아지경의 행복을 느낀다.");
+            /*KR pline("(In fact, you're on Cloud 9!)"); */
+            pline("(사실, 당신은 가장 높은 하늘에 있다!)");
             display_nhwindow(WIN_MESSAGE, FALSE);
         } else
-            You("are now high above the clouds...");
+            /*KR You("are now high above the clouds..."); */
+            You("이제 구름 저 높은 곳에 있다...");
 
         if (killer.name[0]) {
             ; /* arrival in heaven is pending */
         } else if (Levitation) {
-            escape_by_flying = "float gently down to earth";
+            /*KR escape_by_flying = "float gently down to earth"; */
+            escape_by_flying = "부드럽게 지상으로 내려앉았다";
         } else if (Flying) {
-            escape_by_flying = "fly down to the ground";
+            /*KR escape_by_flying = "fly down to the ground"; */
+            escape_by_flying = "지상으로 날아서 내려갔다";
         } else {
-            pline("Unfortunately, you don't know how to fly.");
-            You("plummet a few thousand feet to your death.");
+            /*KR pline("Unfortunately, you don't know how to fly."); */
+            pline("불행히도, 당신은 나는 법을 모른다.");
+            /*KR You("plummet a few thousand feet to your death."); */
+            You("수천 피트 아래로 추락해 죽고 말았다.");
+#if 0 /*KR: 원본*/
             Sprintf(killer.name,
                     "teleported out of the dungeon and fell to %s death",
                     uhis());
             killer.format = NO_KILLER_PREFIX;
+#else /*KR: KRNethack 맞춤 번역 */
+            Strcpy(killer.name, "던전 밖으로 순간이동한 후 추락해서");
+            killer.format = KILLED_BY;
+#endif
         }
     }
 
@@ -980,18 +1056,20 @@ level_tele()
         done(DIED);
         /* can only get here via life-saving (or declining to die in
            explore|debug mode); the hero has now left the dungeon... */
-        escape_by_flying = "find yourself back on the surface";
+        /*KR escape_by_flying = "find yourself back on the surface"; */
+        escape_by_flying = "정신을 차려보니 지상에 돌아와 있었다";
         u.uz = lsav; /* restore u.uz so escape code works */
     }
 
     /* calls done(ESCAPED) if newlevel==0 */
     if (escape_by_flying) {
+        /*KR You("%s.", escape_by_flying); */
         You("%s.", escape_by_flying);
         newlevel.dnum = 0;   /* specify main dungeon */
         newlevel.dlevel = 0; /* escape the dungeon */
         /* [dlevel used to be set to 1, but it doesn't make sense to
-            teleport out of the dungeon and float or fly down to the
-            surface but then actually arrive back inside the dungeon] */
+           teleport out of the dungeon and float or fly down to the
+           surface but then actually arrive back inside the dungeon] */
     } else if (u.uz.dnum == medusa_level.dnum
                && newlev >= dungeons[u.uz.dnum].depth_start
                                 + dunlevs_in_dungeon(&u.uz)) {
@@ -1006,7 +1084,8 @@ level_tele()
                           + dunlevs_in_dungeon(&u.uz) - 1)) {
             newlev = dungeons[u.uz.dnum].depth_start
                      + dunlevs_in_dungeon(&u.uz) - 2;
-            pline("Sorry...");
+            /*KR pline("Sorry..."); */
+            pline("아쉽지만...");
         }
         /* no teleporting out of quest dungeon */
         if (In_quest(&u.uz) && newlev < depth(&qstart_level))
@@ -1025,9 +1104,7 @@ level_tele()
         deferred_goto();
 }
 
-void
-domagicportal(ttmp)
-register struct trap *ttmp;
+void domagicportal(ttmp) register struct trap *ttmp;
 {
     struct d_level target_level;
 
@@ -1044,31 +1121,33 @@ register struct trap *ttmp;
     if (!on_level(&u.uz, &u.uz0))
         return;
 
-    You("activated a magic portal!");
+    /*KR You("activated a magic portal!"); */
+    pline("마법의 포탈이 작동했다!");
 
     /* prevent the poor shnook, whose amulet was stolen while in
      * the endgame, from accidently triggering the portal to the
      * next level, and thus losing the game
      */
     if (In_endgame(&u.uz) && !u.uhave.amulet) {
-        You_feel("dizzy for a moment, but nothing happens...");
+        /*KR You_feel("dizzy for a moment, but nothing happens..."); */
+        You_feel("잠시 어지러웠지만, 아무 일도 일어나지 않았다...");
         return;
     }
 
     target_level = ttmp->dst;
-    schedule_goto(&target_level, FALSE, FALSE, 1,
-                  "You feel dizzy for a moment, but the sensation passes.",
-                  (char *) 0);
+    schedule_goto(
+        &target_level, FALSE, FALSE, 1,
+        /*KR "You feel dizzy for a moment, but the sensation passes.", */
+        "잠시 현기증을 느꼈지만 이내 진정되었다.", (char *) 0);
 }
 
-void
-tele_trap(trap)
-struct trap *trap;
+void tele_trap(trap) struct trap *trap;
 {
     if (In_endgame(&u.uz) || Antimagic) {
         if (Antimagic)
             shieldeff(u.ux, u.uy);
-        You_feel("a wrenching sensation.");
+        /*KR You_feel("a wrenching sensation."); */
+        You_feel("비틀리는 듯한 감각이 느껴졌다.");
     } else if (!next_to_u()) {
         You1(shudder_for_moment);
     } else if (trap->once) {
@@ -1079,11 +1158,12 @@ struct trap *trap;
         tele();
 }
 
-void
-level_tele_trap(trap, trflags)
+void 
+level_tele_trap(trap, trflags) 
 struct trap *trap;
 unsigned trflags;
 {
+#if 0 /*KR: 원본*/
     char verbbuf[BUFSZ];
 
     if ((trflags & VIASITTING) != 0)
@@ -1093,18 +1173,29 @@ unsigned trflags;
                 Levitation ? (const char *) "float"
                            : locomotion(youmonst.data, "step"));
     You("%s a level teleport trap!", verbbuf);
+#else /*KR: KRNethack 맞춤 번역 */
+    if ((trflags & VIASITTING) != 0) {
+        pline("층 텔레포트 함정을 작동시켰다!");
+    } else {
+        You("층 텔레포트 함정 위로 %s!",
+            Levitation ? "떠올랐다" : "올라섰다");
+    }
+#endif
 
     if (Antimagic) {
         shieldeff(u.ux, u.uy);
     }
     if (Antimagic || In_endgame(&u.uz)) {
-        You_feel("a wrenching sensation.");
+        /*KR You_feel("a wrenching sensation."); */
+        You_feel("비틀리는 듯한 감각이 느껴졌다.");
         return;
     }
     if (!Blind)
-        You("are momentarily blinded by a flash of light.");
+        /*KR You("are momentarily blinded by a flash of light."); */
+        You("순간적인 섬광에 눈이 멀었다.");
     else
-        You("are momentarily disoriented.");
+        /*KR You("are momentarily disoriented."); */
+        You("일순간 방향 감각을 잃었다.");
     deltrap(trap);
     newsym(u.ux, u.uy); /* get rid of trap symbol */
     level_tele();
@@ -1137,14 +1228,14 @@ struct monst *mtmp;
                     ^ !within_bounded_area(x, y, dndest.nlx, dndest.nly,
                                            dndest.nhx, dndest.nhy));
         if (updest.lx && (yy & 1) != 0) /* moving up */
-            return (within_bounded_area(x, y, updest.lx, updest.ly,
-                                        updest.hx, updest.hy)
+            return (within_bounded_area(x, y, updest.lx, updest.ly, updest.hx,
+                                        updest.hy)
                     && (!updest.nlx
                         || !within_bounded_area(x, y, updest.nlx, updest.nly,
                                                 updest.nhx, updest.nhy)));
         if (dndest.lx && (yy & 1) == 0) /* moving down */
-            return (within_bounded_area(x, y, dndest.lx, dndest.ly,
-                                        dndest.hx, dndest.hy)
+            return (within_bounded_area(x, y, dndest.lx, dndest.ly, dndest.hx,
+                                        dndest.hy)
                     && (!dndest.nlx
                         || !within_bounded_area(x, y, dndest.nlx, dndest.nly,
                                                 dndest.nhx, dndest.nhy)));
@@ -1176,9 +1267,7 @@ struct monst *mtmp;
  * a value because mtmp is a migrating_mon.  Worm tails are always
  * placed randomly around the head of the worm.
  */
-void
-rloc_to(mtmp, x, y)
-struct monst *mtmp;
+void rloc_to(mtmp, x, y) struct monst *mtmp;
 register int x, y;
 {
     register int oldx = mtmp->mx, oldy = mtmp->my;
@@ -1208,7 +1297,7 @@ register int x, y;
             u_on_newpos(mtmp->mx, mtmp->my);
             docrt();
         } else if (distu(mtmp->mx, mtmp->my) > 2) {
-           unstuck(mtmp);
+            unstuck(mtmp);
         }
     }
 
@@ -1270,14 +1359,12 @@ boolean suppress_impossible;
         impossible("rloc(): couldn't relocate monster");
     return FALSE;
 
- found_xy:
+found_xy:
     rloc_to(mtmp, x, y);
     return TRUE;
 }
 
-STATIC_OVL void
-mvault_tele(mtmp)
-struct monst *mtmp;
+STATIC_OVL void mvault_tele(mtmp) struct monst *mtmp;
 {
     struct mkroom *croom = search_special(VAULT);
     coord c;
@@ -1295,16 +1382,19 @@ struct monst *mon;
 {
     if (level.flags.noteleport) {
         if (canseemon(mon))
+#if 0 /*KR: 원본*/
             pline("A mysterious force prevents %s from teleporting!",
                   mon_nam(mon));
+#else /*KR: KRNethack 맞춤 번역 */
+            pline("신비한 힘이 %s 순간이동을 막았다!",
+                  append_josa(mon_nam(mon), "의"));
+#endif
         return TRUE;
     }
     return FALSE;
 }
 
-void
-mtele_trap(mtmp, trap, in_sight)
-struct monst *mtmp;
+void mtele_trap(mtmp, trap, in_sight) struct monst *mtmp;
 struct trap *trap;
 int in_sight;
 {
@@ -1327,9 +1417,12 @@ int in_sight;
 
         if (in_sight) {
             if (canseemon(mtmp))
-                pline("%s seems disoriented.", monname);
+                /*KR pline("%s seems disoriented.", monname); */
+                pline("%s 방향 감각을 상실한 것 같다.",
+                      append_josa(monname, "은"));
             else
-                pline("%s suddenly disappears!", monname);
+                /*KR pline("%s suddenly disappears!", monname); */
+                pline("%s 갑자기 사라졌다!", append_josa(monname, "가"));
             seetrap(trap);
         }
     }
@@ -1356,18 +1449,27 @@ int in_sight;
                 assign_level(&tolevel, &valley_level);
             } else if (Is_botlevel(&u.uz)) {
                 if (in_sight && trap->tseen)
+#if 0 /*KR: 원본*/
                     pline("%s avoids the %s.", Monnam(mtmp),
                           (tt == HOLE) ? "hole" : "trap");
+#else /*KR: KRNethack 맞춤 번역 */
+                    pline("%s %s 피했다.",
+                          append_josa(Monnam(mtmp), "은"),
+                          (tt == HOLE) ? "구멍을" : "함정을");
+#endif
                 return 0;
             } else {
                 get_level(&tolevel, depth(&u.uz) + 1);
             }
         } else if (tt == MAGIC_PORTAL) {
-            if (In_endgame(&u.uz) && (mon_has_amulet(mtmp)
-                                      || is_home_elemental(mtmp->data)
-                                      || rn2(7))) {
+            if (In_endgame(&u.uz)
+                && (mon_has_amulet(mtmp) || is_home_elemental(mtmp->data)
+                    || rn2(7))) {
                 if (in_sight && mtmp->data->mlet != S_ELEMENTAL) {
-                    pline("%s seems to shimmer for a moment.", Monnam(mtmp));
+                    /*KR pline("%s seems to shimmer for a moment.",
+                     * Monnam(mtmp)); */
+                    pline("%s 한순간 희미하게 빛나는 듯했다.",
+                          append_josa(Monnam(mtmp), "가"));
                     seetrap(trap);
                 }
                 return 0;
@@ -1378,15 +1480,18 @@ int in_sight;
         } else if (tt == LEVEL_TELEP || tt == NO_TRAP) {
             int nlev;
 
-            if (mon_has_amulet(mtmp) || In_endgame(&u.uz)
+            if (mon_has_amulet(mtmp)
+                || In_endgame(&u.uz)
                 /* NO_TRAP is used when forcing a monster off the level;
                    onscary(0,0,) is true for the Wizard, Riders, lawful
                    minions, Angels of any alignment, shopkeeper or priest
                    currently inside his or her own special room */
                 || (tt == NO_TRAP && onscary(0, 0, mtmp))) {
                 if (in_sight)
-                    pline("%s seems very disoriented for a moment.",
-                          Monnam(mtmp));
+                    /*KR pline("%s seems very disoriented for a moment.",
+                          Monnam(mtmp)); */
+                    pline("%s 순간 크게 당황하는 것 같다.",
+                          append_josa(Monnam(mtmp), "은"));
                 return 0;
             }
             if (tt == NO_TRAP) {
@@ -1399,7 +1504,10 @@ int in_sight;
                 nlev = random_teleport_level();
                 if (nlev == depth(&u.uz)) {
                     if (in_sight)
-                        pline("%s shudders for a moment.", Monnam(mtmp));
+                        /*KR pline("%s shudders for a moment.", Monnam(mtmp));
+                         */
+                        pline("%s 한순간 몸을 떨었다.",
+                              append_josa(Monnam(mtmp), "은"));
                     return 0;
                 }
                 get_level(&tolevel, nlev);
@@ -1410,7 +1518,10 @@ int in_sight;
         }
 
         if (in_sight) {
-            pline("Suddenly, %s disappears out of sight.", mon_nam(mtmp));
+            /*KR pline("Suddenly, %s disappears out of sight.",
+             * mon_nam(mtmp)); */
+            pline("갑자기, %s 시야에서 사라졌다.",
+                  append_josa(mon_nam(mtmp), "가"));
             if (trap)
                 seetrap(trap);
         }
@@ -1443,23 +1554,24 @@ register struct obj *obj;
         ty = rn2(ROWNO);
         if (!--try_limit)
             break;
-    } while (!goodpos(tx, ty, (struct monst *) 0, 0)
-             || (restricted_fall
-                 && (!within_bounded_area(tx, ty, dndest.lx, dndest.ly,
-                                          dndest.hx, dndest.hy)
-                     || (dndest.nlx
-                         && within_bounded_area(tx, ty,
-                                                dndest.nlx, dndest.nly,
-                                                dndest.nhx, dndest.nhy))))
-             /* on the Wizard Tower levels, objects inside should
-                stay inside and objects outside should stay outside */
-             || (dndest.nlx && On_W_tower_level(&u.uz)
-                 && within_bounded_area(tx, ty, dndest.nlx, dndest.nly,
-                                        dndest.nhx, dndest.nhy)
-                    != within_bounded_area(otx, oty, dndest.nlx, dndest.nly,
-                                           dndest.nhx, dndest.nhy)));
+    } while (
+        !goodpos(tx, ty, (struct monst *) 0, 0)
+        || (restricted_fall
+            && (!within_bounded_area(tx, ty, dndest.lx, dndest.ly, dndest.hx,
+                                     dndest.hy)
+                || (dndest.nlx
+                    && within_bounded_area(tx, ty, dndest.nlx, dndest.nly,
+                                           dndest.nhx, dndest.nhy))))
+        /* on the Wizard Tower levels, objects inside should
+           stay inside and objects outside should stay outside */
+        || (dndest.nlx && On_W_tower_level(&u.uz)
+            && within_bounded_area(tx, ty, dndest.nlx, dndest.nly, dndest.nhx,
+                                   dndest.nhy)
+                   != within_bounded_area(otx, oty, dndest.nlx, dndest.nly,
+                                          dndest.nhx, dndest.nhy)));
 
-    if (flooreffects(obj, tx, ty, "fall")) {
+    /*KR if (flooreffects(obj, tx, ty, "fall")) { */
+    if (flooreffects(obj, tx, ty, "떨어지는")) {
         /* update old location since flooreffects() couldn't;
            unblock_point() for boulder handled by obj_extract_self() */
         newsym(otx, oty);
@@ -1496,12 +1608,12 @@ random_teleport_level()
 
     /* What I really want to do is as follows:
      * -- If in a dungeon that goes down, the new level is to be restricted
-     *    to [top of parent, bottom of current dungeon]
+     * to [top of parent, bottom of current dungeon]
      * -- If in a dungeon that goes up, the new level is to be restricted
-     *    to [top of current dungeon, bottom of parent]
+     * to [top of current dungeon, bottom of parent]
      * -- If in a quest dungeon or similar dungeon entered by portals,
-     *    the new level is to be restricted to [top of current dungeon,
-     *    bottom of current dungeon]
+     * the new level is to be restricted to [top of current dungeon,
+     * bottom of current dungeon]
      * The current behavior is not as sophisticated as that ideal, but is
      * still better what we used to do, which was like this for players
      * but different for monsters for no obvious reason.  Currently, we
@@ -1566,11 +1678,14 @@ boolean give_feedback;
 
     if (mtmp->ispriest && *in_rooms(mtmp->mx, mtmp->my, TEMPLE)) {
         if (give_feedback)
-            pline("%s resists your magic!", Monnam(mtmp));
+            /*KR pline("%s resists your magic!", Monnam(mtmp)); */
+            pline("%s 당신의 마법에 저항했다!",
+                  append_josa(Monnam(mtmp), "은"));
         return FALSE;
     } else if (level.flags.noteleport && u.uswallow && mtmp == u.ustuck) {
         if (give_feedback)
-            You("are no longer inside %s!", mon_nam(mtmp));
+            /*KR You("are no longer inside %s!", mon_nam(mtmp)); */
+            You("더 이상 %s 안에 있지 않다!", mon_nam(mtmp));
         unstuck(mtmp);
         (void) rloc(mtmp, TRUE);
     } else if (is_rider(mtmp->data) && rn2(13)

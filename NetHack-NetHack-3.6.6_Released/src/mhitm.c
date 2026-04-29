@@ -1809,7 +1809,8 @@ struct obj *otemp;
 #else /*KR: KRNethack 맞춤 번역 */
         pline("%s %s %s %s 향해 %s.", append_josa(Monnam(magr), "은"),
               (otemp->quan > 1L) ? "자신의 것 중 하나인" : "자신의",
-              append_josa(xname(otemp), "을"), mon_nam(mdef),
+              append_josa(xname(otemp), "을"),
+              append_josa(mon_nam(mdef),"을"),
               (objects[otemp->otyp].oc_dir & PIERCE) ? "찔렀다" : "휘둘렀다");
 #endif
     }
@@ -1854,7 +1855,8 @@ int mdead;
                       s_suffix(mon_nam(mdef)), hliquid("acid"));
 #else /*KR: KRNethack 맞춤 번역 */
                 pline("%s %s %s 뒤집어썼다!", append_josa(buf, "은"),
-                      append_josa(mon_nam(mdef), "의"), hliquid("산성을"));
+                      append_josa(mon_nam(mdef), "의"),
+                      append_josa(hliquid("산성액"), "을"));
 #endif
             if (resists_acid(magr)) {
                 if (canseemon(magr))

@@ -1407,9 +1407,17 @@ int dieroll;
                 Strcat(silverobjbuf, " %s!");
 #else /*KR: KRNethack 맞춤 번역 */
                 /* '은' 또는 '은빛'이 이미 포함된 무기 이름인지 확인합니다 */
-                Sprintf(silverobjbuf, "당신의 %s%s %%s 태웠다!",
-                        strstri(saved_oname, "은") ? "" : "은빛 ",
-                        saved_oname);
+                {
+                    char temp_wep[BUFSZ];
+                /* 무기 이름에 '은빛 '을 붙일지 판별하여 임시 버퍼에 저장 */
+                    Sprintf(temp_wep, "%s%s",
+                            strstri(saved_oname, "은") ? "" : "은빛 ",
+                            saved_oname);
+
+                    /* 완성된 무기 이름에 조사를 붙여서 최종 포맷팅 */
+                    Sprintf(silverobjbuf, "당신의 %s %%s 태웠다!",
+                            append_josa(temp_wep, "이(가)"));
+                }
                 (void) strNsubst(silverobjbuf, "%%", "%", 0);
 #endif
                 fmt = silverobjbuf;
@@ -3234,7 +3242,7 @@ boolean wep_was_destroyed;
                     hliquid("acid"));
 #else /*KR: KRNethack 맞춤 번역 */
                 You("%s %s 뒤집어썼다!", append_josa(mon_nam(mon), "의"),
-                    hliquid("acid"));
+                    append_josa(hliquid("산성액"), "을"));
 #endif
 
             if (!Acid_resistance)

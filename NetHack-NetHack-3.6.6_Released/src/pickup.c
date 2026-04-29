@@ -1713,9 +1713,17 @@ boolean telekinesis; /* not picking it up directly by hand */
 
     if (uwep && uwep == obj)
         mrg_to_wielded = TRUE;
+#if 0 /*KR: 원본*/
     nearload = near_capacity();
     prinv(nearload == SLT_ENCUMBER ? moderateloadmsg : (char *) 0, obj,
           count);
+#else /*KR: KRNethack 맞춤 번역 */
+    nearload = near_capacity();
+    prinv((char *) 0, obj, count);
+    if (nearload == SLT_ENCUMBER) {
+        pline("짐이 무거워 들면서 약간 휘청거렸다.");
+    }
+#endif
     mrg_to_wielded = FALSE;
     return 1;
 }
@@ -2082,12 +2090,11 @@ lootcont:
                 if (Is_container(cobj)) {
 #if 0 /*KR: 원본*/
                     c = ynq(safe_qbuf(qbuf, "There is ", " here, loot it?",
-                                      cobj, doname, ansimpleoname,
-                                      "a container"));
+                      cobj, doname, ansimpleoname, "a container"));
 #else /*KR: KRNethack 맞춤 번역 */
-                    c = ynq(safe_qbuf(qbuf, "여기에 ", " 열어보겠습니까?",
-                                      cobj, doname, ansimpleoname,
-                                      "상자가 있다,"));
+                    Sprintf(qbuf, "여기에 %s 놓여 있다. 열어보겠습니까?",
+                            append_josa(doname(cobj), "이"));
+                    c = ynq(qbuf);
 #endif
                     if (c == 'q')
                         return timepassed;
@@ -3000,7 +3007,7 @@ boolean more_containers; /* True iff #loot multiple and this isn't last one */
                              yname, ysimple_name, "it");
 #else /*KR: KRNethack 맞춤 번역 */
             /* KRNethack: "상자로 무엇을 하겠는가?" */
-            (void) safe_qbuf(qbuf, "", "어떻게 하겠는가?", current_container,
+            (void) safe_qbuf(qbuf, "", " 어떻게 하겠는가?", current_container,
                              yname, ysimple_name, "이것을 ");
 #endif
         /* ask player about what to do with this container */

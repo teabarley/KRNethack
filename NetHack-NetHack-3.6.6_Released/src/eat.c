@@ -1388,10 +1388,10 @@ char *buf;
             }
 
             if (vegetarian(&mons[mnum])) {
-                Sprintf(eos(buf), "%s ", mons[mnum].mname);
+                Sprintf(eos(buf), "%s ", get_kr_name(mons[mnum].mname));
             } else {
                 Sprintf(eos(buf), "%s 고기 ",
-                        mons[mnum].mname); /* 예: "newt 고기 " */
+                        get_kr_name(mons[mnum].mname)); /* 예: "뉴트 고기 " */
             }
 #endif
         }
@@ -1525,10 +1525,10 @@ const char *mesg;
 #else /*KR: KRNethack 맞춤 번역*/
         if (vegetarian(&mons[mnum])) {
             You("%s %s 통조림을 먹어치웠다.", tintxts[r].txt,
-                mons[mnum].mname);
+                get_kr_name(mons[mnum].mname));
         } else {
             You("%s %s 고기 통조림을 먹어치웠다.", tintxts[r].txt,
-                mons[mnum].mname);
+                get_kr_name(mons[mnum].mname));
         }
 #endif
         eating_conducts(&mons[mnum]);
@@ -1552,8 +1552,8 @@ const char *mesg;
             pline("Eating %s food made your %s very slippery.",
                   tintxts[r].txt, fingers_or_gloves(TRUE));
 #else
-            pline("기름진 음식을 먹어서 당신의 %s이 미끄러워졌다.",
-                fingers_or_gloves(TRUE));
+            pline("기름진 음식을 먹어서 당신의 %s 미끄러워졌다.",
+                append_josa(fingers_or_gloves(TRUE), "이(가)"));
 #endif
         }
 
@@ -1764,9 +1764,13 @@ struct obj *obj;
             /*KR You_feel("rather trippy."); */
             You("좀 맛이 갔다.");
         else
-            /*KR You_feel("rather %s.", body_part(LIGHT_HEADED)); */
-            You("%s.", body_part(LIGHT_HEADED));
+#if 0 /*KR: 원본*/
+            You_feel("rather %s.", body_part(LIGHT_HEADED));
         make_confused(HConfusion + d(2, 4), FALSE);
+#else /*KR: KRNethack 맞춤 번역 */
+        You_feel("다소 %s 기분이 든다.", body_part(LIGHT_HEADED));
+        make_confused(HConfusion + d(2, 4), FALSE);
+#endif
     } else if (!rn2(4) && !Blind) {
         /*KR pline("Everything suddenly goes dark."); */
         pline("갑자기 모든 것이 캄캄해졌다.");
@@ -2869,8 +2873,8 @@ doeat()
                 "%s stops tingling and your sense of smell returns to normal.",
                 body_part(NOSE));
 #else
-            Your("%s가 따끔거리는 것을 멈추고, 후각이 정상으로 돌아왔다.",
-                body_part(NOSE));
+            Your("%s 따끔거리는 것을 멈추고, 후각이 정상으로 돌아왔다.",
+                 append_josa(body_part(NOSE), "이"));
 #endif
             u.uedibility = 0;
             if (res == 1)

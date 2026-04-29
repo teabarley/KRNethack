@@ -543,7 +543,8 @@ boolean verbose;    /* give message(s) even when you can't see what happened */
                         otmp)) {
             if (vis && mtmp->mcansee)
                 /*KR pline("%s is blinded by %s.", Monnam(mtmp), the(xname(otmp))); */
-                pline("%s %s 때문에 눈이 보이지 않게 되었다.", append_josa(Monnam(mtmp), "은"), the(xname(otmp)));
+                pline("%s %s 때문에 눈이 보이지 않게 되었다.", 
+                      append_josa(Monnam(mtmp), "은"), the(xname(otmp)));
             mtmp->mcansee = 0;
             tmp = (int) mtmp->mblinded + rnd(25) + 20;
             if (tmp > 127)
@@ -681,19 +682,24 @@ struct obj *obj;         /* missile (or stack providing it) */
                 && singleobj->otyp <= LAST_GEM + 9 /* 9 glass colors */
                 && is_unicorn(youmonst.data)) {
                 if (singleobj->otyp > LAST_GEM) {
-                    You("catch the %s.", xname(singleobj));
-                    You("are not interested in %s junk.",
-                        s_suffix(mon_nam(mon)));
+                    /*KR You("catch the %s.", xname(singleobj)); */
+                    You("%s 잡아챘다.",
+                        append_josa(xname(singleobj), "을"));
+                    /*KR You("are not interested in %s junk.",
+                        s_suffix(mon_nam(mon))); */
+                    You("%s 쓰레기에는 관심이 없다.",
+                        append_josa(mon_nam(mon), "의"));
                     makeknown(singleobj->otyp);
                     dropy(singleobj);
                 } else {
-                    You(
+                    /*KR You(
                      "accept %s gift in the spirit in which it was intended.",
-                        s_suffix(mon_nam(mon)));
-                    (void) hold_another_object(singleobj,
-                                               "You catch, but drop, %s.",
-                                               xname(singleobj),
-                                               "You catch:");
+                        s_suffix(mon_nam(mon))); */
+                    You("%s 의도를 담아 보낸 선물을 받아들였다.",
+                        append_josa(mon_nam(mon), "의"));
+                    (void) hold_another_object(
+                        singleobj, "잡았지만, 이내 떨어뜨리고 말았다.",
+                        xname(singleobj), "잡은 물건:");
                 }
                 break;
             }
@@ -748,18 +754,23 @@ struct obj *obj;         /* missile (or stack providing it) */
                             poison is limited to attrib loss */
                          (u.umortality > oldumort) ? 0 : 10, TRUE);
             }
-            if (hitu && can_blnd((struct monst *) 0, &youmonst,
-                                 (uchar) ((singleobj->otyp == BLINDING_VENOM)
-                                             ? AT_SPIT
-                                             : AT_WEAP),
-                                 singleobj)) {
+            if (hitu
+                && can_blnd((struct monst *) 0, &youmonst,
+                            (uchar) ((singleobj->otyp == BLINDING_VENOM)
+                                         ? AT_SPIT
+                                         : AT_WEAP),
+                            singleobj)) {
                 blindinc = rnd(25);
                 if (singleobj->otyp == CREAM_PIE) {
                     if (!Blind)
-                        pline("Yecch!  You've been creamed.");
+                        /*KR pline("Yecch!  You've been creamed."); */
+                        pline("우웩! 크림 파이를 제대로 맞았다.");
                     else
-                        pline("There's %s sticky all over your %s.",
-                              something, body_part(FACE));
+                        /*KR pline("There's %s sticky all over your %s.",
+                              something, body_part(FACE)); */
+                        pline("당신의 %s 온통 끈적거리는 %s 묻어있다.",
+                              body_part(FACE),
+                              append_josa(something, "이"));
                 } else if (singleobj->otyp == BLINDING_VENOM) {
                     const char *eyes = body_part(EYE);
 
@@ -767,9 +778,12 @@ struct obj *obj;         /* missile (or stack providing it) */
                         eyes = makeplural(eyes);
                     /* venom in the eyes */
                     if (!Blind)
-                        pline_The("venom blinds you.");
+                        /*KR pline_The("venom blinds you."); */
+                        pline("독이 당신의 눈을 멀게 했다.");
                     else
-                        Your("%s %s.", eyes, vtense(eyes, "sting"));
+                        /*KR Your("%s %s.", eyes, vtense(eyes, "sting")); */
+                        Your("%s 따가움을 느낀다.",
+                             append_josa(eyes, "이"));
                 }
             }
             if (hitu && singleobj->otyp == EGG) {
@@ -792,7 +806,9 @@ struct obj *obj;         /* missile (or stack providing it) */
                     && (!mesg_given || bhitpos.x != u.ux || bhitpos.y != u.uy)
                     && (cansee(bhitpos.x, bhitpos.y)
                         || (archer && canseemon(archer))))
-                    pline("%s misses.", The(mshot_xname(singleobj)));
+                    /*KR pline("%s misses.", The(mshot_xname(singleobj))); */
+                    pline("%s 빗나갔다.",
+                          append_josa(The(mshot_xname(singleobj)), "은"));
                 (void) drop_throw(singleobj, 0, bhitpos.x, bhitpos.y);
             }
             break;
@@ -849,7 +865,7 @@ struct monst *mtmp, *mtarg;
         if (!mtarg->mflee || !rn2(chance)) {
             if (ammo_and_launcher(otmp, mwep)
                 && dist2(mtmp->mx, mtmp->my, mtarg->mx, mtarg->my)
-                   > PET_MISSILE_RANGE2)
+                       > PET_MISSILE_RANGE2)
                 return 0; /* Out of range */
             /* Set target monster */
             target = mtarg;
@@ -873,8 +889,10 @@ struct attack *mattk;
 
     if (mtmp->mcan) {
         if (!Deaf)
-            pline("A dry rattle comes from %s throat.",
-                  s_suffix(mon_nam(mtmp)));
+            /*KR pline("A dry rattle comes from %s throat.",
+                  s_suffix(mon_nam(mtmp))); */
+            pline("%s 목구멍에서 마른 쇳소리가 난다.",
+                  append_josa(mon_nam(mtmp), "의"));
         return 0;
     }
     if (m_lined_up(mtarg, mtmp)) {
@@ -890,13 +908,16 @@ struct attack *mattk;
             otmp = mksobj(ACID_VENOM, TRUE, FALSE);
             break;
         }
-        if (!rn2(BOLT_LIM-distmin(mtmp->mx,mtmp->my,mtarg->mx,mtarg->my))) {
+        if (!rn2(BOLT_LIM
+                 - distmin(mtmp->mx, mtmp->my, mtarg->mx, mtarg->my))) {
             if (canseemon(mtmp))
-                pline("%s spits venom!", Monnam(mtmp));
+                /*KR pline("%s spits venom!", Monnam(mtmp)); */
+                pline("%s 독을 내뱉었다!",
+                      append_josa(Monnam(mtmp), "이"));
             target = mtarg;
             m_throw(mtmp, mtmp->mx, mtmp->my, sgn(tbx), sgn(tby),
-                    distmin(mtmp->mx,mtmp->my,mtarg->mx,mtarg->my), otmp);
-            target = (struct monst *)0;
+                    distmin(mtmp->mx, mtmp->my, mtarg->mx, mtarg->my), otmp);
+            target = (struct monst *) 0;
             nomul(0);
 
             /* If this is a pet, it'll get hungry. Minions and
@@ -919,27 +940,34 @@ struct attack *mattk;
 int
 breamm(mtmp, mattk, mtarg)
 struct monst *mtmp, *mtarg;
-struct attack  *mattk;
+struct attack *mattk;
 {
     /* if new breath types are added, change AD_ACID to max type */
-    int typ = (mattk->adtyp == AD_RBRE) ? rnd(AD_ACID) : mattk->adtyp ;
+    int typ = (mattk->adtyp == AD_RBRE) ? rnd(AD_ACID) : mattk->adtyp;
 
     if (m_lined_up(mtarg, mtmp)) {
         if (mtmp->mcan) {
             if (!Deaf) {
                 if (canseemon(mtmp))
-                    pline("%s coughs.", Monnam(mtmp));
+                    /*KR pline("%s coughs.", Monnam(mtmp)); */
+                    pline("%s 기침을 했다.",
+                          append_josa(Monnam(mtmp), "이"));
                 else
-                    You_hear("a cough.");
+                    /*KR You_hear("a cough."); */
+                    You_hear("기침 소리를 들었다.");
             }
             return 0;
         }
         if (!mtmp->mspec_used && rn2(3)) {
             if ((typ >= AD_MAGM) && (typ <= AD_ACID)) {
                 if (canseemon(mtmp))
-                    pline("%s breathes %s!", Monnam(mtmp), breathwep[typ - 1]);
-                dobuzz((int) (-20 - (typ - 1)), (int) mattk->damn,
-                       mtmp->mx, mtmp->my, sgn(tbx), sgn(tby), FALSE);
+                    /*KR pline("%s breathes %s!", Monnam(mtmp), breathwep[typ
+                     * - 1]); */
+                    pline("%s %s 뿜어냈다!",
+                          append_josa(Monnam(mtmp), "이"),
+                          append_josa(breathwep[typ - 1], "을"));
+                dobuzz((int) (-20 - (typ - 1)), (int) mattk->damn, mtmp->mx,
+                       mtmp->my, sgn(tbx), sgn(tby), FALSE);
                 nomul(0);
                 /* breath runs out sometimes. Also, give monster some
                  * cunning; don't breath if the target fell asleep.
@@ -955,7 +983,8 @@ struct attack  *mattk;
                     if (dog->hungrytime >= 10)
                         dog->hungrytime -= 10;
                 }
-            } else impossible("Breath weapon %d used", typ-1);
+            } else
+                impossible("Breath weapon %d used", typ - 1);
         } else
             return 0;
     }
@@ -965,8 +994,8 @@ struct attack  *mattk;
 
 
 /* remove an entire item from a monster's inventory; destroy that item */
-void
-m_useupall(mon, obj)
+void 
+m_useupall(mon, obj) 
 struct monst *mon;
 struct obj *obj;
 {
@@ -982,9 +1011,7 @@ struct obj *obj;
 }
 
 /* remove one instance of an item from a monster's inventory */
-void
-m_useup(mon, obj)
-struct monst *mon;
+void m_useup(mon, obj) struct monst *mon;
 struct obj *obj;
 {
     if (obj->quan > 1L) {
@@ -996,9 +1023,7 @@ struct obj *obj;
 }
 
 /* monster attempts ranged weapon attack against player */
-void
-thrwmu(mtmp)
-struct monst *mtmp;
+void thrwmu(mtmp) struct monst *mtmp;
 {
     struct obj *otmp, *mwep;
     xchar x, y;
@@ -1028,8 +1053,10 @@ struct monst *mtmp;
 
         if (canseemon(mtmp)) {
             onm = xname(otmp);
-            pline("%s thrusts %s.", Monnam(mtmp),
-                  obj_is_pname(otmp) ? the(onm) : an(onm));
+            /*KR pline("%s thrusts %s.", Monnam(mtmp),
+                  obj_is_pname(otmp) ? the(onm) : an(onm)); */
+            pline("%s %s 찔러왔다.", append_josa(Monnam(mtmp), "이"),
+                  append_josa(obj_is_pname(otmp) ? the(onm) : onm, "으로"));
         }
 
         dam = dmgval(otmp, &youmonst);
@@ -1059,7 +1086,7 @@ struct monst *mtmp;
             && rn2(BOLT_LIM - distmin(x, y, mtmp->mux, mtmp->muy))))
         return;
 
-    mwep = MON_WEP(mtmp); /* wielded weapon */
+    mwep = MON_WEP(mtmp);       /* wielded weapon */
     monshoot(mtmp, otmp, mwep); /* multishot shooting or throwing */
     nomul(0);
 }
@@ -1074,8 +1101,10 @@ struct attack *mattk;
 
     if (mtmp->mcan) {
         if (!Deaf)
-            pline("A dry rattle comes from %s throat.",
-                  s_suffix(mon_nam(mtmp)));
+            /*KR pline("A dry rattle comes from %s throat.",
+                  s_suffix(mon_nam(mtmp))); */
+            pline("%s 목구멍에서 마른 쇳소리가 난다.",
+                  append_josa(mon_nam(mtmp), "의"));
         return 0;
     }
     if (lined_up(mtmp)) {
@@ -1094,7 +1123,9 @@ struct attack *mattk;
         if (!rn2(BOLT_LIM
                  - distmin(mtmp->mx, mtmp->my, mtmp->mux, mtmp->muy))) {
             if (canseemon(mtmp))
-                pline("%s spits venom!", Monnam(mtmp));
+                /*KR pline("%s spits venom!", Monnam(mtmp)); */
+                pline("%s 독을 내뱉었다!",
+                      append_josa(Monnam(mtmp), "이"));
             m_throw(mtmp, mtmp->mx, mtmp->my, sgn(tbx), sgn(tby),
                     distmin(mtmp->mx, mtmp->my, mtmp->mux, mtmp->muy), otmp);
             nomul(0);
@@ -1120,17 +1151,23 @@ struct attack *mattk;
         if (mtmp->mcan) {
             if (!Deaf) {
                 if (canseemon(mtmp))
-                    pline("%s coughs.", Monnam(mtmp));
+                    /*KR pline("%s coughs.", Monnam(mtmp)); */
+                    pline("%s 기침을 했다.",
+                          append_josa(Monnam(mtmp), "이"));
                 else
-                    You_hear("a cough.");
+                    /*KR You_hear("a cough."); */
+                    You_hear("기침 소리를 들었다.");
             }
             return 0;
         }
         if (!mtmp->mspec_used && rn2(3)) {
             if ((typ >= AD_MAGM) && (typ <= AD_ACID)) {
                 if (canseemon(mtmp))
-                    pline("%s breathes %s!", Monnam(mtmp),
-                          breathwep[typ - 1]);
+                    /*KR pline("%s breathes %s!", Monnam(mtmp),
+                          breathwep[typ - 1]); */
+                    pline("%s %s 뿜어냈다!",
+                          append_josa(Monnam(mtmp), "이"),
+                          append_josa(breathwep[typ - 1], "을"));
                 buzz((int) (-20 - (typ - 1)), (int) mattk->damn, mtmp->mx,
                      mtmp->my, sgn(tbx), sgn(tby));
                 nomul(0);
@@ -1207,12 +1244,12 @@ register struct monst *mtmp;
 
     /* hero concealment usually trumps monst awareness of being lined up */
     if (Upolyd && rn2(25)
-        && (u.uundetected || (U_AP_TYPE != M_AP_NOTHING
-                              && U_AP_TYPE != M_AP_MONSTER)))
+        && (u.uundetected
+            || (U_AP_TYPE != M_AP_NOTHING && U_AP_TYPE != M_AP_MONSTER)))
         return FALSE;
 
-    ignore_boulders = (throws_rocks(mtmp->data)
-                       || m_carrying(mtmp, WAN_STRIKING));
+    ignore_boulders =
+        (throws_rocks(mtmp->data) || m_carrying(mtmp, WAN_STRIKING));
     return linedup(mtmp->mux, mtmp->muy, mtmp->mx, mtmp->my,
                    ignore_boulders ? 1 : 2);
 }
@@ -1231,9 +1268,9 @@ int type;
     return (struct obj *) 0;
 }
 
-void
-hit_bars(objp, objx, objy, barsx, barsy, your_fault, from_invent)
-struct obj **objp;      /* *objp will be set to NULL if object breaks */
+void hit_bars(objp, objx, objy, barsx, barsy, your_fault,
+              from_invent) struct obj *
+    *objp; /* *objp will be set to NULL if object breaks */
 int objx, objy, barsx, barsy;
 boolean your_fault, from_invent;
 {
@@ -1241,28 +1278,33 @@ boolean your_fault, from_invent;
     int obj_type = otmp->otyp;
     boolean unbreakable = (levl[barsx][barsy].wall_info & W_NONDIGGABLE) != 0;
 
-    if (your_fault
-        ? hero_breaks(otmp, objx, objy, from_invent)
-        : breaks(otmp, objx, objy)) {
+    if (your_fault ? hero_breaks(otmp, objx, objy, from_invent)
+                   : breaks(otmp, objx, objy)) {
         *objp = 0; /* object is now gone */
         /* breakage makes its own noises */
         if (obj_type == POT_ACID) {
             if (cansee(barsx, barsy) && !unbreakable)
-                pline_The("iron bars are dissolved!");
+                /*KR pline_The("iron bars are dissolved!"); */
+                pline("쇠창살이 녹아내렸다!");
             else
-                You_hear(Hallucination ? "angry snakes!" : "a hissing noise.");
+                /*KR You_hear(Hallucination ? "angry snakes!" : "a hissing
+                 * noise."); */
+                You_hear(Hallucination ? "화난 뱀 소리를 들었다!"
+                                       : "쉬익거리는 소리를 들었다.");
             if (!unbreakable)
                 dissolve_bars(barsx, barsy);
         }
-    }
-    else if (obj_type == BOULDER || obj_type == HEAVY_IRON_BALL)
-        pline("Whang!");
+    } else if (obj_type == BOULDER || obj_type == HEAVY_IRON_BALL)
+        /*KR pline("Whang!"); */
+        pline("쾅!");
     else if (otmp->oclass == COIN_CLASS
              || objects[obj_type].oc_material == GOLD
              || objects[obj_type].oc_material == SILVER)
-        pline("Clink!");
+        /*KR pline("Clink!"); */
+        pline("챙그랑!");
     else
-        pline("Clonk!");
+        /*KR pline("Clonk!"); */
+        pline("퉁!");
 }
 
 /* TRUE iff thrown/kicked/rolled object doesn't pass through iron bars */
@@ -1319,7 +1361,7 @@ int whodidit;   /* 1==hero, 0=other, -1==just check whether it'll pass thru */
         }
 
     if (hits && whodidit != -1) {
-        hit_bars(obj_p, x,y, barsx,barsy, whodidit, FALSE);
+        hit_bars(obj_p, x, y, barsx, barsy, whodidit, FALSE);
     }
 
     return hits;

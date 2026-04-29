@@ -266,7 +266,7 @@ struct attack *mattk;
                 pline("%s %s을 공격했다!", append_josa(Monst_name, "은"),
                     (levl[mtmp->mux][mtmp->muy].typ == WATER)
                     ? "물"
-                    : "아무것도 없는 공간");
+                    : "허공");
 #endif
                 break;
             default:

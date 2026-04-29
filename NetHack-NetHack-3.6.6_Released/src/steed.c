@@ -9,14 +9,17 @@ static NEARDATA const char steeds[] = { S_QUADRUPED, S_UNICORN, S_ANGEL,
                                         S_CENTAUR,   S_DRAGON,  S_JABBERWOCK,
                                         '\0' };
 
-STATIC_DCL boolean FDECL(landing_spot, (coord *, int, int));
-STATIC_DCL void FDECL(maybewakesteed, (struct monst *));
+STATIC_DCL boolean FDECL(landing_spot, (coord *, int, int) );
+STATIC_DCL void FDECL(maybewakesteed, (struct monst *) );
 
 /* caller has decided that hero can't reach something while mounted */
 void
 rider_cant_reach()
 {
-    You("aren't skilled enough to reach from %s.", y_monnam(u.usteed));
+    /*KR You("aren't skilled enough to reach from %s.", y_monnam(u.usteed));
+     */
+    You("아직 기승 기술이 부족하여 %s에게서 손이 닿지 않는다.",
+        y_monnam(u.usteed));
 }
 
 /*** Putting the saddle on ***/
@@ -51,42 +54,52 @@ struct obj *otmp;
         return 0;
     }
     if (!u.dx && !u.dy) {
-        pline("Saddle yourself?  Very funny...");
+        /*KR pline("Saddle yourself?  Very funny..."); */
+        pline("스스로에게 안장을 씌우겠다고? 아주 재미있군...");
         return 0;
     }
     if (!isok(u.ux + u.dx, u.uy + u.dy)
         || !(mtmp = m_at(u.ux + u.dx, u.uy + u.dy)) || !canspotmon(mtmp)) {
-        pline("I see nobody there.");
+        /*KR pline("I see nobody there."); */
+        pline("거기엔 아무도 없다.");
         return 1;
     }
 
     /* Is this a valid monster? */
     if (mtmp->misc_worn_check & W_SADDLE || which_armor(mtmp, W_SADDLE)) {
-        pline("%s doesn't need another one.", Monnam(mtmp));
+        /*KR pline("%s doesn't need another one.", Monnam(mtmp)); */
+        pline("%s 이미 안장을 차고 있다.",
+              append_josa(Monnam(mtmp), "은"));
         return 1;
     }
     ptr = mtmp->data;
     if (touch_petrifies(ptr) && !uarmg && !Stone_resistance) {
         char kbuf[BUFSZ];
 
-        You("touch %s.", mon_nam(mtmp));
+        /*KR You("touch %s.", mon_nam(mtmp)); */
+        You("%s 만졌다.", append_josa(mon_nam(mtmp), "을"));
         if (!(poly_when_stoned(youmonst.data) && polymon(PM_STONE_GOLEM))) {
-            Sprintf(kbuf, "attempting to saddle %s", an(mtmp->data->mname));
+            /*KR Sprintf(kbuf, "attempting to saddle %s",
+             * an(mtmp->data->mname)); */
+            Sprintf(kbuf, "%s에게 안장을 씌우려다가", mtmp->data->mname);
             instapetrify(kbuf);
         }
     }
     if (ptr == &mons[PM_INCUBUS] || ptr == &mons[PM_SUCCUBUS]) {
-        pline("Shame on you!");
+        /*KR pline("Shame on you!"); */
+        pline("부끄러운 줄 알아라!");
         exercise(A_WIS, FALSE);
         return 1;
     }
     if (mtmp->isminion || mtmp->isshk || mtmp->ispriest || mtmp->isgd
         || mtmp->iswiz) {
-        pline("I think %s would mind.", mon_nam(mtmp));
+        /*KR pline("I think %s would mind.", mon_nam(mtmp)); */
+        pline("%s 싫어할 것 같다.", append_josa(mon_nam(mtmp), "가"));
         return 1;
     }
     if (!can_saddle(mtmp)) {
-        You_cant("saddle such a creature.");
+        /*KR You_cant("saddle such a creature."); */
+        You_cant("이런 생명체에게는 안장을 씌울 수 없다.");
         return 1;
     }
 
@@ -114,12 +127,16 @@ struct obj *otmp;
     }
     if (Confusion || Fumbling || Glib)
         chance -= 20;
-    else if (uarmg && (s = OBJ_DESCR(objects[uarmg->otyp])) != (char *) 0
-             && !strncmp(s, "riding ", 7))
+    else if (uarmg
+             && (s = OBJ_DESCR(objects[uarmg->otyp])) != (char *) 0
+             /*KR && !strncmp(s, "riding ", 7)) */
+             && !strncmp(s, "승마용 ", strlen("승마용 ")))
         /* Bonus for wearing "riding" (but not fumbling) gloves */
         chance += 10;
-    else if (uarmf && (s = OBJ_DESCR(objects[uarmf->otyp])) != (char *) 0
-             && !strncmp(s, "riding ", 7))
+    else if (uarmf
+             && (s = OBJ_DESCR(objects[uarmf->otyp])) != (char *) 0
+             /*KR && !strncmp(s, "riding ", 7)) */
+             && !strncmp(s, "승마용 ", strlen("승마용 "))) 
         /* ... or for "riding boots" */
         chance += 10;
     if (otmp->cursed)
@@ -130,19 +147,19 @@ struct obj *otmp;
 
     /* Make the attempt */
     if (rn2(100) < chance) {
-        You("put the saddle on %s.", mon_nam(mtmp));
+        /*KR You("put the saddle on %s.", mon_nam(mtmp)); */
+        You("%s에게 안장을 얹었다.", mon_nam(mtmp));
         if (otmp->owornmask)
             remove_worn_item(otmp, FALSE);
         freeinv(otmp);
         put_saddle_on_mon(otmp, mtmp);
     } else
-        pline("%s resists!", Monnam(mtmp));
+        /*KR pline("%s resists!", Monnam(mtmp)); */
+        pline("%s 거부했다!", append_josa(Monnam(mtmp), "가"));
     return 1;
 }
 
-void
-put_saddle_on_mon(saddle, mtmp)
-struct obj *saddle;
+void put_saddle_on_mon(saddle, mtmp) struct obj *saddle;
 struct monst *mtmp;
 {
     if (!can_saddle(mtmp) || which_armor(mtmp, W_SADDLE))
@@ -175,7 +192,8 @@ doride()
     if (u.usteed) {
         dismount_steed(DISMOUNT_BYCHOICE);
     } else if (getdir((char *) 0) && isok(u.ux + u.dx, u.uy + u.dy)) {
-        if (wizard && yn("Force the mount to succeed?") == 'y')
+        /*KR if (wizard && yn("Force the mount to succeed?") == 'y') */
+        if (wizard && yn("강제로 기승에 성공하게 만드시겠습니까?") == 'y')
             forcemount = TRUE;
         return (mount_steed(m_at(u.ux + u.dx, u.uy + u.dy), forcemount));
     } else {
@@ -196,13 +214,18 @@ boolean force;      /* Quietly force this animal */
 
     /* Sanity checks */
     if (u.usteed) {
-        You("are already riding %s.", mon_nam(u.usteed));
+        /*KR You("are already riding %s.", mon_nam(u.usteed)); */
+        You("이미 %s 타고 있다.", append_josa(mon_nam(u.usteed), "을"));
         return (FALSE);
     }
 
     /* Is the player in the right form? */
     if (Hallucination && !force) {
+#if 0 /*KR: 원본*/
         pline("Maybe you should find a designated driver.");
+#else /*KR: KRNethack 맞춤 번역 */
+        pline("대리기사를 찾아보는 게 좋을 것 같다.");
+#endif
         return (FALSE);
     }
     /* While riding Wounded_legs refers to the steed's,
@@ -219,28 +242,38 @@ boolean force;      /* Quietly force this animal */
      * temporary 1 point Dex loss become permanent.]
      */
     if (Wounded_legs) {
-        Your("%s are in no shape for riding.", makeplural(body_part(LEG)));
-        if (force && wizard && yn("Heal your legs?") == 'y')
+        /*KR Your("%s are in no shape for riding.",
+         * makeplural(body_part(LEG))); */
+        pline("%s 다쳐서 말을 탈 상태가 아니다.",
+              append_josa(makeplural(body_part(LEG)), "을"));
+        /*KR if (force && wizard && yn("Heal your legs?") == 'y') */
+        if (force && wizard && yn("다리를 치료하시겠습니까?") == 'y')
             HWounded_legs = EWounded_legs = 0L;
         else
             return (FALSE);
     }
 
-    if (Upolyd && (!humanoid(youmonst.data) || verysmall(youmonst.data)
-                   || bigmonst(youmonst.data) || slithy(youmonst.data))) {
-        You("won't fit on a saddle.");
+    if (Upolyd
+        && (!humanoid(youmonst.data) || verysmall(youmonst.data)
+            || bigmonst(youmonst.data) || slithy(youmonst.data))) {
+        /*KR You("won't fit on a saddle."); */
+        You("안장에 몸이 맞지 않는다.");
         return (FALSE);
     }
     if (!force && (near_capacity() > SLT_ENCUMBER)) {
-        You_cant("do that while carrying so much stuff.");
+        /*KR You_cant("do that while carrying so much stuff."); */
+        You_cant("짐을 그렇게 많이 들고서는 기승할 수 없다.");
         return (FALSE);
     }
 
     /* Can the player reach and see the monster? */
-    if (!mtmp || (!force && ((Blind && !Blind_telepat) || mtmp->mundetected
-                             || M_AP_TYPE(mtmp) == M_AP_FURNITURE
-                             || M_AP_TYPE(mtmp) == M_AP_OBJECT))) {
-        pline("I see nobody there.");
+    if (!mtmp
+        || (!force
+            && ((Blind && !Blind_telepat) || mtmp->mundetected
+                || M_AP_TYPE(mtmp) == M_AP_FURNITURE
+                || M_AP_TYPE(mtmp) == M_AP_OBJECT))) {
+        /*KR pline("I see nobody there."); */
+        pline("거기엔 아무도 안 보인다.");
         return (FALSE);
     }
     if (mtmp->data == &mons[PM_LONG_WORM]
@@ -250,91 +283,126 @@ boolean force;      /* Quietly force this animal */
            attempting to mount a tail segment when hero was not adjacent
            to worm's head could trigger an impossible() in worm_cross()
            called from test_move(), so handle not-on-head before that */
-        You("couldn't ride %s, let alone its tail.", a_monnam(mtmp));
+        /*KR You("couldn't ride %s, let alone its tail.", a_monnam(mtmp)); */
+        You("꼬리는 말할 것도 없고, %s조차도 탈 수 없다.", a_monnam(mtmp));
         return FALSE;
     }
     if (u.uswallow || u.ustuck || u.utrap || Punished
         || !test_move(u.ux, u.uy, mtmp->mx - u.ux, mtmp->my - u.uy,
                       TEST_MOVE)) {
         if (Punished || !(u.uswallow || u.ustuck || u.utrap))
-            You("are unable to swing your %s over.", body_part(LEG));
+            /*KR You("are unable to swing your %s over.", body_part(LEG)); */
+            You("안장을 넘어 %s 휘두를 수 없다.",
+                append_josa(body_part(LEG), "을"));
         else
-            You("are stuck here for now.");
+            /*KR You("are stuck here for now."); */
+            You("당분간은 여기 꼼짝없이 갇혀 있다.");
         return (FALSE);
     }
 
     /* Is this a valid monster? */
     otmp = which_armor(mtmp, W_SADDLE);
     if (!otmp) {
-        pline("%s is not saddled.", Monnam(mtmp));
+        /*KR pline("%s is not saddled.", Monnam(mtmp)); */
+        pline("%s 안장이 채워져 있지 않다.",
+              append_josa(Monnam(mtmp), "은"));
         return (FALSE);
     }
     ptr = mtmp->data;
     if (touch_petrifies(ptr) && !Stone_resistance) {
         char kbuf[BUFSZ];
 
-        You("touch %s.", mon_nam(mtmp));
-        Sprintf(kbuf, "attempting to ride %s", an(mtmp->data->mname));
+        /*KR You("touch %s.", mon_nam(mtmp)); */
+        You("%s 만졌다.", append_josa(mon_nam(mtmp), "을"));
+        /*KR Sprintf(kbuf, "attempting to ride %s", an(mtmp->data->mname)); */
+        Sprintf(kbuf, "%s 등에 타려다", a_monnam(mtmp));
         instapetrify(kbuf);
     }
     if (!mtmp->mtame || mtmp->isminion) {
-        pline("I think %s would mind.", mon_nam(mtmp));
+        /*KR pline("I think %s would mind.", mon_nam(mtmp)); */
+        pline("%s 싫어할 것 같다.", append_josa(mon_nam(mtmp), "가"));
         return (FALSE);
     }
     if (mtmp->mtrapped) {
         struct trap *t = t_at(mtmp->mx, mtmp->my);
 
+#if 0 /*KR: 원본*/
         You_cant("mount %s while %s's trapped in %s.", mon_nam(mtmp),
                  mhe(mtmp), an(defsyms[trap_to_defsym(t->ttyp)].explanation));
+#else /*KR: KRNethack 맞춤 번역 */
+        You_cant("%s 갇혀 있는 동안에는 %s 등에 탈 수 없다.",
+                 append_josa(an(defsyms[trap_to_defsym(t->ttyp)].explanation),
+                             "에"),
+                 mon_nam(mtmp));
+#endif
         return (FALSE);
     }
 
     if (!force && !Role_if(PM_KNIGHT) && !(--mtmp->mtame)) {
         /* no longer tame */
         newsym(mtmp->mx, mtmp->my);
+#if 0 /*KR: 원본*/
         pline("%s resists%s!", Monnam(mtmp),
               mtmp->mleashed ? " and its leash comes off" : "");
+#else /*KR: KRNethack 맞춤 번역 */
+        pline("%s 저항했다%s!", append_josa(Monnam(mtmp), "가"),
+              mtmp->mleashed ? " 그리고 목줄이 풀렸다" : "");
+#endif
         if (mtmp->mleashed)
             m_unleash(mtmp, FALSE);
         return (FALSE);
     }
     if (!force && Underwater && !is_swimmer(ptr)) {
-        You_cant("ride that creature while under %s.",
-                 hliquid("water"));
+        /*KR You_cant("ride that creature while under %s.",
+                 hliquid("water")); */
+        You_cant("%s 아래에서는 그 생물을 탈 수 없다.", hliquid("물"));
         return (FALSE);
     }
     if (!can_saddle(mtmp) || !can_ride(mtmp)) {
-        You_cant("ride such a creature.");
+        /*KR You_cant("ride such a creature."); */
+        You_cant("그런 생명체에는 탈 수 없다.");
         return FALSE;
     }
 
     /* Is the player impaired? */
     if (!force && !is_floater(ptr) && !is_flyer(ptr) && Levitation
         && !Lev_at_will) {
-        You("cannot reach %s.", mon_nam(mtmp));
+        /*KR You("cannot reach %s.", mon_nam(mtmp)); */
+        You("%s에게 닿지 않는다.", mon_nam(mtmp));
         return (FALSE);
     }
     if (!force && uarm && is_metallic(uarm) && greatest_erosion(uarm)) {
+#if 0 /*KR: 원본*/
         Your("%s armor is too stiff to be able to mount %s.",
              uarm->oeroded ? "rusty" : "corroded", mon_nam(mtmp));
+#else /*KR: KRNethack 맞춤 번역 */
+        Your("%s 갑옷이 너무 뻣뻣해서 %s 올라탈 수 없다.",
+             uarm->oeroded ? "녹슨" : "부식된",
+             append_josa(mon_nam(mtmp), "에"));
+#endif
         return (FALSE);
     }
     if (!force
         && (Confusion || Fumbling || Glib || Wounded_legs || otmp->cursed
             || (u.ulevel + mtmp->mtame < rnd(MAXULEV / 2 + 5)))) {
         if (Levitation) {
-            pline("%s slips away from you.", Monnam(mtmp));
+            /*KR pline("%s slips away from you.", Monnam(mtmp)); */
+            pline("%s 당신에게서 빠져나갔다.",
+                  append_josa(Monnam(mtmp), "가"));
             return FALSE;
         }
-        You("slip while trying to get on %s.", mon_nam(mtmp));
+        /*KR You("slip while trying to get on %s.", mon_nam(mtmp)); */
+        You("%s 타려다 미끄러졌다.", append_josa(mon_nam(mtmp), "에"));
 
-        Sprintf(buf, "slipped while mounting %s",
+        /*KR Sprintf(buf, "slipped while mounting %s", */
+        Sprintf(buf, "%s 타려다 미끄러져서",
                 /* "a saddled mumak" or "a saddled pony called Dobbin" */
                 x_monnam(mtmp, ARTICLE_A, (char *) 0,
                          SUPPRESS_IT | SUPPRESS_INVISIBLE
                              | SUPPRESS_HALLUCINATION,
                          TRUE));
-        losehp(Maybe_Half_Phys(rn1(5, 10)), buf, NO_KILLER_PREFIX);
+        /*KR losehp(Maybe_Half_Phys(rn1(5, 10)), buf, NO_KILLER_PREFIX); */
+        losehp(Maybe_Half_Phys(rn1(5, 10)), buf, KILLED_BY);
         return (FALSE);
     }
 
@@ -343,10 +411,15 @@ boolean force;      /* Quietly force this animal */
     if (!force) {
         if (Levitation && !is_floater(ptr) && !is_flyer(ptr))
             /* Must have Lev_at_will at this point */
-            pline("%s magically floats up!", Monnam(mtmp));
-        You("mount %s.", mon_nam(mtmp));
+            /*KR pline("%s magically floats up!", Monnam(mtmp)); */
+            pline("%s 마법처럼 둥실 떠올랐다!",
+                  append_josa(Monnam(mtmp), "가"));
+        /*KR You("mount %s.", mon_nam(mtmp)); */
+        You("%s 올라탔다.", append_josa(mon_nam(mtmp), "에"));
         if (Flying)
-            You("and %s take flight together.", mon_nam(mtmp));
+            /*KR You("and %s take flight together.", mon_nam(mtmp)); */
+            You("%s 함께 비행을 시작했다.",
+                append_josa(mon_nam(mtmp), "와(과)"));
     }
     /* setuwep handles polearms differently when you're mounted */
     if (uwep && is_pole(uwep))
@@ -377,7 +450,12 @@ exercise_steed()
 void
 kick_steed()
 {
+#if 0 /*KR: 원본*/
     char He[4];
+#else /*KR: KRNethack 맞춤 번역 */
+    /* role.c Gender.he 의 값이 복사된다 */
+    char He[16];
+#endif
     if (!u.usteed)
         return;
 
@@ -398,11 +476,23 @@ kick_steed()
                 u.usteed->mcanmove = 1;
             }
             if (u.usteed->msleeping || !u.usteed->mcanmove)
+#if 0 /*KR: 원본*/
                 pline("%s stirs.", He);
+#else /*KR: KRNethack 맞춤 번역 */
+                pline("%s 몸을 뒤척인다.", append_josa(He, "은"));
+#endif
             else
+#if 0 /*KR: 원본*/
                 pline("%s rouses %sself!", He, mhim(u.usteed));
+#else /*KR: KRNethack 맞춤 번역 */
+                pline("%s 정신을 차렸다!", append_josa(He, "은"));
+#endif
         } else
+#if 0 /*KR: 원본*/
             pline("%s does not respond.", He);
+#else /*KR: KRNethack 맞춤 번역 */
+            pline("%s 아무 반응이 없다.", append_josa(He, "은"));
+#endif
         return;
     }
 
@@ -418,7 +508,8 @@ kick_steed()
         return;
     }
 
-    pline("%s gallops!", Monnam(u.usteed));
+    /*KR pline("%s gallops!", Monnam(u.usteed)); */
+    pline("%s 질주한다!", append_josa(Monnam(u.usteed), "가"));
     u.ugallop += rn1(20, 30);
     return;
 }
@@ -453,9 +544,10 @@ int forceit;
                     distance = distu(x, y);
                     if (min_distance < 0 || distance < min_distance
                         || (distance == min_distance && rn2(2))) {
-                        if (i > 0 || (((t = t_at(x, y)) == 0 || !t->tseen)
-                                      && (!sobj_at(BOULDER, x, y)
-                                          || throws_rocks(youmonst.data)))) {
+                        if (i > 0
+                            || (((t = t_at(x, y)) == 0 || !t->tseen)
+                                && (!sobj_at(BOULDER, x, y)
+                                    || throws_rocks(youmonst.data)))) {
                             spot->x = x;
                             spot->y = y;
                             min_distance = distance;
@@ -475,14 +567,13 @@ int forceit;
 }
 
 /* Stop riding the current steed */
-void
-dismount_steed(reason)
-int reason; /* Player was thrown off etc. */
+void dismount_steed(reason) int reason; /* Player was thrown off etc. */
 {
     struct monst *mtmp;
     struct obj *otmp;
     coord cc, steedcc;
-    const char *verb = "fall";
+    /*KR const char *verb = "fall"; */
+    const char *verb = "떨어졌다";
     boolean repair_leg_damage = (Wounded_legs != 0L);
     unsigned save_utrap = u.utrap;
     boolean have_spot = landing_spot(&cc, reason, 0);
@@ -496,18 +587,24 @@ int reason; /* Player was thrown off etc. */
     otmp = which_armor(mtmp, W_SADDLE);
     switch (reason) {
     case DISMOUNT_THROWN:
-        verb = "are thrown";
+        /*KR verb = "are thrown"; */
+        verb = "내동댕이쳐졌다";
         /*FALLTHRU*/
     case DISMOUNT_FELL:
-        You("%s off of %s!", verb, mon_nam(mtmp));
+        /*KR You("%s off of %s!", verb, mon_nam(mtmp)); */
+        You("%s에게서 %s!", mon_nam(mtmp), verb);
         if (!have_spot)
             have_spot = landing_spot(&cc, reason, 1);
-        losehp(Maybe_Half_Phys(rn1(10, 10)), "riding accident", KILLED_BY_AN);
+        /*KR losehp(Maybe_Half_Phys(rn1(10, 10)), "riding accident",
+         * KILLED_BY_AN); */
+        losehp(Maybe_Half_Phys(rn1(10, 10)), "기승 사고로", KILLED_BY);
         set_wounded_legs(BOTH_SIDES, (int) HWounded_legs + rn1(5, 5));
         repair_leg_damage = FALSE;
         break;
     case DISMOUNT_POLY:
-        You("can no longer ride %s.", mon_nam(u.usteed));
+        /*KR You("can no longer ride %s.", mon_nam(u.usteed)); */
+        You("더 이상 %s 탈 수 없게 되었다.",
+            append_josa(mon_nam(u.usteed), "을"));
         if (!have_spot)
             have_spot = landing_spot(&cc, reason, 1);
         break;
@@ -523,22 +620,32 @@ int reason; /* Player was thrown off etc. */
     case DISMOUNT_BYCHOICE:
     default:
         if (otmp && otmp->cursed) {
+#if 0 /*KR: 원본*/
             You("can't.  The saddle %s cursed.",
                 otmp->bknown ? "is" : "seems to be");
+#else /*KR: KRNethack 맞춤 번역 */
+            You("내릴 수 없다. 안장이 저주받은 것 %s.",
+                otmp->bknown ? "같다" : "같다");
+#endif
             otmp->bknown = 1; /* ok to skip set_bknown() here */
             return;
         }
         if (!have_spot) {
-            You("can't.  There isn't anywhere for you to stand.");
+            /*KR You("can't.  There isn't anywhere for you to stand."); */
+            pline("내릴 수 없다. 설 만한 장소가 전혀 없다.");
             return;
         }
         if (!has_mname(mtmp)) {
-            pline("You've been through the dungeon on %s with no name.",
-                  an(mtmp->data->mname));
+            /*KR pline("You've been through the dungeon on %s with no name.",
+                  an(mtmp->data->mname)); */
+            pline("당신은 이름 없는 %s 함께 이 던전을 지나왔다.",
+                  append_josa(an(mtmp->data->mname), "와(과)"));
             if (Hallucination)
-                pline("It felt good to get out of the rain.");
+                /*KR pline("It felt good to get out of the rain."); */
+                pline("비를 피할 수 있어 기분이 좋았다.");
         } else
-            You("dismount %s.", mon_nam(mtmp));
+            /*KR You("dismount %s.", mon_nam(mtmp)); */
+            You("%s에게서 내렸다.", mon_nam(mtmp));
     }
     /* While riding, Wounded_legs refers to the steed's legs;
        after dismounting, it reverts to the hero's legs. */
@@ -604,15 +711,24 @@ int reason; /* Player was thrown off etc. */
             if (!is_flyer(mdat) && !is_floater(mdat) && !is_clinger(mdat)) {
                 if (is_pool(u.ux, u.uy)) {
                     if (!Underwater)
-                        pline("%s falls into the %s!", Monnam(mtmp),
+                        /*KR pline("%s falls into the %s!", Monnam(mtmp),
+                              surface(u.ux, u.uy)); */
+                        pline("%s %s에 빠졌다!",
+                              append_josa(Monnam(mtmp), "가"),
                               surface(u.ux, u.uy));
                     if (!is_swimmer(mdat) && !amphibious(mdat)) {
                         killed(mtmp);
                         adjalign(-1);
                     }
                 } else if (is_lava(u.ux, u.uy)) {
+#if 0 /*KR: 원본*/
                     pline("%s is pulled into the %s!", Monnam(mtmp),
                           hliquid("lava"));
+#else /*KR: KRNethack 맞춤 번역 */
+                    pline("%s %s 속으로 끌려 들어갔다!",
+                          append_josa(Monnam(mtmp), "가"),
+                          hliquid("용암"));
+#endif
                     if (!likes_lava(mdat)) {
                         killed(mtmp);
                         adjalign(-1);
@@ -651,13 +767,13 @@ int reason; /* Player was thrown off etc. */
                     (void) mintrap(mtmp);
             }
 
-        /* Couldn't move hero... try moving the steed. */
+            /* Couldn't move hero... try moving the steed. */
         } else if (enexto(&cc, u.ux, u.uy, mtmp->data)) {
             /* Keep player here, move the steed to cc */
             rloc_to(mtmp, cc.x, cc.y);
             /* Player stays put */
 
-        /* Otherwise, kill the steed. */
+            /* Otherwise, kill the steed. */
         } else {
             if (reason == DISMOUNT_BYCHOICE) {
                 /* [un]#ride: hero gets credit/blame for killing steed */
@@ -689,9 +805,7 @@ int reason; /* Player was thrown off etc. */
 
 /* when attempting to saddle or mount a sleeping steed, try to wake it up
    (for the saddling case, it won't be u.usteed yet) */
-STATIC_OVL void
-maybewakesteed(steed)
-struct monst *steed;
+STATIC_OVL void maybewakesteed(steed) struct monst *steed;
 {
     int frozen = (int) steed->mfrozen;
     boolean wasimmobile = steed->msleeping || !steed->mcanmove;
@@ -709,7 +823,8 @@ struct monst *steed;
         }
     }
     if (wasimmobile && !steed->msleeping && steed->mcanmove)
-        pline("%s wakes up.", Monnam(steed));
+        /*KR pline("%s wakes up.", Monnam(steed)); */
+        pline("%s 깨어났다.", append_josa(Monnam(steed), "은"));
     /* regardless of waking, terminate any meal in progress */
     finish_meating(steed);
 }
@@ -725,21 +840,23 @@ boolean checkfeeding;
     if (steed) {
         /* check whether steed can move */
         if (steed->msleeping || !steed->mcanmove) {
-            pline("%s won't move!", upstart(y_monnam(steed)));
+            /*KR pline("%s won't move!", upstart(y_monnam(steed))); */
+            pline("%s 움직이지 않는다!",
+                  append_josa(upstart(y_monnam(steed)), "은"));
             return TRUE;
         }
         /* optionally check whether steed is in the midst of a meal */
         if (checkfeeding && steed->meating) {
-            pline("%s is still eating.", upstart(y_monnam(steed)));
+            /*KR pline("%s is still eating.", upstart(y_monnam(steed))); */
+            pline("%s 아직도 먹고 있다.",
+                  append_josa(upstart(y_monnam(steed)), "은"));
             return TRUE;
         }
     }
     return FALSE;
 }
 
-void
-place_monster(mon, x, y)
-struct monst *mon;
+void place_monster(mon, x, y) struct monst *mon;
 int x, y;
 {
     struct monst *othermon;

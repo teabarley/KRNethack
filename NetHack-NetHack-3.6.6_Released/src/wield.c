@@ -1012,9 +1012,10 @@ register int amount;
         pline("%s %s for a %s.",
               Yobjnam2(uwep, amount == 0 ? "violently glow" : "glow"), color,
               xtime);
-#else
-        pline("%s %s µ¿¾È %s %sºû³µ´Ù.", append_josa(Yname2(uwep), "ÀÌ"),
-              xtime, color, amount == 0 ? "°Ý·ÄÇÏ°Ô " : "");
+#else /*KR: KRNethack ¸ÂÃã ¹ø¿ª */
+        pline("%s %s µ¿¾È %sºûÀ» ³»¸ç %sºû³µ´Ù.",
+              append_josa(Yname2(uwep), "ÀÌ"), xtime, color,
+              amount == 0 ? "°Ý·ÄÇÏ°Ô " : "");
 #endif
         if (otyp != STRANGE_OBJECT && uwep->known
             && (amount > 0 || (amount < 0 && otmp->bknown)))

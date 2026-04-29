@@ -1,5 +1,5 @@
 /* NetHack 3.6	music.c	$NHDT-Date: 1573063606 2019/11/06 18:06:46 $  $NHDT-Branch: NetHack-3.6 $:$NHDT-Revision: 1.60 $ */
-/*      Copyright (c) 1989 by Jean-Christophe Collet */
+/* Copyright (c) 1989 by Jean-Christophe Collet */
 /* NetHack may be freely redistributed.  See license for details. */
 
 /*
@@ -10,56 +10,54 @@
  *
  * (wooden) flute       may calm snakes if player has enough dexterity
  * magic flute          may put monsters to sleep:  area of effect depends
- *                      on player level.
+ * on player level.
  * (tooled) horn        Will awaken monsters:  area of effect depends on
- *                      player level.  May also scare monsters.
+ * player level.  May also scare monsters.
  * fire horn            Acts like a wand of fire.
  * frost horn           Acts like a wand of cold.
  * bugle                Will awaken soldiers (if any):  area of effect depends
- *                      on player level.
+ * on player level.
  * (wooden) harp        May calm nymph if player has enough dexterity.
  * magic harp           Charm monsters:  area of effect depends on player
- *                      level.
+ * level.
  * (leather) drum       Will awaken monsters like the horn.
  * drum of earthquake   Will initiate an earthquake whose intensity depends
- *                      on player level.  That is, it creates random pits
- *                      called here chasms.
+ * on player level.  That is, it creates random pits
+ * called here chasms.
  */
 
 #include "hack.h"
 
-STATIC_DCL void FDECL(awaken_monsters, (int));
-STATIC_DCL void FDECL(put_monsters_to_sleep, (int));
-STATIC_DCL void FDECL(charm_snakes, (int));
-STATIC_DCL void FDECL(calm_nymphs, (int));
-STATIC_DCL void FDECL(charm_monsters, (int));
-STATIC_DCL void FDECL(do_earthquake, (int));
-STATIC_DCL int FDECL(do_improvisation, (struct obj *));
+STATIC_DCL void FDECL(awaken_monsters, (int) );
+STATIC_DCL void FDECL(put_monsters_to_sleep, (int) );
+STATIC_DCL void FDECL(charm_snakes, (int) );
+STATIC_DCL void FDECL(calm_nymphs, (int) );
+STATIC_DCL void FDECL(charm_monsters, (int) );
+STATIC_DCL void FDECL(do_earthquake, (int) );
+STATIC_DCL int FDECL(do_improvisation, (struct obj *) );
 
 #ifdef UNIX386MUSIC
 STATIC_DCL int NDECL(atconsole);
-STATIC_DCL void FDECL(speaker, (struct obj *, char *));
+STATIC_DCL void FDECL(speaker, (struct obj *, char *) );
 #endif
 #ifdef VPIX_MUSIC
 extern int sco_flag_console; /* will need changing if not _M_UNIX */
 STATIC_DCL void NDECL(playinit);
-STATIC_DCL void FDECL(playstring, (char *, size_t));
-STATIC_DCL void FDECL(speaker, (struct obj *, char *));
+STATIC_DCL void FDECL(playstring, (char *, size_t) );
+STATIC_DCL void FDECL(speaker, (struct obj *, char *) );
 #endif
 #ifdef PCMUSIC
-void FDECL(pc_speaker, (struct obj *, char *));
+void FDECL(pc_speaker, (struct obj *, char *) );
 #endif
 #ifdef AMIGA
-void FDECL(amii_speaker, (struct obj *, char *, int));
+void FDECL(amii_speaker, (struct obj *, char *, int) );
 #endif
 
 /*
  * Wake every monster in range...
  */
 
-STATIC_OVL void
-awaken_monsters(distance)
-int distance;
+STATIC_OVL void awaken_monsters(distance) int distance;
 {
     register struct monst *mtmp;
     register int distm;
@@ -88,9 +86,7 @@ int distance;
  * Make monsters fall asleep.  Note that they may resist the spell.
  */
 
-STATIC_OVL void
-put_monsters_to_sleep(distance)
-int distance;
+STATIC_OVL void put_monsters_to_sleep(distance) int distance;
 {
     register struct monst *mtmp;
 
@@ -109,9 +105,7 @@ int distance;
  * Charm snakes in range.  Note that the snakes are NOT tamed.
  */
 
-STATIC_OVL void
-charm_snakes(distance)
-int distance;
+STATIC_OVL void charm_snakes(distance) int distance;
 {
     register struct monst *mtmp;
     int could_see_mon, was_peaceful;
@@ -130,11 +124,20 @@ int distance;
             newsym(mtmp->mx, mtmp->my);
             if (canseemon(mtmp)) {
                 if (!could_see_mon)
-                    You("notice %s, swaying with the music.", a_monnam(mtmp));
+                    /*KR You("notice %s, swaying with the music.",
+                     * a_monnam(mtmp)); */
+                    You("음악에 맞춰 몸을 흔들고 있는 %s 알아챘다.",
+                        append_josa(a_monnam(mtmp), "을(를)"));
                 else
+#if 0 /*KR: 원본*/
                     pline("%s freezes, then sways with the music%s.",
                           Monnam(mtmp),
                           was_peaceful ? "" : ", and now seems quieter");
+#else /*KR: KRNethack 맞춤 번역 */
+                    pline("%s 멈칫하더니, 이내 음악에 맞춰 몸을 흔든다%s.",
+                          append_josa(Monnam(mtmp), "은(는)"),
+                          was_peaceful ? "" : ", 그리고 얌전해진 것 같다");
+#endif
             }
         }
     }
@@ -144,9 +147,7 @@ int distance;
  * Calm nymphs in range.
  */
 
-STATIC_OVL void
-calm_nymphs(distance)
-int distance;
+STATIC_OVL void calm_nymphs(distance) int distance;
 {
     register struct monst *mtmp;
 
@@ -160,17 +161,18 @@ int distance;
             mtmp->mavenge = 0;
             mtmp->mstrategy &= ~STRAT_WAITMASK;
             if (canseemon(mtmp))
-                pline(
+                /*KR pline(
                     "%s listens cheerfully to the music, then seems quieter.",
-                      Monnam(mtmp));
+                      Monnam(mtmp)); */
+                pline("%s 즐겁게 음악을 듣더니, 이내 얌전해진 것 같다.",
+                      append_josa(Monnam(mtmp), "은(는)"));
         }
     }
 }
 
 /* Awake soldiers anywhere the level (and any nearby monster). */
-void
-awaken_soldiers(bugler)
-struct monst *bugler; /* monster that played instrument */
+void awaken_soldiers(
+    bugler) struct monst *bugler; /* monster that played instrument */
 {
     register struct monst *mtmp;
     int distance, distm;
@@ -186,14 +188,18 @@ struct monst *bugler; /* monster that played instrument */
             mtmp->mcanmove = 1;
             mtmp->mstrategy &= ~STRAT_WAITMASK;
             if (canseemon(mtmp))
-                pline("%s is now ready for battle!", Monnam(mtmp));
+                /*KR pline("%s is now ready for battle!", Monnam(mtmp)); */
+                pline("이제 %s 전투 준비를 마쳤다!",
+                      append_josa(Monnam(mtmp), "은(는)"));
             else if (!Deaf)
-                Norep("%s the rattle of battle gear being readied.",
-                      "You hear");  /* Deaf-aware */
-        } else if ((distm = ((bugler == &youmonst)
-                                 ? distu(mtmp->mx, mtmp->my)
-                                 : dist2(bugler->mx, bugler->my, mtmp->mx,
-                                         mtmp->my))) < distance) {
+                /*KR Norep("%s the rattle of battle gear being readied.",
+                      "You hear"); */ /* Deaf-aware */
+                Norep("당신은 전투 장비를 챙기는 철그럭 소리를 듣는다.");
+        } else if ((distm =
+                        ((bugler == &youmonst) ? distu(mtmp->mx, mtmp->my)
+                                               : dist2(bugler->mx, bugler->my,
+                                                       mtmp->mx, mtmp->my)))
+                   < distance) {
             mtmp->msleeping = 0;
             mtmp->mcanmove = 1;
             mtmp->mfrozen = 0;
@@ -211,9 +217,7 @@ struct monst *bugler; /* monster that played instrument */
 /* Charm monsters in range.  Note that they may resist the spell.
  * If swallowed, range is reduced to 0.
  */
-STATIC_OVL void
-charm_monsters(distance)
-int distance;
+STATIC_OVL void charm_monsters(distance) int distance;
 {
     struct monst *mtmp, *mtmp2;
 
@@ -237,9 +241,7 @@ int distance;
 /* Generate earthquake :-) of desired force.
  * That is:  create random chasms (pits).
  */
-STATIC_OVL void
-do_earthquake(force)
-int force;
+STATIC_OVL void do_earthquake(force) int force;
 {
     register int x, y;
     struct monst *mtmp;
@@ -266,12 +268,18 @@ int force;
                 if (mtmp->mundetected && is_hider(mtmp->data)) {
                     mtmp->mundetected = 0;
                     if (cansee(x, y))
-                        pline("%s is shaken loose from the ceiling!",
-                              Amonnam(mtmp));
+                        /*KR pline("%s is shaken loose from the ceiling!",
+                              Amonnam(mtmp)); */
+                        pline("%s 충격에 천장에서 떨어졌다!",
+                              append_josa(Amonnam(mtmp), "은(는)"));
                     else
-                        You_hear("a thumping sound.");
+                        /*KR You_hear("a thumping sound."); */
+                        You_hear("쿵 하는 소리가 들렸다.");
                     if (x == u.ux && y == u.uy)
-                        You("easily dodge the falling %s.", mon_nam(mtmp));
+                        /*KR You("easily dodge the falling %s.",
+                         * mon_nam(mtmp)); */
+                        You("떨어지는 %s 가볍게 피했다.",
+                            append_josa(mon_nam(mtmp), "을(를)"));
                     newsym(x, y);
                 }
             }
@@ -279,30 +287,35 @@ int force;
                 switch (levl[x][y].typ) {
                 case FOUNTAIN: /* Make the fountain disappear */
                     if (cansee(x, y))
-                        pline_The("fountain falls into a chasm.");
+                        /*KR pline_The("fountain falls into a chasm."); */
+                        pline("분수가 갈라진 틈으로 떨어졌다.");
                     goto do_pit;
                 case SINK:
                     if (cansee(x, y))
-                        pline_The("kitchen sink falls into a chasm.");
+                        /*KR pline_The("kitchen sink falls into a chasm."); */
+                        pline("싱크대가 갈라진 틈으로 떨어졌다.");
                     goto do_pit;
                 case ALTAR:
                     if (Is_astralevel(&u.uz) || Is_sanctum(&u.uz))
                         break;
 
                     if (cansee(x, y))
-                        pline_The("altar falls into a chasm.");
+                        /*KR pline_The("altar falls into a chasm."); */
+                        pline("제단이 갈라진 틈으로 떨어졌다.");
                     goto do_pit;
                 case GRAVE:
                     if (cansee(x, y))
-                        pline_The("headstone topples into a chasm.");
+                        /*KR pline_The("headstone topples into a chasm."); */
+                        pline("비석이 갈라진 틈으로 쓰러졌다.");
                     goto do_pit;
                 case THRONE:
                     if (cansee(x, y))
-                        pline_The("throne falls into a chasm.");
+                        /*KR pline_The("throne falls into a chasm."); */
+                        pline("옥좌가 갈라진 틈으로 떨어졌다.");
                     /*FALLTHRU*/
                 case ROOM:
                 case CORR: /* Try to make a pit */
- do_pit:
+                do_pit:
                     chasm = maketrap(x, y, PIT);
                     if (!chasm)
                         break; /* no pit if portal at that location */
@@ -321,7 +334,8 @@ int force;
                      */
                     filltype = fillholetyp(x, y, FALSE);
                     if (filltype != ROOM) {
-                        levl[x][y].typ = filltype; /* flags set via doormask */
+                        levl[x][y].typ =
+                            filltype; /* flags set via doormask */
                         liquid_flow(x, y, filltype, chasm, (char *) 0);
                     }
 
@@ -329,9 +343,15 @@ int force;
 
                     if ((otmp = sobj_at(BOULDER, x, y)) != 0) {
                         if (cansee(x, y))
+#if 0 /*KR: 원본*/
                             pline("KADOOM!  The boulder falls into a chasm%s!",
                                   (x == u.ux && y == u.uy) ? " below you"
                                                            : "");
+#else /*KR: KRNethack 맞춤 번역 */
+                            pline("콰앙! 바위가 %s갈라진 틈으로 떨어졌다!",
+                                  (x == u.ux && y == u.uy) ? "당신 발아래의 "
+                                                           : "");
+#endif
                         if (mtmp)
                             mtmp->mtrapped = 0;
                         obj_extract_self(otmp);
@@ -349,21 +369,27 @@ int force;
                             mtmp->mtrapped = 1;
                             if (!m_already_trapped) { /* suppress messages */
                                 if (cansee(x, y))
-                                    pline("%s falls into a chasm!",
-                                          Monnam(mtmp));
+                                    /*KR pline("%s falls into a chasm!",
+                                          Monnam(mtmp)); */
+                                    pline(
+                                        "%s 갈라진 틈으로 떨어졌다!",
+                                        append_josa(Monnam(mtmp), "이(가)"));
                                 else if (humanoid(mtmp->data))
-                                    You_hear("a scream!");
+                                    /*KR You_hear("a scream!"); */
+                                    You_hear("비명 소리를 들었다!");
                             }
                             /* Falling is okay for falling down
-                                within a pit from jostling too */
-                            mselftouch(mtmp, "Falling, ", TRUE);
+                               within a pit from jostling too */
+                            /*KR mselftouch(mtmp, "Falling, ", TRUE); */
+                            mselftouch(mtmp, "추락하면서, ", TRUE);
                             if (!DEADMONSTER(mtmp)) {
                                 mtmp->mhp -= rnd(m_already_trapped ? 4 : 6);
                                 if (DEADMONSTER(mtmp)) {
                                     if (!cansee(x, y)) {
-                                        pline("It is destroyed!");
+                                        /*KR pline("It is destroyed!"); */
+                                        pline("그것은 산산조각 났다!");
                                     } else {
-                                        You("destroy %s!",
+                                        /*KR You("destroy %s!",
                                             mtmp->mtame
                                               ? x_monnam(mtmp, ARTICLE_THE,
                                                          "poor",
@@ -371,7 +397,19 @@ int force;
                                                            ? SUPPRESS_SADDLE
                                                            : 0,
                                                          FALSE)
-                                              : mon_nam(mtmp));
+                                              : mon_nam(mtmp)); */
+                                        You("%s 파괴했다!",
+                                            append_josa(
+                                                mtmp->mtame
+                                                    ? x_monnam(
+                                                          mtmp, ARTICLE_NONE,
+                                                          "불쌍한",
+                                                          has_mname(mtmp)
+                                                              ? SUPPRESS_SADDLE
+                                                              : 0,
+                                                          FALSE)
+                                                    : mon_nam(mtmp),
+                                                "을(를)"));
                                     }
                                     xkilled(mtmp, XKILL_NOMSG);
                                 }
@@ -385,42 +423,61 @@ int force;
                                things this way, entering the new pit below
                                will override current trap anyway, but too
                                late to get Lev and Fly handling. */
-                            Your("chain breaks!");
+                            /*KR Your("chain breaks!"); */
+                            Your("사슬이 끊어졌다!");
                             reset_utrap(TRUE);
                         }
                         if (Levitation || Flying
                             || is_clinger(youmonst.data)) {
                             if (!tu_pit) { /* no pit here previously */
-                                pline("A chasm opens up under you!");
-                                You("don't fall in!");
+                                /*KR pline("A chasm opens up under you!"); */
+                                pline("당신의 발아래에 갈라진 틈이 입을 "
+                                      "벌렸다!");
+                                /*KR You("don't fall in!"); */
+                                You("떨어지지 않았다!");
                             }
                         } else if (!tu_pit || !u.utrap
                                    || (u.utrap && u.utraptype != TT_PIT)) {
                             /* no pit here previously, or you were
                                not in it even if there was */
-                            You("fall into a chasm!");
+                            /*KR You("fall into a chasm!"); */
+                            You("갈라진 틈으로 떨어졌다!");
                             set_utrap(rn1(6, 2), TT_PIT);
+                            /*KR losehp(Maybe_Half_Phys(rnd(6)),
+                                   "fell into a chasm", NO_KILLER_PREFIX); */
                             losehp(Maybe_Half_Phys(rnd(6)),
-                                   "fell into a chasm", NO_KILLER_PREFIX);
-                            selftouch("Falling, you");
+                                   "갈라진 틈에 떨어져서", KILLED_BY);
+                            /*KR selftouch("Falling, you"); */
+                            selftouch("추락하면서, 당신은");
                         } else if (u.utrap && u.utraptype == TT_PIT) {
                             boolean keepfooting =
                                 ((Fumbling && !rn2(5))
                                  || (!rnl(Role_if(PM_ARCHEOLOGIST) ? 3 : 9))
                                  || ((ACURR(A_DEX) > 7) && rn2(5)));
 
-                            You("are jostled around violently!");
+                            /*KR You("are jostled around violently!"); */
+                            You("거칠게 이리저리 부딪혔다!");
                             set_utrap(rn1(6, 2), TT_PIT);
+                            /*KR losehp(Maybe_Half_Phys(rnd(keepfooting ? 2 :
+                               4)), "hurt in a chasm", NO_KILLER_PREFIX); */
                             losehp(Maybe_Half_Phys(rnd(keepfooting ? 2 : 4)),
-                                   "hurt in a chasm", NO_KILLER_PREFIX);
+                                   "갈라진 틈에서 다쳐서", KILLED_BY);
                             if (keepfooting)
                                 exercise(A_DEX, TRUE);
                             else
+#if 0 /*KR: 원본*/
                                 selftouch(
                                     (Upolyd && (slithy(youmonst.data)
                                                 || nolimbs(youmonst.data)))
                                         ? "Shaken, you"
                                         : "Falling down, you");
+#else /*KR: KRNethack 맞춤 번역 */
+                                selftouch((Upolyd
+                                           && (slithy(youmonst.data)
+                                               || nolimbs(youmonst.data)))
+                                              ? "마구 흔들리며, 당신은"
+                                              : "굴러떨어지며, 당신은");
+#endif
                         }
                     } else
                         newsym(x, y);
@@ -429,7 +486,8 @@ int force;
                     if (levl[x][y].doormask == D_NODOOR)
                         goto do_pit;
                     if (cansee(x, y))
-                        pline_The("door collapses.");
+                        /*KR pline_The("door collapses."); */
+                        pline("문이 무너져 내렸다.");
                     if (*in_rooms(x, y, SHOPBASE))
                         add_damage(x, y, 0L);
                     levl[x][y].doormask = D_NODOOR;
@@ -444,22 +502,32 @@ const char *
 generic_lvl_desc()
 {
     if (Is_astralevel(&u.uz))
-        return "astral plane";
+        /*KR return "astral plane"; */
+        return "천상계";
     else if (In_endgame(&u.uz))
-        return "plane";
+        /*KR return "plane"; */
+        return "정령계";
     else if (Is_sanctum(&u.uz))
-        return "sanctum";
+        /*KR return "sanctum"; */
+        return "성소";
     else if (In_sokoban(&u.uz))
-        return "puzzle";
+        /*KR return "puzzle"; */
+        return "퍼즐";
     else if (In_V_tower(&u.uz))
-        return "tower";
+        /*KR return "tower"; */
+        return "탑";
     else
-        return "dungeon";
+        /*KR return "dungeon"; */
+        return "던전";
 }
 
 const char *beats[] = {
-    "stepper", "one drop", "slow two", "triple stroke roll",
-    "double shuffle", "half-time shuffle", "second line", "train"
+    /*KR "stepper", "one drop", "slow two", "triple stroke roll",
+    "double shuffle", "half-time shuffle", "second line", "train" */
+    "스테퍼(stepper)",           "원 드롭(one drop)",
+    "슬로우 투(slow two)",       "트리플 스트로크 롤(triple stroke roll)",
+    "더블 셔플(double shuffle)", "하프타임 셔플(half-time shuffle)",
+    "세컨드 라인(second line)",  "트레인(train)"
 };
 
 /*
@@ -499,10 +567,10 @@ struct obj *instr;
     pc_speaker(&itmp, "C");
 #endif
 
-#define PLAY_NORMAL   0x00
-#define PLAY_STUNNED  0x01
+#define PLAY_NORMAL 0x00
+#define PLAY_STUNNED 0x01
 #define PLAY_CONFUSED 0x02
-#define PLAY_HALLU    0x04
+#define PLAY_HALLU 0x04
     mode = PLAY_NORMAL;
     if (Stunned)
         mode |= PLAY_STUNNED;
@@ -530,22 +598,29 @@ struct obj *instr;
        now use a different verb here */
     switch (mode) {
     case PLAY_NORMAL:
-        You("start playing %s.", yname(instr));
+        /*KR You("start playing %s.", yname(instr)); */
+        You("%s 연주하기 시작했다.", append_josa(yname(instr), "을(를)"));
         break;
     case PLAY_STUNNED:
         if (!Deaf)
-            You("radiate an obnoxious droning sound.");
+            /*KR You("radiate an obnoxious droning sound."); */
+            You("불쾌하게 윙윙거리는 소리를 퍼뜨렸다.");
         else
-            You_feel("a monotonous vibration.");
+            /*KR You_feel("a monotonous vibration."); */
+            You_feel("단조로운 진동을 느낀다.");
         break;
     case PLAY_CONFUSED:
         if (!Deaf)
-            You("generate a raucous noise.");
+            /*KR You("generate a raucous noise."); */
+            You("귀에 거슬리는 소음을 냈다.");
         else
-            You_feel("a jarring vibration.");
+            /*KR You_feel("a jarring vibration."); */
+            You_feel("귀에 거슬리는 진동을 느낀다.");
         break;
     case PLAY_HALLU:
-        You("disseminate a kaleidoscopic display of floating butterflies.");
+        /*KR You("disseminate a kaleidoscopic display of floating
+         * butterflies."); */
+        You("만화경처럼 둥둥 떠다니는 나비의 향연을 흩뿌렸다.");
         break;
     /* TODO? give some or all of these combinations their own feedback;
        hallucination ones should reference senses other than hearing... */
@@ -554,7 +629,8 @@ struct obj *instr;
     case PLAY_CONFUSED | PLAY_HALLU:
     case PLAY_STUNNED | PLAY_CONFUSED | PLAY_HALLU:
     default:
-        pline("What you perform is quite far from music...");
+        /*KR pline("What you perform is quite far from music..."); */
+        pline("당신의 연주는 음악과는 아주 거리가 멀다...");
         break;
     }
 #undef PLAY_NORMAL
@@ -563,20 +639,31 @@ struct obj *instr;
 #undef PLAY_HALLU
 
     switch (itmp.otyp) { /* note: itmp.otyp might differ from instr->otyp */
-    case MAGIC_FLUTE: /* Make monster fall asleep */
+    case MAGIC_FLUTE:    /* Make monster fall asleep */
         consume_obj_charge(instr, TRUE);
 
+#if 0 /*KR: 원본*/
         You("%sproduce %s music.", !Deaf ? "" : "seem to ",
             Hallucination ? "piped" : "soft");
+#else /*KR: KRNethack 맞춤 번역 */
+        You("%s 음악을 연주하는 것%s.",
+            Hallucination ? "피리 소리 같은" : "부드러운",
+            !Deaf ? " 같다" : "");
+#endif
         put_monsters_to_sleep(u.ulevel * 5);
         exercise(A_DEX, TRUE);
         break;
     case WOODEN_FLUTE: /* May charm snakes */
         do_spec &= (rn2(ACURR(A_DEX)) + u.ulevel > 25);
         if (!Deaf)
-            pline("%s.", Tobjnam(instr, do_spec ? "trill" : "toot"));
+            /*KR pline("%s.", Tobjnam(instr, do_spec ? "trill" : "toot")); */
+            pline("%s %s.", append_josa(xname(instr), "은(는)"),
+                  do_spec ? "떨리는 소리를 냈다" : "삑 소리를 냈다");
         else
-            You_feel("%s %s.", yname(instr), do_spec ? "trill" : "toot");
+            /*KR You_feel("%s %s.", yname(instr), do_spec ? "trill" : "toot");
+             */
+            You_feel("%s %s.", append_josa(yname(instr), "이(가)"),
+                     do_spec ? "떨리는 것을" : "삑 소리를 내는 것을");
         if (do_spec)
             charm_snakes(u.ulevel * 3);
         exercise(A_DEX, TRUE);
@@ -586,13 +673,16 @@ struct obj *instr;
         consume_obj_charge(instr, TRUE);
 
         if (!getdir((char *) 0)) {
-            pline("%s.", Tobjnam(instr, "vibrate"));
+            /*KR pline("%s.", Tobjnam(instr, "vibrate")); */
+            pline("%s 진동했다.", append_josa(xname(instr), "이(가)"));
             break;
         } else if (!u.dx && !u.dy && !u.dz) {
             if ((damage = zapyourself(instr, TRUE)) != 0) {
                 char buf[BUFSZ];
 
-                Sprintf(buf, "using a magical horn on %sself", uhim());
+                /*KR Sprintf(buf, "using a magical horn on %sself", uhim());
+                 */
+                Sprintf(buf, "자신에게 마법의 나팔을 사용해서");
                 losehp(damage, buf, KILLED_BY); /* fire or frost damage */
             }
         } else {
@@ -603,17 +693,21 @@ struct obj *instr;
         break;
     case TOOLED_HORN: /* Awaken or scare monsters */
         if (!Deaf)
-            You("produce a frightful, grave sound.");
+            /*KR You("produce a frightful, grave sound."); */
+            You("무시무시하고 웅장한 소리를 냈다.");
         else
-            You("blow into the horn.");
+            /*KR You("blow into the horn."); */
+            You("나팔을 불었다.");
         awaken_monsters(u.ulevel * 30);
         exercise(A_WIS, FALSE);
         break;
     case BUGLE: /* Awaken & attract soldiers */
         if (!Deaf)
-            You("extract a loud noise from %s.", yname(instr));
+            /*KR You("extract a loud noise from %s.", yname(instr)); */
+            You("%s에서 시끄러운 소리를 뽑아냈다.", yname(instr));
         else
-            You("blow into the bugle.");
+            /*KR You("blow into the bugle."); */
+            You("나팔을 불었다.");
         awaken_soldiers(&youmonst);
         exercise(A_WIS, FALSE);
         break;
@@ -621,19 +715,29 @@ struct obj *instr;
         consume_obj_charge(instr, TRUE);
 
         if (!Deaf)
-            pline("%s very attractive music.", Tobjnam(instr, "produce"));
+            /*KR pline("%s very attractive music.", Tobjnam(instr,
+             * "produce")); */
+            pline("%s 아주 매력적인 음악을 만들어냈다.",
+                  append_josa(xname(instr), "은(는)"));
         else
-            You_feel("very soothing vibrations.");
+            /*KR You_feel("very soothing vibrations."); */
+            You_feel("아주 진정되는 진동을 느낀다.");
         charm_monsters((u.ulevel - 1) / 3 + 1);
         exercise(A_DEX, TRUE);
         break;
     case WOODEN_HARP: /* May calm Nymph */
         do_spec &= (rn2(ACURR(A_DEX)) + u.ulevel > 25);
         if (!Deaf)
+#if 0 /*KR: 원본*/
             pline("%s %s.", Yname2(instr),
                   do_spec ? "produces a lilting melody" : "twangs");
+#else /*KR: KRNethack 맞춤 번역 */
+            pline("%s %s.", append_josa(Yname2(instr), "은(는)"),
+                  do_spec ? "경쾌한 멜로디를 만들어냈다" : "탕 하고 울렸다");
+#endif
         else
-            You_feel("soothing vibrations.");
+            /*KR You_feel("soothing vibrations."); */
+            You_feel("진정되는 진동을 느낀다.");
         if (do_spec)
             calm_nymphs(u.ulevel * 3);
         exercise(A_DEX, TRUE);
@@ -645,8 +749,11 @@ struct obj *instr;
            mundane is flagged */
         consume_obj_charge(instr, TRUE);
 
-        You("produce a heavy, thunderous rolling!");
-        pline_The("entire %s is shaking around you!", generic_lvl_desc());
+        /*KR You("produce a heavy, thunderous rolling!"); */
+        You("무겁고, 우레와 같은 소리를 냈다!");
+        /*KR pline_The("entire %s is shaking around you!",
+         * generic_lvl_desc()); */
+        pline("%s 전체가 당신을 중심으로 흔들리고 있다!", generic_lvl_desc());
         do_earthquake((u.ulevel - 1) / 3 + 1);
         /* shake up monsters in a much larger radius... */
         awaken_monsters(ROWNO * COLNO);
@@ -655,16 +762,25 @@ struct obj *instr;
     case LEATHER_DRUM: /* Awaken monsters */
         if (!mundane) {
             if (!Deaf) {
-                You("beat a deafening row!");
+                /*KR You("beat a deafening row!"); */
+                You("귀가 먹먹해질 정도로 두드렸다!");
                 incr_itimeout(&HDeaf, rn1(20, 30));
             } else {
-                You("pound on the drum.");
+                /*KR You("pound on the drum."); */
+                You("북을 두드렸다.");
             }
             exercise(A_WIS, FALSE);
         } else
+#if 0 /*KR: 원본*/
             You("%s %s.",
                 rn2(2) ? "butcher" : rn2(2) ? "manage" : "pull off",
                 an(beats[rn2(SIZE(beats))]));
+#else /*KR: KRNethack 맞춤 번역 */
+            You("%s 비트를 %s.", beats[rn2(SIZE(beats))],
+                rn2(2)   ? "엉망으로 만들었다"
+                : rn2(2) ? "그럭저럭 연주했다"
+                         : "훌륭하게 소화해냈다");
+#endif
         awaken_monsters(u.ulevel * (mundane ? 5 : 40));
         context.botl = TRUE;
         break;
@@ -688,31 +804,39 @@ struct obj *instr;
     boolean ok;
 
     if (Underwater) {
-        You_cant("play music underwater!");
+        /*KR You_cant("play music underwater!"); */
+        You_cant("물속에서는 음악을 연주할 수 없다!");
         return 0;
     } else if ((instr->otyp == WOODEN_FLUTE || instr->otyp == MAGIC_FLUTE
                 || instr->otyp == TOOLED_HORN || instr->otyp == FROST_HORN
                 || instr->otyp == FIRE_HORN || instr->otyp == BUGLE)
                && !can_blow(&youmonst)) {
-        You("are incapable of playing %s.", the(distant_name(instr, xname)));
+        /*KR You("are incapable of playing %s.", the(distant_name(instr,
+         * xname))); */
+        You("%s 연주할 능력이 없다.",
+            append_josa(the(distant_name(instr, xname)), "을(를)"));
         return 0;
     }
     if (instr->otyp != LEATHER_DRUM && instr->otyp != DRUM_OF_EARTHQUAKE
         && !(Stunned || Confusion || Hallucination)) {
-        c = ynq("Improvise?");
+        /*KR c = ynq("Improvise?"); */
+        c = ynq("즉흥 연주를 할까요?");
         if (c == 'q')
             goto nevermind;
     }
 
     if (c == 'n') {
         if (u.uevent.uheard_tune == 2)
-            c = ynq("Play the passtune?");
+            /*KR c = ynq("Play the passtune?"); */
+            c = ynq("통과를 위한 선율을 연주할까요?");
         if (c == 'q') {
             goto nevermind;
         } else if (c == 'y') {
             Strcpy(buf, tune);
         } else {
-            getlin("What tune are you playing? [5 notes, A-G]", buf);
+            /*KR getlin("What tune are you playing? [5 notes, A-G]", buf); */
+            getlin("어떤 선율을 연주하시겠습니까? [A-G 사이의 5개 음표]",
+                   buf);
             (void) mungspaces(buf);
             if (*buf == '\033')
                 goto nevermind;
@@ -731,8 +855,14 @@ struct obj *instr;
             }
         }
 
+#if 0 /*KR: 원본*/
         You(!Deaf ? "extract a strange sound from %s!"
                   : "can feel %s emitting vibrations.", the(xname(instr)));
+#else /*KR: KRNethack 맞춤 번역 */
+        You(!Deaf ? "%s에서 이상한 소리를 냈다!"
+                  : "%s 진동을 뿜어내는 것을 느낄 수 있다.",
+            append_josa(the(xname(instr)), "이(가)"));
+#endif
 
 #ifdef UNIX386MUSIC
         /* if user is at the console, play through the console speaker */
@@ -819,14 +949,29 @@ struct obj *instr;
                         }
                     if (tumblers) {
                         if (gears)
+#if 0 /*KR: 원본*/
                             You_hear("%d tumbler%s click and %d gear%s turn.",
                                      tumblers, plur(tumblers), gears,
                                      plur(gears));
+#else /*KR: KRNethack 맞춤 번역 */
+                            You_hear("%d개의 텀블러가 딸깍거리고 %d개의 "
+                                     "톱니바퀴가 돌아가는 소리가 들린다.",
+                                     tumblers, gears);
+#endif
                         else
+#if 0 /*KR: 원본*/
                             You_hear("%d tumbler%s click.", tumblers,
                                      plur(tumblers));
+#else /*KR: KRNethack 맞춤 번역 */
+                            You_hear(
+                                "%d개의 텀블러가 딸깍거리는 소리가 들린다.",
+                                tumblers);
+#endif
                     } else if (gears) {
-                        You_hear("%d gear%s turn.", gears, plur(gears));
+                        /*KR You_hear("%d gear%s turn.", gears, plur(gears));
+                         */
+                        You_hear("%d개의 톱니바퀴가 돌아가는 소리가 들린다.",
+                                 gears);
                         /* could only get `gears == 5' by playing five
                            correct notes followed by excess; otherwise,
                            tune would have matched above */
@@ -840,7 +985,7 @@ struct obj *instr;
     } else
         return do_improvisation(instr);
 
- nevermind:
+nevermind:
     pline1(Never_mind);
     return 0;
 }
@@ -868,9 +1013,7 @@ atconsole()
     return (!strcmp(termtype, "AT386") || !strcmp(termtype, "xterm"));
 }
 
-STATIC_OVL void
-speaker(instr, buf)
-struct obj *instr;
+STATIC_OVL void speaker(instr, buf) struct obj *instr;
 char *buf;
 {
     /*
@@ -921,9 +1064,7 @@ char *buf;
 #define noDEBUG
 
 /* emit tone of frequency hz for given number of ticks */
-STATIC_OVL void
-tone(hz, ticks)
-unsigned int hz, ticks;
+STATIC_OVL void tone(hz, ticks) unsigned int hz, ticks;
 {
     ioctl(0, KDMKTONE, hz | ((ticks * 10) << 16));
 #ifdef DEBUG
@@ -933,9 +1074,7 @@ unsigned int hz, ticks;
 }
 
 /* rest for given number of ticks */
-STATIC_OVL void
-rest(ticks)
-int ticks;
+STATIC_OVL void rest(ticks) int ticks;
 {
     nap(ticks * 10);
 #ifdef DEBUG
@@ -945,9 +1084,7 @@ int ticks;
 
 #include "interp.c" /* from snd86unx.shr */
 
-STATIC_OVL void
-speaker(instr, buf)
-struct obj *instr;
+STATIC_OVL void speaker(instr, buf) struct obj *instr;
 char *buf;
 {
     /* emit a prefix to modify instrumental `timbre' */
@@ -974,8 +1111,7 @@ char *buf;
 }
 
 #ifdef VPIX_DEBUG
-main(argc, argv)
-int argc;
+main(argc, argv) int argc;
 char *argv[];
 {
     if (argc == 2) {

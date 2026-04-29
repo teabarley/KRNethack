@@ -6,31 +6,28 @@
 #include "hack.h"
 
 STATIC_DCL boolean FDECL(clear_fcorr, (struct monst *, BOOLEAN_P));
-STATIC_DCL void FDECL(blackout, (int, int));
-STATIC_DCL void FDECL(restfakecorr, (struct monst *));
-STATIC_DCL void FDECL(parkguard, (struct monst *));
-STATIC_DCL boolean FDECL(in_fcorridor, (struct monst *, int, int));
-STATIC_DCL boolean FDECL(find_guard_dest, (struct monst *, xchar *, xchar *));
-STATIC_DCL void FDECL(move_gold, (struct obj *, int));
-STATIC_DCL void FDECL(wallify_vault, (struct monst *));
-STATIC_DCL void FDECL(gd_mv_monaway, (struct monst *, int, int));
-STATIC_OVL void FDECL(gd_pick_corridor_gold, (struct monst *, int, int));
+STATIC_DCL void FDECL(blackout, (int, int) );
+STATIC_DCL void FDECL(restfakecorr, (struct monst *) );
+STATIC_DCL void FDECL(parkguard, (struct monst *) );
+STATIC_DCL boolean FDECL(in_fcorridor, (struct monst *, int, int) );
+STATIC_DCL boolean FDECL(find_guard_dest,
+                         (struct monst *, xchar *, xchar *) );
+STATIC_DCL void FDECL(move_gold, (struct obj *, int) );
+STATIC_DCL void FDECL(wallify_vault, (struct monst *) );
+STATIC_DCL void FDECL(gd_mv_monaway, (struct monst *, int, int) );
+STATIC_OVL void FDECL(gd_pick_corridor_gold, (struct monst *, int, int) );
 
-void
-newegd(mtmp)
-struct monst *mtmp;
+void newegd(mtmp) struct monst *mtmp;
 {
     if (!mtmp->mextra)
         mtmp->mextra = newmextra();
     if (!EGD(mtmp)) {
-        EGD(mtmp) = (struct egd *) alloc(sizeof (struct egd));
-        (void) memset((genericptr_t) EGD(mtmp), 0, sizeof (struct egd));
+        EGD(mtmp) = (struct egd *) alloc(sizeof(struct egd));
+        (void) memset((genericptr_t) EGD(mtmp), 0, sizeof(struct egd));
     }
 }
 
-void
-free_egd(mtmp)
-struct monst *mtmp;
+void free_egd(mtmp) struct monst *mtmp;
 {
     if (mtmp->mextra && EGD(mtmp)) {
         free((genericptr_t) EGD(mtmp));
@@ -104,13 +101,15 @@ boolean forceshow;
         egrd->fcbeg++;
     }
     if (sawcorridor && !silently)
-        pline_The("corridor disappears.");
+        /*KR pline_The("corridor disappears."); */
+        pline("통로가 사라졌다.");
     /* only give encased message if hero is still alive (might get here
        via paygd() -> mongone() -> grddead() when game is over;
        died: no message, quit: message) */
     if (IS_ROCK(levl[u.ux][u.uy].typ) && (Upolyd ? u.mh : u.uhp) > 0
         && !silently)
-        You("are encased in rock.");
+        /*KR You("are encased in rock."); */
+        You("암석 속에 갇혔다.");
     return TRUE;
 }
 
@@ -118,9 +117,7 @@ boolean forceshow;
    spots to unlit; if player used scroll/wand/spell of light while inside
    the corridor, we don't want the light to reappear if/when a new tunnel
    goes through the same area */
-STATIC_OVL void
-blackout(x, y)
-int x, y;
+STATIC_OVL void blackout(x, y) int x, y;
 {
     struct rm *lev;
     int i, j;
@@ -140,9 +137,7 @@ int x, y;
         }
 }
 
-STATIC_OVL void
-restfakecorr(grd)
-struct monst *grd;
+STATIC_OVL void restfakecorr(grd) struct monst *grd;
 {
     /* it seems you left the corridor - let the guard disappear */
     if (clear_fcorr(grd, FALSE)) {
@@ -152,9 +147,7 @@ struct monst *grd;
 }
 
 /* move guard--dead to alive--to <0,0> until temporary corridor is removed */
-STATIC_OVL void
-parkguard(grd)
-struct monst *grd;
+STATIC_OVL void parkguard(grd) struct monst *grd;
 {
     /* either guard is dead or will now be treated as if so;
        monster traversal loops should skip it */
@@ -165,7 +158,7 @@ struct monst *grd;
         newsym(grd->mx, grd->my);
         place_monster(grd, 0, 0);
         /* [grd->mx,my just got set to 0,0 by place_monster(), so this
-           just sets EGD(grd)->ogx,ogy to 0,0 too; is that what we want?] */
+            just sets EGD(grd)->ogx,ogy to 0,0 too; is that what we want?] */
         EGD(grd)->ogx = grd->mx;
         EGD(grd)->ogy = grd->my;
     }
@@ -238,9 +231,7 @@ char *array;
 }
 
 /* hero has teleported out of vault while a guard is active */
-void
-uleftvault(grd)
-struct monst *grd;
+void uleftvault(grd) struct monst *grd;
 {
     /* only called if caller has checked vault_occupied() and findgd() */
     if (!grd || !grd->isgd || DEADMONSTER(grd)) {
@@ -253,7 +244,8 @@ struct monst *grd;
         && um_dist(grd->mx, grd->my, 1)) {
         if (grd->mpeaceful) {
             if (canspotmon(grd)) /* see or sense via telepathy */
-                pline("%s becomes irate.", Monnam(grd));
+                /*KR pline("%s becomes irate.", Monnam(grd)); */
+                pline("%s 분노했다.", append_josa(Monnam(grd), "은"));
             grd->mpeaceful = 0; /* bypass setmangry() */
         }
         /* if arriving outside guard's temporary corridor, give the
@@ -280,8 +272,9 @@ xchar *rx, *ry;
                     x = u.ux + dd;
                 if (x < 1 || x > COLNO - 1)
                     continue;
-                if (guard && ((x == guard->mx && y == guard->my)
-                              || (guard->isgd && in_fcorridor(guard, x, y))))
+                if (guard
+                    && ((x == guard->mx && y == guard->my)
+                        || (guard->isgd && in_fcorridor(guard, x, y))))
                     continue;
                 if (levl[x][y].typ == CORR) {
                     lx = (x < u.ux) ? x + 1 : (x > u.ux) ? x - 1 : x;
@@ -294,8 +287,7 @@ xchar *rx, *ry;
                 }
             }
         }
- incr_radius:
-        ;
+    incr_radius:;
     }
     impossible("Not a single corridor on this level?");
     tele();
@@ -327,7 +319,7 @@ invault()
         long umoney;
 
         /* first find the goal for the guard */
-        if (!find_guard_dest((struct monst *)0, &rx, &ry))
+        if (!find_guard_dest((struct monst *) 0, &rx, &ry))
             return;
         gx = rx, gy = ry;
 
@@ -399,17 +391,25 @@ invault()
         reset_faint(); /* if fainted - wake up */
         gsensed = !canspotmon(guard);
         if (!gsensed)
+#if 0 /*KR: 원본*/
             pline("Suddenly one of the Vault's %s enters!",
                   makeplural(guard->data->mname));
+#else /*KR: KRNethack 맞춤 번역 */
+            pline("갑자기 비밀 창고의 %s 들어왔다!",
+                  append_josa(makeplural(guard->data->mname), "이"));
+#endif
         else
-            pline("Someone else has entered the Vault.");
+            /*KR pline("Someone else has entered the Vault."); */
+            pline("누군가 창고에 들어왔다.");
         newsym(guard->mx, guard->my);
         if (u.uswallow) {
             /* can't interrogate hero, don't interrogate engulfer */
             if (!Deaf)
-                verbalize("What's going on here?");
+                /*KR verbalize("What's going on here?"); */
+                verbalize("무슨 일이지?");
             if (gsensed)
-                pline_The("other presence vanishes.");
+                /*KR pline_The("other presence vanishes."); */
+                pline("누군가의 기척이 사라졌다.");
             mongone(guard);
             return;
         }
@@ -417,10 +417,17 @@ invault()
             if (U_AP_TYPE == M_AP_OBJECT
                 && youmonst.mappearance != GOLD_PIECE)
                 if (!Deaf)
+#if 0 /*KR: 원본*/
                     verbalize("Hey!  Who left that %s in here?",
                               mimic_obj_name(&youmonst));
+#else /*KR: KRNethack 맞춤 번역 */
+                    verbalize("이봐! 누가 여기 %s 두고 간 거야?",
+                              append_josa(mimic_obj_name(&youmonst), "을"));
+#endif
             /* You're mimicking some object or you're hidden. */
-            pline("Puzzled, %s turns around and leaves.", mhe(guard));
+            /*KR pline("Puzzled, %s turns around and leaves.", mhe(guard)); */
+            pline("어리둥절해진 채로, %s 몸을 돌려 떠났다.",
+                  append_josa(mhe(guard), "은"));
             mongone(guard);
             return;
         }
@@ -429,9 +436,14 @@ invault()
                been given in order to vary it upon repeat visits, but
                discarding the monster and its egd data renders that hard] */
             if (Deaf)
-                pline("%s huffs and turns to leave.", noit_Monnam(guard));
+                /*KR pline("%s huffs and turns to leave.",
+                 * noit_Monnam(guard)); */
+                pline("%s 씩씩거리며 돌아서서 나갔다.",
+                      append_josa(noit_Monnam(guard), "은"));
             else
-                verbalize("I'll be back when you're ready to speak to me!");
+                /*KR verbalize("I'll be back when you're ready to speak to
+                 * me!"); */
+                verbalize("나한테 말할 준비가 되면 다시 오겠다!");
             mongone(guard);
             return;
         }
@@ -444,8 +456,14 @@ invault()
         buf[0] = '\0';
         trycount = 5;
         do {
+#if 0 /*KR: 원본*/
             getlin(Deaf ? "You are required to supply your name. -"
                         : "\"Hello stranger, who are you?\" -", buf);
+#else /*KR: KRNethack 맞춤 번역 */
+            getlin(Deaf ? "신원을 밝히라는 요구를 받았다. -"
+                        : "\"이봐 낯선 사람, 누구냐?\" -",
+                   buf);
+#endif
             (void) mungspaces(buf);
         } while (!buf[0] && --trycount > 0);
 
@@ -456,25 +474,43 @@ invault()
         }
 
         if (!strcmpi(buf, "Croesus") || !strcmpi(buf, "Kroisos")
-            || !strcmpi(buf, "Creosote")) { /* Discworld */
+            || !strcmpi(buf, "Creosote") /* Discworld */
+#if 1 /*KR:T*/
+            || !strcmp(buf, "크로이소스") || !strcmp(buf, "크레오소트")) {
+#endif
             if (!mvitals[PM_CROESUS].died) {
                 if (Deaf) {
                     if (!Blind)
-                        pline("%s waves goodbye.", noit_Monnam(guard));
+                        /*KR pline("%s waves goodbye.", noit_Monnam(guard));
+                         */
+                        pline("%s 작별 인사를 하며 손을 흔든다.",
+                              append_josa(noit_Monnam(guard), "은"));
                 } else {
-                    verbalize(
+                    /*KR verbalize(
                          "Oh, yes, of course.  Sorry to have disturbed you.");
+                     */
+                    verbalize("아, 네, 그렇군요. 방해해서 죄송합니다.");
                 }
                 mongone(guard);
             } else {
                 setmangry(guard, FALSE);
                 if (Deaf) {
-                   if (!Blind)
+                    if (!Blind)
+#if 0 /*KR: 원본*/
                         pline("%s mouths something and looks very angry!",
                               noit_Monnam(guard));
+#else /*KR: KRNethack 맞춤 번역 */
+                        pline("%s 입술을 달싹거리더니 아주 화가 난 것 같다!",
+                              append_josa(noit_Monnam(guard), "은"));
+#endif
                 } else {
+#if 0 /*KR: 원본*/
                    verbalize(
                            "Back from the dead, are you?  I'll remedy that!");
+#else /*KR: KRNethack 맞춤 번역 */
+                    verbalize("죽었다가 돌아오기라도 했나? 다시 편안하게 "
+                              "만들어 주지!");
+#endif
                 }
                 /* don't want guard to waste next turn wielding a weapon */
                 if (!MON_WEP(guard)) {
@@ -485,37 +521,69 @@ invault()
             return;
         }
         if (Deaf)
+#if 0 /*KR: 원본*/
             pline("%s doesn't %srecognize you.", noit_Monnam(guard),
                     (Blind) ? "" : "appear to ");
+#else /*KR: KRNethack 맞춤 번역 */
+            pline("%s 당신을 못 알아보는 %s.",
+                  append_josa(noit_Monnam(guard), "은"),
+                  (Blind) ? "것 같다" : "것처럼 보인다");
+#endif
         else
-            verbalize("I don't know you.");
+            /*KR verbalize("I don't know you."); */
+            verbalize("모르는 얼굴이군.");
         umoney = money_cnt(invent);
         if (!umoney && !hidden_gold()) {
             if (Deaf)
+#if 0 /*KR: 원본*/
                 pline("%s stomps%s.", noit_Monnam(guard),
                       (Blind) ? "" : " and beckons");
+#else /*KR: KRNethack 맞춤 번역 */
+                pline("%s 발을 쾅 구른다%s.",
+                      append_josa(noit_Monnam(guard), "은"),
+                      (Blind) ? "" : " 그리고는 손짓한다");
+#endif
             else
-                verbalize("Please follow me.");
+                /*KR verbalize("Please follow me."); */
+                verbalize("저를 따라오십시오.");
         } else {
             if (!umoney) {
                 if (Deaf) {
                     if (!Blind)
+#if 0 /*KR: 원본*/
                         pline("%s glares at you%s.", noit_Monnam(guard),
                               invent ? "r stuff" : "");
+#else /*KR: KRNethack 맞춤 번역 */
+                        pline("%s 당신%s 빤히 쳐다본다.",
+                              append_josa(noit_Monnam(guard), "은"),
+                              invent ? "의 물건을" : "을");
+#endif
                 } else {
-                   verbalize("You have hidden gold.");
+                    /*KR verbalize("You have hidden gold."); */
+                    verbalize("금화를 숨기고 있군.");
                 }
             }
             if (Deaf) {
                 if (!Blind)
+#if 0 /*KR: 원본*/
                     pline(
                        "%s holds out %s palm and beckons with %s other hand.",
                           noit_Monnam(guard), noit_mhis(guard),
                           noit_mhis(guard));
+#else /*KR: KRNethack 맞춤 번역 */
+                    pline("%s %s 손바닥을 내밀고는 다른 손으로 오라고 "
+                          "손짓한다.",
+                          append_josa(noit_Monnam(guard), "은"),
+                          noit_mhis(guard));
+#endif
             } else {
-                verbalize(
+                /*KR verbalize(
                     "Most likely all your gold was stolen from this vault.");
-                verbalize("Please drop that gold and follow me.");
+                 */
+                verbalize("보나마나 네가 가진 금화는 다 이 창고에서 훔친 "
+                          "것이겠지.");
+                /*KR verbalize("Please drop that gold and follow me."); */
+                verbalize("그 금화를 내려놓고 나를 따라오너라.");
             }
         }
         EGD(guard)->gdx = gx;
@@ -551,9 +619,7 @@ invault()
     }
 }
 
-STATIC_OVL void
-move_gold(gold, vroom)
-struct obj *gold;
+STATIC_OVL void move_gold(gold, vroom) struct obj *gold;
 int vroom;
 {
     xchar nx, ny;
@@ -567,9 +633,7 @@ int vroom;
     newsym(nx, ny);
 }
 
-STATIC_OVL void
-wallify_vault(grd)
-struct monst *grd;
+STATIC_OVL void wallify_vault(grd) struct monst *grd;
 {
     int x, y, typ;
     int vlt = EGD(grd)->vroom;
@@ -601,11 +665,13 @@ struct monst *grd;
                 if ((trap = t_at(x, y)) != 0)
                     deltrap(trap);
                 if (x == lox)
-                    typ =
-                        (y == loy) ? TLCORNER : (y == hiy) ? BLCORNER : VWALL;
+                    typ = (y == loy)   ? TLCORNER
+                          : (y == hiy) ? BLCORNER
+                                       : VWALL;
                 else if (x == hix)
-                    typ =
-                        (y == loy) ? TRCORNER : (y == hiy) ? BRCORNER : VWALL;
+                    typ = (y == loy)   ? TRCORNER
+                          : (y == hiy) ? BRCORNER
+                                       : VWALL;
                 else /* not left or right side, must be top or bottom */
                     typ = HWALL;
                 levl[x][y].typ = typ;
@@ -625,24 +691,30 @@ struct monst *grd;
 
     if (movedgold || fixed) {
         if (in_fcorridor(grd, grd->mx, grd->my) || cansee(grd->mx, grd->my))
-            pline("%s whispers an incantation.", noit_Monnam(grd));
+            /*KR pline("%s whispers an incantation.", noit_Monnam(grd)); */
+            pline("%s 주문을 속삭인다.",
+                  append_josa(noit_Monnam(grd), "은"));
         else
-            You_hear("a distant chant.");
+            /*KR You_hear("a distant chant."); */
+            You_hear("멀리서 성가가 들린다.");
         if (movedgold)
-            pline("A mysterious force moves the gold into the vault.");
+            /*KR pline("A mysterious force moves the gold into the vault.");
+             */
+            pline("알 수 없는 힘이 금화를 창고로 옮겼다.");
         if (fixed)
-            pline_The("damaged vault's walls are magically restored!");
+            /*KR pline_The("damaged vault's walls are magically restored!");
+             */
+            pline("손상된 창고의 벽이 마법처럼 복구되었다!");
     }
 }
 
-STATIC_OVL void
-gd_mv_monaway(grd, nx, ny)
-register struct monst *grd;
+STATIC_OVL void gd_mv_monaway(grd, nx, ny) register struct monst *grd;
 int nx, ny;
 {
     if (MON_AT(nx, ny) && !(nx == grd->mx && ny == grd->my)) {
         if (!Deaf)
-            verbalize("Out of my way, scum!");
+            /*KR verbalize("Out of my way, scum!"); */
+            verbalize("비켜라, 쓰레기야!");
         if (!rloc(m_at(nx, ny), FALSE) || MON_AT(nx, ny))
             m_into_limbo(m_at(nx, ny));
     }
@@ -650,15 +722,13 @@ int nx, ny;
 
 /* have guard pick gold off the floor, possibly moving to the gold's
    position before message and back to his current spot after */
-STATIC_OVL void
-gd_pick_corridor_gold(grd, goldx, goldy)
-struct monst *grd;
+STATIC_OVL void gd_pick_corridor_gold(grd, goldx, goldy) struct monst *grd;
 int goldx, goldy; /* <gold->ox, gold->oy> */
 {
     struct obj *gold;
     coord newcc, bestcc;
-    int gdelta, newdelta, bestdelta, tryct,
-        guardx = grd->mx, guardy = grd->my;
+    int gdelta, newdelta, bestdelta, tryct, guardx = grd->mx,
+                                            guardy = grd->my;
     boolean under_u = (goldx == u.ux && goldy == u.uy),
             see_it = cansee(goldx, goldy);
 
@@ -683,7 +753,8 @@ int goldx, goldy; /* <gold->ox, gold->oy> */
                     if ((newdelta = distu(newcc.x, newcc.y)) < bestdelta
                         || (newdelta == bestdelta
                             && dist2(newcc.x, newcc.y, guardx, guardy)
-                               < dist2(bestcc.x, bestcc.y, guardx, guardy))) {
+                                   < dist2(bestcc.x, bestcc.y, guardx,
+                                           guardy))) {
                         bestdelta = newdelta;
                         bestcc = newcc;
                     }
@@ -701,11 +772,11 @@ int goldx, goldy; /* <gold->ox, gold->oy> */
         add_to_minv(grd, gold);
         newsym(goldx, goldy);
 
-    /* guard is already at gold's location */
+        /* guard is already at gold's location */
     } else if (goldx == guardx && goldy == guardy) {
         mpickgold(grd); /* does a newsym */
 
-    /* gold is at some third spot, neither guard's nor hero's */
+        /* gold is at some third spot, neither guard's nor hero's */
     } else {
         /* just for insurance... */
         gd_mv_monaway(grd, goldx, goldy); /* make room for guard */
@@ -723,10 +794,16 @@ int goldx, goldy; /* <gold->ox, gold->oy> */
         Strcpy(monnambuf, Monnam(grd));
         if (!strcmpi(monnambuf, "It"))
             Strcpy(monnambuf, "Someone");
+#if 0 /*KR: 원본*/
         pline("%s%s picks up the gold%s.", monnambuf,
               (grd->mpeaceful && EGD(grd)->warncnt > 5)
                  ? " calms down and" : "",
               under_u ? " from beneath you" : "");
+#else /*KR: KRNethack 맞춤 번역 */
+        pline("%s %s%s 금화를 주웠다.", append_josa(monnambuf, "은"),
+              (grd->mpeaceful && EGD(grd)->warncnt > 5) ? "진정하고 " : "",
+              under_u ? "당신의 발밑에서 " : "");
+#endif
     }
 
     /* if guard was moved to get the gold, move him back */
@@ -773,8 +850,9 @@ register struct monst *grd;
 
     if (!grd->mpeaceful) {
         if (!u_in_vault
-            && (grd_in_vault || (in_fcorridor(grd, grd->mx, grd->my)
-                                 && !in_fcorridor(grd, u.ux, u.uy)))) {
+            && (grd_in_vault
+                || (in_fcorridor(grd, grd->mx, grd->my)
+                    && !in_fcorridor(grd, u.ux, u.uy)))) {
             (void) rloc(grd, TRUE);
             wallify_vault(grd);
             if (!in_fcorridor(grd, grd->mx, grd->my))
@@ -790,8 +868,14 @@ register struct monst *grd;
 
     if (egrd->witness) {
         if (!Deaf)
+#if 0 /*KR: 원본*/
             verbalize("How dare you %s that gold, scoundrel!",
                       (egrd->witness & GD_EATGOLD) ? "consume" : "destroy");
+#else /*KR: KRNethack 맞춤 번역 */
+            verbalize("감히 그 금화를 %s, 이 악당아!",
+                      (egrd->witness & GD_EATGOLD) ? "먹어치우다니"
+                                                   : "파괴하다니");
+#endif
         egrd->witness = 0;
         grd->mpeaceful = 0;
         return -1;
@@ -802,16 +886,24 @@ register struct monst *grd;
     if (egrd->fcend == 1) {
         if (u_in_vault && (u_carry_gold || um_dist(grd->mx, grd->my, 1))) {
             if (egrd->warncnt == 3 && !Deaf)
+#if 0 /*KR: 원본*/
                 verbalize("I repeat, %sfollow me!",
                           u_carry_gold
                               ? (!umoney ? "drop that hidden money and "
                                          : "drop that money and ")
                               : "");
+#else /*KR: KRNethack 맞춤 번역 */
+                verbalize("다시 말한다, %s나를 따라와라!",
+                          u_carry_gold ? (!umoney ? "숨긴 돈을 내려놓고 "
+                                                  : "그 돈을 내려놓고 ")
+                                       : "");
+#endif
             if (egrd->warncnt == 7) {
                 m = grd->mx;
                 n = grd->my;
                 if (!Deaf)
-                    verbalize("You've been warned, knave!");
+                    /*KR verbalize("You've been warned, knave!"); */
+                    verbalize("분명히 경고했다, 이 악당 녀석아!");
                 mnexto(grd);
                 levl[m][n].typ = egrd->fakecorr[0].ftyp;
                 newsym(m, n);
@@ -832,22 +924,39 @@ register struct monst *grd;
                 levl[m][n].typ = egrd->fakecorr[0].ftyp;
                 newsym(m, n);
                 grd->mpeaceful = 0;
- letknow:
+            letknow:
                 if (!cansee(grd->mx, grd->my) || !mon_visible(grd))
+#if 0 /*KR: 원본*/
                     You_hear("%s.",
                              m_carrying(grd, TIN_WHISTLE)
                                  ? "the shrill sound of a guard's whistle"
                                  : "angry shouting");
+#else /*KR: KRNethack 맞춤 번역 */
+                    You_hear("%s 들린다.",
+                             m_carrying(grd, TIN_WHISTLE)
+                                 ? "경비병의 날카로운 호루라기 소리가"
+                                 : "분노에 찬 외침이");
+#endif
                 else
+#if 0 /*KR: 원본*/
                     You(um_dist(grd->mx, grd->my, 2)
                             ? "see %s approaching."
                             : "are confronted by %s.",
                         /* "an angry guard" */
                         x_monnam(grd, ARTICLE_A, "angry", 0, FALSE));
+#else /*KR: KRNethack 맞춤 번역 */
+                    You(um_dist(grd->mx, grd->my, 2)
+                            ? "분노한 %s 다가오는 것을 보았다."
+                            : "분노한 %s 마주쳤다.",
+                        append_josa(
+                            x_monnam(grd, ARTICLE_NONE, (char *) 0, 0, FALSE),
+                            "이"));
+#endif
                 return -1;
             } else {
                 if (!Deaf)
-                    verbalize("Well, begone.");
+                    /*KR verbalize("Well, begone."); */
+                    verbalize("좋아, 가봐라.");
                 egrd->gddone = 1;
                 goto cleanup;
             }
@@ -859,13 +968,16 @@ register struct monst *grd;
             && !egrd->gddone && !in_fcorridor(grd, u.ux, u.uy)
             && levl[egrd->fakecorr[0].fx][egrd->fakecorr[0].fy].typ
                    == egrd->fakecorr[0].ftyp) {
-            pline("%s, confused, disappears.", noit_Monnam(grd));
+            /*KR pline("%s, confused, disappears.", noit_Monnam(grd)); */
+            pline("%s 혼란스러워하며 사라졌다.",
+                  append_josa(noit_Monnam(grd), "은"));
             disappear_msg_seen = TRUE;
             goto cleanup;
         }
-        if (u_carry_gold && (in_fcorridor(grd, u.ux, u.uy)
-                             /* cover a 'blind' spot */
-                             || (egrd->fcend > 1 && u_in_vault))) {
+        if (u_carry_gold
+            && (in_fcorridor(grd, u.ux, u.uy)
+                /* cover a 'blind' spot */
+                || (egrd->fcend > 1 && u_in_vault))) {
             if (!grd->mx) {
                 restfakecorr(grd);
                 return -2;
@@ -874,19 +986,32 @@ register struct monst *grd;
                 egrd->warncnt = 6;
                 if (Deaf) {
                     if (!Blind)
+#if 0 /*KR: 원본*/
                         pline("%s holds out %s palm demandingly!",
                               noit_Monnam(grd), noit_mhis(grd));
+#else /*KR: KRNethack 맞춤 번역 */
+                        pline("%s 강압적으로 %s 손바닥을 내밀었다!",
+                              append_josa(noit_Monnam(grd), "은"),
+                              noit_mhis(grd));
+#endif
                 } else {
-                    verbalize("Drop all your gold, scoundrel!");
+                    /*KR verbalize("Drop all your gold, scoundrel!"); */
+                    verbalize("가진 금화를 모두 내려놔라, 악당 녀석아!");
                 }
                 return 0;
             } else {
                 if (Deaf) {
                     if (!Blind)
+#if 0 /*KR: 원본*/
                         pline("%s rubs %s hands with enraged delight!",
                               noit_Monnam(grd), noit_mhis(grd));
+#else /*KR: KRNethack 맞춤 번역 */
+                        pline("%s 분노에 찬 환희로 두 손을 비빈다!",
+                              append_josa(noit_Monnam(grd), "은"));
+#endif
                 } else {
-                    verbalize("So be it, rogue!");
+                    /*KR verbalize("So be it, rogue!"); */
+                    verbalize("그렇다면 어쩔 수 없지, 도둑놈아!");
                 }
                 grd->mpeaceful = 0;
                 return -1;
@@ -912,7 +1037,8 @@ register struct monst *grd;
     if (um_dist(grd->mx, grd->my, 1) || egrd->gddone) {
         if (!egrd->gddone && !rn2(10) && !Deaf && !u.uswallow
             && !(u.ustuck && !sticks(youmonst.data)))
-            verbalize("Move along!");
+            /*KR verbalize("Move along!"); */
+            verbalize("계속 움직여라!");
         restfakecorr(grd);
         return 0; /* didn't move */
     }
@@ -952,10 +1078,9 @@ register struct monst *grd;
                     goto proceed;
                 }
             }
- nextnxy:
-            ;
+        nextnxy:;
         }
- nextpos:
+nextpos:
     nx = x;
     ny = y;
     gx = egrd->gdx;
@@ -996,7 +1121,7 @@ register struct monst *grd;
         break;
     }
     crm->typ = CORR;
- proceed:
+proceed:
     newspot = TRUE;
     unblock_point(nx, ny); /* doesn't block light */
     if (cansee(nx, ny))
@@ -1013,13 +1138,15 @@ register struct monst *grd;
         /* We're stuck, so try to find a new destination. */
         if (!find_guard_dest(grd, &egrd->gdx, &egrd->gdy)
             || (egrd->gdx == gx && egrd->gdy == gy)) {
-            pline("%s, confused, disappears.", Monnam(grd));
+            /*KR pline("%s, confused, disappears.", Monnam(grd)); */
+            pline("%s 혼란스러워하며 사라졌다.",
+                  append_josa(Monnam(grd), "은"));
             disappear_msg_seen = TRUE;
             goto cleanup;
         } else
             goto nextpos;
     }
- newpos:
+newpos:
     gd_mv_monaway(grd, nx, ny);
     if (egrd->gddone) {
         /* The following is a kludge.  We need to keep    */
@@ -1031,18 +1158,19 @@ register struct monst *grd;
         /* to avoid a check at the top of this function.  */
         /* At the end of the process, the guard is killed */
         /* in restfakecorr().                             */
- cleanup:
+    cleanup:
         x = grd->mx, y = grd->my;
         see_guard = canspotmon(grd);
         parkguard(grd); /* move to <0,0> */
         wallify_vault(grd);
         restfakecorr(grd);
-        debugpline2("gd_move: %scleanup%s",
-                    grd->isgd ? "" : "final ",
+        debugpline2("gd_move: %scleanup%s", grd->isgd ? "" : "final ",
                     grd->isgd ? " attempt" : "");
         if (!semi_dead && (in_fcorridor(grd, u.ux, u.uy) || cansee(x, y))) {
             if (!disappear_msg_seen && see_guard)
-                pline("Suddenly, %s disappears.", noit_mon_nam(grd));
+                /*KR pline("Suddenly, %s disappears.", noit_mon_nam(grd)); */
+                pline("갑자기, %s 사라졌다.",
+                      append_josa(noit_mon_nam(grd), "이"));
             return 1;
         }
         return -2;
@@ -1057,7 +1185,9 @@ register struct monst *grd;
            it and give an inappropriate message */
         mpickgold(grd);
         if (canspotmon(grd))
-            pline("%s picks up some gold.", Monnam(grd));
+            /*KR pline("%s picks up some gold.", Monnam(grd)); */
+            pline("%s 약간의 금화를 주웠다.",
+                  append_josa(Monnam(grd), "은"));
     } else
         newsym(grd->mx, grd->my);
     restfakecorr(grd);
@@ -1065,9 +1195,7 @@ register struct monst *grd;
 }
 
 /* Routine when dying or quitting with a vault guard around */
-void
-paygd(silently)
-boolean silently;
+void paygd(silently) boolean silently;
 {
     register struct monst *grd = findgd();
     long umoney = money_cnt(invent);
@@ -1080,8 +1208,13 @@ boolean silently;
 
     if (u.uinvault) {
         if (!silently)
+#if 0 /*KR: 원본*/
             Your("%ld %s goes into the Magic Memory Vault.",
                  umoney, currency(umoney));
+#else /*KR: KRNethack 맞춤 번역 */
+            Your("%ld %s 마법의 추억 금고 안으로 들어갔다.", umoney,
+                 append_josa(currency(umoney), "은"));
+#endif
         gx = u.ux;
         gy = u.uy;
     } else {
@@ -1090,11 +1223,19 @@ boolean silently;
 
         mnexto(grd);
         if (!silently)
-            pline("%s remits your gold to the vault.", Monnam(grd));
+            /*KR pline("%s remits your gold to the vault.", Monnam(grd)); */
+            pline("%s 당신의 금화를 창고로 송금했다.",
+                  append_josa(Monnam(grd), "은"));
         gx = rooms[EGD(grd)->vroom].lx + rn2(2);
         gy = rooms[EGD(grd)->vroom].ly + rn2(2);
+#if 0 /*KR: 원본*/
         Sprintf(buf, "To Croesus: here's the gold recovered from %s the %s.",
                 plname, mons[u.umonster].mname);
+#else /*KR: KRNethack 맞춤 번역 */
+        Sprintf(buf,
+                "크로이소스에게: %s %s에게서 회수한 금화가 여기 있습니다.",
+                mons[u.umonster].mname, plname);
+#endif
         make_grave(gx, gy, buf);
     }
     for (coins = invent; coins; coins = nextcoins) {
@@ -1105,7 +1246,7 @@ boolean silently;
             stackobj(coins);
         }
     }
- remove_guard:
+remove_guard:
     mongone(grd);
     return;
 }
@@ -1136,9 +1277,7 @@ gd_sound()
         return (boolean) (grd == (struct monst *) 0);
 }
 
-void
-vault_gd_watching(activity)
-unsigned int activity;
+void vault_gd_watching(activity) unsigned int activity;
 {
     struct monst *guard = findgd();
 
