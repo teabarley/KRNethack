@@ -1761,9 +1761,21 @@ dovspell()
                 if (spellsortmenu())
                     sortspells();
             } else {
-                /*KR Sprintf(qbuf, "Reordering spells; swap '%c' with", */
-                Sprintf(qbuf, "주문 재정렬: '%c'을(를) 바꿀 문자는?",
+#if 0 /*KR: 원본*/
+                Sprintf(qbuf, "Reordering spells; swap '%c' with",
                         spellet(splnum));
+#else /*KR: KRNethack 맞춤 번역 */
+                {
+                    char temp_let[10];
+                    /* 1. 단일 문자를 작은따옴표로 감싼 문자열로 만듭니다. */
+                    Sprintf(temp_let, "'%c'", spellet(splnum));
+
+                    /* 2. 문자열이 되었으므로 append_josa에 넣고 %s로
+                     * 출력합니다. */
+                    Sprintf(qbuf, "주문 재정렬: %s 바꿀 문자는?",
+                            append_josa(temp_let, "와"));
+                }
+#endif
                 if (!dospellmenu(qbuf, splnum, &othnum))
                     break;
 

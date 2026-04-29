@@ -2287,16 +2287,15 @@ boolean silently;
             context.botl = 1;
             if (!silently)
 #if 0 /*KR: 원본*/
-                pline("%s %s the %ld %s %sowed %s.", Shknam(shkp),
-                      takes, loss, currency(loss),
-                      strncmp(eshkp->customer, plname, PL_NSIZ) ? "" : "you ",
-                      noit_mhim(shkp));
+            pline("%s %s the %ld %s %sowed %s.", Shknam(shkp),
+                  takes, loss, currency(loss),
+                  strncmp(eshkp->customer, plname, PL_NSIZ) ? "" : "you ",
+                  noit_mhim(shkp));
 #else /*KR: KRNethack 맞춤 번역 */
-                pline("%s %s빚진 %ld %s을(를) %s.",
-                      append_josa(Shknam(shkp), "은"),
+                pline("%s %s빚진 %ld %s %s.", append_josa(Shknam(shkp), "은"),
                       strncmp(eshkp->customer, plname, PL_NSIZ) ? ""
                                                                 : "당신이 ",
-                      loss, currency(loss), takes);
+                      loss, append_josa(currency(loss), "을"), takes);
 #endif
             /* shopkeeper has now been paid in full */
             pacify_shk(shkp);
@@ -3041,8 +3040,30 @@ const char *arg;
     } else {
         You(fmt, obj_name, amt, plur(amt), arg);
     }
-#else /*KR: 복잡한 문장 구조를 피하기 위해 동일하게 처리 */
-    You(fmt, obj_name, amt, "", arg);
+#else /*KR: KRNethack 맞춤 번역 */
+    {
+        char newfmt[BUFSZ];
+        const char *josa = "";
+        char *match;
+
+        Strcpy(newfmt, fmt);
+
+        /* 포맷 문자열이 특정 패턴으로 시작하면, 조사를 분리하여 append_josa로
+         * 넘깁니다. */
+        if ((match = strstr(newfmt, "%s(을)를")) == newfmt) {
+            josa = "을";
+            Sprintf(newfmt, "%%s%s", match + strlen("%s(을)를"));
+        } else if ((match = strstr(newfmt, "%s의")) == newfmt) {
+            josa = "의";
+            Sprintf(newfmt, "%%s%s", match + strlen("%s의"));
+        } else if ((match = strstr(newfmt, "%s 안의")) == newfmt) {
+            josa = " 안의";
+            Sprintf(newfmt, "%%s%s", match + strlen("%s 안의"));
+        }
+
+        You(newfmt, josa[0] ? append_josa(obj_name, josa) : obj_name, amt, "",
+            arg);
+    }
 #endif
 }
 
@@ -3207,7 +3228,7 @@ boolean ininv, dummy, silent;
                         (contentscount && obj->unpaid) ? and_its_contents
                                                        : "");
                 pline("%s%s %ld %s에 주지.\"", buf,
-                      append_josa(item_buf, "을(를)"), ltmp, currency(ltmp));
+                      append_josa(item_buf, "을"), ltmp, currency(ltmp));
             }
 #endif
             obj->quan = save_quan;
@@ -3946,7 +3967,7 @@ xchar x, y;
                     ? ((!ltmp && cltmp && only_partially_your_contents)
                            ? "%s 안의 물건을 금화 %ld닢%s에 팔았다.%s"
                            : "%s(을)를 금화 %ld닢%s에 팔았다.%s")
-                    : "%s(을)를 넘겨주고 그 대가로 금화 %ld닢%s을(를) "
+                    : "%s(을)를 넘겨주고 그 대가로 금화 %ld닢%s을 "
                       "받았다.%s",
                 offer, "");
 #endif

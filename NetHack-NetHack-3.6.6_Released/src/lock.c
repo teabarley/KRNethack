@@ -690,7 +690,7 @@ doforce()
         /*KR You("resume your attempt to force the lock."); */
         You("자물쇠를 힘으로 열려는 시도를 재개했다.");
         /*KR set_occupation(forcelock, "forcing the lock", 0); */
-        set_occupation(forcelock, "억지로 자물쇠를 여는", 0);
+        set_occupation(forcelock, "억지로 자물쇠를 열기", 0);
         return 1;
     }
 
@@ -748,7 +748,7 @@ doforce()
 
     if (xlock.box)
         /*KR set_occupation(forcelock, "forcing the lock", 0); */
-        set_occupation(forcelock, "자물쇠를 억지로 여는", 0);
+        set_occupation(forcelock, "자물쇠를 억지로 열기", 0);
     else
         /*KR You("decide not to force the issue."); */
         You("억지로 여는 것을 관두기로 했다.");

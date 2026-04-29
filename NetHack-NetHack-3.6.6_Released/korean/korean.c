@@ -2282,6 +2282,10 @@ get_kr_name(const char *en_name)
         return "가시 돋친";
     if (!strcmp(en_name, "jeweled"))
         return "보석이 박힌";
+    if (!strcmp(en_name, "runed"))
+        return "룬이 새겨진";
+    if (!strcmp(en_name, "brass"))
+        return "황동";
 
     /* [반지 재질] */
     if (!strcmp(en_name, "wooden"))

@@ -1340,8 +1340,8 @@ STATIC_OVL void really_done(how) int how;
     if (moves <= 1 && how < PANICKED && !done_stopprint)
         /*KR pline("Do not pass Go.  Do not collect 200 %s.", currency(200L));
          */
-        pline("출발선을 지나치지 마시오. 200 %s(을)를 받지 마시오.",
-              currency(200L)); /* (모노폴리 게임 패러디) */
+        pline("출발선을 지나치지 마시오. 200 %s 받지 마시오.",
+              append_josa(currency(200L), "을")); /* (모노폴리 게임 패러디) */
 
     if (have_windows)
         wait_synch(); /* flush screen output */

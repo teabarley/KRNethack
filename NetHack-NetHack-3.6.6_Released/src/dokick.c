@@ -1768,8 +1768,8 @@ xchar dlev;                    /* if !0 send to dlev near player */
             You("owe %s %ld %s for goods lost.", Monnam(shkp), amt,
                 currency(amt));
 #else /*KR: KRNethack 맞춤 번역 */
-            You("잃어버린 상품에 대해 %s에게 %ld %s을(를) 빚졌다.",
-                Monnam(shkp), amt, currency(amt));
+            You("잃어버린 상품에 대해 %s에게 %ld %s 빚졌다.",
+                Monnam(shkp), amt, append_josa(currency(amt), "을"));
 #endif
         }
     }
@@ -2045,7 +2045,7 @@ long num;
     }
     Strcpy(obuf, optr);
 #else
-    Sprintf(obuf, "%s", append_josa(xname(otmp), "은(는)"));
+    Sprintf(obuf, "%s", append_josa(xname(otmp), "은"));
 #endif
 
     if (num) { /* means: other objects are impacted */

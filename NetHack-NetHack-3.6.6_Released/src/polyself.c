@@ -2236,12 +2236,12 @@ udeadinside()
        for monster death message; we refine the nonliving aspect a bit */
     return !nonliving(youmonst.data)
                /*KR ? "dead" */ /* living, including demons */
-               ? "죽은 것 같다" /* living, including demons */
+               ? "죽은 것 같은" /* living, including demons */
                : !weirdnonliving(youmonst.data)
                      /*KR ? "condemned" */  /* undead plus manes */
-                     ? "저주받은 것 같다"   /* undead plus manes */
+                     ? "저주받은 것 같은"   /* undead plus manes */
                      /*KR : "empty"; */     /* golems plus vortices */
-                     : "공허하게 느껴진다"; /* golems plus vortices */
+                     : "공허한"; /* golems plus vortices */
 }
 
 /*polyself.c*/

@@ -1766,11 +1766,11 @@ struct obj *obj;
         else
 #if 0 /*KR: 원본*/
             You_feel("rather %s.", body_part(LIGHT_HEADED));
-        make_confused(HConfusion + d(2, 4), FALSE);
 #else /*KR: KRNethack 맞춤 번역 */
-        You_feel("다소 %s 기분이 든다.", body_part(LIGHT_HEADED));
-        make_confused(HConfusion + d(2, 4), FALSE);
+            /* polyself.c에서 mbodypart(mon, part) 참고 */
+            You("다소 %s 기분이 든다.", body_part(LIGHT_HEADED));
 #endif
+        make_confused(HConfusion + d(2, 4), FALSE);
     } else if (!rn2(4) && !Blind) {
         /*KR pline("Everything suddenly goes dark."); */
         pline("갑자기 모든 것이 캄캄해졌다.");

@@ -127,7 +127,7 @@ STATIC_OVL void charm_snakes(distance) int distance;
                     /*KR You("notice %s, swaying with the music.",
                      * a_monnam(mtmp)); */
                     You("음악에 맞춰 몸을 흔들고 있는 %s 알아챘다.",
-                        append_josa(a_monnam(mtmp), "을(를)"));
+                        append_josa(a_monnam(mtmp), "을"));
                 else
 #if 0 /*KR: 원본*/
                     pline("%s freezes, then sways with the music%s.",
@@ -135,7 +135,7 @@ STATIC_OVL void charm_snakes(distance) int distance;
                           was_peaceful ? "" : ", and now seems quieter");
 #else /*KR: KRNethack 맞춤 번역 */
                     pline("%s 멈칫하더니, 이내 음악에 맞춰 몸을 흔든다%s.",
-                          append_josa(Monnam(mtmp), "은(는)"),
+                          append_josa(Monnam(mtmp), "은"),
                           was_peaceful ? "" : ", 그리고 얌전해진 것 같다");
 #endif
             }
@@ -165,7 +165,7 @@ STATIC_OVL void calm_nymphs(distance) int distance;
                     "%s listens cheerfully to the music, then seems quieter.",
                       Monnam(mtmp)); */
                 pline("%s 즐겁게 음악을 듣더니, 이내 얌전해진 것 같다.",
-                      append_josa(Monnam(mtmp), "은(는)"));
+                      append_josa(Monnam(mtmp), "은"));
         }
     }
 }
@@ -190,7 +190,7 @@ void awaken_soldiers(
             if (canseemon(mtmp))
                 /*KR pline("%s is now ready for battle!", Monnam(mtmp)); */
                 pline("이제 %s 전투 준비를 마쳤다!",
-                      append_josa(Monnam(mtmp), "은(는)"));
+                      append_josa(Monnam(mtmp), "은"));
             else if (!Deaf)
                 /*KR Norep("%s the rattle of battle gear being readied.",
                       "You hear"); */ /* Deaf-aware */
@@ -271,7 +271,7 @@ STATIC_OVL void do_earthquake(force) int force;
                         /*KR pline("%s is shaken loose from the ceiling!",
                               Amonnam(mtmp)); */
                         pline("%s 충격에 천장에서 떨어졌다!",
-                              append_josa(Amonnam(mtmp), "은(는)"));
+                              append_josa(Amonnam(mtmp), "은"));
                     else
                         /*KR You_hear("a thumping sound."); */
                         You_hear("쿵 하는 소리가 들렸다.");
@@ -279,7 +279,7 @@ STATIC_OVL void do_earthquake(force) int force;
                         /*KR You("easily dodge the falling %s.",
                          * mon_nam(mtmp)); */
                         You("떨어지는 %s 가볍게 피했다.",
-                            append_josa(mon_nam(mtmp), "을(를)"));
+                            append_josa(mon_nam(mtmp), "을"));
                     newsym(x, y);
                 }
             }
@@ -373,7 +373,7 @@ STATIC_OVL void do_earthquake(force) int force;
                                           Monnam(mtmp)); */
                                     pline(
                                         "%s 갈라진 틈으로 떨어졌다!",
-                                        append_josa(Monnam(mtmp), "이(가)"));
+                                        append_josa(Monnam(mtmp), "이"));
                                 else if (humanoid(mtmp->data))
                                     /*KR You_hear("a scream!"); */
                                     You_hear("비명 소리를 들었다!");
@@ -409,7 +409,7 @@ STATIC_OVL void do_earthquake(force) int force;
                                                               : 0,
                                                           FALSE)
                                                     : mon_nam(mtmp),
-                                                "을(를)"));
+                                                "을"));
                                     }
                                     xkilled(mtmp, XKILL_NOMSG);
                                 }
@@ -599,7 +599,7 @@ struct obj *instr;
     switch (mode) {
     case PLAY_NORMAL:
         /*KR You("start playing %s.", yname(instr)); */
-        You("%s 연주하기 시작했다.", append_josa(yname(instr), "을(를)"));
+        You("%s 연주하기 시작했다.", append_josa(yname(instr), "을"));
         break;
     case PLAY_STUNNED:
         if (!Deaf)
@@ -657,12 +657,12 @@ struct obj *instr;
         do_spec &= (rn2(ACURR(A_DEX)) + u.ulevel > 25);
         if (!Deaf)
             /*KR pline("%s.", Tobjnam(instr, do_spec ? "trill" : "toot")); */
-            pline("%s %s.", append_josa(xname(instr), "은(는)"),
+            pline("%s %s.", append_josa(xname(instr), "은"),
                   do_spec ? "떨리는 소리를 냈다" : "삑 소리를 냈다");
         else
             /*KR You_feel("%s %s.", yname(instr), do_spec ? "trill" : "toot");
              */
-            You_feel("%s %s.", append_josa(yname(instr), "이(가)"),
+            You_feel("%s %s.", append_josa(yname(instr), "이"),
                      do_spec ? "떨리는 것을" : "삑 소리를 내는 것을");
         if (do_spec)
             charm_snakes(u.ulevel * 3);
@@ -674,7 +674,7 @@ struct obj *instr;
 
         if (!getdir((char *) 0)) {
             /*KR pline("%s.", Tobjnam(instr, "vibrate")); */
-            pline("%s 진동했다.", append_josa(xname(instr), "이(가)"));
+            pline("%s 진동했다.", append_josa(xname(instr), "이"));
             break;
         } else if (!u.dx && !u.dy && !u.dz) {
             if ((damage = zapyourself(instr, TRUE)) != 0) {
@@ -718,7 +718,7 @@ struct obj *instr;
             /*KR pline("%s very attractive music.", Tobjnam(instr,
              * "produce")); */
             pline("%s 아주 매력적인 음악을 만들어냈다.",
-                  append_josa(xname(instr), "은(는)"));
+                  append_josa(xname(instr), "은"));
         else
             /*KR You_feel("very soothing vibrations."); */
             You_feel("아주 진정되는 진동을 느낀다.");
@@ -732,7 +732,7 @@ struct obj *instr;
             pline("%s %s.", Yname2(instr),
                   do_spec ? "produces a lilting melody" : "twangs");
 #else /*KR: KRNethack 맞춤 번역 */
-            pline("%s %s.", append_josa(Yname2(instr), "은(는)"),
+            pline("%s %s.", append_josa(Yname2(instr), "은"),
                   do_spec ? "경쾌한 멜로디를 만들어냈다" : "탕 하고 울렸다");
 #endif
         else
@@ -814,7 +814,7 @@ struct obj *instr;
         /*KR You("are incapable of playing %s.", the(distant_name(instr,
          * xname))); */
         You("%s 연주할 능력이 없다.",
-            append_josa(the(distant_name(instr, xname)), "을(를)"));
+            append_josa(the(distant_name(instr, xname)), "을"));
         return 0;
     }
     if (instr->otyp != LEATHER_DRUM && instr->otyp != DRUM_OF_EARTHQUAKE
@@ -861,7 +861,7 @@ struct obj *instr;
 #else /*KR: KRNethack 맞춤 번역 */
         You(!Deaf ? "%s에서 이상한 소리를 냈다!"
                   : "%s 진동을 뿜어내는 것을 느낄 수 있다.",
-            append_josa(the(xname(instr)), "이(가)"));
+            append_josa(the(xname(instr)), "이"));
 #endif
 
 #ifdef UNIX386MUSIC

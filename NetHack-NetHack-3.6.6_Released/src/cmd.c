@@ -1733,8 +1733,8 @@ static const char You_[] = "You ", are[] = "are ", were[] = "were ",
                   could[] = "could ";
 #else /*KR: KRNethack 맞춤 번역 (SOV 어순을 위한 조사/어미 세팅)*/
 static const char You_[] = "당신은 ", are[] = "이다", were[] = "이었다",
-                  have[] = "을(를) 가지고 있다",
-                  had[] = "을(를) 가지고 있었다", can[] = "할 수 있다",
+                  have[] = " 가지고 있다",
+                  had[] = " 가지고 있었다", can[] = "할 수 있다",
                   could[] = "할 수 있었다", iru[] = "있다", ita[] = "있었다";
 #endif
 #if 0 /*KR: 미사용 */
@@ -1750,10 +1750,17 @@ static const char have_been[] = "have been ", have_never[] = "have never ",
     enlght_line(prefix, ps, suffix, final ? past : present)
 #endif
 #define you_are(attr, ps) enl_msg(You_, are, were, attr, ps)
+#if 0 /*KR: 원본*/
 #define you_have(attr, ps) enl_msg(You_, have, had, attr, ps)
+#else /*KR: KRNethack 맞춤 번역 */
+#define you_have(attr, ps) enl_msg(You_, have, had, append_josa((attr), "을"), ps)
+#endif
 #define you_can(attr, ps) enl_msg(You_, can, could, attr, ps)
-/*KR #define you_have_been(goodthing) enl_msg(You_, have_been, were, goodthing, "") */
+#if 0 /*KR:T*/
+#define you_have_been(goodthing) enl_msg(You_, have_been, were, goodthing, "")
+#else
 #define you_have_been(goodthing) enl_msg(You_, are, were, goodthing, "")
+#endif
 #if 0 /*KR: 원본*/
 #define you_have_never(badthing) \
     enl_msg(You_, have_never, never, badthing, "")
@@ -3062,8 +3069,8 @@ int final;
             Sprintf(buf, "wounded %s", makeplural(body_part(LEG)));
             you_have(buf, "");
 #else
-            Sprintf(buf, "다친 %s(을)를", makeplural(body_part(LEG)));
-            enl_msg_kr(You_, buf, "", "가지고 있다", "가지고 있었다");
+            Sprintf(buf, "다친 %s", makeplural(body_part(LEG)));
+            you_have(buf, "");
 #endif
         }
     }
@@ -3074,10 +3081,10 @@ int final;
             Sprintf(eos(buf), " (%ld)", (Glib & TIMEOUT));
         you_have(buf, "");
 #else
-        Sprintf(buf, "미끄러운 %s(을)를", fingers_or_gloves(TRUE));
+        Sprintf(buf, "미끄러운 %s", fingers_or_gloves(TRUE));
         if (wizard)
             Sprintf(eos(buf), " (%ld)", (Glib & TIMEOUT));
-        enl_msg_kr(You_, buf, "", "가지고 있다", "가지고 있었다");
+        you_have(buf, "");
 #endif
     }
     if (Fumbling) {
