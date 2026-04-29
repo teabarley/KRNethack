@@ -1,4 +1,4 @@
-/* NetHack 3.6	o_init.c	$NHDT-Date: 1545383615 2018/12/21 09:13:35 $  $NHDT-Branch: NetHack-3.6.2-beta01 $:$NHDT-Revision: 1.25 $ */
+/* NetHack 3.6	o_init.c	$NHDT-Date: 1674864731 2023/01/28 00:12:11 $  $NHDT-Branch: NetHack-3.6 $:$NHDT-Revision: 1.27 $ */
 /* Copyright (c) Stichting Mathematisch Centrum, Amsterdam, 1985. */
 /*-Copyright (c) Robert Patrick Rankin, 2011. */
 /* NetHack may be freely redistributed.  See license for details. */
@@ -6,11 +6,12 @@
 #include "hack.h"
 #include "lev.h" /* save & restore info */
 
-STATIC_DCL void FDECL(setgemprobs, (d_level *));
+STATIC_DCL void FDECL(setgemprobs, (d_level *) );
 STATIC_DCL void FDECL(shuffle, (int, int, BOOLEAN_P));
 STATIC_DCL void NDECL(shuffle_all);
-STATIC_DCL boolean FDECL(interesting_to_discover, (int));
-STATIC_DCL char *FDECL(oclass_to_name, (CHAR_P, char *));
+STATIC_DCL boolean FDECL(interesting_to_discover, (int) );
+STATIC_DCL void FDECL(disco_append_typename, (char *, int) );
+STATIC_DCL char *FDECL(oclass_to_name, (CHAR_P, char *) );
 
 static NEARDATA short disco[NUM_OBJECTS] = DUMMY;
 
@@ -41,9 +42,7 @@ shuffle_tiles()
 }
 #endif /* USE_TILES */
 
-STATIC_OVL void
-setgemprobs(dlev)
-d_level *dlev;
+STATIC_OVL void setgemprobs(dlev) d_level *dlev;
 {
     int j, first, lev;
 
@@ -68,9 +67,7 @@ d_level *dlev;
 }
 
 /* shuffle descriptions on objects o_low to o_high */
-STATIC_OVL void
-shuffle(o_low, o_high, domaterial)
-int o_low, o_high;
+STATIC_OVL void shuffle(o_low, o_high, domaterial) int o_low, o_high;
 boolean domaterial;
 {
     int i, j, num_to_shuffle;
@@ -183,9 +180,8 @@ init_objects()
 }
 
 /* retrieve the range of objects that otyp shares descriptions with */
-void
-obj_shuffle_range(otyp, lo_p, hi_p)
-int otyp;         /* input: representative item */
+void obj_shuffle_range(otyp, lo_p,
+                       hi_p) int otyp; /* input: representative item */
 int *lo_p, *hi_p; /* output: range that item belongs among */
 {
     int i, ocls = objects[otyp].oc_class;
@@ -248,7 +244,10 @@ shuffle_all()
     };
     /* sub-class type ranges (one item from each group) */
     static short shuffle_types[] = {
-        HELMET, LEATHER_GLOVES, CLOAK_OF_PROTECTION, SPEED_BOOTS,
+        HELMET,
+        LEATHER_GLOVES,
+        CLOAK_OF_PROTECTION,
+        SPEED_BOOTS,
     };
     int first, last, idx;
 
@@ -273,7 +272,11 @@ find_skates()
     register const char *s;
 
     for (i = SPEED_BOOTS; i <= LEVITATION_BOOTS; i++)
+#if 0 /*KR: 원본*/
         if ((s = OBJ_DESCR(objects[i])) != 0 && !strcmp(s, "snow boots"))
+#else /*KR: KRNethack 맞춤 번역 */
+        if ((s = OBJ_DESCR(objects[i])) != 0 && !strcmp(s, "설원 장화"))
+#endif
             return i;
 
     impossible("snow boots not found?");
@@ -287,9 +290,7 @@ oinit()
     setgemprobs(&u.uz);
 }
 
-void
-savenames(fd, mode)
-int fd, mode;
+void savenames(fd, mode) int fd, mode;
 {
     register int i;
     unsigned int len;
@@ -317,9 +318,7 @@ int fd, mode;
         }
 }
 
-void
-restnames(fd)
-register int fd;
+void restnames(fd) register int fd;
 {
     register int i;
     unsigned int len;
@@ -338,9 +337,7 @@ register int fd;
 #endif
 }
 
-void
-discover_object(oindx, mark_as_known, credit_hero)
-register int oindx;
+void discover_object(oindx, mark_as_known, credit_hero) register int oindx;
 boolean mark_as_known;
 boolean credit_hero;
 {
@@ -371,9 +368,7 @@ boolean credit_hero;
 }
 
 /* if a class name has been cleared, we may need to purge it from disco[] */
-void
-undiscover_object(oindx)
-register int oindx;
+void undiscover_object(oindx) register int oindx;
 {
     if (!objects[oindx].oc_name_known) {
         register int dindx, acls = objects[oindx].oc_class;
@@ -412,9 +407,35 @@ register int i;
 
 /* items that should stand out once they're known */
 static short uniq_objs[] = {
-    AMULET_OF_YENDOR, SPE_BOOK_OF_THE_DEAD, CANDELABRUM_OF_INVOCATION,
+    AMULET_OF_YENDOR,
+    SPE_BOOK_OF_THE_DEAD,
+    CANDELABRUM_OF_INVOCATION,
     BELL_OF_OPENING,
 };
+
+/* append typename(dis) to buf[], possibly truncating in the process */
+STATIC_OVL void disco_append_typename(buf, dis) char *buf;
+int dis;
+{
+    unsigned len = (unsigned) strlen(buf);
+    char *p, *typnm = obj_typename(dis);
+
+    if (len + (unsigned) strlen(typnm) < BUFSZ) {
+        /* ordinary */
+        Strcat(buf, typnm);
+    } else if ((p = rindex(typnm, '(')) != 0 && p > typnm && p[-1] == ' '
+               && index(p, ')') != 0) {
+        /* typename() returned "really long user-applied name (actual type)"
+           and we want to truncate from "really long user-applied name" while
+           keeping " (actual type)" intact */
+        --p; /* back up to space in front of open paren */
+        (void) strncat(buf, typnm, BUFSZ - 1 - (len + (unsigned) strlen(p)));
+        Strcat(buf, p);
+    } else {
+        /* unexpected; just truncate from end of typename */
+        (void) strncat(buf, typnm, BUFSZ - 1 - len);
+    }
+}
 
 /* the '\' command - show discovered object types */
 int
@@ -426,7 +447,8 @@ dodiscovered() /* free after Robert Viduya */
     winid tmpwin;
 
     tmpwin = create_nhwindow(NHW_MENU);
-    putstr(tmpwin, 0, "Discoveries");
+    /*KR putstr(tmpwin, 0, "Discoveries"); */
+    putstr(tmpwin, 0, "발견물 목록");
     putstr(tmpwin, 0, "");
 
     /* gather "unique objects" into a pseudo-class; note that they'll
@@ -434,7 +456,8 @@ dodiscovered() /* free after Robert Viduya */
     for (i = dis = 0; i < SIZE(uniq_objs); i++)
         if (objects[uniq_objs[i]].oc_name_known) {
             if (!dis++)
-                putstr(tmpwin, iflags.menu_headings, "Unique items");
+                /*KR putstr(tmpwin, iflags.menu_headings, "Unique items"); */
+                putstr(tmpwin, iflags.menu_headings, "고유 아이템");
             Sprintf(buf, "  %s", OBJ_NAME(objects[uniq_objs[i]]));
             putstr(tmpwin, 0, buf);
             ++ct;
@@ -459,15 +482,15 @@ dodiscovered() /* free after Robert Viduya */
                            let_to_name(oclass, FALSE, FALSE));
                     prev_class = oclass;
                 }
-                Sprintf(buf, "%s %s",
-                        (objects[dis].oc_pre_discovered ? "*" : " "),
-                        obj_typename(dis));
+                Strcpy(buf, objects[dis].oc_pre_discovered ? "* " : "  ");
+                disco_append_typename(buf, dis);
                 putstr(tmpwin, 0, buf);
             }
         }
     }
     if (ct == 0) {
-        You("haven't discovered anything yet...");
+        /*KR You("haven't discovered anything yet..."); */
+        You("아직 아무것도 발견하지 못했다...");
     } else
         display_nhwindow(tmpwin, TRUE);
     destroy_nhwindow(tmpwin);
@@ -481,11 +504,15 @@ oclass_to_name(oclass, buf)
 char oclass;
 char *buf;
 {
+#if 0 /*KR: 원본*/
     char *s;
+#endif
 
     Strcpy(buf, let_to_name(oclass, FALSE, FALSE));
+#if 0 /*KR: 원본*/
     for (s = buf; *s; ++s)
         *s = lowc(*s);
+#endif
     return buf;
 }
 
@@ -494,10 +521,14 @@ int
 doclassdisco()
 {
     static NEARDATA const char
-        prompt[] = "View discoveries for which sort of objects?",
-        havent_discovered_any[] = "haven't discovered any %s yet.",
-        unique_items[] = "unique items",
-        artifact_items[] = "artifacts";
+        /*KR prompt[] = "View discoveries for which sort of objects?", */
+        prompt[] = "어떤 종류의 발견물을 보시겠습니까?",
+        /*KR havent_discovered_any[] = "haven't discovered any %s yet.", */
+        havent_discovered_any[] = "아직 어떠한 %s도 발견하지 못했다.",
+        /*KR unique_items[] = "unique items", */
+        unique_items[] = "고유 아이템",
+        /*KR artifact_items[] = "artifacts"; */
+        artifact_items[] = "아티팩트";
     char *s, c, oclass, menulet, allclasses[MAXOCLASSES],
         discosyms[2 + MAXOCLASSES + 1], buf[BUFSZ];
     int i, ct, dis, xtras;
@@ -564,7 +595,11 @@ doclassdisco()
 
     /* there might not be anything for us to do... */
     if (!discosyms[0]) {
+#if 0 /*KR: 원본*/
         You(havent_discovered_any, "items");
+#else /*KR: KRNethack 맞춤 번역 */
+        You(havent_discovered_any, "아이템");
+#endif
         if (tmpwin != WIN_ERR)
             destroy_nhwindow(tmpwin);
         return 0;
@@ -636,14 +671,15 @@ doclassdisco()
         break;
     default:
         oclass = def_char_to_objclass(c);
-        Sprintf(buf, "Discovered %s", let_to_name(oclass, FALSE, FALSE));
+        /*KR Sprintf(buf, "Discovered %s", let_to_name(oclass, FALSE, FALSE));
+         */
+        Sprintf(buf, "발견한 %s", let_to_name(oclass, FALSE, FALSE));
         putstr(tmpwin, iflags.menu_headings, buf);
         for (i = bases[(int) oclass];
              i < NUM_OBJECTS && objects[i].oc_class == oclass; ++i) {
             if ((dis = disco[i]) != 0 && interesting_to_discover(dis)) {
-                Sprintf(buf, "%s %s",
-                        objects[dis].oc_pre_discovered ? "*" : " ",
-                        obj_typename(dis));
+                Strcpy(buf, objects[dis].oc_pre_discovered ? "* " : "  ");
+                disco_append_typename(buf, dis);
                 putstr(tmpwin, 0, buf);
                 ++ct;
             }
@@ -697,8 +733,7 @@ rename_disco()
             if (oclass != prev_class) {
                 any.a_int = 0;
                 add_menu(tmpwin, NO_GLYPH, &any, 0, 0, iflags.menu_headings,
-                         let_to_name(oclass, FALSE, FALSE),
-                         MENU_UNSELECTED);
+                         let_to_name(oclass, FALSE, FALSE), MENU_UNSELECTED);
                 prev_class = oclass;
             }
             any.a_int = dis;
@@ -707,11 +742,14 @@ rename_disco()
         }
     }
     if (ct == 0) {
-        You("haven't discovered anything yet...");
+        /*KR You("haven't discovered anything yet..."); */
+        You("아직 아무것도 발견하지 못했다...");
     } else if (mn == 0) {
-        pline("None of your discoveries can be assigned names...");
+        /*KR pline("None of your discoveries can be assigned names..."); */
+        pline("이름을 붙일 수 있는 발견물이 없다...");
     } else {
-        end_menu(tmpwin, "Pick an object type to name");
+        /*KR end_menu(tmpwin, "Pick an object type to name"); */
+        end_menu(tmpwin, "이름을 붙일 물건 종류를 선택하세요");
         dis = STRANGE_OBJECT;
         sl = select_menu(tmpwin, PICK_ONE, &selected);
         if (sl > 0) {

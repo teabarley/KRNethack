@@ -1,5 +1,5 @@
 /* NetHack 3.6	spell.c	$NHDT-Date: 1546565814 2019/01/04 01:36:54 $  $NHDT-Branch: NetHack-3.6.2-beta01 $:$NHDT-Revision: 1.88 $ */
-/*      Copyright (c) M. Stephenson 1988                          */
+/* Copyright (c) M. Stephenson 1988                                  */
 /* NetHack may be freely redistributed.  See license for details. */
 
 #include "hack.h"
@@ -27,70 +27,70 @@
 
 STATIC_DCL int FDECL(spell_let_to_idx, (CHAR_P));
 STATIC_DCL boolean FDECL(cursed_book, (struct obj * bp));
-STATIC_DCL boolean FDECL(confused_book, (struct obj *));
-STATIC_DCL void FDECL(deadbook, (struct obj *));
+STATIC_DCL boolean FDECL(confused_book, (struct obj *) );
+STATIC_DCL void FDECL(deadbook, (struct obj *) );
 STATIC_PTR int NDECL(learn);
 STATIC_DCL boolean NDECL(rejectcasting);
-STATIC_DCL boolean FDECL(getspell, (int *));
-STATIC_PTR int FDECL(CFDECLSPEC spell_cmp, (const genericptr,
-                                            const genericptr));
+STATIC_DCL boolean FDECL(getspell, (int *) );
+STATIC_PTR int FDECL(CFDECLSPEC spell_cmp,
+                     (const genericptr, const genericptr));
 STATIC_DCL void NDECL(sortspells);
 STATIC_DCL boolean NDECL(spellsortmenu);
-STATIC_DCL boolean FDECL(dospellmenu, (const char *, int, int *));
-STATIC_DCL int FDECL(percent_success, (int));
-STATIC_DCL char *FDECL(spellretention, (int, char *));
+STATIC_DCL boolean FDECL(dospellmenu, (const char *, int, int *) );
+STATIC_DCL int FDECL(percent_success, (int) );
+STATIC_DCL char *FDECL(spellretention, (int, char *) );
 STATIC_DCL int NDECL(throwspell);
 STATIC_DCL void NDECL(cast_protection);
-STATIC_DCL void FDECL(spell_backfire, (int));
-STATIC_DCL const char *FDECL(spelltypemnemonic, (int));
-STATIC_DCL boolean FDECL(spell_aim_step, (genericptr_t, int, int));
+STATIC_DCL void FDECL(spell_backfire, (int) );
+STATIC_DCL const char *FDECL(spelltypemnemonic, (int) );
+STATIC_DCL boolean FDECL(spell_aim_step, (genericptr_t, int, int) );
 
 /* The roles[] table lists the role-specific values for tuning
  * percent_success().
  *
  * Reasoning:
- *   spelbase, spelheal:
- *      Arc are aware of magic through historical research
- *      Bar abhor magic (Conan finds it "interferes with his animal instincts")
- *      Cav are ignorant to magic
- *      Hea are very aware of healing magic through medical research
- *      Kni are moderately aware of healing from Paladin training
- *      Mon use magic to attack and defend in lieu of weapons and armor
- *      Pri are very aware of healing magic through theological research
- *      Ran avoid magic, preferring to fight unseen and unheard
- *      Rog are moderately aware of magic through trickery
- *      Sam have limited magical awareness, preferring meditation to conjuring
- *      Tou are aware of magic from all the great films they have seen
- *      Val have limited magical awareness, preferring fighting
- *      Wiz are trained mages
+ * spelbase, spelheal:
+ * Arc are aware of magic through historical research
+ * Bar abhor magic (Conan finds it "interferes with his animal instincts")
+ * Cav are ignorant to magic
+ * Hea are very aware of healing magic through medical research
+ * Kni are moderately aware of healing from Paladin training
+ * Mon use magic to attack and defend in lieu of weapons and armor
+ * Pri are very aware of healing magic through theological research
+ * Ran avoid magic, preferring to fight unseen and unheard
+ * Rog are moderately aware of magic through trickery
+ * Sam have limited magical awareness, preferring meditation to conjuring
+ * Tou are aware of magic from all the great films they have seen
+ * Val have limited magical awareness, preferring fighting
+ * Wiz are trained mages
  *
- *      The arms penalty is lessened for trained fighters Bar, Kni, Ran,
- *      Sam, Val -- the penalty is its metal interference, not encumbrance.
- *      The `spelspec' is a single spell which is fundamentally easier
- *      for that role to cast.
+ * The arms penalty is lessened for trained fighters Bar, Kni, Ran,
+ * Sam, Val -- the penalty is its metal interference, not encumbrance.
+ * The `spelspec' is a single spell which is fundamentally easier
+ * for that role to cast.
  *
- *  spelspec, spelsbon:
- *      Arc map masters (SPE_MAGIC_MAPPING)
- *      Bar fugue/berserker (SPE_HASTE_SELF)
- *      Cav born to dig (SPE_DIG)
- *      Hea to heal (SPE_CURE_SICKNESS)
- *      Kni to turn back evil (SPE_TURN_UNDEAD)
- *      Mon to preserve their abilities (SPE_RESTORE_ABILITY)
- *      Pri to bless (SPE_REMOVE_CURSE)
- *      Ran to hide (SPE_INVISIBILITY)
- *      Rog to find loot (SPE_DETECT_TREASURE)
- *      Sam to be At One (SPE_CLAIRVOYANCE)
- *      Tou to smile (SPE_CHARM_MONSTER)
- *      Val control the cold (SPE_CONE_OF_COLD)
- *      Wiz all really, but SPE_MAGIC_MISSILE is their party trick
+ * spelspec, spelsbon:
+ * Arc map masters (SPE_MAGIC_MAPPING)
+ * Bar fugue/berserker (SPE_HASTE_SELF)
+ * Cav born to dig (SPE_DIG)
+ * Hea to heal (SPE_CURE_SICKNESS)
+ * Kni to turn back evil (SPE_TURN_UNDEAD)
+ * Mon to preserve their abilities (SPE_RESTORE_ABILITY)
+ * Pri to bless (SPE_REMOVE_CURSE)
+ * Ran to hide (SPE_INVISIBILITY)
+ * Rog to find loot (SPE_DETECT_TREASURE)
+ * Sam to be At One (SPE_CLAIRVOYANCE)
+ * Tou to smile (SPE_CHARM_MONSTER)
+ * Val control the cold (SPE_CONE_OF_COLD)
+ * Wiz all really, but SPE_MAGIC_MISSILE is their party trick
  *
- *      See percent_success() below for more comments.
+ * See percent_success() below for more comments.
  *
- *  uarmbon, uarmsbon, uarmhbon, uarmgbon, uarmfbon:
- *      Fighters find body armour & shield a little less limiting.
- *      Headgear, Gauntlets and Footwear are not role-specific (but
- *      still have an effect, except helm of brilliance, which is designed
- *      to permit magic-use).
+ * uarmbon, uarmsbon, uarmhbon, uarmgbon, uarmfbon:
+ * Fighters find body armour & shield a little less limiting.
+ * Headgear, Gauntlets and Footwear are not role-specific (but
+ * still have an effect, except helm of brilliance, which is designed
+ * to permit magic-use).
  */
 
 #define uarmhbon 4 /* Metal helmets interfere with the mind */
@@ -98,7 +98,9 @@ STATIC_DCL boolean FDECL(spell_aim_step, (genericptr_t, int, int));
 #define uarmfbon 2 /* All metal interferes to some degree */
 
 /* since the spellbook itself doesn't blow up, don't say just "explodes" */
+#if 0 /*KR: 원본*/
 static const char explodes[] = "radiates explosive energy";
+#endif
 
 /* convert a letter into a number in the range 0..51, or -1 if not a letter */
 STATIC_OVL int
@@ -127,11 +129,13 @@ struct obj *bp;
 
     switch (rn2(lev)) {
     case 0:
-        You_feel("a wrenching sensation.");
+        /*KR You_feel("a wrenching sensation."); */
+        You_feel("몸이 비틀어지는 듯한 감각을 느꼈다.");
         tele(); /* teleport him */
         break;
     case 1:
-        You_feel("threatened.");
+        /*KR You_feel("threatened."); */
+        You_feel("위협받고 있는 것 같다.");
         aggravate();
         break;
     case 2:
@@ -141,32 +145,44 @@ struct obj *bp;
         take_gold();
         break;
     case 4:
-        pline("These runes were just too much to comprehend.");
+        /*KR pline("These runes were just too much to comprehend."); */
+        pline("이 룬 문자들은 이해하기에 너무 벅차다.");
         make_confused(HConfusion + rn1(7, 16), FALSE);
         break;
     case 5:
-        pline_The("book was coated with contact poison!");
+        /*KR pline_The("book was coated with contact poison!"); */
+        pline("그 책은 접촉성 독으로 코팅되어 있었다!");
         if (uarmg) {
-            erode_obj(uarmg, "gloves", ERODE_CORRODE, EF_GREASE | EF_VERBOSE);
+            /*KR erode_obj(uarmg, "gloves", ERODE_CORRODE, EF_GREASE |
+             * EF_VERBOSE); */
+            erode_obj(uarmg, "장갑", ERODE_CORRODE, EF_GREASE | EF_VERBOSE);
             break;
         }
         /* temp disable in_use; death should not destroy the book */
         was_in_use = bp->in_use;
         bp->in_use = FALSE;
         losestr(Poison_resistance ? rn1(2, 1) : rn1(4, 3));
-        losehp(rnd(Poison_resistance ? 6 : 10), "contact-poisoned spellbook",
+        /*KR losehp(rnd(Poison_resistance ? 6 : 10), "contact-poisoned
+           spellbook", KILLED_BY_AN); */
+        losehp(rnd(Poison_resistance ? 6 : 10), "접촉성 독이 발린 마법서",
                KILLED_BY_AN);
         bp->in_use = was_in_use;
         break;
     case 6:
         if (Antimagic) {
             shieldeff(u.ux, u.uy);
-            pline_The("book %s, but you are unharmed!", explodes);
+            /*KR pline_The("book %s, but you are unharmed!", explodes); */
+            pline("책이 폭발적인 에너지를 뿜어냈지만, 당신은 무사하다!");
         } else {
-            pline("As you read the book, it %s in your %s!", explodes,
-                  body_part(FACE));
+            /*KR pline("As you read the book, it %s in your %s!", explodes,
+                  body_part(FACE)); */
+            pline("책을 읽는 순간, 책이 당신의 %s 폭발적인 에너지를 "
+                  "뿜어냈다!",
+                  append_josa(body_part(FACE), "으로"));
             dmg = 2 * rnd(10) + 5;
-            losehp(Maybe_Half_Phys(dmg), "exploding rune", KILLED_BY_AN);
+            /*KR losehp(Maybe_Half_Phys(dmg), "exploding rune", KILLED_BY_AN);
+             */
+            losehp(Maybe_Half_Phys(dmg), "폭발하는 룬 문자", KILLED_BY_AN);
         }
         return TRUE;
     default:
@@ -185,31 +201,38 @@ struct obj *spellbook;
 
     if (!rn2(3) && spellbook->otyp != SPE_BOOK_OF_THE_DEAD) {
         spellbook->in_use = TRUE; /* in case called from learn */
-        pline(
+        /*KR pline(
          "Being confused you have difficulties in controlling your actions.");
+       */
+        pline("혼란스러워서 행동을 제대로 통제하기가 어렵다.");
         display_nhwindow(WIN_MESSAGE, FALSE);
-        You("accidentally tear the spellbook to pieces.");
+        /*KR You("accidentally tear the spellbook to pieces."); */
+        You("실수로 그 마법서를 갈기갈기 찢어버렸다.");
         if (!objects[spellbook->otyp].oc_name_known
             && !objects[spellbook->otyp].oc_uname)
             docall(spellbook);
         useup(spellbook);
         gone = TRUE;
     } else {
+#if 0 /*KR: 원본*/
         You("find yourself reading the %s line over and over again.",
             spellbook == context.spbook.book ? "next" : "first");
+#else /*KR: KRNethack 맞춤 번역 */
+        You("자신도 모르게 %s 줄을 계속해서 반복해 읽고 있다.",
+            spellbook == context.spbook.book ? "다음" : "첫");
+#endif
     }
     return gone;
 }
 
 /* special effects for The Book of the Dead */
-STATIC_OVL void
-deadbook(book2)
-struct obj *book2;
+STATIC_OVL void deadbook(book2) struct obj *book2;
 {
     struct monst *mtmp, *mtmp2;
     coord mm;
 
-    You("turn the pages of the Book of the Dead...");
+    /*KR You("turn the pages of the Book of the Dead..."); */
+    You("사자의 서의 페이지를 넘겼다...");
     makeknown(SPE_BOOK_OF_THE_DEAD);
     /* KMH -- Need ->known to avoid "_a_ Book of the Dead" */
     book2->known = 1;
@@ -219,16 +242,22 @@ struct obj *book2;
                          arti_cursed = FALSE;
 
         if (book2->cursed) {
-            pline_The("runes appear scrambled.  You can't read them!");
+            /*KR pline_The("runes appear scrambled.  You can't read them!");
+             */
+            pline("룬 문자들이 뒤죽박죽으로 섞여 있다. 읽을 수가 없다!");
             return;
         }
 
         if (!u.uhave.bell || !u.uhave.menorah) {
-            pline("A chill runs down your %s.", body_part(SPINE));
+            /*KR pline("A chill runs down your %s.", body_part(SPINE)); */
+            pline("당신의 %s 타고 오싹한 기운이 흘러내린다.",
+                  append_josa(body_part(SPINE), "을"));
             if (!u.uhave.bell)
-                You_hear("a faint chime...");
+                /*KR You_hear("a faint chime..."); */
+                You_hear("희미한 종소리가 들린다...");
             if (!u.uhave.menorah)
-                pline("Vlad's doppelganger is amused.");
+                /*KR pline("Vlad's doppelganger is amused."); */
+                pline("블라드의 도플갱어가 즐거워한다.");
             return;
         }
 
@@ -250,8 +279,10 @@ struct obj *book2;
         }
 
         if (arti_cursed) {
-            pline_The("invocation fails!");
-            pline("At least one of your artifacts is cursed...");
+            /*KR pline_The("invocation fails!"); */
+            pline("기원이 실패했다!");
+            /*KR pline("At least one of your artifacts is cursed..."); */
+            pline("적어도 당신의 아티팩트 중 하나는 저주받은 것 같다...");
         } else if (arti1_primed && arti2_primed) {
             unsigned soon =
                 (unsigned) d(2, 6); /* time til next intervene() */
@@ -265,7 +296,9 @@ struct obj *book2;
             if (!u.udg_cnt || u.udg_cnt > soon)
                 u.udg_cnt = soon;
         } else { /* at least one artifact not prepared properly */
-            You("have a feeling that %s is amiss...", something);
+            /*KR You("have a feeling that %s is amiss...", something); */
+            You("%s 잘못되었다는 느낌이 든다...",
+                append_josa(something, "이"));
             goto raise_dead;
         }
         return;
@@ -275,12 +308,16 @@ struct obj *book2;
     if (book2->cursed) {
     raise_dead:
 
-        You("raised the dead!");
+        /*KR You("raised the dead!"); */
+        You("사망자들을 깨웠다!");
         /* first maybe place a dangerous adversary */
-        if (!rn2(3) && ((mtmp = makemon(&mons[PM_MASTER_LICH], u.ux, u.uy,
-                                        NO_MINVENT)) != 0
-                        || (mtmp = makemon(&mons[PM_NALFESHNEE], u.ux, u.uy,
-                                           NO_MINVENT)) != 0)) {
+        if (!rn2(3)
+            && ((mtmp =
+                     makemon(&mons[PM_MASTER_LICH], u.ux, u.uy, NO_MINVENT))
+                    != 0
+                || (mtmp =
+                        makemon(&mons[PM_NALFESHNEE], u.ux, u.uy, NO_MINVENT))
+                       != 0)) {
             mtmp->mpeaceful = 0;
             set_malign(mtmp);
         }
@@ -313,13 +350,16 @@ struct obj *book2;
     } else {
         switch (rn2(3)) {
         case 0:
-            Your("ancestors are annoyed with you!");
+            /*KR Your("ancestors are annoyed with you!"); */
+            Your("조상님들이 당신에게 짜증을 내신다!");
             break;
         case 1:
-            pline_The("headstones in the cemetery begin to move!");
+            /*KR pline_The("headstones in the cemetery begin to move!"); */
+            pline("공동묘지의 묘비들이 움직이기 시작했다!");
             break;
         default:
-            pline("Oh my!  Your name appears in the book!");
+            /*KR pline("Oh my!  Your name appears in the book!"); */
+            pline("이런 세상에! 책에 당신의 이름이 적혀 있다!");
         }
     }
     return;
@@ -327,12 +367,10 @@ struct obj *book2;
 
 /* 'book' has just become cursed; if we're reading it and realize it is
    now cursed, interrupt */
-void
-book_cursed(book)
-struct obj *book;
+void book_cursed(book) struct obj *book;
 {
-    if (occupation == learn && context.spbook.book == book
-        && book->cursed && book->bknown && multi >= 0)
+    if (occupation == learn && context.spbook.book == book && book->cursed
+        && book->bknown && multi >= 0)
         stop_occupation();
 }
 
@@ -353,7 +391,8 @@ learn(VOID_ARGS)
         context.spbook.book = 0; /* no longer studying */
         context.spbook.o_id = 0;
         nomul(context.spbook.delay); /* remaining delay is uninterrupted */
-        multi_reason = "reading a book";
+        /*KR multi_reason = "reading a book"; */
+        multi_reason = "책을 읽고 있어서";
         nomovemsg = 0;
         context.spbook.delay = 0;
         return 0;
@@ -370,9 +409,14 @@ learn(VOID_ARGS)
         return 0;
     }
 
+#if 0 /*KR: 원본*/
     Sprintf(splname,
             objects[booktype].oc_name_known ? "\"%s\"" : "the \"%s\" spell",
             OBJ_NAME(objects[booktype]));
+#else /*KR: KRNethack 맞춤 번역 */
+    Sprintf(splname, objects[booktype].oc_name_known ? "\"%s\"" : "\"%s\"",
+            OBJ_NAME(objects[booktype]));
+#endif
     for (i = 0; i < MAXSPELL; i++)
         if (spellid(i) == booktype || spellid(i) == NO_SPELL)
             break;
@@ -382,16 +426,23 @@ learn(VOID_ARGS)
     } else if (spellid(i) == booktype) {
         /* normal book can be read and re-read a total of 4 times */
         if (book->spestudied > MAX_SPELL_STUDY) {
-            pline("This spellbook is too faint to be read any more.");
+            /*KR pline("This spellbook is too faint to be read any more."); */
+            pline("이 마법서의 글씨는 너무 희미해서 더 이상 읽을 수 없다.");
             book->otyp = booktype = SPE_BLANK_PAPER;
             /* reset spestudied as if polymorph had taken place */
             book->spestudied = rn2(book->spestudied);
         } else if (spellknow(i) > KEEN / 10) {
-            You("know %s quite well already.", splname);
+            /*KR You("know %s quite well already.", splname); */
+            You("이미 %s 잘 알고 있다.", append_josa(splname, "을"));
             costly = FALSE;
         } else { /* spellknow(i) <= KEEN/10 */
+#if 0            /*KR: 원본*/
             Your("knowledge of %s is %s.", splname,
                  spellknow(i) ? "keener" : "restored");
+#else            /*KR: KRNethack 맞춤 번역 */
+            Your("%s 관한 지식이 %s.", append_josa(splname, "에"),
+                 spellknow(i) ? "더욱 선명해졌다" : "회복되었다");
+#endif
             incrnknow(i, 1);
             book->spestudied++;
             exercise(A_WIS, TRUE); /* extra study */
@@ -405,7 +456,8 @@ learn(VOID_ARGS)
            one less reading is available than when re-learning */
         if (book->spestudied >= MAX_SPELL_STUDY) {
             /* pre-used due to being the product of polymorph */
-            pline("This spellbook is too faint to read even once.");
+            /*KR pline("This spellbook is too faint to read even once."); */
+            pline("이 마법서의 글씨는 너무 희미해서 한 번도 읽을 수가 없다.");
             book->otyp = booktype = SPE_BLANK_PAPER;
             /* reset spestudied as if polymorph had taken place */
             book->spestudied = rn2(book->spestudied);
@@ -414,7 +466,10 @@ learn(VOID_ARGS)
             spl_book[i].sp_lev = objects[booktype].oc_level;
             incrnknow(i, 1);
             book->spestudied++;
-            You(i > 0 ? "add %s to your repertoire." : "learn %s.", splname);
+            /*KR You(i > 0 ? "add %s to your repertoire." : "learn %s.",
+             * splname); */
+            You(i > 0 ? "%s 당신의 레퍼토리에 추가했다." : "%s 배웠다.",
+                append_josa(splname, "을"));
         }
         makeknown((int) booktype);
     }
@@ -443,8 +498,10 @@ register struct obj *spellbook;
     boolean too_hard = FALSE;
 
     /* attempting to read dull book may make hero fall asleep */
-    if (!confused && !Sleep_resistance
-        && !strcmp(OBJ_DESCR(objects[booktype]), "dull")) {
+    if (!confused
+        && !Sleep_resistance
+        /*KR && !strcmp(OBJ_DESCR(objects[booktype]), "dull")) { */
+        && !strcmp(OBJ_DESCR(objects[booktype]), "따분한")) {
         const char *eyes;
         int dullbook = rnd(25) - ACURR(A_WIS);
 
@@ -456,24 +513,34 @@ register struct obj *spellbook;
             eyes = body_part(EYE);
             if (eyecount(youmonst.data) > 1)
                 eyes = makeplural(eyes);
-            pline("This book is so dull that you can't keep your %s open.",
-                  eyes);
+            /*KR pline("This book is so dull that you can't keep your %s
+               open.", eyes); */
+            pline(
+                "이 책은 너무나 따분해서 당신은 %s 계속 뜨고 있을 수가 없다.",
+                append_josa(eyes, "을"));
             dullbook += rnd(2 * objects[booktype].oc_level);
             fall_asleep(-dullbook, TRUE);
             return 1;
         }
     }
 
-    if (context.spbook.delay && !confused && spellbook == context.spbook.book
+    if (context.spbook.delay && !confused
+        && spellbook == context.spbook.book
         /* handle the sequence: start reading, get interrupted, have
            context.spbook.book become erased somehow, resume reading it */
         && booktype != SPE_BLANK_PAPER) {
+#if 0 /*KR: 원본*/
         You("continue your efforts to %s.",
             (booktype == SPE_NOVEL) ? "read the novel" : "memorize the spell");
+#else /*KR: KRNethack 맞춤 번역 */
+        You("계속해서 %s 읽으려고 노력한다.",
+            (booktype == SPE_NOVEL) ? "소설을" : "주문을 기억해 내려고");
+#endif
     } else {
         /* KMH -- Simplified this code */
         if (booktype == SPE_BLANK_PAPER) {
-            pline("This spellbook is all blank.");
+            /*KR pline("This spellbook is all blank."); */
+            pline("이 마법서는 온통 백지다.");
             makeknown(booktype);
             return 1;
         }
@@ -529,17 +596,25 @@ register struct obj *spellbook;
                 too_hard = TRUE;
             } else {
                 /* uncursed - chance to fail */
-                int read_ability = ACURR(A_INT) + 4 + u.ulevel / 2
-                                   - 2 * objects[booktype].oc_level
-                             + ((ublindf && ublindf->otyp == LENSES) ? 2 : 0);
+                int read_ability =
+                    ACURR(A_INT) + 4 + u.ulevel / 2
+                    - 2 * objects[booktype].oc_level
+                    + ((ublindf && ublindf->otyp == LENSES) ? 2 : 0);
 
                 /* only wizards know if a spell is too difficult */
                 if (Role_if(PM_WIZARD) && read_ability < 20 && !confused) {
                     char qbuf[QBUFSZ];
 
+#if 0 /*KR: 원본*/
                     Sprintf(qbuf,
                     "This spellbook is %sdifficult to comprehend.  Continue?",
                             (read_ability < 12 ? "very " : ""));
+#else /*KR: KRNethack 맞춤 번역 */
+                    Sprintf(qbuf,
+                            "이 마법서를 이해하기에는 %s어렵습니다. "
+                            "계속하시겠습니까?",
+                            (read_ability < 12 ? "매우 " : ""));
+#endif
                     if (yn(qbuf) != 'y') {
                         spellbook->in_use = FALSE;
                         return 1;
@@ -556,12 +631,14 @@ register struct obj *spellbook;
             boolean gone = cursed_book(spellbook);
 
             nomul(context.spbook.delay); /* study time */
-            multi_reason = "reading a book";
+            /*KR multi_reason = "reading a book"; */
+            multi_reason = "책을 읽고 있어서";
             nomovemsg = 0;
             context.spbook.delay = 0;
             if (gone || !rn2(3)) {
                 if (!gone)
-                    pline_The("spellbook crumbles to dust!");
+                    /*KR pline_The("spellbook crumbles to dust!"); */
+                    pline("마법서가 바스라져 먼지가 되었다!");
                 if (!objects[spellbook->otyp].oc_name_known
                     && !objects[spellbook->otyp].oc_uname)
                     docall(spellbook);
@@ -574,29 +651,35 @@ register struct obj *spellbook;
                 spellbook->in_use = FALSE;
             }
             nomul(context.spbook.delay);
-            multi_reason = "reading a book";
+            /*KR multi_reason = "reading a book"; */
+            multi_reason = "책을 읽고 있어서";
             nomovemsg = 0;
             context.spbook.delay = 0;
             return 1;
         }
         spellbook->in_use = FALSE;
 
+#if 0 /*KR: 원본*/
         You("begin to %s the runes.",
             spellbook->otyp == SPE_BOOK_OF_THE_DEAD ? "recite" : "memorize");
+#else /*KR: KRNethack 맞춤 번역 */
+        You("그 룬 문자들을 %s 시작했다.",
+            spellbook->otyp == SPE_BOOK_OF_THE_DEAD ? "암송하기"
+                                                    : "암기하기");
+#endif
     }
 
     context.spbook.book = spellbook;
     if (context.spbook.book)
         context.spbook.o_id = context.spbook.book->o_id;
-    set_occupation(learn, "studying", 0);
+    /*KR set_occupation(learn, "studying", 0); */
+    set_occupation(learn, "공부하기", 0);
     return 1;
 }
 
 /* a spellbook has been destroyed or the character has changed levels;
    the stored address for the current book is no longer valid */
-void
-book_disappears(obj)
-struct obj *obj;
+void book_disappears(obj) struct obj *obj;
 {
     if (obj == context.spbook.book) {
         context.spbook.book = (struct obj *) 0;
@@ -607,9 +690,7 @@ struct obj *obj;
 /* renaming an object usually results in it having a different address;
    so the sequence start reading, get interrupted, name the book, resume
    reading would read the "new" book from scratch */
-void
-book_substitution(old_obj, new_obj)
-struct obj *old_obj, *new_obj;
+void book_substitution(old_obj, new_obj) struct obj *old_obj, *new_obj;
 {
     if (old_obj == context.spbook.book) {
         context.spbook.book = new_obj;
@@ -642,10 +723,12 @@ rejectcasting()
 {
     /* rejections which take place before selecting a particular spell */
     if (Stunned) {
-        You("are too impaired to cast a spell.");
+        /*KR You("are too impaired to cast a spell."); */
+        You("너무 어지러워서 주문을 시전할 수 없다.");
         return TRUE;
     } else if (!can_chant(&youmonst)) {
-        You("are unable to chant the incantation.");
+        /*KR You("are unable to chant the incantation."); */
+        You("주문을 읊조릴 수 없다.");
         return TRUE;
     } else if (!freehand()) {
         /* Note: !freehand() occurs when weapon and shield (or two-handed
@@ -655,7 +738,8 @@ rejectcasting()
          * But why isn't lack of free arms (for gesturing) an issue when
          * poly'd hero has no limbs?
          */
-        Your("arms are not free to cast!");
+        /*KR Your("arms are not free to cast!"); */
+        Your("주문을 시전할 만큼 팔이 자유롭지 않다!");
         return TRUE;
     }
     return FALSE;
@@ -673,7 +757,8 @@ int *spell_no;
     char ilet, lets[BUFSZ], qbuf[QBUFSZ];
 
     if (spellid(0) == NO_SPELL) {
-        You("don't know any spells right now.");
+        /*KR You("don't know any spells right now."); */
+        You("지금은 아무런 주문도 모른다.");
         return FALSE;
     }
     if (rejectcasting())
@@ -696,7 +781,8 @@ int *spell_no;
             Sprintf(lets, "a-zA-%c", 'A' + nspells - 27);
 
         for (;;) {
-            Sprintf(qbuf, "Cast which spell? [%s *?]", lets);
+            /*KR Sprintf(qbuf, "Cast which spell? [%s *?]", lets); */
+            Sprintf(qbuf, "어떤 주문을 시전하시겠습니까? [%s *?]", lets);
             ilet = yn_function(qbuf, (char *) 0, '\0');
             if (ilet == '*' || ilet == '?')
                 break; /* use menu mode */
@@ -705,15 +791,17 @@ int *spell_no;
 
             idx = spell_let_to_idx(ilet);
             if (idx < 0 || idx >= nspells) {
-                You("don't know that spell.");
+                /*KR You("don't know that spell."); */
+                You("그런 주문은 모른다.");
                 continue; /* ask again */
             }
             *spell_no = idx;
             return TRUE;
         }
     }
-    return dospellmenu("Choose which spell to cast", SPELLMENU_CAST,
-                       spell_no);
+    /*KR return dospellmenu("Choose which spell to cast", SPELLMENU_CAST,
+                       spell_no); */
+    return dospellmenu("시전할 주문을 선택하세요", SPELLMENU_CAST, spell_no);
 }
 
 /* the 'Z' command -- cast a spell */
@@ -733,19 +821,26 @@ int skill;
 {
     switch (skill) {
     case P_ATTACK_SPELL:
-        return "attack";
+        /*KR return "attack"; */
+        return "공격";
     case P_HEALING_SPELL:
-        return "healing";
+        /*KR return "healing"; */
+        return "치유";
     case P_DIVINATION_SPELL:
-        return "divination";
+        /*KR return "divination"; */
+        return "점술";
     case P_ENCHANTMENT_SPELL:
-        return "enchantment";
+        /*KR return "enchantment"; */
+        return "부여";
     case P_CLERIC_SPELL:
-        return "clerical";
+        /*KR return "clerical"; */
+        return "성직";
     case P_ESCAPE_SPELL:
-        return "escape";
+        /*KR return "escape"; */
+        return "탈출";
     case P_MATTER_SPELL:
-        return "matter";
+        /*KR return "matter"; */
+        return "물질";
     default:
         impossible("Unknown spell skill, %d;", skill);
         return "";
@@ -762,8 +857,7 @@ int booktype;
 STATIC_OVL void
 cast_protection()
 {
-    int l = u.ulevel, loglev = 0,
-        gain, natac = u.uac + u.uspellprot;
+    int l = u.ulevel, loglev = 0, gain, natac = u.uac + u.uspellprot;
     /* note: u.uspellprot is subtracted when find_ac() factors it into u.uac,
        so adding here factors it back out
        (versions prior to 3.6 had this backwards) */
@@ -777,23 +871,23 @@ cast_protection()
     /* The more u.uspellprot you already have, the less you get,
      * and the better your natural ac, the less you get.
      *
-     *  LEVEL AC    SPELLPROT from successive SPE_PROTECTION casts
-     *      1     10    0,  1,  2,  3,  4
-     *      1      0    0,  1,  2,  3
-     *      1    -10    0,  1,  2
-     *      2-3   10    0,  2,  4,  5,  6,  7,  8
-     *      2-3    0    0,  2,  4,  5,  6
-     *      2-3  -10    0,  2,  3,  4
-     *      4-7   10    0,  3,  6,  8,  9, 10, 11, 12
-     *      4-7    0    0,  3,  5,  7,  8,  9
-     *      4-7  -10    0,  3,  5,  6
-     *      7-15 -10    0,  3,  5,  6
-     *      8-15  10    0,  4,  7, 10, 12, 13, 14, 15, 16
-     *      8-15   0    0,  4,  7,  9, 10, 11, 12
-     *      8-15 -10    0,  4,  6,  7,  8
-     *     16-30  10    0,  5,  9, 12, 14, 16, 17, 18, 19, 20
-     *     16-30   0    0,  5,  9, 11, 13, 14, 15
-     *     16-30 -10    0,  5,  8,  9, 10
+     * LEVEL AC    SPELLPROT from successive SPE_PROTECTION casts
+     * 1     10    0,  1,  2,  3,  4
+     * 1      0    0,  1,  2,  3
+     * 1    -10    0,  1,  2
+     * 2-3   10    0,  2,  4,  5,  6,  7,  8
+     * 2-3    0    0,  2,  4,  5,  6
+     * 2-3  -10    0,  2,  3,  4
+     * 4-7   10    0,  3,  6,  8,  9, 10, 11, 12
+     * 4-7    0    0,  3,  5,  7,  8,  9
+     * 4-7  -10    0,  3,  5,  6
+     * 7-15 -10    0,  3,  5,  6
+     * 8-15  10    0,  4,  7, 10, 12, 13, 14, 15, 16
+     * 8-15   0    0,  4,  7,  9, 10, 11, 12
+     * 8-15 -10    0,  4,  6,  7,  8
+     * 16-30  10    0,  5,  9, 12, 14, 16, 17, 18, 19, 20
+     * 16-30   0    0,  5,  9, 11, 13, 14, 15
+     * 16-30 -10    0,  5,  8,  9, 10
      */
     natac = (10 - natac) / 10; /* convert to positive and scale down */
     gain = loglev - (int) u.uspellprot / (4 - min(3, natac));
@@ -804,48 +898,63 @@ cast_protection()
             const char *hgolden = hcolor(NH_GOLDEN), *atmosphere;
 
             if (u.uspellprot) {
-                pline_The("%s haze around you becomes more dense.", hgolden);
+                /*KR pline_The("%s haze around you becomes more dense.",
+                 * hgolden); */
+                pline("당신 주변의 %s 아지랑이가 더 짙어졌다.", hgolden);
             } else {
                 rmtyp = levl[u.ux][u.uy].typ;
                 atmosphere = u.uswallow
-                                ? ((u.ustuck->data == &mons[PM_FOG_CLOUD])
-                                   ? "mist"
-                                   : is_whirly(u.ustuck->data)
-                                      ? "maelstrom"
-                                      : is_animal(u.ustuck->data)
-                                         ? "maw"
-                                         : "ooze")
-                                : (u.uinwater
-                                   ? hliquid("water")
-                                   : (rmtyp == CLOUD)
-                                      ? "cloud"
-                                      : IS_TREE(rmtyp)
-                                         ? "vegetation"
-                                         : IS_STWALL(rmtyp)
-                                            ? "stone"
-                                            : "air");
+                                 ? ((u.ustuck->data == &mons[PM_FOG_CLOUD])
+                                        /*KR ? "mist" */
+                                        ? "안개"
+                                        : is_whirly(u.ustuck->data)
+                                              /*KR ? "maelstrom" */
+                                              ? "소용돌이"
+                                              : is_animal(u.ustuck->data)
+                                                    /*KR ? "maw" */
+                                                    ? "위장"
+                                                    /*KR : "ooze") */
+                                                    : "진흙")
+                                 : (u.uinwater
+                                        /*KR ? hliquid("water") */
+                                        ? hliquid("물")
+                                        : (rmtyp == CLOUD)
+                                              /*KR ? "cloud" */
+                                              ? "구름"
+                                              : IS_TREE(rmtyp)
+                                                    /*KR ? "vegetation" */
+                                                    ? "초목"
+                                                    : IS_STWALL(rmtyp)
+                                                          /*KR ? "stone" */
+                                                          ? "암석"
+                                                          /*KR : "air"); */
+                                                          : "공기");
+#if 0 /*KR: 원본*/
                 pline_The("%s around you begins to shimmer with %s haze.",
                           atmosphere, an(hgolden));
+#else /*KR: KRNethack 맞춤 번역 */
+                pline("당신 주변의 %s %s 아지랑이로 일렁이기 시작했다.",
+                      append_josa(atmosphere, "이"), an(hgolden));
+#endif
             }
         }
         u.uspellprot += gain;
-        u.uspmtime = (P_SKILL(spell_skilltype(SPE_PROTECTION)) == P_EXPERT)
-                        ? 20 : 10;
+        u.uspmtime =
+            (P_SKILL(spell_skilltype(SPE_PROTECTION)) == P_EXPERT) ? 20 : 10;
         if (!u.usptime)
             u.usptime = u.uspmtime;
         find_ac();
     } else {
-        Your("skin feels warm for a moment.");
+        /*KR Your("skin feels warm for a moment."); */
+        Your("피부가 잠시 따뜻해지는 느낌이다.");
     }
 }
 
 /* attempting to cast a forgotten spell will cause disorientation */
-STATIC_OVL void
-spell_backfire(spell)
-int spell;
+STATIC_OVL void spell_backfire(spell) int spell;
 {
     long duration = (long) ((spellev(spell) + 1) * 3), /* 6..24 */
-         old_stun = (HStun & TIMEOUT), old_conf = (HConfusion & TIMEOUT);
+        old_stun = (HStun & TIMEOUT), old_conf = (HConfusion & TIMEOUT);
 
     /* Prior to 3.4.1, only effect was confusion; it still predominates.
      *
@@ -910,33 +1019,43 @@ boolean atme;
      * decrement of spell knowledge is done every turn.
      */
     if (spellknow(spell) <= 0) {
-        Your("knowledge of this spell is twisted.");
-        pline("It invokes nightmarish images in your mind...");
+        /*KR Your("knowledge of this spell is twisted."); */
+        Your("이 주문에 대한 당신의 지식이 뒤틀렸다.");
+        /*KR pline("It invokes nightmarish images in your mind..."); */
+        pline("당신의 마음에 악몽 같은 심상들을 불러일으킨다...");
         spell_backfire(spell);
         return 1;
     } else if (spellknow(spell) <= KEEN / 200) { /* 100 turns left */
-        You("strain to recall the spell.");
+        /*KR You("strain to recall the spell."); */
+        You("그 주문을 떠올리려고 몹시 애쓴다.");
     } else if (spellknow(spell) <= KEEN / 40) { /* 500 turns left */
-        You("have difficulty remembering the spell.");
+        /*KR You("have difficulty remembering the spell."); */
+        You("그 주문을 기억해 내기가 어렵다.");
     } else if (spellknow(spell) <= KEEN / 20) { /* 1000 turns left */
-        Your("knowledge of this spell is growing faint.");
+        /*KR Your("knowledge of this spell is growing faint."); */
+        Your("이 주문에 대한 당신의 지식이 점점 흐릿해지고 있다.");
     } else if (spellknow(spell) <= KEEN / 10) { /* 2000 turns left */
-        Your("recall of this spell is gradually fading.");
+        /*KR Your("recall of this spell is gradually fading."); */
+        Your("이 주문에 대한 당신의 기억이 서서히 옅어지고 있다.");
     }
     /*
-     *  Note: dotele() also calculates energy use and checks nutrition
-     *  and strength requirements; it any of these change, update it too.
+     * Note: dotele() also calculates energy use and checks nutrition
+     * and strength requirements; it any of these change, update it too.
      */
     energy = (spellev(spell) * 5); /* 5 <= energy <= 35 */
 
     if (u.uhunger <= 10 && spellid(spell) != SPE_DETECT_FOOD) {
-        You("are too hungry to cast that spell.");
+        /*KR You("are too hungry to cast that spell."); */
+        You("너무 배가 고파서 그 주문을 시전할 수 없다.");
         return 0;
     } else if (ACURR(A_STR) < 4 && spellid(spell) != SPE_RESTORE_ABILITY) {
-        You("lack the strength to cast spells.");
+        /*KR You("lack the strength to cast spells."); */
+        You("주문을 시전할 힘이 부족하다.");
         return 0;
     } else if (check_capacity(
-                "Your concentration falters while carrying so much stuff.")) {
+                   /*KR "Your concentration falters while carrying so much
+                      stuff.")) { */
+                   "너무 많은 물건을 들고 있어 집중이 흐트러진다.")) {
         return 1;
     }
 
@@ -946,7 +1065,8 @@ boolean atme;
        the attempt may fail due to lack of energy after the draining, in
        which case a turn will be used up in addition to the energy loss */
     if (u.uhave.amulet && u.uen >= energy) {
-        You_feel("the amulet draining your energy away.");
+        /*KR You_feel("the amulet draining your energy away."); */
+        You_feel("부적이 당신의 에너지를 앗아가는 것을 느낀다.");
         /* this used to be 'energy += rnd(2 * energy)' (without 'res'),
            so if amulet-induced cost was more than u.uen, nothing
            (except the "don't have enough energy" message) happened
@@ -961,7 +1081,8 @@ boolean atme;
     }
 
     if (energy > u.uen) {
-        You("don't have enough energy to cast that spell.");
+        /*KR You("don't have enough energy to cast that spell."); */
+        You("그 주문을 시전할 마력이 부족하다.");
         return res;
     } else {
         if (spellid(spell) != SPE_DETECT_FOOD) {
@@ -1016,7 +1137,8 @@ boolean atme;
 
     chance = percent_success(spell);
     if (confused || (rnd(100) > chance)) {
-        You("fail to cast the spell correctly.");
+        /*KR You("fail to cast the spell correctly."); */
+        You("주문을 올바르게 시전하는 데 실패했다.");
         u.uen -= energy / 2;
         context.botl = 1;
         return 1;
@@ -1055,17 +1177,20 @@ boolean atme;
                     if (!u.dx && !u.dy && !u.dz) {
                         if ((damage = zapyourself(pseudo, TRUE)) != 0) {
                             char buf[BUFSZ];
+#if 0 /*KR: 원본*/
                             Sprintf(buf, "zapped %sself with a spell",
                                     uhim());
                             losehp(damage, buf, NO_KILLER_PREFIX);
+#else /*KR: KRNethack 맞춤 번역 */
+                            Strcpy(buf, "자신의 마법을 맞고");
+                            losehp(damage, buf, KILLED_BY);
+#endif
                         }
                     } else {
-                        explode(u.dx, u.dy,
-                                otyp - SPE_MAGIC_MISSILE + 10,
+                        explode(u.dx, u.dy, otyp - SPE_MAGIC_MISSILE + 10,
                                 spell_damage_bonus(u.ulevel / 2 + 1), 0,
-                                (otyp == SPE_CONE_OF_COLD)
-                                   ? EXPL_FROSTY
-                                   : EXPL_FIERY);
+                                (otyp == SPE_CONE_OF_COLD) ? EXPL_FROSTY
+                                                           : EXPL_FIERY);
                     }
                     u.dx = cc.x + rnd(3) - 2;
                     u.dy = cc.y + rnd(3) - 2;
@@ -1121,16 +1246,23 @@ boolean atme;
                  * spelleffects() is organized means that aborting with
                  * "nevermind" is not an option.
                  */
-                pline_The("magical energy is released!");
+                /*KR pline_The("magical energy is released!"); */
+                pline("마법의 에너지가 풀려났다!");
             }
             if (!u.dx && !u.dy && !u.dz) {
                 if ((damage = zapyourself(pseudo, TRUE)) != 0) {
                     char buf[BUFSZ];
 
-                    Sprintf(buf, "zapped %sself with a spell", uhim());
+                    /*KR Sprintf(buf, "zapped %sself with a spell", uhim());
+                     */
+                    Strcpy(buf, "자신의 마법을 맞고");
                     if (physical_damage)
                         damage = Maybe_Half_Phys(damage);
+#if 0 /*KR: 원본*/
                     losehp(damage, buf, NO_KILLER_PREFIX);
+#else /*KR: KRNethack 맞춤 번역 */
+                    losehp(damage, buf, KILLED_BY);
+#endif
                 }
             } else
                 weffects(pseudo);
@@ -1168,16 +1300,18 @@ boolean atme;
     case SPE_INVISIBILITY:
         (void) peffects(pseudo);
         break;
-    /* end of potion-like spells */
+        /* end of potion-like spells */
 
     case SPE_CURE_BLINDNESS:
         healup(0, 0, FALSE, TRUE);
         break;
     case SPE_CURE_SICKNESS:
         if (Sick)
-            You("are no longer ill.");
+            /*KR You("are no longer ill."); */
+            You("더 이상 아프지 않다.");
         if (Slimed)
-            make_slimed(0L, "The slime disappears!");
+            /*KR make_slimed(0L, "The slime disappears!"); */
+            make_slimed(0L, "슬라임이 사라졌다!");
         healup(0, 0, TRUE, FALSE);
         break;
     case SPE_CREATE_FAMILIAR:
@@ -1188,9 +1322,11 @@ boolean atme;
             if (role_skill >= P_SKILLED)
                 pseudo->blessed = 1; /* detect monsters as well as map */
             do_vicinity_map(pseudo);
-        /* at present, only one thing blocks clairvoyance */
+            /* at present, only one thing blocks clairvoyance */
         } else if (uarmh && uarmh->otyp == CORNUTHAUM)
-            You("sense a pointy hat on top of your %s.", body_part(HEAD));
+            /*KR You("sense a pointy hat on top of your %s.",
+             * body_part(HEAD)); */
+            You("당신의 %s 위로 뾰족한 모자가 느껴진다.", body_part(HEAD));
         break;
     case SPE_PROTECTION:
         cast_protection();
@@ -1218,7 +1354,7 @@ spell_aim_step(arg, x, y)
 genericptr_t arg UNUSED;
 int x, y;
 {
-    if (!isok(x,y))
+    if (!isok(x, y))
         return FALSE;
     if (!ZAP_POS(levl[x][y].typ)
         && !(IS_DOOR(levl[x][y].typ) && (levl[x][y].doormask & D_ISOPEN)))
@@ -1234,24 +1370,30 @@ throwspell()
     struct monst *mtmp;
 
     if (u.uinwater) {
-        pline("You're joking!  In this weather?");
+        /*KR pline("You're joking!  In this weather?"); */
+        pline("농담하는 거지! 이런 날씨에?");
         return 0;
     } else if (Is_waterlevel(&u.uz)) {
-        You("had better wait for the sun to come out.");
+        /*KR You("had better wait for the sun to come out."); */
+        You("해가 뜰 때까지 기다리는 게 좋겠다.");
         return 0;
     }
 
-    pline("Where do you want to cast the spell?");
+    /*KR pline("Where do you want to cast the spell?"); */
+    pline("어디에 주문을 시전하시겠습니까?");
     cc.x = u.ux;
     cc.y = u.uy;
-    if (getpos(&cc, TRUE, "the desired position") < 0)
+    /*KR if (getpos(&cc, TRUE, "the desired position") < 0) */
+    if (getpos(&cc, TRUE, "원하는 위치") < 0)
         return 0; /* user pressed ESC */
     /* The number of moves from hero to where the spell drops.*/
     if (distmin(u.ux, u.uy, cc.x, cc.y) > 10) {
-        pline_The("spell dissipates over the distance!");
+        /*KR pline_The("spell dissipates over the distance!"); */
+        pline("거리가 멀어 주문이 흩어져버렸다!");
         return 0;
     } else if (u.uswallow) {
-        pline_The("spell is cut short!");
+        /*KR pline_The("spell is cut short!"); */
+        pline("주문이 끊어져버렸다!");
         exercise(A_WIS, FALSE); /* What were you THINKING! */
         u.dx = 0;
         u.dy = 0;
@@ -1259,7 +1401,8 @@ throwspell()
     } else if ((!cansee(cc.x, cc.y)
                 && (!(mtmp = m_at(cc.x, cc.y)) || !canspotmon(mtmp)))
                || IS_STWALL(levl[cc.x][cc.y].typ)) {
-        Your("mind fails to lock onto that location!");
+        /*KR Your("mind fails to lock onto that location!"); */
+        Your("정신이 그 위치를 포착하는 데 실패했다!");
         return 0;
     }
 
@@ -1285,9 +1428,9 @@ int what;
     } save_tport;
     int i;
 /* also defined in teleport.c */
-#define NOOP_SPELL  0
-#define HIDE_SPELL  1
-#define ADD_SPELL   2
+#define NOOP_SPELL 0
+#define HIDE_SPELL 1
+#define ADD_SPELL 2
 #define UNHIDESPELL 3
 #define REMOVESPELL 4
 
@@ -1404,12 +1547,12 @@ losespells()
  * pairs of them becomes very tedious once the list reaches two pages.
  *
  * Possible extensions:
- *      provide means for player to control ordering of skill classes;
- *      provide means to supply value N such that first N entries stick
- *      while rest of list is being sorted;
- *      make chosen sort order be persistent such that when new spells
- *      are learned, they get inserted into sorted order rather than be
- *      appended to the end of the list?
+ * provide means for player to control ordering of skill classes;
+ * provide means to supply value N such that first N entries stick
+ * while rest of list is being sorted;
+ * make chosen sort order be persistent such that when new spells
+ * are learned, they get inserted into sorted order rather than be
+ * appended to the end of the list?
  */
 enum spl_sort_types {
     SORTBY_LETTER = 0,
@@ -1426,33 +1569,40 @@ enum spl_sort_types {
 };
 
 static const char *spl_sortchoices[NUM_SPELL_SORTBY] = {
-    "by casting letter",
-    "alphabetically",
-    "by level, low to high",
-    "by level, high to low",
-    "by skill group, alphabetized within each group",
-    "by skill group, low to high level within group",
-    "by skill group, high to low level within group",
-    "maintain current ordering",
+    /*KR "by casting letter", */
+    "시전 문자 순으로",
+    /*KR "alphabetically", */
+    "알파벳 순으로",
+    /*KR "by level, low to high", */
+    "레벨 순으로 (낮은 순서)",
+    /*KR "by level, high to low", */
+    "레벨 순으로 (높은 순서)",
+    /*KR "by skill group, alphabetized within each group", */
+    "스킬 그룹별로, 그룹 내 알파벳 순",
+    /*KR "by skill group, low to high level within group", */
+    "스킬 그룹별로, 그룹 내 레벨 낮은 순",
+    /*KR "by skill group, high to low level within group", */
+    "스킬 그룹별로, 그룹 내 레벨 높은 순",
+    /*KR "maintain current ordering", */
+    "현재 정렬 순서 유지",
     /* a menu choice rather than a sort choice */
-    "reassign casting letters to retain current order",
+    /*KR "reassign casting letters to retain current order", */
+    "현재 순서를 유지하면서 시전 문자 재할당",
 };
 static int spl_sortmode = 0;   /* index into spl_sortchoices[] */
 static int *spl_orderindx = 0; /* array of spl_book[] indices */
 
 /* qsort callback routine */
-STATIC_PTR int CFDECLSPEC
-spell_cmp(vptr1, vptr2)
-const genericptr vptr1;
+STATIC_PTR int CFDECLSPEC spell_cmp(vptr1, vptr2) const genericptr vptr1;
 const genericptr vptr2;
 {
     /*
      * gather up all of the possible parameters except spell name
      * in advance, even though some might not be needed:
-     *  indx. = spl_orderindx[] index into spl_book[];
-     *  otyp. = spl_book[] index into objects[];
-     *  levl. = spell level;
-     *  skil. = skill group aka spell class.
+     * indx. = spl_orderindx[] index into spl_book[];
+     * otyp. = spl_book[] index into objects[];
+     * levl. = spell level;
+     * skil. = skill group aka spell class.
      */
     int indx1 = *(int *) vptr1, indx2 = *(int *) vptr2,
         otyp1 = spl_book[indx1].sp_id, otyp2 = spl_book[indx2].sp_id,
@@ -1575,7 +1725,8 @@ spellsortmenu()
         add_menu(tmpwin, NO_GLYPH, &any, let, 0, ATR_NONE, spl_sortchoices[i],
                  (i == spl_sortmode) ? MENU_SELECTED : MENU_UNSELECTED);
     }
-    end_menu(tmpwin, "View known spells list sorted");
+    /*KR end_menu(tmpwin, "View known spells list sorted"); */
+    end_menu(tmpwin, "알고 있는 주문 목록 정렬 방식");
 
     n = select_menu(tmpwin, PICK_ONE, &selected);
     destroy_nhwindow(tmpwin);
@@ -1600,15 +1751,18 @@ dovspell()
     struct spell spl_tmp;
 
     if (spellid(0) == NO_SPELL) {
-        You("don't know any spells right now.");
+        /*KR You("don't know any spells right now."); */
+        You("지금은 아무런 주문도 모른다.");
     } else {
-        while (dospellmenu("Currently known spells",
-                           SPELLMENU_VIEW, &splnum)) {
+        /*KR while (dospellmenu("Currently known spells", */
+        while (dospellmenu("현재 알고 있는 주문 목록", SPELLMENU_VIEW,
+                           &splnum)) {
             if (splnum == SPELLMENU_SORT) {
                 if (spellsortmenu())
                     sortspells();
             } else {
-                Sprintf(qbuf, "Reordering spells; swap '%c' with",
+                /*KR Sprintf(qbuf, "Reordering spells; swap '%c' with", */
+                Sprintf(qbuf, "주문 재정렬: '%c'을(를) 바꿀 문자는?",
                         spellet(splnum));
                 if (!dospellmenu(qbuf, splnum, &othnum))
                     break;
@@ -1627,9 +1781,8 @@ dovspell()
     return 0;
 }
 
-STATIC_OVL boolean
-dospellmenu(prompt, splaction, spell_no)
-const char *prompt;
+STATIC_OVL boolean dospellmenu(prompt, splaction, spell_no) const
+    char *prompt;
 int splaction; /* SPELLMENU_CAST, SPELLMENU_VIEW, or spl_book[] index */
 int *spell_no;
 {
@@ -1652,11 +1805,16 @@ int *spell_no;
      * given string and are of the form "a - ".
      */
     if (!iflags.menu_tab_sep) {
-        Sprintf(buf, "%-20s     Level %-12s Fail Retention", "    Name",
+#if 0 /*KR: 원본*/
+        Sprintf(buf, "%-20s      Level %-12s Fail Retention", "    Name",
                 "Category");
+#else /*KR: KRNethack 맞춤 번역 */
+        Sprintf(buf, "%-20s      레벨 %-12s 실패 지속", "    이름", "분류");
+#endif
         fmt = "%-20s  %2d   %-12s %3d%% %9s";
     } else {
-        Sprintf(buf, "Name\tLevel\tCategory\tFail\tRetention");
+        /*KR Sprintf(buf, "Name\tLevel\tCategory\tFail\tRetention"); */
+        Sprintf(buf, "이름\t레벨\t분류\t실패율\t지속도");
         fmt = "%s\t%-d\t%s\t%-d%%\t%s";
     }
     add_menu(tmpwin, NO_GLYPH, &any, 0, 0, iflags.menu_headings, buf,
@@ -1681,7 +1839,8 @@ int *spell_no;
             /* more than 1 spell, add an extra menu entry */
             any.a_int = SPELLMENU_SORT + 1;
             add_menu(tmpwin, NO_GLYPH, &any, '+', 0, ATR_NONE,
-                     "[sort spells]", MENU_UNSELECTED);
+                     /*KR "[sort spells]", MENU_UNSELECTED); */
+                     "[주문 정렬]", MENU_UNSELECTED);
         }
     }
     end_menu(tmpwin, prompt);
@@ -1839,7 +1998,8 @@ char *outbuf;
 
     if (turnsleft < 1L) {
         /* spell has expired; hero can't successfully cast it anymore */
-        Strcpy(outbuf, "(gone)");
+        /*KR Strcpy(outbuf, "(gone)"); */
+        Strcpy(outbuf, "(망각함)");
     } else if (turnsleft >= (long) KEEN) {
         /* full retention, first turn or immediately after reading book */
         Strcpy(outbuf, "100%");
@@ -1849,9 +2009,9 @@ char *outbuf;
          * amount of time left until memory of the spell expires;
          * the precision of the range depends upon hero's skill
          * in this spell.
-         *    expert:  2% intervals; 1-2,   3-4,  ...,   99-100;
-         *   skilled:  5% intervals; 1-5,   6-10, ...,   95-100;
-         *     basic: 10% intervals; 1-10, 11-20, ...,   91-100;
+         * expert:  2% intervals; 1-2,  3-4,  ...,  99-100;
+         * skilled:  5% intervals; 1-5,  6-10, ...,  95-100;
+         * basic: 10% intervals; 1-10, 11-20, ...,  91-100;
          * unskilled: 25% intervals; 1-25, 26-50, 51-75, 76-100.
          *
          * At the low end of each range, a value of N% really means
@@ -1859,10 +2019,10 @@ char *outbuf;
          * KEEN is a multiple of 100; KEEN/100 loses no precision.
          */
         percent = (turnsleft - 1L) / ((long) KEEN / 100L) + 1L;
-        accuracy =
-            (skill == P_EXPERT) ? 2L : (skill == P_SKILLED)
-                                           ? 5L
-                                           : (skill == P_BASIC) ? 10L : 25L;
+        accuracy = (skill == P_EXPERT)    ? 2L
+                   : (skill == P_SKILLED) ? 5L
+                   : (skill == P_BASIC)   ? 10L
+                                          : 25L;
         /* round up to the high end of this range */
         percent = accuracy * ((percent - 1L) / accuracy + 1L);
         Sprintf(outbuf, "%ld%%-%ld%%", percent - accuracy + 1L, percent);
@@ -1871,9 +2031,7 @@ char *outbuf;
 }
 
 /* Learn a spell during creation of the initial inventory */
-void
-initialspell(obj)
-struct obj *obj;
+void initialspell(obj) struct obj *obj;
 {
     int i, otyp = obj->otyp;
 

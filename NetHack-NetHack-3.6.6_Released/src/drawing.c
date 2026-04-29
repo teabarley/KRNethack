@@ -41,7 +41,7 @@ altinvisexplain[] = "보이지 않는 생명체"; /* for clairvoyance */
  */
 const struct class_sym def_oc_syms[MAXOCLASSES] = {
     { '\0', "", "" }, /* placeholder for the "random class" */
-#if 0 /*KR 원본으로 돌아갈 때는 if 1로 바꾸기만 하면 됨 */
+#if 0 /*KR 원본 */
     { ILLOBJ_SYM, "illegal objects", "strange object" },
     { WEAPON_SYM, "weapons", "weapon" },
     { ARMOR_SYM, "armor", "suit or piece of armor" },
@@ -83,7 +83,7 @@ const struct class_sym def_oc_syms[MAXOCLASSES] = {
 /* Default monster class symbols.  See monsym.h. */
 const struct class_sym def_monsyms[MAXMCLASSES] = {
     { '\0', "", "" },
-#if 0 /*KR 원본으로 돌아갈 때는 if 1로 바꾸기만 하면 됨 */
+#if 0 /*KR 원본 */
     { DEF_ANT, "", "ant or other insect" },
     { DEF_BLOB, "", "blob" },
     { DEF_COCKATRICE, "", "cockatrice" },
@@ -209,7 +209,7 @@ const struct class_sym def_monsyms[MAXMCLASSES] = {
 };
 
 const struct symdef def_warnsyms[WARNCOUNT] = {
-#if 0 /*KR 원본으로 돌아갈 때는 1로 바꾸기만 하면 됨 */
+#if 0 /*KR 원본*/
     /* white warning  */
     { '0', "unknown creature causing you worry",    C(CLR_WHITE) },
     /* pink warning   */

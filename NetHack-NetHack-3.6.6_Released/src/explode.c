@@ -1,5 +1,5 @@
 /* NetHack 3.6	explode.c	$NHDT-Date: 1545182146 2018/12/19 01:15:46 $  $NHDT-Branch: NetHack-3.6.2-beta01 $:$NHDT-Revision: 1.60 $ */
-/*      Copyright (C) 1990 by Ken Arromdee */
+/* Copyright (C) 1990 by Ken Arromdee */
 /* NetHack may be freely redistributed.  See license for details. */
 
 #include "hack.h"
@@ -18,15 +18,13 @@ static int explosion[3][3] = { { S_explode1, S_explode4, S_explode7 },
  * these disadvantages....
  *
  * Important note about Half_physical_damage:
- *      Unlike losehp(), explode() makes the Half_physical_damage adjustments
- *      itself, so the caller should never have done that ahead of time.
- *      It has to be done this way because the damage value is applied to
- *      things beside the player. Care is taken within explode() to ensure
- *      that Half_physical_damage only affects the damage applied to the hero.
+ * Unlike losehp(), explode() makes the Half_physical_damage adjustments
+ * itself, so the caller should never have done that ahead of time.
+ * It has to be done this way because the damage value is applied to
+ * things beside the player. Care is taken within explode() to ensure
+ * that Half_physical_damage only affects the damage applied to the hero.
  */
-void
-explode(x, y, type, dam, olet, expltype)
-int x, y;
+void explode(x, y, type, dam, olet, expltype) int x, y;
 int type; /* the same as in zap.c; passes -(wand typ) for some WAND_CLASS */
 int dam;
 char olet;
@@ -41,10 +39,19 @@ int expltype;
     struct monst *mtmp, *mdef = 0;
     uchar adtyp;
     int explmask[3][3]; /* 0=normal explosion, 1=do shieldeff, 2=do nothing */
+#if 0 /*KR: 원본*/      /*do_hallu의 처리는 일단 보류*/
     boolean shopdamage = FALSE, generic = FALSE, physical_dmg = FALSE,
             do_hallu = FALSE, inside_engulfer, grabbed, grabbing;
+#else                   /*KR: KRNethack 맞춤 번역 */
+    boolean shopdamage = FALSE, generic = FALSE, physical_dmg = FALSE,
+            inside_engulfer, grabbed, grabbing;
+#endif
     coord grabxy;
+#if 0 /*KR: 원본*/
     char hallu_buf[BUFSZ], killr_buf[BUFSZ];
+#else /*KR: KRNethack 맞춤 번역 */
+    char hallu_buf[BUFSZ];
+#endif
     short exploding_wand_typ = 0;
 
     if (olet == WAND_CLASS) { /* retributive strike */
@@ -55,8 +62,8 @@ int expltype;
             exploding_wand_typ = (short) type;
             /* most attack wands produce specific explosions;
                other types produce a generic magical explosion */
-            if (objects[type].oc_dir == RAY
-                && type != WAN_DIGGING && type != WAN_SLEEP) {
+            if (objects[type].oc_dir == RAY && type != WAN_DIGGING
+                && type != WAN_SLEEP) {
                 type -= WAN_MAGIC_MISSILE;
                 if (type < 0 || type > 9) {
                     impossible("explode: wand has bad zap type (%d).", type);
@@ -101,18 +108,19 @@ int expltype;
     } else
         grabxy.x = grabxy.y = 0; /* lint suppression */
     /* FIXME:
-     *  It is possible for a grabber to be outside the explosion
-     *  radius and reaching inside to hold the hero.  If so, it ought
-     *  to take damage (the extra half of double damage).  It is also
-     *  possible for poly'd hero to be outside the radius and reaching
-     *  in to hold a monster.  Hero should take damage in that situation.
+     * It is possible for a grabber to be outside the explosion
+     * radius and reaching inside to hold the hero.  If so, it ought
+     * to take damage (the extra half of double damage).  It is also
+     * possible for poly'd hero to be outside the radius and reaching
+     * in to hold a monster.  Hero should take damage in that situation.
      *
-     *  Probably the simplest way to handle this would be to expand
-     *  the radius used when collecting targets but exclude everything
-     *  beyond the regular radius which isn't reaching inside.  Then
-     *  skip harm to gear of any extended targets when inflicting damage.
+     * Probably the simplest way to handle this would be to expand
+     * the radius used when collecting targets but exclude everything
+     * beyond the regular radius which isn't reaching inside.  Then
+     * skip harm to gear of any extended targets when inflicting damage.
      */
 
+#if 0 /*KR: 원본*/ /*do_hallu의 처리는 일단 보류*/
     if (olet == MON_EXPLODE) {
         /* when explode() is called recursively, killer.name might change so
            we need to retain a copy of the current value for this explosion */
@@ -122,42 +130,58 @@ int expltype;
                         || strstri(str, "s' explosion")));
         adtyp = AD_PHYS;
     } else
-        switch (abs(type) % 10) {
-        case 0:
-            str = "magical blast";
-            adtyp = AD_MAGM;
-            break;
-        case 1:
+#endif
+    switch (abs(type) % 10) {
+    case 0:
+        /*KR str = "magical blast"; */
+        str = "마법 폭발";
+        adtyp = AD_MAGM;
+        break;
+    case 1:
+#if 0 /*KR: 원본*/
             str = (olet == BURNING_OIL) ? "burning oil"
                      : (olet == SCROLL_CLASS) ? "tower of flame" : "fireball";
-            /* fire damage, not physical damage */
-            adtyp = AD_FIRE;
-            break;
-        case 2:
-            str = "ball of cold";
-            adtyp = AD_COLD;
-            break;
-        case 4:
+#else /*KR: KRNethack 맞춤 번역 */
+        str = (olet == BURNING_OIL)    ? "불타는 기름"
+              : (olet == SCROLL_CLASS) ? "불기둥"
+                                       : "파이어볼";
+#endif
+        /* fire damage, not physical damage */
+        adtyp = AD_FIRE;
+        break;
+    case 2:
+        /*KR str = "ball of cold"; */
+        str = "얼음 구슬";
+        adtyp = AD_COLD;
+        break;
+    case 4:
+#if 0 /*KR: 원본*/
             str = (olet == WAND_CLASS) ? "death field"
                                        : "disintegration field";
-            adtyp = AD_DISN;
-            break;
-        case 5:
-            str = "ball of lightning";
-            adtyp = AD_ELEC;
-            break;
-        case 6:
-            str = "poison gas cloud";
-            adtyp = AD_DRST;
-            break;
-        case 7:
-            str = "splash of acid";
-            adtyp = AD_ACID;
-            break;
-        default:
-            impossible("explosion base type %d?", type);
-            return;
-        }
+#else /*KR: KRNethack 맞춤 번역 */
+        str = (olet == WAND_CLASS) ? "죽음의 파동" : "분해 파동";
+#endif
+        adtyp = AD_DISN;
+        break;
+    case 5:
+        /*KR str = "ball of lightning"; */
+        str = "번개 구슬";
+        adtyp = AD_ELEC;
+        break;
+    case 6:
+        /*KR str = "poison gas cloud"; */
+        str = "독가스 구름";
+        adtyp = AD_DRST;
+        break;
+    case 7:
+        /*KR str = "splash of acid"; */
+        str = "산성 물보라";
+        adtyp = AD_ACID;
+        break;
+    default:
+        impossible("explosion base type %d?", type);
+        return;
+    }
 
     any_shield = visible = FALSE;
     for (i = 0; i < 3; i++)
@@ -301,11 +325,13 @@ int expltype;
         tmp_at(DISP_END, 0); /* clear the explosion */
     } else {
         if (olet == MON_EXPLODE) {
-            str = "explosion";
+            /*KR str = "explosion"; */
+            str = "폭발";
             generic = TRUE;
         }
         if (!Deaf && olet != SCROLL_CLASS)
-            You_hear("a blast.");
+            /*KR You_hear("a blast."); */
+            You_hear("폭발음을 들었다.");
     }
 
     if (dam)
@@ -329,6 +355,7 @@ int expltype;
                     mtmp = u.usteed;
                 if (!mtmp)
                     continue;
+#if 0 /*KR: 원본*/ /*do_hallu의 처리는 일단 보류*/
                 if (do_hallu) {
                     /* replace "gas spore" with a different description
                        for each target (we can't distinguish personal names
@@ -340,70 +367,96 @@ int expltype;
                     } while (*hallu_buf != lowc(*hallu_buf));
                     str = hallu_buf;
                 }
+#endif
                 if (u.uswallow && mtmp == u.ustuck) {
                     const char *adj = (char *) 0;
 
                     if (is_animal(u.ustuck->data)) {
                         switch (adtyp) {
                         case AD_FIRE:
-                            adj = "heartburn";
+                            /*KR adj = "heartburn"; */
+                            adj = "위장에 화상을 입었다";
                             break;
                         case AD_COLD:
-                            adj = "chilly";
+                            /*KR adj = "chilly"; */
+                            adj = "오한을 느꼈다";
                             break;
                         case AD_DISN:
                             if (olet == WAND_CLASS)
-                                adj = "irradiated by pure energy";
+                                /*KR adj = "irradiated by pure energy"; */
+                                adj = "순수한 에너지에 노출되었다";
                             else
-                                adj = "perforated";
+                                /*KR adj = "perforated"; */
+                                adj = "구멍이 뚫렸다";
                             break;
                         case AD_ELEC:
-                            adj = "shocked";
+                            /*KR adj = "shocked"; */
+                            adj = "전기에 감전되었다";
                             break;
                         case AD_DRST:
-                            adj = "poisoned";
+                            /*KR adj = "poisoned"; */
+                            adj = "중독되었다";
                             break;
                         case AD_ACID:
-                            adj = "an upset stomach";
+                            /*KR adj = "an upset stomach"; */
+                            adj = "배탈이 났다";
                             break;
                         default:
-                            adj = "fried";
+                            /*KR adj = "fried"; */
+                            adj = "바싹 튀겨졌다";
                             break;
                         }
-                        pline("%s gets %s!", Monnam(u.ustuck), adj);
+                        /*KR pline("%s gets %s!", Monnam(u.ustuck), adj); */
+                        pline("%s %s!",
+                              append_josa(Monnam(u.ustuck), "은"), adj);
                     } else {
                         switch (adtyp) {
                         case AD_FIRE:
-                            adj = "toasted";
+                            /*KR adj = "toasted"; */
+                            adj = "바싹 구워졌다";
                             break;
                         case AD_COLD:
-                            adj = "chilly";
+                            /*KR adj = "chilly"; */
+                            adj = "얼어붙었다";
                             break;
                         case AD_DISN:
                             if (olet == WAND_CLASS)
-                                adj = "overwhelmed by pure energy";
+                                /*KR adj = "overwhelmed by pure energy"; */
+                                adj = "순수한 에너지에 압도되었다";
                             else
-                                adj = "perforated";
+                                /*KR adj = "perforated"; */
+                                adj = "구멍이 뚫렸다";
                             break;
                         case AD_ELEC:
-                            adj = "shocked";
+                            /*KR adj = "shocked"; */
+                            adj = "전기에 감전되었다";
                             break;
                         case AD_DRST:
-                            adj = "intoxicated";
+                            /*KR adj = "intoxicated"; */
+                            adj = "독에 당했다";
                             break;
                         case AD_ACID:
-                            adj = "burned";
+                            /*KR adj = "burned"; */
+                            adj = "산에 타들어갔다";
                             break;
                         default:
-                            adj = "fried";
+                            /*KR adj = "fried"; */
+                            adj = "바싹 튀겨졌다";
                             break;
                         }
-                        pline("%s gets slightly %s!", Monnam(u.ustuck), adj);
+                        /*KR pline("%s gets slightly %s!", Monnam(u.ustuck),
+                         * adj); */
+                        pline("%s 약간 %s!",
+                              append_josa(Monnam(u.ustuck), "은"), adj);
                     }
                 } else if (cansee(i + x - 1, j + y - 1)) {
                     if (mtmp->m_ap_type)
                         seemimic(mtmp);
-                    pline("%s is caught in the %s!", Monnam(mtmp), str);
+                    /*KR pline("%s is caught in the %s!", Monnam(mtmp), str);
+                     */
+                    pline("%s %s 휩싸였다!",
+                          append_josa(Monnam(mtmp), "은"),
+                          append_josa(str, "에"));
                 }
 
                 idamres += destroy_mitem(mtmp, SCROLL_CLASS, (int) adtyp);
@@ -425,7 +478,11 @@ int expltype;
                     if (resist(mtmp, olet, 0, FALSE)) {
                         /* inside_engulfer: <i+x-1,j+y-1> == <u.ux,u.uy> */
                         if (cansee(i + x - 1, j + y - 1) || inside_engulfer)
-                            pline("%s resists the %s!", Monnam(mtmp), str);
+                            /*KR pline("%s resists the %s!", Monnam(mtmp),
+                             * str); */
+                            pline("%s %s 저항했다!",
+                                  append_josa(Monnam(mtmp), "은"),
+                                  append_josa(str, "에"));
                         mdam = (dam + 1) / 2;
                     }
                     /* if grabber is reaching into hero's spot and
@@ -445,9 +502,10 @@ int expltype;
                     mtmp->mhp -= (idamres + idamnonres);
                 }
                 if (DEADMONSTER(mtmp)) {
-                    int xkflg = ((adtyp == AD_FIRE
-                                  && completelyburns(mtmp->data))
-                                 ? XKILL_NOCORPSE : 0);
+                    int xkflg =
+                        ((adtyp == AD_FIRE && completelyburns(mtmp->data))
+                             ? XKILL_NOCORPSE
+                             : 0);
 
                     if (!context.mon_moving) {
                         xkilled(mtmp, XKILL_GIVEMSG | xkflg);
@@ -461,10 +519,18 @@ int expltype;
                          * would be "you killed <mdef>" so give our own.
                          */
                         if (cansee(mtmp->mx, mtmp->my) || canspotmon(mtmp))
+#if 0 /*KR: 원본*/
                             pline("%s is %s!", Monnam(mtmp),
                                   xkflg ? "burned completely"
                                         : nonliving(mtmp->data) ? "destroyed"
                                                                 : "killed");
+#else /*KR: KRNethack 맞춤 번역 */
+                            pline("%s %s!",
+                                  append_josa(Monnam(mtmp), "은"),
+                                  xkflg                   ? "완전히 타버렸다"
+                                  : nonliving(mtmp->data) ? "파괴되었다"
+                                                          : "살해당했다");
+#endif
                         xkilled(mtmp, XKILL_NOMSG | XKILL_NOCONDUCT | xkflg);
                     } else {
                         if (xkflg)
@@ -482,6 +548,7 @@ int expltype;
         /* give message for any monster-induced explosion
            or player-induced one other than scroll of fire */
         if (flags.verbose && (type < 0 || olet != SCROLL_CLASS)) {
+#if 0 /*KR: 원본*/ /*do_hallu의 처리는 일단 보류*/
             if (do_hallu) { /* (see explanation above) */
                 do {
                     Sprintf(hallu_buf, "%s explosion",
@@ -489,7 +556,9 @@ int expltype;
                 } while (*hallu_buf != lowc(*hallu_buf));
                 str = hallu_buf;
             }
-            You("are caught in the %s!", str);
+#endif
+            /*KR You("are caught in the %s!", str); */
+            You("%s 휘말렸다!", append_josa(str, "에"));
             iflags.last_msg = PLNMSG_CAUGHT_IN_EXPLOSION;
         }
         /* do property damage first, in case we end up leaving bones */
@@ -497,7 +566,8 @@ int expltype;
             burn_away_slime();
         if (Invulnerable) {
             damu = 0;
-            You("are unharmed!");
+            /*KR You("are unharmed!"); */
+            You("무사하다!");
         } else if (adtyp == AD_PHYS || physical_dmg)
             damu = Maybe_Half_Phys(damu);
         if (adtyp == AD_FIRE)
@@ -534,22 +604,40 @@ int expltype;
                     else if (str != killer.name && str != hallu_buf)
                         Strcpy(killer.name, str);
                     killer.format = KILLED_BY_AN;
+#if 1 /*KR*/
+                    Strcat(killer.name, "에 의해");
+#endif
                 } else if (type >= 0 && olet != SCROLL_CLASS) {
+#if 0 /*KR: 원본*/
                     killer.format = NO_KILLER_PREFIX;
                     Sprintf(killer.name, "caught %sself in %s own %s", uhim(),
                             uhis(), str);
+#else /*KR: KRNethack 맞춤 번역 */
+                    killer.format = KILLED_BY;
+                    Sprintf(killer.name, "스스로 터뜨린 %s",
+                            append_josa(str, "에"));
+#endif
                 } else {
+#if 0 /*KR: 원본*/ /* an 을 붙일지 여부는 무관하므로 KILLED_BY 사용 */
                     killer.format = (!strcmpi(str, "tower of flame")
                                      || !strcmpi(str, "fireball"))
                                         ? KILLED_BY_AN
                                         : KILLED_BY;
                     Strcpy(killer.name, str);
+#else              /*KR: KRNethack 맞춤 번역 */
+                    killer.format = KILLED_BY;
+                    Strcpy(killer.name, str);
+                    Strcat(killer.name, "에 의해");
+#endif
                 }
                 if (iflags.last_msg == PLNMSG_CAUGHT_IN_EXPLOSION
-                    || iflags.last_msg == PLNMSG_TOWER_OF_FLAME) /*seffects()*/
-                    pline("It is fatal.");
+                    || iflags.last_msg
+                           == PLNMSG_TOWER_OF_FLAME) /*seffects()*/
+                    /*KR pline("It is fatal."); */
+                    pline("이것은 치명적이다.");
                 else
-                    pline_The("%s is fatal.", str);
+                    /*KR pline_The("%s is fatal.", str); */
+                    pline("%s 치명적이었다.", append_josa(str, "은"));
                 /* Known BUG: BURNING suppresses corpse in bones data,
                    but done does not handle killer reason correctly */
                 done((adtyp == AD_FIRE) ? BURNING : DIED);
@@ -559,11 +647,19 @@ int expltype;
     }
 
     if (shopdamage) {
+#if 0 /*KR: 원본*/
         pay_for_damage((adtyp == AD_FIRE) ? "burn away"
                           : (adtyp == AD_COLD) ? "shatter"
                              : (adtyp == AD_DISN) ? "disintegrate"
                                 : "destroy",
                        FALSE);
+#else /*KR: KRNethack 맞춤 번역 */
+        pay_for_damage(adtyp == AD_FIRE   ? "불태운"
+                       : adtyp == AD_COLD ? "산산조각 낸"
+                       : adtyp == AD_DISN ? "분해시킨"
+                                          : "파괴한",
+                       FALSE);
+#endif
     }
 
     /* explosions are noisy */
@@ -579,21 +675,21 @@ struct scatter_chain {
     struct scatter_chain *next; /* pointer to next scatter item */
     struct obj *obj;            /* pointer to the object        */
     xchar ox;                   /* location of                  */
-    xchar oy;                   /*      item                    */
+    xchar oy;                   /* item                    */
     schar dx;                   /* direction of                 */
-    schar dy;                   /*      travel                  */
+    schar dy;                   /* travel                  */
     int range;                  /* range of object              */
     boolean stopped;            /* flag for in-motion/stopped   */
 };
 
 /*
  * scflags:
- *      VIS_EFFECTS     Add visual effects to display
- *      MAY_HITMON      Objects may hit monsters
- *      MAY_HITYOU      Objects may hit hero
- *      MAY_HIT         Objects may hit you or monsters
- *      MAY_DESTROY     Objects may be destroyed at random
- *      MAY_FRACTURE    Stone objects can be fractured (statues, boulders)
+ * VIS_EFFECTS     Add visual effects to display
+ * MAY_HITMON      Objects may hit monsters
+ * MAY_HITYOU      Objects may hit hero
+ * MAY_HIT         Objects may hit you or monsters
+ * MAY_DESTROY     Objects may be destroyed at random
+ * MAY_FRACTURE    Stone objects can be fractured (statues, boulders)
  */
 
 /* returns number of scattered objects */
@@ -623,7 +719,8 @@ struct obj *obj; /* only scatter this obj        */
     while ((otmp = (individual_object ? obj : level.objects[sx][sy])) != 0) {
         if (otmp == uball || otmp == uchain) {
             boolean waschain = (otmp == uchain);
-            pline_The("chain shatters!");
+            /*KR pline_The("chain shatters!"); */
+            pline("사슬이 산산조각 났다!");
             unpunish();
             if (waschain)
                 continue;
@@ -642,13 +739,14 @@ struct obj *obj; /* only scatter this obj        */
 
         /* 9 in 10 chance of fracturing boulders or statues */
         if ((scflags & MAY_FRACTURE) != 0
-            && (otmp->otyp == BOULDER || otmp->otyp == STATUE)
-            && rn2(10)) {
+            && (otmp->otyp == BOULDER || otmp->otyp == STATUE) && rn2(10)) {
             if (otmp->otyp == BOULDER) {
                 if (cansee(sx, sy))
-                    pline("%s apart.", Tobjnam(otmp, "break"));
+                    /*KR pline("%s apart.", Tobjnam(otmp, "break")); */
+                    pline("%s 쪼개졌다.", append_josa(xname(otmp), "은"));
                 else
-                    You_hear("stone breaking.");
+                    /*KR You_hear("stone breaking."); */
+                    You_hear("돌이 부서지는 소리를 들었다.");
                 fracture_rock(otmp);
                 place_object(otmp, sx, sy);
                 if ((otmp = sobj_at(BOULDER, sx, sy)) != 0) {
@@ -662,19 +760,25 @@ struct obj *obj; /* only scatter this obj        */
                 if ((trap = t_at(sx, sy)) && trap->ttyp == STATUE_TRAP)
                     deltrap(trap);
                 if (cansee(sx, sy))
-                    pline("%s.", Tobjnam(otmp, "crumble"));
+                    /*KR pline("%s.", Tobjnam(otmp, "crumble")); */
+                    pline("%s 산산조각 났다.",
+                          append_josa(xname(otmp), "은"));
                 else
-                    You_hear("stone crumbling.");
+                    /*KR You_hear("stone crumbling."); */
+                    You_hear("돌이 바스러지는 소리를 들었다.");
                 (void) break_statue(otmp);
+#ifndef FIX_BUG_C340_2
                 place_object(otmp, sx, sy); /* put fragments on floor */
+#endif
             }
             newsym(sx, sy); /* in case it's beyond radius of 'farthest' */
             used_up = TRUE;
 
             /* 1 in 10 chance of destruction of obj; glass, egg destruction */
         } else if ((scflags & MAY_DESTROY) != 0
-                   && (!rn2(10) || (objects[otmp->otyp].oc_material == GLASS
-                                    || otmp->otyp == EGG))) {
+                   && (!rn2(10)
+                       || (objects[otmp->otyp].oc_material == GLASS
+                           || otmp->otyp == EGG))) {
             if (breaks(otmp, (xchar) sx, (xchar) sy))
                 used_up = TRUE;
         }
@@ -789,9 +893,7 @@ struct obj *obj; /* only scatter this obj        */
  *
  * For now, just perform a "regular" explosion.
  */
-void
-splatter_burning_oil(x, y, diluted_oil)
-int x, y;
+void splatter_burning_oil(x, y, diluted_oil) int x, y;
 boolean diluted_oil;
 {
     int dmg = d(diluted_oil ? 3 : 4, 4);
@@ -803,9 +905,7 @@ boolean diluted_oil;
 
 /* lit potion of oil is exploding; extinguish it as a light source before
    possibly killing the hero and attempting to save bones */
-void
-explode_oil(obj, x, y)
-struct obj *obj;
+void explode_oil(obj, x, y) struct obj *obj;
 int x, y;
 {
     boolean diluted_oil = obj->odiluted;

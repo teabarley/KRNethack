@@ -954,14 +954,15 @@ init_dungeons()
     /*
      *  I hate hardwiring these names. :-(
      */
+    /*KR 내부 식별자이므로 번역하면 오류 발생 */
     /*KR quest_dnum = dname_to_dnum("The Quest"); */
-    quest_dnum = dname_to_dnum("퀘스트");
+    quest_dnum = dname_to_dnum("The Quest");
     /*KR sokoban_dnum = dname_to_dnum("Sokoban"); */
-    sokoban_dnum = dname_to_dnum("소코반");
+    sokoban_dnum = dname_to_dnum("Sokoban");
     /*KR mines_dnum = dname_to_dnum("The Gnomish Mines"); */
-    mines_dnum = dname_to_dnum("노움 광산");
+    mines_dnum = dname_to_dnum("The Gnomish Mines");
     /*KR tower_dnum = dname_to_dnum("Vlad's Tower"); */
-    tower_dnum = dname_to_dnum("블라드의 탑");
+    tower_dnum = dname_to_dnum("Vlad's Tower");
 
     /* one special fixup for dummy surface level */
     if ((x = find_level("dummy")) != 0) {

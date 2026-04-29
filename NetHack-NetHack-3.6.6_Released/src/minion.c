@@ -5,9 +5,7 @@
 
 #include "hack.h"
 
-void
-newemin(mtmp)
-struct monst *mtmp;
+void newemin(mtmp) struct monst *mtmp;
 {
     if (!mtmp->mextra)
         mtmp->mextra = newmextra();
@@ -17,9 +15,7 @@ struct monst *mtmp;
     }
 }
 
-void
-free_emin(mtmp)
-struct monst *mtmp;
+void free_emin(mtmp) struct monst *mtmp;
 {
     if (mtmp->mextra && EMIN(mtmp)) {
         free((genericptr_t) EMIN(mtmp));
@@ -61,40 +57,47 @@ struct monst *mon;
 
         if (uwep && uwep->oartifact == ART_DEMONBANE && is_demon(ptr)) {
             if (canseemon(mon))
+#if 0 /*KR: 원본*/
                 pline("%s looks puzzled for a moment.", Monnam(mon));
+#else /*KR: KRNethack 맞춤 번역 */
+                pline("%s 잠시 어리둥절한 표정을 지었다.",
+                      append_josa(Monnam(mon), "은"));
+#endif
             return 0;
         }
 
-        atyp = mon->ispriest ? EPRI(mon)->shralign
-                             : mon->isminion ? EMIN(mon)->min_align
-                                             : (ptr->maligntyp == A_NONE)
-                                                   ? A_NONE
-                                                   : sgn(ptr->maligntyp);
+        atyp = mon->ispriest                ? EPRI(mon)->shralign
+               : mon->isminion              ? EMIN(mon)->min_align
+               : (ptr->maligntyp == A_NONE) ? A_NONE
+                                            : sgn(ptr->maligntyp);
     } else {
         ptr = &mons[PM_WIZARD_OF_YENDOR];
         atyp = (ptr->maligntyp == A_NONE) ? A_NONE : sgn(ptr->maligntyp);
     }
 
     if (is_dprince(ptr) || (ptr == &mons[PM_WIZARD_OF_YENDOR])) {
-        dtype = (!rn2(20)) ? dprince(atyp) : (!rn2(4)) ? dlord(atyp)
-                                                       : ndemon(atyp);
-        cnt = ((dtype != NON_PM)
-               && !rn2(4) && is_ndemon(&mons[dtype])) ? 2 : 1;
+        dtype = (!rn2(20))  ? dprince(atyp)
+                : (!rn2(4)) ? dlord(atyp)
+                            : ndemon(atyp);
+        cnt =
+            ((dtype != NON_PM) && !rn2(4) && is_ndemon(&mons[dtype])) ? 2 : 1;
     } else if (is_dlord(ptr)) {
-        dtype = (!rn2(50)) ? dprince(atyp) : (!rn2(20)) ? dlord(atyp)
-                                                        : ndemon(atyp);
-        cnt = ((dtype != NON_PM)
-               && !rn2(4) && is_ndemon(&mons[dtype])) ? 2 : 1;
+        dtype = (!rn2(50))   ? dprince(atyp)
+                : (!rn2(20)) ? dlord(atyp)
+                             : ndemon(atyp);
+        cnt =
+            ((dtype != NON_PM) && !rn2(4) && is_ndemon(&mons[dtype])) ? 2 : 1;
     } else if (is_ndemon(ptr)) {
-        dtype = (!rn2(20)) ? dlord(atyp) : (!rn2(6)) ? ndemon(atyp)
-                                                     : monsndx(ptr);
+        dtype = (!rn2(20))  ? dlord(atyp)
+                : (!rn2(6)) ? ndemon(atyp)
+                            : monsndx(ptr);
         cnt = 1;
     } else if (is_lminion(mon)) {
-        dtype = (is_lord(ptr) && !rn2(20))
-                    ? llord()
-                    : (is_lord(ptr) || !rn2(6)) ? lminion() : monsndx(ptr);
-        cnt = ((dtype != NON_PM)
-               && !rn2(4) && !is_lord(&mons[dtype])) ? 2 : 1;
+        dtype = (is_lord(ptr) && !rn2(20))  ? llord()
+                : (is_lord(ptr) || !rn2(6)) ? lminion()
+                                            : monsndx(ptr);
+        cnt =
+            ((dtype != NON_PM) && !rn2(4) && !is_lord(&mons[dtype])) ? 2 : 1;
     } else if (ptr == &mons[PM_ANGEL]) {
         /* non-lawful angels can also summon */
         if (!rn2(6)) {
@@ -110,8 +113,8 @@ struct monst *mon;
         } else {
             dtype = PM_ANGEL;
         }
-        cnt = ((dtype != NON_PM)
-               && !rn2(4) && !is_lord(&mons[dtype])) ? 2 : 1;
+        cnt =
+            ((dtype != NON_PM) && !rn2(4) && !is_lord(&mons[dtype])) ? 2 : 1;
     }
 
     if (dtype == NON_PM)
@@ -148,7 +151,12 @@ struct monst *mon;
                     (atyp != u.ualign.type) ^ !mtmp->mpeaceful;
             }
             if (is_demon(ptr) && canseemon(mtmp))
+#if 0 /*KR: 원본*/
                 pline("%s appears in a cloud of smoke!", Amonnam(mtmp));
+#else /*KR: KRNethack 맞춤 번역 */
+                pline("%s 연기구름 속에서 나타났다!",
+                      append_josa(Amonnam(mtmp), "이"));
+#endif
         }
         cnt--;
     }
@@ -160,9 +168,7 @@ struct monst *mon;
     return result;
 }
 
-void
-summon_minion(alignment, talk)
-aligntyp alignment;
+void summon_minion(alignment, talk) aligntyp alignment;
 boolean talk;
 {
     register struct monst *mon;
@@ -209,13 +215,28 @@ boolean talk;
     if (mon) {
         if (talk) {
             if (!Deaf)
+#if 0 /*KR: 원본*/
                 pline_The("voice of %s booms:", align_gname(alignment));
+#else /*KR: KRNethack 맞춤 번역 */
+                pline("%s의 목소리가 울려 퍼졌다:", align_gname(alignment));
+#endif
             else
+#if 0 /*KR: 원본*/
                 You_feel("%s booming voice:",
                          s_suffix(align_gname(alignment)));
-            verbalize("Thou shalt pay for thine indiscretion!");
+#else /*KR: KRNethack 맞춤 번역 */
+                You_feel("%s 울려 퍼지는 목소리를 느꼈다:",
+                         s_suffix(align_gname(alignment)));
+#endif
+            /*KR verbalize("Thou shalt pay for thine indiscretion!"); */
+            verbalize("너의 무분별함에 대한 대가를 치를지어다!");
             if (canspotmon(mon))
+#if 0 /*KR: 원본*/
                 pline("%s appears before you.", Amonnam(mon));
+#else /*KR: KRNethack 맞춤 번역 */
+                pline("%s 당신의 앞에 나타났다.",
+                      append_josa(Amonnam(mon), "이"));
+#endif
             mon->mstrategy &= ~STRAT_APPEARMSG;
         }
         mon->mpeaceful = FALSE;
@@ -233,7 +254,11 @@ register struct monst *mtmp;
     long cash, demand, offer;
 
     if (uwep && uwep->oartifact == ART_EXCALIBUR) {
+#if 0 /*KR: 원본*/
         pline("%s looks very angry.", Amonnam(mtmp));
+#else /*KR: KRNethack 맞춤 번역 */
+        pline("%s 매우 화나 보인다.", append_josa(Amonnam(mtmp), "은"));
+#endif
         mtmp->mpeaceful = mtmp->mtame = 0;
         set_malign(mtmp);
         newsym(mtmp->mx, mtmp->my);
@@ -256,24 +281,40 @@ register struct monst *mtmp;
 
         mtmp->minvis = mtmp->perminvis = 0;
         if (wasunseen && canspotmon(mtmp)) {
+#if 0 /*KR: 원본*/
             pline("%s appears before you.", Amonnam(mtmp));
+#else /*KR: KRNethack 맞춤 번역 */
+            pline("%s 당신의 앞에 나타났다.",
+                  append_josa(Amonnam(mtmp), "이"));
+#endif
             mtmp->mstrategy &= ~STRAT_APPEARMSG;
         }
         newsym(mtmp->mx, mtmp->my);
     }
     if (youmonst.data->mlet == S_DEMON) { /* Won't blackmail their own. */
         if (!Deaf)
+#if 0 /*KR: 원본*/
             pline("%s says, \"Good hunting, %s.\"", Amonnam(mtmp),
                   flags.female ? "Sister" : "Brother");
+#else /*KR: KRNethack 맞춤 번역 */
+            pline("%s 말한다, \"훌륭한 사냥이 되기를, %s.\"",
+                  append_josa(Amonnam(mtmp), "이"),
+                  flags.female ? "자매여" : "형제여");
+#endif
         else if (canseemon(mtmp))
+#if 0 /*KR: 원본*/
             pline("%s says something.", Amonnam(mtmp));
+#else /*KR: KRNethack 맞춤 번역 */
+            pline("%s 무언가를 말한다.", append_josa(Amonnam(mtmp), "이"));
+#endif
         if (!tele_restrict(mtmp))
             (void) rloc(mtmp, TRUE);
         return 1;
     }
     cash = money_cnt(invent);
-    demand = (cash * (rnd(80) + 20 * Athome))
-           / (100 * (1 + (sgn(u.ualign.type) == sgn(mtmp->data->maligntyp))));
+    demand =
+        (cash * (rnd(80) + 20 * Athome))
+        / (100 * (1 + (sgn(u.ualign.type) == sgn(mtmp->data->maligntyp))));
 
     if (!demand || multi < 0) { /* you have no gold or can't move */
         mtmp->mpeaceful = 0;
@@ -292,21 +333,46 @@ register struct monst *mtmp;
             demand = cash + (long) rn1(1000, 125);
 
         if (!Deaf)
+#if 0 /*KR: 원본*/
             pline("%s demands %ld %s for safe passage.",
                   Amonnam(mtmp), demand, currency(demand));
+#else /*KR: KRNethack 맞춤 번역 */
+            pline("%s 무사히 통과하고 싶다면 %ld %s 내놓으라고 요구한다.",
+                  append_josa(Amonnam(mtmp), "은"), demand,
+                  append_josa(currency(demand), "을"));
+#endif
         else if (canseemon(mtmp))
+#if 0 /*KR: 원본*/
             pline("%s seems to be demanding something.", Amonnam(mtmp));
+#else /*KR: KRNethack 맞춤 번역 */
+            pline("%s 무언가를 요구하는 것 같다.",
+                  append_josa(Amonnam(mtmp), "이"));
+#endif
 
         offer = 0L;
         if (!Deaf && ((offer = bribe(mtmp)) >= demand)) {
+#if 0 /*KR: 원본*/
             pline("%s vanishes, laughing about cowardly mortals.",
                   Amonnam(mtmp));
+#else /*KR: KRNethack 맞춤 번역 */
+            pline("%s 겁 많은 필멸자들을 비웃으며 사라졌다.",
+                  append_josa(Amonnam(mtmp), "은"));
+#endif
         } else if (offer > 0L
                    && (long) rnd(5 * ACURR(A_CHA)) > (demand - offer)) {
+#if 0 /*KR: 원본*/
             pline("%s scowls at you menacingly, then vanishes.",
                   Amonnam(mtmp));
+#else /*KR: KRNethack 맞춤 번역 */
+            pline("%s 당신을 위협적으로 노려보고는, 이내 사라졌다.",
+                  append_josa(Amonnam(mtmp), "은"));
+#endif
         } else {
+#if 0 /*KR: 원본*/
             pline("%s gets angry...", Amonnam(mtmp));
+#else /*KR: KRNethack 맞춤 번역 */
+            pline("%s 화를 낸다...", append_josa(Amonnam(mtmp), "이"));
+#endif
             mtmp->mpeaceful = 0;
             set_malign(mtmp);
             return 0;
@@ -324,23 +390,39 @@ struct monst *mtmp;
     long offer;
     long umoney = money_cnt(invent);
 
-    getlin("How much will you offer?", buf);
+    /*KR getlin("How much will you offer?", buf); */
+    getlin("얼마를 제안하시겠습니까?", buf);
     if (sscanf(buf, "%ld", &offer) != 1)
         offer = 0L;
 
     /*Michael Paddon -- fix for negative offer to monster*/
     /*JAR880815 - */
     if (offer < 0L) {
+#if 0 /*KR: 원본*/
         You("try to shortchange %s, but fumble.", mon_nam(mtmp));
+#else /*KR: KRNethack 맞춤 번역 */
+        You("%s 속이려 했으나, 엉성하게 실패했다.",
+            append_josa(mon_nam(mtmp), "을"));
+#endif
         return 0L;
     } else if (offer == 0L) {
-        You("refuse.");
+        /*KR You("refuse."); */
+        You("거절했다.");
         return 0L;
     } else if (offer >= umoney) {
+#if 0 /*KR: 원본*/
         You("give %s all your gold.", mon_nam(mtmp));
+#else /*KR: KRNethack 맞춤 번역 */
+        You("%s에게 당신의 모든 금화를 주었다.", mon_nam(mtmp));
+#endif
         offer = umoney;
     } else {
+#if 0 /*KR: 원본*/
         You("give %s %ld %s.", mon_nam(mtmp), offer, currency(offer));
+#else /*KR: KRNethack 맞춤 번역 */
+        You("%s에게 %ld %s 주었다.", mon_nam(mtmp), offer,
+            append_josa(currency(offer), "을"));
+#endif
     }
     (void) money2mon(mtmp, offer);
     context.botl = 1;
@@ -427,9 +509,8 @@ aligntyp atyp; /* A_NONE is used for 'any alignment' */
 }
 
 /* guardian angel has been affected by conflict so is abandoning hero */
-void
-lose_guardian_angel(mon)
-struct monst *mon; /* if null, angel hasn't been created yet */
+void lose_guardian_angel(
+    mon) struct monst *mon; /* if null, angel hasn't been created yet */
 {
     coord mm;
     int i;
@@ -437,10 +518,21 @@ struct monst *mon; /* if null, angel hasn't been created yet */
     if (mon) {
         if (canspotmon(mon)) {
             if (!Deaf) {
+#if 0 /*KR: 원본*/
                 pline("%s rebukes you, saying:", Monnam(mon));
-                verbalize("Since you desire conflict, have some more!");
+#else /*KR: KRNethack 맞춤 번역 */
+                pline("%s 당신을 꾸짖으며 말한다:",
+                      append_josa(Monnam(mon), "이"));
+#endif
+                /*KR verbalize("Since you desire conflict, have some more!");
+                 */
+                verbalize("네가 투쟁을 원하니, 조금 더 맛보아라!");
             } else {
+#if 0 /*KR: 원본*/
                 pline("%s vanishes!", Monnam(mon));
+#else /*KR: KRNethack 맞춤 번역 */
+                pline("%s 사라졌다!", append_josa(Monnam(mon), "이"));
+#endif
             }
         }
         mongone(mon);
@@ -467,23 +559,30 @@ gain_guardian_angel()
                      message will be heard even if that fails) */
     if (Conflict) {
         if (!Deaf)
-            pline("A voice booms:");
+            /*KR pline("A voice booms:"); */
+            pline("어떤 목소리가 울려 퍼졌다:");
         else
-            You_feel("a booming voice:");
-        verbalize("Thy desire for conflict shall be fulfilled!");
+            /*KR You_feel("a booming voice:"); */
+            You_feel("울려 퍼지는 목소리를 느꼈다:");
+        /*KR verbalize("Thy desire for conflict shall be fulfilled!"); */
+        verbalize("투쟁에 대한 너의 갈망이 채워질지어다!");
         /* send in some hostile angels instead */
         lose_guardian_angel((struct monst *) 0);
     } else if (u.ualign.record > 8) { /* fervent */
         if (!Deaf)
-            pline("A voice whispers:");
+            /*KR pline("A voice whispers:"); */
+            pline("어떤 목소리가 속삭였다:");
         else
-            You_feel("a soft voice:");
-        verbalize("Thou hast been worthy of me!");
+            /*KR You_feel("a soft voice:"); */
+            You_feel("부드러운 목소리를 느꼈다:");
+        /*KR verbalize("Thou hast been worthy of me!"); */
+        verbalize("너는 나의 인정을 받을 자격이 있다!");
         mm.x = u.ux;
         mm.y = u.uy;
         if (enexto(&mm, mm.x, mm.y, &mons[PM_ANGEL])
             && (mtmp = mk_roamer(&mons[PM_ANGEL], u.ualign.type, mm.x, mm.y,
-                                 TRUE)) != 0) {
+                                 TRUE))
+                   != 0) {
             mtmp->mstrategy &= ~STRAT_APPEARMSG;
             /* guardian angel -- the one case mtame doesn't imply an
              * edog structure, so we don't want to call tamedog().
@@ -494,9 +593,12 @@ gain_guardian_angel()
             /* for 'hilite_pet'; after making tame, before next message */
             newsym(mtmp->mx, mtmp->my);
             if (!Blind)
-                pline("An angel appears near you.");
+                /*KR pline("An angel appears near you."); */
+                pline("당신 근처에 천사가 나타났다.");
             else
-                You_feel("the presence of a friendly angel near you.");
+                /*KR You_feel("the presence of a friendly angel near you.");
+                 */
+                You_feel("당신 근처에 우호적인 천사가 있음을 느꼈다.");
             /* make him strong enough vs. endgame foes */
             mtmp->m_lev = rn1(8, 15);
             mtmp->mhp = mtmp->mhpmax =

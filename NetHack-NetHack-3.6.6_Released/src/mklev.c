@@ -9,30 +9,31 @@
 /* croom->lx etc are schar (width <= int), so % arith ensures that */
 /* conversion of result to int is reasonable */
 
-STATIC_DCL void FDECL(mkfount, (int, struct mkroom *));
-STATIC_DCL void FDECL(mksink, (struct mkroom *));
-STATIC_DCL void FDECL(mkaltar, (struct mkroom *));
-STATIC_DCL void FDECL(mkgrave, (struct mkroom *));
+STATIC_DCL void FDECL(mkfount, (int, struct mkroom *) );
+STATIC_DCL void FDECL(mksink, (struct mkroom *) );
+STATIC_DCL void FDECL(mkaltar, (struct mkroom *) );
+STATIC_DCL void FDECL(mkgrave, (struct mkroom *) );
 STATIC_DCL void NDECL(makevtele);
 STATIC_DCL void NDECL(clear_level_structures);
 STATIC_DCL void NDECL(makelevel);
 STATIC_DCL boolean FDECL(bydoor, (XCHAR_P, XCHAR_P));
-STATIC_DCL struct mkroom *FDECL(find_branch_room, (coord *));
+STATIC_DCL struct mkroom *FDECL(find_branch_room, (coord *) );
 STATIC_DCL struct mkroom *FDECL(pos_to_room, (XCHAR_P, XCHAR_P));
-STATIC_DCL boolean FDECL(place_niche, (struct mkroom *, int *, int *, int *));
-STATIC_DCL void FDECL(makeniche, (int));
+STATIC_DCL boolean FDECL(place_niche,
+                         (struct mkroom *, int *, int *, int *) );
+STATIC_DCL void FDECL(makeniche, (int) );
 STATIC_DCL void NDECL(make_niches);
-STATIC_PTR int FDECL(CFDECLSPEC do_comp, (const genericptr,
-                                          const genericptr));
-STATIC_DCL void FDECL(dosdoor, (XCHAR_P, XCHAR_P, struct mkroom *, int));
+STATIC_PTR int FDECL(CFDECLSPEC do_comp,
+                     (const genericptr, const genericptr));
+STATIC_DCL void FDECL(dosdoor, (XCHAR_P, XCHAR_P, struct mkroom *, int) );
 STATIC_DCL void FDECL(join, (int, int, BOOLEAN_P));
-STATIC_DCL void FDECL(do_room_or_subroom, (struct mkroom *, int, int,
-                                           int, int, BOOLEAN_P,
-                                           SCHAR_P, BOOLEAN_P, BOOLEAN_P));
+STATIC_DCL void FDECL(do_room_or_subroom,
+                      (struct mkroom *, int, int, int, int, BOOLEAN_P,
+                       SCHAR_P, BOOLEAN_P, BOOLEAN_P));
 STATIC_DCL void NDECL(makerooms);
-STATIC_DCL void FDECL(finddpos, (coord *, XCHAR_P, XCHAR_P,
-                                 XCHAR_P, XCHAR_P));
-STATIC_DCL void FDECL(mkinvpos, (XCHAR_P, XCHAR_P, int));
+STATIC_DCL void FDECL(finddpos,
+                      (coord *, XCHAR_P, XCHAR_P, XCHAR_P, XCHAR_P));
+STATIC_DCL void FDECL(mkinvpos, (XCHAR_P, XCHAR_P, int) );
 STATIC_DCL void FDECL(mk_knox_portal, (XCHAR_P, XCHAR_P));
 
 #define create_vault() create_room(-1, -1, 2, 2, -1, -1, VAULT, TRUE)
@@ -43,9 +44,7 @@ static boolean made_branch; /* used only during level creation */
 
 /* Args must be (const genericptr) so that qsort will always be happy. */
 
-STATIC_PTR int CFDECLSPEC
-do_comp(vx, vy)
-const genericptr vx;
+STATIC_PTR int CFDECLSPEC do_comp(vx, vy) const genericptr vx;
 const genericptr vy;
 {
 #ifdef LINT
@@ -65,9 +64,7 @@ const genericptr vy;
 #endif /* LINT */
 }
 
-STATIC_OVL void
-finddpos(cc, xl, yl, xh, yh)
-coord *cc;
+STATIC_OVL void finddpos(cc, xl, yl, xh, yh) coord *cc;
 xchar xl, yl, xh, yh;
 {
     register xchar x, y;
@@ -89,7 +86,7 @@ xchar xl, yl, xh, yh;
     /* cannot find something reasonable -- strange */
     x = xl;
     y = yh;
- gotit:
+gotit:
     cc->x = x;
     cc->y = y;
     return;
@@ -103,13 +100,13 @@ sort_rooms()
 #else
 #define CAST_nroom nroom /*as-is*/
 #endif
-    qsort((genericptr_t) rooms, CAST_nroom, sizeof (struct mkroom), do_comp);
+    qsort((genericptr_t) rooms, CAST_nroom, sizeof(struct mkroom), do_comp);
 #undef CAST_nroom
 }
 
-STATIC_OVL void
-do_room_or_subroom(croom, lowx, lowy, hix, hiy, lit, rtype, special, is_room)
-register struct mkroom *croom;
+STATIC_OVL void do_room_or_subroom(croom, lowx, lowy, hix, hiy, lit, rtype,
+                                   special,
+                                   is_room) register struct mkroom *croom;
 int lowx, lowy;
 register int hix, hiy;
 boolean lit;
@@ -183,9 +180,8 @@ boolean is_room;
     }
 }
 
-void
-add_room(lowx, lowy, hix, hiy, lit, rtype, special)
-int lowx, lowy, hix, hiy;
+void add_room(lowx, lowy, hix, hiy, lit, rtype, special) int lowx, lowy, hix,
+    hiy;
 boolean lit;
 schar rtype;
 boolean special;
@@ -200,9 +196,8 @@ boolean special;
     nroom++;
 }
 
-void
-add_subroom(proom, lowx, lowy, hix, hiy, lit, rtype, special)
-struct mkroom *proom;
+void add_subroom(proom, lowx, lowy, hix, hiy, lit, rtype,
+                 special) struct mkroom *proom;
 int lowx, lowy, hix, hiy;
 boolean lit;
 schar rtype;
@@ -240,9 +235,7 @@ makerooms()
     return;
 }
 
-STATIC_OVL void
-join(a, b, nxcor)
-register int a, b;
+STATIC_OVL void join(a, b, nxcor) register int a, b;
 boolean nxcor;
 {
     coord cc, tt, org, dest;
@@ -347,9 +340,7 @@ makecorridors()
         }
 }
 
-void
-add_door(x, y, aroom)
-register int x, y;
+void add_door(x, y, aroom) register int x, y;
 register struct mkroom *aroom;
 {
     register struct mkroom *broom;
@@ -380,9 +371,7 @@ register struct mkroom *aroom;
     doors[aroom->fdoor].y = y;
 }
 
-STATIC_OVL void
-dosdoor(x, y, aroom, type)
-register xchar x, y;
+STATIC_OVL void dosdoor(x, y, aroom, type) register xchar x, y;
 struct mkroom *aroom;
 int type;
 {
@@ -463,11 +452,11 @@ int *dy, *xx, *yy;
     }
     *xx = dd.x;
     *yy = dd.y;
-    return (boolean) ((isok(*xx, *yy + *dy)
-                       && levl[*xx][*yy + *dy].typ == STONE)
-                      && (isok(*xx, *yy - *dy)
-                          && !IS_POOL(levl[*xx][*yy - *dy].typ)
-                          && !IS_FURNITURE(levl[*xx][*yy - *dy].typ)));
+    return (
+        boolean) ((isok(*xx, *yy + *dy) && levl[*xx][*yy + *dy].typ == STONE)
+                  && (isok(*xx, *yy - *dy)
+                      && !IS_POOL(levl[*xx][*yy - *dy].typ)
+                      && !IS_FURNITURE(levl[*xx][*yy - *dy].typ)));
 }
 
 /* there should be one of these per trap, in the same order as trap.h */
@@ -476,13 +465,13 @@ static NEARDATA const char *trap_engravings[TRAPNUM] = {
     (char *) 0,      (char *) 0,    (char *) 0,    (char *) 0, (char *) 0,
     (char *) 0,      (char *) 0,    (char *) 0,    (char *) 0,
     /* 14..16: trap door, teleport, level-teleport */
-    "Vlad was here", "ad aerarium", "ad aerarium", (char *) 0, (char *) 0,
-    (char *) 0,      (char *) 0,    (char *) 0,    (char *) 0, (char *) 0,
+    /*KR "Vlad was here", "ad aerarium", "ad aerarium", (char *) 0, (char *)
+       0, */
+    "블라드가 다녀감", "ad aerarium", "ad aerarium", (char *) 0, (char *) 0,
+    (char *) 0,    (char *) 0,    (char *) 0,    (char *) 0,   (char *) 0,
 };
 
-STATIC_OVL void
-makeniche(trap_type)
-int trap_type;
+STATIC_OVL void makeniche(trap_type) int trap_type;
 {
     register struct mkroom *aroom;
     struct rm *rm;
@@ -578,8 +567,9 @@ makevtele()
 STATIC_OVL void
 clear_level_structures()
 {
-    static struct rm zerorm = { cmap_to_glyph(S_stone),
-                                0, 0, 0, 0, 0, 0, 0, 0, 0 };
+    static struct rm zerorm = {
+        cmap_to_glyph(S_stone), 0, 0, 0, 0, 0, 0, 0, 0, 0
+    };
     register int x, y;
     register struct rm *lev;
 
@@ -739,9 +729,9 @@ makelevel()
         w = 1;
         h = 1;
         if (check_room(&vault_x, &w, &vault_y, &h, TRUE)) {
- fill_vault:
-            add_room(vault_x, vault_y, vault_x + w, vault_y + h,
-                     TRUE, VAULT, FALSE);
+        fill_vault:
+            add_room(vault_x, vault_y, vault_x + w, vault_y + h, TRUE, VAULT,
+                     FALSE);
             level.flags.has_vault = 1;
             ++room_threshold;
             fill_room(&rooms[nroom - 1], FALSE);
@@ -792,7 +782,7 @@ makelevel()
             mkroom(COCKNEST);
     }
 
- skip0:
+skip0:
     /* Place multi-dungeon branch. */
     place_branch(branchp, 0, 0);
 
@@ -843,9 +833,9 @@ makelevel()
                               (struct permonst *) 0, somex(croom),
                               somey(croom), CORPSTAT_INIT);
         /* put box/chest inside;
-         *  40% chance for at least 1 box, regardless of number
-         *  of rooms; about 5 - 7.5% for 2 boxes, least likely
-         *  when few rooms; chance for 3 or more is negligible.
+         * 40% chance for at least 1 box, regardless of number
+         * of rooms; about 5 - 7.5% for 2 boxes, least likely
+         * when few rooms; chance for 3 or more is negligible.
          */
         if (!rn2(nroom * 5 / 2))
             (void) mksobj_at((rn2(3)) ? LARGE_BOX : CHEST, somex(croom),
@@ -867,7 +857,7 @@ makelevel()
             }
         }
 
- skip_nonrogue:
+    skip_nonrogue:
         if (!rn2(3)) {
             (void) mkobj_at(0, somex(croom), somey(croom), TRUE);
             tryct = 0;
@@ -883,14 +873,14 @@ makelevel()
 }
 
 /*
- *      Place deposits of minerals (gold and misc gems) in the stone
- *      surrounding the rooms on the map.
- *      Also place kelp in water.
- *      mineralize(-1, -1, -1, -1, FALSE); => "default" behaviour
+ * Place deposits of minerals (gold and misc gems) in the stone
+ * surrounding the rooms on the map.
+ * Also place kelp in water.
+ * mineralize(-1, -1, -1, -1, FALSE); => "default" behaviour
  */
-void
-mineralize(kelp_pool, kelp_moat, goldprob, gemprob, skip_lvl_checks)
-int kelp_pool, kelp_moat, goldprob, gemprob;
+void mineralize(kelp_pool, kelp_moat, goldprob, gemprob,
+                skip_lvl_checks) int kelp_pool,
+    kelp_moat, goldprob, gemprob;
 boolean skip_lvl_checks;
 {
     s_level *sp;
@@ -1034,12 +1024,10 @@ mklev()
 
 void
 #ifdef SPECIALIZATION
-topologize(croom, do_ordinary)
-struct mkroom *croom;
+    topologize(croom, do_ordinary) struct mkroom *croom;
 boolean do_ordinary;
 #else
-topologize(croom)
-struct mkroom *croom;
+    topologize(croom) struct mkroom *croom;
 #endif
 {
     register int x, y, roomno = (int) ((croom - rooms) + ROOMOFFSET);
@@ -1059,7 +1047,7 @@ struct mkroom *croom;
         do_ordinary = TRUE; /* vision routine helper */
     if ((rtype != OROOM) || do_ordinary)
 #endif
-        {
+    {
         /* do innards first */
         for (x = lowx; x <= hix; x++)
             for (y = lowy; y <= hiy; y++)
@@ -1114,7 +1102,8 @@ coord *mp;
             do
                 croom = &rooms[rn2(nroom)];
             while ((croom == dnstairs_room || croom == upstairs_room
-                    || croom->rtype != OROOM) && (++tryct < 100));
+                    || croom->rtype != OROOM)
+                   && (++tryct < 100));
         } else
             croom = &rooms[rn2(nroom)];
 
@@ -1144,10 +1133,8 @@ xchar x, y;
 }
 
 /* If given a branch, randomly place a special stair or portal. */
-void
-place_branch(br, x, y)
-branch *br; /* branch to place */
-xchar x, y; /* location */
+void place_branch(br, x, y) branch *br; /* branch to place */
+xchar x, y;                             /* location */
 {
     coord m;
     d_level *dest;
@@ -1243,9 +1230,7 @@ xchar x, y;
             && doorindex < DOORMAX && !near_door);
 }
 
-void
-dodoor(x, y, aroom)
-int x, y;
+void dodoor(x, y, aroom) int x, y;
 struct mkroom *aroom;
 {
     if (doorindex >= DOORMAX) {
@@ -1267,9 +1252,7 @@ register xchar x, y;
 
 /* make a trap somewhere (in croom if mazeflag = 0 && !tm) */
 /* if tm != null, make trap at that location */
-void
-mktrap(num, mazeflag, croom, tm)
-int num, mazeflag;
+void mktrap(num, mazeflag, croom, tm) int num, mazeflag;
 struct mkroom *croom;
 coord *tm;
 {
@@ -1412,13 +1395,13 @@ coord *tm;
        lethal, and tend not to generate on shallower levels anyway.
        Finally, pits are excluded because it's weird to see an item
        in a pit and yet not be able to identify that the pit is there. */
-    if (kind != NO_TRAP && lvl <= (unsigned) rnd(4)
-        && kind != SQKY_BOARD && kind != RUST_TRAP
+    if (kind != NO_TRAP && lvl <= (unsigned) rnd(4) && kind != SQKY_BOARD
+        && kind != RUST_TRAP
         /* rolling boulder trap might not have a boulder if there was no
            viable path (such as when placed in the corner of a room), in
            which case tx,ty==launch.x,y; no boulder => no dead predecessor */
-        && !(kind == ROLLING_BOULDER_TRAP
-             && t->launch.x == t->tx && t->launch.y == t->ty)
+        && !(kind == ROLLING_BOULDER_TRAP && t->launch.x == t->tx
+             && t->launch.y == t->ty)
         && !is_pit(kind) && kind < HOLE) {
         /* Object generated by the trap; initially NULL, stays NULL if
            we fail to generate an object or if the trap doesn't
@@ -1498,19 +1481,25 @@ coord *tm;
             if (kind == SLP_GAS_TRAP && !(lvl <= 2 && rn2(2)))
                 victim_mnum = PM_HUMAN;
             break;
-        case 1: case 2:
+        case 1:
+        case 2:
             victim_mnum = PM_DWARF;
             break;
-        case 3: case 4: case 5:
+        case 3:
+        case 4:
+        case 5:
             victim_mnum = PM_ORC;
             break;
-        case 6: case 7: case 8: case 9:
+        case 6:
+        case 7:
+        case 8:
+        case 9:
             /* more common as they could have come from the Mines */
             victim_mnum = PM_GNOME;
             /* 10% chance of a candle too */
             if (!rn2(10)) {
-                otmp = mksobj(rn2(4) ? TALLOW_CANDLE : WAX_CANDLE,
-                              TRUE, FALSE);
+                otmp =
+                    mksobj(rn2(4) ? TALLOW_CANDLE : WAX_CANDLE, TRUE, FALSE);
                 otmp->quan = 1;
                 otmp->blessed = 0;
                 otmp->cursed = 1;
@@ -1530,9 +1519,7 @@ coord *tm;
     }
 }
 
-void
-mkstairs(x, y, up, croom)
-xchar x, y;
+void mkstairs(x, y, up, croom) xchar x, y;
 char up;
 struct mkroom *croom;
 {
@@ -1564,9 +1551,7 @@ struct mkroom *croom;
     levl[x][y].ladder = up ? LA_UP : LA_DOWN;
 }
 
-STATIC_OVL void
-mkfount(mazeflag, croom)
-int mazeflag;
+STATIC_OVL void mkfount(mazeflag, croom) int mazeflag;
 struct mkroom *croom;
 {
     coord m;
@@ -1590,9 +1575,7 @@ struct mkroom *croom;
     level.flags.nfountains++;
 }
 
-STATIC_OVL void
-mksink(croom)
-struct mkroom *croom;
+STATIC_OVL void mksink(croom) struct mkroom *croom;
 {
     coord m;
     register int tryct = 0;
@@ -1610,9 +1593,7 @@ struct mkroom *croom;
     level.flags.nsinks++;
 }
 
-STATIC_OVL void
-mkaltar(croom)
-struct mkroom *croom;
+STATIC_OVL void mkaltar(croom) struct mkroom *croom;
 {
     coord m;
     register int tryct = 0;
@@ -1636,9 +1617,7 @@ struct mkroom *croom;
     levl[m.x][m.y].altarmask = Align2amask(al);
 }
 
-static void
-mkgrave(croom)
-struct mkroom *croom;
+static void mkgrave(croom) struct mkroom *croom;
 {
     coord m;
     register int tryct = 0;
@@ -1656,7 +1635,8 @@ struct mkroom *croom;
     } while (occupied(m.x, m.y) || bydoor(m.x, m.y));
 
     /* Put a grave at <m.x,m.y> */
-    make_grave(m.x, m.y, dobell ? "Saved by the bell!" : (char *) 0);
+    /*KR make_grave(m.x, m.y, dobell ? "Saved by the bell!" : (char *) 0); */
+    make_grave(m.x, m.y, dobell ? "종소리에 목숨을 건졌다!" : (char *) 0);
 
     /* Possibly fill it with objects */
     if (!rn2(3)) {
@@ -1706,18 +1686,20 @@ void
 mkinvokearea()
 {
     int dist;
-    xchar xmin = inv_pos.x, xmax = inv_pos.x,
-          ymin = inv_pos.y, ymax = inv_pos.y;
+    xchar xmin = inv_pos.x, xmax = inv_pos.x, ymin = inv_pos.y,
+          ymax = inv_pos.y;
     register xchar i;
 
     /* slightly odd if levitating, but not wrong */
-    pline_The("floor shakes violently under you!");
+    /*KR pline_The("floor shakes violently under you!"); */
+    pline("발밑의 바닥이 거세게 흔들린다!");
     /*
      * TODO:
-     *  Suppress this message if player has dug out all the walls
-     *  that would otherwise be affected.
+     * Suppress this message if player has dug out all the walls
+     * that would otherwise be affected.
      */
-    pline_The("walls around you begin to bend and crumble!");
+    /*KR pline_The("walls around you begin to bend and crumble!"); */
+    pline("당신 주변의 벽들이 휘어지고 무너지기 시작한다!");
     display_nhwindow(WIN_MESSAGE, TRUE);
 
     /* any trap hero is stuck in will be going away now */
@@ -1752,7 +1734,8 @@ mkinvokearea()
         delay_output();
     }
 
-    You("are standing at the top of a stairwell leading down!");
+    /*KR You("are standing at the top of a stairwell leading down!"); */
+    You("아래로 이어지는 나선 계단의 꼭대기에 서 있다!");
     mkstairs(u.ux, u.uy, 0, (struct mkroom *) 0); /* down */
     newsym(u.ux, u.uy);
     vision_full_recalc = 1; /* everything changed */
@@ -1761,9 +1744,7 @@ mkinvokearea()
 /* Change level topology.  Boulders in the vicinity are eliminated.
  * Temporarily overrides vision in the name of a nice effect.
  */
-STATIC_OVL void
-mkinvpos(x, y, dist)
-xchar x, y;
+STATIC_OVL void mkinvpos(x, y, dist) xchar x, y;
 int dist;
 {
     struct trap *ttmp;
@@ -1844,7 +1825,8 @@ int dist;
     }
 
     if (!does_block(x, y, lev))
-        unblock_point(x, y); /* make sure vision knows this location is open */
+        unblock_point(x,
+                      y); /* make sure vision knows this location is open */
 
     /* display new value of position; could have a monster/object on it */
     newsym(x, y);
@@ -1858,15 +1840,14 @@ int dist;
  *
  * Ludios will remain isolated until the branch is corrected by this function.
  */
-STATIC_OVL void
-mk_knox_portal(x, y)
-xchar x, y;
+STATIC_OVL void mk_knox_portal(x, y) xchar x, y;
 {
     extern int n_dgns; /* from dungeon.c */
     d_level *source;
     branch *br;
     schar u_depth;
 
+    /*KR: 내부 식별자이므로 번역하면 오류 발생 */
     br = dungeon_branch("Fort Ludios");
     if (on_level(&knox_level, &br->end1)) {
         source = &br->end2;
@@ -1881,7 +1862,8 @@ xchar x, y;
     if (source->dnum < n_dgns || (rn2(3) && !wizard))
         return;
 
-    if (!(u.uz.dnum == oracle_level.dnum      /* in main dungeon */
+    if (!(u.uz.dnum == oracle_level.dnum /* in main dungeon */
+          /*KR: 내부 식별자이므로 번역하면 오류 발생 */
           && !at_dgn_entrance("The Quest")    /* but not Quest's entry */
           && (u_depth = depth(&u.uz)) > 10    /* beneath 10 */
           && u_depth < depth(&medusa_level))) /* and above Medusa */

@@ -9,14 +9,14 @@
 
 extern boolean notonhead;
 
-STATIC_DCL void FDECL(watch_on_duty, (struct monst *));
-STATIC_DCL int FDECL(disturb, (struct monst *));
-STATIC_DCL void FDECL(release_hero, (struct monst *));
-STATIC_DCL void FDECL(distfleeck, (struct monst *, int *, int *, int *));
-STATIC_DCL int FDECL(m_arrival, (struct monst *));
-STATIC_DCL boolean FDECL(stuff_prevents_passage, (struct monst *));
-STATIC_DCL int FDECL(vamp_shift, (struct monst *, struct permonst *,
-                                  BOOLEAN_P));
+STATIC_DCL void FDECL(watch_on_duty, (struct monst *) );
+STATIC_DCL int FDECL(disturb, (struct monst *) );
+STATIC_DCL void FDECL(release_hero, (struct monst *) );
+STATIC_DCL void FDECL(distfleeck, (struct monst *, int *, int *, int *) );
+STATIC_DCL int FDECL(m_arrival, (struct monst *) );
+STATIC_DCL boolean FDECL(stuff_prevents_passage, (struct monst *) );
+STATIC_DCL int FDECL(vamp_shift,
+                     (struct monst *, struct permonst *, BOOLEAN_P));
 
 /* True if mtmp died */
 boolean
@@ -25,9 +25,11 @@ struct monst *mtmp;
 {
     if (flags.verbose) {
         if (cansee(mtmp->mx, mtmp->my) && !Unaware)
-            pline("KABOOM!!  You see a door explode.");
+            /*KR pline("KABOOM!!  You see a door explode."); */
+            pline("콰앙!! 문이 폭발하는 것을 보았다.");
         else if (!Deaf)
-            You_hear("a distant explosion.");
+            /*KR You_hear("a distant explosion."); */
+            You_hear("멀리서 폭발음이 들린다.");
     }
     wake_nearto(mtmp->mx, mtmp->my, 7 * 7);
     mtmp->mstun = 1;
@@ -53,47 +55,57 @@ boolean for_unlocking; /* true => credit card ok, false => not ok */
     return m_carrying(mon, SKELETON_KEY) || m_carrying(mon, LOCK_PICK);
 }
 
-void
-mon_yells(mon, shout)
-struct monst *mon;
+void mon_yells(mon, shout) struct monst *mon;
 const char *shout;
 {
     if (Deaf) {
         if (canspotmon(mon))
-            /* Sidenote on "A watchman angrily waves her arms!"
-             * Female being called watchman is correct (career name).
-             */
+        /* Sidenote on "A watchman angrily waves her arms!"
+         * Female being called watchman is correct (career name).
+         */
+#if 0 /*KR: 원본*/
             pline("%s angrily %s %s %s!",
                 Amonnam(mon),
                 nolimbs(mon->data) ? "shakes" : "waves",
                 mhis(mon),
                 nolimbs(mon->data) ? mbodypart(mon, HEAD)
                                    : makeplural(mbodypart(mon, ARM)));
+#else /*KR: KRNethack 맞춤 번역 */
+            pline("%s 화난 듯이 %s 흔들었다!",
+                  append_josa(Amonnam(mon), "은"),
+                  append_josa(nolimbs(mon->data)
+                                  ? mbodypart(mon, HEAD)
+                                  : makeplural(mbodypart(mon, ARM)),
+                              "을"));
+#endif
     } else {
         if (canspotmon(mon))
-            pline("%s yells:", Amonnam(mon));
+            /*KR pline("%s yells:", Amonnam(mon)); */
+            pline("%s 외친다:", append_josa(Amonnam(mon), "은"));
         else
-            You_hear("someone yell:");
+            /*KR You_hear("someone yell:"); */
+            You_hear("누군가 외치는 소리를 들었다:");
         verbalize1(shout);
     }
 }
 
-STATIC_OVL void
-watch_on_duty(mtmp)
-register struct monst *mtmp;
+STATIC_OVL void watch_on_duty(mtmp) register struct monst *mtmp;
 {
     int x, y;
 
-    if (mtmp->mpeaceful && in_town(u.ux + u.dx, u.uy + u.dy)
-        && mtmp->mcansee && m_canseeu(mtmp) && !rn2(3)) {
+    if (mtmp->mpeaceful && in_town(u.ux + u.dx, u.uy + u.dy) && mtmp->mcansee
+        && m_canseeu(mtmp) && !rn2(3)) {
         if (picking_lock(&x, &y) && IS_DOOR(levl[x][y].typ)
             && (levl[x][y].doormask & D_LOCKED)) {
             if (couldsee(mtmp->mx, mtmp->my)) {
                 if (levl[x][y].looted & D_WARNED) {
-                    mon_yells(mtmp, "Halt, thief!  You're under arrest!");
+                    /*KR mon_yells(mtmp, "Halt, thief!  You're under
+                     * arrest!"); */
+                    mon_yells(mtmp, "멈춰라, 도둑놈아! 널 체포하겠다!");
                     (void) angry_guards(!!Deaf);
                 } else {
-                    mon_yells(mtmp, "Hey, stop picking that lock!");
+                    /*KR mon_yells(mtmp, "Hey, stop picking that lock!"); */
+                    mon_yells(mtmp, "이봐, 당장 자물쇠에서 손 떼!");
                     levl[x][y].looted |= D_WARNED;
                 }
                 stop_occupation();
@@ -116,7 +128,8 @@ register struct monst *mtmp;
 
     /* a similar check is in monster_nearby() in hack.c */
     /* check whether hero notices monster and stops current activity */
-    if (occupation && !rd && !Confusion && (!mtmp->mpeaceful || Hallucination)
+    if (occupation && !rd && !Confusion
+        && (!mtmp->mpeaceful || Hallucination)
         /* it's close enough to be a threat */
         && distu(x, y) <= (BOLT_LIM + 1) * (BOLT_LIM + 1)
         /* and either couldn't see it before, or it was too far away */
@@ -140,8 +153,7 @@ struct monst *mtmp;
      * Rodney, lawful minions, Angels, the Riders, shopkeepers
      * inside their own shop, priests inside their own temple */
     if (mtmp->iswiz || is_lminion(mtmp) || mtmp->data == &mons[PM_ANGEL]
-        || is_rider(mtmp->data)
-        || (mtmp->isshk && inhishop(mtmp))
+        || is_rider(mtmp->data) || (mtmp->isshk && inhishop(mtmp))
         || (mtmp->ispriest && inhistemple(mtmp)))
         return FALSE;
 
@@ -177,14 +189,14 @@ struct monst *mtmp;
                 || (Displaced && mtmp->mux == x && mtmp->muy == y))
             && !(mtmp->isshk || mtmp->isgd || !mtmp->mcansee
                  || mtmp->mpeaceful || mtmp->data->mlet == S_HUMAN
-                 || mtmp->data == &mons[PM_MINOTAUR]
+                 || mtmp->data == &mons[PM_MINOTAUR] 
                  || Inhell || In_endgame(&u.uz)));
 }
 
 
 /* regenerate lost hit points */
-void
-mon_regen(mon, digest_meal)
+void 
+mon_regen(mon, digest_meal) 
 struct monst *mon;
 boolean digest_meal;
 {
@@ -214,12 +226,12 @@ register struct monst *mtmp;
      * + Nymphs, jabberwocks, and leprechauns do not easily wake up.
      *
      * Wake up if:
-     *  in direct LOS                                           AND
-     *  within 10 squares                                       AND
-     *  not stealthy or (mon is an ettin and 9/10)              AND
-     *  (mon is not a nymph, jabberwock, or leprechaun) or 1/50 AND
-     *  Aggravate or mon is (dog or human) or
-     *      (1/7 and mon is not mimicing furniture or object)
+     * in direct LOS                                               AND
+     * within 10 squares                                           AND
+     * not stealthy or (mon is an ettin and 9/10)                  AND
+     * (mon is not a nymph, jabberwock, or leprechaun) or 1/50 AND
+     * Aggravate or mon is (dog or human) or
+     * (1/7 and mon is not mimicing furniture or object)
      */
     if (couldsee(mtmp->mx, mtmp->my) && distu(mtmp->mx, mtmp->my) <= 100
         && (!Stealth || (mtmp->data == &mons[PM_ETTIN] && rn2(10)))
@@ -228,7 +240,8 @@ register struct monst *mtmp;
 #if 0 /* DEFERRED */
               || mtmp->data == &mons[PM_VORPAL_JABBERWOCK]
 #endif
-              || mtmp->data->mlet == S_LEPRECHAUN) || !rn2(50))
+              || mtmp->data->mlet == S_LEPRECHAUN)
+            || !rn2(50))
         && (Aggravate_monster
             || (mtmp->data->mlet == S_DOG || mtmp->data->mlet == S_HUMAN)
             || (!rn2(7) && M_AP_TYPE(mtmp) != M_AP_FURNITURE
@@ -240,32 +253,30 @@ register struct monst *mtmp;
 }
 
 /* ungrab/expel held/swallowed hero */
-STATIC_OVL void
-release_hero(mon)
-struct monst *mon;
+STATIC_OVL void release_hero(mon) struct monst *mon;
 {
     if (mon == u.ustuck) {
         if (u.uswallow) {
             expels(mon, mon->data, TRUE);
         } else if (!sticks(youmonst.data)) {
             unstuck(mon); /* let go */
-            You("get released!");
+            /*KR You("get released!"); */
+            You("붙잡혀 있던 상태에서 풀려났다!");
         }
     }
 }
 
-#define flees_light(mon) ((mon)->data == &mons[PM_GREMLIN]     \
-                          && (uwep && artifact_light(uwep) && uwep->lamplit))
+#define flees_light(mon)              \
+    ((mon)->data == &mons[PM_GREMLIN] \
+     && (uwep && artifact_light(uwep) && uwep->lamplit))
 /* we could include this in the above macro, but probably overkill/overhead */
-/*      && (!(which_armor((mon), W_ARMC) != 0                               */
-/*            && which_armor((mon), W_ARMH) != 0))                          */
+/* && (!(which_armor((mon), W_ARMC) != 0                               */
+/* && which_armor((mon), W_ARMH) != 0))                          */
 
 /* monster begins fleeing for the specified time, 0 means untimed flee
  * if first, only adds fleetime if monster isn't already fleeing
  * if fleemsg, prints a message about new flight, otherwise, caller should */
-void
-monflee(mtmp, fleetime, first, fleemsg)
-struct monst *mtmp;
+void monflee(mtmp, fleetime, first, fleemsg) struct monst *mtmp;
 int fleetime;
 boolean first;
 boolean fleemsg;
@@ -295,15 +306,27 @@ boolean fleemsg;
                sleep and temporary paralysis, so both conditions
                receive the same alternate message */
             if (!mtmp->mcanmove || !mtmp->data->mmove) {
-                pline("%s seems to flinch.", Adjmonnam(mtmp, "immobile"));
+                /*KR pline("%s seems to flinch.", Adjmonnam(mtmp,
+                 * "immobile")); */
+                pline("%s 움찔하는 것 같다.",
+                      append_josa(Adjmonnam(mtmp, "움직이지 않는"), "이"));
             } else if (flees_light(mtmp)) {
                 if (rn2(10) || Deaf)
+#if 0 /*KR: 원본*/
                     pline("%s flees from the painful light of %s.",
                           Monnam(mtmp), bare_artifactname(uwep));
+#else /*KR: KRNethack 맞춤 번역 */
+                    pline("%s %s의 고통스러운 빛으로부터 도망친다.",
+                          append_josa(Monnam(mtmp), "은"),
+                          bare_artifactname(uwep));
+#endif
                 else
-                    verbalize("Bright light!");
+                    /*KR verbalize("Bright light!"); */
+                    verbalize("눈부신 빛이다!");
             } else
-                pline("%s turns to flee.", Monnam(mtmp));
+                /*KR pline("%s turns to flee.", Monnam(mtmp)); */
+                pline("%s 돌아서서 도망친다.",
+                      append_josa(Monnam(mtmp), "은"));
         }
         mtmp->mflee = 1;
     }
@@ -311,9 +334,8 @@ boolean fleemsg;
     memset(mtmp->mtrack, 0, sizeof(mtmp->mtrack));
 }
 
-STATIC_OVL void
-distfleeck(mtmp, inrange, nearby, scared)
-register struct monst *mtmp;
+STATIC_OVL void distfleeck(mtmp, inrange, nearby,
+                           scared) register struct monst *mtmp;
 int *inrange, *nearby, *scared;
 {
     int seescaryx, seescaryy;
@@ -339,9 +361,9 @@ int *inrange, *nearby, *scared;
     }
 
     sawscary = onscary(seescaryx, seescaryy, mtmp);
-    if (*nearby && (sawscary
-                    || (flees_light(mtmp) && !bravegremlin)
-                    || (!mtmp->mpeaceful && in_your_sanctuary(mtmp, 0, 0)))) {
+    if (*nearby
+        && (sawscary || (flees_light(mtmp) && !bravegremlin)
+            || (!mtmp->mpeaceful && in_your_sanctuary(mtmp, 0, 0)))) {
         *scared = 1;
         monflee(mtmp, rnd(rn2(7) ? 10 : 100), TRUE, TRUE);
     } else
@@ -373,7 +395,7 @@ register struct monst *mtmp;
     register int tmp = 0;
     int inrange, nearby, scared;
 
-    /*  Pre-movement adjustments
+    /* Pre-movement adjustments
      */
 
     mdat = mtmp->data;
@@ -469,8 +491,15 @@ register struct monst *mtmp;
     if (nearby && mdat->msound == MS_BRIBE && mtmp->mpeaceful && !mtmp->mtame
         && !u.uswallow) {
         if (mtmp->mux != u.ux || mtmp->muy != u.uy) {
+#if 0 /*KR: 원본*/
             pline("%s whispers at thin air.",
                   cansee(mtmp->mux, mtmp->muy) ? Monnam(mtmp) : "It");
+#else /*KR: KRNethack 맞춤 번역 */
+            pline("%s 허공에 대고 속삭였다.",
+                  cansee(mtmp->mux, mtmp->muy)
+                      ? append_josa(Monnam(mtmp), "은")
+                      : "그것은");
+#endif
 
             if (is_demon(youmonst.data)) {
                 /* "Good hunting, brother" */
@@ -479,7 +508,8 @@ register struct monst *mtmp;
             } else {
                 mtmp->minvis = mtmp->perminvis = 0;
                 /* Why?  For the same reason in real demon talk */
-                pline("%s gets angry!", Amonnam(mtmp));
+                /*KR pline("%s gets angry!", Amonnam(mtmp)); */
+                pline("%s 화를 냈다!", append_josa(Amonnam(mtmp), "이"));
                 mtmp->mpeaceful = 0;
                 set_malign(mtmp);
                 /* since no way is an image going to pay it off */
@@ -496,27 +526,41 @@ register struct monst *mtmp;
         struct monst *m2, *nmon = (struct monst *) 0;
 
         if (canseemon(mtmp))
-            pline("%s concentrates.", Monnam(mtmp));
+            /*KR pline("%s concentrates.", Monnam(mtmp)); */
+            pline("%s 정신을 집중하고 있다.",
+                  append_josa(Monnam(mtmp), "은"));
         if (distu(mtmp->mx, mtmp->my) > BOLT_LIM * BOLT_LIM) {
-            You("sense a faint wave of psychic energy.");
+            /*KR You("sense a faint wave of psychic energy."); */
+            You("희미한 정신 에너지가 감지된다.");
             goto toofar;
         }
-        pline("A wave of psychic energy pours over you!");
+        /*KR pline("A wave of psychic energy pours over you!"); */
+        pline("정신 에너지의 파동이 당신을 덮친다!");
         if (mtmp->mpeaceful
             && (!Conflict || resist(mtmp, RING_CLASS, 0, 0))) {
-            pline("It feels quite soothing.");
+            /*KR pline("It feels quite soothing."); */
+            pline("마음이 아주 편안해지는 느낌이다.");
         } else if (!u.uinvulnerable) {
             register boolean m_sen = sensemon(mtmp);
 
             if (m_sen || (Blind_telepat && rn2(2)) || !rn2(10)) {
                 int dmg;
+#if 0 /*KR: 원본*/
                 pline("It locks on to your %s!",
                       m_sen ? "telepathy" : Blind_telepat ? "latent telepathy"
                                                           : "mind");
+#else /*KR: KRNethack 맞춤 번역 */
+                pline("그 에너지가 당신의 %s 고정되었다!",
+                      append_josa(m_sen           ? "텔레파시"
+                                  : Blind_telepat ? "잠재적 텔레파시"
+                                                  : "정신",
+                                  "에"));
+#endif
                 dmg = rnd(15);
                 if (Half_spell_damage)
                     dmg = (dmg + 1) / 2;
-                losehp(dmg, "psychic blast", KILLED_BY_AN);
+                /*KR losehp(dmg, "psychic blast", KILLED_BY_AN); */
+                losehp(dmg, "정신 분열파", KILLED_BY_AN);
             }
         }
         for (m2 = fmon; m2; m2 = nmon) {
@@ -532,7 +576,9 @@ register struct monst *mtmp;
             if ((telepathic(m2->data) && (rn2(2) || m2->mblinded))
                 || !rn2(10)) {
                 if (cansee(m2->mx, m2->my))
-                    pline("It locks on to %s.", mon_nam(m2));
+                    /*KR pline("It locks on to %s.", mon_nam(m2)); */
+                    pline("그 에너지가 %s 고정되었다.",
+                          append_josa(mon_nam(m2), "에"));
                 m2->mhp -= rnd(15);
                 if (DEADMONSTER(m2))
                     monkilled(m2, "", AD_DRIN);
@@ -541,7 +587,7 @@ register struct monst *mtmp;
             }
         }
     }
- toofar:
+toofar:
 
     /* If monster is nearby you, and has to wield a weapon, do so.   This
      * costs the monster a move, of course.
@@ -568,7 +614,7 @@ register struct monst *mtmp;
         }
     }
 
-    /*  Now the actual movement phase
+    /* Now the actual movement phase
      */
 
     if (!nearby || mtmp->mflee || scared || mtmp->mconf || mtmp->mstun
@@ -603,8 +649,8 @@ register struct monst *mtmp;
             distfleeck(mtmp, &inrange, &nearby, &scared); /* recalc */
 
         switch (tmp) { /* for pets, cases 0 and 3 are equivalent */
-        case 0: /* no movement, but it can still attack you */
-        case 3: /* absolutely no movement */
+        case 0:        /* no movement, but it can still attack you */
+        case 3:        /* absolutely no movement */
             /* vault guard might have vanished */
             if (mtmp->isgd && (DEADMONSTER(mtmp) || mtmp->mx == 0))
                 return 1; /* behave as if it died */
@@ -643,7 +689,7 @@ register struct monst *mtmp;
      */
 
     if (!mtmp->mpeaceful || (Conflict && !resist(mtmp, RING_CLASS, 0, 0))) {
-        if (inrange && !noattacks(mdat)
+        if (inrange && !noattacks(mdat) 
             && (Upolyd ? u.mh : u.uhp) > 0 && !scared && tmp != 3)
             if (mattacku(mtmp))
                 return 1; /* monster died (e.g. exploded) */
@@ -664,9 +710,13 @@ register struct monst *mtmp;
 
 static NEARDATA const char practical[] = { WEAPON_CLASS, ARMOR_CLASS,
                                            GEM_CLASS, FOOD_CLASS, 0 };
-static NEARDATA const char magical[] = { AMULET_CLASS, POTION_CLASS,
-                                         SCROLL_CLASS, WAND_CLASS,
-                                         RING_CLASS,   SPBOOK_CLASS, 0 };
+static NEARDATA const char magical[] = { AMULET_CLASS,
+                                         POTION_CLASS,
+                                         SCROLL_CLASS,
+                                         WAND_CLASS,
+                                         RING_CLASS,
+                                         SPBOOK_CLASS,
+                                         0 };
 static NEARDATA const char indigestion[] = { BALL_CLASS, ROCK_CLASS, 0 };
 static NEARDATA const char boulder_class[] = { ROCK_CLASS, 0 };
 static NEARDATA const char gem_class[] = { GEM_CLASS, 0 };
@@ -676,7 +726,9 @@ itsstuck(mtmp)
 register struct monst *mtmp;
 {
     if (sticks(youmonst.data) && mtmp == u.ustuck && !u.uswallow) {
-        pline("%s cannot escape from you!", Monnam(mtmp));
+        /*KR pline("%s cannot escape from you!", Monnam(mtmp)); */
+        pline("%s 당신에게서 도망칠 수 없다!",
+              append_josa(Monnam(mtmp), "은"));
         return TRUE;
     }
     return FALSE;
@@ -729,7 +781,7 @@ xchar gx, gy;
 boolean
 m_digweapon_check(mtmp, nix, niy)
 struct monst *mtmp;
-xchar nix,niy;
+xchar nix, niy;
 {
     boolean can_tunnel = 0;
     struct obj *mw_tmp = MON_WEP(mtmp);
@@ -741,9 +793,7 @@ xchar nix,niy;
         && (may_dig(nix, niy) || closed_door(nix, niy))) {
         /* may_dig() is either IS_STWALL or IS_TREE */
         if (closed_door(nix, niy)) {
-            if (!mw_tmp
-                || !is_pick(mw_tmp)
-                || !is_axe(mw_tmp))
+            if (!mw_tmp || !is_pick(mw_tmp) || !is_axe(mw_tmp))
                 mtmp->weapon_check = NEED_PICK_OR_AXE;
         } else if (IS_TREE(levl[nix][niy].typ)) {
             if (!(mw_tmp = MON_WEP(mtmp)) || !is_axe(mw_tmp))
@@ -880,7 +930,8 @@ register int after;
 #ifdef MAIL
     if (ptr == &mons[PM_MAIL_DAEMON]) {
         if (!Deaf && canseemon(mtmp))
-            verbalize("I'm late!");
+            /*KR verbalize("I'm late!"); */
+            verbalize("지각이다!");
         mongone(mtmp);
         return 2;
     }
@@ -896,7 +947,7 @@ register int after;
         mmoved = 1;
         goto postmov;
     }
- not_special:
+not_special:
     if (u.uswallow && !mtmp->mflee && u.ustuck != mtmp)
         return 1;
     omx = mtmp->mx;
@@ -908,17 +959,18 @@ register int after;
         appr = 0;
     } else {
         struct obj *lepgold, *ygold;
-        boolean should_see = (couldsee(omx, omy)
-                              && (levl[gx][gy].lit || !levl[omx][omy].lit)
-                              && (dist2(omx, omy, gx, gy) <= 36));
+        boolean should_see =
+            (couldsee(omx, omy) && (levl[gx][gy].lit || !levl[omx][omy].lit)
+             && (dist2(omx, omy, gx, gy) <= 36));
 
         if (!mtmp->mcansee
             || (should_see && Invis && !perceives(ptr) && rn2(11))
-            || is_obj_mappear(&youmonst,STRANGE_OBJECT) || u.uundetected
-            || (is_obj_mappear(&youmonst,GOLD_PIECE) && !likes_gold(ptr))
+            || is_obj_mappear(&youmonst, STRANGE_OBJECT) || u.uundetected
+            || (is_obj_mappear(&youmonst, GOLD_PIECE) && !likes_gold(ptr))
             || (mtmp->mpeaceful && !mtmp->isshk) /* allow shks to follow */
             || ((monsndx(ptr) == PM_STALKER || ptr->mlet == S_BAT
-                 || ptr->mlet == S_LIGHT) && !rn2(3)))
+                 || ptr->mlet == S_LIGHT)
+                && !rn2(3)))
             appr = 0;
 
         if (monsndx(ptr) == PM_LEPRECHAUN && (appr == 1)
@@ -939,9 +991,10 @@ register int after;
     }
 
     if ((!mtmp->mpeaceful || !rn2(10)) && (!Is_rogue_level(&u.uz))) {
-        boolean in_line = (lined_up(mtmp)
-               && (distmin(mtmp->mx, mtmp->my, mtmp->mux, mtmp->muy)
-                   <= (throws_rocks(youmonst.data) ? 20 : ACURRSTR / 2 + 1)));
+        boolean in_line =
+            (lined_up(mtmp)
+             && (distmin(mtmp->mx, mtmp->my, mtmp->mux, mtmp->muy)
+                 <= (throws_rocks(youmonst.data) ? 20 : ACURRSTR / 2 + 1)));
 
         if (appr != 1 || !in_line) {
             /* Monsters in combat won't pick stuff up, avoiding the
@@ -980,9 +1033,10 @@ register int after;
             minr = 1;
 
         if ((likegold || likegems || likeobjs || likemagic || likerock
-             || conceals) && (!*in_rooms(omx, omy, SHOPBASE)
-                              || (!rn2(25) && !mtmp->isshk))) {
- look_for_obj:
+             || conceals)
+            && (!*in_rooms(omx, omy, SHOPBASE)
+                || (!rn2(25) && !mtmp->isshk))) {
+        look_for_obj:
             oomx = min(COLNO - 1, omx + minr);
             oomy = min(ROWNO - 1, omy + minr);
             lmx = max(1, omx - minr);
@@ -1034,9 +1088,11 @@ register int after;
                                   && touch_petrifies(&mons[otmp->corpsenm]))))
                         && touch_artifact(otmp, mtmp)) {
                         if (can_carry(mtmp, otmp) > 0
-                            && (throws_rocks(ptr) || !sobj_at(BOULDER, xx, yy))
+                            && (throws_rocks(ptr)
+                                || !sobj_at(BOULDER, xx, yy))
                             && (!is_unicorn(ptr)
-                                || objects[otmp->otyp].oc_material == GEMSTONE)
+                                || objects[otmp->otyp].oc_material
+                                       == GEMSTONE)
                             /* Don't get stuck circling an Elbereth */
                             && !onscary(xx, yy, mtmp)) {
                             minr = distmin(omx, omy, xx, yy);
@@ -1157,8 +1213,7 @@ register int after;
                 chi = i;
                 mmoved = 1;
             }
- nxti:
-            ;
+        nxti:;
         }
     }
 
@@ -1168,7 +1223,7 @@ register int after;
         if (mmoved == 1 && (u.ux != nix || u.uy != niy) && itsstuck(mtmp))
             return 3;
 
-        if (mmoved == 1 && m_digweapon_check(mtmp, nix,niy))
+        if (mmoved == 1 && m_digweapon_check(mtmp, nix, niy))
             return 3;
 
         /* If ALLOW_U is set, either it's trying to attack you, or it
@@ -1255,7 +1310,7 @@ register int after;
         if (mtmp->wormno)
             worm_nomove(mtmp);
     }
- postmov:
+postmov:
     if (mmoved == 1 || mmoved == 3) {
         boolean canseeit = cansee(mtmp->mx, mtmp->my);
 
@@ -1322,9 +1377,18 @@ register int after;
                 if ((here->doormask & (D_LOCKED | D_CLOSED)) != 0
                     && amorphous(ptr)) {
                     if (flags.verbose && canseemon(mtmp))
+#if 0 /*KR: 원본*/
                         pline("%s %s under the door.", Monnam(mtmp),
                               (ptr == &mons[PM_FOG_CLOUD]
                                || ptr->mlet == S_LIGHT) ? "flows" : "oozes");
+#else /*KR: KRNethack 맞춤 번역 */
+                        pline("%s 문 아래로 %s 들어왔다.",
+                              append_josa(Monnam(mtmp), "은"),
+                              (ptr == &mons[PM_FOG_CLOUD]
+                               || ptr->mlet == S_LIGHT)
+                                  ? "흘러"
+                                  : "스며");
+#endif
                 } else if (here->doormask & D_LOCKED && can_unlock) {
                     if (btrapped) {
                         here->doormask = D_NODOOR;
@@ -1335,12 +1399,17 @@ register int after;
                     } else {
                         if (flags.verbose) {
                             if (observeit)
-                                pline("%s unlocks and opens a door.",
-                                      Monnam(mtmp));
+                                /*KR pline("%s unlocks and opens a door.",
+                                      Monnam(mtmp)); */
+                                pline("%s 잠금을 해제하고 문을 열었다.",
+                                      append_josa(Monnam(mtmp), "은"));
                             else if (canseeit)
-                                You_see("a door unlock and open.");
+                                /*KR You_see("a door unlock and open."); */
+                                You("문이 잠금 해제되며 열리는 것을 보았다.");
                             else if (!Deaf)
-                                You_hear("a door unlock and open.");
+                                /*KR You_hear("a door unlock and open."); */
+                                You_hear("문이 잠금 해제되며 열리는 소리가 "
+                                         "들렸다.");
                         }
                         here->doormask = D_ISOPEN;
                         /* newsym(mtmp->mx, mtmp->my); */
@@ -1356,13 +1425,16 @@ register int after;
                     } else {
                         if (flags.verbose) {
                             if (observeit)
-                                pline("%s opens a door.", Monnam(mtmp));
+                                /*KR pline("%s opens a door.", Monnam(mtmp));
+                                 */
+                                pline("%s 문을 열었다.",
+                                      append_josa(Monnam(mtmp), "은"));
                             else if (canseeit)
                                 /*KR You_see("a door open."); */
-                                You_see("문이 열리는 것을 보았다.");
+                                You("문이 열리는 것을 보았다.");
                             else if (!Deaf)
                                 /*KR You_hear("a door open."); */
-                                You_hear("문이 열리는 소리를 들었다.");
+                                You_hear("문이 열리는 소리가 들렸다.");
                         }
                         here->doormask = D_ISOPEN;
                         /* newsym(mtmp->mx, mtmp->my); */  /* done below */
@@ -1379,12 +1451,17 @@ register int after;
                     } else {
                         if (flags.verbose) {
                             if (observeit)
-                                pline("%s smashes down a door.",
-                                      Monnam(mtmp));
+                                /*KR pline("%s smashes down a door.",
+                                      Monnam(mtmp)); */
+                                pline("%s 문을 산산조각 내며 부쉈다.",
+                                      append_josa(Monnam(mtmp), "은"));
                             else if (canseeit)
-                                You_see("a door crash open.");
+                                /*KR You_see("a door crash open."); */
+                                You("문이 부서지며 열리는 것을 보았다.");
                             else if (!Deaf)
-                                You_hear("a door crash open.");
+                                /*KR You_hear("a door crash open."); */
+                                You_hear(
+                                    "문이 부서지며 열리는 소리가 들렸다.");
                         }
                         if ((here->doormask & D_LOCKED) != 0 && !rn2(2))
                             here->doormask = D_NODOOR;
@@ -1398,18 +1475,28 @@ register int after;
                         add_damage(mtmp->mx, mtmp->my, 0L);
                 }
             } else if (levl[mtmp->mx][mtmp->my].typ == IRONBARS) {
-                /* As of 3.6.2: was using may_dig() but it doesn't handle bars */
+                /* As of 3.6.2: was using may_dig() but it doesn't handle bars
+                 */
                 if (!(levl[mtmp->mx][mtmp->my].wall_info & W_NONDIGGABLE)
                     && (dmgtype(ptr, AD_RUST) || dmgtype(ptr, AD_CORR))) {
                     if (canseemon(mtmp))
-                        pline("%s eats through the iron bars.", Monnam(mtmp));
+                        /*KR pline("%s eats through the iron bars.",
+                         * Monnam(mtmp)); */
+                        pline("%s 쇠창살을 먹어치우며 뚫고 나갔다.",
+                              append_josa(Monnam(mtmp), "은"));
                     dissolve_bars(mtmp->mx, mtmp->my);
                     return 3;
                 } else if (flags.verbose && canseemon(mtmp))
+#if 0 /*KR: 원본*/
                     Norep("%s %s %s the iron bars.", Monnam(mtmp),
                           /* pluralization fakes verb conjugation */
                           makeplural(locomotion(ptr, "pass")),
                           passes_walls(ptr) ? "through" : "between");
+#else /*KR: KRNethack 맞춤 번역 */
+                    Norep("%s 쇠창살을 %s.", append_josa(Monnam(mtmp), "은"),
+                          passes_walls(ptr) ? "통과해 지나갔다"
+                                            : "사이로 빠져나갔다");
+#endif
             }
 
             /* possibly dig */
@@ -1432,7 +1519,8 @@ register int after;
             /* recompute the likes tests, in case we polymorphed
              * or if the "likegold" case got taken above */
             if (setlikes) {
-                int pctload = (curr_mon_load(mtmp) * 100) / max_mon_load(mtmp);
+                int pctload =
+                    (curr_mon_load(mtmp) * 100) / max_mon_load(mtmp);
 
                 /* look for gold or jewels nearby */
                 likegold = (likes_gold(ptr) && pctload < 95);
@@ -1500,9 +1588,7 @@ register int after;
     return mmoved;
 }
 
-void
-dissolve_bars(x, y)
-register int x, y;
+void dissolve_bars(x, y) register int x, y;
 {
     levl[x][y].typ = (Is_special(&u.uz) || *in_rooms(x, y, 0)) ? ROOM : CORR;
     levl[x][y].flags = 0;
@@ -1531,9 +1617,7 @@ register int x, y;
 }
 
 /* decide where the monster thinks you are standing */
-void
-set_apparxy(mtmp)
-register struct monst *mtmp;
+void set_apparxy(mtmp) register struct monst *mtmp;
 {
     boolean notseen, gotu;
     register int disp, mx = mtmp->mux, my = mtmp->muy;
@@ -1588,7 +1672,7 @@ register struct monst *mtmp;
                               && (can_ooze(mtmp) || can_fog(mtmp)))))
                  || !couldsee(mx, my));
     } else {
- found_you:
+    found_you:
         mx = u.ux;
         my = u.uy;
     }
@@ -1608,7 +1692,7 @@ register struct monst *mtmp;
 boolean
 undesirable_disp(mtmp, x, y)
 struct monst *mtmp; /* barging creature */
-xchar x, y; /* spot 'mtmp' is considering moving to */
+xchar x, y;         /* spot 'mtmp' is considering moving to */
 {
     boolean is_pet = (mtmp && mtmp->mtame && !mtmp->isminion);
     struct trap *trap = t_at(x, y);
@@ -1621,7 +1705,7 @@ xchar x, y; /* spot 'mtmp' is considering moving to */
         if (cursed_object_at(x, y))
             return TRUE;
 
-    /* Monsters avoid a trap if they've seen that type before */
+        /* Monsters avoid a trap if they've seen that type before */
     } else if (trap && rn2(40)
                && (mtmp->mtrapseen & (1 << (trap->ttyp - 1))) != 0) {
         return TRUE;
@@ -1725,9 +1809,15 @@ boolean domsg;
     }
 
     if (reslt && domsg) {
+#if 0 /*KR: 원본*/
         pline("You %s %s where %s was.",
               !canseemon(mon) ? "now detect" : "observe",
               noname_monnam(mon, ARTICLE_A), oldmtype);
+#else /*KR: KRNethack 맞춤 번역 */
+        pline("당신은 %s 있던 곳에서 %s %s.", append_josa(oldmtype, "이"),
+              append_josa(noname_monnam(mon, ARTICLE_A), "을"),
+              !canseemon(mon) ? "이제 감지했다" : "목격했다");
+#endif
         /* this message is given when it turns into a fog cloud
            in order to move under a closed door */
         display_nhwindow(WIN_MESSAGE, FALSE);

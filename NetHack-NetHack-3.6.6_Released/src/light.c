@@ -44,7 +44,7 @@
 
 static light_source *light_base = 0;
 
-STATIC_DCL void FDECL(write_ls, (int, light_source *));
+STATIC_DCL void FDECL(write_ls, (int, light_source *) );
 STATIC_DCL int FDECL(maybe_write_ls, (int, int, BOOLEAN_P));
 
 /* imported from vision.c, for small circles */
@@ -52,9 +52,7 @@ extern char circle_data[];
 extern char circle_start[];
 
 /* Create a new light source.  */
-void
-new_light_source(x, y, range, type, id)
-xchar x, y;
+void new_light_source(x, y, range, type, id) xchar x, y;
 int range, type;
 anything *id;
 {
@@ -83,9 +81,7 @@ anything *id;
  * Delete a light source. This assumes only one light source is attached
  * to an object at a time.
  */
-void
-del_light_source(type, id)
-int type;
+void del_light_source(type, id) int type;
 anything *id;
 {
     light_source *curr, *prev;
@@ -127,9 +123,7 @@ anything *id;
 }
 
 /* Mark locations that are temporarily lit via mobile light sources. */
-void
-do_light_sources(cs_rows)
-char **cs_rows;
+void do_light_sources(cs_rows) char **cs_rows;
 {
     int x, y, min_x, max_x, max_y, offset;
     char *limits;
@@ -213,9 +207,7 @@ char **cs_rows;
 /* lit 'obj' has been thrown or kicked and is passing through x,y on the
    way to its destination; show its light so that hero has a chance to
    remember terrain, objects, and monsters being revealed */
-void
-show_transient_light(obj, x, y)
-struct obj *obj;
+void show_transient_light(obj, x, y) struct obj *obj;
 int x, y;
 {
     light_source *ls;
@@ -312,9 +304,7 @@ unsigned fmflags;
 }
 
 /* Save all light sources of the given range. */
-void
-save_light_sources(fd, mode, range)
-int fd, mode, range;
+void save_light_sources(fd, mode, range) int fd, mode, range;
 {
     int count, actual, is_global;
     light_source **prev, *curr;
@@ -362,9 +352,7 @@ int fd, mode, range;
  * Pull in the structures from disk, but don't recalculate the object
  * pointers.
  */
-void
-restore_light_sources(fd)
-int fd;
+void restore_light_sources(fd) int fd;
 {
     int count;
     light_source *ls;
@@ -381,15 +369,13 @@ int fd;
 }
 
 /* to support '#stats' wizard-mode command */
-void
-light_stats(hdrfmt, hdrbuf, count, size)
-const char *hdrfmt;
+void light_stats(hdrfmt, hdrbuf, count, size) const char *hdrfmt;
 char *hdrbuf;
 long *count, *size;
 {
     light_source *ls;
 
-    Sprintf(hdrbuf, hdrfmt, (long) sizeof (light_source));
+    Sprintf(hdrbuf, hdrfmt, (long) sizeof(light_source));
     *count = *size = 0L;
     for (ls = light_base; ls; ls = ls->next) {
         ++*count;
@@ -398,9 +384,7 @@ long *count, *size;
 }
 
 /* Relink all lights that are so marked. */
-void
-relink_light_sources(ghostly)
-boolean ghostly;
+void relink_light_sources(ghostly) boolean ghostly;
 {
     char which;
     unsigned nid;
@@ -502,9 +486,7 @@ light_sources_sanity_check()
 }
 
 /* Write a light source structure to disk. */
-STATIC_OVL void
-write_ls(fd, ls)
-int fd;
+STATIC_OVL void write_ls(fd, ls) int fd;
 light_source *ls;
 {
     anything arg_save;
@@ -543,9 +525,7 @@ light_source *ls;
 }
 
 /* Change light source's ID from src to dest. */
-void
-obj_move_light_source(src, dest)
-struct obj *src, *dest;
+void obj_move_light_source(src, dest) struct obj *src, *dest;
 {
     light_source *ls;
 
@@ -567,9 +547,7 @@ any_light_source()
  * Snuff an object light source if at (x,y).  This currently works
  * only for burning light sources.
  */
-void
-snuff_light_source(x, y)
-int x, y;
+void snuff_light_source(x, y) int x, y;
 {
     light_source *ls;
     struct obj *obj;
@@ -615,15 +593,13 @@ boolean
 obj_is_burning(obj)
 struct obj *obj;
 {
-    return (boolean) (obj->lamplit && (obj->otyp == MAGIC_LAMP
-                                       || ignitable(obj)
-                                       || artifact_light(obj)));
+    return (boolean) (obj->lamplit
+                      && (obj->otyp == MAGIC_LAMP || ignitable(obj)
+                          || artifact_light(obj)));
 }
 
 /* copy the light source(s) attached to src, and attach it/them to dest */
-void
-obj_split_light_source(src, dest)
-struct obj *src, *dest;
+void obj_split_light_source(src, dest) struct obj *src, *dest;
 {
     light_source *ls, *new_ls;
 
@@ -651,9 +627,7 @@ struct obj *src, *dest;
 
 /* light source `src' has been folded into light source `dest';
    used for merging lit candles and adding candle(s) to lit candelabrum */
-void
-obj_merge_light_sources(src, dest)
-struct obj *src, *dest;
+void obj_merge_light_sources(src, dest) struct obj *src, *dest;
 {
     light_source *ls;
 
@@ -670,9 +644,7 @@ struct obj *src, *dest;
 }
 
 /* light source `obj' is being made brighter or dimmer */
-void
-obj_adjust_light_radius(obj, new_radius)
-struct obj *obj;
+void obj_adjust_light_radius(obj, new_radius) struct obj *obj;
 int new_radius;
 {
     light_source *ls;
@@ -697,21 +669,21 @@ struct obj *obj;
 
     if (obj->otyp == CANDELABRUM_OF_INVOCATION) {
         /*
-         *      The special candelabrum emits more light than the
-         *      corresponding number of candles would.
-         *       1..3 candles, range 2 (minimum range);
-         *       4..6 candles, range 3 (normal lamp range);
-         *          7 candles, range 4 (bright).
+         * The special candelabrum emits more light than the
+         * corresponding number of candles would.
+         * 1..3 candles, range 2 (minimum range);
+         * 4..6 candles, range 3 (normal lamp range);
+         * 7 candles, range 4 (bright).
          */
         radius = (obj->spe < 4) ? 2 : (obj->spe < 7) ? 3 : 4;
     } else if (Is_candle(obj)) {
         /*
-         *      Range is incremented by powers of 7 so that it will take
-         *      wizard mode quantities of candles to get more light than
-         *      from a lamp, without imposing an arbitrary limit.
-         *       1..6   candles, range 2;
-         *       7..48  candles, range 3;
-         *      49..342 candles, range 4; &c.
+         * Range is incremented by powers of 7 so that it will take
+         * wizard mode quantities of candles to get more light than
+         * from a lamp, without imposing an arbitrary limit.
+         * 1..6   candles, range 2;
+         * 7..48  candles, range 3;
+         * 49..342 candles, range 4; &c.
          */
         long n = obj->quan;
 
@@ -757,15 +729,28 @@ struct obj *obj;
 {
     switch (arti_light_radius(obj)) {
     case 3:
+#if 0                           /*KR: 원본*/
         return "brilliantly"; /* blessed */
+#else                           /*KR: KRNethack 맞춤 번역 */
+        return "눈부시게 밝게"; /* blessed */
+#endif
     case 2:
+#if 0                  /*KR: 원본*/
         return "brightly"; /* uncursed */
+#else                  /*KR: KRNethack 맞춤 번역 */
+        return "밝게"; /* uncursed */
+#endif
     case 1:
+#if 0                        /*KR: 원본*/
         return "dimly"; /* cursed */
+#else                        /*KR: KRNethack 맞춤 번역 */
+        return "어스름하게"; /* cursed */
+#endif
     default:
         break;
     }
-    return "strangely";
+    /*KR return "strangely"; */
+    return "기이하게";
 }
 
 int
@@ -789,16 +774,14 @@ wiz_light_sources()
         for (ls = light_base; ls; ls = ls->next) {
             Sprintf(buf, "  %2d,%2d   %2d   0x%04x  %s  %s", ls->x, ls->y,
                     ls->range, ls->flags,
-                    (ls->type == LS_OBJECT
-                       ? "obj"
-                       : ls->type == LS_MONSTER
-                          ? (mon_is_local(ls->id.a_monst)
-                             ? "mon"
-                             : (ls->id.a_monst == &youmonst)
+                    (ls->type == LS_OBJECT ? "obj"
+                     : ls->type == LS_MONSTER
+                         ? (mon_is_local(ls->id.a_monst) ? "mon"
+                            : (ls->id.a_monst == &youmonst)
                                 ? "you"
                                 /* migrating monster */
                                 : "<m>")
-                          : "???"),
+                         : "???"),
                     fmt_ptr(ls->id.a_void));
             putstr(win, 0, buf);
         }

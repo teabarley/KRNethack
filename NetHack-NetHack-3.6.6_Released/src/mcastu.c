@@ -36,43 +36,47 @@ enum mcast_cleric_spells {
 };
 
 STATIC_DCL void FDECL(cursetxt, (struct monst *, BOOLEAN_P));
-STATIC_DCL int FDECL(choose_magic_spell, (int));
-STATIC_DCL int FDECL(choose_clerical_spell, (int));
-STATIC_DCL int FDECL(m_cure_self, (struct monst *, int));
-STATIC_DCL void FDECL(cast_wizard_spell, (struct monst *, int, int));
-STATIC_DCL void FDECL(cast_cleric_spell, (struct monst *, int, int));
-STATIC_DCL boolean FDECL(is_undirected_spell, (unsigned int, int));
-STATIC_DCL boolean
-FDECL(spell_would_be_useless, (struct monst *, unsigned int, int));
+STATIC_DCL int FDECL(choose_magic_spell, (int) );
+STATIC_DCL int FDECL(choose_clerical_spell, (int) );
+STATIC_DCL int FDECL(m_cure_self, (struct monst *, int) );
+STATIC_DCL void FDECL(cast_wizard_spell, (struct monst *, int, int) );
+STATIC_DCL void FDECL(cast_cleric_spell, (struct monst *, int, int) );
+STATIC_DCL boolean FDECL(is_undirected_spell, (unsigned int, int) );
+STATIC_DCL boolean FDECL(spell_would_be_useless,
+                         (struct monst *, unsigned int, int) );
 
 extern const char *const flash_types[]; /* from zap.c */
 
 /* feedback when frustrated monster couldn't cast a spell */
 STATIC_OVL
-void
-cursetxt(mtmp, undirected)
-struct monst *mtmp;
+void cursetxt(mtmp, undirected) struct monst *mtmp;
 boolean undirected;
 {
     if (canseemon(mtmp) && couldsee(mtmp->mx, mtmp->my)) {
         const char *point_msg; /* spellcasting monsters are impolite */
 
         if (undirected)
-            point_msg = "all around, then curses";
+            /*KR point_msg = "all around, then curses"; */
+            point_msg = "사방을 가리키고는 저주를 퍼부었다";
         else if ((Invis && !perceives(mtmp->data)
                   && (mtmp->mux != u.ux || mtmp->muy != u.uy))
                  || is_obj_mappear(&youmonst, STRANGE_OBJECT)
                  || u.uundetected)
-            point_msg = "and curses in your general direction";
+            /*KR point_msg = "and curses in your general direction"; */
+            point_msg = "당신이 있는 쪽을 가리키고는 저주를 퍼부었다";
         else if (Displaced && (mtmp->mux != u.ux || mtmp->muy != u.uy))
-            point_msg = "and curses at your displaced image";
+            /*KR point_msg = "and curses at your displaced image"; */
+            point_msg = "당신의 환영을 가리키고는 저주를 퍼부었다";
         else
-            point_msg = "at you, then curses";
+            /*KR point_msg = "at you, then curses"; */
+            point_msg = "당신을 가리키고는 저주를 퍼부었다";
 
-        pline("%s points %s.", Monnam(mtmp), point_msg);
+        /*KR pline("%s points %s.", Monnam(mtmp), point_msg); */
+        pline("%s %s.", append_josa(Monnam(mtmp), "은"), point_msg);
     } else if ((!(moves % 4) || !rn2(4))) {
         if (!Deaf)
-            Norep("You hear a mumbled curse.");   /* Deaf-aware */
+            /*KR Norep("You hear a mumbled curse.");   */ /* Deaf-aware */
+            Norep("누군가 웅얼거리며 저주하는 소리가 들린다.");
     }
 }
 
@@ -194,11 +198,11 @@ boolean foundyou;
     /* Three cases:
      * -- monster is attacking you.  Search for a useful spell.
      * -- monster thinks it's attacking you.  Search for a useful spell,
-     *    without checking for undirected.  If the spell found is directed,
-     *    it fails with cursetxt() and loss of mspec_used.
+     * without checking for undirected.  If the spell found is directed,
+     * it fails with cursetxt() and loss of mspec_used.
      * -- monster isn't trying to attack.  Select a spell once.  Don't keep
-     *    searching; if that spell is not useful (or if it's directed),
-     *    return and do something else.
+     * searching; if that spell is not useful (or if it's directed),
+     * return and do something else.
      * Since most spells are directed, this means that a monster that isn't
      * attacking casts spells only a small portion of the time that an
      * attacking monster does.
@@ -217,8 +221,8 @@ boolean foundyou;
                 if (!is_undirected_spell(mattk->adtyp, spellnum)
                     || spell_would_be_useless(mtmp, mattk->adtyp, spellnum)) {
                     if (foundyou)
-                        impossible(
-                       "spellcasting monster found you and doesn't know it?");
+                        impossible("spellcasting monster found you and "
+                                   "doesn't know it?");
                     return 0;
                 }
                 break;
@@ -246,20 +250,31 @@ boolean foundyou;
        penalizing mspec_used. */
     if (!foundyou && thinks_it_foundyou
         && !is_undirected_spell(mattk->adtyp, spellnum)) {
+#if 0 /*KR: 원본*/
         pline("%s casts a spell at %s!",
               canseemon(mtmp) ? Monnam(mtmp) : "Something",
               levl[mtmp->mux][mtmp->muy].typ == WATER ? "empty water"
                                                       : "thin air");
+#else /*KR: KRNethack 맞춤 번역 */
+        pline("%s %s에 대고 주문을 시전했다!",
+              canseemon(mtmp) ? append_josa(Monnam(mtmp), "은")
+                              : "무언가가",
+              levl[mtmp->mux][mtmp->muy].typ == WATER ? "텅 빈 물속"
+                                                      : "허공");
+#endif
         return (0);
     }
 
     nomul(0);
     if (rn2(ml * 10) < (mtmp->mconf ? 100 : 20)) { /* fumbled attack */
         if (canseemon(mtmp) && !Deaf)
-            pline_The("air crackles around %s.", mon_nam(mtmp));
+            /*KR pline_The("air crackles around %s.", mon_nam(mtmp)); */
+            pline("%s 주변의 공기가 찌릿찌릿 소리를 낸다.",
+                  append_josa(mon_nam(mtmp), "의"));
         return (0);
     }
     if (canspotmon(mtmp) || !is_undirected_spell(mattk->adtyp, spellnum)) {
+#if 0 /*KR: 원본*/
         pline("%s casts a spell%s!",
               canspotmon(mtmp) ? Monnam(mtmp) : "Something",
               is_undirected_spell(mattk->adtyp, spellnum)
@@ -271,6 +286,20 @@ boolean foundyou;
                            && (mtmp->mux != u.ux || mtmp->muy != u.uy))
                               ? " at your displaced image"
                               : " at you");
+#else /*KR: KRNethack 맞춤 번역 */
+        const char *who = (canspotmon(mtmp) ? Monnam(mtmp) : "무언가");
+        if (is_undirected_spell(mattk->adtyp, spellnum)) {
+            pline("%s 주문을 시전했다!", append_josa(who, "은"));
+        } else {
+            pline("%s %s 향해 주문을 시전했다!", append_josa(who, "은"),
+                  (Invis && !perceives(mtmp->data)
+                   && (mtmp->mux != u.ux || mtmp->muy != u.uy))
+                      ? "당신 근처의 한 지점을"
+                  : (Displaced && (mtmp->mux != u.ux || mtmp->muy != u.uy))
+                      ? "당신의 환영을"
+                      : "당신을");
+        }
+#endif
     }
 
     /*
@@ -280,8 +309,8 @@ boolean foundyou;
     if (!foundyou) {
         dmg = 0;
         if (mattk->adtyp != AD_SPEL && mattk->adtyp != AD_CLRC) {
-            impossible(
-              "%s casting non-hand-to-hand version of hand-to-hand spell %d?",
+            impossible("%s casting non-hand-to-hand version of hand-to-hand "
+                       "spell %d?",
                        Monnam(mtmp), mattk->adtyp);
             return (0);
         }
@@ -296,27 +325,33 @@ boolean foundyou;
 
     switch (mattk->adtyp) {
     case AD_FIRE:
-        pline("You're enveloped in flames.");
+        /*KR pline("You're enveloped in flames."); */
+        pline("당신은 화염에 휩싸였다.");
         if (Fire_resistance) {
             shieldeff(u.ux, u.uy);
-            pline("But you resist the effects.");
+            /*KR pline("But you resist the effects."); */
+            pline("하지만 당신은 그 효과에 저항했다.");
             dmg = 0;
         }
         burn_away_slime();
         break;
     case AD_COLD:
-        pline("You're covered in frost.");
+        /*KR pline("You're covered in frost."); */
+        pline("당신은 서리로 뒤덮였다.");
         if (Cold_resistance) {
             shieldeff(u.ux, u.uy);
-            pline("But you resist the effects.");
+            /*KR pline("But you resist the effects."); */
+            pline("하지만 당신은 그 효과에 저항했다.");
             dmg = 0;
         }
         break;
     case AD_MAGM:
-        You("are hit by a shower of missiles!");
+        /*KR You("are hit by a shower of missiles!"); */
+        You("마법의 화살 세례를 맞았다!");
         if (Antimagic) {
             shieldeff(u.ux, u.uy);
-            pline_The("missiles bounce off!");
+            /*KR pline_The("missiles bounce off!"); */
+            pline("화살들이 튕겨 나갔다!");
             dmg = 0;
         } else
             dmg = d((int) mtmp->m_lev / 2 + 1, 6);
@@ -344,7 +379,9 @@ int dmg;
 {
     if (mtmp->mhp < mtmp->mhpmax) {
         if (canseemon(mtmp))
-            pline("%s looks better.", Monnam(mtmp));
+            /*KR pline("%s looks better.", Monnam(mtmp)); */
+            pline("%s 상태가 좋아진 것 같다.",
+                  append_josa(Monnam(mtmp), "의"));
         /* note: player healing does 6d4; this used to do 1d8 */
         if ((mtmp->mhp += d(3, 6)) > mtmp->mhpmax)
             mtmp->mhp = mtmp->mhpmax;
@@ -363,9 +400,7 @@ int dmg;
    and spell_would_be_useless().
  */
 STATIC_OVL
-void
-cast_wizard_spell(mtmp, dmg, spellnum)
-struct monst *mtmp;
+void cast_wizard_spell(mtmp, dmg, spellnum) struct monst *mtmp;
 int dmg;
 int spellnum;
 {
@@ -376,27 +411,34 @@ int spellnum;
 
     switch (spellnum) {
     case MGC_DEATH_TOUCH:
-        pline("Oh no, %s's using the touch of death!", mhe(mtmp));
+        /*KR pline("Oh no, %s's using the touch of death!", mhe(mtmp)); */
+        pline("오 이런, %s 죽음의 손길을 사용하고 있다!",
+              append_josa(mhe(mtmp), "가"));
         if (nonliving(youmonst.data) || is_demon(youmonst.data)) {
-            You("seem no deader than before.");
+            /*KR You("seem no deader than before."); */
+            You("이전보다 더 죽은 것 같지는 않다.");
         } else if (!Antimagic && rn2(mtmp->m_lev) > 12) {
             if (Hallucination) {
-                You("have an out of body experience.");
+                /*KR You("have an out of body experience."); */
+                You("유체이탈을 경험했다.");
             } else {
                 killer.format = KILLED_BY_AN;
-                Strcpy(killer.name, "touch of death");
+                /*KR Strcpy(killer.name, "touch of death"); */
+                Strcpy(killer.name, "죽음의 손길");
                 done(DIED);
             }
         } else {
             if (Antimagic)
                 shieldeff(u.ux, u.uy);
-            pline("Lucky for you, it didn't work!");
+            /*KR pline("Lucky for you, it didn't work!"); */
+            pline("다행히도, 아무런 효과가 없었다!");
         }
         dmg = 0;
         break;
     case MGC_CLONE_WIZ:
         if (mtmp->iswiz && context.no_of_wizards == 1) {
-            pline("Double Trouble...");
+            /*KR pline("Double Trouble..."); */
+            pline("골칫거리가 두 배가 되었다...");
             clonewiz();
             dmg = 0;
         } else
@@ -407,8 +449,11 @@ int spellnum;
 
         count = nasty(mtmp); /* summon something nasty */
         if (mtmp->iswiz) {
-            verbalize("Destroy the thief, my pet%s!", plur(count));
+            /*KR verbalize("Destroy the thief, my pet%s!", plur(count)); */
+            verbalize("도둑놈을 없애라, 나의 %s!",
+                      count > 1 ? "부하들아" : "부하야");
         } else {
+#if 0 /*KR: 원본*/
             const char *mappear = (count == 1) ? "A monster appears"
                                                : "Monsters appear";
 
@@ -421,35 +466,52 @@ int spellnum;
                 pline("%s around your displaced image!", mappear);
             else
                 pline("%s from nowhere!", mappear);
+#else /*KR: KRNethack 맞춤 번역 */
+            const char *mappear = (count == 1) ? "괴물이" : "괴물들이";
+
+            if (Invis && !perceives(mtmp->data)
+                && (mtmp->mux != u.ux || mtmp->muy != u.uy))
+                pline("%s 당신 근처에 나타났다!", mappear);
+            else if (Displaced && (mtmp->mux != u.ux || mtmp->muy != u.uy))
+                pline("%s 당신의 환영 근처에 나타났다!", mappear);
+            else
+                pline("%s 어디선가 불쑥 나타났다!", mappear);
+#endif
         }
         dmg = 0;
         break;
     }
     case MGC_AGGRAVATION:
-        You_feel("that monsters are aware of your presence.");
+        /*KR You_feel("that monsters are aware of your presence."); */
+        You_feel("괴물들이 당신의 존재를 알아챈 것 같다.");
         aggravate();
         dmg = 0;
         break;
     case MGC_CURSE_ITEMS:
-        You_feel("as if you need some help.");
+        /*KR You_feel("as if you need some help."); */
+        You_feel("어딘가 도움이 필요할 것 같은 기분이 든다.");
         rndcurse();
         dmg = 0;
         break;
     case MGC_DESTRY_ARMR:
         if (Antimagic) {
             shieldeff(u.ux, u.uy);
-            pline("A field of force surrounds you!");
+            /*KR pline("A field of force surrounds you!"); */
+            pline("신비한 역장이 당신을 감싼다!");
         } else if (!destroy_arm(some_armor(&youmonst))) {
-            Your("skin itches.");
+            /*KR Your("skin itches."); */
+            Your("피부가 가렵다.");
         }
         dmg = 0;
         break;
     case MGC_WEAKEN_YOU: /* drain strength */
         if (Antimagic) {
             shieldeff(u.ux, u.uy);
-            You_feel("momentarily weakened.");
+            /*KR You_feel("momentarily weakened."); */
+            You_feel("잠시 허약해진 느낌이 들었다.");
         } else {
-            You("suddenly feel weaker!");
+            /*KR You("suddenly feel weaker!"); */
+            You("갑자기 힘이 빠지는 것을 느꼈다!");
             dmg = mtmp->m_lev - 6;
             if (Half_spell_damage)
                 dmg = (dmg + 1) / 2;
@@ -462,8 +524,13 @@ int spellnum;
     case MGC_DISAPPEAR: /* makes self invisible */
         if (!mtmp->minvis && !mtmp->invis_blkd) {
             if (canseemon(mtmp))
+#if 0 /*KR: 원본*/
                 pline("%s suddenly %s!", Monnam(mtmp),
                       !See_invisible ? "disappears" : "becomes transparent");
+#else /*KR: KRNethack 맞춤 번역 */
+                pline("%s 갑자기 %s!", append_josa(Monnam(mtmp), "가"),
+                      !See_invisible ? "사라졌다" : "투명해졌다");
+#endif
             mon_set_minvis(mtmp);
             if (cansee(mtmp->mx, mtmp->my) && !canspotmon(mtmp))
                 map_invisible(mtmp->mx, mtmp->my);
@@ -475,10 +542,13 @@ int spellnum;
         if (Antimagic || Free_action) {
             shieldeff(u.ux, u.uy);
             if (!Stunned)
-                You_feel("momentarily disoriented.");
+                /*KR You_feel("momentarily disoriented."); */
+                You_feel("순간적으로 방향 감각을 잃었다.");
             make_stunned(1L, FALSE);
         } else {
-            You(Stunned ? "struggle to keep your balance." : "reel...");
+            /*KR You(Stunned ? "struggle to keep your balance." : "reel...");
+             */
+            You(Stunned ? "균형을 잡으려고 발버둥 친다." : "비틀거린다...");
             dmg = d(ACURR(A_DEX) < 12 ? 6 : 4, 4);
             if (Half_spell_damage)
                 dmg = (dmg + 1) / 2;
@@ -501,13 +571,20 @@ int spellnum;
             dmg = (dmg + 1) / 2;
         }
         if (dmg <= 5)
-            You("get a slight %sache.", body_part(HEAD));
+            /*KR You("get a slight %sache.", body_part(HEAD)); */
+            You("가벼운 %s통을 느낀다.", body_part(HEAD));
         else if (dmg <= 10)
-            Your("brain is on fire!");
+            /*KR Your("brain is on fire!"); */
+            Your("뇌가 불타는 것 같다!");
         else if (dmg <= 20)
-            Your("%s suddenly aches painfully!", body_part(HEAD));
+            /*KR Your("%s suddenly aches painfully!", body_part(HEAD)); */
+            Your("%s 갑자기 고통스럽게 아프다!",
+                 append_josa(body_part(HEAD), "가"));
         else
-            Your("%s suddenly aches very painfully!", body_part(HEAD));
+            /*KR Your("%s suddenly aches very painfully!", body_part(HEAD));
+             */
+            Your("%s 갑자기 몹시 고통스럽게 아프다!",
+                 append_josa(body_part(HEAD), "가"));
         break;
     default:
         impossible("mcastu: invalid magic spell (%d)", spellnum);
@@ -520,9 +597,7 @@ int spellnum;
 }
 
 STATIC_OVL
-void
-cast_cleric_spell(mtmp, dmg, spellnum)
-struct monst *mtmp;
+void cast_cleric_spell(mtmp, dmg, spellnum) struct monst *mtmp;
 int dmg;
 int spellnum;
 {
@@ -536,13 +611,15 @@ int spellnum;
         /* this is physical damage (force not heat),
          * not magical damage or fire damage
          */
-        pline("A sudden geyser slams into you from nowhere!");
+        /*KR pline("A sudden geyser slams into you from nowhere!"); */
+        pline("어디선가 갑자기 튀어나온 간헐천이 당신을 강타했다!");
         dmg = d(8, 6);
         if (Half_physical_damage)
             dmg = (dmg + 1) / 2;
         break;
     case CLC_FIRE_PILLAR:
-        pline("A pillar of fire strikes all around you!");
+        /*KR pline("A pillar of fire strikes all around you!"); */
+        pline("당신 주변에 불기둥이 솟아올랐다!");
         if (Fire_resistance) {
             shieldeff(u.ux, u.uy);
             dmg = 0;
@@ -560,8 +637,10 @@ int spellnum;
     case CLC_LIGHTNING: {
         boolean reflects;
 
-        pline("A bolt of lightning strikes down at you from above!");
-        reflects = ureflects("It bounces off your %s%s.", "");
+        /*KR pline("A bolt of lightning strikes down at you from above!"); */
+        pline("위에서 번개가 당신을 향해 내리쳤다!");
+        /*KR reflects = ureflects("It bounces off your %s%s.", ""); */
+        reflects = ureflects("그것은 당신의 %s%s 튕겨 나갔다.", "에서");
         if (reflects || Shock_resistance) {
             shieldeff(u.ux, u.uy);
             dmg = 0;
@@ -577,7 +656,8 @@ int spellnum;
         break;
     }
     case CLC_CURSE_ITEMS:
-        You_feel("as if you need some help.");
+        /*KR You_feel("as if you need some help."); */
+        You_feel("어딘가 도움이 필요할 것 같은 기분이 든다.");
         rndcurse();
         dmg = 0;
         break;
@@ -615,40 +695,60 @@ int spellnum;
         fmt = 0;
         if (!seecaster) {
             char *arg; /* [not const: upstart(N==1 ? an() : makeplural())] */
-            const char *what = (let == S_SNAKE) ? "snake" : "insect";
+            /*KR const char *what = (let == S_SNAKE) ? "snake" : "insect"; */
+            const char *what = (let == S_SNAKE) ? "뱀" : "벌레";
 
             if (newseen <= oldseen || Unaware) {
                 /* unseen caster fails or summons unseen critters,
                    or unconscious hero ("You dream that you hear...") */
-                You_hear("someone summoning %s.", makeplural(what));
+                /*KR You_hear("someone summoning %s.", makeplural(what)); */
+                You_hear("누군가 %s 소환하는 소리가 들린다.",
+                         append_josa(what, "을"));
             } else {
                 /* unseen caster summoned seen critter(s) */
+#if 0 /*KR: 원본*/
                 arg = (newseen == oldseen + 1) ? an(what) : makeplural(what);
                 if (!Deaf)
                     You_hear("someone summoning something, and %s %s.", arg,
                              vtense(arg, "appear"));
                 else
                     pline("%s %s.", upstart(arg), vtense(arg, "appear"));
+#else /*KR: KRNethack 맞춤 번역 */
+                arg = (char *) what;
+                if (!Deaf)
+                    You_hear("누군가 무언가를 소환하는 소리가 들렸고, %s "
+                             "나타났다.",
+                             append_josa(arg, "가"));
+                else
+                    pline("%s 나타났다.", append_josa(arg, "가"));
+#endif
             }
 
-        /* seen caster, possibly producing unseen--or just one--critters;
-           hero is told what the caster is doing and doesn't necessarily
-           observe complete accuracy of that caster's results (in other
-           words, no need to fuss with visibility or singularization;
-           player is told what's happening even if hero is unconscious) */
+            /* seen caster, possibly producing unseen--or just one--critters;
+               hero is told what the caster is doing and doesn't necessarily
+               observe complete accuracy of that caster's results (in other
+               words, no need to fuss with visibility or singularization;
+               player is told what's happening even if hero is unconscious) */
         } else if (!success)
-            fmt = "%s casts at a clump of sticks, but nothing happens.";
+            /*KR fmt = "%s casts at a clump of sticks, but nothing happens.";
+             */
+            fmt = "%s 나뭇가지 더미를 향해 주문을 외웠지만, 아무 일도 "
+                  "일어나지 않았다.";
         else if (let == S_SNAKE)
-            fmt = "%s transforms a clump of sticks into snakes!";
+            /*KR fmt = "%s transforms a clump of sticks into snakes!"; */
+            fmt = "%s 나뭇가지 더미를 뱀들로 바꿔놓았다!";
         else if (Invis && !perceives(mtmp->data)
                  && (mtmp->mux != u.ux || mtmp->muy != u.uy))
-            fmt = "%s summons insects around a spot near you!";
+            /*KR fmt = "%s summons insects around a spot near you!"; */
+            fmt = "%s 당신 주변의 한 지점에 벌레들을 소환했다!";
         else if (Displaced && (mtmp->mux != u.ux || mtmp->muy != u.uy))
-            fmt = "%s summons insects around your displaced image!";
+            /*KR fmt = "%s summons insects around your displaced image!"; */
+            fmt = "%s 당신의 환영 주변에 벌레들을 소환했다!";
         else
-            fmt = "%s summons insects!";
+            /*KR fmt = "%s summons insects!"; */
+            fmt = "%s 벌레들을 소환했다!";
         if (fmt)
-            pline(fmt, Monnam(mtmp));
+            pline(fmt, append_josa(Monnam(mtmp), "은"));
 
         dmg = 0;
         break;
@@ -657,9 +757,14 @@ int spellnum;
         /* note: resists_blnd() doesn't apply here */
         if (!Blinded) {
             int num_eyes = eyecount(youmonst.data);
+#if 0 /*KR: 원본*/
             pline("Scales cover your %s!", (num_eyes == 1)
                                                ? body_part(EYE)
                                                : makeplural(body_part(EYE)));
+#else /*KR: KRNethack 맞춤 번역 */
+            pline("비늘이 당신의 %s 덮었다!",
+                  append_josa(body_part(EYE), "을"));
+#endif
             make_blinded(Half_spell_damage ? 100L : 200L, FALSE);
             if (!Blind)
                 Your1(vision_clears);
@@ -671,17 +776,21 @@ int spellnum;
         if (Antimagic || Free_action) {
             shieldeff(u.ux, u.uy);
             if (multi >= 0)
-                You("stiffen briefly.");
+                /*KR You("stiffen briefly."); */
+                You("잠시 몸이 굳어졌다.");
             nomul(-1);
-            multi_reason = "paralyzed by a monster";
+            /*KR multi_reason = "paralyzed by a monster"; */
+            multi_reason = "괴물에 의해 마비되어";
         } else {
             if (multi >= 0)
-                You("are frozen in place!");
+                /*KR You("are frozen in place!"); */
+                You("그 자리에 얼어붙었다!");
             dmg = 4 + (int) mtmp->m_lev;
             if (Half_spell_damage)
                 dmg = (dmg + 1) / 2;
             nomul(-dmg);
-            multi_reason = "paralyzed by a monster";
+            /*KR multi_reason = "paralyzed by a monster"; */
+            multi_reason = "괴물에 의해 마비되어";
         }
         nomovemsg = 0;
         dmg = 0;
@@ -689,7 +798,8 @@ int spellnum;
     case CLC_CONFUSE_YOU:
         if (Antimagic) {
             shieldeff(u.ux, u.uy);
-            You_feel("momentarily dizzy.");
+            /*KR You_feel("momentarily dizzy."); */
+            You_feel("순간적으로 어지러움을 느꼈다.");
         } else {
             boolean oldprop = !!Confusion;
 
@@ -698,9 +808,11 @@ int spellnum;
                 dmg = (dmg + 1) / 2;
             make_confused(HConfusion + dmg, TRUE);
             if (Hallucination)
-                You_feel("%s!", oldprop ? "trippier" : "trippy");
+                /*KR You_feel("%s!", oldprop ? "trippier" : "trippy"); */
+                You_feel("%s몽롱하다!", oldprop ? "더욱 " : "");
             else
-                You_feel("%sconfused!", oldprop ? "more " : "");
+                /*KR You_feel("%sconfused!", oldprop ? "more " : ""); */
+                You_feel("%s혼란스럽다!", oldprop ? "더욱 " : "");
         }
         dmg = 0;
         break;
@@ -713,13 +825,17 @@ int spellnum;
             dmg = (dmg + 1) / 2;
         }
         if (dmg <= 5)
-            Your("skin itches badly for a moment.");
+            /*KR Your("skin itches badly for a moment."); */
+            Your("피부가 잠시 심하게 가려웠다.");
         else if (dmg <= 10)
-            pline("Wounds appear on your body!");
+            /*KR pline("Wounds appear on your body!"); */
+            pline("몸에 상처가 생겼다!");
         else if (dmg <= 20)
-            pline("Severe wounds appear on your body!");
+            /*KR pline("Severe wounds appear on your body!"); */
+            pline("몸에 심각한 상처가 생겼다!");
         else
-            Your("body is covered with painful wounds!");
+            /*KR Your("body is covered with painful wounds!"); */
+            Your("몸이 고통스러운 상처들로 뒤덮였다!");
         break;
     default:
         impossible("mcastu: invalid clerical spell (%d)", spellnum);
@@ -800,8 +916,9 @@ int spellnum;
         if (mtmp->mhp == mtmp->mhpmax && spellnum == MGC_CURE_SELF)
             return TRUE;
         /* don't summon monsters if it doesn't think you're around */
-        if (!mcouldseeu && (spellnum == MGC_SUMMON_MONS
-                            || (!mtmp->iswiz && spellnum == MGC_CLONE_WIZ)))
+        if (!mcouldseeu
+            && (spellnum == MGC_SUMMON_MONS
+                || (!mtmp->iswiz && spellnum == MGC_CLONE_WIZ)))
             return TRUE;
         if ((!mtmp->iswiz || context.no_of_wizards > 1)
             && spellnum == MGC_CLONE_WIZ)
@@ -855,8 +972,15 @@ register struct attack *mattk;
         nomul(0);
         if (mattk->adtyp && (mattk->adtyp < 11)) { /* no cf unsigned >0 */
             if (canseemon(mtmp))
+#if 0 /*KR: 원본*/
                 pline("%s zaps you with a %s!", Monnam(mtmp),
                       flash_types[ad_to_typ(mattk->adtyp)]);
+#else /*KR: KRNethack 맞춤 번역 */
+                pline("%s 당신에게 %s 발사했다!",
+                      append_josa(Monnam(mtmp), "가"),
+                      append_josa(flash_types[ad_to_typ(mattk->adtyp)],
+                                  "을"));
+#endif
             buzz(-ad_to_typ(mattk->adtyp), (int) mattk->damn, mtmp->mx,
                  mtmp->my, sgn(tbx), sgn(tby));
         } else
