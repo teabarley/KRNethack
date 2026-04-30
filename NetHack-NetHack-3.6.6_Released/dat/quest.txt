@@ -52,2783 +52,2687 @@
 #	Archeologist
 #
 %Cc Arc 00001
-You are suddenly in familiar surroundings.  The buildings in the distance
-seem to be those of your old alma mater, but something is wrong.  It feels
-as if there has been a riot recently, or %H has
-been under siege.
+당신은 갑자기 낯익은 환경에 놓였습니다. 저 멀리 보이는 건물들은
+당신의 옛 모교 같지만, 무언가 잘못되었습니다. 최근 폭동이 일어났거나, 
+%H(이)가 포위 공격을 받은 것만 같습니다.
 
-All of the windows are boarded up, and there are objects scattered around
-the entrance.
+모든 창문은 판자로 막혀 있고, 입구 주변에는 물건들이 흩어져 있습니다.
 
-Strange forbidding shapes seem to be moving in the distance.
-%E [You arrive at %H, but all is not well.]
+저 멀리서 기괴하고 끔찍한 형상들이 움직이는 것 같습니다.
+%E [%H에 도착했지만, 상황이 좋지 않습니다.]
 %Cp Arc 00002
-Once again, you are back at %H.
+다시 한 번, 당신은 %H에 돌아왔습니다.
 %E
 %Cp Arc 00003
-You are back at %H.
-You have an odd feeling this may be the last time you ever come here.
+당신은 %H에 돌아왔습니다.
+이번이 이곳에 오는 마지막이 될지도 모른다는 이상한 예감이 듭니다.
 %E
 %Cp Arc 00005
-"Did you see Lash LaRue in 'Song of Old Wyoming' the other night?"
+"요전 밤에 '올드 와이오밍의 노래'에 나온 래시 라루 봤어?"
 %E
 %Cp Arc 00006
-"Hey man, got any potions of hallucination for sale?"
+"이봐, 환각의 물약 파는 거 있어?"
 %E
 %Cp Arc 00007
-"Did you see the artifact %l brought back from the last dig?"
+"%l(이)가 지난 발굴에서 가져온 유물 봤어?"
 %E
 %Cp Arc 00008
-"So what species do *you* think we evolved from?"
+"그래서 *넌* 우리가 어떤 종에서 진화했다고 생각해?"
 %E
 %Cp Arc 00009
-"So you're %ls prize pupil!  I don't know what he sees in you."
+"네가 바로 %l의 수제자구나! 도대체 네 안의 뭘 본 건지 모르겠네."
 %E
 %Cp Arc 00010
-"Did you see Lash LaRue in 'Song of Old Wyoming' the other night?"
+"요전 밤에 '올드 와이오밍의 노래'에 나온 래시 라루 봤어?"
 %E
 %Cp Arc 00011
-"Hey man, got any potions of hallucination for sale?"
+"이봐, 환각의 물약 파는 거 있어?"
 %E
 %Cp Arc 00012
-"I guess you are guaranteed to make full professor now."
+"이제 정교수가 되는 건 떼어 놓은 당상이겠군."
 %E
 %Cp Arc 00013
-"So, what was worse, %n or your entrance exams?"
+"그래서, %n(와)과 입학 시험 중에 어느 쪽이 더 최악이었어?"
 %E
 %Cp Arc 00014
-"%oC is impressive, but nothing like the bones I dug up!"
+"%oC(은)는 꽤 인상적이지만, 내가 파낸 뼈들에 비하면 아무것도 아니지!"
 %E
 %Cc Arc 00015
-"Finally you have returned, %p.  You were always
-my most promising student.  Allow me to see if you are ready for the
-most difficult task of your career."
-%E ["You have returned, %p, to a difficult task."]
+"마침내 돌아왔구나, %p. 넌 항상 나의 가장 유망한 제자였지. 
+네 커리어에서 가장 어려운 과제를 맡을 준비가 되었는지 내가 한 번 보마."
+%E ["어려운 임무를 위해 돌아왔구나, %p."]
 %Cp Arc 00016
-"Again, %p, you stand before me.
-Let me see if you have gained experience in the interim."
+"다시 내 앞에 섰구나, %p.
+그동안 얼마나 경험을 쌓았는지 한 번 보마."
 %E
 %Cp Arc 00017
-"Once more, %p, you have returned from the field.
-Are you finally ready for the task that must be accomplished?"
+"또다시 현장에서 돌아왔구나, %p.
+드디어 반드시 완수해야 할 그 과제를 맡을 준비가 되었느냐?"
 %E
 %Cc Arc 00018
-"%p, you have failed us.  All of my careful training has been in
-vain.  Begone!  Your tenure at this college has been revoked!
+"%p, 넌 우리를 실망시켰다. 나의 그 모든 정성 어린 가르침이 
+헛수고가 되었어. 썩 꺼져라! 이 대학에서 네 종신 교수직은 취소되었다!
 
-"You are a disgrace to the profession!"
-%E ["%pC, you have failed us.  Begone!"]
+"넌 고고학계의 수치다!"
+%E ["%pC, 넌 우리를 실망시켰다. 썩 꺼져라!"]
 %Cc Arc 00019
-"%p, you are yet too inexperienced to undertake such a demanding
-quest.  A mere %r could not possibly face the rigors demanded and
-survive.  Go forth, and come here again when your adventures have further
-taught you."
-%E [%pC, a mere %r is too inexperienced.]
+"%p, 넌 아직 이토록 가혹한 퀘스트를 맡기엔 경험이 너무 부족하다. 
+한낱 %r(으)로는 이 혹독한 시련을 견뎌내고 살아남을 수 없을 테지. 
+세상으로 나가 너의 모험이 네게 더 많은 것을 가르쳐 주었을 때 다시 이곳으로 오너라."
+%E [%pC, 한낱 %r(은)는 너무 미숙하다.]
 %Cc Arc 00020
-"%pC!  I've heard that you've been using sloppy techniques.  Your
-results lately can hardly be called suitable for %ra!
+"%pC! 자네가 아주 조잡한 기술을 쓰고 있다고 들었네. 최근 자네의 
+성과는 %ra(이)라 부르기엔 적합하지 않아!
 
-"How could you have strayed from the %a path?  Go from here, and come
-back only when you have purified yourself."
-%E ["%pC, you have strayed from the %a path.  Purify yourself!"]
+"어찌하여 %a의 길에서 벗어난 겐가? 이곳에서 떠나, 스스로를 
+정화한 후에만 다시 돌아오게."
+%E ["%pC, 자네는 %a의 길에서 벗어났다. 스스로를 정화하게!"]
 %Cc Arc 00021
-"Grave times have befallen the college, for %na has
-stolen %o.  Without it, the board of directors of
-the university will soon have no choice but to revoke our research grants.
+"대학에 심각한 위기가 닥쳤네. %na(이)가 
+%o(을)를 훔쳐갔기 때문이지. 그것이 없다면, 대학 이사회는 
+곧 우리의 연구 지원금을 전액 삭감할 수밖에 없을 걸세.
 
-"You must locate the entrance to %i.  Within it,
-you will find %n.
+"자네는 %i의 입구를 찾아야 하네. 그 안에서 
+%n(을)를 찾을 수 있을 거야.
 
-"You must then defeat %n and return %o
-to me.
+"그런 다음 %n(을)를 물리치고 %o(을)를 
+내게 가져와야만 해.
 
-"Only in this way will we be able to prevent the budget cuts that could
-close this college.
+"오직 이 방법만이 대학의 문을 닫게 만들지도 모르는 예산 삭감을 막을 수 있다네.
 
-"May the wisdom of %d be your guide."
-%E [%nC has stolen %o.  Locate %i, defeat %ni, and return %O.]
+"%d의 지혜가 자네를 인도하기를."
+%E [%nC(이)가 %o(을)를 훔쳤다. %i(을)를 찾아 %ni(을)를 물리치고 %O(을)를 되찾아라.]
 %Cp Arc 00025
-"Beware, for %n is powerful and cunning."
+"조심하게, %n(은)는 강력하고 교활하니까."
 %E
 %Cp Arc 00026
-"To locate the entrance to %i, you must pass
-many traps."
+"%i의 입구를 찾으려면 수많은 함정을 통과해야 할 걸세."
 %E
 %Cp Arc 00027
-"A %nt may be vulnerable to attacks by magical cold."
+"%nt(은)는 마법적인 냉기 공격에 취약할 수 있지."
 %E
 %Cp Arc 00028
-"Call upon %d when you encounter %n."
+"%n(와)과 마주치면 %d께 기도하게."
 %E
 %Cp Arc 00029
-"You must destroy %n.  It will pursue you otherwise."
+"%n(을)를 완전히 파괴해야 해. 그렇지 않으면 그것이 자네를 쫓아올 테니."
 %E
 %Cp Arc 00030
-"%oC is a mighty talisman.  With it you
-can destroy %n."
+"%oC(은)는 강력한 부적이야. 그걸 사용하면 자네는 
+%n(을)를 파괴할 수 있지."
 %E
 %Cp Arc 00031
-"Go forth with the blessings of %d."
+"%d의 축복과 함께 나아가게."
 %E
 %Cp Arc 00032
-"I will have my %gP watch for your return."
+"내 %gP들에게 자네가 돌아오는지 망을 보게 하겠네."
 %E
 %Cp Arc 00033
-"Remember not to stray from the true %a path."
+"진정한 %a의 길에서 벗어나지 말아야 함을 명심하게."
 %E
 %Cp Arc 00034
-"You may be able to sense %o when you are near."
+"근처에 가면 %o의 기운을 느낄 수 있을지도 모르네."
 %E
 %Cc Arc 00035
-A plain opens before you.  Beyond the plain lies a foreboding edifice.
+당신의 눈앞에 평원이 펼쳐집니다. 평원 너머에는 불길한 건축물이 우뚝 서 있습니다.
 
-You have the feeling that you will soon find the entrance to
-%i.
-%E [This foreboding edifice must hide the entrance to %i.]
+곧 %i의 입구를 찾게 될 것이라는 예감이 듭니다.
+%E [이 불길한 건축물은 %i의 입구를 숨기고 있는 게 틀림없습니다.]
 %Cp Arc 00036
-Once again, you are near the entrance to %i.
+다시 한 번, 당신은 %i의 입구 근처에 있습니다.
 %E
 %Cc Arc 00040
-A strange feeling washes over you, and you think back to things you
-learned during the many lectures of %l.
+기묘한 기운이 당신을 덮치고, 당신은 %l의 수많은 강의에서 
+배웠던 내용들을 떠올립니다.
 
-You realize the feeling must be the presence of %o.
-%E [This strange feeling must be the presence of %o.]
+당신은 이 기운이 %o의 존재 때문이라는 것을 깨닫습니다.
+%E [이 기묘한 기운은 %o의 존재 때문일 것입니다.]
 %Cp Arc 00041
-The familiar presence of %o is in the ether.
+대기 중에 %o의 낯익은 기운이 맴돌고 있습니다.
 %E
 # delivered instead of 00041 if %o is not on the level anymore;
 # hero might already be carrying it, so don't say anything like
 # "%o's presence can't be felt"
 %Cp Arc 00042
-The have returned to %ns lair.
+당신은 %n의 은신처로 돌아왔습니다.
 %E
 %Cc Arc 00050
-"So, %p, you think that you can succeed in recovering
-%o, when your teacher, %l, has already failed.
+"그래서, %p. 네 스승인 %l도 실패했는데 
+네가 %o(을)를 되찾을 수 있을 거라고 생각하느냐?
 
-"Come, try your best!  I shall destroy you, and gnaw on your bones."
-%E ["Come, %p, I shall destroy you!"]
+"와라, 어디 최선을 다해 보아라! 널 산산조각 내고 네 뼈를 갉아 먹어주마."
+%E ["와라, %p, 내가 널 파괴해주마!"]
 %Cc Arc 00051
-"Again you try to best me, eh %p?  Well, you shall fail again.
+"또 나를 이겨보겠다고 발악하는 거냐, %p? 글쎄, 넌 다시 실패할 것이다.
 
-"You shall never recover %o.
+"넌 결코 %o(을)를 되찾지 못할 것이야.
 
-"I shall bear your soul to the Plane of Origins for my master's pleasure."
-%E ["Again you try to best me, %p?  You shall never recover %o."]
+"내 주인의 즐거움을 위해 네 영혼을 기원의 차원으로 끌고 가주마."
+%E ["또 날 이기려 드느냐, %p? 넌 결코 %o(을)를 되찾지 못할 것이다."]
 %Cp Arc 00052
-"You persist yet %p!  Good.  Now, you shall die!"
+"아직도 고집을 부리는구나 %p! 좋다. 이제, 죽어라!"
 %E
 %Cp Arc 00053
-"I shall have %o from you, %p, then feast
-upon your entrails!"
+"네게서 %o(을)를 빼앗은 다음, %p, 
+네 내장으로 포식을 즐겨주마!"
 %E
 %Cp Arc 00060
-"Try your best, %p.  You cannot defeat me."
+"최선을 다해 보거라, %p. 넌 나를 이길 수 없다."
 %E
 %Cp Arc 00061
-"I shall rend the flesh from your body whilst you still breathe!"
+"네놈이 아직 숨쉬고 있을 때 그 몸에서 살점을 찢어내 주마!"
 %E
 %Cp Arc 00062
-"First you, %p, then I shall destroy your mentor, %l."
+"먼저 네놈부터 처리하고, %p, 그 다음엔 네 스승인 %l(을)를 끝장내주지."
 %E
 %Cp Arc 00063
-"Tiring yet, %p?  I draw my power from my master and cannot
-falter!"
+"벌써 지치느냐, %p? 난 내 주인으로부터 힘을 끌어내기 때문에 결코 
+지치지 않는다!"
 %E
 %Cp Arc 00064
-"I shall rend thy soul from thy body and consume it!"
+"네 육신에서 영혼을 찢어내어 먹어 치워주마!"
 %E
 %Cp Arc 00065
-"You are far too %a -- it weakens you.  You shall die in this place."
+"넌 너무 %a하다 -- 그게 널 나약하게 만들지. 넌 이곳에서 죽을 것이다."
 %E
 %Cp Arc 00066
-"%d has forsaken you!  You are lost now!"
+"%d(은)는 널 버렸다! 이제 네겐 희망이 없어!"
 %E
 %Cp Arc 00067
-"A mere %r cannot hope to defeat me!"
+"한낱 %r 따위가 날 이길 수 있을 거라 기대하지 마라!"
 %E
 %Cp Arc 00068
-"If you are the best %l can send, I have nothing to fear."
+"네가 %l(이)가 보낼 수 있는 최고의 인재라면, 난 두려울 게 하나도 없군."
 %E
 %Cp Arc 00069
-"Die %c!  I shall exhibit your carcass as a trophy."
+"죽어라 %c! 네 시체를 전리품으로 전시해주마."
 %E
 %Cc Arc 00070
-The power of %o flows through your body!  You feel
-as if you could now take on the Wizard of Yendor himself and win, but
-you know you must return %o to %l.
-%E [The power of %o flows through your body!  You must return it to %l.]
+%o의 힘이 당신의 몸을 타고 흐릅니다! 당신은 지금 당장이라도 
+옌더의 마법사와 맞서 이길 수 있을 것 같은 힘을 느끼지만, 
+%o(을)를 반드시 %l에게 돌려주어야 한다는 사실을 알고 있습니다.
+%E [%o의 힘이 당신의 몸을 타고 흐릅니다! 그것을 %l에게 돌려주어야 합니다.]
 %Cp Arc 00080
-The body of %n dissipates in a cloud of noxious fumes.
+%n의 시체가 유독한 가스 구름 속으로 흩어집니다.
 %E
 %Cc Arc 00081
-%lC touches %o briefly, gazes into it,
-then smiles at you and says:
+%lC(은)는 %o(을)를 짧게 만져보고 그 안을 응시하더니, 
+당신을 향해 미소를 지으며 말합니다:
 
-"Well done, %p.  You have defeated %n and
-recovered %o.  But I fear that it shall never be safe
-here.
+"아주 잘했네, %p. 자네는 %n(을)를 물리치고 
+%o(을)를 되찾았어. 하지만 난 이곳이 결코 안전하지 
+않을까 두렵다네.
 
-Please take %o with you.  You, %p, can
-guard it now far better than I.
+부디 %o(을)를 자네가 가져가게. 자네가, %p, 
+지금은 나보다 훨씬 더 그것을 잘 지킬 수 있을 테니.
 
-May the blessings of %d follow you and guard you."
-%E [%lC instructs you to guard %o from now on.]
+%d의 축복이 자네를 따르고 지켜주기를."
+%E [%lC(이)가 지금부터 당신에게 %o(을)를 지키라고 지시합니다.]
 # assumes Orb of Detection (glass object)
 %Cc Arc 00082
-"Careful, %p!  %oC might break, and that would be
-a tragic loss.  You are its keeper now, and the time has come to
-resume your search for the Amulet.  %Z await your
-return through the magic portal that brought you here."
-%E ["Resume your search for the Amulet beyond the magic portal to %Z."]
+"조심하게, %p! %oC(이)가 깨지기라도 한다면 너무나 
+비극적인 손실일 테니까. 이제 자네가 그것의 수호자이며, 다시 부적을 
+찾는 여정을 재개할 때가 되었네. %Z(이)가 
+자네를 이곳으로 이끌었던 마법의 포탈 너머에서 자네의 귀환을 기다리고 있다네."
+%E ["마법의 포탈 너머 %Z에서 부적을 찾는 여정을 재개하십시오."]
 %Cc Arc 00090
-"Welcome back, %p.  Have you progressed with your quest to
-regain the Amulet of Yendor for %d?"
-%E ["Have you progressed with your quest to regain the Amulet of Yendor for %d?"]
+"돌아온 걸 환영하네, %p. %d(을)를 위해 옌더의 부적을 되찾으려는 
+퀘스트는 진척이 좀 있었는가?"
+%E ["%d(을)를 위해 옌더의 부적을 되찾으려는 퀘스트는 진척이 있었습니까?"]
 %Cc Arc 00091
-"Congratulations, %p.  I wondered if anyone could prevail against
-the Wizard and the minions of Moloch.  Now, you must embark on one
-final adventure.
+"축하하네, %p. 마법사와 몰록의 하수인들을 상대로 승리할 수 있는 
+자가 과연 있을까 싶었는데 말이야. 자, 이제 자네는 마지막 모험을 떠나야 하네.
 
-"Take the Amulet, and find your way onto the Astral Plane.
-There you must find the altar of %d and sacrifice the
-Amulet on that altar to fulfill your destiny.
+"부적을 가지고 천상계(Astral Plane)로 향하는 길을 찾게. 
+그곳에서 %d의 제단을 찾아 그 제단에 부적을 바쳐 
+자네의 운명을 완수하게나.
 
-"Remember, your path now should always be upwards."
-%E [Take the Amulet to the Astral Plane and sacrifice it at the altar of %d.]
+"명심하게, 이제 자네의 길은 항상 위를 향해야 한다는 것을."
+%E [부적을 천상계로 가져가 %d의 제단에 바치십시오.]
 #
 #	Barbarian
 #
 %Cc Bar 00001
-Warily you scan your surroundings, all of your senses alert for signs
-of possible danger.  Off in the distance, you can %x the familiar shapes
-of %H.
+당신은 혹시 모를 위험의 징후를 경계하며 모든 감각을 곤두세우고 
+조심스럽게 주변을 살핍니다. 저 멀리, 당신은 %H의 낯익은 형상을 %x.
 
-But why, you think, should %l be there?
+하지만 왜, %l(이)가 저곳에 있는 것일까요?
 
-Suddenly, the hairs on your neck stand on end as you detect the aura of
-evil magic in the air.
+갑자기 대기 중에 깃든 사악한 마법의 기운을 감지하자 당신의 목덜미 털이 쭈뼛 섭니다.
 
-Without thought, you ready your weapon, and mutter under your breath:
+아무 생각 없이, 당신은 무기를 고쳐 잡고 낮게 중얼거립니다:
 
-    "By %d, there will be blood spilt today."
-%E [You reach the vicinity of %H, but sense evil magic nearby.]
+    "%d의 이름을 걸고, 오늘 피를 보게 될 것이다."
+%E [%H 근처에 도달했지만, 근처에서 사악한 마법의 기운을 감지했습니다.]
 %Cp Bar 00002
-Once again, you near %H.  You know that %l
-will be waiting.
+다시 한 번, 당신은 %H에 가까워집니다. %l(이)가 기다리고 있을 거란 걸 
+당신은 알고 있습니다.
 %E
 %Cp Bar 00003
-Again, and you think possibly for the last time, you approach
-%H.
+다시 한 번, 그리고 이번이 마지막이 될지도 모른다고 생각하며, 
+당신은 %H에 접근합니다.
 %E
 %Cp Bar 00005
-"The battles here have been good -- our enemies' blood soaks the soil!"
+"이곳에서의 전투는 훌륭했어 -- 적들의 피가 대지를 적시고 있다!"
 %E
 %Cp Bar 00006
-"Remember that glory is crushing your enemies beneath your feet!"
+"영광이란 네 발밑에서 적들을 짓밟는 것임을 명심해라!"
 %E
 %Cp Bar 00007
-"There has been little treasure to loot, since the horde arrived."
+"군단이 도착한 이후로, 약탈할 보물이 거의 없었어."
 %E
 %Cp Bar 00008
-"The horde is mighty in numbers, but they have little courage."
+"군단은 머릿수만 많을 뿐, 용기는 쥐뿔도 없다."
 %E
 %Cp Bar 00009
-"%lC is a strange one, but he has helped defend us."
+"%lC(은)는 좀 이상한 자지만, 우리가 방어하는 걸 도왔어."
 %E
 %Cp Bar 00010
-"The battles here have been good -- our enemies' blood soaks the soil!"
+"이곳에서의 전투는 훌륭했어 -- 적들의 피가 대지를 적시고 있다!"
 %E
 %Cp Bar 00011
-"Remember that glory is crushing your enemies beneath your feet!"
+"영광이란 네 발밑에서 적들을 짓밟는 것임을 명심해라!"
 %E
 %Cp Bar 00012
-"Times will be good again, now that the horde is vanquished."
+"군단이 섬멸되었으니, 이제 다시 좋은 시절이 올 거야."
 %E
 %Cp Bar 00013
-"You have brought our clan much honor in defeating %n."
+"네가 %n(을)를 무찌름으로써 우리 부족에 큰 명예를 안겨주었어."
 %E
 %Cp Bar 00014
-"You will be a worthy successor to %l."
+"넌 %l의 훌륭한 후계자가 될 거다."
 %E
 %Cc Bar 00015
-"Ah, %p.  You have returned at last.  The world is in dire
-need of your help.  There is a great quest you must undertake.
+"아, %p. 마침내 돌아왔군. 세상은 자네의 도움이 절실히 
+필요하네. 자네가 맡아야 할 위대한 임무가 있어.
 
-"But first, I must see if you are ready to take on such a challenge."
-%E ["At last you have returned.  There is a great quest you must undertake."]
+"하지만 먼저, 자네가 그 도전을 감당할 준비가 되었는지 봐야겠군."
+%E ["마침내 돌아왔군. 자네가 맡아야 할 위대한 임무가 있네."]
 %Cp Bar 00016
-"%p, you are back.  Are you ready now for the challenge?"
+"%p, 돌아왔군. 이제 도전을 맞이할 준비가 되었나?"
 %E
 %Cp Bar 00017
-"Again, you stand before me, %p.  Surely you have prepared yourself."
+"다시 내 앞에 섰군, %p. 분명 스스로 준비를 마쳤겠지."
 %E
 %Cc Bar 00018
-"Pah!  You have betrayed the gods, %p.  You will never attain
-the glory which you aspire to.  Your failure to follow the true path has
-closed this future to you.
+"퉤! 자네는 신들을 배신했어, %p. 자네가 열망하는 영광은 결코 
+얻지 못할 거네. 진정한 길을 따르지 못한 실패가 자네의 미래를 닫아버렸어.
 
-"I will protect these people as best I can, but soon %n will overcome
-me and destroy all who once called you %s.  Now begone!"
-%E ["You have betrayed %d; soon %n will destroy us.  Begone!"]
+"난 최선을 다해 이 사람들을 지키겠지만, 곧 %n(이)가 나를 이기고 
+한때 자네를 %s(이)라 불렀던 모든 이들을 파괴할 걸세. 이제 당장 꺼져라!"
+%E ["자네는 %d(을)를 배신했어; 곧 %n(이)가 우리를 파괴할 걸세. 꺼져라!"]
 %Cc Bar 00019
-"%p, I fear that you are as yet too inexperienced to face
-%n.  Only %Ra with the help of %d could ever hope to
-defeat %ni."
-%E ["You are too inexperienced.  Come back when you are %Ra."]
+"%p, 내 보기에 자네는 아직 %n(와)과 맞서기엔 경험이 너무 부족해. 
+%d의 도움을 받는 %Ra만이 %ni(을)를 이길 수 있기를 희망해볼 수 있지."
+%E ["넌 경험이 너무 부족하다. %Ra(이)가 되어 다시 오너라."]
 %Cc Bar 00020
-"%pC!  You have wandered from the path of the %a!
-If you attempt to overcome %n in this state, he will surely
-enslave your soul.  Your only hope, and ours, lies in your purification.
-Go forth, and return when you feel ready."
-%E ["You have wandered from the path of the %a.  Come back when you have atoned."]
+"%pC! 자네는 %a의 길에서 벗어났어! 
+이 상태로 %n(을)를 이기려 든다면, 그는 틀림없이 자네의 영혼을 노예로 만들 걸세. 
+자네와 우리의 유일한 희망은 자네가 정화되는 것에 달려 있어. 
+나아가게, 그리고 준비가 되었다고 느낄 때 돌아오게나."
+%E ["자네는 %a의 길에서 벗어났다. 속죄한 뒤에 다시 돌아오게."]
 %Cc Bar 00021
-"The world is in great need of your assistance, %p.
+"세상은 자네의 도움이 몹시 필요하네, %p.
 
-"About six months ago, I learned that a mysterious sorcerer, known
-as %n, had begun to gather a large group of cutthroats and brigands
-about %ni.
+"대략 여섯 달 전, 난 %n(이)라고 알려진 수수께끼의 마법사가 
+%ni 주변에 수많은 살인청부업자들과 산적들을 모으기 시작했다는 걸 
+알게 되었네.
 
-"At about the same time, these people you once rode with `liberated' a
-potent magical talisman, %o, from a Turanian caravan.
+"비슷한 시기에, 자네가 한때 함께 말머리를 나란히 했던 이 사람들이 강력한 마법 부적인 
+%o(을)를 투란 상단으로부터 '해방'시켰지.
 
-"%nC and %nj Black Horde swept down upon %i and defeated
-the people there, driving them out into the desert.  He has taken
-%o, and seeks to bend it to %nj will.  I detected the
-subtle changes in the currents of fate, and joined these people.
-Then I sent forth a summons for you.
+"%nC(와)과 %nj 검은 군단은 %i(을)를 휩쓸고 그곳 사람들을 패배시켜 
+사막으로 몰아냈어. 그는 %o(을)를 빼앗았고, 그것을 %nj 뜻대로 
+부리려 하고 있지. 난 운명의 흐름에 생긴 미묘한 변화를 감지했고, 이 사람들과 합류했네. 
+그리고 자네를 부른 거야.
 
-"If %n can bend %o to %nj will, he will become
-almost indestructible.  He will then be able to enslave the minds of
-men across the world.  You are the only hope.  The gods smile upon you,
-and with %d behind you, you alone can defeat %n.
+"만약 %n(이)가 %o(을)를 %nj 뜻대로 부릴 수 있게 된다면, 
+그는 거의 무적의 존재가 될 거야. 
+그러면 그는 온 세상 사람들의 마음을 지배할 수 있게 되겠지. 
+자네가 유일한 희망이네. 신들이 자네에게 미소 짓고 있고, 
+%d(이)가 자네 뒤에 있으니, 자네만이 %n(을)를 이길 수 있어.
 
-"You must go to %i.  From there, you can track down
-%n, defeat %ni, and return %o to us.  Only
-then will the world be safe."
-%E ["Find %n, defeat %ni, and return %o to us."]
+"자네는 %i(으)로 가야만 하네. 그곳에서부터 자네는 
+%n(을)를 추적해서, %ni(을)를 물리치고, %o(을)를 우리에게 
+가져와 주게. 그래야만 세상이 안전해질 수 있어."
+%E ["%n(을)를 찾아 %ni(을)를 물리치고 %o(을)를 우리에게 가져오게."]
 %Cp Bar 00025
-"%nC is strong in the dark arts, but not immune to cold steel."
+"%nC(은)는 어둠의 마법에 강하지만, 차가운 강철검에 면역인 건 아니야."
 %E
 %Cp Bar 00026
-"Remember that %n is a great sorcerer.  He lived in the time
-of Atlantis."
+"%n(이)가 위대한 마법사라는 사실을 잊지 말게. 그는 아틀란티스 시대부터 살아왔지."
 %E
 %Cp Bar 00027
-"If you fail, %p, I will not be able to protect these people long."
+"만약 자네가 실패한다면, %p, 나도 이 사람들을 오래 지켜줄 순 없을 걸세."
 %E
 %Cp Bar 00028
-"To enter %i, you must be very stealthy.  The horde will be on
-guard."
+"%i에 들어가려면 아주 은밀하게 움직여야 해. 군단이 경계를 서고 있을 테니까."
 %E
 %Cp Bar 00029
-"Call upon %d in your time of need."
+"어려움에 처하면 %d께 기도하게."
 %E
 %Cp Bar 00030
-"May %d protect you, and guide your steps."
+"%d(이)가 자네를 보호하고 그 발걸음을 인도하기를."
 %E
 %Cp Bar 00031
-"If you can lay hands upon %o, carry it for good fortune."
+"%o(을)를 손에 넣게 된다면, 행운을 위해 그것을 지니고 다니게."
 %E
 %Cp Bar 00032
-"I cannot stand against %ns sorcery.  But %d will help you."
+"나는 %n의 마법에 맞설 수 없네. 하지만 %d(이)가 자네를 도울 거야."
 %E
 %Cp Bar 00033
-"Do not fear %n.  I know you can defeat %ni."
+"%n(을)를 두려워하지 말게. 난 자네가 %ni(을)를 물리칠 수 있다는 걸 알고 있으니."
 %E
 %Cp Bar 00034
-"You have a great road to travel, %p, but only after you defeat
-%n."
+"자네가 걸어야 할 위대한 길이 있지만, %p, 그건 자네가 %n(을)를 물리친 이후의 이야기지."
 %E
 %Cc Bar 00035
-The scent of water comes to you in the desert breeze.  You know that
-you have located %i.
-%E [You have located %i.]
+사막의 바람을 타고 물 냄새가 당신에게 다가옵니다. 당신은 %i(을)를 
+찾았다는 것을 알게 됩니다.
+%E [%i(을)를 찾았습니다.]
 %Cp Bar 00036
-Yet again you have a chance to infiltrate %i.
+다시 한 번 당신은 %i에 잠입할 기회를 얻었습니다.
 %E
 %Cc Bar 00040
-The hairs on the nape of your neck lift as you sense an energy in the
-very air around you.  You fight down a primordial panic that seeks to
-make you turn and run.  This is surely the lair of %n.
-%E [This is surely the lair of %n.]
+주변의 공기 그 자체에서 느껴지는 에너지에 당신의 목덜미 털이 곤두섭니다. 
+당신은 당장 뒤돌아 도망치게 만들려는 원초적인 공포와 맞서 싸웁니다. 
+이곳이 %n의 은신처임이 틀림없습니다.
+%E [이곳이 %n의 은신처임이 틀림없습니다.]
 %Cp Bar 00041
-Yet again you feel the air around you heavy with malevolent magical energy.
+또다시 당신을 둘러싼 공기가 악의적인 마법 에너지로 무겁게 짓누르는 것을 느낍니다.
 %E
 %Cc Bar 00050
-"So.  This is what that second rate sorcerer %l sends to do %lj bidding.
-I have slain many before you.  You shall give me little sport.
+"그래. 그 이류 마법사 %l(이)가 자기 심부름이나 하라고 보낸 게 
+고작 이거란 말이냐. 난 네놈이 오기 전에도 수많은 자들을 죽여왔지. 
+넌 내게 약간의 즐거움조차 주지 못하겠구나.
 
-"Prepare to die, %c."
-%E [%nC boasts that %nh has slain many.  "Prepare to die, %c."]
+"죽을 준비를 해라, %c."
+%E [%nC(이)가 예전에도 많은 이들을 죽여왔다고 으스댑니다. "죽을 준비를 해라, %c."]
 %Cp Bar 00051
-"I have wasted too much time on you already.  Now, you shall die."
+"네놈에게 이미 너무 많은 시간을 낭비했군. 이제 넌 죽을 것이다."
 %E
 %Cp Bar 00052
-"You return yet again, %c!  Are you prepared for death now?"
+"또다시 돌아왔구나, %c! 이제 죽을 각오는 되었느냐?"
 %E
 %Cp Bar 00053
-"I shall have %o back, you pitiful excuse for %ca.
-And your life as well."
+"%o(은)는 내가 되찾아 주마, 이 한심한 %c 녀석아. 
+네놈의 목숨과 함께 말이지."
 %E
 %Cp Bar 00060
-"My pets will dine on your carcass tonight!"
+"오늘 밤 내 애완동물들이 네놈의 시체로 포식을 하겠구나!"
 %E
 %Cp Bar 00061
-"You are a sorry excuse for %ra."
+"넌 정말이지 한심한 %r이군."
 %E
 %Cp Bar 00062
-"Run while you can, %c.  My next spell will be your last."
+"도망칠 수 있을 때 도망쳐라, %c. 내 다음 마법이 네놈의 마지막이 될 테니."
 %E
 %Cp Bar 00063
-"I shall use your very skin to bind my next grimoire."
+"네놈의 피부를 벗겨내 내 다음 마도서의 표지로 써주마."
 %E
 %Cp Bar 00064
-"%d cannot protect you now.  Here, you die."
+"%d(은)는 이제 널 지켜줄 수 없다. 여기서 넌 죽는다."
 %E
 %Cp Bar 00065
-"Your %a nature makes you weak.  You cannot defeat me."
+"너의 그 %a 본성이 널 나약하게 만들지. 넌 결코 나를 이길 수 없다."
 %E
 %Cp Bar 00066
-"Come, %c.  I shall kill you, then unleash the horde on your tribe."
+"덤벼라, %c. 널 죽인 다음, 네놈의 부족에게 내 군단을 풀어놓아 주마."
 %E
 %Cp Bar 00067
-"Once you are dead, my horde shall finish off %l, and your tribe."
+"네놈이 죽고 나면, 내 군단이 %l(와)과 네 부족의 숨통을 끊어놓을 것이다."
 %E
 %Cp Bar 00068
-"Fight, %c, or are you afraid of the mighty %n?"
+"싸워라, %c, 아니면 이 위대한 %n(이)가 두려운 것이냐?"
 %E
 %Cp Bar 00069
-"You have failed, %c.  Now, my victory is complete."
+"넌 실패했다, %c. 이제, 나의 완벽한 승리다."
 %E
 %Cc Bar 00070
-As you pick up %o, you feel the power of it
-flowing through your hands.  It seems to be in two or more places
-at once, even though you are holding it.
-%E [You feel the power of %o flowing through your hands.]
+%o(을)를 집어 들자, 당신은 그것의 힘이 
+당신의 손을 타고 흐르는 것을 느낍니다. 분명히 당신이 쥐고 있음에도 불구하고, 
+그것은 동시에 두 개 이상의 장소에 존재하는 것처럼 느껴집니다.
+%E [%o의 힘이 당신의 손을 타고 흐르는 것을 느낍니다.]
 %Cc Bar 00080
-%nC falls to the ground, and utters a last curse at you.  Then %nj
-body fades slowly, seemingly dispersing into the air around you.  You
-slowly become aware that the overpowering aura of magic in the air has
-begun to fade.
-%E [%nC curses you, but you feel the overpowering aura of magic fading.]
+%nC(은)는 땅에 쓰러지며 당신에게 마지막 저주를 내뱉습니다. 그리고 %nj 
+몸이 천천히 흐려지더니, 당신을 둘러싼 대기 중으로 흩어져 버립니다. 당신은 
+공기 중에 감돌던 압도적인 마법의 오라가 서서히 사라지기 시작했다는 것을 알아차립니다.
+%E [%nC(이)가 당신을 저주하지만, 주변의 마법의 오라가 잦아드는 것을 느낍니다.]
 %Cc Bar 00081
-When %l sees %o, he smiles, and says:
+%l(은)는 %o(을)를 보자 미소를 지으며 말합니다:
 
-    Well done, %p.  You have saved the world from certain doom.
-    What, now, should be done with %o?
+    "아주 잘했네, %p. 자네가 확실한 파멸로부터 세상을 구했어.
+    자, 이제 %o(을)를 어찌해야 할까?
 
-    These people, brave as they are, cannot hope to guard it from
-    other sorcerers who will detect it, as surely as %n did.
+    이 사람들이 아무리 용감하다 한들, %n(이)가 그랬듯 확실하게 
+    그것의 기운을 감지해 낼 다른 마법사들로부터 이것을 지켜낼 수는 없을 걸세.
 
-    Take %o with you, %p.  It will guard you in
-    your adventures, and you can best guard it.  You embark on a
-    quest far greater than you realize.
+    %o(은)는 자네가 챙기게나, %p. 그것이 자네의 
+    모험을 지켜줄 것이며, 또한 자네가 그것을 가장 잘 지켜낼 수 있겠지. 자네는 
+    스스로 생각하는 것보다 훨씬 더 위대한 퀘스트에 뛰어들고 있는 거라네.
 
-    Remember me, %p, and return when you have triumphed.  I
-    will tell you then of what you must do.  You will understand when the
-    time comes.
-%E [%lC tells you to guard %o, and to return when you have triumphed.]
+    나를 잊지 말게, %p, 그리고 승리했을 때 돌아오게나. 그때 자네가 
+    무엇을 해야 할지 알려주겠네. 때가 되면 자네도 이해하게 될 걸세."
+%E [%lC(이)가 당신에게 %o(을)를 지키라고 하며 승리한 후에 다시 돌아오라고 합니다.]
 %Cc Bar 00082
-%l gazes reverently at %o, then back at you.
+%l(은)는 %o(을)를 경건하게 바라보고는, 다시 당신을 쳐다봅니다.
 
-"You are its keeper now, and the time has come to resume your search
-for the Amulet.  %Z await your return through the
-magic portal which brought you here."
-%E ["You keep %o.  Return to %Z to search for the Amulet."]
+"이제 자네가 이것의 수호자네, 그리고 부적을 찾는 여정을 다시 시작할 
+때가 되었어. 자네를 이곳으로 이끌었던 마법의 포탈 너머에서 %Z(이)가 
+자네의 귀환을 기다리고 있다네."
+%E ["자네가 %o의 수호자네. %Z(으)로 돌아가 부적을 찾게."]
 %Cp Bar 00090
-"Tell us, %p, have you fared well on your great quest?"
+"말해주게, %p, 그 위대한 퀘스트는 잘 진행되고 있는가?"
 %E
 %Cc Bar 00091
-"This is wondrous, %p.  I feared that you could not possibly
-succeed in your quest, but here you are in possession of the Amulet
-of Yendor!
+"정말 경이로운 일이군, %p. 난 자네가 퀘스트에 성공하지 
+못할까 두려웠는데, 이렇게 옌더의 부적을 손에 넣고 돌아왔군!
 
-"I have studied the texts of the magi constantly since you left.  In
-the Book of Skelos, I found this:
+"자네가 떠난 후로 난 현자들의 문헌을 끊임없이 연구했네. 
+스켈로스의 서에서 이런 내용을 찾아냈지:
 
-    %d will cause a child to be sent into the world.  This child is to
-    be made strong by trial of battle and magic, for %d has willed it so.
-    It is said that the child of %d will recover the Amulet of Yendor
-    that was stolen from the Creator at the beginning of time.
+    '%d(이)가 세상에 한 아이를 보낼 것이다. 이 아이는 전투와 마법의 
+    시련을 거쳐 강해질 것이니, 이는 %d(이)가 그리 뜻했기 때문이다.
+    %d의 아이는 태초에 창조주로부터 도난당한 옌더의 부적을 되찾을 
+    것이라 전해진다.'
 
-"As you now possess the amulet, %p, I suspect that the Book
-speaks of you.
+"자네가 지금 그 부적을 가지고 있는 걸 보니, %p, 난 이 책이 말하는 
+아이가 바로 자네라고 짐작하네.
 
-    The child of %d will take the Amulet, and travel to the Astral
-    Plane, where the Great Temple of %d is to be found.  The Amulet
-    will be sacrificed to %d, there on %dJ altar.  Then the child will
-    stand by %d as champion of all %cP for eternity.
+    '%d의 아이는 부적을 취하여, %d의 대신전이 있는 천상계로 
+    향할 것이다. 부적은 그곳에 있는 %dJ 제단에서 %d에게 
+    제물로 바쳐질 것이다. 그러면 그 아이는 영원토록 모든 %cP의 
+    대변자로서 %d 곁에 설 것이다.'
 
-"This is all I know, %p.  I hope it will help you."
-%E ["Take the Amulet to the altar of %d on the Astral Plane and offer it."]
+"이것이 내가 아는 전부라네, %p. 자네에게 도움이 되길 바라네."
+%E ["부적을 천상계의 %d 제단으로 가져가 바치게."]
 #
 #	Cave(wo)man
 #
 %Cc Cav 00001
-You descend through a barely familiar stairwell that you remember
-%l showing you when you embarked upon your vision quest.
+당신은 당신의 비전 퀘스트를 떠날 때 %l(이)가 보여주었던, 
+어렴풋이 기억나는 계단을 통해 내려갑니다.
 
-You arrive back at %H, but something seems
-wrong here.  The usual smoke and glowing light of the fires of the
-outer caves are absent, and an uneasy quiet fills the damp air.
-%E [You arrive back at %H, but something is wrong here.]
+당신은 %H에 도착하지만, 무언가 잘못된 것 같습니다. 
+바깥 동굴에서 피어오르던 평소의 연기와 불빛은 온데간데없고, 
+축축한 공기에는 불안한 침묵만이 감돌고 있습니다.
+%E [%H에 돌아왔지만, 무언가 잘못되었습니다.]
 %Cp Cav 00002
-Once again, you arrive back at %H.
+다시 한 번, 당신은 %H에 도착합니다.
 %E
 %Cp Cav 00003
-For some reason, you think that this may be the last time you will
-enter %H.
+어쩐지 이번이 %H에 들어가는 마지막 순간이 될 것 같은 기분이 듭니다.
 %E
 %Cp Cav 00005
-"We have not been able to gather as much food since the Giants sealed
-off our access to the outer world."
+"거인들이 바깥 세상으로 향하는 길을 막아버린 이후로 식량을 예전만큼 구하지 못하고 있어."
 %E
 %Cp Cav 00006
-"Since %n sent her minions, we have been constantly fighting."
+"%n(이)가 하수인들을 보낸 이후로 우린 끊임없이 싸우고 있어."
 %E
 %Cp Cav 00007
-"I have heard your vision quest was successful.  Is this so?"
+"네 비전 퀘스트가 성공적이었다고 들었어. 사실이야?"
 %E
 %Cp Cav 00008
-"So, tell me, %p, how have you fared?"
+"그래서, 말해봐, %p, 그동안 어떻게 지냈어?"
 %E
 %Cp Cav 00009
-"%lC grows old.  We know not who will guide us after he ascends."
+"%lC께서 늙어가고 계셔. 그분이 승천하신 후엔 누가 우리를 이끌지 모르겠어."
 %E
 %Cp Cav 00010
-"The rains have returned and the land grows lush again."
+"비가 다시 내리기 시작했고 땅이 다시 푸르게 변하고 있어."
 %E
 %Cp Cav 00011
-"Peace has returned, give thanks to %d!"
+"평화가 돌아왔어, %d께 감사드려야지!"
 %E
 %Cp Cav 00012
-"Welcome back!  Did you find %o?"
+"환영해! %o(은)는 찾았어?"
 %E
 %Cp Cav 00013
-"So, %p, tell us the story of your fight with %n."
+"그래서, %p, %n(와)과 싸운 이야기 좀 해봐."
 %E
 %Cp Cav 00014
-"%lC grows old.  Perhaps you will guide us after he ascends."
+"%lC께서 늙어가고 계셔. 아마도 그분이 승천하시면 네가 우리를 이끌게 될 거야."
 %E
 %Cc Cav 00015
-"You have returned from your vision quest, %p.  Thank %d.
+"비전 퀘스트에서 무사히 돌아왔구나, %p. %d께 감사드린다.
 
-"We are in dire need of your help, my %S.
+"우린 너의 도움이 절실히 필요하단다, 나의 %S.
 
-"But first, I must see if you are yet capable of the quest I would
-ask you to undertake."
-%E ["You have returned.  We are in dire need of your help."]
+"하지만 먼저, 내가 네게 맡길 퀘스트를 수행할 능력이 되는지 확인해 봐야겠다."
+%E ["네가 돌아왔구나. 우리는 네 도움이 절실히 필요하다."]
 %Cp Cav 00016
-"Again, you return to us, %p.  Let me see if you are ready now."
+"다시 우리에게 돌아왔구나, %p. 이제 준비가 되었는지 한 번 보자."
 %E
 %Cp Cav 00017
-"Ah, %p.  Are you finally ready?"
+"아, %p. 이제 드디어 준비가 되었느냐?"
 %E
 %Cc Cav 00018
-"%pC!  You have sealed our fate.  You seem unable to reform yourself,
-so I must select another to take your place.
+"%pC! 네가 우리의 운명을 결정지었구나. 넌 스스로를 쇄신할 능력이 없는 것 
+같으니, 네 자리를 대신할 다른 이를 선택해야겠다.
 
-"Begone from %H!  You have betrayed us by choosing
-the path of the %C over the true path of the %L.
+"%H에서 당장 꺼져라! 넌 %L의 진정한 길을 버리고 
+%C의 길을 선택함으로써 우리를 배신했다.
 
-"You no longer live in our eyes."
-%E ["You have betrayed the %L.  Begone!"]
+"넌 더 이상 우리 눈에 살아있는 존재가 아니다."
+%E ["넌 %L(을)를 배신했다. 꺼져라!"]
 %Cc Cav 00019
-"Alas, %p, you are as yet too inexperienced to embark upon such
-a difficult quest as that I propose to give you.
+"아아, %p, 넌 아직 내가 주려는 이토록 어려운 퀘스트에 나서기엔 
+너무나 미숙하구나.
 
-"%rA could not possibly survive the rigors demanded to find
-%i, never mind to confront %n herself.
+"%rA(으)로는 %n(와)과 맞서기는커녕 %i(을)를 
+찾는 가혹한 시련조차 살아남지 못할 것이다.
 
-"Adventure some more, and you will learn the skills you will require.
-%d decrees it."
-%E ["%rA is too inexperienced.  Come back when you have progressed."]
+"모험을 좀 더 하다 보면 필요한 기술을 배우게 될 게다. %d께서 그리 명하신다."
+%E ["%rA(은)는 너무 미숙하다. 좀 더 성장한 뒤에 돌아오너라."]
 %Cc Cav 00020
-"%pC!  You have deviated from my teachings.  You no longer follow
-the path of the %a as you should.  I banish you from these caves, to
-go forth and purify yourself.  Then, you might be able to accomplish this
-quest."
-%E ["You no longer follow the path of the %a.  Go, and purify yourself."]
+"%pC! 넌 내 가르침에서 벗어났다. 넌 더 이상 네가 마땅히 따라야 할 %a의 
+길을 따르지 않고 있어. 널 이 동굴에서 추방하니, 나가서 스스로를 정화해라. 
+그런 다음에야, 네가 이 퀘스트를 완수할 수 있을 것이다."
+%E ["넌 더 이상 %a의 길을 따르지 않고 있다. 가서 스스로를 정화해라."]
 %Cc Cav 00021
-"You are indeed ready now, %p.  I shall tell you a tale of
-great suffering among your people:
+"넌 이제 정말로 준비가 되었구나, %p. 우리 부족이 겪고 있는 
+크나큰 고통에 대한 이야기를 해주마:
 
-"Shortly after you left on your vision quest, the caves were invaded by
-the creatures sent against us by %n.
+"네가 비전 퀘스트를 떠나고 얼마 지나지 않아, 동굴은 %n(이)가 
+보낸 괴물들의 침략을 받았다.
 
-"She, herself, could not attack us due to her great size, but her minions
-have harassed us ever since.  In the first attacks, many died, and the
-minions of %n managed to steal %o.
-They took it to %i and there, none of our
-%g warriors have been able to go.
+"그녀의 거대한 덩치 때문에 그녀가 직접 우리를 공격할 순 없었지만, 그 하수인들은 
+그 후로 계속 우리를 괴롭혔지. 첫 공격에서 많은 이들이 죽었고, %n의 
+하수인들은 %o(을)를 훔쳐내는 데 성공했다.
+그들은 그것을 %i(으)로 가져갔고, 그곳엔 우리의 %g 전사들 
+중 그 누구도 갈 수 없었어.
 
-"You must find %i, and within it wrest
-%o from %n.  She guards it as
-jealously as she guards all treasures she attains.  But with it,
-we can make our caves safe once more.
+"넌 %i(을)를 찾아서, 그 안에서 %n에게서 %o(을)를 빼앗아야 한다. 
+그녀는 자신이 얻은 모든 보물을 철저히 지키듯 그것 또한 질투심 많게 
+지키고 있지. 하지만 그것만 있으면 우리는 다시 동굴을 안전하게 만들 수 있어.
 
-"Please, %p, recover %o for us, and return it here."
-%E [Find and defeat %n, recover %o, and return with it.]
+"부탁이다, %p, 우리를 위해 %o(을)를 되찾아 이곳으로 가져와다오."
+%E [%n(을)를 찾아서 쓰러뜨리고, %o(을)를 되찾아 돌아오십시오.]
 %Cp Cav 00025
-"%nC is immune to her own breath weapons.
-You should use magic upon her that she does not use herself."
+"%nC(은)는 자신의 브레스 공격에 면역이다.
+그녀가 쓰지 않는 마법을 그녀에게 써야만 해."
 %E
 %Cp Cav 00026
-"When you encounter %n, call upon %d for assistance."
+"%n(와)과 마주치면 %d께 도움을 청하거라."
 %E
 %Cp Cav 00027
-"There will be nowhere to hide inside %ns inner sanctum."
+"%n의 성소 내부엔 숨을 곳이 전혀 없을 거다."
 %E
 %Cp Cav 00028
-"Your best chance with %n will be to keep moving."
+"%n(와)과 싸울 때 최고의 전술은 계속해서 움직이는 거란다."
 %E
 %Cp Cav 00029
-"Do not be distracted by the great treasures in %ns lair.
-Concentrate on %o."
+"%n의 은신처에 있는 거대한 보물들에 정신이 팔리면 안 된다. 
+오로지 %o에 집중해라."
 %E
 %Cp Cav 00030
-"%oC is the only object that %n truly fears."
+"%oC(은)는 %n(이)가 진정으로 두려워하는 유일한 물건이지."
 %E
 %Cp Cav 00031
-"Do not be fooled by %ns size.  She is fast, and it is
-rumored that she uses magic."
+"%n의 거대한 덩치에 속지 마라. 그녀는 아주 빠르고, 
+마법을 쓴다는 소문도 있으니까."
 %E
 %Cp Cav 00032
-"I would send a party of %gP with you, but we will need all
-of our strength to defend ourselves."
+"네 곁에 %gP 부대를 함께 보내고 싶지만, 
+우리는 우리 스스로를 방어하는 데 모든 힘이 필요한 상황이야."
 %E
 %Cp Cav 00033
-"Remember, be %a at all times.  This is your strength."
+"명심해라, 항상 %a하게 행동해야 한다. 그것이 네 힘의 원천이니."
 %E
 %Cp Cav 00034
-"If only we had an amulet of reflection, this would not have happened."
+"우리에게 반사의 부적만 있었어도, 이런 일은 일어나지 않았을 텐데."
 %E
 %Cc Cav 00035
-You %x many large claw marks on the ground.  The tunnels ahead
-of you are larger than most of those in any cave complex you have
-ever been in before.
+당신은 바닥에 커다란 발톱 자국들이 수없이 나 있는 것을 %x. 
+당신 앞의 터널들은 지금까지 당신이 들어가 본 그 어떤 동굴 구조물보다도 더 거대합니다.
 
-Your nose detects the smell of carrion from within, and bones litter
-the sides of the tunnels.
-%E [You %x many large claw marks, smell carrion, and notice bones.]
+안쪽에서 썩은 고기 냄새가 코를 찌르고, 터널 양옆에는 뼈들이 널려 있습니다.
+%E [큰 발톱 자국들이 수없이 %x, 썩은 고기 냄새가 코를 찌르고 뼈들이 널려 있습니다.]
 %Cp Cav 00036
-Once again, you approach %i.
+다시 한 번 당신은 %i에 접근합니다.
 %E
 %Cc Cav 00040
-You find yourself in a large cavern, with neatly polished walls, that
-nevertheless show signs of being scorched by fire.
+당신은 아주 크고 매끄럽게 닦인 동굴 벽을 지닌 거대한 동굴에 들어섭니다. 
+하지만 벽 곳곳에는 불에 그을린 자국들이 남아 있습니다.
 
-Bones litter the floor, and there are objects scattered everywhere.
-The air is close with the stench of sulphurous fumes.
+바닥에는 뼈들이 널려 있고, 사방에 물건들이 흩어져 있습니다. 
+공기는 유황 가스의 악취로 숨이 막힐 지경입니다.
 
-%nC is clearly visible, but %nh seems to be asleep.
-%E [You enter a large cavern.  %nC is present.]
+%nC(이)가 분명히 보이지만, 그녀는 잠들어 있는 것 같습니다.
+%E [거대한 동굴에 들어섭니다. %nC(이)가 있습니다.]
 %Cp Cav 00041
-Once again, you find yourself in the lair of %n.
+다시 한 번, 당신은 %n의 은신처에 들어섭니다.
 %E
 %Cc Cav 00050
-"So, follower of %l, you seek to invade the lair of
-%n.  Only my meals are allowed down here.  Prepare
-to be eaten!"
-%E [%nC threatens to eat you.]
+"그래, %l의 추종자여, 네가 %n의 은신처를 침범하려 
+왔구나. 오직 내 식사거리만이 이 아래로 내려올 수 있지. 먹힐 준비나 해라!"
+%E [%nC(이)가 널 먹어치우겠다고 위협합니다.]
 %Cp Cav 00051
-"So, again you face me, %c.  No one has ever before escaped me.
-Now I shall kill you."
+"그래서, 또 나랑 맞서겠다는 거냐, %c. 내게서 도망친 놈은 한 놈도 없었어. 
+이제 널 죽여주마."
 %E
 %Cp Cav 00052
-"You are getting annoying, %c.  Prepare to die."
+"점점 거슬리기 시작하는구나, %c. 죽을 준비를 해라."
 %E
 %Cp Cav 00053
-"I'll have %o from you, %c.  You shall die."
+"네놈에게서 %o(을)를 되찾아주마, %c. 넌 죽을 것이다."
 %E
 %Cp Cav 00060
-"You are weak, %c.  No challenge for the Mother of all Dragons."
+"넌 나약해, %c. 모든 드래곤의 어머니인 내게는 시시한 상대지."
 %E
 %Cp Cav 00061
-"I grow hungry, %r.  You look like a nice appetizer!"
+"슬슬 배가 고파지는군, %r. 아주 훌륭한 에피타이저처럼 생겼어!"
 %E
 %Cp Cav 00062
-"Join me for lunch?  You're the main course, %c."
+"나랑 같이 점심이라도 먹겠느냐? 메인 요리는 너다, %c."
 %E
 %Cp Cav 00063
-"With %o, I am invincible!  You cannot succeed."
+"%o(이)가 있는 한 난 무적이다! 넌 결코 이길 수 없어."
 %E
 %Cp Cav 00064
-"Your mentor, %l has failed.  You are nothing to fear."
+"네 스승인 %l도 실패했다. 네놈 따위는 하나도 두렵지 않다."
 %E
 %Cp Cav 00065
-"You shall die here, %c.  %rA cannot hope to defeat me."
+"넌 여기서 죽을 것이다, %c. %rA 따위가 날 이길 수 있을 거라 생각 마라."
 %E
 %Cp Cav 00066
-"You, a mere %r challenge the might of %n?  Hah!"
+"네놈, 한낱 %r(이)가 감히 %n의 힘에 도전하겠다고? 하!"
 %E
 %Cp Cav 00067
-"I am the Mother of all Dragons!  You cannot hope to defeat me."
+"내가 바로 모든 드래곤의 어머니다! 네놈은 결코 날 쓰러뜨릴 수 없어."
 %E
 %Cp Cav 00068
-"My claws are sharp now.  I shall rip you to shreds!"
+"내 발톱이 날카롭게 벼려져 있지. 널 갈기갈기 찢어주마!"
 %E
 %Cp Cav 00069
-"%d has deserted you, %c.  This is my domain."
+"%d(은)는 널 버렸다, %c. 이곳은 나의 영역이야."
 %E
 %Cc Cav 00070
-As you pick up %o it seems heavy at first, but as you
-hold it strength flows into your arms.
+%o(을)를 집어 들자, 처음엔 묵직하게 느껴지지만 당신이 그것을 쥐고 
+있자 팔로 힘이 흘러들어옵니다.
 
-You suddenly feel full of power, as if nothing could possibly stand
-in your path.
-%E [%oC fills you with a feeling of power.]
+어떤 것도 당신의 앞길을 막을 수 없을 것 같은 강력한 힘이 온몸을 채우는 것을 느낍니다.
+%E [%oC(이)가 당신의 온몸을 힘으로 채웁니다.]
 %Cp Cav 00080
-%nC sinks to the ground, her heads flailing about.
-As she dies, a cloud of noxious fumes billows about her.
+%nC(은)는 여러 개의 머리를 미친 듯이 휘저으며 땅에 쓰러집니다. 
+그녀가 죽어가면서, 유독 가스가 뿜어져 나와 주변을 뒤덮습니다.
 %E
 %Cc Cav 00081
-%lC glimpses %o in your possession.
-He smiles and says:
+%lC(은)는 당신이 가진 %o(을)를 슬쩍 봅니다. 
+그는 미소를 지으며 말합니다:
 
-    You have done it!  We are saved.  But I fear that %o
-    will always be a target for %C forces who will want it for their
-    own.
+    "네가 해냈구나! 우린 이제 살았어. 하지만 %n(이)가 그랬듯 
+    이걸 원하는 %C 세력들이 계속해서 %o(을)를 노릴까 봐 걱정이다.
 
-    To prevent further trouble, I would like you, %p,
-    to take %o away with you.  It will help you as you
-    quest for the Amulet of Yendor.
-%E ["Take %o with you.  It will help in your quest for the Amulet of Yendor."]
+    "더 이상의 골칫거리를 막기 위해, 
+	난 네가 %p, %o(을)를 가지고 멀리 떠나주었으면 해. 
+	네가 옌더의 부적을 찾는 퀘스트를 수행하는 데 큰 도움이 될 게다."
+%E ["%o(을)를 가지고 가거라. 옌더의 부적을 찾는 너의 퀘스트에 큰 도움이 될 거다."]
 %Cc Cav 00082
-%l grasps %o proudly for a moment, then looks at you.
+%l(은)는 당신을 바라보며 %o(을)를 자랑스럽게 꽉 쥡니다.
 
-"You are its keeper now, and the time has come to resume your search
-for the Amulet.  %Z await your return through the
-magic portal which brought you here."
-%E ["You are the keeper of %o now.  Return to %Z to search for the Amulet.]
+"이제 네가 이것의 수호자란다, 
+그리고 이제 네가 부적을 찾기 위한 여정을 재개할 때가 되었어. 
+널 이곳으로 데려왔던 마법의 포탈을 지나면 %Z(이)가 널 기다리고 있을 거다."
+%E ["이제 네가 %o의 수호자란다. %Z(으)로 돌아가 부적을 찾아라."]
 %Cp Cav 00090
-"%pC!  Welcome back.
-How goes your quest to recover the Amulet for %d?"
+"%pC! 돌아온 걸 환영한다.
+%d(을)를 위해 부적을 찾는 네 퀘스트는 어떻게 되어 가느냐?"
 %E
 %Cc Cav 00091
-"You have been successful, I see, %p.
+"네가 성공했구나, %p.
 
-"Now that the Amulet of Yendor is yours, here is what you must do:
+"이제 옌더의 부적이 네 것이 되었으니, 네가 무엇을 해야 할지 알려주마:
 
-"Journey upwards to the open air.  The Amulet you carry will then
-take you into the Astral Planes, where the Great Temple of %d
-casts its influence throughout our world.
+"위를 향해 지상으로 여행을 떠나라. 네가 지닌 부적이 널 천상계로 
+이끌어 줄 것이다. 그곳엔 우리 세계 전체에 영향을 미치는 %d의 대신전이 자리잡고 있지.
 
-"Sacrifice the Amulet on the altar.  Thus shall %d become supreme!"
-%E ["Take the Amulet to the altar of %d on the Astral Plane and offer it."]
+"부적을 그 제단에 바쳐라. 그리하면 %d께서 지고무상한 존재가 되실 것이다!"
+%E ["부적을 천상계의 %d 제단으로 가져가 바쳐라."]
 #
 #	Healer
 #
 %Cc Hea 00001
-What sorcery has brought you back to %H?  The smell
-of fresh funeral pyres tells you that something is amiss with the healing
-powers that used to practice here.
+어떤 마법이 당신을 %H(으)로 다시 데려온 것일까요? 갓 지펴진 장작더미의 
+냄새는 이곳에서 행해지던 치유의 힘에 무언가 문제가 생겼음을 말해줍니다.
 
-No rhizotomists are tending the materia medica gardens, and where are the
-common folk who used to come for the cures?
+약초 재배지를 돌보는 약초꾼도 없고, 치료를 받으러 오던 평민들은 다 어디로 간 걸까요?
 
-You know that you must quickly make your way to the collegium, and
-%ls iatreion, and find out what has happened in your absence.
-%E [You arrive back at %H and must find %l.]
+당신은 서둘러 대학과 %l의 진료소로 가서 당신이 없는 동안 
+무슨 일이 있었는지 알아내야 합니다.
+%E [%H에 다시 돌아왔으며 %l(을)를 찾아야 합니다.]
 %Cp Hea 00002
-After your last experience you expected to be here, but you certainly
-did not expect to see things so much worse.  This time you must succeed.
+지난 경험 이후로 이곳에 오게 될 줄은 알았지만, 상황이 이토록 악화되었을 줄은 
+전혀 예상치 못했습니다. 이번에는 반드시 성공해야 합니다.
 %E
 %Cp Hea 00003
-Again, you %x %H in the distance.
+다시 한 번, 저 멀리 %H(이)가 %x.
 
-The smell of death and disease permeates the air.  You do not have
-to be %Ra to know that %n is on the verge of victory.
+죽음과 질병의 악취가 공기 중에 진동합니다. %n(이)가 승리를 목전에 두고 
+있다는 것을 알기 위해 굳이 %Ra가 될 필요조차 없습니다.
 %E
 %Cp Hea 00005
-"Did you read that new treatise on the therapeutic use of leeches?"
+"거머리를 이용한 치료 요법에 관한 새로운 논문 읽어봤어?"
 %E
 %Cp Hea 00006
-"Paint a red caduceus on your shield and monsters won't hit you."
+"방패에 붉은 카두세우스를 그려넣으면 몬스터들이 때리지 않을 거야."
 %E
 %Cp Hea 00007
-"I passed handwriting so they are demoting me a rank."
+"글씨체 시험을 통과했더니 내 등급을 강등시키더라고."
 %E
 %Cp Hea 00008
-"I've heard that even %l has not been able to cure Chiron."
+"듣자 하니 %l조차도 케이론을 치료하지 못했다더군."
 %E
 %Cp Hea 00009
-"We think %n has used %nj alchemists, and %o,
-to unleash a new disease we call 'the cold' on Gehennom."
+"우리는 %n(이)가 %nj 연금술사들과 %o(을)를 이용해서 
+게헨놈에 '감기'라는 새로운 질병을 퍼뜨렸다고 생각해."
 %E
 %Cp Hea 00010
-"Did you read that new treatise on the therapeutic use of leeches?"
+"거머리를 이용한 치료 요법에 관한 새로운 논문 읽어봤어?"
 %E
 %Cp Hea 00011
-"Paint a red caduceus on your shield and monsters won't hit you."
+"방패에 붉은 카두세우스를 그려넣으면 몬스터들이 때리지 않을 거야."
 %E
 %Cp Hea 00012
-"How are you feeling?  Perhaps a good bleeding will improve your spirits."
+"기분이 좀 어때? 피를 좀 뽑아내면 기력이 좋아질지도 몰라."
 %E
 %Cp Hea 00013
-"Have you heard the absurd new theory that diseases are caused by
-microscopic organisms, and not ill humors?"
+"질병이 나쁜 체액이 아니라 아주 미세한 유기체들 때문에 발생한다는 그 
+터무니없는 새로운 이론 들어봤어?"
 %E
 %Cp Hea 00014
-"I see that you bring %o, now you can cure this plague!"
+"네가 %o(을)를 가져왔구나, 이제 이 역병을 치료할 수 있겠어!"
 %E
 %Cc Hea 00015
-Feebly, %l raises %lj head to look at you.
+%l(은)는 힘없이 %lj 고개를 들어 당신을 바라봅니다.
 
-"It is good to see you again, %p.  I see the concern in your
-eyes, but do not worry for me.  I am not ready for Hades yet.  We have
-exhausted much of our healing powers holding off %n.
-I need your fresh strength to carry on our work.
+"다시 만나서 반갑네, %p. 자네의 눈에 어린 걱정이 보이지만, 날 위해 
+염려할 필요는 없네. 난 아직 하데스로 갈 준비가 되지 않았으니까. 우리는 
+%n(을)를 막아내느라 치유의 힘을 너무 많이 소모해버렸지. 
+우리의 과업을 이어가기 위해선 자네의 새로운 힘이 필요하다네.
 
-"Come closer and let me lay hands on you, and determine if you have
-the skills necessary to accomplish this mission."
-%E [%l is weak from the struggle with %n.  %lH wants to examine you.]
+"가까이 와서 내가 손을 얹어보게 해주게, 자네가 이 임무를 완수할 기술을 
+갖췄는지 확인해 보게나."
+%E [%l(은)는 %n(와)과의 싸움으로 쇠약해졌습니다. %lH 당신을 진찰하고자 합니다.]
 %Cp Hea 00016
-"Again you return to me, %p.  I sense that each trip back
-the pleurisy and maladies of our land begin to infect you.  Let us
-hope and pray to %d that you become ready for your task before
-you fall victim to the bad humors."
+"다시 나에게 돌아왔군, %p. 자네가 돌아올 때마다 우리 땅의 늑막염과 질환들이 
+자네를 감염시키기 시작하는 게 느껴져. 자네가 나쁜 체액의 희생양이 되기 전에 부디 
+%d께 기도하며 임무를 완수할 준비가 되기를 바라세."
 %E
 %Cp Hea 00017
-"Chiron has fallen, Hermes has fallen, what else must I tell you to
-impress upon you the importance of your mission!  I hope that you
-have come prepared this time."
+"케이론이 쓰러졌고, 헤르메스가 쓰러졌어, 자네 임무의 중요성을 각인시키려면 
+내가 더 이상 무슨 말을 해야 한단 말인가! 이번에는 부디 준비가 되었기를 바라네."
 %E
 %Cc Hea 00018
-"You have failed us, %p.  You are a quack!  A charlatan!
+"넌 우리를 실망시켰어, %p. 넌 돌팔이야! 사기꾼이라고!
 
-"Hades will be happy to hear that you are once again practicing your
-arts on the unsuspecting."
-%E [You are a failure as a healer.]
+"네가 순진한 사람들을 상대로 또다시 야바위 짓을 하고 있다는 걸 알면 하데스가 
+참으로 기뻐하겠군."
+%E [당신은 치유사로서 실패했습니다.]
 %Cc Hea 00019
-"Alas, %p, you are yet too inexperienced to deal with the rigors
-of such a task.  You must be able to draw on the knowledge of botany,
-alchemy and veterinary practices before I can send you on this quest 
-with good conscience.
+"오호라, %p, 자네는 아직 그런 임무의 고난을 다루기엔 경험이 너무 부족해. 
+내가 양심의 가책 없이 자네를 이 퀘스트에 보내려면 자네는 식물학, 연금술, 그리고 
+수의학의 지식을 끌어낼 수 있어야 하네.
 
-"Return when you wear %Ra's caduceus."
-%E [You are too inexperienced.  Return when you are %Ra.]
+"자네가 %Ra의 카두세우스를 달 수 있을 때 돌아오게나."
+%E [너무 미숙합니다. %Ra가 되어서 다시 오십시오.]
 %Cc Hea 00020
-"You have learned much of the remedies that benefit, but you must also
-know which physic for which ail.  That is why %ds teachings are a
-part of your training.
+"자네는 이로운 치료법에 대해 많이 배웠지만, 어떤 병에 어떤 약을 써야 하는지도 
+알아야 하네. 그것이 바로 %d의 가르침이 자네 훈련의 일부인 이유지.
 
-"Return to us when you have healed thyself."
-%E [Return when you are more %a.]
+"먼저 자네 자신부터 치유한 후에 다시 돌아오게나."
+%E [자신이 더 %a해 졌을 때 다시 돌아오십시오.]
 %Cc Hea 00021
-For the first time, you sense a smile on %ls face.
+처음으로, 당신은 %l의 얼굴에 띤 미소를 느낍니다.
 
-    "You have indeed learned as much as we can teach you in preparation
-    for this task.  Let me tell you what I know of the symptoms and hope
-    that you can provide a cure.
+    "그래, 이 임무를 준비하기 위해 우리가 가르칠 수 있는 건 모두 배웠군. 
+    증상에 대해 내가 아는 바를 말해줄 테니 자네가 치료법을 찾을 수 있기를 바라네.
 
-    "A short while ago, the dreaded %nt was fooled by the gods
-    into thinking that %nh could use %o to find a
-    cure for old age.  Think of it, eternal youth!  But %nj good
-    health is accomplished by drawing the health from those around %ni.
+    "조금 전, 끔찍한 %nt(은)는 신들에게 속아 %nh 자신이 
+    %o(을)를 이용해 노화의 치료법을 찾을 수 있다고 믿게 되었네. 
+    생각해 보게, 영원한 젊음이라니! 하지만 %nj 건강은 주변 사람들의 건강을 
+    빨아들여야만 유지된다네.
 
-    "He has exhausted %nj own supply of healthy people and now %nh seeks to
-    extend %nj influence into our world.  You must recover from %ni
-    %o and break the spell.
+    "그는 건강한 사람들의 공급을 다 소진해버렸고, 이제 우리의 세계로 마수를 
+    뻗치려 하고 있지. 자네는 %ni에게서 %o(을)를 되찾아 그 마법을 깨야만 해.
 
-    "You must travel into the swamps to %i, and from there
-    follow the trail to %ns island lair.  Be careful."
-%E [Travel to %i on your way to recover %o from %n.]
+    "자네는 늪지대를 가로질러 %i(으)로 가야 하네, 그리고 그곳에서부터 
+    %n의 섬에 있는 은신처로 향하는 흔적을 따라가야 하지. 부디 조심하게."
+%E [%n에게서 %o(을)를 되찾기 위한 여정으로 %i(으)로 가십시오.]
 %Cp Hea 00025
-"Remember, %p, to always wash your hands before operating."
+"수술 전에는 항상 손을 씻어야 한다는 걸 명심하게, %p."
 %E
 %Cp Hea 00026
-"%nC has no real magic of %nj own.  To this %nh is vulnerable."
+"%nC에게는 자신만의 진정한 마법이 없네. 이것이 %nh의 약점이지."
 %E
 %Cp Hea 00027
-"If you have been true to %d, you can draw on the power of
-%o."
+"만약 자네가 %d에게 진실했다면, %o의 힘을 끌어다 쓸 수 있을 걸세."
 %E
 %Cp Hea 00028
-"Bring with you antidotes for poisons."
+"독에 대한 해독제를 챙겨가게나."
 %E
 %Cp Hea 00029
-"Remember this, %n can twist the powers of %o
-to hurt instead of heal."
+"이걸 명심해, %n(은)는 치유 대신 상처를 입히기 위해 %o의 힘을 왜곡할 수 있어."
 %E
 %Cp Hea 00030
-"I have sent for Chiron, but I am afraid he will come too late."
+"케이론을 불렀지만, 너무 늦게 올까 봐 걱정되는군."
 %E
 %Cp Hea 00031
-"Maybe when you return the snakes will once again begin to shed."
+"어쩌면 자네가 돌아올 때쯤엔 뱀들이 다시 한번 허물을 벗기 시작할지도 모르지."
 %E
 %Cp Hea 00032
-"The plague grows worse as we speak.  Hurry, %p!"
+"우리가 말하는 이 순간에도 역병은 악화되고 있네. 서두르게, %p!"
 %E
 %Cp Hea 00033
-"Many times %n has caused trouble in these lands.  It is
-time that %nh was eradicated like the diseases %nh has caused."
+"지금껏 여러 번 %n(은)는 이 땅에 골칫거리를 일으켜왔지. 이제 %nh(이)가 
+퍼뜨린 질병들처럼 %nh 또한 근절되어야 할 때네."
 %E
 %Cp Hea 00034
-"With but one eye, %n should be easy to blind.  Remember this."
+"눈이 하나뿐이니, %n(은)는 눈을 멀게 하기 쉬울 거야. 이걸 명심하게."
 %E
 %Cc Hea 00035
-You stand before the entrance to %i.  Strange
-scratching noises come from within the building.
+당신은 %i의 입구 앞에 서 있습니다. 건물 안에서 
+기묘하게 긁는 듯한 소리가 들려옵니다.
 
-The swampy ground around you seems to stink with disease.
-%E [You have reached %i but all is not well.]
+당신 주변의 질척거리는 땅은 질병의 악취를 풍기고 있습니다.
+%E [%i에 도착했지만 상황이 나쁩니다.]
 %Cp Hea 00036
-Once again you stand at the entrance to %i.
+다시 한 번 당신은 %i의 입구에 서 있습니다.
 %E
 %Cc Hea 00040
-You stand within sight of the infamous Isle of %n.  Even
-the words of %l had not prepared you for this.
+당신은 악명 높은 %n의 섬이 보이는 곳에 서 있습니다. %l의 
+말조차도 이 광경을 대비하게 해주진 못했습니다.
 
-Steeling yourself against the wails of the ill that pierce your ears,
-you hurry on your task.  Maybe with %o you can
-heal them on your return, but not now.
-%E [You have reached the lair of %n.  Take %o away from %ni.]
+귀를 찌르는 병자들의 울부짖음에 마음을 굳게 먹고, 당신은 서둘러 임무를 
+향해 나아갑니다. 어쩌면 돌아가는 길에 %o(으)로 그들을 치유해 
+줄 수 있을지도 모르지만, 지금은 아닙니다.
+%E [%n의 은신처에 도달했습니다. %ni에게서 %o(을)를 빼앗으십시오.]
 %Cp Hea 00041
-Once again, you %x the Isle of %n in the distance.
+다시 한 번, 저 멀리 %n의 섬이 %x.
 %E
 %Cc Hea 00050
-"They have made a mistake in sending you, %p.
+"널 보낸 건 그들의 실수야, %p.
 
-"When I add your youth to mine, it will just make it easier for me
-to defeat %l."
-%E ["I will take your life, then defeat %l."]
+"네 젊음을 내 것에 더하고 나면, %l(을)를 쓰러뜨리기가 훨씬 더 수월해질 테니까."
+%E ["네 목숨을 앗아간 뒤에, %l(을)를 쓰러뜨리겠다."]
 %Cp Hea 00051
-"Unlike your patients, you seem to keep coming back, %p!"
+"네 환자들과는 다르게, 넌 자꾸만 되돌아오는 것 같군, %p!"
 %E
 %Cp Hea 00052
-"Which would you like, %p?  Boils, pleurisy, convulsions?"
+"어느 쪽이 마음에 드느냐, %p? 종기? 늑막염? 아니면 경련?"
 %E
 %Cp Hea 00053
-"I'll have %o back from you, %r.  You are
-not going to live to escape this place."
+"네게서 %o(을)를 되찾아주마, %r. 넌 이 장소에서 
+살아서 빠져나가지 못할 것이다."
 %E
 %Cp Hea 00060
-"They might as well give scalpels to wizards as to let you try to
-use %o!"
+"네가 %o(을)를 쓰게 놔두느니 차라리 마법사들에게 메스를 쥐여 주는 게 낫겠군!"
 %E
 %Cp Hea 00061
-"If I could strike %l, surrounded by %lj %gP, imagine what I
-can do to you here by yourself."
+"%lj %gP들에게 둘러싸인 %l(을)를 타격할 수 있는 나라면, 
+여기 홀로 있는 네놈에게 내가 무슨 짓을 할 수 있을지 상상해 보아라."
 %E
 %Cp Hea 00062
-"I will put my %Rp to work making a physic out of your ashes."
+"내 %Rp들을 시켜 네놈의 재로 설사약을 만들게 하마."
 %E
 %Cp Hea 00063
-"As we speak, Hades gathers your patients to join you."
+"우리가 이렇게 말하는 동안에도, 하데스는 네 환자들을 모아 너와 합류시킬 준비를 하고 있지."
 %E
 %Cp Hea 00064
-"After I'm done with you, I'll destroy %l as well."
+"널 끝장내고 나면, %l 또한 파괴해 주마."
 %E
 %Cp Hea 00065
-"You will have to kill me if you ever hope to leave this place."
+"이곳을 떠날 희망이라도 품고 싶다면 날 죽여야 할 것이다."
 %E
 %Cp Hea 00066
-"I will impale your head on my caduceus for all to see."
+"만인이 볼 수 있게 네놈의 머리통을 내 카두세우스에 꽂아 주마."
 %E
 %Cp Hea 00067
-"There is no materia medica in your sack which will cure you of me!"
+"네 가방 안의 그 어떤 약초로도 나라는 질병에서 널 치료할 순 없을 거다!"
 %E
 %Cp Hea 00068
-"Do not fight too hard, I want your soul strong, not weakened!"
+"너무 저항하지 마라, 난 네 영혼이 약해진 게 아니라 강한 상태이길 원하니까!"
 %E
 %Cp Hea 00069
-"You should have stopped studying at vetenary."
+"수의학이나 배울 때 멈췄어야 했어."
 %E
 %Cc Hea 00070
-As you pick up %o, you feel its healing begin to
-warm your soul.  You curse Zeus for taking it from its rightful owner,
-but at least you hope that %l can put it to good use once
-again.
-%E [You feel the healing power of %o and should return it to %l.]
+%o(을)를 집어 들자, 당신은 그것의 치유의 힘이 영혼을 따뜻하게 
+적시는 것을 느낍니다. 당신은 제우스가 본래의 주인에게서 이것을 빼앗아간 것을 
+저주하지만, 적어도 %l(이)가 다시 한번 이것을 좋은 곳에 쓸 수 있기를 희망합니다.
+%E [%o의 치유의 힘을 느낍니다. 그것을 %l에게 되돌려줘야 합니다.]
 %Cc Hea 00080
-The battered body of %n slumps to the ground and gasps
-out one last curse:
+난도질당한 %n의 몸이 땅에 고꾸라지며 마지막 저주를 내뱉습니다:
 
-    "You have defeated me, %p, but I shall have my revenge.
-    How, I shall not say, but this curse shall be like a cancer
-    on you."
+    "네가 날 이겼구나, %p, 하지만 난 복수할 것이다.
+    어떻게 할지는 말하지 않겠지만, 
+	이 저주는 네게 암적인 존재처럼 달라붙어 있을 거다."
 
-With that %n dies.
-%E [%nC curses you as %nh dies.]
+그 말을 끝으로 %n(은)는 숨을 거둡니다.
+%E [%nC(이)가 숨을 거두면서 당신을 저주합니다.]
 %Cc Hea 00081
-As soon as %l sees %o %lh summons %lj
-%gP.
+%l(은)는 %o(을)를 보자마자 %lj
+%gP들을 소환합니다.
 
-Gently, %l reaches out and touches %o.
-He instructs each of the assembled to do the same.  When everyone
-has finished %lh speaks to you.
+조심스럽게, %l(은)는 손을 뻗어 %o(을)를 어루만집니다.
+그는 모인 모든 이들에게도 똑같이 하라고 지시합니다. 
+모두가 끝마치자 %lh 당신에게 말합니다.
 
-    "Now that we have been replenished we can defeat this plague.  You must
-    take %o with you and replenish the worlds you have
-    been called upon to travel next.  I wish you could ride Chiron to the
-    end of your journey, but I need him to help me spread the cure.  Go
-    now and continue your journey."
-%E [%l touches %o and tells %lj %gP to do so too, then tells you to take it with you.]
+    "이제 우리 모두가 활력을 되찾았으니 이 역병을 이겨낼 수 있을 거네. 자네는
+    %o(을)를 가지고 다음 여정으로 향해 자네가 가게 될 세계들을 회복시켜야
+    하네. 자네의 여정 끝까지 케이론을 타고 갈 수 있게 해주고 싶지만,
+    치료법을 퍼뜨리려면 나도 그의 도움이 필요하다네. 자, 이제 가서 자네의 여정을 계속하게."
+%E [%l(이)가 %o(을)를 만지고 모인 이들에게도 지시한 후, 그것을 가져가라고 합니다.]
 %Cc Hea 00082
-%l cautiously handles %o while watching you.
+%l(은)는 당신을 지켜보며 조심스럽게 %o(을)를 다룹니다.
 
-"You are its keeper now, and the time has come to resume your search
-for the Amulet.  %Z await your return through the
-magic portal which brought you here."
-%E [%l tells you to keep %o and return to %Z to search for the Amulet.]
+"이제 자네가 이것의 수호자네. 그리고 부적을 찾는 여정을 다시 시작할
+때가 되었어. 자네를 이곳으로 이끌었던 마법의 포탈 너머에서 %Z(이)가 
+자네의 귀환을 기다리고 있다네."
+%E [%l(이)가 %o(을)를 지키라고 하며 부적을 찾기 위해 %Z(으)로 가라고 합니다.]
 %Cp Hea 00090
-"You have again returned to us, %p.  We have done well in your
-absence, yes?  How fare you upon your quest for the Amulet?"
+"또다시 우리에게 돌아왔구나, %p. 우리가 없는 동안에도 우린 잘해냈다네. 
+부적을 찾으러 간 자네의 퀘스트는 어떻게 되었나?"
 %E
 %Cc Hea 00091
-"Ah, you have recovered the Amulet, %p.  Well done!
+"아, 자네가 부적을 되찾았군, %p. 아주 잘했어!
 
-"Now, you should know that you must travel through the Elemental Planes
-to the Astral, and there return the Amulet to %d.  Go forth and
-may our prayers be as a wind upon your back."
-%E ["You have recovered the Amulet.  Travel to the Astral Plane and return it to %d."]
+"이제 정령계를 거쳐 천상계로 향하여 그곳에서 부적을 %d에게 
+돌려주어야 한다는 걸 알아야 하네. 
+나아가게, 우리의 기도가 자네 등 뒤에 부는 순풍이 되기를 바라네."
+%E ["부적을 무사히 되찾았습니다. 천상계로 향해 그것을 %d에게 바치십시오."]
 #
 #	Knight
 #
 %Cc Kni 00001
-You materialize in the shadows of %H.  Immediately, you notice
-that something is wrong.  The fields around the castle are trampled and
-withered, as if some great battle has been recently fought.
+당신은 %H의 그림자 속에서 형체를 갖춥니다. 즉시 당신은 무언가 
+잘못되었음을 눈치챕니다. 성 주변의 들판은 최근 거대한 전투가 벌어진 듯 
+짓밟히고 시들어 있습니다.
 
-Exploring further, you %x long gouges in the walls of %H.
-You know of only one creature that makes those kinds of marks...
-%E [Signs of battle include long gouges in the walls of %H.]
+주변을 더 둘러보다가, 당신은 %H의 성벽에 난 길게 팬 자국들을 %x.
+당신은 저런 흔적을 남길 수 있는 생명체를 단 하나 알고 있습니다...
+%E [전투의 흔적과 %H의 성벽에 난 깊은 팬 자국들이 보입니다.]
 %Cp Kni 00002
-Once again you stand in the shadows of %H.
+다시 한 번 당신은 %H의 그림자 속에 서 있습니다.
 %E
 %Cp Kni 00003
-Again, you stand before %H.  You vaguely sense that this
-may be the last time you stand before %l.
+다시 한 번, 당신은 %H 앞에 서 있습니다. 어렴풋하게 이번이 
+%l 앞에 서는 마지막이 될 것 같다는 예감이 듭니다.
 %E
 %Cp Kni 00005
-"Hail, %p!  Verily, thou lookest well."
+"경의를 표하오, %p! 참으로 건강해 보이시는구려."
 %E
 %Cp Kni 00006
-"There is word, %p, that %n hath been sighted in the fens
-near %i."
+"%i 근처의 늪지에서 %n(이)가 목격되었다는 소문이 있소, %p."
 %E
 %Cp Kni 00007
-"Thou art our only hope now, %p."
+"이제 당신만이 우리의 유일한 희망이오, %p."
 %E
 %Cp Kni 00008
-"Verily, %l could have no better champion, %p."
+"정말로, %l 전하께 이보다 더 훌륭한 전사는 없을 거요, %p."
 %E
 %Cp Kni 00009
-"Many brave %cP died when %n attacked."
+"%n(이)가 공격했을 때 수많은 용감한 %cP들이 목숨을 잃었소."
 %E
 %Cp Kni 00010
-"Hail, %p!  Verily, thou lookest well."
+"경의를 표하오, %p! 참으로 건강해 보이시는구려."
 %E
 %Cp Kni 00011
-"So, %p, didst thou find %n in the fens near %i?"
+"그래서, %p, %i 근처의 늪지에서 %n(을)를 찾으셨소?"
 %E
 %Cp Kni 00012
-"Worthy %p, hast thou proven thy right purpose on the body of %n?"
+"고결한 %p이시여, %n의 몸뚱이에 당신의 정당한 명분을 증명하셨소?"
 %E
 %Cp Kni 00013
-"Verily, %l could have no better champion, %p."
+"정말로, %l 전하께 이보다 더 훌륭한 전사는 없을 거요, %p."
 %E
 %Cp Kni 00014
-"Hast thou indeed recovered %o?"
+"정녕 당신이 %o(을)를 되찾아 오셨소?"
 %E
 %Cc Kni 00015
-"Ah, %p.  We see thou hast received Our summons.
-We are in dire need of thy prowess.  But first, We must needs
-decide if thou art ready for this great undertaking."
-%E [%lC checks whether you are ready for a great undertaking.]
+"아, %p. 그대가 짐의 부름을 받았음을 알겠도다.
+짐은 그대의 무용이 절실히 필요하다. 하지만 먼저, 그대가 이 
+위대한 대업을 감당할 준비가 되었는지 판가름해야 하느니라."
+%E [%lC(은)는 당신이 위대한 대업을 맡을 준비가 되었는지 확인합니다.]
 %Cp Kni 00016
-"Welcome again, %p.  We hope thou art ready now."
+"다시 환영하노라, %p. 이번에는 그대가 준비되었기를 바라노라."
 %E
 %Cp Kni 00017
-"Once again, thou standest before Us, %p.  Art thou ready now?"
+"다시 한 번 짐의 앞에 섰구나, %p. 이제 준비가 되었느냐?"
 %E
 %Cc Kni 00018
-"Thou disgracest this noble court with thine impure presence.  We have been
-lenient with thee, but no more.  Thy name shall be spoken no more.  We
-hereby strip thee of thy title, thy lands, and thy standing as %ca.
-Begone from Our sight!"
-%E [You are a disgrace as %ca.]
+"그대는 불순한 존재로 이 고귀한 궁정을 더럽히고 있도다. 짐은 그대에게 관대함을 
+베풀었으나, 이제 더는 아니니라. 그대의 이름은 두 번 다시 불리지 않을 것이다. 
+짐은 이 시간부로 그대의 작위와 영지, 그리고 %ca로서의 자격을 박탈하노라.
+짐의 눈앞에서 당장 물러가라!"
+%E [당신은 %ca로서의 수치입니다.]
 %Cc Kni 00019
-"Verily, %p, thou hast done well.  That thou hast survived thus
-far is a credit to thy valor, but thou art yet unprepared for
-the demands required as Our Champion.  %rA, no matter how
-pure, could never hope to defeat the foul %n.
+"정말로, %p, 그대는 잘해주었다. 그대가 여태껏 살아남았다는 것은 그대의 
+용맹함을 증명하나, 그대는 아직 짐의 전사로서 요구되는 책임을 감당하기엔 
+부족하도다. 아무리 순수할지라도 %rA(은)는 결코 사악한 %n(을)를 무찌를 수 없다.
 
-"Journey forth from this place, and hone thy skills.  Return to
-Our presence when thou hast attained the noble title of %R."
-%E [You are not prepared to face %n.  Return when you are %Ra.]
+"이곳을 떠나 그대의 기술을 갈고닦거라. 
+그대가 %R라는 고귀한 작위에 도달했을 때 다시 짐의 곁으로 돌아오라."
+%E [당신은 %n(와)과 마주할 준비가 되지 않았습니다. %Ra가 되어서 다시 오십시오.]
 %Cc Kni 00020
-"Thou dishonourest Us, %p!  Thou hast strayed from the path of
-chivalry! Go from Our presence and do penance.  Only when thou art again
-pure mayst thou return hence."
-%E [Go and do penance.  Return when you are truly %a.]
+"그대는 짐의 명예를 더럽혔도다, %p! 그대는 기사도의 길에서 벗어났느니라! 
+짐의 앞에서 물러나 참회하라. 
+그대가 다시 순수해졌을 때야 비로소 다시 이곳으로 돌아올 수 있을 것이다."
+%E [가서 참회하십시오. 진정한 %a가 되어 돌아오십시오.]
 %Cc Kni 00021
-"Ah, %p.  Thou art truly ready, as no %c before thee hath
-been.  Hear now Our words:
+"아, %p. 그대는 참으로 준비되었도다. 이전의 어떤 %c도 도달하지 못한 경지이니라. 
+이제 짐의 말을 경청하라:
 
-"As thou noticed as thou approached %H, a great battle hath
-been fought recently in these fields.  Know thou that Merlin himself
-came to aid Us here as We battled the foul %n.  In the midst of that
-battle, %n struck Merlin a great blow, felling him.  Then, as Our
-forces were pressed back, %n stole %o.
+"그대가 %H에 다가오며 보았듯이, 최근 이 들판에서 거대한 전투가 벌어졌다. 
+멀린 본인이 직접 이곳으로 와 우리가 사악한 %n(와)과 싸우는 것을 도왔노라. 
+그 전투의 와중, %n(이)가 멀린에게 거대한 일격을 가해 그를 쓰러뜨렸다. 
+그리고 우리 군대가 밀려나는 동안 %n(은)는 %o(을)를 훔쳐갔도다.
 
-"We eventually turned the tide, but lost many %cP in doing so.
-Merlin was taken off by his apprentice, but hath not recovered.  We have
-been told that so long as %n possesseth %o,
-Merlin will not regain his health.
+"우리는 마침내 전세를 역전시켰으나, 그 과정에서 많은 %cP를 잃었다. 
+멀린은 그의 견습생이 데려갔으나 아직 회복하지 못하였노라. 
+%n(이)가 %o(을)를 가지고 있는 한, 멀린은 결코 건강을 
+되찾지 못할 것이라고 전해 들었느니라.
 
-"We hereby charge thee with this most important of duties:
+"짐은 그대에게 가장 중요한 이 임무를 명하노라:
 
-"Go forth from this place, to the fens, and there thou wilt find
-%i.  From there, thou must track down %n.  Destroy the
-beast, and return to Us %o.  Only then can
-We restore Merlin to health."
-%E [Pass through %i to reach %n.  Destroy %ni and return with %o.]
+"이곳을 떠나 늪지대로 가라. 그곳에서 %i(을)를 찾을 수 있을 것이다. 
+그곳에서부터 %n(을)를 추적하라. 그 야수를 파괴하고, 
+%o(을)를 짐에게 가져오라. 그래야만 멀린을 다시 건강하게 만들 수 있도다."
+%E [%i(을)를 지나 %n(에)게 도달하십시오. %ni(을)를 파괴하고 %o(을)를 가지고 돌아오십시오.]
 %Cp Kni 00025
-"Remember, %p, follow always the path of %d."
+"명심하라, %p, 항상 %d의 길을 따르도록 하라."
 %E
 %Cp Kni 00026
-"Though %n is verily a mighty foe, We have confidence in thy victory."
+"비록 %n(이)가 참으로 강력한 적일지라도, 짐은 그대의 승리를 확신하노라."
 %E
 %Cp Kni 00027
-"Beware, for %n hath surrounded %niself with hordes of foul creatures."
+"조심하라, %n(은)는 사악한 생명체들의 무리로 %niself(을)를 둘러싸고 있도다."
 %E
 %Cp Kni 00028
-"Great treasure, 'tis said, is hoarded in the lair of %n."
+"전해지는 바에 따르면, %n의 은신처에는 엄청난 보물이 숨겨져 있다고 하느니라."
 %E
 %Cp Kni 00029
-"If thou possessest %o, %p, %ns magic
-shall therewith be thwarted."
+"그대가 %o(을)를 차지하게 된다면, %p, %n의 마법은 그로 인해 좌절될 것이다."
 %E
 %Cp Kni 00030
-"The gates of %i are guarded by forces unseen, %p.
-Go carefully."
+"%i의 문은 보이지 않는 힘에 의해 지켜지고 있다, %p. 조심해서 가라."
 %E
 %Cp Kni 00031
-"Return %o to Us quickly, %p."
+"%o(을)를 신속히 짐에게 가져오라, %p."
 %E
 %Cp Kni 00032
-"Destroy %n, %p, else %H shall surely fall."
+"%n(을)를 파괴하라, %p, 그렇지 않으면 %H(은)는 틀림없이 멸망할 것이다."
 %E
 %Cp Kni 00033
-"Call upon %d when thou art in need."
+"위급한 순간에는 %d께 기도를 올리라."
 %E
 %Cp Kni 00034
-"To find %i, thou must keep thy heart pure."
+"%i(을)를 찾기 위해서는 그대의 마음을 순수하게 유지해야 하느니라."
 %E
 %Cc Kni 00035
-You stand at the foot of %i.  Atop, you can %x a shrine.
-Strange energies seem to be focused here, and the hair on the back of
-your neck stands on end.
-%E [You have reached %i and can %x a shrine.]
+당신은 %i의 산기슭에 서 있습니다. 그 정상에서 성소를 
+%x 수 있습니다. 
+기묘한 에너지가 이곳에 집중되는 듯하며, 목덜미의 털이 쭈뼛 섭니다.
+%E [%i에 도달했으며, 성소를 %x 수 있습니다.]
 %Cp Kni 00036
-Again, you stand at the foot of %i.
+다시 한 번, 당신은 %i의 산기슭에 서 있습니다.
 %E
 %Cc Kni 00040
-As you exit the swamps, you %x before you a huge, gaping hole in the
-side of a hill.  From within, you smell the foul stench of carrion.
+늪지대를 벗어나자, 당신은 언덕의 한쪽 면에 크게 벌어진 거대한 구멍을 %x. 
+그 안에서 썩은 고기의 역겨운 악취가 진동합니다.
 
-The pools on either side of the entrance are fouled with blood, and
-pieces of rusted metal and broken weapons show above the surface.
-%E [You %x the entrance to a cavern inside a hill.]
+입구 양쪽의 물웅덩이는 피로 얼룩져 있으며, 
+녹슨 금속 조각들과 부러진 무기들이 수면 위로 모습을 드러내고 있습니다.
+%E [당신은 언덕 안쪽의 동굴 입구를 %x.]
 %Cp Kni 00041
-Again, you stand at the entrance to %ns lair.
+다시 한 번, 당신은 %n의 은신처 입구에 서 있습니다.
 %E
 %Cc Kni 00050
-"Hah!  Another puny %c seeks death.  I shall dine well tonight,
-then tomorrow, %H shall fall!"
-%E [%nC taunts you and issues a threat against %H.]
+"하하! 또 다른 보잘것없는 %c(이)가 죽음을 자초하는군. 오늘 밤은 포식하겠어, 
+그리고 내일이면 %H(은)는 함락될 것이다!"
+%E [%nC(이)가 당신을 조롱하며 %H에 대한 위협을 가합니다.]
 %Cp Kni 00051
-"Again, thou challengest me, %r?  So be it.  Thou wilt die here."
+"다시 날 상대하려 들다니, %r? 좋다. 넌 여기서 죽게 될 거다."
 %E
 %Cp Kni 00052
-"Thou art truly foolish, %r.  I shall dispatch thee anon."
+"넌 참으로 어리석구나, %r. 널 곧장 저승으로 보내주마."
 %E
 %Cp Kni 00053
-"So, thou darest touch MY property!  I shall have that bauble back,
-puny %r.  Thou wilt die in agony!"
+"그래, 감히 내 소유물에 손을 댄단 말이지! 그 장신구는 내가 다시 돌려받겠다, 
+하찮은 %r 놈아. 넌 고통 속에서 죽어갈 것이다!"
 %E
 %Cp Kni 00060
-"A mere %r can never withstand me!"
+"한낱 %r 따위는 결코 날 감당할 수 없다!"
 %E
 %Cp Kni 00061
-"I shall kill thee now, and feast!"
+"이제 널 죽이고 만찬을 즐겨주마!"
 %E
 %Cp Kni 00062
-"Puny %c.  What manner of death dost thou wish?"
+"보잘것없는 %c 놈. 어떤 식으로 죽기를 원하느냐?"
 %E
 %Cp Kni 00063
-"First thee, %p, then I shall feast upon %l."
+"먼저 네놈부터 끝내고, %p, 그 다음엔 %l(을)를 씹어 먹어주마."
 %E
 %Cp Kni 00064
-"Hah!  Thou hast failed, %r.  Now thou shalt die."
+"하하! 넌 실패했다, %r. 이제 넌 죽게 될 거다."
 %E
 %Cp Kni 00065
-"Die, %c.  Thou art as nothing against my might."
+"죽어라, %c. 내 힘 앞에 네놈은 먼지에 불과하다."
 %E
 %Cp Kni 00066
-"I shall suck the marrow from thy bones, %c."
+"네놈 뼈에서 골수까지 빨아먹어 주마, %c."
 %E
 %Cp Kni 00067
-"Let's see...  Baked?  No.  Fried?  Nay.  Broiled?  Yea verily,
-that is the way I like my %c for dinner."
+"어디 보자... 굽는 게 나을까? 아니. 튀기는 건? 그것도 아니지. 
+석쇠에 굽는 건? 암, 그렇고 말고, 그게 내가 가장 좋아하는 %c 요리법이지."
 %E
 %Cp Kni 00068
-"Thy strength waneth, %p.  The time of thy death draweth near."
+"네놈의 힘이 다해가는구나, %p. 네 죽음의 순간이 다가온다."
 %E
 %Cp Kni 00069
-"Call upon thy precious %d, %p.  It shall not avail thee."
+"그토록 아끼는 %d께 기도나 해보시지, %p. 아무 소용없을 테지만 말이야."
 %E
 %Cc Kni 00070
-As you pick up %o, you feel its protective fields
-form around your body.  You also feel a faint stirring in your mind, as
-if you are in two places at once, and in the second, you are waking from
-a long sleep.
-%E [You feel the magic of %o.]
+%o(을)를 집어 들자, 그것을 감싸는 보호막이 당신의 몸 
+주위에 형성되는 것을 느낍니다. 또한 마음속에서 희미한 떨림을 느끼는데, 
+마치 당신이 동시에 두 곳에 존재하는 것 같고, 또 다른 장소에서 오랜 잠에서 
+막 깨어나는 듯한 기분이 듭니다.
+%E [%o의 마법을 느낍니다.]
 %Cc Kni 00080
-As %n sinks to the ground, blood gushing from %nj open mouth, %nh
-defiantly curses you and %l:
+%n(이)가 열린 입에서 피를 뿜으며 땅으로 쓰러질 때, %nh 당신과 
+%l에게 반항적으로 저주를 퍼붓습니다:
 
-    "Thou hast not won yet, %r.  By the gods, I shall return
-    and dog thy steps to the grave!"
+    "네놈이 아직 이긴 게 아니다, %r. 신들의 이름을 걸고 맹세하건대, 
+    난 다시 돌아와 네놈이 무덤에 갈 때까지 뒤를 쫓을 것이다!"
 
-%nJ tail flailing madly, %n tries to crawl towards you, but slumps
-to the ground and dies in a pool of %nj own blood.
-%E [%nC curses you as %nh dies.]
+%nJ 꼬리가 미친 듯이 요동치고, %n(은)는 당신을 향해 기어가려 하지만 
+결국 땅에 쓰러져 %nj 피웅덩이 속에서 숨을 거둡니다.
+%E [%nC(이)가 죽으며 당신을 저주합니다.]
 %Cc Kni 00081
-As you approach %l, %lh beams at you and says:
+당신이 다가가자, %l(이)가 당신을 향해 미소 지으며 말합니다:
 
-    "Well done!  Thou art truly the Champion of %H.  We
-    have received word that Merlin is recovering, and shall soon
-    rejoin Us.
+    "잘 해주었도다! 그대는 진정한 %H의 전사이니라. 
+    우리는 멀린이 회복 중이며 곧 우리와 다시 합류할 것이라는 소식을 들었도다.
 
-    "He hath instructed Us that thou art now to be the guardian of
-    %o.  He feeleth that thou mayst have need of
-    its powers in thine adventures.  It is Our wish that thou keepest
-    %o with thee as thou searchest for the fabled
-    Amulet of Yendor."
-%E [%oC is yours now.  It will aid in your search for the Amulet.]
+    "멀린은 짐에게 이제부터 그대가 %o의 
+    수호자가 되어야 한다고 지시하였노라. 그는 그대가 앞으로의 모험에서 
+    그것의 힘이 필요할 것이라 느낀 듯하도다. 전설적인 옌더의 부적을 찾는 동안 
+    그대가 %o(을)를 지니고 다니는 것이 짐의 뜻이니라."
+%E [이제 %oC(은)는 당신의 것입니다. 이것이 부적을 찾는 데 도움이 될 것입니다.]
 # assumes Magic Mirror of Merlin (glass object)
 %Cc Kni 00082
-"Careful, %p!  %oC might break, and that would
-be a tragic loss.  Thou art its keeper now, and the time hath come
-to resume thy search for the Amulet.  %Z await thy
-return through the magic portal that brought thee here."
-%E [You are the keeper of %o.  Return to %Z and find the Amulet.]
+"조심하라, %p! %oC(이)가 깨지기라도 한다면 너무나 비극적인 손실일 테니까. 
+이제 그대가 그것의 수호자이며, 다시 부적을 찾는 여정을 재개할 때가 되었도다. 
+%Z(이)가 그대를 이곳으로 이끌었던 마법의 포탈 너머에서 그대의 귀환을 기다리고 있느니라."
+%E [당신은 %o의 수호자입니다. %Z(으)로 돌아가 부적을 찾으십시오.]
 %Cp Kni 00090
-"Well met, %p.  How goeth thy search for the Amulet of Yendor?"
+"잘 왔도다, %p. 옌더의 부적을 찾는 여정은 어떠하였는가?"
 %E
 %Cc Kni 00091
-"Thou hast succeeded, We see, %p!  Now thou art commanded to take
-the Amulet to be sacrificed to %d in the Plane of the Astral.
+"그대가 해냈음을 짐이 보았노라, %p! 이제 그대는 부적을 천상계(Plane of the Astral)에 
+있는 %d에게 바치라는 명을 받았도다.
 
-"Merlin hath counseled Us that thou must travel always upwards through
-the Planes of the Elements, to achieve this goal.
+"멀린은 짐에게 그대가 이 목표를 달성하려면 정령계(Planes of the Elements)를 거쳐 
+항상 위로 나아가야 한다고 조언해주었노라.
 
-"Go with %d, %p."
-%E [Take the Amulet to the Astral Plane and deliver it to %d.]
+"%d(와)과 함께 가라, %p."
+%E [부적을 천상계로 가져가 %d에게 바치십시오.]
 #
-#       Monk
+#	Monk
 #
 # The quest artifact is "The Eyes of the Overworld", hence needs
 # to be treated as plural by messages which use %o.
 #
 %Cc Mon 00001
-You find yourself standing in sight of %H.
-Something is obviously wrong here.  Strange shapes lumber around
-outside %H!
+당신은 자신이 %H(이)가 보이는 곳에 서 있음을 알게 됩니다.
+이곳엔 분명히 무언가 잘못된 것이 있습니다. 기괴한 형상들이 
+%H 밖을 어슬렁거리고 있습니다!
 
-You realize that the %l needs your assistance!
-%E [You have reached %H but something is wrong.  %lC needs your aid.]
+당신은 %l에게 당신의 도움이 필요하다는 사실을 깨닫습니다!
+%E [%H에 도착했지만 무언가 잘못되었습니다. %lC(은)는 당신의 도움이 필요합니다.]
 %Cp Mon 00002
-Once again, you stand before %H.
+다시 한 번, 당신은 %H 앞에 서 있습니다.
 %E
 %Cp Mon 00003
-Again you face %H.  Your intuition hints that this
-may be the final time you come here.
+다시 당신은 %H(와)과 마주합니다. 당신의 직감은 이번이 이곳에 
+오는 마지막이 될 것이라고 넌지시 알려줍니다.
 %E
 %Cp Mon 00005
-"Greetings, honorable %r.  It is good to see you."
+"인사드립니다, 고귀하신 %r. 당신을 다시 뵈어 반갑습니다."
 %E
 %Cp Mon 00006
-"Ah, %p!  Surely you can help us in our hour of need."
+"아, %p! 당신이라면 우리가 절실히 필요로 하는 이 순간에 틀림없이 도움을 줄 수 있을 겁니다."
 %E
 %Cp Mon 00007
-"Greetings, %s.  %lC has great need of your help."
+"인사드립니다, %s. %lC께서 당신의 도움을 간절히 바라고 계십니다."
 %E
 %Cp Mon 00008
-"Alas, it seems as if even %d has deserted us."
+"오호라, 심지어 %d께서도 우리를 버리신 듯합니다."
 %E
 %Cp Mon 00009
-"May %d be with you, %s."
+"%d께서 당신과 함께하시기를, %s."
 %E
 %Cp Mon 00010
-"Greetings, honorable %r.  It is good to see you again."
+"인사드립니다, 고귀하신 %r. 당신을 다시 뵈니 참으로 기쁩니다."
 %E
 %Cp Mon 00011
-"Ah, %p!  Our deepest gratitude for all of your help."
+"아, %p! 당신의 모든 도움에 깊은 감사를 드립니다."
 %E
 %Cp Mon 00012
-"Greetings, %s.  Perhaps you will take some time to meditate with us?"
+"인사드립니다, %s. 혹시 잠시 시간을 내어 저희와 함께 명상하시겠습니까?"
 %E
 %Cp Mon 00013
-"With this test behind you, may %d bring you enlightenment."
+"이 시련을 이겨낸 당신에게, %d께서 깨달음을 내려주시길."
 %E
 %Cp Mon 00014
-"May %d be with you, %s."
+"%d께서 당신과 함께하시기를, %s."
 %E
 %Cc Mon 00015
-"Ah, %p, my %S.  You have returned to us at last.
-A great blow has befallen our order; perhaps you can help us.
-First, however, I must determine if you are prepared for this
-great challenge."
-%E [%lC checks whether you are ready for the great challenge.]
+"아, %p, 나의 %S. 마침내 우리에게 돌아왔구나.
+우리 교단에 크나큰 타격이 떨어졌다. 어쩌면 네가 우리를 도울 수 있을지도 모르지.
+하지만 먼저, 난 네가 이 거대한 시련을 맞이할 준비가 되었는지 확인해 봐야겠다."
+%E [%lC(은)는 당신이 이 거대한 시련을 맞이할 준비가 되었는지 확인합니다.]
 %Cp Mon 00016
-"Again, my %S, you stand before me.  Are you ready now to help us?"
+"다시 내 앞에 섰구나, 나의 %S. 이제 우리를 도울 준비가 되었느냐?"
 %E
 %Cp Mon 00017
-"Once more, %p, you stand within the sanctum.  Are you ready now?"
+"다시 한 번, %p, 네가 성소 안에 서 있구나. 이제 준비가 되었느냐?"
 %E
 %Cc Mon 00018
-"You are a heretic, %p!  How can you, %ra, deviate so from the
-teachings of %d?  Begone from this temple.  You are no longer
-%sa to this order.  We will pray to %d for other assistance,
-as you have failed us utterly."
-%E [You are a heretic and have failed utterly.]
+"넌 이단자다, %p! 네가 명색이 %ra인데 어찌 그리 
+%d의 가르침에서 벗어날 수 있단 말이냐? 이 사원에서 당장 꺼져라. 
+넌 더 이상 우리 교단의 %sa(이)가 아니다. 네가 우리를 철저히 실망시켰으니, 
+우리는 다른 이를 보내달라고 %d께 기도할 수밖에."
+%E [당신은 이단자이며 우리를 철저히 실망시켰습니다.]
 %Cc Mon 00019
-"Alas, %p, it is not yet to be.  A mere %r could never
-withstand the might of %n.  Go forth, again into the world, and
-return when you have attained the post of %R."
-%E [You are not ready to face %n.  Come back when you are %Ra.]
+"아아, %p, 아직은 때가 아닌 듯하구나. 한낱 %r(으)로는 결코 
+%n의 힘에 맞설 수 없어. 다시 세상으로 나아가거라. 그리고 네가 
+%R의 지위에 올랐을 때 다시 돌아오너라."
+%E [당신은 %n(와)과 마주할 준비가 되지 않았습니다. %Ra가 되어서 다시 오십시오.]
 %Cc Mon 00020
-"This is terrible, %p.  You have deviated from the true path!
-You know that %d requires the most strident devotion of this
-order.  The %shood must stand for utmost piety.
+"끔찍한 일이로구나, %p. 네가 진정한 길에서 벗어났어!
+너도 알다시피 %d께서는 이 교단에 가장 강경한 헌신을 요구하시지. 
+%s의 신분은 최고의 경건함을 상징해야만 한단다.
 
-"Go from here, atone for your sins against %d.  Return only when
-you have purified yourself."
-%E [You must atone.  Come back when you are worthy of %d.]
+"이곳을 떠나, %d께 지은 너의 죄를 참회해라. 
+네 스스로를 정화한 후에만 다시 돌아올 수 있다."
+%E [가서 참회하십시오. %d의 마음에 들 만큼 준비되었을 때 돌아오십시오.]
 %Cc Mon 00021
-"Yes, %p.  You are truly ready now.  Attend to me and I shall
-tell you of what has transpired:
+"그래, %p. 넌 이제 정말로 준비가 되었구나. 내 말에 집중하거라, 
+그간 무슨 일이 있었는지 말해줄 테니:
 
-"During one of the Great Meditations a short time ago, %n and
-a legion of elementals invaded %H.  Many %gP
-were killed, including the one bearing %o.
+"얼마 전 대명상 기간 중에, %n(와)과 정령 군단이 
+%H(을)를 침략했네. %o(을)를 지니고 있던 자를 
+포함해 수많은 %gP들이 목숨을 잃었지.
 
-Now, there are barely enough %gP left to keep the elementals
-at bay.
+"지금은 남은 %gP의 수가 정령 무리를 막아내기에도 벅찬 실정이란다.
 
-"We need you to find %i, then, from there,
-travel to %ns lair.  If you can manage to defeat %n and
-return %o here, we can then drive off the legions
-of elementals that slay our students.
+"우린 네가 %i(을)를 찾아서, 그곳에서부터 
+%n의 은신처로 가주길 바란다. 네가 %n(을)를 무찌르고 
+%o(을)를 이곳으로 다시 가져올 수 있다면, 우리 제자들을 학살하는 
+정령 군단을 몰아낼 수 있을 게다.
 
-"Go with %d as your guide, %p."
-%E [Find %i, then continue to %ns lair.  Defeat %ni and return with %o.]
+"%d(을)를 너의 길잡이 삼아 나아가라, %p."
+%E [%i(을)를 찾아서, %n의 은신처로 계속 나아가십시오. %ni(을)를 물리치고 %o(을)를 가지고 돌아오십시오.]
 %Cp Mon 00025
-"You can prevail, if you rely on %d."
+"%d께 의지한다면 넌 이겨낼 수 있을 거다."
 %E
 %Cp Mon 00026
-"Remember that %n has great magic at his command."
+"%n(이)가 강력한 마법을 다룬다는 사실을 잊지 마라."
 %E
 %Cp Mon 00027
-"Be pure, my %S."
+"순수해져라, 나의 %S."
 %E
 %Cp Mon 00028
-"Beware, %i is surrounded by hordes of earth elementals."
+"조심해라, %i(은)는 대지 정령(earth elementals) 무리에 둘러싸여 있으니."
 %E
 %Cp Mon 00029
-"Remember your studies, and you will prevail!"
+"너의 수련을 기억한다면 넌 승리할 것이다!"
 %E
 %Cp Mon 00030
-"Acquire and wear %o if you can.  They will aid you
-against %n."
+"%o(을)를 얻게 되면 그것을 착용하거라. 그것들이 
+네가 %n(와)과 맞설 때 도움을 줄 것이다."
 %E
 %Cp Mon 00031
-"Call upon %d when your need is greatest.  You will be answered."
+"가장 도움이 절실할 때 %d께 기도해라. 그분께서 응답하실 것이다."
 %E
 %Cp Mon 00032
-"Remember to use the elementals' strength against them!"
+"정령들의 힘을 그들에게 역이용하는 것을 잊지 마라!"
 %E
 %Cp Mon 00033
-"Do not lose faith, %p.  If you do so, %n will grow stronger."
+"신앙을 잃지 마라, %p. 만약 네가 신앙을 잃는다면 %n(이)가 더욱 강해질 것이다."
 %E
 %Cp Mon 00034
-"Wear %o.  They will assist you in your efforts."
+"%o(을)를 착용하거라. 그것들이 네 임무를 도울 것이다."
 %E
 %Cc Mon 00035
-You remember the descriptions of %i, given
-to you by the %l.  It is ahead that you will find
-%n's trail.
-%E [You have reached %i.  %nC lurks further ahead.]
+당신은 %l(이)가 들려주었던 %i의 생김새를 
+기억해냅니다. %n의 흔적을 발견할 곳은 바로 이 앞일 것입니다.
+%E [%i에 도착했습니다. %nC(이)가 저 멀리 숨어있습니다.]
 %Cp Mon 00036
-Again, you stand before %i.
+다시 한 번, 당신은 %i 앞에 서 있습니다.
 %E
 %Cc Mon 00040
-The stench of brimstone is all about you, and the elementals close in
-from all sides!
+유황 냄새가 사방에 진동하고, 사방에서 정령들이 거리를 좁혀옵니다!
 
-Ahead, there is a small clearing amidst the bubbling pits of lava...
-%E [You are surrounded by brimstone, lava, and elementals.]
+앞쪽, 부글부글 끓는 용암 구덩이 한가운데에 작은 공터가 있습니다...
+%E [당신은 유황, 용암, 그리고 정령들에 둘러싸여 있습니다.]
 %Cp Mon 00041
-Again, you have invaded %ns domain.
+다시 한 번, 당신은 %n의 영역을 침범했습니다.
 %E
 %Cc Mon 00050
-"Ah, so %l has sent another %g to retrieve
-%o.
+"아, 그래서 %l(이)가 %o(을)를 되찾으려고 또 다른 
+%g(을)를 보냈군.
 
-"No, I see you are no %g.  Perhaps I shall have some fun today
-after all.  Prepare to die, %r!  You shall never regain
-%o."
-%E [You are no %g.  You shall never regain %o.]
+"아니, 가만 보니 넌 %g(이)가 아니군. 어쩌면 오늘 꽤 재밌는 일이 생길지도 
+모르겠어. 죽을 준비를 해라, %r! 넌 결코 %o(을)를 되찾지 못할 거다."
+%E [당신은 %g(이)가 아닙니다. 당신은 결코 %o(을)를 얻지 못할 것입니다.]
 %Cp Mon 00051
-"So, %r.  Again you challenge me."
+"그래서, %r. 또 나한테 덤비겠다는 거냐."
 %E
 %Cp Mon 00052
-"Die now, %r.  %d has no power here to aid you."
+"이제 죽어라, %r. 이곳에선 %d도 널 도와줄 수 없어."
 %E
 %Cp Mon 00053
-"You shall die, %r, and I will have %o back."
+"넌 죽을 것이다, %r, 그리고 %o(은)는 다시 내 것이 될 거야."
 %E
 %Cp Mon 00060
-"Submit to my will, %c, and I shall spare you."
+"내 의지에 복종해라, %c, 그럼 널 살려주마."
 %E
 %Cp Mon 00061
-"Your puny powers are no match for me, %c."
+"네놈의 하찮은 힘은 내 상대가 안 된다, %c."
 %E
 %Cp Mon 00062
-"I shall have you turned into a zombie for my pleasure!"
+"내 즐거움을 위해 널 좀비로 만들어주마!"
 %E
 %Cp Mon 00063
-"Despair now, %r.  %d cannot help you."
+"이제 절망해라, %r. %d(은)는 널 도울 수 없어."
 %E
 %Cp Mon 00064
-"I shall feast upon your soul for many days, %c."
+"며칠 동안 네 영혼으로 포식을 해야겠군, %c."
 %E
 %Cp Mon 00065
-"Your death will be slow and painful.  That I promise!"
+"네 죽음은 느리고 고통스러울 것이다. 그건 약속하지!"
 %E
 %Cp Mon 00066
-"You cannot defeat %n, you fool.  I shall kill you now."
+"넌 %n(을)를 이길 수 없어, 이 바보 녀석아. 당장 널 죽여주마."
 %E
 %Cp Mon 00067
-"Your precious %lt will be my next victim."
+"네놈이 그토록 아끼는 %lt(이)가 내 다음 희생양이 될 것이다."
 %E
 %Cp Mon 00068
-"I feel your powers failing you, %r.  You shall die now."
+"네 힘이 점점 빠져나가는 게 느껴지는군, %r. 넌 이제 죽을 것이다."
 %E
 %Cp Mon 00069
-"With %o, nothing can stand in my way."
+"%o(이)가 있는 한, 어떤 것도 내 앞길을 막을 수 없어."
 %E
 %Cc Mon 00070
-As you pick up %o, you feel the essence of
-%d fill your soul.  You know now why %n stole %oi from
-%H, for with %oi, %ca of %d could
-easily defeat his plans.
+%o(을)를 집어 들자, 당신은 %d의 정수가 
+영혼을 가득 채우는 것을 느낍니다. 당신은 이제 왜 %n(이)가 %H에서 
+%oi(을)를 훔쳤는지 깨닫습니다. 왜냐하면 %oi(이)가 있다면 
+%d의 %ca는 그의 계획을 쉽게 꺾어버릴 수 있었을 테니까요.
 
-You sense a message from %d.  Though not verbal, you
-get the impression that you must return to %l as soon
-as possible.
-%E [You feel the essence of %d and realize that you should take %o to %l.]
+당신은 %d에게서 메시지를 느낍니다. 말로 표현되진 않았지만, 당신은 
+가능한 한 빨리 %l에게 돌아가야 한다는 강렬한 인상을 받습니다.
+%E [%d의 정수를 느끼고 그것을 %l에게 가져가야 한다는 사실을 깨닫습니다.]
 %Cc Mon 00080
-%nC gasps:
+%nC(이)가 헐떡거리며 말합니다:
 
-    "You have only defeated this mortal body.  Know this: my spirit
-    is strong.  I shall return and reclaim what is mine!"
+    "넌 그저 필멸자의 육신을 부쉈을 뿐이다. 이것만은 알아둬라: 내 영혼은
+    강대하다. 난 돌아와서 내 것을 되찾을 것이다!"
 
-With that, %n expires.
-%E [As %n dies, %nh threatens to return.]
+그 말을 끝으로, %n(은)는 숨을 거둡니다.
+%E [%n(이)가 죽어가며 다시 돌아올 것을 위협합니다.]
 %Cc Mon 00081
-"You have returned, %p.  And with %o, I see.
-Congratulations.
+"돌아왔구나, %p. 보아하니 %o(와)과 함께 온 것 같군. 축하한다.
 
-"I have been in meditation, and have received direction from
-a minion of %d.  %d commands that you retain
-%o.  With %oi, you must recover the Amulet
-of Yendor.
+"명상을 하던 중, 난 %d의 사자로부터 계시를 받았단다. 
+%d께서 네가 %o(을)를 간직하라고 명하셨어. 
+넌 %oi(을)를 지닌 채 옌더의 부적을 되찾아야만 한다.
 
-"Go forth, and let %d guide your steps."
-%E [Keep %o.  %oH will help you recover the Amulet of Yendor.]
+"나아가라, %d께서 너의 발걸음을 이끄실 것이다."
+%E [%o(을)를 간직하십시오. %oH(이)가 옌더의 부적을 찾는 데 도움을 줄 것입니다.]
 %Cc Mon 00082
-%lC studies %o for a moment,
-then returns his gaze to you.
+%lC(은)는 %o(을)를 한동안 유심히 바라보더니, 
+다시 당신에게 시선을 돌립니다.
 
-"%oC must remain with you.  Use %oi
-as you resume your search for the Amulet.
-%Z await your return through the magic portal
-that brought you here."
-%E [Keep %o and return to %Z to search for the Amulet.]
+"%oC(은)는 너와 함께 남아 있어야 한단다. 
+부적을 찾기 위한 너의 여정을 재개할 때 %oi(을)를 사용하거라. 
+널 이곳으로 데려왔던 마법의 포탈 너머에서 %Z(이)가 
+너의 귀환을 기다리고 있을 거다."
+%E [%o(을)를 간직하고 %Z(으)로 돌아가 부적을 찾으십시오.]
 %Cp Mon 00090
-"Welcome back, %p.  How is your quest for the Amulet going?"
+"돌아온 걸 환영한다, %p. 부적을 찾는 네 퀘스트는 어떻게 되어 가느냐?"
 %E
 %Cc Mon 00091
-"You have prevailed, %p!  %d is surely with you.  Now,
-you must take the Amulet, and sacrifice it on %ds altar on
-the Astral Plane.  I suspect that I shall never see you again in this
-life, but I hope to at %ds feet."
-%E [Take the Amulet to the Astral Plane and deliver it to %d.]
+"네가 마침내 승리했구나, %p! %d께서 분명 너와 함께하고 계신 게야. 
+이제 부적을 챙겨 천상계에 있는 %d의 제단에 그것을 제물로 바치거라. 
+아마 이번 생에서는 널 다시 볼 수 없을 것 같지만, %d의 발치에서 
+다시 만날 수 있기를 바라마."
+%E [부적을 천상계로 가져가 %d에게 바치십시오.]
 #
 #	Priest
 #
 %Cc Pri 00001
-You find yourself standing in sight of %H.  Something
-is obviously wrong here.  The doors to %H, which usually
-stand open, are closed.  Strange human shapes shamble around
-outside.
+당신은 자신이 %H(이)가 보이는 곳에 서 있음을 알게 됩니다. 
+이곳엔 분명히 무언가 잘못된 것이 있습니다. 평소라면 열려 있어야 할 %H의 문이 굳게 닫혀 있습니다. 
+기괴한 인간의 형상들이 바깥을 어슬렁거리고 있습니다.
 
-You realize that %l needs your assistance!
-%E [You are at %H; the doors are closed.  %lC needs your help!]
+당신은 %l에게 당신의 도움이 필요하다는 사실을 깨닫습니다!
+%E [당신은 %H에 있지만 문이 닫혀 있습니다. %lC(은)는 당신의 도움이 필요합니다!]
 %Cp Pri 00002
-Once again, you stand before %H.
+다시 한 번, 당신은 %H 앞에 서 있습니다.
 %E
 %Cp Pri 00003
-Again you face %H.  Your intuition hints that this may be
-the final time you come here.
+다시 당신은 %H(와)과 마주합니다. 당신의 직감은 이번이 
+이곳에 오는 마지막이 될 것이라고 넌지시 알려줍니다.
 %E
 %Cp Pri 00005
-"Greetings, honored %r.  It is good to see you."
+"인사드립니다, 고귀하신 %r. 당신을 다시 뵈어 반갑습니다."
 %E
 %Cp Pri 00006
-"Ah, %p!  Surely you can help us in our hour of need."
+"아, %p! 당신이라면 우리가 절실히 필요로 하는 이 순간에 틀림없이 도움을 줄 수 있을 겁니다."
 %E
 %Cp Pri 00007
-"Greetings, %s.  %lC has great need of your help."
+"인사드립니다, %s. %lC께서 당신의 도움을 간절히 바라고 계십니다."
 %E
 %Cp Pri 00008
-"Alas, it seems as if even %d has deserted us."
+"오호라, 심지어 %d께서도 우리를 버리신 듯합니다."
 %E
 %Cp Pri 00009
-"May %d be with you, %s."
+"%d께서 당신과 함께하시기를, %s."
 %E
 %Cp Pri 00010
-"Greetings, %r.  It is good to see you again."
+"인사드립니다, %r. 당신을 다시 뵈니 참으로 기쁩니다."
 %E
 %Cp Pri 00011
-"Ah, %p!  Our deepest gratitude for all of your help."
+"아, %p! 당신의 모든 도움에 깊은 감사를 드립니다."
 %E
 %Cp Pri 00012
-"Welcome back, %s!  With %o, no undead can stand against us."
+"돌아오신 걸 환영합니다, %s! %o(이)가 있다면 그 어떤 언데드도 우리에게 맞설 수 없을 겁니다."
 %E
 %Cp Pri 00013
-"Praise be to %d, for delivering us from %n."
+"%n의 손아귀에서 우리를 구원해주신 %d을 찬양하라."
 %E
 %Cp Pri 00014
-"May %d be with you, %s."
+"%d께서 당신과 함께하시기를, %s."
 %E
 %Cc Pri 00015
-"Ah, %p, my %S.  You have returned to us at last.
-A great blow has befallen our order; perhaps you can help us.
-First, however, I must determine if you are prepared for this
-great challenge."
-%E [You have returned and we need your help.  Are you ready?]
+"아, %p, 나의 %S. 마침내 우리에게 돌아왔구나.
+우리 교단에 크나큰 타격이 떨어졌다. 어쩌면 네가 우리를 도울 수 있을지도 모르지.
+하지만 먼저, 난 네가 이 거대한 시련을 맞이할 준비가 되었는지 확인해 봐야겠다."
+%E [당신이 돌아왔고 우린 당신의 도움이 필요합니다. 준비되셨습니까?]
 %Cp Pri 00016
-"Again, my %S, you stand before me.  Are you ready now to help us?"
+"다시 내 앞에 섰구나, 나의 %S. 이제 우리를 도울 준비가 되었느냐?"
 %E
 %Cp Pri 00017
-"Once more, %p, you stand within the sanctum.  Are you ready now?"
+"다시 한 번, %p, 네가 성소 안에 서 있구나. 이제 준비가 되었느냐?"
 %E
 %Cc Pri 00018
-"You are a heretic, %p!  How can you, %ra, deviate so from the
-teachings of %d?  Begone from this temple.  You are no longer
-%sa to this order.  We will pray to %d for other assistance,
-as you have failed us utterly."
-%E [You are a heretic who has deviated from the teachings of %d.]
+"넌 이단자다, %p! 네가 명색이 %ra인데 어찌 그리 
+%d의 가르침에서 벗어날 수 있단 말이냐? 이 사원에서 당장 꺼져라. 
+넌 더 이상 우리 교단의 %sa(이)가 아니다. 네가 우리를 철저히 실망시켰으니, 
+우리는 다른 이를 보내달라고 %d께 기도할 수밖에."
+%E [당신은 %d의 가르침에서 벗어난 이단자입니다.]
 %Cc Pri 00019
-"Alas, %p, it is not yet to be.  A mere %r could never
-withstand the might of %n.  Go forth, again into the world, and return
-when you have attained the post of %R."
-%E [%rA cannot withstand %n.  Come back when you are %Ra.]
+"아아, %p, 아직은 때가 아닌 듯하구나. 한낱 %r(으)로는 결코 
+%n의 힘에 맞설 수 없어. 다시 세상으로 나아가거라. 그리고 네가 
+%R의 지위에 올랐을 때 다시 돌아오너라."
+%E [%rA(은)는 %n(와)과 맞설 수 없습니다. %Ra가 되어서 다시 오십시오.]
 %Cc Pri 00020
-"This is terrible, %p.  You have deviated from the true path!
-You know that %d requires the most strident devotion of this
-order.  The %shood must stand for utmost piety.
+"끔찍한 일이로구나, %p. 네가 진정한 길에서 벗어났어!
+너도 알다시피 %d께서는 이 교단에 가장 강경한 헌신을 요구하시지. 
+%s의 신분은 최고의 경건함을 상징해야만 한단다.
 
-"Go from here, atone for your sins against %d.  Return only when
-you have purified yourself."
-%E [You have deviated from the path.  Return when you have purified yourself.]
+"이곳을 떠나, %d께 지은 너의 죄를 참회해라. 
+네 스스로를 정화한 후에만 다시 돌아올 수 있다."
+%E [당신은 길에서 벗어났습니다. 스스로를 정화한 후에 돌아오십시오.]
 %Cc Pri 00021
-"Yes, %p.  You are truly ready now.  Attend to me and I shall
-tell you of what has transpired:
+"그래, %p. 넌 이제 정말로 준비가 되었구나. 내 말에 집중하거라, 
+그간 무슨 일이 있었는지 말해줄 테니:
 
-"At one of the Great Festivals a short time ago, %n and a legion
-of undead invaded %H.  Many %gP were killed, including
-the one carrying %o.
+"얼마 전 대축제 기간에, %n(와)과 언데드 군단이 %H(을)를 침략했소. 
+%o(을)를 지니고 있던 자를 포함해 수많은 %gP들이 목숨을 잃었소.
 
-"As a final act of vengefulness, %n desecrated the altar here.
-Without it, we could not mount a counter-attack.  Now, there are
-barely enough %gP left to keep the undead at bay.
+"마지막 복수로 %n(은)는 이곳의 제단을 모독했소. 제단이 없으면 우린 반격에 
+나설 수 없었지. 지금은 남은 %gP의 수가 언데드 무리를 막아내기에도 벅찬 실정이오.
 
-"We need you to find %i, then, from there, travel
-to %ns lair.  If you can manage to defeat %n and return
-%o here, we can then drive off the legions of
-undead that befoul the land.
+"우린 네가 %i(을)를 찾아서, 그곳에서부터 
+%n의 은신처로 가주길 바란다. 네가 %n(을)를 무찌르고 
+%o(을)를 이곳으로 다시 가져올 수 있다면, 우리 땅을 더럽히는 
+언데드 군단을 몰아낼 수 있을 게다.
 
-"Go with %d as your guide, %p."
-%E [%nC invaded %H and captured %o.  Defeat %ni and retrieve %oh.]
+"%d(을)를 너의 길잡이 삼아 나아가라, %p."
+%E [%nC(이)가 %H(을)를 침략하고 %o(을)를 차지했습니다. %ni(을)를 무찌르고 %oh(을)를 되찾으십시오.]
 %Cp Pri 00025
-"You can prevail, if you rely on %d."
+"%d께 의지한다면 넌 이겨낼 수 있을 거다."
 %E
 %Cp Pri 00026
-"Remember that %n has great magic at his command."
+"%n(이)가 강력한 마법을 다룬다는 사실을 잊지 마라."
 %E
 %Cp Pri 00027
-"Be pure, my %S."
+"순수해져라, 나의 %S."
 %E
 %Cp Pri 00028
-"Beware, %i is surrounded by a great graveyard."
+"조심해라, %i(은)는 거대한 묘지에 둘러싸여 있으니."
 %E
 %Cp Pri 00029
-"You may be able to affect %n with magical cold."
+"마법적인 냉기 공격이 %n에게 효과가 있을지도 모른다."
 %E
 %Cp Pri 00030
-"Acquire and wear %o if you can.  It will aid you
-against %n."
+"%o(을)를 얻게 되면 그것을 착용하거라. 그것들이 
+네가 %n(와)과 맞설 때 도움을 줄 것이다."
 %E
 %Cp Pri 00031
-"Call upon %d when your need is greatest.  You will be answered."
+"가장 도움이 절실할 때 %d께 기도해라. 그분께서 응답하실 것이다."
 %E
 %Cp Pri 00032
-"The undead legions are weakest during the daylight hours."
+"언데드 군단은 낮 시간 동안에 가장 약해진단다."
 %E
 %Cp Pri 00033
-"Do not lose faith, %p.  If you do so, %n will grow stronger."
+"신앙을 잃지 마라, %p. 만약 네가 신앙을 잃는다면 %n(이)가 더욱 강해질 것이다."
 %E
 %Cp Pri 00034
-"Wear %o.  It will assist you against the undead."
+"%o(을)를 착용하거라. 그것이 언데드와 맞설 때 널 도울 것이다."
 %E
 %Cc Pri 00035
-You stand facing a large graveyard.  The sky above is filled with clouds
-that seem to get thicker closer to the center.  You sense the presence of
-undead in larger numbers than you have ever encountered before.
+당신은 거대한 묘지를 마주하고 서 있습니다. 하늘은 중심부로 갈수록 더 짙어지는 
+구름으로 가득 차 있습니다. 당신은 지금까지 한 번도 겪어본 적 없는 엄청난 수의 
+언데드 기운을 느낍니다.
 
-You remember the descriptions of %i, given to you by
-%l.  It is ahead that you will find %ns trail.
-%E [You have found %i.  The trail to %n lies ahead.]
+당신은 %l(이)가 들려주었던 %i의 생김새를 기억해냅니다. 
+%n의 흔적을 발견할 곳은 바로 이 앞일 것입니다.
+%E [%i(을)를 찾았습니다. %n(으)로 가는 길이 바로 앞에 있습니다.]
 %Cp Pri 00036
-Again, you stand before %i.
+다시 한 번, 당신은 %i 앞에 서 있습니다.
 %E
 %Cc Pri 00040
-The stench of brimstone is all about you, and the shrieks and moans
-of tortured souls assault your psyche.
+유황 냄새가 사방에 진동하고, 고문받는 영혼들의 비명과 신음 소리가 당신의 정신을 공격합니다.
 
-Ahead, there is a small clearing amidst the bubbling pits of lava...
-%E [The stench of brimstone surrounds you, the shrieks and moans are endless.]
+앞쪽, 부글부글 끓는 용암 구덩이 한가운데에 작은 공터가 있습니다...
+%E [유황의 악취가 당신을 감싸고, 끝없는 비명과 신음이 들려옵니다.]
 %Cp Pri 00041
-Again, you have invaded %ns domain.
+다시 한 번, 당신은 %n의 영역을 침범했습니다.
 %E
 %Cc Pri 00050
-"Ah, so %l has sent another %gC to retrieve
-%o.
+"아, 그래서 %l(이)가 %o(을)를 되찾으려고 또 다른 
+%gC(을)를 보냈군.
 
-"No, I see you are no %gC.  Perhaps I shall have some fun today
-after all.  Prepare to die, %r!  You shall never regain
-%o."
-%E [%lC has sent you, but you are no %gC.  I shall destroy you.]
+"아니, 가만 보니 넌 %gC(이)가 아니군. 어쩌면 오늘 꽤 재밌는 일이 생길지도 모르겠어. 
+죽을 준비를 해라, %r! 넌 결코 %o(을)를 되찾지 못할 거다."
+%E [%lC(이)가 널 보냈지만, 넌 %gC(이)가 아니다. 널 파괴해 주마.]
 %Cp Pri 00051
-"So, %r.  Again you challenge me."
+"그래서, %r. 또 나한테 덤비겠다는 거냐."
 %E
 %Cp Pri 00052
-"Die now, %r.  %d has no power here to aid you."
+"이제 죽어라, %r. 이곳에선 %d도 널 도와줄 수 없어."
 %E
 %Cp Pri 00053
-"You shall die, %r, and I will have %o back."
+"넌 죽을 것이다, %r, 그리고 %o(은)는 다시 내 것이 될 거야."
 %E
 %Cp Pri 00060
-"Submit to my will, %c, and I shall spare you."
+"내 의지에 복종해라, %c, 그럼 널 살려주마."
 %E
 %Cp Pri 00061
-"Your puny powers are no match for me, %c."
+"네놈의 하찮은 힘은 내 상대가 안 된다, %c."
 %E
 %Cp Pri 00062
-"I shall have you turned into a zombie for my pleasure!"
+"내 즐거움을 위해 널 좀비로 만들어주마!"
 %E
 %Cp Pri 00063
-"Despair now, %r.  %d cannot help you."
+"이제 절망해라, %r. %d(은)는 널 도울 수 없어."
 %E
 %Cp Pri 00064
-"I shall feast upon your soul for many days, %c."
+"며칠 동안 네 영혼으로 포식을 해야겠군, %c."
 %E
 %Cp Pri 00065
-"Your death will be slow and painful.  That I promise!"
+"네 죽음은 느리고 고통스러울 것이다. 그건 약속하지!"
 %E
 %Cp Pri 00066
-"You cannot defeat %n, you fool.  I shall kill you now."
+"넌 %n(을)를 이길 수 없어, 이 바보 녀석아. 당장 널 죽여주마."
 %E
 %Cp Pri 00067
-"Your precious %lt will be my next victim."
+"네놈이 그토록 아끼는 %lt(이)가 내 다음 희생양이 될 것이다."
 %E
 %Cp Pri 00068
-"I feel your powers failing you, %r.  You shall die now."
+"네 힘이 점점 빠져나가는 게 느껴지는군, %r. 넌 이제 죽을 것이다."
 %E
 %Cp Pri 00069
-"With %o, nothing can stand in my way."
+"%o(이)가 있는 한, 어떤 것도 내 앞길을 막을 수 없어."
 %E
 %Cc Pri 00070
-As you pick up %o, you feel the essence of
-%d fill your soul.  You know now why %n stole it from
-%H, for with it, %ca of %d could
-easily defeat his plans.
+%o(을)를 집어 들자, 당신은 %d의 정수가 
+영혼을 가득 채우는 것을 느낍니다. 당신은 이제 왜 %n(이)가 %H에서 
+그것을 훔쳤는지 깨닫습니다. 왜냐하면 그것만 있으면 %d의 
+%ca는 그의 계획을 쉽게 꺾어버릴 수 있었을 테니까요.
 
-You sense a message from %d.  Though not verbal, you
-get the impression that you must return to %l as soon
-as possible.
-%E [You feel %d as you pick up %o; return %oh to %l.]
+당신은 %d에게서 메시지를 느낍니다. 말로 표현되진 않았지만, 당신은 
+가능한 한 빨리 %l에게 돌아가야 한다는 강렬한 인상을 받습니다.
+%E [%o(을)를 집어들 때 %d(을)를 느낍니다; %oh(을)를 %l에게 돌려주십시오.]
 %Cc Pri 00080
-You feel a wrenching shift in the ether as %ns body dissolves
-into a cloud of noxious gas.
+당신은 %n의 몸이 유독 가스 구름 속으로 녹아들 때 
+주변 대기가 뒤틀리는 듯한 기이한 변화를 느낍니다.
 
-Suddenly, a voice booms out:
+갑자기, 우렁찬 목소리가 울려 퍼집니다:
 
-    "Thou hast defeated the least of my minions, %r.
-    Know now that Moloch is aware of thy presence.
-    As for thee, %n, I shall deal with thy failure
-    at my leisure."
+    "내 하수인 중 가장 보잘것없는 놈을 무찔렀구나, %r.
+    이제 몰록이 네 존재를 알아차렸음을 명심해라.
+    그리고 %n, 네 실패에 대한 대가는 
+    내가 내키는 대로 천천히 치르게 해주마."
 
-You then hear the voice of %n, screaming in terror...
-%E [%nC dies.  Moloch is aware of you and angry at %n.]
+그 직후, 공포에 질려 비명을 지르는 %n의 목소리가 들려옵니다...
+%E [%nC(이)가 죽습니다. 몰록이 당신을 인식했으며 %n에게 분노했습니다.]
 %Cc Pri 00081
-"You have returned, %p.  And with %o, I see.
-Congratulations.
+"돌아왔구나, %p. 보아하니 %o(와)과 함께 온 것 같군. 축하한다.
 
-"I have been in meditation, and have received direction from
-a minion of %d.  %d commands that you retain
-%o.  With it, you must recover the Amulet
-of Yendor.
+"명상을 하던 중, 난 %d의 사자로부터 계시를 받았단다. 
+%d께서 네가 %o(을)를 간직하라고 명하셨어. 
+넌 그것을 지닌 채 옌더의 부적을 되찾아야만 한다.
 
-"Go forth, and let %d guide your steps."
-%E [Congratulations, %p.  Keep %o; go and recover the Amulet.]
+"나아가라, %d께서 너의 발걸음을 이끄실 것이다."
+%E [축하합니다, %p. %o(을)를 가지고 가서 부적을 찾아오십시오.]
 %Cc Pri 00082
-%lC reiterates that %o is yours now.
+%lC(은)는 거듭해서 %o(이)가 이제 당신의 것이라고 말합니다.
 
-"The time has come to resume your search for the Amulet.
-%Z await your return through the magic portal
-that brought you here."
-%E [%oC is yours now.  Return to %Z and find the Amulet.]
+"부적을 찾기 위한 여정을 재개할 때가 되었다.
+널 이곳으로 데려왔던 마법의 포탈 너머에서 %Z(이)가 
+너의 귀환을 기다리고 있을 거다."
+%E [이제 %oC(은)는 당신의 것입니다. %Z(으)로 돌아가 부적을 찾으십시오.]
 %Cp Pri 00090
-"Welcome back, %p.  How is your quest for the Amulet going?"
+"돌아온 걸 환영한다, %p. 부적을 찾는 네 퀘스트는 어떻게 되어 가느냐?"
 %E
 %Cc Pri 00091
-"You have prevailed, %p!  %d is surely with you.  Now,
-you must take the amulet, and sacrifice it on %ds altar on
-the Astral Plane.  I suspect that I shall never see you again in this
-life, but I hope to at %ds feet."
-%E [Take the Amulet to the Astral Plane and offer it on %ds altar.]
+"네가 마침내 승리했구나, %p! %d께서 분명 너와 함께하고 계신 게야. 
+이제 부적을 챙겨 천상계에 있는 %d의 제단에 그것을 제물로 바치거라. 
+아마 이번 생에서는 널 다시 볼 수 없을 것 같지만, %d의 발치에서 
+다시 만날 수 있기를 바라마."
+%E [부적을 천상계로 가져가 %ds 제단에 바치십시오.]
 #
 #	Ranger
 #
 # [Ran 00001: what if centaurs have been genocided?]
 %Cc Ran 00001
-You arrive in familiar surroundings.  In the distance, you %x the
-ancient forest grove, the place of worship to %d.
+당신은 낯익은 환경에 도착합니다. 저 멀리, %d께 예배를 올리는 장소인 고대의 숲의 성소가 %x. 
 
-Something is wrong, though.  Surrounding the grove are centaurs!
-And they've noticed you!
-%E [The ancient forest grove is surrounded by centaurs.]
+하지만 무언가 잘못되었습니다. 성소를 둘러싸고 있는 것은 켄타우로스 무리들입니다!
+그리고 그들이 당신을 발견했습니다!
+%E [고대의 숲의 성소가 켄타우로스 무리에게 포위당했습니다.]
 %Cp Ran 00002
-Once again, you stand before %H.
+다시 한 번, 당신은 %H 앞에 서 있습니다.
 %E
 %Cp Ran 00003
-You have the oddest feeling that this may be the last time you
-are to enter %H.
+어쩐지 이번이 %H에 들어가는 마지막 순간이 될 것 같은 아주 이상한 예감이 듭니다.
 %E
 %Cp Ran 00005
-"%pC!  I have not seen you in many moons.  How do you fare?"
+"%pC! 오랫동안 보이지 않더니. 그동안 잘 지냈는가?"
 %E
 %Cp Ran 00006
-"%nC continues to threaten the grove.  But we hold fast."
+"%nC(이)가 계속해서 성소를 위협하고 있지만, 우린 굳건히 버티고 있네."
 %E
 %Cp Ran 00007
-"%lC is growing weak.  The magic required to defend the grove drains us."
+"%lC께서 쇠약해지고 계셔. 성소를 지키기 위해 사용되는 마법이 우리의 힘을 고갈시키고 있거든."
 %E
 %Cp Ran 00008
-"Remember %i is hard to enter.  Beware the
-distraction of leatherwings."
+"명심하게, %i(은)는 들어가기 힘든 곳이야. 박쥐들(leatherwings)의 방해를 조심해라."
 %E
 %Cp Ran 00009
-"We must regain %o.  Without it we will be overrun."
+"우린 반드시 %o(을)를 되찾아야 해. 그게 없다면 우린 무너지고 말 거야."
 %E
 %Cp Ran 00010
-"%pC!  I have not seen you in many moons.  How do you fare?"
+"%pC! 오랫동안 보이지 않더니. 그동안 잘 지냈는가?"
 %E
 %Cp Ran 00011
-"Birdsong has returned to the grove, surely this means you have defeated %n."
+"새소리가 성소로 다시 돌아왔어, 분명 자네가 %n(을)를 무찔렀다는 뜻이겠지."
 %E
 %Cp Ran 00012
-"%lC seems to have regained some of his strength."
+"%lC께서 기력을 어느 정도 되찾으신 것 같아."
 %E
 %Cp Ran 00013
-"So, tell us how you entered %i, in case some new evil arises there."
+"그래서, 그곳에 또 다른 악이 나타날 경우를 대비해서 %i에 어떻게 들어갔는지 말해주게."
 %E
 %Cp Ran 00014
-"Is that truly %o that I see you carrying?"
+"자네가 들고 있는 게 정말 %o(이)가 맞는가?"
 %E
 %Cc Ran 00015
-"%pC!  You have returned!  Thank %d.
+"%pC! 돌아왔구나! %d께 감사드린다.
 
-"We have great need of you.  But first, I must see if you have the
-required abilities to take on this responsibility."
-%E [You have returned, %p.  We need your help.  Are you ready?]
+"우린 네가 절실히 필요하단다. 하지만 먼저, 네가 이 막중한 책임을 떠맡을 
+능력이 되는지 확인해 봐야겠다."
+%E [돌아왔구나, %p. 우린 네가 필요하다. 준비는 되었느냐?]
 %Cp Ran 00016
-"Once again, %p, you stand in our midst.  Are you ready now?"
+"다시 한 번, %p, 네가 우리 곁에 서 있구나. 이제 준비가 되었느냐?"
 %E
 %Cp Ran 00017
-"Ah, you are here again, %p.  Allow me to determine your readiness..."
+"아, 다시 이곳에 왔구나, %p. 네가 준비되었는지 확인해 주마..."
 %E
 %Cc Ran 00018
-"%pC!  You have doomed us all.  You fairly radiate %L influences
-and weaken the power we have raised in this grove as a result!
+"%pC! 네가 우리 모두를 파멸시켰구나. 넌 %L의 기운을 
+풀풀 풍기고 다니고, 그 결과 우리가 이 성소에서 끌어모은 힘마저 약해지게 만들고 있어!
 
-"Begone!  We renounce your %shood with us!  You are an outcast now!"
-%E [You are not sufficiently %a.  We renounce your %shood.]
+"썩 물러가라! 우리는 너의 %s 자격을 박탈하겠다! 넌 이제 추방자다!"
+%E [넌 더 이상 %a하지 않다. 우리는 너의 %s 자격을 박탈한다.]
 %Cc Ran 00019
-"%p, you are yet too inexperienced to withstand the demands of that
-which we need you to do.  %RA might just be able to do this thing.
+"%p, 넌 아직 우리가 네게 요구할 임무를 견뎌내기엔 경험이 너무 부족하다. 
+%RA 정도는 되어야 이 임무를 해낼 수 있을까 말까겠지.
 
-"Return to us when you have learned more, my %S."
-%E [You are too inexperienced.  Come back when you are %Ra.]
+"가서 더 많은 것을 배우고 돌아오거라, 나의 %S."
+%E [너무 미숙하다. %Ra가 되어서 다시 오너라.]
 %Cc Ran 00020
-"You have strayed, %p!  You know that %d requires that
-we maintain a pure devotion to things %a!
+"넌 길을 잃었다, %p! %d께서는 우리가 
+%a한 것들에 순수한 헌신을 다하기를 요구하신다는 걸 알지 않느냐!
 
-"You must go from us.  Return when you have purified yourself."
-%E [You are not sufficiently %a.  Come back when you have purified yourself.]
+"넌 우릴 떠나야만 한다. 스스로를 정화한 후에야 돌아오너라."
+%E [넌 더 이상 %a하지 않다. 스스로를 정화한 후에 돌아오너라.]
 %Cc Ran 00021
-"You are indeed ready, %p.  I shall tell you what has transpired,
-and why we so desperately need your help:
+"넌 진정으로 준비가 되었구나, %p. 지금까지 무슨 일이 있었는지, 
+그리고 왜 우리가 네 도움을 이토록 간절히 필요로 하는지 말해주마:
 
-"A short time ago, the mountain centaurs to the east invaded
-and enslaved the plains centaurs in this area.  The local
-leader is now only a figurehead, and serves %n.
+"얼마 전, 동쪽의 산악 켄타우로스들이 이 지역의 평원 켄타우로스들을 침략하고 
+노예로 만들었단다. 이 지역의 지도자는 이제 허수아비일 뿐이고, %n의 명령에 복종하고 있지.
 
-"During our last gathering of worship here, we were beset by hordes of
-hostile centaurs, as you witnessed.  In the first onslaught a group,
-headed by %n %niself, managed to breach the grove and steal
-%o.
+"우리가 이곳에서 마지막 예배를 올리던 중, 네가 본 것처럼 적대적인 켄타우로스 무리들에게 
+포위당했다. 첫 번째 맹공에서 %n 본인이 이끄는 무리가 
+성소를 뚫고 들어와 %o(을)를 훔쳐 갔단다.
 
-"Since then, we have been besieged.  We do not know how much longer
-we will be able to maintain our magical barriers.
+"그 후로 우린 줄곧 포위당해 있었지. 우리가 이 마법 장벽을 얼마나 더 오래 
+유지할 수 있을지 모르겠다.
 
-"If we are to survive, you, %p, must infiltrate
-%i.  There, you will find a pathway down, to the
-underground cavern of %n.  He has always coveted
-%o, and will surely keep it.
+"우리가 살아남으려면 네가, %p, %i(으)로 잠입해야만 해. 
+그곳에서 넌 %n의 지하 동굴로 내려가는 길을 
+찾을 수 있을 게다. 그는 전부터 늘 %o(을)를 탐내왔고, 
+틀림없이 자신이 그것을 보관하고 있을 거다.
 
-"Recover %o for us, %p!  Only then will %d be safe."
-%E [%nC has stolen %o.  Infiltrate %i and retrieve %oh for us.]
+"우리를 위해 %o(을)를 되찾아 다오, %p! 그래야만 
+%d께서 무사하실 수 있어."
+%E [%nC(이)가 %o(을)를 훔쳐 갔다. %i(으)로 잠입하여 우리를 위해 %oh(을)를 되찾아 오너라.]
 %Cp Ran 00025
-"It is rumored that the Forest and Mountain Centaurs have resolved
-their ancient feud and now band together against us."
+"숲의 켄타우로스들과 산의 켄타우로스들이 오랜 불화를 풀고 이제 우리에 맞서 힘을 합쳤다는 소문이 돌고 있다."
 %E
 %Cp Ran 00026
-"%nC is strong, and very smart."
+"%nC(은)는 힘도 세고, 몹시 교활하기도 하지."
 %E
 %Cp Ran 00027
-"Use %o, when you find it.  It will help you survive
-to reach us."
+"%o(을)를 찾게 되면 그것을 사용하거라. 네가 살아남아 우리에게 돌아오는 데 도움이 될 게다."
 %E
 %Cp Ran 00028
-"Remember, let %d be your guide."
+"명심해라, %d의 인도를 따르거라."
 %E
 %Cp Ran 00029
-"Call upon %d when you face %n.
-The very act of doing so will infuriate him, and give you advantage."
+"%n(와)과 마주치면 %d의 이름을 부르거라.
+그 행동 자체가 그를 격분하게 만들 것이고, 네게 우위를 가져다줄 것이다."
 %E
 %Cp Ran 00030
-"%n and his kind have always hated us."
+"%n(와)과 그의 동족들은 항상 우리를 증오해 왔다."
 %E
 %Cp Ran 00031
-"We cannot hold the grove much longer, %p.  Hurry!"
+"우린 성소를 더 이상 오래 지켜낼 수 없어, %p. 서둘러라!"
 %E
 %Cp Ran 00032
-"To infiltrate %i, you must be very stealthy."
+"%i(으)로 잠입하려면, 아주 은밀하게 움직여야 한다."
 %E
 %Cp Ran 00033
-"Remember that %n is a braggart.  Trust not what he says."
+"%n(이)가 허풍쟁이라는 사실을 잊지 마라. 그가 하는 말을 믿지 마라."
 %E
 %Cp Ran 00034
-"You can triumph, %p, if you trust in %d."
+"넌 승리할 수 있다, %p, 네가 %d을(를) 굳게 믿는다면 말이지."
 %E
 %Cc Ran 00035
-This must be %i.
+이곳이 분명 %i일 것이다.
 
-You are in a cave built of many different rooms, all interconnected
-by tunnels.  Your quest is to find and shoot the evil wumpus that
-resides elsewhere in the cave without running into any bottomless
-pits or using up your limited supply of arrows.  Good luck.
+당신은 여러 개의 방이 터널로 서로 얽히고설킨 동굴에 들어왔습니다. 당신의 임무는 끝없는 
+구덩이에 빠지거나 한정된 화살을 낭비하지 않고, 동굴 어딘가에 숨어 있는 사악한 웜퍼스(wumpus)를 찾아 
+쏘아 맞히는 것입니다. 행운을 빕니다.
 
-You are in room 9 of the cave.  There are tunnels to rooms
-5, 8, and 10.
-*rustle* *rustle* (must be bats nearby.)
-*sniff* (I can smell the evil wumpus nearby!)
-%E [This is %i.  There are bats nearby.  Beware the wumpus!]
+당신은 동굴의 9번 방에 있습니다. 5번, 8번, 그리고 10번 방으로 향하는 터널이 있습니다.
+*바스락* *바스락* (근처에 박쥐가 있는 것 같습니다.)
+*킁킁* (근처에서 사악한 웜퍼스의 냄새가 납니다!)
+%E [이곳은 %i입니다. 근처에 박쥐들이 있습니다. 웜퍼스를 조심하십시오!]
 %Cc Ran 00036
-Once again, you descend into %i.
+다시 한 번, 당신은 %i(으)로 내려갑니다.
 
-*whoosh* (I feel a draft from some pits.)
-*rustle* *rustle* (must be bats nearby.)
-%E [You are in %i.  There are pits.  There are bats nearby.]
+*휙* (어느 구덩이에서 찬 바람이 느껴집니다.)
+*바스락* *바스락* (근처에 박쥐가 있는 것 같습니다.)
+%E [당신은 %i에 있습니다. 구덩이가 있습니다. 근처에 박쥐들이 있습니다.]
 # [Ran 00040: 'hear a sound' but hero might be deaf.]
 %Cc Ran 00040
-You descend into a weird place, in which roughly cut cave-like walls
-join with smooth, finished ones, as if someone was in the midst of
-finishing off the construction of a subterranean complex.
+당신은 기이한 장소로 내려갑니다. 거칠게 파낸 동굴 벽이 
+매끄럽게 마감된 벽과 이어져 있습니다. 마치 누군가 이 지하 단지의 건축을 
+마무리하던 중에 중단된 것 같은 모습입니다.
 
-Off in the distance, you hear a sound like the clattering of many
-hooves on rock.
-%E [You descend into a subterranean complex.  Hooves clatter in the distance.]
+저 멀리서, 많은 발굽이 바위를 울리는 달그락거리는 소리가 들려옵니다.
+%E [당신은 지하 복합 단지로 내려왔습니다. 멀리서 발굽 소리가 달그락거립니다.]
 %Cp Ran 00041
-Once again, you enter the distorted castle of %n.
+다시 한 번, 당신은 %n의 기형적인 성에 들어섭니다.
 %E
 %Cc Ran 00050
-"So, %c.  %lC has sent you to recover %o.
+"그래, %c. %lC(이)가 %o(을)를 되찾아 오라며 널 보냈군.
 
-"Well, I shall keep that bauble.  It pleases me.  You, %c, shall die."
-%E [You have come to recover %o, but I shall keep %oh and you shall die.]
+"글쎄, 이 장신구는 내가 간직하도록 하겠다. 꽤 맘에 들거든. 넌, %c, 죽게 될 거다."
+%E [네가 %o(을)를 되찾으러 왔구나, 하지만 내가 %oh(을)를 간직할 것이고 넌 죽게 될 거다.]
 %Cp Ran 00051
-"Back again, eh?  Well, a mere %r is no threat to me!  Die, %c!"
+"또 돌아왔나? 뭐, 한낱 %r 따윈 내게 위협조차 되지 않지! 죽어라, %c!"
 %E
 %Cp Ran 00052
-"You haven't learned your lesson, %c.  You can't kill me!  You shall die now."
+"아직도 교훈을 얻지 못했구나, %c. 넌 날 죽일 수 없어! 지금 넌 죽을 것이다."
 %E
 %Cp Ran 00053
-"I shall have %o from you, %r.  Then I shall
-kill you."
+"네게서 %o(을)를 되찾아주마, %r. 그 다음에 널 죽이겠다."
 %E
 %Cp Ran 00060
-"Your %d is nothing, %c.  You are mine now!"
+"네놈의 %d 따위는 아무것도 아니다, %c. 넌 이제 내 것이다!"
 %E
 %Cp Ran 00061
-"Run away little %c!  You can never hope to defeat %n!"
+"도망쳐라 꼬마 %c! 넌 결코 %n(을)를 이길 수 없어!"
 %E
 %Cp Ran 00062
-"My servants will rip you to shreds!"
+"내 하수인들이 널 갈기갈기 찢어놓을 거다!"
 %E
 %Cp Ran 00063
-"I shall display your head as a trophy.  What do you think about that wall?"
+"네놈의 머리통을 전리품으로 전시해주마. 저기 저 벽이 어울릴 것 같군?"
 %E
 %Cp Ran 00064
-"I shall break your %ls grove, and destroy all the %gP!"
+"네 %l의 성소를 박살내고, 그 모든 %gP들을 다 파괴해주마!"
 %E
 %Cp Ran 00065
-"%d has abandoned you, %c.  You are doomed."
+"%d(은)는 널 버렸다, %c. 넌 끝났다."
 %E
 %Cp Ran 00066
-"%rA?  %lC sends a mere %r against me?  Hah!"
+"%rA? %lC(이)가 나를 상대로 겨우 %r(을)를 보냈다고? 하하!"
 %E
 %Cp Ran 00067
-"%lC has failed, %c.  %oC will never leave here."
+"%lC(은)는 실패했다, %c. %oC(은)는 결코 이곳을 떠나지 못할 것이다."
 %E
 %Cp Ran 00068
-"You really think you can defeat me, eh %c?  You are wrong!"
+"정말 네가 날 이길 수 있다고 생각하나, 어 %c? 네놈이 틀렸다는 걸 보여주마!"
 %E
 %Cp Ran 00069
-"You weaken, %c.  I shall kill you now."
+"네놈의 힘이 빠지는군, %c. 당장 널 죽여주마."
 %E
 %Cc Ran 00070
-As you pick up %o, it seems to glow, and a warmth
-fills you completely.  You realize that its power is what has protected
-your %sp against their enemies for so long.
+%o(을)를 집어 들자, 그것이 은은하게 빛나는 것 같더니 
+당신을 온통 따뜻함으로 채웁니다. 당신은 그 힘이야말로 
+지금껏 적들로부터 당신의 %sp들을 오랜 세월 지켜주었던 것임을 깨닫습니다.
 
-You must now return it to %l without delay -- their lives depend
-on your speed.
-%E [You pick up %o and feel power.  It's time to return %oh to %l.]
+이제 한시라도 빨리 그것을 %l에게 돌려주어야 합니다 -- 그들의 목숨이 
+당신의 발걸음에 달려 있습니다.
+%E [%o(을)를 집어 들자 힘이 느껴집니다. 이제 %oh(을)를 %l에게 돌려줄 시간입니다.]
 %Cc Ran 00080
-%nC collapses to the ground, cursing you and %l, then says:
+%nC(은)는 땅에 쓰러지며 당신과 %l에게 저주를 퍼붓고, 이렇게 말합니다:
 
-    "You have defeated me, %r!  But I curse you one final time, with
-    my dying breath!  You shall die before you leave my castle!"
-%E [%nC curses you as %nh dies.]
+    "네가 날 이겼구나, %r! 하지만 내 마지막 숨을 다해 널 저주하겠다! 
+    넌 내 성을 빠져나가기 전에 죽게 될 것이다!"
+%E [%nC(이)가 죽으며 당신을 저주합니다.]
 %Cc Ran 00081
-"%pC!  You have succeeded!  I feared it was not possible!
+"%pC! 네가 해냈구나! 난 사실 불가능할지도 모른다 두려워했단다!
 
-"You have returned with %o!
+"네가 %o(와)과 함께 돌아오다니!
 
-"I fear, now, that the Centaurs will regroup and plot yet another raid.
-This will take some time, but if you can recover the Amulet of Yendor
-for %d before that happens, we will be eternally safe.
+"이제, 켄타우로스들이 다시 뭉쳐 또 다른 습격을 꾸미지 않을까 두렵구나.
+시간은 좀 걸리겠지만, 그 전에 네가 %d(을)를 위해 옌더의 부적을 
+되찾아올 수 있다면, 우린 영원히 안전해질 게다.
 
-"Take %o with you.  It will aid in your quest for
-the Amulet."
-%E [You have succeeded.  Take %o with you as you go to find the Amulet.]
+"%o(을)를 가져가거라. 그것이 네가 부적을 
+찾는 여정에 큰 도움을 줄 것이다."
+%E [네가 성공했구나. 부적을 찾으러 가면서 %o(을)를 챙기거라.]
 # assumes The Longbow of Diana
 %Cc Ran 00082
-%l flexes %o reverently.
+%l(은)는 %o(을)를 경건하게 구부려봅니다.
 
-"With this wondrous bow, one need never run out of arrows.
-You are its keeper now, and the time has come to resume your
-search for the Amulet.  %Z await your return
-through the magic portal that brought you here."
-%E [You are the keeper of %o now.  Go and find the Amulet.]
+"이 경이로운 활과 함께라면, 결코 화살이 바닥날 일은 없을 거다.
+이제 네가 이것의 수호자란다, 그리고 네가 부적을 찾기 위한 여정을 
+재개할 때가 되었어. 널 이곳으로 이끌었던 마법의 포탈을 지나면 
+%Z(이)가 널 기다리고 있을 거다."
+%E [이제 네가 %o의 수호자란다. 부적을 찾으러 가거라.]
 %Cp Ran 00090
-"Welcome, %p.  How have you fared on your quest for the Amulet
-of Yendor?"
+"환영한다, %p. 옌더의 부적을 찾는 네 여정은 어찌 되어가고 있느냐?"
 %E
 %Cc Ran 00091
-"You have it!  You have recovered the Amulet of Yendor!
-Now attend to me, %p, and I will tell you what must be done:
+"네가 찾아냈구나! 네가 옌더의 부적을 되찾았어!
+자, 내 말을 듣거라, %p, 이제 네가 무엇을 해야 할지 알려주마:
 
-"The Amulet has within it magic, the capability to transport you to
-the Astral Plane, where the primary circle of %d resides.
+"그 부적에는 마법이 깃들어 있어, 널 %d의 으뜸가는 성소가 있는 
+천상계로 널 데려다줄 수 있는 능력이 있단다.
 
-"To activate this magic, you must travel upwards as far as you can.
-When you reach the temple, sacrifice the Amulet to %d.
+"이 마법을 활성화하려면, 넌 계속해서 위로, 가능한 한 높은 곳으로 올라가야 해.
+신전에 도달하면, 부적을 %d께 바치거라.
 
-"Thus will you fulfill your destiny."
-%E [You have the Amulet!  Take it to the Astral Plane and offer it to %d.]
+"그리하여 너의 운명을 완수하게 될 것이다."
+%E [넌 부적을 가졌다! 그것을 천상계로 가져가 %d에게 바치거라.]
 #
 #	Rogue (with apologies to all Norsk speakers -dean)
 #
 %Cc Rog 00001
-Unexpectedly, you find yourself back in Ransmannsby, where you trained to
-be a thief.  Quickly you make the guild sign, hoping that you AND word
-of your arrival reach %ls den.
-%E [You are in Ransmannsby, where you trained.  Find %l.]
+뜻밖에도, 당신은 자신이 도둑 훈련을 받았던 란스만스비(Ransmannsby)로 돌아왔음을 깨닫습니다. 
+당신은 당신의 도착 소식이 %l의 소굴에 무사히 닿기를 바라며 
+재빨리 길드 수신호를 보냅니다.
+%E [당신은 훈련받았던 란스만스비에 있습니다. %l(을)를 찾으십시오.]
 %Cp Rog 00002
-Once again, you find yourself back in Ransmannsby.  Fond memories are
-replaced by fear, knowing that %l is waiting for you.
+다시 한 번, 당신은 자신이 란스만스비에 돌아왔음을 깨닫습니다. 기분 좋은 옛 추억은 
+%l(이)가 널 기다리고 있다는 공포심으로 덮어 씌워집니다.
 %E
 %Cp Rog 00003
-You rub your hands through your hair, hoping that the little ones on
-the back of your neck stay down, and prepare yourself for your meeting
-with %l.
+당신은 목덜미에 돋은 털들이 가라앉기를 바라며 두 손으로 머리를 쓸어 넘기고, 
+%l(와)과의 면담을 준비합니다.
 %E
 %Cp Rog 00005
-"I hear that Lady Tyvefelle's household is lightly guarded."
+"티베펠(Tyvefelle) 부인의 저택은 경비가 허술하다는 소문이 있던데."
 %E
 %Cp Rog 00006
-"You're back?  Even the Twain don't come back anymore."
+"너 돌아왔냐? 이제 트웨인(Twain)조차도 돌아오지 않는데."
 %E
 %Cp Rog 00007
-"Can you spare an old cutpurse a zorkmid for some grog?"
+"이 늙은 소매치기가 싸구려 술이라도 한잔하게 1 조크미드만 적선해 줄 텐가?"
 %E
 %Cp Rog 00008
-"Fritz tried to join the other side, and now he's hell-hound chow."
+"프리츠가 다른 쪽에 빌붙으려다가 지옥 사냥개의 개밥이 되어버렸다지."
 %E
 %Cp Rog 00009
-"Be careful what you steal, I hear the boss has perfected turning
-rocks into worthless pieces of glass."
+"훔치는 물건을 잘 골라, 보스가 돌덩이를 쓸모없는 유리 조각으로 바꾸는 마법을 완성했다는 소문이 있으니까."
 %E
 %Cp Rog 00010
-"I was sure wrong about Lady Tyvefelle's house; I barely got away with my
-life and lost my lock pick in the process."
+"티베펠 부인 저택에 대해선 내가 단단히 착각했어; 하마터면 목숨을 잃을 뻔했고 내 락픽(lock pick)까지 잃어버렸다고."
 %E
 %Cp Rog 00011
-"You're back?  Even the Twain don't come back anymore."
+"너 돌아왔냐? 이제 트웨인조차도 돌아오지 않는데."
 %E
 %Cp Rog 00012
-"Can you spare an old cutpurse a zorkmid for some grog?"
+"이 늙은 소매치기가 싸구려 술이라도 한잔하게 1 조크미드만 적선해 줄 텐가?"
 %E
 %Cp Rog 00013
-"Fritz tried to join the other side, and now he's hell-hound chow."
+"프리츠가 다른 쪽에 빌붙으려다가 지옥 사냥개의 개밥이 되어버렸다지."
 %E
 %Cp Rog 00014
-"Be careful what you steal, I hear the boss has perfected turning
-rocks into worthless pieces of glass."
+"훔치는 물건을 잘 골라, 보스가 돌덩이를 쓸모없는 유리 조각으로 바꾸는 마법을 완성했다는 소문이 있으니까."
 %E
 %Cc Rog 00015
-"Well, look who it is boys -- %p has come home.  You seem to have
-fallen behind in your dues.  I should kill you as an example to these
-other worthless cutpurses, but I have a better plan.  If you are ready
-maybe you could work off your back dues by performing a little job for
-me.  Let us just see if you are ready..."
-%E [You owe back dues to your guild.  You can pay them off if you're up to the job.]
+"자, 이게 누군가 얘들아 -- %p(이)가 고향에 돌아왔군. 회비가 꽤 밀린 
+것 같던데. 이 쓸모없는 소매치기 놈들에게 본보기로 널 죽여버려야 마땅하겠지만, 
+내게 더 좋은 계획이 있지. 네가 준비만 됐다면 내게 작은 일 하나를 해주고 
+밀린 회비를 퉁쳐줄 수도 있어. 어디 준비가 됐는지 한 번 볼까..."
+%E [당신은 길드에 회비가 밀렸습니다. 임무를 감당할 수 있다면 회비를 탕감받을 수 있습니다.]
 %Cc Rog 00016
-"Well, I didn't expect to see you back.  It shows that you are either stupid,
-or you are finally ready to accept my offer.  Let us hope for your sake it
-isn't stupidity that brings you back."
-%E [Are you stupid or are you ready?]
+"글쎄, 네가 돌아올 줄은 예상 못 했는데. 네가 아예 멍청하거나, 
+아니면 내 제안을 받아들일 준비가 드디어 됐다는 뜻이겠지. 
+널 살리고 싶다면 부디 널 여기로 이끈 게 멍청함 때문이 아니길 바란다."
+%E [너 멍청한 거냐 아니면 준비가 된 거냐?]
 %Cp Rog 00017
-"Did you perhaps mistake me for some other %lt?  You must
-think me as stupid as your behavior.  I warn you not to try my patience."
+"네놈 혹시 날 다른 %lt(으)로 착각한 거냐? 네 멍청한 행동거지 
+만큼이나 생각하는 것도 멍청하군. 내 인내심을 시험하려 들지 마라."
 %E
 %Cc Rog 00018
-"Well %gp, it looks like our friend has forgotten who is the boss
-around here.  Our friend seems to think that %rp have been put in
-charge.  Wrong.  DEAD WRONG!"
+"이봐 %gp, 우리 친구가 이 구역 보스가 누군지 깜빡한 모양인데.
+우리 친구는 %rp(이)가 대장이 된 줄 아나 보지.
+틀렸어. 아주 제대로 틀렸다고!"
 
-Your sudden shift in surroundings prevents you from hearing the end
-of %ls curse.
-%E [You must go.]
+주변 환경이 갑작스럽게 바뀌어 당신은 %l의 
+저주 섞인 말끝을 듣지 못했습니다.
+%E [가야 합니다.]
 %Cc Rog 00019
-"In the time that you've been gone you've only been able to master the
-arts of %ra?  I've trained ten times again as many %Rp
-in that time.  Maybe I should send one of them, no?  Where would that
-leave you, %p?  Oh yeah, I remember, I was going to kill you!"
-%E [%rA is not adequately trained to handle this job.]
+"네가 떠나 있던 시간 동안 고작 %ra의 기술밖에 
+터득하지 못했다고? 난 그 시간 동안 그런 놈을 수십 명도 더 
+훈련시켰다. 차라리 걔들 중 하나를 보내는 게 낫겠지, 안 그래? 그럼 넌 
+어떻게 되는 거지, %p? 아 맞다, 내가 널 죽여버리기로 했었지!"
+%E [%rA(은)는 이 일을 처리할 만큼 제대로 훈련받지 못했습니다.]
 %Cc Rog 00020
-"Maybe I should chain you to my perch here for a while.  Perhaps watching
-real %a men at work will bring some sense back to you.  I don't
-think I could stand the sight of you for that long though.  Come back
-when you can be trusted to act properly."
-%E [Come back when you are really %a.]
+"아무래도 널 내 농어 자리에 좀 묶어둬야겠어. 진짜 %a 녀석들이 어떻게 
+일하는지 구경 좀 시켜주면 제정신이 돌아올지도 모르지. 하지만 네 얼굴을 
+그렇게 오래 보고 싶진 않군. 제대로 행동할 믿음이 생길 때나 돌아와라."
+%E [진짜 %a(이)가 되어서 돌아와라.]
 %Cc Rog 00021
-"Will everyone not going to retrieve %o from that
-jerk, %n, take one step backwards.  Good choice,
-%p, because I was going to send you anyway.  My other %gp
-are too valuable to me.
+"저 재수 없는 %n에게서 %o(을)를 되찾아오기 싫은 놈은 
+뒤로 한 발짝 물러서라. 좋은 선택이군, %p. 어차피 널 
+보내려던 참이었으니까. 다른 내 %gp들은 나한테 너무 귀중하거든.
 
-"Here's the deal.  I want %o, %n
-has %o.  You are going to get %o
-and bring it back to me.  So simple an assignment even you can understand
-it."
-%E [Get %o from %n and bring it to %l.]
+"거래 조건은 이렇다. 난 %o(을)를 원하고, %n(이)가 
+%o(을)를 가지고 있지. 넌 %o(을)를 구해서 
+내게로 가져오는 거다. 너같이 멍청한 놈도 이해할 수 있을 만큼 아주 간단한 임무지."
+%E [%n에게서 %o(을)를 가져와 %l에게 바치십시오.]
 %Cp Rog 00025
-"You don't seem to understand,
-%o isn't here so neither should you be!"
+"아직 상황 파악이 안 되나 본데, 
+%o(이)가 여기 없으니 너도 여기 있으면 안 되는 거야!"
 %E
 %Cp Rog 00026
-"May %d curse you with lead fingers.  Get going!"
+"%d께서 네 손가락을 둔하게 만드시기를. 당장 꺼져!"
 %E
 %Cp Rog 00027
-"We don't have all year.  GET GOING!"
+"시간이 썩어도는 줄 아나. 당장 꺼져!"
 %E
 %Cp Rog 00028
-"How would you like a scar necklace?  I'm just the jeweler to do it!"
+"흉터로 된 목걸이는 어떠냐? 내가 직접 만들어 줄 수 있는데!"
 %E
 %Cp Rog 00029
-"Lazy S.O.B.  Maybe I should call up someone else..."
+"게을러빠진 자식 같으니. 차라리 딴 놈을 부르는 게 낫겠군..."
 %E
 %Cp Rog 00030
-"Maybe I should open your skull and see if my instructions are inside?"
+"아무래도 네 머리통을 열어서 내 지시사항이 제대로 들어갔는지 확인해 봐야겠어?"
 %E
 %Cp Rog 00031
-"This is not a task you can complete in the afterlife, you know."
+"이건 저승에서 완수할 수 있는 일이 아니란 걸 명심해라."
 %E
 %Cp Rog 00032
-"Inside every living person is a dead person trying to get out,
-and I have your key!"
+"살아 숨 쉬는 모든 사람 안에는 빠져나가려 발버둥 치는 시체가 하나씩 들어있지.
+그리고 내게 그걸 꺼낼 열쇠가 있고 말이야!"
 %E
 %Cp Rog 00033
-"We're almost out of hell-hound chow, so why don't you just get moving!"
+"지옥 사냥개 밥이 거의 다 떨어져 가는데, 당장 꺼지지 않으면 네가 밥이 될 줄 알아!"
 %E
 %Cp Rog 00034
-"You know, %o isn't going to come when you whistle.  You must get it yourself."
+"너도 알다시피, %o(은)는 휘파람 분다고 제 발로 굴러오지 않는다. 네가 직접 가서 훔쳐와야지."
 %E
 %Cp Rog 00035
-Those damn little hairs tell you that you are nearer to %o.
+이 망할 목덜미의 잔털들이 당신이 %o에 가까워지고 있음을 알려줍니다.
 %E
 %Cp Rog 00036
-Not wanting to face %l without having stolen %o, you continue.
+%o(을)를 훔치지도 못하고 %l(와)과 마주하고 싶진 않기에, 당신은 계속 나아갑니다.
 %E
 %Cc Rog 00040
-You feel a great swelling up of courage, sensing the presence of
-%o.  Or is it fear?
-%E [You sense %o.]
+%o의 존재를 감지하자, 당신은 엄청난 용기가 
+솟구치는 것을 느낍니다. 아니면 두려움일까요?
+%E [%o(을)를 감지합니다.]
 %Cp Rog 00041
-The hairs on the back of your neck whisper -- it's fear.
+목덜미의 잔털들이 속삭입니다 -- 이건 두려움입니다.
 %E
 %Cp Rog 00050
-"Ah!  You must be %ls ... er, `hero'.  A pleasure to meet you."
+"아! 네가 바로 %l의... 어, '영웅'이로군. 만나서 반갑다."
 %E
 %Cp Rog 00051
-"We meet again.  Please reconsider your actions."
+"또 만났군. 제발 네 행동을 다시 생각해 보아라."
 %E
 %Cc Rog 00052
-"Surely, %p, you have learned that you cannot trust any bargains
-that %l has made.  I can show you how to continue on
-your quest without having to run into him again."
-%E [You cannot trust %l.]
+"%p, 넌 %l(이)가 한 거래는 어떤 것도 믿을 수 없다는 걸 
+충분히 겪어봐서 알지 않느냐. 널 다시는 그와 마주치지 않게 하면서도 
+네 퀘스트를 이어나갈 방법을 알려주마."
+%E [%l(을)를 믿을 수 없습니다.]
 %Cc Rog 00053
-"Please, think for a moment about what you are doing.  Do you truly
-believe that %d would want %l to have
-%o?"
-%E [%lC should not have %o.]
+"제발 네가 무슨 짓을 하고 있는지 잠깐만 생각해 보아라. 
+넌 정말 %d께서 %l(이)가 
+%o(을)를 가지기를 원하실 거라고 생각하느냐?"
+%E [%lC(은)는 %o(을)를 가져선 안 됩니다.]
 %Cp Rog 00060
-"May I suggest a compromise.  Are you interested in gold or gems?"
+"타협점을 제안하지. 금화나 보석에 관심 있나?"
 %E
 %Cp Rog 00061
-"Please don't force me to kill you."
+"제발 널 죽이게 만들지 마라."
 %E
 %Cp Rog 00062
-"Grim times are upon us all.  Will you not see reason?"
+"우린 지금 끔찍한 시대를 살고 있다. 이성을 차릴 순 없는 거냐?"
 %E
 %Cp Rog 00063
-"I knew %l, and you're no %lt, thankfully."
+"난 %l(을)를 잘 알지, 그리고 참 다행스럽게도 넌 그 녀석 같은 %lt(은)는 아니군."
 %E
 %Cp Rog 00064
-"It is a shame that we are not meeting under more pleasant circumstances."
+"우리가 좀 더 좋은 상황에서 만나지 못한 게 참으로 유감이군."
 %E
 %Cp Rog 00065
-"I was once like you are now, %p.  Believe in me -- our way is better."
+"나도 한때는 너와 같았다, %p. 날 믿어라 -- 우리의 방식이 더 나으니까."
 %E
 %Cp Rog 00066
-"Stay with me, and I will make you %os guardian."
+"내 곁에 남아라. 그럼 널 %o의 수호자로 만들어 주마."
 %E
 %Cp Rog 00067
-"When you return, with or without %o,
-%l will have you killed."
+"네가 돌아가면, %o(이)가 있든 없든, 
+%l(은)는 널 죽여버릴 것이다."
 %E
 %Cp Rog 00068
-"Do not be fooled; I am prepared to kill to defend %o."
+"오해하지 마라; 난 %o(을)를 지키기 위해서라면 기꺼이 살인을 할 준비가 되어 있다."
 %E
 %Cp Rog 00069
-"I can reunite you with the Twain.  Oh, the stories you can swap."
+"널 트웨인(Twain)과 다시 만나게 해 줄 수 있다. 오, 너희들이 나눌 이야기 보따리가 산더미 같겠지."
 %E
 %Cc Rog 00070
-As you pick up %o, the hairs on the back of your
-neck fall out.  At once you realize why %n was
-willing to die to keep it out of %ls hands.  Somehow
-you know that you must do likewise.
-%E [You pick up %o and know that %l should not have it.]
+%o(을)를 집어 들자, 곤두섰던 목덜미의 털이 
+다 빠져버리는 듯합니다. 당신은 곧장 왜 %n(이)가 이 물건이 
+%l의 손에 들어가지 못하게 목숨까지 바치려 했는지 깨닫게 됩니다. 
+어쩐지 당신도 이와 똑같이 행동해야 할 것만 같습니다.
+%E [%o(을)를 집어 들고 %l(이)가 이것을 가져선 안 된다고 확신합니다.]
 %Cc Rog 00080
-"I know what you are thinking, %p.  It is not too late for you
-to use %o wisely.  For the sake of your guild
-%sp, do what is right."
+"네가 무슨 생각을 하는지 안다, %p. 네가 이 
+%o(을)를 지혜롭게 쓰는 건 아직 늦지 않았어. 너희 길드 
+%sp들을 위해서라도, 옳은 일을 하거라."
 
-You sit and wait for death to come for %n, and then you
-brace yourself for your next meeting with %l!
-%E [Before dying, %n tells you to use the %o wisely.]
+당신은 앉아서 %n에게 죽음이 찾아오기를 기다렸고, 
+그리고 나서 %l(와)과의 다음 만남을 위해 마음을 다잡습니다!
+%E [죽기 전, %n(은)는 당신에게 %o(을)를 지혜롭게 쓰라고 말합니다.]
 %Cc Rog 00081
-"Well, I'll be damned.  You got it.  I am proud of you, a fine %r
-you've turned out to be.
+"이럴 수가, 빌어먹을. 네가 그걸 가져왔군. 널 자랑스럽게 여긴다. 
+아주 훌륭한 %r(으)로 성장했어.
 
-"While you were gone I got to thinking, you and %o
-together could bring me more treasure than either of you apart, so why don't
-you take it with you.  All I ask is a cut of whatever loot you come by.
-That is a better deal than I offered %n.
+"네가 없는 동안 생각 좀 해봤는데, 너와 %o(이)가 
+함께라면 너나 나나 각자 떨어져 있는 것보다 더 많은 보물을 가져올 수 있을 것 같더군. 
+그러니 네가 그걸 챙겨가는 게 어때? 내가 요구하는 건 네가 얻는 전리품의 일정 지분뿐이다. 
+내가 %n에게 제안했던 것보다 훨씬 더 좋은 조건이지.
 
-"But, you see what happened to %n when he refused.
-Don't make me find another to send after you this time."
-%E [Take %o with you and go.]
+"하지만, %n(이)가 거절했을 때 어떻게 됐는지 네 두 눈으로 직접 봤겠지.
+이번엔 널 쫓아갈 다른 놈을 찾게 만들지 마라."
+%E [%o(을)를 챙기고 떠나십시오.]
 # assumes Master Key of Thievery (small object)
 %Cc Rog 00082
-%lC seems tempted to swap %o for
-the mundane one you detect in his pocket, but noticing your alertness,
-evidently chickens out.
+%lC(은)는 주머니 속에 있는 평범한 물건을 자신이 감지한 
+%o(와)과 슬쩍 바꿔치기하고 싶은 유혹을 느끼는 것 같지만, 
+당신의 날카로운 눈초리를 알아채고 꼬리를 내립니다.
 
-"Go filch the Amulet before someone else beats you to it.
-%Z are back the way you came, through the magic portal."
-%E [Take %o and acquire the Amulet.]
+"다른 놈이 널 치기 전에 가서 부적을 훔쳐 와라. 
+네가 왔던 마법의 포탈 너머에 %Z(이)가 있다."
+%E [%o(을)를 챙기고 부적을 손에 넣으십시오.]
 %Cc Rog 00090
-"Quite the little thief, aren't we, %p.  Can I interest you in a
-swap for %o?  Look around, anything in the keep
-is yours for the asking."
-%E [How about trading %o for something?]
+"아주 훌륭한 꼬마 도둑님이시군, %p. 
+%o(와)과 뭐 좀 교환할 생각 없나? 
+주위를 둘러봐, 요새 안에 있는 건 네가 원하면 다 네 거다."
+%E [%o(을)를 다른 무언가와 교환하는 게 어떻겠습니까?]
 %Cc Rog 00091
-"I see that with your abilities, and my brains, we could rule this world.
+"네 재능과 내 두뇌가 합쳐지면, 우리가 이 세상을 지배할 수 있겠어.
 
-"All that we would need to be all-powerful is for you to take that little
-trinket you've got there up to the Astral Plane.  From there, %d will
-show you what to do with it.  Once that's done, we will be invincible!"
-%E [Take the Amulet to the Astral Plane and find %ds temple.]
+"우리가 전능해지기 위해 필요한 건 네가 가진 그 작은 장신구를 
+천상계로 가져가는 것뿐이다. 그곳에서 %d(이)가 그것으로 뭘 해야 
+할지 알려줄 거다. 그것만 끝나면 우린 천하무적이 되는 거라고!"
+%E [부적을 천상계로 가져가 %ds의 신전을 찾으십시오.]
 #
 #	Samurai
 #
 %Cc Sam 00001
-Even before your senses adjust, you recognize the kami of
-%H.
+시각이 채 적응하기도 전에, 당신은 %H의 카미(신)를 
+알아차립니다.
 
-You %x the standard of your teki, %n, flying above
-the town.  How could such a thing have happened?  Why are ninja
-wandering freely; where are the samurai of your daimyo, %l?
+당신은 당신의 테키(적), %n의 깃발이 마을 위로 
+휘날리고 있는 것을 %x. 도대체 어떻게 이런 일이 일어날 수 있었을까요? 
+어째서 닌자들이 버젓이 돌아다니고, 당신의 다이묘(영주)인 %l의 사무라이들은 
+다 어디로 간 걸까요?
 
-You quickly say a prayer to Izanagi and Izanami and walk towards
-town.
-%E [The banner of %n flies above town.  What has happened to %l?]
+당신은 신속히 이자나기와 이자나미에게 기도를 올린 후 마을로 발걸음을 향합니다.
+%E [%n의 깃발이 마을 위로 휘날립니다. %l에게 무슨 일이 일어난 걸까요?]
 %Cp Sam 00002
-Once again, you are back at %H.
+다시 한 번, 당신은 %H에 돌아왔습니다.
 %E
 %Cc Sam 00003
-You are back at %H.
+당신은 %H에 돌아왔습니다.
 
-Instantly you sense a subtle change in your karma.  You seem to know that
-if you do not succeed in your quest, %n will have destroyed
-the kami of %H before you return again.
-%E [%HC is threatened by %n.]
+즉시 카르마에 미묘한 변화가 일어나는 것을 감지합니다. 만약 이번 퀘스트에 
+성공하지 못한다면, 다음에 돌아왔을 때엔 %n(이)가 %H의 
+카미를 파괴해 버렸을 것이란 걸 직감합니다.
+%E [%HC(이)가 %n의 위협을 받고 있습니다.]
 %Cp Sam 00005
-"To succeed, you must walk like a butterfly on the wind."
+"성공하기 위해서는 바람을 타는 나비처럼 걸어야만 하오."
 %E
 %Cp Sam 00006
-"Ikaga desu ka?"
+"이카가 데스 카(어떻게 지내십니까)?"
 %E
 %Cp Sam 00007
-"I fear for The Land of The Gods."
+"신들의 나라가 걱정되는구려."
 %E
 %Cp Sam 00008
-"%nC has hired the Ninja -- be careful."
+"%nC(이)가 닌자들을 고용했소 -- 부디 조심하시오."
 %E
 %Cp Sam 00009
-"If %o is not returned, we will all be ronin."
+"%o(을)를 되찾지 못한다면, 우린 모두 낭인(로닌)이 되고 말 거요."
 %E
 %Cp Sam 00010
-"Come, join us in celebrating with some sake."
+"이리 와서 우리와 함께 사케를 마시며 자축합시다."
 %E
 %Cp Sam 00011
-"Ikaga desu ka?"
+"이카가 데스 카(어떻게 지내십니까)?"
 %E
 %Cp Sam 00012
-"You have brought our clan and %l much honor."
+"당신은 우리 가문과 %l께 엄청난 명예를 안겨주었소."
 %E
 %Cp Sam 00013
-"Please %r, sit for a while and tell us how you overcame the Ninja."
+"부디 %r, 잠시 앉아서 당신이 닌자들을 어떻게 극복했는지 들려주시구려."
 %E
 %Cp Sam 00014
-"%lC still lives!  You have saved us from becoming ronin."
+"%lC께서 아직 살아계시오! 당신이 우리를 낭인이 될 운명에서 구해주셨소."
 %E
 %Cc Sam 00015
-"Ah, %p-san, it is good to see you again.  I need someone who can
-lead my samurai against %n.  If you are ready, you will be
-that person."
-%E [%lC needs someone to lead %lj samurai against %n.  Are you ready?]
+"아, %p-상, 다시 만나서 반갑소. 난 %n에 맞서 
+나의 사무라이들을 이끌 사람이 필요하오. 당신이 준비되었다면, 
+그 자리는 당신의 것이오."
+%E [%lC(은)는 %n에 맞서 %lj 사무라이를 이끌 사람을 찾고 있습니다. 준비되셨소?]
 %Cp Sam 00016
-"Once again, %p-san, you kneel before me.  Are you yet capable of
-being my vassal?"
+"다시 한 번, %p-상, 그대가 내 앞에 무릎 꿇고 있구려. 
+이제 내 가신(가신)이 될 능력을 갖추었소?"
 %E
 # [Sam 00017: This summary is definitely a poor one.]
 %Cc Sam 00017
-"You begin to test my matsu, %p-san.
-If you cannot determine what I want in a samurai, how can I rely on you
-to figure out what I need from a samurai?"
-%E [Are you truely a samurai?]
+"그대는 내 마츠(인내심)를 시험하려 드는구려, %p-상. 
+내가 사무라이에게서 무엇을 원하는지도 헤아리지 못하면서, 
+어떻게 내가 사무라이에게 무엇이 필요한지 파악하길 바라겠소?"
+%E [그대는 진정으로 사무라이입니까?]
 %Cc Sam 00018
-"You are no longer my samurai, %p.
+"그대는 더 이상 내 사무라이가 아니오, %p.
 
-"Hara-kiri is denied.  You are ordered to shave your head and then to
-become a monk.  Your fief and family are forfeit.  Wakarimasu ka?"
-%E [Leave and do not come back.]
+"하라키리(할복)는 허락할 수 없소. 머리를 깎고 승려가 되시오. 
+그대의 영지와 가족은 몰수될 것이오. 와카리마스 카(알겠소)?"
+%E [떠나시오, 그리고 다신 돌아오지 마시오.]
 %Cc Sam 00019
-"%p-san, you have learned well and honored your family.
-I require the skills of %Ra in order to defeat %n.
-Go and seek out teachers.  Learn what they have learned.  When you
-are ready, return to me."
-%E ["I require %Ra to defeat %n.  Return when you are ready."]
+"%p-상, 그대는 그동안 수련에 힘써 가문을 명예롭게 했소. 
+하지만 %n(을)를 무찌르기 위해선 %Ra의 기술이 필요하오. 
+가서 스승들을 찾으시오. 그들이 배운 것을 배우시오. 
+그리고 준비가 되었을 때, 내게로 돌아오시오."
+%E ["%n(을)를 무찌르기 위해선 %Ra(이)가 필요하오. 준비가 되면 돌아오시오."]
 %Cc Sam 00020
-"%p-san, you would do better to join the kyokaku.
+"%p-상, 그대는 차라리 쿄카쿠(협객) 무리에 들어가는 게 낫겠소.
 
-"You have skills, but until you can call upon the bushido to know when and
-how to use them you are not samurai.  When you can think %a and
-act %a then return."
-%E [When you can think %a and act %a then return.]
+"그대는 뛰어난 기술을 지녔지만, 언제 어떻게 그것을 써야 할지 무사도(부시도)에 기대어 
+판단할 수 없다면 진정한 사무라이라 할 수 없소. %a하게 생각하고 
+%a하게 행동할 수 있게 되면 그때 돌아오시오."
+%E [%a하게 생각하고 %a하게 행동할 수 있을 때 돌아오시오.]
 %Cc Sam 00021
-"Domo %p-san, indeed you are ready.  I can now tell you what
-it is that I require of you.
+"도모 %p-상, 참으로 준비가 되었소. 이제 그대에게 무엇이 
+필요한지 말해주겠소.
 
-"The daimyo, %n, has betrayed us.  He has stolen from us
-%o and taken it to his donjon deep within
-%i.
+"다이묘 %n(이)가 우리를 배신했소. 그는 우리에게서 
+%o(을)를 훔쳐내어 %i 깊숙한 곳에 있는 자신의 천수각으로 가져갔소.
 
-"If I cannot show the emperor %o when he comes
-for the festival he will know that I have failed in my duty, and
-request that I commit seppuku.
+"축제를 위해 천황께서 오셨을 때 %o(을)를 보여드리지 못한다면 
+천황께선 내가 의무를 다하지 못했음을 아시고 내게 셋푸쿠(할복)를 명하실 것이오.
 
-"You must gain entrance to %i and retrieve the
-emperor's property.  Be quick!  The emperor will be here for the
-cha-no-you in 5 sticks.
+"그대는 반드시 %i에 잠입하여 천황의 물건을 
+되찾아와야 하오. 서두르시오! 천황께선 향이 다섯 번 타들어 갈 시간이면 다과회를 위해 이곳에 당도하실 거요.
 
-"Wakarimasu ka?"
-%E [You must enter %i, then regain %o from %n.]
+"와카리마스 카(알겠소)?"
+%E [%i에 잠입하여 %n에게서 %o(을)를 되찾으시오.]
 %Cp Sam 00025
-"To defeat %n you must overcome the seven emotions:
-hate, adoration, joy, anxiety, anger, grief, and fear."
+"%n(을)를 무찌르려면 일곱 가지 감정인
+증오, 흠모, 기쁨, 불안, 분노, 슬픔, 그리고 두려움을 극복해야만 하오."
 %E
 %Cp Sam 00026
-"Remember your honor is my honor, you perform in my name."
+"그대의 명예가 곧 나의 명예임을 명심하시오. 그대는 나의 이름으로 행동하는 것이니."
 %E
 %Cp Sam 00027
-"I will go to the temple and burn incense for your safe return."
+"그대가 무사히 돌아오도록 사원에 가서 향을 피우며 기도하겠소."
 %E
 %Cp Sam 00028
-"Sayonara."
+"사요나라."
 %E
 %Cp Sam 00029
-"There can be honor in defeat, but no gain."
+"패배 속에도 명예가 있을 수 있지만, 거기서 얻을 수 있는 건 아무것도 없소."
 %E
 %Cp Sam 00030
-"Your kami must be strong in order to succeed."
+"성공하기 위해선 당신의 카미가 강력해야 하오."
 %E
 %Cp Sam 00031
-"You are indeed a worthy %R, but now you must be a worthy samurai."
+"당신은 참으로 훌륭한 %R이지만, 이제 훌륭한 사무라이가 되어야만 하오."
 %E
 %Cp Sam 00032
-"If you fail, %n will be like a tai-fun on the land."
+"만약 당신이 실패한다면, %n(은)는 이 땅에 몰아치는 태풍(tai-fun)과 같을 거요."
 %E
 %Cp Sam 00033
-"If you are truly %a, %d will listen."
+"당신이 진정으로 %a하다면, %d께서도 귀를 기울이실 거요."
 %E
 %Cp Sam 00034
-"Sharpen your swords and your wits for the task before you."
+"당신 앞에 놓인 시련을 위해 당신의 검과 지혜를 날카롭게 벼려 두시오."
 %E
 %Cp Sam 00035
-You instinctively reach for your swords.  You do not recognize the
-lay of this land, but you know that your teki are everywhere.
+당신은 본능적으로 검을 향해 손을 뻗습니다. 이 땅의 
+지형은 낯설지만, 당신의 테키(적)가 사방에 깔려 있다는 사실은 알 수 있습니다.
 %E
 %Cp Sam 00036
-Thankful that your %sp at %H cannot see
-your fear, you prepare again to advance.
+%H에 있는 당신의 %sp들이 당신의 
+두려움을 볼 수 없다는 사실에 감사하며, 당신은 다시 전진할 채비를 합니다.
 %E
 %Cc Sam 00040
-In your mind, you hear the taunts of %n.
+당신의 머릿속에 %n의 조롱 섞인 목소리가 들려옵니다.
 
-You become like the rice plant and bend to the ground, offering a
-prayer to %d.  But when the wind has passed, you stand
-proudly again.  Putting your kami in the hands of fate, you advance.
-%E [You feel the taunts %n, but after offering a prayer to %d, you proceed.]
+당신은 벼 이삭처럼 땅을 향해 몸을 굽히고, %d께 
+기도를 올립니다. 그리고 바람이 지나가고 나자, 당신은 다시 
+자랑스럽게 일어섭니다. 카미를 운명의 손에 맡기고, 당신은 앞으로 나아갑니다.
+%E [%n의 조롱이 느껴지지만, %d께 기도를 올린 후 앞으로 나아갑니다.]
 %Cp Sam 00041
-As you arrive once again at the home of %n, your thoughts
-turn only to %o.
+다시 한 번 %n의 거처에 도착한 당신의 마음속에는, 
+오직 %o에 대한 생각뿐입니다.
 %E
 %Cp Sam 00042
-As you arrive once again at the home of %n.
+다시 한 번 %n의 거처에 도착하면서.
 %E
 %Cp Sam 00050
-"Ah, so it is to be you, %p-san.  I offer you seppuku.
-I will be your second if you wish."
+"아, 그게 너였군, %p-상. 내 너에게 셋푸쿠(할복)를 권하마. 
+네가 원한다면 내가 너의 카이샤쿠(할복 시 목을 쳐주는 역할)가 되어주마."
 %E
 %Cp Sam 00051
-"I have offered you the honorable exit.  Now I will have your
-head to send unwashed to %l."
+"내가 명예롭게 죽을 길을 권했거늘. 이제 네 목을 
+씻지도 않은 채 %l에게 보내주마."
 %E
 %Cp Sam 00052
-"After I have dispatched you, I will curse your kami."
+"널 처치하고 난 뒤, 네놈의 카미를 저주해 주마."
 %E
 %Cp Sam 00053
-"You have fought my samurai; surely you must know that you
-will not be able to take %o back to
-%H."
+"내 사무라이들과 싸워봤으니, 네놈이 %o(을)를 
+%H(으)로 가져갈 수 없을 거란 걸 
+당연히 알고 있겠지."
 %E
 %Cp Sam 00060
-"Ahh, I finally meet the daimyo of the kyokaku!"
+"아, 드디어 쿄카쿠(협객)들의 다이묘를 만나보게 되는군!"
 %E
 %Cp Sam 00061
-"There is no honor for me in your death."
+"네놈의 죽음엔 나를 위한 명예 따윈 없다."
 %E
 %Cp Sam 00062
-"You know that I cannot resash my swords until they have killed."
+"내 검들은 한 번 뽑으면 피를 맛보기 전엔 칼집에 들어갈 수 없다는 걸 너도 알 테지."
 %E
 %Cp Sam 00063
-"Your presence only compounds the dishonor of %l in not coming %liself."
+"네가 여기 있다는 사실은 그저 %l(이)가 스스로 오지 않은 불명예를 더 악화시킬 뿐이다."
 %E
 %Cp Sam 00064
-"I will make tea with your hair and serve it to %l."
+"네놈의 머리카락으로 차를 달여서 %l에게 대접해 주마."
 %E
 %Cp Sam 00065
-"Your fear shows in your eyes, coward!"
+"네 눈에 두려움이 서려 있구나, 겁쟁이 녀석!"
 %E
 %Cp Sam 00066
-"I have not heard of you, %p-san; has your life been that unworthy?"
+"네 이름은 들어본 적도 없다, %p-상. 네놈의 인생이 그렇게나 보잘것없었나?"
 %E
 %Cp Sam 00067
-"If you will not obey me, you will die."
+"내게 복종하지 않는다면, 넌 죽는다."
 %E
 %Cp Sam 00068
-"Kneel now and make the two cuts of honor.  I will tell your %sp
-of your honorable death."
+"지금 무릎을 꿇고 명예로운 두 번의 칼질을 해라. 네가 명예롭게 
+죽었다고 네 %sp들에게 전해주마."
 %E
 %Cp Sam 00069
-"Your master was a poor teacher.  You will pay for his mistakes in
-your teaching."
+"네 스승은 형편없는 스승이었군. 그 녀석의 잘못된 가르침에 대한 대가를 네가 치르게 될 것이다."
 %E
 %Cc Sam 00070
-As you pick up %o, you feel the strength of its karma.
-You realize at once why so many good samurai had to die to defend it.
-You are humbled knowing that you hold one of the artifacts of the
-sun goddess.
-%E [You feel the power of %o and are humbled.]
+%o(을)를 집어 들자, 그 강력한 카르마의 힘이 
+느껴집니다. 당신은 즉시 왜 그렇게 많은 훌륭한 사무라이들이 이것을 지키기 위해 죽어야만 했는지 깨닫게 
+됩니다. 당신은 태양의 여신의 유물 중 하나를 들고 있다는 사실에 크나큰 
+겸손함을 느낍니다.
+%E [%o의 힘을 느끼고 겸손해집니다.]
 %Cc Sam 00080
-Your healing skills tell you that %ns wounds are mortal.
+치유의 지식이 당신에게 %ns의 상처가 치명적이라는 사실을 알려줍니다.
 
-You know that the bushido tells you to finish him and let his kami
-die with honor, but the thought of so many samurai dead due to this
-man's dishonor prevents you from giving the final blow.
+무사도(부시도)는 그의 숨통을 끊어 그의 카미가 명예롭게 죽을 수 있도록 하라고 가르치지만, 
+이 사내의 불명예로 인해 죽어간 수많은 사무라이들을 생각하니, 
+그 마지막 일격을 가하는 것을 망설이게 합니다.
 
-You order that his unwashed head be given to the crows and his body
-thrown into the sea.
-%E [%nC dies without honor.]
+당신은 그의 씻지 않은 머리를 까마귀에게 던져주고 몸통은 
+바다에 던지라고 명합니다.
+%E [%nC(이)가 명예롭지 못하게 죽음을 맞이합니다.]
 %Cc Sam 00081
-As you bow before %l, he welcomes you:
+당신이 %l 앞에서 절을 올리자, 그가 당신을 환영합니다:
 
-    "You have brought your family great honor, %p-sama.
+    "그대는 가문에 크나큰 명예를 가져다주었소, %p-사마.
 
-    "While you have been gone the emperor's advisors have discovered in
-    the ancient texts that the karma of the samurai who seeks to recover
-    the Amulet and the karma of %o are joined
-    as the seasons join to make a year.
+    "당신이 떠난 동안 천황의 고문들이 고문헌에서 
+    부적을 되찾고자 하는 사무라이의 카르마와 %o의 카르마가 
+    마치 계절이 이어져 한 해를 이루듯 연결되어 있다는 사실을 알아냈소.
 
-    "Because you have shown such fidelity, the emperor requests
-    that you take leave of other obligations and continue on the
-    road that fate has set your feet upon.  I would consider it
-    an honor if you would allow me to watch your household until
-    you return with the Amulet."
+    "당신이 그토록 놀라운 충의를 보여주었기에, 천황께선 
+    그대가 다른 모든 의무를 내려놓고 운명이 그대의 발걸음을 이끄는 
+    그 길을 계속 나아가길 청하셨소. 당신이 부적을 찾아 돌아올 때까지 
+    내가 당신의 가문을 보살필 수 있게 해준다면 내게도 큰 영광이 될 것이오."
 
-With that, %l bows, and places his sword atop
-%o.
-%E [The emperor wants you to take %o and recover the Amulet.]
+말을 마친 %l(은)는 절을 한 뒤, 자신의 검을 
+%o 위에 올려놓습니다.
+%E [천황께서 당신이 %o(을)를 가져가 부적을 되찾기를 명하셨습니다.]
 %Cc Sam 00082
-%l holds %o tightly for a moment, then returns
-his gaze to you.
+%l(은)는 %o(을)를 잠시 꽉 쥐었다가, 
+다시 당신을 쳐다봅니다.
 
-"The time is ripe to recover the Amulet.  Return to %Z
-through the magic portal that transported you here so that you may
-achieve the destiny which awaits you."
-%E [Take %o, return to %Z, and recover the Amulet.]
+"이제 부적을 되찾을 때가 무르익었소. 그대를 이곳으로 데려온 마법의 포탈을 지나 
+%Z(으)로 돌아가시오. 그곳에서 당신을 기다리고 있는 운명을 
+성취하시길 바라오."
+%E [%o(을)를 가져가 %Z(으)로 돌아가 부적을 되찾으십시오.]
 %Cp Sam 00090
-%lC bows.  "%p-sama, tell us of your search for the Amulet."
+%lC(이)가 고개를 숙여 인사합니다. "%p-사마, 부적을 찾는 여정이 어땠는지 들려주시오."
 %E
 # [Sam 00091: most other roles give more explicit directions for the
 #  feedback here, so this summary does that too.]
 %Cc Sam 00091
-"Ah, %p-sama.  You have wasted your efforts returning home.
-Now that you are in possession of the Amulet, you are honor-bound to
-finish the quest you have undertaken.  There will be plenty of time
-for saki and stories when you have finished.
+"아, %p-사마. 헛걸음을 하셨구려. 
+이제 옌더의 부적을 손에 넣으셨으니, 그대는 명예를 걸고 자신이 맡은 
+퀘스트를 마무리해야 할 의무가 있소. 사케와 이야기꽃은 모든 일이 
+끝난 후에 즐겨도 충분할 것이오.
 
-"Go now, and may our prayers be a wind at your back."
-%E [Take the Amulet to the Astral Plane to finish your task.]
+"이제 가시오, 우리의 기도가 당신의 등 뒤에 부는 순풍이 되기를."
+%E [부적을 천상계로 가져가 퀘스트를 마치십시오.]
 #
 #	Tourist
 #
 %Cc Tou 00001
-You breathe a sigh of relief as you find yourself back in the familiar
-surroundings of %H.
+당신은 %H의 낯익은 환경으로 돌아온 것을 깨닫고 
+안도의 한숨을 내쉽니다.
 
-You quickly notice that things do not appear the way they did when you
-left.  The town is dark and quiet.  There are no sounds coming from
-behind the town walls, and no campfires burning in the fields.  As a
-matter of fact, you do not %x any movement in the fields at all, and
-the crops seem as though they have been untended for many weeks.
-%E [You find yourself back at %H, but the quiet is ominous.]
+하지만 당신은 곧 마을이 떠날 때와는 달라 보인다는 사실을 눈치챕니다. 
+마을은 어둡고 고요합니다. 성벽 너머에서는 아무런 소리도 들리지 않고, 
+들판에는 모닥불 하나 타오르지 않습니다. 사실, 들판에서는 어떤 
+움직임도 %x 수 없으며, 농작물들은 마치 몇 주 동안이나 방치된 것처럼 보입니다.
+%E [%H에 돌아왔지만, 고요함이 불길하게 느껴집니다.]
 %Cp Tou 00002
-Once again, you are back at %H.
+다시 한 번, 당신은 %H에 돌아왔습니다.
 %E
 %Cp Tou 00003
-You are back at %H.
-Things appear to have become so bad that you fear that soon
-%H will not be here to return to.
+당신은 %H에 돌아왔습니다.
+상황이 너무 악화되어 조만간 다시 돌아올 
+%H조차 사라지지 않을까 두렵습니다.
 %E
 %Cp Tou 00005
-"Gehennom on 5 zorkmids a day -- more like 500 a day if you ask me."
+"하루 5 조크미드로 떠나는 게헨놈 여행 -- 내 생각엔 하루 500은 드는 것 같은데."
 %E
 %Cp Tou 00006
-"Do you know where I could find some nice postcards of The Gnomish Mines?"
+"노움 광산의 멋진 엽서를 어디서 구할 수 있는지 아십니까?"
 %E
 %Cp Tou 00007
-"Have you tried the weird toilets?"
+"그 이상한 화장실 써봤어?"
 %E
 %Cp Tou 00008
-"Don't stay at the Inn, I hear the food is terrible and it has rats."
+"그 여관에는 머물지 마, 음식도 최악이고 쥐들도 들끓는다니까."
 %E
 %Cp Tou 00009
-"They told me that this was the off season!"
+"다들 지금이 비수기라고 했단 말이야!"
 %E
 %Cp Tou 00010
-"Gehennom on 5 zorkmids a day -- more like 500 a day if you ask me."
+"하루 5 조크미드로 떠나는 게헨놈 여행 -- 내 생각엔 하루 500은 드는 것 같은데."
 %E
 %Cp Tou 00011
-"Do you know where I could find some nice postcards of The Gnomish Mines?"
+"노움 광산의 멋진 엽서를 어디서 구할 수 있는지 아십니까?"
 %E
 %Cp Tou 00012
-"Have you tried the weird toilets?"
+"그 이상한 화장실 써봤어?"
 %E
 %Cp Tou 00013
-"If you stick around, I'll show you the pictures from my latest trip."
+"여기 조금만 더 있어 봐, 내가 최근에 간 여행 사진들을 보여줄게."
 %E
 %Cp Tou 00014
-"Did you bring me back any souvenirs?"
+"내 기념품도 사 왔어?"
 %E
 %Cc Tou 00015
-"Is it really you, %p!  I had given up hope for your return.
-As you can %x, we are desperately in need of your talents.  Someone must
-defeat %n if our town is to become what it once was.
+"정말 자네인가, %p! 난 자네가 돌아올 거란 희망을 버리고 있었네.
+자네도 %x, 우린 자네의 재능이 절실히 필요해. 우리 마을이 예전의 
+모습을 되찾으려면 누군가는 %n(을)를 무찔러야만 하네.
 
-"Let me see if you are ready to be that someone."
-%E [Someone must defeat %n.  Are your ready?]
+"자네가 그 적임자가 될 준비가 되었는지 한 번 보겠네."
+%E [누군가 %n(을)를 물리쳐야만 합니다. 준비되셨습니까?]
 %Cp Tou 00016
-"Things are getting worse, %p.  I hope that this time you are ready."
+"상황이 점점 나빠지고 있어, %p. 이번에는 부디 준비가 되었기를 바라네."
 %E
 %Cp Tou 00017
-"I hope that for the sake of %H you have prepared yourself this time."
+"%H(을)를 위해서라도 자네가 이번에는 제대로 준비를 마쳤기를 바라네."
 %E
 %Cc Tou 00018
-"It is too late, %p.  You are not even worthy to die amongst us.
-Leave %H and never return."
-%E [Leave %H and never return.]
+"너무 늦었어, %p. 넌 우리 곁에서 죽을 가치조차 없다.
+%H(을)를 떠나서 다시는 돌아오지 마."
+%E [%H(을)를 떠나서 다시는 돌아오지 마십시오.]
 %Cc Tou 00019
-"There is still too much that you have to learn before you can undertake
-the next step.  Return to us as a proven %R, and perhaps then
-you will be ready.
+"다음 단계로 나아가기 위해선 자네가 아직 배워야 할 것들이 너무 많네. 
+능력을 증명받은 %R(이)가 되어서 우리에게 다시 돌아오게나, 어쩌면 
+그때쯤엔 준비가 되었을지도 모르지.
 
-"Go back now, and may the teachings of %d serve you well."
-%E [Return when you are %Ra.]
+"이제 그만 돌아가게, %d의 가르침이 자네에게 도움이 되기를."
+%E [%Ra가 되어서 다시 오십시오.]
 %Cc Tou 00020
-"It would be an affront to %d to have one not true to the
-%a path undertake her bidding.
+"%a의 길을 따르지 않는 자가 %d의 임무를 수행하는 것은 
+그분에 대한 모독이라네.
 
-"You must not return to us until you have purified yourself of these
-bad influences on your actions.  Remember, only by following the %a
-path can you hope to overcome the obstacles you will face."
-%E [You are not sufficiently %a.  Return when you are.]
+"네 행동에 깃든 이 나쁜 영향력들을 정화하기 전까지는 우리에게 
+돌아와서는 안 돼. 명심하게, 오직 %a의 길을 따를 때만이 
+네가 마주할 장애물들을 극복할 수 있을 테니."
+%E [당신은 충분히 %a하지 않습니다. 정화한 뒤에 돌아오십시오.]
 %Cc Tou 00021
-"You have indeed proven yourself a worthy %c, %p.
+"자네는 %c의 자격을 충분히 증명했네, %p.
 
-"But now your kinfolk and I must ask you to put aside your travels and
-help us in our time of need.  After you left us we elected a new mayor,
-%n.  He proved to be a most heinous and vile creature.
+"하지만 이제 자네의 친척들과 난 자네가 여행을 잠시 멈추고 이 어려운 
+시기에 우릴 도와달라고 부탁해야만 하네. 자네가 우리를 떠난 후, 우리는 새로운 시장으로 
+%n(을)를 뽑았지. 하지만 그는 실로 끔찍하고 사악한 괴물이었어.
 
-"Soon after taking office he absconded with %o
-and fled town, leaving behind his henchmen to rule over us.  In order
-for us to regain control of our town, you must enter %i
-and recover %o.
+"그는 시장이 된 지 얼마 지나지 않아 %o(을)를 훔쳐 
+마을을 떠났고, 남겨진 부하들이 우리를 지배하게 만들었네. 우리가 
+우리 마을의 통제권을 되찾으려면 자네가 %i에 들어가 
+%o(을)를 되찾아와야만 하네.
 
-"Do not be distracted on your quest.  If you do not return quickly I fear
-that all will be lost.  Let us both pray now that %d will guide you
-and keep you safe."
-%E [Enter %i and recover %o from %n.]
+"퀘스트 중에 딴 길로 새지 말게. 자네가 빨리 돌아오지 않으면 
+모든 것이 끝장날지도 모르니까. %d께서 자네를 인도하시고 
+무사히 지켜주시기를 우리 함께 기도하세."
+%E [%i에 들어가 %n에게서 %o(을)를 되찾으십시오.]
 %Cp Tou 00025
-"Do not be fooled by the false promises of %n."
+"%n의 거짓 약속에 속지 말게."
 %E
 %Cp Tou 00026
-"To enter %i you must pass many traps."
+"%i에 들어가려면 수많은 함정을 통과해야 하네."
 %E
 %Cp Tou 00027
-"If you do not return with %o, your quest
-will be in vain."
+"%o(을)를 되찾아오지 못한다면, 자네의 퀘스트는 물거품이 될 걸세."
 %E
 %Cp Tou 00028
-"Do not be afraid to call upon %d if you truly need help."
+"정말 도움이 필요할 땐 두려워하지 말고 %d께 기도하게."
 %E
 %Cp Tou 00029
-"If you do not destroy %n, he will follow you back here!"
+"%n(을)를 완전히 없애지 않으면, 그가 여기까지 널 쫓아올 거야!"
 %E
 %Cp Tou 00030
-"Take %o from %n
-and you may be able to defeat him."
+"%n에게서 %o(을)를 빼앗게, 
+그러면 그를 이길 수 있을지도 몰라."
 %E
 %Cp Tou 00031
-"You must hurry, %p!"
+"서둘러야 해, %p!"
 %E
 %Cp Tou 00032
-"You are like %Sa to me, %p.  Do not let me down."
+"넌 내게 %Sa(이)나 다름없어, %p. 날 실망시키지 말아주게."
 %E
 %Cp Tou 00033
-"If you are %a at all times you may succeed, %p."
+"항상 %a한 마음가짐을 갖는다면 성공할 수 있을 걸세, %p."
 %E
 %Cp Tou 00034
-"Let all who meet you on your journey know that you are on a quest for
-%l and grant safe passage."
+"여정에서 만나는 모든 이들에게 네가 %l(을)를 위한 퀘스트 중임을 
+알리고 무사히 통과시켜 달라고 하게."
 %E
 %Cc Tou 00035
-Only your faith in %d keeps you from trembling.  You %x
-the handiwork of %ns henchlings everywhere.
-%E [You %x the handiwork of %ns henchlings.]
+오직 %d에 대한 당신의 굳건한 믿음만이 당신이 
+떨지 않게 붙잡아 줍니다. 당신은 사방에서 %n의 부하들이 
+저지른 짓들을 %x.
+%E [%n의 부하들이 저지른 짓들을 %x.]
 %Cp Tou 00036
-You know that this time you must find and destroy %n.
+이번엔 반드시 %n(을)를 찾아내어 죽여야 한다는 것을 당신은 알고 있습니다.
 %E
 %Cp Tou 00040
-You sense the presence of %o.
+당신은 %o의 존재를 느낍니다.
 %E
 %Cp Tou 00041
-You gain confidence, knowing that you may soon be united with
-%o.
+곧 %o(와)과 함께할 수 있을 거란 사실에 자신감이 차오릅니다.
 %E
 %Cp Tou 00042
-You have returned to %ns lair.
+당신은 %n의 은신처로 돌아왔습니다.
 %E
 %Cc Tou 00050
-"So, %p, %l thinks that you can wrest
-%o from me!
+"그래서, %p. %l(은)는 네가 
+%o(을)를 나한테서 빼앗아 갈 수 있다고 생각하나 보군!
 
-"It only proves how desperate he has become that he sends %ra to
-try and defeat me.  When this day is over, I will have you enslaved
-in the mines where you will rue the day that you ever entered
-%i."
-%E [%rA will not defeat me.]
+"나를 이겨보겠다고 %ra 따위를 보낸 걸 보면 그 녀석이 얼마나 
+절박해졌는지 아주 잘 알겠어. 오늘이 지나면 넌 내 노예가 되어 
+광산에서 평생 썩게 될 거다. %i에 들어온 걸 
+뼈저리게 후회하게 만들어주마."
+%E [%rA 따위가 날 이길 수는 없을 것이다.]
 %Cp Tou 00051
-"I let you live the last time because it gave me pleasure.
-This time I will destroy you, %p."
+"지난번엔 널 살려두는 게 더 재미있을 것 같아서 살려둔 거다.
+이번엔 널 파괴해 주마, %p."
 %E
 %Cc Tou 00052
-"These meetings come to bore me.  You disturb my workings with
-%o.
+"이런 만남도 이젠 지루하군. 넌 내가 %o(을)를 
+다루는 데 방해만 될 뿐이야.
 
-"If you do not run away now, I will inflict so much suffering on you that
-%l will feel guilty for ever having sent his %S to me!"
-%E [Run away or you will suffer severely.]
+"지금 당장 도망치지 않는다면, %l(이)가 자신의 %S(을)를 
+내게 보낸 것을 후회할 만큼 널 아주 끔찍하게 고통스럽게 만들어 주마!"
+%E [도망치지 않으면 끔찍한 고통을 겪게 될 것입니다.]
 %Cc Tou 00053
-"You fool.  You do not know how to call upon the powers of
-%o.
+"멍청한 녀석. 넌 %o의 힘을 어떻게 이끌어내는지도 모르는구나.
 
-"Return it to me and I will teach you how to use it, and together we
-will rule %H.  But do so now, as my patience grows thin."
-%E ["Return %o to me and we will rule %H."]
+"그걸 나한테 돌려줘라. 그럼 내가 어떻게 쓰는 건지 가르쳐 줄 테니, 
+우리 함께 %H(을)를 지배하는 거다. 내 인내심이 바닥나기 전에 
+빨리 결정해."
+%E ["%o(을)를 돌려줘라, 함께 %H(을)를 지배하자."]
 %Cp Tou 00060
-"I defeated %l and I will defeat you, %p."
+"난 %l(을)를 꺾었다. 널 꺾는 건 일도 아니지, %p."
 %E
 %Cp Tou 00061
-"Where is %d now!  You must realize no one can help you here."
+"네놈의 %d(은)는 어딜 갔느냐! 이곳에선 널 구해줄 자가 아무도 없다는 걸 깨달아라."
 %E
 %Cp Tou 00062
-"Beg for mercy now and I may be lenient on you."
+"지금이라도 자비를 구걸한다면 널 좀 관대하게 대해줄 수도 있다."
 %E
 %Cp Tou 00063
-"If you were not so %a, you might have stood a chance."
+"네가 그렇게 %a한 녀석만 아니었어도 가능성이 있었을 텐데."
 %E
 %Cp Tou 00064
-"Vengeance is mine at last, %p."
+"마침내 내 복수가 완성되는군, %p."
 %E
 %Cp Tou 00065
-"I only wish that %l had a more worthy %r to send against me."
+"%l(이)가 너보다 좀 더 쓸 만한 %r(을)를 보냈다면 좋았을 것을."
 %E
 %Cp Tou 00066
-"With %o in my possession you cannot
-hope to defeat me."
+"%o(이)가 내 손에 있는 한 넌 날 결코 
+이길 수 없어."
 %E
 %Cp Tou 00067
-"%nC has never been defeated, NEVER!"
+"%nC(은)는 한 번도 패배한 적이 없다, 절대!"
 %E
 %Cp Tou 00068
-"Are you truly the best %H has to send against me?  I pity %l."
+"네가 정말로 %H(이)가 내게 보낼 수 있는 최고의 인재란 말이냐? %l(이)가 불쌍할 지경이군."
 %E
 %Cp Tou 00069
-"How do you spell %p?  I want to ensure the marker on your grave is
-correct as a warning to your %sp."
+"네 이름 철자가 어떻게 되더라, %p? 네놈의 %sp들에게 경고로 남겨줄 
+묘비명에 이름은 똑바로 적어주고 싶어서 말이야."
 %E
 %Cc Tou 00070
-As you pick up %o, you feel a great
-weight has been lifted from your shoulders.  Your only thoughts are
-to quickly return to %H and find %l.
-%E [You pick up %o and feel relief.  Return it to %l.]
+%o(을)를 집어 들자, 어깨를 짓누르던 
+무거운 짐이 한결 가벼워진 것을 느낍니다. 당신의 머릿속은 온통 
+서둘러 %H(으)로 돌아가 %l(을)를 찾아야겠다는 생각뿐입니다.
+%E [%o(을)를 집어 들고 안도감을 느낍니다. %l에게 돌려주십시오.]
 %Cc Tou 00080
-You turn in the direction of %n.  As his earthly body begins
-to vanish before your eyes, you hear him curse:
+당신은 %n의 방향으로 고개를 돌립니다. 그의 지상에서의 육체가 
+당신의 눈앞에서 사라져 가면서, 당신은 그의 저주를 듣습니다:
 
-    "You shall never be rid of me, %p!
-    I will find you where ever you go and regain what is rightly mine."
-%E [%nC curses at you as %nh dies.]
+    "넌 날 결코 떼어내지 못할 거다, %p!
+    네가 어딜 가든 찾아내서 내 정당한 권리를 되찾고야 말겠다."
+%E [%nC(이)가 죽으며 당신을 저주합니다.]
 %Cc Tou 00081
-As %l detects the presence of %o,
-he almost smiles for the first time in many a full moon.
+%l(은)는 %o의 존재를 느끼자마자, 
+거의 보름달이 여러 번 뜰 동안 지어보지 않았던 옅은 미소를 지어 보입니다.
 
-As he looks up from %o he says:
+그는 %o에서 눈을 떼고 당신을 바라보며 말합니다:
 
-    "You have recovered %o.  You are its
-    owner now, but not its master.  Let it work with you as you continue
-    your journey.  With its help, and %d to guide you on the
-    %a path, you may yet recover the Amulet of Yendor."
-%E [Take %o and with %ds guidance, recover the Amulet.]
+    "자네가 %o(을)를 되찾았군. 이제 그것의 
+    소유자는 자네지만, 아직 주인이 된 건 아닐세. 자네의 여정이 
+    계속되는 동안 그것이 자네를 돕게 만들게나. 그것의 도움과, 
+    %a의 길로 널 인도할 %d의 가호가 있다면 자네는 
+    결국 옌더의 부적을 되찾을 수 있을지도 모르네."
+%E [%o(을)를 취하고 %ds의 인도에 따라 부적을 찾으십시오.]
 %Cc Tou 00082
-"%oC is yours now.  %Z
-await your return through the magic portal that brought you here."
-%E [Keep %o and return to %Z through the portal.]
+"이제 %oC(은)는 자네 것이네. %Z(이)가 
+자네를 이곳으로 이끌었던 마법의 포탈 너머에서 자네의 귀환을 기다리고 있다네."
+%E [%o(을)를 간직하고 포탈을 통해 %Z(으)로 돌아가십시오.]
 %Cp Tou 00090
-"I could not be more proud than if you were my own %S, %p!
-Tell me of your adventures in quest of the Amulet of Yendor."
+"자네가 내 친척(S)이었다 하더라도 지금 이보다 더 자랑스러울 순 없을 걸세, %p!
+옌더의 부적을 찾는 여정은 어땠는지 내게 말해주게나."
 %E
 # [Tou 00091: like Sam 00091, the directions about what to do next are
 #  missing, so make the summary be a little bit more explicit.]
 %Cc Tou 00091
-"Stand back and let me look at you, %p.
-Now that you have recovered the Amulet of Yendor, I'm afraid living
-out your days in %H would seem pretty tame.
+"어디 한 걸음 물러나서 자네를 제대로 보게 해주게, %p.
+이제 옌더의 부적을 되찾았으니, %H에서 평생을 보내는 건 
+자네에겐 너무나 지루한 일이 될 것 같구먼.
 
-"You have come too far to stop now, for there are still more tasks that
-our oral history foretells for you.  Forever more, though, your name shall
-be spoken by the %gP with awe.  You are truly an inspiration to your
-%sp!"
-%E [You have the Amulet.  Take it to the Astral Plane to finish your task.]
+"이제 와서 멈추기엔 너무 멀리 왔어. 구전되는 역사 속에는 자네가 이뤄내야 할 
+과업들이 아직 더 남아있거든. 그래도 앞으로 자네의 이름은 
+%gP들의 입에 경외심을 담아 오르내리게 될 거야. 
+자네는 진정으로 네 %sp들에게 영감을 주는 존재가 된 거란다!"
+%E [부적을 얻었습니다. 천상계로 가져가 당신의 임무를 완수하십시오.]
 #
 #	Valkyrie
 #
@@ -2855,31 +2759,31 @@ be spoken by the %gP with awe.  You are truly an inspiration to your
 "찬양하라, 그리고 잘 왔소, 용감한 %c이여."
 %E
 %Cp Val 00006
-"May %d guide your steps, %p."
+"%d께서 당신의 발걸음을 인도하시기를, %p."
 %E
 %Cp Val 00007
-"%lC weakens.  Without %o, her foresight is dim."
+"%lC께서 쇠약해지고 계십니다. %o(이)가 없다면 그녀의 예지력도 희미해집니다."
 %E
 %Cp Val 00008
-"You must hurry, %p, else Ragnarok may well come."
+"서둘러야 합니다, %p, 그러지 않으면 라그나로크가 도래할지도 모릅니다."
 %E
 %Cp Val 00009
-"I would deal with this foul %n myself, but %d forbids it."
+"이 사악한 %n 놈은 내 손으로 직접 처리하고 싶지만, %d께서 금하셨소."
 %E
 %Cp Val 00010
-"Hail, and well met, brave %c."
+"찬양하라, 그리고 잘 왔소, 용감한 %c이여."
 %E
 %Cp Val 00011
-"May %d guide your steps, %p."
+"%d께서 당신의 발걸음을 인도하시기를, %p."
 %E
 %Cp Val 00012
 "%lC께서 당신이 성공했다고 말씀하셨소!"
 %E
 %Cp Val 00013
-"You recovered %o just in time, %p."
+"딱 맞춰서 %o(을)를 되찾았구려, %p."
 %E
 %Cp Val 00014
-"Hail %d, for delivering %o back to us."
+"%o(을)를 우리에게 돌려주신 %d을(를) 찬양하라."
 %E
 %Cc Val 00015
 "아, %p, 나의 %S. 마침내 %H(으)로 
@@ -2912,78 +2816,81 @@ be spoken by the %gP with awe.  You are truly an inspiration to your
 네가 %Ra(이)가 되어 돌아왔을 때야 비로소 %n를 무찌를 수 있을 것이다."
 %E [%Ra(이)가 되었을 때 다시 오십시오.]
 %Cc Val 00020
-"NO!  This is terrible.  I see you becoming an ally of %n, and
-leading his armies in the final great battles.  This must not come to
-pass!  You have strayed from the %a path.  You must purge yourself,
-and return here only when you have regained a state of purity."
-%E [You have strayed from the %a path.  Return after you purify yourself.]
+"안 돼! 이럴 수가. 네가 %n의 동맹이 되어 
+그의 군대를 이끌고 마지막 거대한 전쟁에 나서는 모습이 보인다. 이래선 안 돼! 
+넌 %a의 길에서 벗어났다. 넌 스스로를 정화해야만 해. 
+순수함을 되찾았을 때만이 다시 이곳으로 돌아오너라."
+%E [당신은 %a의 길에서 벗어났습니다. 스스로를 정화한 뒤에 돌아오십시오.]
 %Cc Val 00021
-"It is not clear, %p, for my sight is limited without our relic.
-But it is now likely that you can defeat %n, and recover
-%o.
+"앞날이 선명하게 보이질 않는구나, %p, 우리의 유물이 없어서 
+내 예지력이 제한된 탓이야. 
+하지만 지금은 네가 %n(을)를 이기고 %o(을)를 
+되찾을 가능성이 높아 보인다.
 
-"A short time ago, %n and his minions attacked this place.  They
-opened the huge volcanic vents you %x about the hill, and attacked.  I knew
-that this was to come to pass, and had asked %d for a group of %gP
-to help defend this place.  The few you %x here are the mightiest of
-Valhalla's own, and are all that are left of one hundred %d sent.
+"얼마 전, %n(와)과 그의 부하들이 이곳을 공격했지. 
+그들은 네가 언덕 주변에서 %x 거대한 화산 분화구들을 열고 
+공격해 왔다. 난 이런 일이 일어날 것을 미리 알았기에, %d께 
+이곳을 방어할 %gP 부대를 보내달라고 요청했었지. 네가 이곳에서 %x 
+저 소수의 전사들이야말로 발할라 최정예 전사들이며, %d께서 보내신 
+백 명의 전사들 중 유일한 생존자들이란다.
 
-"Despite the great and glorious battle we fought, %n managed at
-last to steal %o.  This has upset the balance of the universe,
-and unless %oh is returned into my care, %n may start Ragnarok.
+"우리가 벌인 거대하고 영광스러운 전투에도 불구하고, %n(은)는 결국 
+%o(을)를 훔쳐내는 데 성공했다. 이것이 우주의 균형을 무너뜨렸고, 
+%oh(이)가 내 손에 다시 돌아오지 않는다면, %n(은)는 라그나로크를 
+시작할지도 모른다.
 
-"You must find the entrance to %i.  Travel downward
-from there and you will find %ns lair.  Defeat him and
-return %o to me."
-%E [Find %i; defeat %n; return with %o.]
+"넌 %i의 입구를 찾아야만 한다. 그곳에서부터 
+아래로 내려가면 %ns의 은신처가 나올 것이다. 그를 무찌르고 
+%o(을)를 내게 되돌려다오."
+%E [%i(을)를 찾으십시오; %n(을)를 무찌르십시오; %o(을)를 가지고 돌아오십시오.]
 %Cp Val 00025
-"Go with the blessings of %d."
+"%d의 축복과 함께 나아가라."
 %E
 %Cp Val 00026
-"Call upon %d when you are in need."
+"도움이 필요할 땐 %d께 기도해라."
 %E
 %Cp Val 00027
-"Use %o if you can.  It will protect you."
+"%o(을)를 사용할 수 있게 된다면 사용하거라. 그것이 널 지켜줄 것이다."
 %E
 %Cp Val 00028
-"Magical cold is very effective against %n."
+"마법적인 냉기가 %n에게 아주 효과적이다."
 %E
 %Cp Val 00029
-"To face %n, you will need to be immune to fire."
+"%n(와)과 맞서려면, 화염에 면역이 되어야만 할 거다."
 %E
 %Cp Val 00030
-"May %d strengthen your sword-arm."
+"%d께서 네 검을 쥔 팔에 힘을 실어 주시기를."
 %E
 %Cp Val 00031
-"Trust in %d.  He will not desert you."
+"%d을(를) 믿어라. 그분은 널 저버리지 않으실 거다."
 %E
 %Cp Val 00032
-"It becomes more likely that Ragnarok will come with every passing moment.
-You must hurry, %p."
+"시간이 지날수록 라그나로크가 도래할 가능성이 점점 커지고 있다. 서둘러야 한다, %p."
 %E
 %Cp Val 00033
-"If %n can master %o, he will be powerful enough to
-face %d far earlier than is fated.  This must not be!"
+"만약 %n(이)가 %o(을)를 완벽히 다루게 된다면, 
+그는 운명에 정해진 시간보다 훨씬 일찍 %d(와)과 맞설 만큼 강해질 것이다. 
+그런 일이 일어나선 안 돼!"
 %E
 %Cp Val 00034
-"Remember your training, %p.  You can succeed."
+"네가 받은 훈련을 기억해라, %p. 넌 이길 수 있다."
 %E
 %Cc Val 00035
-The ice and snow gives way to a valley floor.  You %x ahead of you
-a huge round hill surrounded by pools of lava.  This then is the entrance
-to %i.  It looks like you're not going to get in without
-a fight though.
-%E [This is the entrance to %i.]
+얼음과 눈으로 뒤덮인 길이 끝나고 계곡 바닥이 나타납니다. 당신은 당신의 앞에 
+용암 웅덩이들로 둘러싸인 거대하고 둥근 언덕을 %x. 이것이 바로 
+%i의 입구입니다. 하지만 싸우지 않고는 안으로 
+들어갈 수 없을 것 같습니다.
+%E [이곳은 %i의 입구입니다.]
 %Cp Val 00036
-Once again, you stand before the entrance to %i.
+다시 한 번, 당신은 %i의 입구에 섰습니다.
 %E
 %Cc Val 00040
-Through clouds of sulphurous gasses, you %x a rock palisade
-surrounded with a moat of bubbling lava.  You remember the description
-from something that %l said.  This is the lair of %n.
-%E [This is the lair of %n.]
+유황 가스 구름 너머로, 당신은 부글거리는 용암의 해자로 
+둘러싸인 바위 방벽을 %x. 당신은 %l(이)가 말해주었던 
+생김새를 떠올립니다. 이곳이 바로 %n의 은신처입니다.
+%E [이곳은 %n의 은신처입니다.]
 %Cp Val 00041
-Once again, you stand in sight of %ns lair.
+다시 한 번, 당신은 %ns의 은신처가 보이는 곳에 서 있습니다.
 %E
 %Cc Val 00050
 "그래! %lC(이)가 드디어 나에게 대항할 %ca를 보냈군!
@@ -2992,46 +2899,47 @@ Once again, you stand in sight of %ns lair.
 이것이 네놈부터 먼저 처리해야 한다고 알려주더군! 
 자, 이리 와라, 꼬마 %s. 
 널 끝장내고 나면, 마침내 %d(와)과의 최후의 결전을 시작할 수 있겠지."
-%E ["%oC has shown me that I must kill you."]
+%E ["%oC(이)가 내가 널 죽여야만 한다고 보여주었지."]
 %Cp Val 00051
-"Again you challenge me, %r.  Good.  I will kill you now."
+"다시 나한테 도전하겠다고, %r. 좋다. 지금 당장 널 죽여주마."
 %E
 %Cp Val 00052
-"Have you not learned yet?  You cannot defeat %n!"
+"아직도 교훈을 얻지 못했느냐? 넌 결코 %n(을)를 이길 수 없다!"
 %E
 %Cp Val 00053
-"I will kill you, %c, and wrest %o from your mangled hands."
+"널 죽이고, 네 그 너덜너덜해진 손에서 %o(을)를 
+다시 빼앗아주마, %c."
 %E
 %Cp Val 00060
-"I am your death, %c."
+"내가 바로 너의 죽음이다, %c."
 %E
 %Cp Val 00061
-"You cannot prevail, %r.  I have foreseen your every move."
+"넌 결코 이길 수 없어, %r. 네 모든 움직임은 내 예상대로다."
 %E
 %Cp Val 00062
-"With you out of the way, Valhalla will be mine for the taking."
+"네놈만 치워버리면, 발할라는 내 것이 될 것이다."
 %E
 %Cp Val 00063
-"I killed scores of %ds best when I took %o.
-Do you really think that one %c can stand against me?"
+"내가 %o(을)를 차지했을 때 수십 명의 가장 뛰어난 
+%ds들도 죽여버렸다. 고작 %c 하나가 날 막을 수 있다고 생각하느냐?"
 %E
 %Cp Val 00064
-"Who bears the souls of %cP to Valhalla, %r?"
+"누가 발할라로 %cP의 영혼을 데려가는가, %r?"
 %E
 %Cp Val 00065
-"No, %d cannot help you here."
+"아니, %d(은)는 여기서 널 도울 수 없다."
 %E
 %Cp Val 00066
-"Some instrument of %d you are, %p.  You are a weakling!"
+"네가 %d의 도구라고, %p. 참 약해빠진 녀석이군!"
 %E
 %Cp Val 00067
-"Never have I seen %ca so clumsy in battle."
+"전투에서 이토록 서투른 %ca는 본 적이 없다."
 %E
 %Cp Val 00068
-"You die now, little %s."
+"지금 죽어라, 꼬마 %s."
 %E
 %Cp Val 00069
-"Your body I destroy now, your soul when my hordes overrun Valhalla!"
+"네 육신은 지금 당장 박살을 내주마, 그리고 네 영혼은 내 군단이 발할라를 짓밟을 때 파괴해주지!"
 %E
 %Cc Val 00070
 %o를 손에 쥐자, 당신의 머릿속은 온갖 환영으로 가득 차며, 
@@ -3061,14 +2969,14 @@ Do you really think that one %c can stand against me?"
 %E [%o를 챙기십시오. 부적을 찾으십시오.]
 # assumes Orb of Fate (glass object)
 %Cc Val 00082
-"Careful, %p!  %oC might break, and that would be
-a tragic loss.  You are its keeper now, and the time has come to
-resume your search for the Amulet.  %Z await your
-return through the magic portal that brought you here."
-%E [You are %os keeper now.  Return through the portal and find the Amulet.]
+"조심해라, %p! %oC(이)가 깨지기라도 한다면 너무나 
+비극적인 손실일 테니까. 이제 네가 그것의 수호자이며, 다시 부적을 찾는 
+여정을 재개할 때가 되었단다. %Z(이)가 널 
+이곳으로 데려왔던 마법의 포탈 너머에서 너의 귀환을 기다리고 있을 거다."
+%E [당신은 이제 %o의 수호자입니다. 포탈을 통해 돌아가 부적을 찾으십시오.]
 %Cp Val 00090
-"Greetings, %p.  I have not been able to pay as much attention to
-your search for the Amulet as I have wished.  How do you fare?"
+"환영한다, %p. 네가 부적을 찾는 여정을 그동안 내가 
+원했던 만큼 주의 깊게 지켜보진 못했구나. 잘 진행되고 있느냐?"
 %E
 %Cc Val 00091
 "훌륭하다, %p. 부적을 무사히 되찾았구나!
@@ -3083,262 +2991,248 @@ your search for the Amulet as I have wished.  How do you fare?"
 #	Wizard
 #
 %Cc Wiz 00001
-You are suddenly in familiar surroundings.  You notice what appears to
-be a large, squat stone structure nearby.  Wait!  That looks like the
-tower of your former teacher, %l.
+당신은 갑자기 낯익은 환경에 놓였습니다. 당신은 근처에 크고 납작한 돌 
+건축물로 보이는 것을 발견합니다. 잠깐! 저건 당신의 옛 스승인 
+%l의 탑 같습니다.
 
-However, things are not the same as when you were last here.  Mists and
-areas of unexplained darkness surround the tower.  There is movement in
-the shadows.
+하지만, 상황이 당신이 마지막으로 이곳에 있었을 때와 다릅니다. 안개와 
+원인을 알 수 없는 어둠이 탑을 둘러싸고 있습니다. 그림자 속에서 무언가 움직이고 있습니다.
 
-Your teacher would never allow such unaesthetic forms to surround the
-tower...  unless something were dreadfully wrong!
-%E [You have arrived at %ls tower but something is very wrong.]
+당신의 스승님은 저런 흉측한 것들이 탑을 둘러싸도록 절대 
+내버려두지 않았을 텐데... 무언가 지독하게 잘못된 게 틀림없습니다!
+%E [%l의 탑에 도착했지만 무언가 대단히 잘못되었습니다.]
 %Cp Wiz 00002
-Once again, you are back at %H.
+다시 한 번, 당신은 %H에 돌아왔습니다.
 %E
 %Cp Wiz 00003
-You are back at %H.
-You have an odd feeling this may be the last time you ever come here.
+당신은 %H에 돌아왔습니다.
+이번이 이곳에 오는 마지막이 될지도 모른다는 이상한 예감이 듭니다.
 %E
 %Cp Wiz 00005
-"Would you happen to have some eye of newt in that overstuffed pack, %s?"
+"그 빵빵한 가방에 뉴트의 눈알 좀 가지고 있지 않나, %s?"
 %E
 %Cp Wiz 00006
-"Ah, the spell to create the magic portal worked.  Outstanding!"
+"아, 마법 포탈 생성 주문이 성공했군. 훌륭해!"
 %E
 %Cp Wiz 00007
-"Hurry!  %lC may not survive that casting of the portal spell!"
+"서두르게! 포탈 주문을 시전한 후유증으로 %lC(이)가 무사하지 못할지도 몰라!"
 %E
 %Cp Wiz 00008
-"The spells of %n were just too powerful for us to withstand."
+"%n의 주문은 우리가 버텨내기엔 너무 강력했어."
 %E
 %Cp Wiz 00009
-"I, too, will venture into the world, because %n is but one of
-many evils to be vanquished."
+"나 또한 세상으로 모험을 떠날 걸세. %n(은)는 우리가 물리쳐야 할 수많은 악 중 하나일 뿐이니까."
 %E
 %Cp Wiz 00010
-"I have some eye of newt to trade, do you have a spare blind-worm's sting?"
+"거래할 뉴트의 눈알이 좀 있는데, 혹시 남는 장님지렁이의 독침 있는가?"
 %E
 %Cp Wiz 00011
-"The magic portal now seems like it will remain stable for quite some time."
+"이제 마법 포탈이 꽤 오랫동안 안정적으로 유지될 것 같군."
 %E
 %Cp Wiz 00012
-"Have you noticed how much stronger %l is since %o was recovered?"
+"%o(을)를 되찾은 이후로 %l(이)가 얼마나 강해졌는지 눈치챘나?"
 %E
 %Cp Wiz 00013
-"Thank %d!  We weren't positive you would defeat %n."
+"%d께 감사를! 자네가 %n(을)를 물리칠 수 있을지 확신하지 못했거든."
 %E
 %Cp Wiz 00014
-"I, too, will venture into the world, because %n was but one of
-many evils to be vanquished."
+"나 또한 세상으로 모험을 떠날 걸세. %n(은)는 우리가 물리쳐야 할 수많은 악 중 하나였을 뿐이니까."
 %E
 %Cc Wiz 00015
-"Come closer, %p, for my voice falters in my old age.
-Yes, I see that you have come a long way since you went out into the
-world, leaving the safe confines of this tower.  However, I must first
-determine if you have all of the skills required to take on the task
-I require of you."
-%E [You have come a long way, but are you ready for the task I require?]
+"가까이 오거라, %p. 내가 늙어 목소리가 예전 같지 않구나.
+그래, 이 탑의 안전한 품을 떠나 세상으로 나간 이후로 참으로 먼 길을 걸어왔군. 
+하지만 내가 네게 맡길 임무를 수행하는 데 필요한 기술을 모두 갖췄는지 먼저 확인해 봐야겠다."
+%E [먼 길을 왔구나, 하지만 내가 네게 맡길 임무를 수행할 준비가 되었는지 확인해 봐야겠다.]
 %Cp Wiz 00016
-"Well, %p, you have returned.  Perhaps you are now ready..."
+"음, %p, 돌아왔구나. 어쩌면 이제 준비가 되었을지도 모르겠군..."
 %E
 %Cp Wiz 00017
-"This is getting tedious, %p, but perseverance is a sign of a true mage.
-I certainly hope that you are truly ready this time!"
+"점점 지루해지는구나, %p. 하지만 인내는 진정한 마법사의 미덕이지.
+이번에는 부디 네가 정말로 준비되었기를 바란다!"
 %E
 %Cc Wiz 00018
-"You fool, %p!  Why did I waste all of those years teaching you
-the esoteric arts?  Get out of here!  I shall find another."
-%E ["Get out of here!"]
+"이 멍청한 녀석, %p! 어째서 내가 네게 비전 마법을 가르치느라 
+그 아까운 세월을 낭비했단 말이냐? 당장 여기서 나가라! 난 다른 사람을 찾겠다."
+%E ["여기서 나가라!"]
 %Cc Wiz 00019
-"Alas, %p, you have not yet shown your proficiency as a worthy
-spellcaster.  As %ra, you would surely be overcome in the challenge
-ahead.  Go, now, expand your horizons, and return when you have attained
-renown as %Ra."
-%E [Go; return when you are %Ra.]
+"오호라, %p, 넌 아직 훌륭한 마법사로서의 능력을 입증하지 못했구나. 
+한낱 %ra(으)로는 앞으로 다가올 시련을 견뎌낼 수 없을 거다. 
+이제 가서 견문을 넓히고, %Ra(으)로서 명성을 얻었을 때 다시 돌아오거라."
+%E [가거라; %Ra(이)가 되었을 때 다시 돌아오거라.]
 %Cc Wiz 00020
-"You amaze me, %p!  How many times did I tell you that the way of a mage
-is an exacting one.  One must use the world with care, lest one leave it
-in ruins and simplify the task of %n.
+"참으로 놀랍구나, %p! 마법사의 길은 엄격한 것이라 몇 번이나 일러주었더냐. 
+세상을 잿더미로 만들어 %n의 과업만 수월해지지 않도록 신중하게 힘을 사용해야 하거늘.
 
-"You must go back and show your worthiness.  Do not return until you are
-truly ready for this quest.  May %d guide you in this task."
-%E [Go; come back when you are worthy of %d.]
+너는 돌아가서 너의 가치를 스스로 증명해야 한다. 
+이 여정에 오를 진정한 준비가 되기 전까지는 돌아오지 마라. 
+이 임무에서 %d께서 널 이끄시기를."
+%E [가거라; %d의 가르침을 받을 준비가 되었을 때 다시 돌아오거라.]
 %Cc Wiz 00021
-"Yes, %p, you truly are ready for this dire task.  Listen,
-carefully, for what I tell you now will be of vital importance.
+"그래, %p. 넌 이 끔찍한 임무를 수행할 준비가 진정으로 끝났구나. 
+잘 듣거라. 지금부터 내가 하는 말은 아주 중요하니까.
 
-"Since you left us to hone your skills in the world, we unexpectedly came
-under attack by the forces of %n.  As you know, we thought
-%n had perished at the end of the last age, but, alas, this was
-not the case.
+네가 세상에서 기술을 연마하기 위해 우리를 떠난 후, 우리는 예상치 못하게 
+%n의 군대에게 공격받았다. 알다시피 우리는 %n(이)가 지난 시대의 끝에 
+소멸했다고 생각했지만, 오호라, 그것은 사실이 아니었어.
 
-"%nC sent an army of abominations against us.  Among them was a
-minion, mindless and ensorcelled, and thus, in the confusion, it was
-able to penetrate our defenses.  Alas, this creature has stolen
-%o and I fear has delivered %oh to %n.
+%nC(은)는 우리에게 흉물스러운 군대를 보냈다. 그중에는 마음을 잃고 
+마법에 걸린 하수인 하나가 있었고, 혼란스러운 틈을 타 우리의 방어를 뚫고 들어왔지. 
+슬프게도, 그 괴물은 %o(을)를 훔쳐 갔고, 아마도 %oh %n에게 넘겨주었을 거다.
 
-"Over the years, I had woven most of my power into this amulet, and thus,
-without it, I have but a shadow of my former power, and I fear that I
-shall soon perish.
+수년에 걸쳐 나는 내 힘의 대부분을 그 아뮬렛에 엮어 놓았다. 
+그러니 그것 없이는 난 과거의 힘의 그림자에 불과하며, 머지않아 죽게 될까 두렵구나.
 
-"You must travel to %i, and within its dungeons,
-find and overcome %n, and return %o to me.
+너는 %i(으)로 가야 한다. 
+그리고 그곳의 지하 미궁에서 %n(을)를 찾아 물리치고, %o(을)를 내게 되돌려 다오.
 
-"Go now, with %d, and complete this quest before it is too late."
-%E [Travel to %i; overcome %n; return with %o.]
+자, 이제 %d와 함께 가거라. 너무 늦기 전에 이 임무를 완수해 다오."
+%E [%i(으)로 떠나십시오; %n(을)를 물리치십시오; %o(을)를 되찾아 오십시오.]
 %Cp Wiz 00025
-"Beware, for %n is immune to most magical attacks."
+"조심해라. %n(은)는 대부분의 마법 공격에 면역이다."
 %E
 %Cp Wiz 00026
-"To enter %i you must pass many traps."
+"%i에 들어가려면 수많은 함정을 통과해야 한다."
 %E
 %Cp Wiz 00027
-"%nC may be vulnerable to physical attacks."
+"%nC(은)는 물리 공격에 취약할지도 모른다."
 %E
 %Cp Wiz 00028
-"%d will come to your aid when you call."
+"네가 부르면 %d께서 도움을 주시러 오실 거다."
 %E
 %Cp Wiz 00029
-"You must utterly destroy %n.  He will pursue you otherwise."
+"너는 반드시 %n(을)를 완전히 파괴해야 한다. 
+그렇지 않으면 그가 널 끝까지 추적할 것이다."
 %E
 %Cp Wiz 00030
-"%oC is a mighty artifact.  With it you can
-destroy %n."
+"%oC(은)는 강력한 아티팩트다. 그것만 있으면 %n(을)를 파괴할 수 있을 거다."
 %E
 %Cp Wiz 00031
-"Go forth with the blessings of %d."
+"%d의 축복과 함께 나아가거라."
 %E
 %Cp Wiz 00032
-"I will have my %gP watch for your return."
+"내 %gP에게 네가 돌아오는지 지켜보도록 하마."
 %E
 %Cp Wiz 00033
-"Feel free to take any items in that chest that might aid you."
+"저 상자 안에 있는 물건 중 너에게 도움이 될 만한 것이 있다면 마음껏 가져가거라."
 %E
 %Cp Wiz 00034
-"You will know when %o is near.  Proceed with care!"
+"%o(이)가 가까이 있으면 알게 될 거다. 조심해서 나아가라!"
 %E
 %Cp Wiz 00035
-Wisps of fog swirl nearby.  You feel that %ns lair is close.
+근처에 안개가 소용돌이친다. 당신은 %n의 둥지가 가까워졌음을 느낀다.
 %E
 %Cp Wiz 00036
-You believe that you may once again invade %i.
+당신은 다시 한번 %i에 침투할 수 있을 것이라 믿는다.
 %E
 %Cp Wiz 00040
-You feel your mentor's presence; perhaps %o is nearby.
+당신은 스승의 기운을 느낀다; 아마도 %o(이)가 근처에 있는 것 같다.
 %E
 %Cp Wiz 00041
-The aura of %o tingles at the edge of your perception.
+%o의 기운이 당신의 감각 끝을 찌릿하게 자극한다.
 %E
 %Cp Wiz 00042
-You have returned to %ns lair.
+당신은 %n의 둥지로 돌아왔다.
 %E
 %Cc Wiz 00050
-"Ah, I recognize you, %p.  So, %l has sent you to steal
-%o from me, hmmm?  Well, %lh is a fool to send such
-a mental weakling against me.
+"아, 누군지 알겠군, %p. 
+그래, %l(이)가 내게서 %o(을)를 훔쳐 오라고 널 보냈단 말이지, 흐음? 
+이런 정신적인 나약쟁이를 내게 보내다니 %lh 참으로 어리석군.
 
-"Your destruction, however, should make for good sport.  In the end, you
-shall beg me to kill you!"
-%E ["Your destruction should make for good sport."]
+하지만 널 파괴하는 건 꽤 훌륭한 유희거리가 될 거다. 
+결국엔, 네 입으로 제발 죽여 달라고 애원하게 될 거다!"
+%E ["널 파괴하는 건 훌륭한 유희거리가 되겠군."]
 %Cc Wiz 00051
-"How nice of you to return, %p!  I enjoyed our last meeting.  Are you
-still hungry for more pain?
+"다시 돌아와 주다니 참으로 친절하기도 하지, %p! 
+난 우리의 지난 만남이 꽤 즐거웠거든. 아직 고통에 더 굶주려 있나 보군?
 
-"Come!  Your soul, like %o, shall soon be mine to command."
-%E ["Your soul shall soon be mine to command."]
+와라! 네 영혼도 %o처럼 곧 내 지배를 받게 될 것이다."
+%E ["네 영혼도 곧 내 지배를 받게 될 것이다."]
 %Cp Wiz 00052
-"I'm sure that your perseverance shall be the subject of innumerable
-ballads, but you shall not be around to hear them, I fear!"
+"네 그 끈기만큼은 수많은 발라드의 소재가 되기에 충분하겠군. 
+안타깝게도 네가 그걸 살아서 들을 일은 없겠지만 말이야!"
 %E
 %Cp Wiz 00053
-"Thief!  %oC belongs to me, now.  I shall feed
-your living flesh to my minions."
+"도둑놈! %oC(은)는 이제 내 것이다. 
+네놈의 산 채로 발려진 살점은 내 하수인들에게 먹이로 주마."
 %E
 %Cp Wiz 00060
-"Your puny powers are no match for me, fool!"
+"네놈의 그 하찮은 힘 따위는 내 상대가 안 된다, 이 바보야!"
 %E
 %Cp Wiz 00061
-"When you are defeated, your torment will last for a thousand years."
+"네가 패배하면, 너의 고통은 천 년 동안 이어질 것이다."
 %E
 %Cp Wiz 00062
-"After your downfall, %p, I shall devour %l for dessert!"
+"네놈을 무너뜨리고 난 뒤, %p, 후식으로 %l(을)를 씹어먹어 주지!"
 %E
 %Cp Wiz 00063
-"Are you ready yet to beg for mercy?  I could be lenient..."
+"이제 자비를 구걸할 준비가 되었느냐? 좀 관대하게 대해줄 수도 있는데..."
 %E
 %Cp Wiz 00064
-"Your soul shall join the enslaved multitude I command!"
+"네 영혼은 내가 지배하는 노예 군단에 합류하게 될 것이다!"
 %E
 %Cp Wiz 00065
-"Your lack of will is evident, and you shall die as a result."
+"네놈의 부족한 의지가 이렇게 뻔히 보이니, 그 결과로 넌 죽음을 맞이할 것이다."
 %E
 %Cp Wiz 00066
-"Your faith in %d is for naught!  Come, submit to me now!"
+"%d에 대한 너의 믿음은 아무짝에도 쓸모가 없다! 자, 이제 내게 굴복해라!"
 %E
 %Cp Wiz 00067
-"A mere %r is nothing compared to my skill!"
+"한낱 %r 따위는 내 힘에 비하면 아무것도 아니지!"
 %E
 %Cp Wiz 00068
-"So, you are the best hope of %l?  How droll."
+"그래, 네가 %l의 최고의 희망이라고? 참으로 우습지도 않군."
 %E
 %Cp Wiz 00069
-"Feel my power, %c!  My victory is imminent!"
+"내 힘을 느껴봐라, %c! 나의 승리가 머지않았다!"
 %E
 %Cc Wiz 00070
-As you touch %o, its comforting power infuses you
-with new energy.  You feel as if you can detect others' thoughts flowing
-through it.  Although you yearn to wear %o and
-attack the Wizard of Yendor, you know you must return it to its rightful
-owner, %l.
-%E [You feel %os power and know you should return %oh to %l.]
+%o(을)를 만지자, 그 편안한 힘이 당신에게 새로운 에너지를 불어넣는다. 
+그것을 통해 다른 이들의 생각이 흘러들어오는 것을 감지할 수 있을 것만 같다. 
+비록 %o(을)를 직접 착용하고 옌더의 마법사를 공격하고 싶은 갈망이 끓어오르지만, 
+당신은 이것을 본래의 주인인 %l에게 돌려주어야 한다는 사실을 알고 있다.
+%E [당신은 %o의 힘을 느끼고, %l에게 %oh(을)를 돌려주어야 함을 알게 된다.]
 %Cc Wiz 00080
-%nC, whose body begins to shrivel up, croaks out:
+몸이 쪼그라들기 시작한 %nC(이)가 쉰 목소리로 내뱉는다:
 
-    "I shall haunt your progress until the end of time.  A thousand
-    curses on you and %l."
+    "나는 세상이 끝나는 날까지 네놈의 앞길을 저주할 것이다.
+    너와 %l에게 천 번의 저주가 있으라."
 
-Then, the body bursts into a cloud of choking dust, and blows away.
-%E [%nC curses you as %nh dies.]
+그리고는, 그 육체가 숨 막히는 먼지구름으로 터져 흩날려 버린다.
+%E [%nC(이)가 죽으며 당신을 저주합니다.]
 %Cc Wiz 00081
-%lC notices %o in your possession,
-beams at you and says:
+%lC(은)는 당신이 %o(을)를 가지고 있는 것을 보고, 당신을 향해 활짝 웃으며 말한다:
 
-    "I knew you could defeat %n and retrieve
-    %o.  We shall never forget this
-    brave service.
+    "네가 %n(을)를 무찌르고 %o(을)를 되찾아올 줄 알고 있었다.
+    우리는 이 용감한 공로를 결코 잊지 않을 것이다.
 
-    "Take %oh with you in your quest for the Amulet of Yendor.
-    I can sense that it has attuned %oiself to you already.
+    "옌더의 부적을 찾는 여정에 %oh 챙겨가거라.
+    나는 그것이 이미 너에게 동화되었음을 느낄 수 있다.
 
-    "May %d guide you in your quest, and keep you from harm."
-%E [Take %o with you in your quest for the Amulet.]
+    "%d께서 너의 여정을 이끄시고, 너를 위험으로부터 지켜주시길."
+%E [%o(을)를 가지고 옌더의 부적을 찾는 여정에 나서거라.]
 %Cc Wiz 00082
-"You are the keeper of %o now.  It is time to
-recover the /other/ Amulet.  %Z await your return through
-the magic portal which brought you here."
-%E [Keep %o, return through the portal to %Z; find the other Amulet.]
+"이제 네가 %o의 수호자다. 이제 /진짜/ 부적을 되찾을 때가 되었다. 
+널 이곳으로 데려온 마법 포탈을 통해 돌아가면 %Z(이)가 널 기다리고 있을 것이다."
+%E [%o(을)를 가지고, %Z(으)로 향하는 포탈로 돌아가십시오; 다른 부적을 찾으십시오.]
 %Cp Wiz 00090
-"Come near, my %S, and share your adventures with me.
-So, have you succeeded in your quest for the Amulet of Yendor?"
+"가까이 오너라, 나의 %S, 그리고 네 모험 이야기를 내게 들려다오. 
+그래, 옌더의 부적을 찾는 여정은 성공했느냐?"
 %E
 %Cc Wiz 00091
-"Congratulations, %p.  I always knew that if anyone could succeed
-in defeating the Wizard of Yendor and his minions, it would be you.
+"축하한다, %p. 누군가 옌더의 마법사와 그의 하수인들을 물리치고 성공할 수 있다면, 
+그건 바로 너일 거라고 나는 항상 믿고 있었단다.
 
-"Go now, and take the Amulet to the Astral Plane.  Once there, present
-the Amulet on the altar of %d.  Along the way you shall pass through
-the four Elemental Planes.  These planes are like nothing you have ever
-experienced before, so be prepared!
+이제 가서, 부적을 천상계로 가져가거라. 그곳에 도착하면, %d의 제단에 부적을 바쳐라. 
+그 과정에서 너는 4개의 정령계를 통과하게 될 것이다. 
+이 차원들은 네가 지금까지 겪어본 그 어떤 곳과도 다르니, 단단히 준비하거라!
 
-"For this you were born, %s!  I am very proud of you."
-%E [Take the Amulet to %ds altar on the Astral Plane.]
+넌 이것을 위해 태어났다, %s! 나는 네가 참으로 자랑스럽구나."
+%E [천상계에 있는 %ds 제단에 부적을 가져가십시오.]
 #
 #	General
 #
 %Cc - 00001
-%d의 서에 이렇게 기록되어 있다:
+ %d의 서에 이렇게 기록되어 있다:
 
     창세 이후, 잔혹한 신 몰록은
     창조주 마르두크의 권위에 반역하였다.
@@ -3359,135 +3253,131 @@ experienced before, so be prepared!
 우리 모두를 위해, %d와 함께 용감히 나아가십시오!
 %E [%dC가 %dI를 위해 옌더의 부적을 되찾을 자로 당신을 선택했습니다.]
 %Cp - 00002
-You receive a faint telepathic message from %l:
-Your help is urgently needed at %H!
-Look for a ...ic transporter.
-You couldn't quite make out that last message.
+당신은 %l에게서 희미한 텔레파시 메시지를 받았다:
+%H에 당장 너의 도움이 필요하다!
+...마법 전송기를 찾아라.
+마지막 메시지는 제대로 알아들을 수 없었다.
 %E
 %Cp - 00003
-You again sense %l pleading for help.
+당신은 %l(이)가 간절히 도움을 요청하는 것을 다시 느낀다.
 %E
 %Cp - 00004
-You again sense %l demanding your attendance.
+당신은 %l(이)가 당신의 출두를 요구하는 것을 다시 느낀다.
 %E
 # Completed the quest by returning with artifact, but not carrying
 # the Bell of Opening; quest leader lets you know that it is needed.
 #[ Should this be role-specific so that each leader has variant text? ]
 %Cp - 00005
-"The silver bell which was hoarded by %n will be
-essential in locating the Amulet of Yendor."
+"%n(이)가 꿍쳐두고 있던 은빛 종은 옌더의 부적을 찾는 데 필수적일 것이다."
 %E
 #
 #	Angelic maledictions.
 #
 %Cp - 00010
-"Repent, and thou shalt be saved!"
+"회개하라, 그러면 구원받을 것이니!"
 %E
 %Cp - 00011
-"Thou shalt pay for thine insolence!"
+"너의 오만함에 대한 대가를 치르게 될 것이다!"
 %E
 %Cp - 00012
-"Very soon, my child, thou shalt meet thy maker."
+"머지않아, 나의 아이야, 넌 너의 창조주를 만나게 될 것이다."
 %E
 %Cp - 00013
-"The great %D has sent me to make you pay for your sins!"
+"위대하신 %D께서 네 죄에 대한 대가를 치르게 하려고 나를 보내셨다!"
 %E
 %Cp - 00014
-"The wrath of %D is now upon you!"
+"%D의 분노가 지금 너에게 임하노라!"
 %E
 %Cp - 00015
-"Thy life belongs to %D now!"
+"이제 너의 목숨은 %D의 것이다!"
 %E
 %Cp - 00016
-"Dost thou wish to receive thy final blessing?"
+"너의 마지막 축복을 받길 원하느냐?"
 %E
 %Cp - 00017
-"Thou art but a godless void."
+"넌 그저 신앙 없는 공허함에 불과하다."
 %E
 %Cp - 00018
-"Thou art not worthy to seek the Amulet."
+"너는 부적을 찾을 자격이 없다."
 %E
 %Cp - 00019
-"No one expects the Spanish Inquisition!"
+"그 누구도 스페인 종교재판을 예상치 못하지!"
 %E
 #
 #	Demonic maledictions.
 #
 %Cp - 00030
-"I first mistook thee for a statue, when I regarded thy head of stone."
+"네 그 멍청한 돌머리를 봤을 때 널 조각상으로 착각할 뻔했지."
 %E
 %Cp - 00031
-"Come here often?"
+"여기 자주 오나?"
 %E
 %Cp - 00032
-"Doth pain excite thee?  Wouldst thou prefer the whip?"
+"고통이 널 흥분시키는가? 채찍을 더 선호하느냐?"
 %E
 %Cp - 00033
-"Thinkest thou it shall tickle as I rip out thy lungs?"
+"내가 네 허파를 뜯어낼 때 간지럽기라도 할 것 같으냐?"
 %E
 %Cp - 00034
-"Eat slime and die!"
+"슬라임이나 처먹고 뒈져라!"
 %E
 %Cp - 00035
-"Go ahead, fetch thy mama!  I shall wait."
+"가서 네 어미나 데려오시지! 난 기다려 줄 테니."
 %E
 %Cp - 00036
-"Go play leapfrog with a herd of unicorns!"
+"유니콘 떼거리랑 말뚝박기나 하러 가시지!"
 %E
 %Cp - 00037
-"Hast thou been drinking, or art thou always so clumsy?"
+"술이라도 마신 거냐, 아니면 원래 그렇게 몸놀림이 둔하냐?"
 %E
 %Cp - 00038
-"This time I shall let thee off with a spanking, but let it not happen again."
+"이번엔 엉덩이를 때리는 걸로 봐주마, 하지만 두 번 다시 이런 일은 없도록 해라."
 %E
 %Cp - 00039
-"I've met smarter (and prettier) acid blobs."
+"난 너보다 더 똑똑하고(더 예쁜) 산성 덩어리를 만난 적이 있지."
 %E
 %Cp - 00040
-"Look!  Thy bootlace is undone!"
+"이봐! 신발 끈이 풀렸잖아!"
 %E
 %Cp - 00041
-"Mercy!  Dost thou wish me to die of laughter?"
+"자비라고! 지금 날 웃겨 죽일 작정이냐?"
 %E
 %Cp - 00042
-"Run away!  Live to flee another day!"
+"도망쳐라! 살아서 훗날을 기약하며 달아나라고!"
 %E
 %Cp - 00043
-"Thou hadst best fight better than thou canst dress!"
+"네놈이 옷 입는 꼬라지보다는 싸움을 더 잘하길 바라지!"
 %E
 %Cp - 00044
-"Twixt thy cousin and thee, Medusa is the prettier."
+"너와 네 사촌 중엔, 메두사가 훨씬 예쁘겠구나."
 %E
 %Cp - 00045
-"Methinks thou wert unnaturally stirred by yon corpse back there, eh, varlet?"
+"이런, 네놈 저기 있던 시체를 보고 묘하게 흥분한 것 같던데, 안 그런가, 이 악당 녀석아?"
 %E
 %Cp - 00046
-"Up thy nose with a rubber hose!"
+"네 콧구멍에 고무 호스나 쑤셔 박아라!"
 %E
 %Cp - 00047
-"Verily, thy corpse could not smell worse!"
+"참으로, 네 시체 썩는 냄새가 이것보다 더 지독할 순 없겠지!"
 %E
 %Cp - 00048
-"Wait!  I shall polymorph into a grid bug to give thee a fighting chance!"
+"기다려! 네게도 싸울 기회를 주기 위해 내가 그리드 버그로 폴리모프해 주마!"
 %E
 %Cp - 00049
-"Why search for the Amulet?  Thou wouldst but lose it, cretin."
+"뭐하러 부적을 찾는 거냐? 어차피 금방 잃어버릴 텐데, 이 멍청아."
 %E
 #
 #	Banishment message (for converted hero)
 #
 %Cc - 00060
-"You have betrayed all those who hold allegiance to %d, as you once did.
-My allegiance to %d holds fast and I cannot condone or accept what you
-have done.
+"당신은 한때 당신이 그랬던 것처럼, %d에게 충성을 맹세한 모든 이들을 배신했다.
+%d에 대한 나의 충성심은 굳건하며, 난 당신이 한 짓을 용납하거나 받아들일 수 없다.
 
-Leave this place.  You shall never set foot at %H again.
-That which you seek is now lost forever, for without the Bell of Opening,
-you will never be able to enter the place where he who has the Amulet
-resides.
+이곳을 떠나라. 당신은 두 번 다시 %H에 발을 들이지 못할 것이다.
+당신이 찾는 것은 이제 영원히 잃어버렸다. 개방의 종 없이는, 부적을 가진 자가 거하는 곳에 결코 들어갈 수 없을 테니까.
 
-Go now!  You are banished from this place.
-%E [You are banished from %H for betraying your allegiance to %d.]
+이제 가라! 당신은 이곳에서 추방되었다.
+%E [%d에게 맹세한 충성을 저버려 %H에서 추방당했습니다.]
 #
 #	TEST PATTERN
 #
@@ -3496,8 +3386,8 @@ Go now!  You are banished from this place.
  %c:	return(pl_character);
  %r:	return((char *)rank_of(u.ulevel));
  %R:	return((char *)rank_of(MIN_QUEST_LEVEL));
- %s:	return((flags.female) ? "sister" : "brother" );
- %S:	return((flags.female) ? "daughter" : "son" );
+ %s:	return((flags.female) ? "자매" : "형제" );
+ %S:	return((flags.female) ? "딸" : "아들" );
  %l:	return((char *)ldrname());
  %i:	return(intermed());
  %o:	return(artiname());
@@ -3510,11 +3400,11 @@ Go now!  You are banished from this place.
  %A:	return(Alignnam(u.ualign.type));
  %d:	return((char *)align_gname(u.ualignbase[1]));
  %D:	return((char *)align_gname(A_LAWFUL));
- %C:	return("chaotic");
- %N:	return("neutral");
- %L:	return("lawful");
- %x:	return((Blind) ? "sense" : "see");
- %Z:	return("The Dungeons of Doom");
+ %C:	return("혼돈");
+ %N:	return("중립");
+ %L:	return("질서");
+ %x:	return((Blind) ? "느낀다" : "본다");
+ %Z:	return("파멸의 미궁");
  %%:	return(percent_sign);
  a suffix:	return an(root);
  A suffix:	return An(root);

@@ -536,7 +536,36 @@ STATIC_OVL void convert_line(in_line, out_line) char *in_line, *out_line;
                 default:
                     --c; /* undo switch increment */
                     break;
+                } /* <--- 내부 switch문 종료 */
+
+#if 1 /*KR: KRNethack 맞춤 번역 (기존 알파벳 충돌 방지를 위해 (을)를 문자열 \
+         직접 감지) */
+                /* 변수 바로 뒤에 '('가 오는지 확인합니다. */
+                if (*(c + 1) == '(') {
+                    /* (은)는, (이)가 등의 정확한 바이트 길이를 비교하여
+                     * 일치하면 조사를 덮어씌웁니다. */
+                    if (!strncmp(c + 1, "(은)는", strlen("(은)는"))) {
+                        Strcpy(cvt_buf, append_josa(cvt_buf, "은"));
+                        c += strlen("(은)는");
+                    } else if (!strncmp(c + 1, "(이)가", strlen("(이)가"))) {
+                        Strcpy(cvt_buf, append_josa(cvt_buf, "이"));
+                        c += strlen("(이)가");
+                    } else if (!strncmp(c + 1, "(을)를", strlen("(을)를"))) {
+                        Strcpy(cvt_buf, append_josa(cvt_buf, "을"));
+                        c += strlen("(을)를");
+                    } else if (!strncmp(c + 1, "(와)과", strlen("(와)과"))) {
+                        Strcpy(cvt_buf, append_josa(cvt_buf, "와"));
+                        c += strlen("(와)과");
+                    } else if (!strncmp(c + 1, "(으)로", strlen("(으)로"))) {
+                        Strcpy(cvt_buf, append_josa(cvt_buf, "으로"));
+                        c += strlen("(으)로");
+                    } else if (!strncmp(c + 1, "(이)야", strlen("(이)야"))) {
+                        Strcpy(cvt_buf, append_josa(cvt_buf, "야"));
+                        c += strlen("(이)야");
+                    }
                 }
+#endif
+
                 Strcat(cc, cvt_buf);
                 cc += strlen(cvt_buf);
                 break;

@@ -9,7 +9,7 @@ Vlad 여기 왔었음
 ad aerarium
 
 # take-offs and other famous engravings
-Owlbreath
+아울브레스
 갈라드리엘
 킬로리 왔다 감.
 프로도는 살아있다!
@@ -18,9 +18,9 @@ Owlbreath
 A.S. ->
 <- A.S.
 # Adventure
-You won't get it up the steps
+계단 위로는 못 가져갈걸
 # Inferno
-Lasciate ogni speranza o voi ch'entrate.
+이곳에 들어오는 자, 모든 희망을 버려라.
 # Prisoner
 잘 왔군.
 # So Long...
@@ -34,9 +34,9 @@ notary sojak
 # Various zoos around the world
 동물에게 먹이를 주지 마시오
 # A palindrome
-Madam, in Eden, I'm Adam.
+마담, 에덴에서 나는 아담이오.
 # Siskel & Ebert
-Two thumbs up!
+두 엄지 척!
 # The First C Program
 헬로, 월드!
 ^?MAIL
@@ -44,15 +44,15 @@ Two thumbs up!
 새 메일이 있습니다!
 ^.
 # Clueless
-As if!
+퍽이나!
 # 200x incarnation of Dr.Who
-BAD WOLF
+배드 울프
 
 # Gang tag
-Arooo!  Werewolves of Yendor!
+아우우우! 옌더의 늑대인간들!
 
 # Strategy and pun
-Dig for Victory here
+승리를 위해 여길 파시오
 
 # Pompeii
 가이우스 율리우스 프리미게니우스가 여기 다녀감. 왜 늦는가?
@@ -61,21 +61,21 @@ Dig for Victory here
 이 길로 가지 마시오
 왼쪽으로 가시오 --->
 <--- 오른쪽으로 가시오
-X marks the spot
-X <--- You are here.
-Here be dragons
+X가 표시된 곳
+X <--- 당신의 현재 위치.
+이곳에 드래곤 있음
 이제 저장하고 숙제를 하렴!
 여기 구멍이 있었는데요, 없었습니다.
-The Vibrating Square
+진동하는 사각형
 이것은 구덩이다!
-This is not the dungeon you are looking for.
+이곳은 당신이 찾고 있는 던전이 아닙니다.
 조심하세요. 저 문 너머에 죽음의 지팡이를 든 노움이 있어요!
 
 # Misc fun
 이 칸은 의도적으로 비워졌습니다.
 
 # Viking graffiti
-Haermund Hardaxe carved these runes
+하에르문드 하드액스가 이 룬을 새겼다
 
 # Advertising
 빛이 필요한가요? 광산마을에서 Izchak의 조명가게를 찾아주세요!
@@ -83,7 +83,7 @@ Haermund Hardaxe carved these runes
 백만 번째 방문자십니다! 200턴을 기다리시고 소원의 지팡이를 받아가세요.
 
 # DnD
-Warning, Exploding runes!
+경고, 폭발하는 룬!
 
 # "Whispers Underground" Ben Aaronovitch
 이걸 읽을 수 있다면 당신은 괴짜에다가 아마 죽었을 것이다.

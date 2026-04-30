@@ -12,522 +12,522 @@
 # vertical bar  |  male, general name
 # equals        =  gender not specified, personal name
 
-# misc.
-jumbo shrimp
-giant pigmy
-gnu
-killer penguin
-giant cockroach
-giant slug
-maggot
-pterodactyl
-tyrannosaurus rex
-basilisk
-beholder
-nightmare
-efreeti
-marid
-rot grub
-bookworm
-master lichen
-shadow
-hologram
-jester
-attorney
-sleazoid
-killer tomato
-amazon
-robot
-battlemech
-rhinovirus
-harpy
-lion-dog
-rat-ant
-Y2K bug
-angry mariachi
-arch-pedant
-bluebird of happiness
-cardboard golem
-duct tape golem
-diagonally moving grid bug
-evil overlord
-newsgroup troll
-ninja pirate zombie robot
-octarine dragon
-gonzo journalist
-lag monster
-loan shark
-possessed waffle iron
-poultrygeist
-stuffed raccoon puppet
-viking
-wee green blobbie
-wereplatypus
-hag of bolding
-blancmange
-raging nerd
-spelling bee
-land octopus
-frog prince
-pigasus
-_Semigorgon
-conventioneer
-large microbat
-small megabat
-uberhulk
-tofurkey
-+Dudley
-shrinking violet
-shallow one
-spherical cow
-electric giraffe
-steam dragon
-omnibus
-slinky
-maxotaur
-octahedron
-dungeon core
-quale
-holloway
+# 잡다한 것들
+점보 새우
+거대 피그미
+누
+살인 펭귄
+거대 바퀴벌레
+거대 달팽이
+구더기
+프테로다크틸
+티라노사우루스 렉스
+바실리스크
+비홀더
+나이트메어
+이프리트
+마리드
+썩은 굼벵이
+책벌레
+마스터 리켄
+그림자
+홀로그램
+광대
+변호사
+저질
+살인 토마토
+아마존
+로봇
+배틀메크
+리노바이러스
+하피
+사자개
+쥐-개미
+Y2K 벌레
+화난 마리아치
+대마법사-현학자
+행복의 파랑새
+골판지 골렘
+덕트 테이프 골렘
+대각선으로 움직이는 격자 벌레
+사악한 대군주
+뉴스그룹 트롤
+닌자 해적 좀비 로봇
+옥타린 드래곤
+미치광이 기자
+랙 몬스터
+고리대금업자
+빙의된 와플 기계
+가금류 유령
+박제 너구리 인형
+바이킹
+조그만 초록 블롭
+오리너구리인간
+배존의 보낭
+블라망주
+분노한 너드
+스펠링 비
+육지 문어
+개구리 왕자
+피가수스
+_데미고르곤
+대회 참가자
+큰 마이크로박쥐
+작은 메가박쥐
+우버헐크
+토퍼키
++더들리
+수줍은 제비꽃
+얕은 존재
+구형 소
+전기 기린
+증기 용
+옴니버스
+슬링키
+맥소타우르스
+팔면체
+미궁 코어
+감각질
+할러웨이
 
-# Quendor (Zork, &c.)
-grue
-Christmas-tree monster
-luck sucker
-paskald
-brogmoid
-dornbeast
+# 쿠엔도르 (조크 등)
+그루
+크리스마스 트리 몬스터
+운 흡수자
+파스칼드
+브로그모이드
+도른비스트
 
-# Moria
-Ancient Multi-Hued Dragon
-+Evil Iggy
+# 모리아
+고대 다색 드래곤
++사악한 이기
 
-# Rogue V5 http://rogue.rogueforge.net/vade-mecum/
-rattlesnake
-ice monster
-phantom
-quagga
-aquator
-griffin
-emu
-kestrel
-xeroc
-venus flytrap
+# 로그 V5 http://rogue.rogueforge.net/vade-mecum/
+방울뱀
+얼음 몬스터
+팬텀
+콰가
+수분 포식자
+그리핀
+에뮤
+황조롱이
+제록
+파리지옥
 
-# Wizardry
-creeping coins
+# 위저드리
+기어다니는 동전
 
-# Greek legend
-hydra
-siren
+# 그리스 전설
+히드라
+사이렌
 
-# Monty Python
-killer bunny
+# 몬티 파이튼
+살인 토끼
 
-# The Princess Bride
-rodent of unusual size
+# 프린세스 브라이드
+비정상적으로 큰 설치류
 
-# Wallace & Gromit
-were-rabbit
+# 월리스와 그로밋
+거대토끼
 
-# "Only you can prevent forest fires!
-+Smokey Bear
+# "오직 당신만이 산불을 예방할 수 있습니다!"
++스모키 베어
 
-# Discworld
-Luggage
-vampiric watermelon
+# 디스크월드
+짐가방
+흡혈 수박
 
-# Lord of the Rings
-Ent
+# 반지의 제왕
+엔트
 
-# Xanth
-tangle tree
-nickelpede
-wiggle
+# 잔스
+얽매는 나무
+니켈피드
+위글
 
-# Lewis Carroll
-white rabbit
-snark
+# 루이스 캐럴
+흰 토끼
+스나크
 
-# Dr. Dolittle
-pushmi-pullyu
+# 닥터 두리틀
+푸시미-풀유
 
-# The Smurfs
-smurf
+# 스머프
+스머프
 
-# Star Trek
-tribble
-Klingon
-Borg
+# 스타트렉
+트리블
+클링온
+보그
 
-# Star Wars
-Ewok
+# 스타워즈
+이웍
 
-# Tonari no Totoro
-Totoro
+# 이웃집 토토로
+토토로
 
-# Nausicaa
-ohmu
+# 나우시카
+오무
 
-# Sailor Moon
-youma
+# 세일러문
+요마
 
-# Pokemon (Meowth)
-nyaasu
+# 포켓몬 (나옹)
+냐스
 
-# monster movies
--Godzilla
-+King Kong
+# 몬스터 영화
+-고질라
++킹콩
 
-# old L of SH
-earthquake beast
+# 오래된 넷핵의 전설
+지진수
 
-# Robotech
-Invid
+# 로보텍
+인비드
 
-# The Terminator
-Terminator
+# 터미네이터
+터미네이터
 
-# Bubblegum Crisis
-boomer
+# 버블검 크라이시스
+부머
 
-# Dr. Who ("Exterminate!")
-Dalek
+# 닥터 후 ("말살하라!")
+달렉
 
-# HGttG
-microscopic space fleet
-Ravenous Bugblatter Beast of Traal
+# 은하수를 여행하는 히치하이커를 위한 안내서
+초소형 우주 함대
+트랄의 굶주린 버그블래터 괴수
 
-# The Tough Guide to Fantasyland
-leathery-winged avian
+# 판타지랜드 터프 가이드
+가죽 날개를 가진 조류
 
-# TMNT
-teenage mutant ninja turtle
+# 닌자거북이
+돌연변이 닌자 거북이
 
-# Usagi Yojimbo
-samurai rabbit
+# 우사기 요짐보
+사무라이 토끼
 
-# Cerebus
-aardvark
+# 세레버스
+땅돼지
 
-# Little Shop of Horrors
-=Audrey II
+# 흡혈 식물 대소동
+=오드리 2세
 
-# 50's rock 'n' roll
-witch doctor
-one-eyed one-horned flying purple people eater
+# 50년대 로큰롤
+주술사
+눈 하나 뿔 하나 달린 날아다니는 보라색 사람 잡아먹는 괴물
 
-# saccharine kiddy TV
-+Barney the dinosaur
+# 달달한 어린이 TV
++공룡 바니
 
-# Angband
-+Morgoth
+# 앙그반드
++모르고스
 
-# Babylon 5
-Vorlon
+# 바빌론 5
+볼론
 
-# King Arthur
-questing beast
+# 아서 왕
+퀘스팅 비스트
 
-# Movie
-Predator
+# 영화
+프레데터
 
-# common pest
-mother-in-law
+# 흔한 해충
+장모님
 
-# Actual creatures
-praying mantis
-beluga whale
-chicken
-coelacanth
-star-nosed mole
-lungfish
-slow loris
-sea cucumber
-tapeworm
-liger
-velociraptor
-corpulent porpoise
-quokka
-potoo
-lemming
-dhole
+# 실제 생물
+사마귀
+벨루가 고래
+닭
+실러캔스
+별코두더지
+폐어
+늘보로리스
+해삼
+촌충
+라이거
+벨로시랩터
+뚱뚱한 돌고래
+쿼카
+포투
+레밍
+승냥이
 
-# european cryptids
-wolpertinger
-elwedritsche
-skvader
-+Nessie
-tatzelwurm
-dahu
+# 유럽 크립티드
+월퍼팅어
+엘베드리트셰
+스콰더
++네시
+타첼부름
+다후
 
-# fictitious beasts
-dropbear
-wild haggis
-jackalope
-flying pig
-hippocampus
-hippogriff
-kelpie
-catoblepas
-phoenix
-amphisbaena
+# 가상의 야수들
+드롭베어
+야생 하기스
+재칼로프
+날아다니는 돼지
+히포캄푸스
+히포그리프
+켈피
+카토블레파스
+불사조
+암피스바에나
 
-# Unusually animate body parts
-bouncing eye
-floating nose
-wandering eye
+# 비정상적으로 살아 움직이는 신체 부위
+통통 튀는 눈알
+떠다니는 코
+배회하는 눈알
 
-# Computerese
-buffer overflow
-dangling pointer
-walking disk drive
-floating point
-regex engine
-netsplit
-wiki
-peer
-COBOL
-wire shark
+# 컴퓨터 용어
+버퍼 오버플로
+댕글링 포인터
+걸어다니는 디스크 드라이브
+부동 소수점
+정규식 엔진
+넷스플릿
+위키
+피어
+코볼
+와이어 샤크
 
-# bugs
-bohrbug
-mandelbug
-schroedinbug
-heisenbug
+# 버그들
+보어버그
+만델버그
+슈뢰딩버그
+하이젠버그
 
-# DooM
-cacodemon
-scrag
+# 둠
+카코데몬
+스크래그
 
-# MST3K
-+Crow T. Robot
+# 미스터리 사이언스 극장 3000
++크로우 T. 로봇
 
-# Items and stuff
-chess pawn
-chocolate pudding
-ooblecks
-terracotta warrior
-hearse
-roomba
-miniature blimp
-dust speck
+# 아이템 및 기타
+체스 폰
+초콜릿 푸딩
+우블렉
+병마용
+영구차
+룸바
+소형 비행선
+먼지 티끌
 
-# DnD monster
-gazebo
+# DnD 몬스터
+가제보
 
-# SciFi elements
-gray goo
-magnetic monopole
-first category perpetual motion device
-big dumb object
+# SF 요소
+그레이 구
+자기 단극자
+제1종 영구기관
+거대한 멍청한 물체
 
-# Ultima
-+Lord British
+# 울티마
++로드 브리티시
 
 # They Might Be Giants
-particle man
+입자 인간(particle man)
 
 # Robot Finds Kitten
-kitten prospecting robot
+새끼고양이 탐사 로봇
 
-# Typography
-guillemet
-solidus
-obelus
-dingbat
-bold face
-boustrophedon
-ligature
-rebus
-dinkus
+# 타이포그래피
+기예메
+솔리두스
+오벨루스
+딩뱃
+볼드체
+우경식 서법
+합자
+레부스
+딩커스
 
-# Their actual character
-apostrophe golem
-voluptuous ampersand
+# 그들의 실제 성격
+아포스트로피 골렘
+육감적인 앰퍼샌드
 
-# Web comics and animation
-+Bob the angry flower
-+Strong Bad
-+Magical Trevor
+# 웹 코믹 및 애니메이션
++분노한 꽃 밥
++스트롱 배드
++마법의 트레버
 
-# Girl Genius
-smakken
-mimmoth
+# 걸 지니어스
+스마켄
+밈모스
 
 # KoL
-one-winged dewinged stab-bat
+날개 하나 달린 날개 잘린 찌르기 박쥐
 
-# deities
-Invisible Pink Unicorn
-Flying Spaghetti Monster
+# 신들
+보이지 않는 핑크 유니콘
+날아다니는 스파게티 괴물
 
-# Monkey Island
-three-headed monkey
-+El Pollo Diablo
+# 원숭이 섬
+머리 셋 달린 원숭이
++엘 폴로 디아블로
 
-# modern folklore
-little green man
+# 현대 민담
+작은 초록인
 
-# Portal
-weighted Companion Cube
+# 포탈
+동행 큐브
 
 # /b/
 /b/tard
 
-# South Park
-manbearpig
+# 사우스 파크
+맨베어피그
 
-# internet memes
-bonsai-kitten
-tie-thulu
-+Domo-kun
-looooooooooooong cat
-nyan cat
+# 인터넷 밈
+분재 고양이
+타이-툴루
++도모군
+기이이이이이이이일쭉한 고양이
+냥캣
 
-# the Internet is made for cat pix
-ceiling cat
-basement cat
-monorail cat
+# 인터넷은 고양이 사진을 위해 만들어졌다
+천장 고양이
+지하실 고양이
+모노레일 고양이
 
 # POWDER
-tridude
+트라이듀드
 
-# Radomir Dopieralski
-orcus cosmicus
+# 라도미르 도피에랄스키
+오르쿠스 코스미쿠스
 
-# Angband
-yeek
-quylthulg
-Greater Hell Beast
+# 앙그반드
+이크
+쿠일툴그
+상급 지옥 야수
 
-# Souljazz
-+Vendor of Yizard
+# 소울재즈
++옌법사의 마더
 
-# Dungeon Crawl Stone Soup
-+Sigmund
-lernaean hydra
-+Ijyb
-+Gloorx Vloq
-+Blork the orc
+# 던전 크롤 스톤 스프
++지그문트
+레르나의 히드라
++이집
++글룩스 블록
++오크 블록
 
-# Wil Wheaton, John Scalzi
-unicorn pegasus kitten
+# 윌 휘튼, 존 스칼지
+유니콘 페가수스 새끼고양이
 
-# Minecraft
-enderman
+# 마인크래프트
+엔더맨
 
-# Pun
-wight supremacist
+# 말장난
+와이트 우월주의자
 
-# Starcraft 2
-zergling
+# 스타크래프트 2
+저글링
 
-# Feelings
-existential angst
-figment of your imagination
-flash of insight
+# 감정들
+실존적 불안
+네 상상의 산물
+번뜩이는 통찰력
 
-# Fish
-ghoti
+# 물고기
+고티
 
-# Roald Dahl
-vermicious knid
+# 로알드 달
+지독한 크니드
 
-# Carcassonne
-meeple
+# 카르카손
+미플
 
-# The Wombles
-womble
+# 웜블
+웜블
 
-# Fraggle Rock
-fraggle
+# 프래글 록
+프래글
 
-# Harry Harrison
-stainless steel rat
+# 해리 해리슨
+스테인리스 스틸 쥐
 
-# Spoonerism
-mock role
+# 스푸너리즘
+가짜 역할
 
-# Truly scary things
-clown
-mime
-peddler
-haggler
+# 진정으로 무서운 것들
+광대
+마임
+보따리상
+흥정꾼
 
-# soundex and typos of monsters
-gloating eye
-flush golem
-martyr orc
-mortar orc
-acid blog
-acute blob
-aria elemental
-aliasing priest
-aligned parasite
-aligned parquet
-aligned proctor
-baby balky dragon
-baby blues dragon
-baby caricature
-baby crochet
-baby grainy dragon
-baby bong worm
-baby long word
-baby parable worm
-barfed devil
-beer wight
-boor wight
-brawny mold
-rave spider
-clue golem
-bust vortex
-errata elemental
-elastic eel
-electrocardiogram eel
-fir elemental
-tire elemental
-flamingo sphere
-fallacy golem
-frizzed centaur
-forest centerfold
-fierceness sphere
-frosted giant
-geriatric snake
-gnat ant
-giant bath
-grant beetle
-greater snake
-grind bug
-giant mango
-glossy golem
-gnome laureate
-gnome dummy
-gooier ooze
-green slide
-guardian nacho
-hell hound pun
-high purist
-hairnet devil
-ice trowel
-killer beet
-feather golem
-lounge worm
-mountain lymph
-pager golem
-pie fiend
-prophylactic worm
-sock mole
-rogue piercer
-seesawing sphere
-simile mimic
-moldier ant
-stain vortex
-scone giant
-umbrella hulk
-vampire mace
-verbal jabberwock
-water lemon
-water melon
-winged grizzly
-yellow wight
+# 몬스터들의 사운덱스(발음) 및 오타
+고소해하는 눈알
+플러시 골렘
+순교자 오크
+박격포 오크
+산성 블로그
+급성 블롭
+아리아 정령
+에일리어싱 사제
+정렬된 기생충
+정렬된 나무바닥
+정렬된 감독관
+새끼 고집불통 용
+새끼 우울한 용
+새끼 캐리커처
+새끼 코바늘 뜨개질
+새끼 거친 용
+새끼 봉 지렁이
+새끼 긴 단어
+새끼 우화 지렁이
+토하는 악마
+맥주 와이트
+천박한 와이트
+건장한 곰팡이
+레이브 거미
+단서 골렘
+흉상 소용돌이
+오탈자 정령
+고무줄 장어
+심전도 장어
+전나무 정령
+타이어 정령
+홍학 구체
+오류 골렘
+곱슬거리는 켄타우로스
+숲 센터폴드
+사나움 구체
+설탕 입힌 거인
+노인 뱀
+각다귀 개미
+거대 욕조
+보조금 딱정벌레
+상급 뱀
+갈아버리는 벌레
+거대 망고
+윤기 나는 골렘
+계관 노움
+노움 더미
+더 끈적이는 점액
+초록 슬라이드
+수호자 나초
+지옥 사냥개 말장난
+하이 퓨리스트
+헤어넷 악마
+얼음 흙손
+살인 비트
+깃털 골렘
+라운지 지렁이
+산 림프
+호출기 골렘
+파이 마귀
+예방용 지렁이
+양말 두더지
+로그 피어서
+시소 타는 구체
+직유 미믹
+곰팡이 핀 개미
+얼룩 소용돌이
+스콘 거인
+우산 헐크
+뱀파이어 메이스
+구두 재버워크
+물 레몬
+물 멜론
+날개 달린 회색곰
+노란색 와이트

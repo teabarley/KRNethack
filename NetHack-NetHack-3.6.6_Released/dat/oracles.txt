@@ -20,7 +20,7 @@
 어떤 여행자들은 던전에서 완성된 방어구를 훔치는 데 의존하지만, 
 수완 좋은 사람은 용비늘로 갑옷을 만드는 신비로운 방법을 알고 있다.
 -----
-여행자들은 관습적으로 extra-healing을 마시는 것으로 그 감각을 정화하여, 
+여행자들은 관습적으로 추가 치료를 마시는 것으로 그 감각을 정화하여, 
 혼란한 시야를 바로잡을 수 있다는 것을 알고 있다. 그러나, 명심하라. 
 사람을 병들게 만드는 하찮은 포션 또한 동일한 용도로 쓰일 수 있음을.
 -----
@@ -44,61 +44,61 @@
 그곳에는 크로이소스의 재물을 축적해둔 마법의 기억 창고로 통하는 길이 있노라.
 허나, 그 황금을 탈취하는 것은 금고에 들어서는 것 이상으로 고된 일일 것이니.
 -----
-It is well known that wily shopkeepers raise their prices whene'er they
-espy the garish apparel of the approaching tourist or the countenance of a
-disfavored patron.  They favor the gentle of manner and the fair of face.
-The boor may expect unprofitable transactions.
+교활한 상점 주인들은 다가오는 관광객의 화려한 옷차림이나 눈 밖에 난 손님의 얼굴을
+발견할 때면 가격을 올린다는 것은 잘 알려진 사실이다.
+그들은 매너가 정중하고 얼굴이 반반한 자들을 선호하노라.
+무례한 자들은 손해 보는 거래를 치를 각오를 해야 할 것이다.
 -----
-The cliche of the kitchen sink swallowing any unfortunate rings that contact
-its pernicious surface reflecteth greater truth than many homilies, yet
-even so, few have developed the skill to identify enchanted rings by the
-transfigurations effected upon the voracious device's frame.
+부엌 싱크대의 치명적인 표면에 닿은 불운한 반지들을
+싱크대가 삼켜버린다는 진부한 이야기는 많은 설교보다 더 큰 진실을 담고 있노라.
+허나 그럼에도 불구하고, 그 탐욕스러운 장치의 외형에 나타나는 변형을 통해
+마법 반지를 감별하는 기술을 터득한 자는 거의 없도다.
 -----
-The meat of enchanted creatures ofttimes conveyeth magical properties
-unto the consumer.  A fresh corpse of floating eye doth fetch a high
-price among wizards for its utility in conferring Telepathy, by which
-the sightless may locate surrounding minds.
+마법 생물들의 고기는 종종 그것을 섭취한 자에게 마법적인 특성을 전달하느니라.
+떠다니는 눈알의 신선한 시체는 텔레파시를 부여하는 효용성 덕분에
+마법사들 사이에서 비싼 값에 거래되며, 눈이 보이지 않는 자라 할지라도
+이를 통해 주변의 정신들을 찾아낼 수 있도다.
 -----
-The detection of blessings and curses is in the domain of the gods.  They will
-make this information available to mortals who request it at their places of
-worship, or elsewhere for those mortals who devote themselves to the service
-of the gods.
+축복과 저주를 감별하는 것은 신들의 영역이니라.
+신들은 자신들의 예배 장소에서 이를 간청하는 필멸자들이나,
+혹은 다른 곳에서라도 신들을 모시는 데 헌신하는 필멸자들에게
+이 지식을 기꺼이 허락할 것이다.
 -----
-At times, the gods may favor worthy supplicants with named blades whose
-powers echo throughout legend.  Learned wayfarers can reproduce blades of
-elven lineage, hated of the orcs, without the need for such intervention.
+때때로, 신들은 가치 있는 탄원자들에게
+전설 속에 힘을 떨치는 이름 있는 검을 하사하기도 하노라.
+학식 있는 여행자들은 신의 개입 없이도
+오크들이 증오하는 엘프 혈통의 검을 복원해 낼 수 있도다.
 -----
-There are many stories of a mighty amulet, the origins of which are said
-to be ancient Yendor.  This amulet doth have awesome power, and the gods
-desire it greatly.  Mortals mayst tap only portions of its terrible
-abilities.  The stories tell of mortals seeing what their eyes cannot
-see and seeking places of magical transportation, while having this
-amulet in their possession.  Others say a mortal must wear the amulet to
-obtain these powers.  But verily, such power comes at great cost, to
-preserve the balance.
+고대 옌더를 기원으로 한다고 전해지는 강력한 부적에 대한 수많은 이야기가 있노라.
+이 부적은 가공할 힘을 지니고 있으며, 신들조차 이를 몹시도 탐내느니라.
+필멸자들은 그 가공할 능력의 극히 일부만을 끌어낼 수 있을 뿐이다.
+이야기들에 따르면 필멸자들이 이 부적을 소유한 동안 그들의 두 눈으로 볼 수 없는 것을
+보게 되고, 마법적인 이동 장소를 찾게 된다고 하노라. 어떤 이들은 필멸자가 그 힘을 얻으려면
+반드시 그 부적을 착용해야만 한다고 말한다. 허나 참으로, 그러한 힘에는
+균형을 유지하기 위한 막대한 대가가 따르느니라.
 -----
-It is said that thou mayst gain entry to Moloch's sanctuary, if thou
-darest, from a place where the ground vibrateth in the deepest depths of
-Gehennom.  Thou needs must have the aid of three magical items.  The
-pure sound of a silver bell shall announce thee.  The terrible runes,
-read from Moloch's book, shall cause the earth to tremble mightily.  The
-light of an enchanted candelabrum shall show thee the way.
+만약 그대에게 용기가 있다면, 게헨놈의 가장 깊은 곳,
+대지가 진동하는 장소로부터 몰록의 성소로 진입할 수 있다고 전해지노라.
+이를 위해선 세 가지 마법 아이템의 도움이 필요할지니.
+은빛 종의 순수한 소리가 그대를 알릴 것이요.
+몰록의 서에서 읽어 내린 끔찍한 룬 문자가 대지를 격렬하게 요동치게 할 것이며.
+마법이 깃든 촛대의 빛이 그대에게 길을 보여줄 것이다.
 -----
-In the deepest recesses of the Dungeons of Doom, guarding access to the
-nether regions, there standeth a castle, wherein lieth a wand of wishes.
-If thou wouldst gain entry, bear with thee an instrument of music, for the
-pontlevis may be charmed down with the proper melody.  What notes comprise
-it only the gods know, but a musical mastermind may yet succeed by witful
-improvisation.  However, the less perspicacious are not without recourse,
-should they be prepared to circumambulate the castle to the postern.
+파멸의 미궁 가장 깊은 구석, 하계로 향하는 입구를 지키는 성이 서 있으니,
+그 안에 소원의 완드가 잠들어 있노라.
+그대가 안으로 들어가고자 한다면 악기를 하나 지니고 가라.
+알맞은 선율로 매혹하면 도개교가 내려올 것이니.
+그 선율을 이루는 음표는 오직 신들만이 알지만,
+음악의 대가라면 재치 있는 즉흥 연주로 성공할 수 있을지도 모른다.
+그러나 통찰력이 부족한 자라 할지라도 방도가 없는 것은 아니니,
+성을 빙 돌아 뒷문으로 갈 준비만 되어 있다면 말이다.
 -----
-The gods are said to be pleased when offerings are given to the
-priests who attend their temples, and they may grant various favors to
-those who do so.  But beware!  To be young and frugal is better than to
-be old and miserly.
+신들은 자신의 신전을 모시는 사제들에게 공물을 바칠 때 기뻐한다고 전해지며,
+그리하는 자들에게 다양한 은총을 내릴 수도 있노라.
+허나 조심하라! 젊고 검소한 것이 늙고 인색한 것보다 나으니.
 -----
-The name of Elbereth may strike fear into the hearts of thine enemies, if
-thou dost write it upon the ground at thy feet.  If thou maintainest the
-utmost calm, thy safety will be aided greatly, but beware lest thy clumsy
-feet scuff the inscription, cancelling its potence.
+그대의 발밑 땅에 엘베레스(Elbereth)의 이름을 새긴다면,
+적들의 심장 속에 공포를 불어넣을 수 있을 것이다.
+그대가 극한의 평정심을 유지한다면 그대의 안전에 큰 도움이 되겠으나,
+그대의 서투른 발놀림이 글귀를 문질러 지워 그 힘을 잃게 만들지 않도록 주의하라.
 -----

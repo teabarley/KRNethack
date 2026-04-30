@@ -1,224 +1,224 @@
 &# cmdhelp
-&	Tell what command a keystroke invokes
-^	Show the type of an adjacent trap
-^[	Cancel command (same as ESCape key)
+&	키 입력이 어떤 명령어를 실행하는지 알려줍니다.
+^	인접한 함정의 종류를 보여줍니다.
+^[	명령어를 취소합니다 (ESCape 키와 동일).
 &? debug
-^E	Search for nearby traps, secret doors, and unseen monsters
-^F	Map level; reveals traps and secret corridors but not secret doors
-^G	Create a monster by name or class
-^I	View inventory with all items identified
-^O	List special level locations
-^V	Teleport between levels
-^W	Wish for something
+^E	근처의 함정, 비밀 문, 보이지 않는 몬스터를 찾습니다.
+^F	해당 층을 맵핑합니다; 함정과 비밀 통로를 드러내지만 비밀 문은 제외합니다.
+^G	이름이나 직업으로 몬스터를 생성합니다.
+^I	모든 아이템이 식별된 상태로 인벤토리를 봅니다.
+^O	특수 층의 위치를 나열합니다.
+^V	층 사이를 순간이동합니다.
+^W	무언가를 소원으로 빕니다.
 &: #!debug
-^E	unavailable debugging command
-^F	unavailable debugging command
-^G	unavailable debugging command
-^I	unavailable debugging command
-^O	Shortcut for '#overview': list interesting levels you have visited
-^V	unavailable debugging command
-^W	unavailable debugging command
+^E	사용할 수 없는 디버깅 명령어
+^F	사용할 수 없는 디버깅 명령어
+^G	사용할 수 없는 디버깅 명령어
+^I	사용할 수 없는 디버깅 명령어
+^O	'#overview'의 단축키: 당신이 방문한 흥미로운 층들을 나열합니다.
+^V	사용할 수 없는 디버깅 명령어
+^W	사용할 수 없는 디버깅 명령어
 &. #?debug
 &? number_pad=0,-1
-b	Go southwest 1 space
-B	Go southwest until you are on top of something
-h	Go west 1 space
-H	Go west until you are on top of something
-j	Go south 1 space
-J	Go south until you are on top of something
-k	Go north 1 space
-K	Go north until you are on top of something
-l	Go east 1 space
-L	Go east until you are on top of something
-n	Go southeast 1 space
-N	Go southeast until you are on something
-u	Go northeast 1 space
-U	Go northeast until you are on top of something
-&# y,Y handled below
+b	남서쪽으로 1칸 이동합니다.
+B	무언가 위에 올라설 때까지 남서쪽으로 이동합니다.
+h	서쪽으로 1칸 이동합니다.
+H	무언가 위에 올라설 때까지 서쪽으로 이동합니다.
+j	남쪽으로 1칸 이동합니다.
+J	무언가 위에 올라설 때까지 남쪽으로 이동합니다.
+k	북쪽으로 1칸 이동합니다.
+K	무언가 위에 올라설 때까지 북쪽으로 이동합니다.
+l	동쪽으로 1칸 이동합니다.
+L	무언가 위에 올라설 때까지 동쪽으로 이동합니다.
+n	남동쪽으로 1칸 이동합니다.
+N	무언가 위에 올라설 때까지 남동쪽으로 이동합니다.
+u	북동쪽으로 1칸 이동합니다.
+U	무언가 위에 올라설 때까지 북동쪽으로 이동합니다.
+&# y,Y는 아래에서 처리됨
 &: #number_pad=1,2,3,4
-h	Help: synonym for '?'
-j	Jump: shortcut for '#jump'
-k	Kick: synonym for '^D'
-l	Loot: shortcut for '#loot'
-n	Start a count; continue with digit(s)
-N	Name: shortcut for '#name'
-u	Untrap: shortcut for '#untrap'
+h	Help: '?'의 동의어입니다.
+j	Jump: '#jump'의 단축키입니다.
+k	Kick: '^D'의 동의어입니다.
+l	Loot: '#loot'의 단축키입니다.
+n	횟수 세기를 시작합니다; 숫자(들)로 이어집니다.
+N	Name: '#name'의 단축키입니다.
+u	Untrap: '#untrap'의 단축키입니다.
 &. #0,-1 vs 1,2,3,4
-a	Apply (use) a tool or break a wand
-A	Remove all armor and/or all accessories and/or unwield weapons
-^A	Redo the previous command
-^B	Go southwest until you are near something
-c	Close a door
-C	Call (name) a monster, an individual object, or a type of object
-^C	Interrupt: quit the game
-d	Drop an item
-D	Drop specific item types
-^D	Kick something (usually a door, chest, or box)
-e	Eat something
-E	Engrave writing on the floor
-f	Fire ammunition from quiver
-F	Followed by direction, fight a monster (even if you don't sense it)
-g	Followed by direction, move until you are near something
-G	Followed by direction, same as control-direction
-^H	Go west until you are near something
-i	Show your inventory
-I	Inventory specific item types
-^J	Go south until you are near something
-^K	Go north until you are near something
-^L	Go east until you are near something
-m	Followed by direction, move without picking anything up or fighting
-M	Followed by direction, move a distance without picking anything up
-^N	Go southeast until you are near something
-o	Open a door
-O	Show option settings, possibly change them
-p	Pay your shopping bill
-P	Put on an accessory (ring, amulet, etc; will work for armor too)
-^P	Toggle through previously displayed game messages
-q	Quaff (drink) something (potion, water, etc)
-Q	Select ammunition for quiver (use '#quit' to quit)
-r	Read a scroll or spellbook
-R	Remove an accessory (ring, amulet, etc; will work for armor too)
-^R	Redraw screen
-s	Search all immediately adjacent locations for traps and secret doors
-S	Save the game (and exit; there is no "save and keep going")
-t	Throw something (choose an item, then a direction--not a target)
-T	Take off one piece of armor (will work for accessories too)
-^T	Teleport around level
-^U	Go northeast until you are near something
-v	Show version ('#version' shows more information)
-V	Show history of game's development
-w	Wield a weapon (for dual weapons: 'w' secondary, 'x', 'w' primary, 'X')
-W	Wear a piece of armor (will work for accessories too)
-x	Swap wielded and secondary weapons
-X	Toggle two-weapon combat
-^X	Show your attributes (shows more in debug or explore mode)
+a	도구를 적용(사용)하거나 완드를 부러뜨립니다.
+A	모든 갑옷 및/또는 모든 장신구를 벗거나 및/또는 무기 장비를 해제합니다.
+^A	이전 명령어를 다시 실행합니다.
+^B	무언가에 가까워질 때까지 남서쪽으로 이동합니다.
+c	문을 닫습니다.
+C	몬스터, 개별 아이템, 또는 아이템 종류를 부릅니다(이름 짓습니다).
+^C	인터럽트: 게임을 종료합니다.
+d	아이템을 버립니다.
+D	특정 종류의 아이템들을 버립니다.
+^D	무언가를 (보통은 문, 상자, 또는 궤짝을) 발로 찹니다.
+e	무언가를 먹습니다.
+E	바닥에 글을 새깁니다.
+f	화살통에서 탄약을 발사합니다.
+F	방향과 함께 쓰여, 몬스터와 싸웁니다 (당신이 감지하지 못했더라도).
+g	방향과 함께 쓰여, 무언가에 가까워질 때까지 이동합니다.
+G	방향과 함께 쓰여, control-방향과 동일하게 작동합니다.
+^H	무언가에 가까워질 때까지 서쪽으로 이동합니다.
+i	당신의 인벤토리를 보여줍니다.
+I	특정 종류의 아이템들을 인벤토리에서 보여줍니다.
+^J	무언가에 가까워질 때까지 남쪽으로 이동합니다.
+^K	무언가에 가까워질 때까지 북쪽으로 이동합니다.
+^L	무언가에 가까워질 때까지 동쪽으로 이동합니다.
+m	방향과 함께 쓰여, 아무것도 줍거나 싸우지 않고 이동합니다.
+M	방향과 함께 쓰여, 아무것도 줍지 않고 일정 거리를 이동합니다.
+^N	무언가에 가까워질 때까지 남동쪽으로 이동합니다.
+o	문을 엽니다.
+O	옵션 설정을 보여주며, 필요시 변경할 수 있습니다.
+p	상점 청구서를 지불합니다.
+P	장신구(반지, 부적 등; 갑옷에도 작동함)를 착용합니다.
+^P	이전에 표시된 게임 메시지들을 순환하며 봅니다.
+q	무언가를 마십니다(들이킵니다) (물약, 물 등).
+Q	화살통에 넣을 탄약을 선택합니다 (취소하려면 '#quit' 사용).
+r	두루마리나 마법책을 읽습니다.
+R	장신구를 벗습니다 (반지, 부적 등; 갑옷에도 작동함).
+^R	화면을 다시 그립니다.
+s	즉시 인접한 모든 위치에서 함정과 비밀 문을 찾습니다.
+S	게임을 저장합니다 (그리고 종료합니다; "저장하고 계속하기"는 없습니다).
+t	무언가를 던집니다 (아이템을 고른 후, 목표물이 아닌 방향을 선택).
+T	갑옷 한 부위를 벗습니다 (장신구에도 작동함).
+^T	층 내에서 순간이동합니다.
+^U	무언가에 가까워질 때까지 북동쪽으로 이동합니다.
+v	버전을 보여줍니다 ('#version'은 더 많은 정보를 보여줍니다).
+V	게임 개발의 역사를 보여줍니다.
+w	무기를 장비합니다 (쌍수의 경우: 보조 무기는 'w', 'x', 주 무기는 'w', 'X').
+W	갑옷 한 부위를 입습니다 (장신구에도 작동함).
+x	주 무기와 보조 무기를 교체합니다.
+X	쌍수 전투를 켜거나 끕니다.
+^X	당신의 속성을 보여줍니다 (디버그나 탐험 모드에서는 더 많이 보여줍니다).
 &? number_pad=0,1,2,3,4
 &? number_pad=0
-y	Go northwest 1 space
-Y	Go northwest until you are on top of something
+y	북서쪽으로 1칸 이동합니다.
+Y	무언가 위에 올라설 때까지 북서쪽으로 이동합니다.
 &.
-^Y	Go northwest until you are near something
-z	Zap a wand
-Z	Zap (cast) a spell
+^Y	무언가에 가까워질 때까지 북서쪽으로 이동합니다.
+z	완드를 쏩니다.
+Z	마법을 쏩니다 (시전합니다).
 &? suspend
-^Z	Suspend game; 'fg' (foreground) to resume
+^Z	게임을 일시 중지합니다; 재개하려면 'fg' (foreground) 사용.
 &:
-^Z	unavailable command: suspend
+^Z	사용할 수 없는 명령어: 일시 중지(suspend)
 &.
 &: number_pad=-1
-y	Zap a wand
-Y	Zap (cast) a spell
+y	완드를 쏩니다.
+Y	마법을 쏩니다 (시전합니다).
 &? suspend
-^Y	Suspend game; 'fg' (foreground) to resume
+^Y	게임을 일시 중지합니다; 재개하려면 'fg' (foreground) 사용.
 &:
-^Y	unavailable command: suspend
+^Y	사용할 수 없는 명령어: 일시 중지(suspend)
 &.
-z	Go northwest 1 space
-Z	Go northwest until you are on top of something
-^Z	Go northwest until you are near something
+z	북서쪽으로 1칸 이동합니다.
+Z	무언가 위에 올라설 때까지 북서쪽으로 이동합니다.
+^Z	무언가에 가까워질 때까지 북서쪽으로 이동합니다.
 &. #0,1..4 vs -1
-<	Go up a staircase
->	Go down a staircase
-/	Show what type of thing a symbol corresponds to
-?	Give a help message
+<	계단을 올라갑니다.
+>	계단을 내려갑니다.
+/	기호가 어떤 종류의 사물에 해당하는지 보여줍니다.
+?	도움말 메시지를 줍니다.
 &? shell
-!	Do a shell escape; 'exit' shell to come back
+!	셸(shell)로 빠져나갑니다; 돌아오려면 셸에서 'exit' 입력.
 &:
-!	unavailable command: shell
+!	사용할 수 없는 명령어: 셸(shell)
 &.
-\	Show what object types have been discovered
-`	Show discovered types for one class of objects
-_	Travel via a shortest-path algorithm to a point on the map
-.	Rest one move while doing nothing
+\	지금까지 발견된 아이템 종류를 보여줍니다.
+`	특정 종류(클래스)의 아이템에서 발견된 것들을 보여줍니다.
+_	최단 경로 알고리즘을 통해 지도의 한 지점으로 자동 이동합니다.
+.	아무것도 하지 않고 한 턴(이동) 쉰다.
 &? rest_on_space
- 	Rest one move while doing nothing
+ 	아무것도 하지 않고 한 턴(이동) 쉰다.
 &.
-:	Look at what is on the floor
-;	Show what type of thing a map symbol on the level corresponds to
-,	Pick up things at the current location
-@	Toggle the pickup option on/off
-)	Show the weapon(s) currently wielded or readied
-[	Show the armor currently worn
-=	Show the ring(s) currently worn
-"	Show the amulet currently worn
-(	Show the tools currently in use
-*	Show all equipment in use (combination of the ),[,=,",( commands)
-$	Count your gold
-+	List known spells
-#	Perform an extended command (use '#?' to list choices)
+:	바닥에 무엇이 있는지 살펴봅니다.
+;	현재 층의 지도 기호가 어떤 종류의 사물에 해당하는지 보여줍니다.
+,	현재 위치에 있는 물건들을 줍습니다.
+@	줍기(pickup) 옵션을 켜거나 끕니다.
+)	현재 장비 중이거나 준비된 무기(들)를 보여줍니다.
+[	현재 입고 있는 갑옷을 보여줍니다.
+=	현재 끼고 있는 반지(들)를 보여줍니다.
+"	현재 착용 중인 부적을 보여줍니다.
+(	현재 사용 중인 도구들을 보여줍니다.
+*	사용 중인 모든 장비를 보여줍니다 ( ),[,=,",( 명령어들의 조합).
+$	가진 골드(돈)를 셉니다.
++	알고 있는 마법 목록을 보여줍니다.
+#	확장 명령어를 수행합니다 (선택지를 나열하려면 '#?' 사용).
 &# number_pad:
-&#  -1 = numpad off, swap y with z (including Y with Z, ^Y with ^Z, M-y &c)
-&#   0 = numpad off (default)
-&#   1 = numpad on, normal keypad layout, '5'->'g'
-&#   2 = numpad on, normal keypad layout, '5'->'G'
-&#   3 = numpad on, phone keypad layout, '5'->'g'
-&#   4 = numpad on, phone keypad layout, '5'->'G'
+&#  -1 = 숫자패드 끔, y와 z를 교환함 (Y와 Z, ^Y와 ^Z, M-y 등도 포함)
+&#   0 = 숫자패드 끔 (기본값)
+&#   1 = 숫자패드 켬, 일반 키패드 배열, '5'->'g'
+&#   2 = 숫자패드 켬, 일반 키패드 배열, '5'->'G'
+&#   3 = 숫자패드 켬, 전화기 키패드 배열, '5'->'g'
+&#   4 = 숫자패드 켬, 전화기 키패드 배열, '5'->'G'
 &? number_pad = 1,2,3,4
-0	Show inventory
-4	Move west
-6	Move east
--	'F' prefix; force fight
+0	인벤토리를 보여줍니다.
+4	서쪽으로 이동합니다.
+6	동쪽으로 이동합니다.
+-	'F' 접두사; 강제 전투.
 &: #-1,0
-0	Continue a count
-4	Start or continue a count
-6	Start or continue a count
+0	숫자 세기를 계속합니다.
+4	숫자 세기를 시작하거나 계속합니다.
+6	숫자 세기를 시작하거나 계속합니다.
 &. #1,2,3,4 vs -1,0
 &? number_pad=1,2
-7	Move northwest
-8	Move north
-9	Move northeast
-1	Move southwest
-2	Move south
-3	Move southeast
+7	북서쪽으로 이동합니다.
+8	북쪽으로 이동합니다.
+9	북동쪽으로 이동합니다.
+1	남서쪽으로 이동합니다.
+2	남쪽으로 이동합니다.
+3	남동쪽으로 이동합니다.
 &: number_pad=3,4
-1	Move northwest
-2	Move north
-3	Move northeast
-7	Move southwest
-8	Move south
-9	Move southeast
+1	북서쪽으로 이동합니다.
+2	북쪽으로 이동합니다.
+3	북동쪽으로 이동합니다.
+7	남서쪽으로 이동합니다.
+8	남쪽으로 이동합니다.
+9	남동쪽으로 이동합니다.
 &: #-1,0
-1	Start or continue a count
-2	Start or continue a count
-3	Start or continue a count
-7	Start or continue a count
-8	Start or continue a count
-9	Start or continue a count
+1	숫자 세기를 시작하거나 계속합니다.
+2	숫자 세기를 시작하거나 계속합니다.
+3	숫자 세기를 시작하거나 계속합니다.
+7	숫자 세기를 시작하거나 계속합니다.
+8	숫자 세기를 시작하거나 계속합니다.
+9	숫자 세기를 시작하거나 계속합니다.
 &. #1,2 vs 3,4 vs -1,0
 &? number_pad=1,3
-5	'g' movement prefix
-M-5	'G' movement prefix
+5	'g' 이동 접두사
+M-5	'G' 이동 접두사
 &: number_pad=2,4
-5	'G' movement prefix
-M-5	'g' movement prefix
-M-0	Inventory specific item types
+5	'G' 이동 접두사
+M-5	'g' 이동 접두사
+M-0	특정 아이템 종류만 인벤토리에서 보여줍니다.
 &: #-1,0
-5	Start or continue a count
-M-2	Toggle two-weapon combat
+5	숫자 세기를 시작하거나 계속합니다.
+M-2	쌍수 전투를 켜거나 끕니다.
 &. #1,3 vs 2,4 vs -1,0
-M-?	Display extended command help (if the platform allows this)
-M-a	Adjust inventory letters
-M-A	Annotate: supply a name for the current dungeon level
-M-c	Chat: talk to an adjacent creature
-M-C	Conduct: list voluntary challenges you have maintained
-M-d	Dip an object into something
-M-e	Enhance: check weapons skills, advance them if eligible
-M-f	Force a lock
-M-i	Invoke an object's special powers
-M-j	Jump to a nearby location
-M-l	Loot a box on the floor
-M-m	When polymorphed, use a monster's special ability
-M-n	Name a monster, an individual object, or a type of object
-M-N	Name a monster, an individual object, or a type of object
-M-o	Offer a sacrifice to the gods
-M-O	Overview: show a summary of the explored dungeon
-M-p	Pray to the gods for help
-M-q	Quit (exit without saving)
-M-r	Rub a lamp or a touchstone
-M-R	Ride: mount or dismount a saddled steed
-M-s	Sit down
-M-t	Turn undead
-M-T	Tip: empty a container
-M-u	Untrap something (trap, door, or chest)
-M-v	Print compile time options for this version of NetHack
-M-w	Wipe off your face
+M-?	확장 명령어 도움말을 표시합니다 (플랫폼에서 허용하는 경우).
+M-a	인벤토리 지정 문자를 조정(변경)합니다.
+M-A	주석(Annotate): 현재 던전 층에 이름을 부여합니다.
+M-c	대화(Chat): 인접한 생물체와 대화합니다.
+M-C	수칙(Conduct): 당신이 유지해 온 자발적 도전 과제들을 나열합니다.
+M-d	아이템을 무언가에 담급니다(Dip).
+M-e	강화(Enhance): 무기 기술을 확인하고, 조건이 되면 향상시킵니다.
+M-f	자물쇠를 강제로 엽니다(Force).
+M-i	아이템의 특수 능력을 발동(Invoke)합니다.
+M-j	근처 위치로 점프(Jump)합니다.
+M-l	바닥에 있는 상자를 약탈(Loot)합니다.
+M-m	폴리모프(변신) 상태일 때, 몬스터의 특수 능력을 사용(monster)합니다.
+M-n	몬스터, 개별 아이템, 또는 아이템 종류의 이름을 짓습니다(Name).
+M-N	몬스터, 개별 아이템, 또는 아이템 종류의 이름을 짓습니다(Name).
+M-o	신들에게 제물을 바칩니다(Offer).
+M-O	개요(Overview): 탐험한 던전의 요약을 보여줍니다.
+M-p	신들에게 도움을 청하는 기도를 올립니다(Pray).
+M-q	그만둡니다 (저장하지 않고 종료/Quit).
+M-r	램프나 시금석을 문지릅니다(Rub).
+M-R	타기(Ride): 안장을 얹은 탈것에 타거나 내립니다.
+M-s	자리에 앉습니다(Sit).
+M-t	언데드를 퇴치합니다(Turn undead).
+M-T	기울이기(Tip): 용기를 비웁니다.
+M-u	무언가(함정, 문, 상자 등)의 함정을 해제합니다(Untrap).
+M-v	이 넷핵 버전의 컴파일 타임 옵션들을 출력합니다.
+M-w	얼굴을 닦아냅니다(Wipe).

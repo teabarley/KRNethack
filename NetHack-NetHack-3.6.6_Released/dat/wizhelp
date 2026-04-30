@@ -1,32 +1,32 @@
-Debug-Mode Quick Reference:
+Debug-Mode Quick Reference (디버그 모드 빠른 참조):
 
-^E  ==  detect secret doors and traps
-^F  ==  map level; reveals traps and secret corridors but not secret doors
-^G  ==  create monster by name or class
-^I  ==  identify items in pack
-^T  ==  do intra-level teleport
-^V  ==  do trans-level teleport; '?' yields menu of special destinations
-^W  ==  make a wish for an item or a trap or a limited subset of terrain
-^X  ==  show status, attributes, and characteristics (extended enlightenment)
+^E  ==  비밀 문과 함정을 탐지합니다.
+^F  ==  현재 층을 맵핑합니다; 함정과 비밀 통로를 드러내지만 비밀 문은 제외합니다.
+^G  ==  이름이나 종류(class)로 몬스터를 생성합니다.
+^I  ==  배낭 안의 아이템들을 식별합니다.
+^T  ==  같은 층 내에서 순간이동을 합니다.
+^V  ==  다른 층으로 순간이동을 합니다; '?' 입력 시 특수 목적지 메뉴를 보여줍니다.
+^W  ==  아이템, 함정, 또는 일부 제한된 지형에 대해 소원을 빕니다.
+^X  ==  상태, 능력치, 그리고 특성들을 보여줍니다 (확장된 깨달음).
 
-#levelchange    == set hero's experience level
-#lightsources   == show mobile light sources
-#panic          == panic test (warning: current game will be terminated)
-#polyself       == polymorph self
-#seenv          == show seen vectors
-#stats          == show memory statistics
-#terrain        == show current level (more options than in normal play)
-#timeout        == look at timeout queue and hero's timed intrinsics
-#vanquished     == disclose counts of dead monsters sorted in various ways
-#vision         == show vision array
-#wizintrinsic   == set selected intrinsic timeouts
-#wizmakemap     == recreate the current dungeon level
-#wizrumorcheck  == validate first and last rumor for true and false set
-#wizsmell       == smell a monster
-#wizwhere       == show dungeon placement of all special levels
-#wmode          == show wall modes
+#levelchange    == 영웅의 경험치 레벨을 설정합니다.
+#lightsources   == 이동 가능한 광원들을 보여줍니다.
+#panic          == 패닉(panic) 테스트 (경고: 현재 게임이 강제 종료됩니다).
+#polyself       == 스스로 폴리모프(변신)합니다.
+#seenv          == 시야 벡터(seen vectors)를 보여줍니다.
+#stats          == 메모리 통계를 보여줍니다.
+#terrain        == 현재 층을 보여줍니다 (일반 플레이보다 더 많은 옵션 제공).
+#timeout        == 타임아웃 대기열과 영웅의 시간제한 내성/특성들을 살펴봅니다.
+#vanquished     == 다양한 방식으로 정렬된 처치한 몬스터의 수를 공개합니다.
+#vision         == 시야 배열(vision array)을 보여줍니다.
+#wizintrinsic   == 선택한 내성/특성의 타임아웃을 설정합니다.
+#wizmakemap     == 현재 던전 층을 다시 생성합니다.
+#wizrumorcheck  == 참과 거짓 소문 세트의 첫 번째와 마지막 소문을 검증합니다.
+#wizsmell       == 몬스터의 냄새를 맡습니다.
+#wizwhere       == 모든 특수 층의 던전 내 위치를 보여줍니다.
+#wmode          == 벽 모드(wall modes)를 보여줍니다.
 
-Options:
-monpolycontrol  == prompt for new form whenever any monster changes shape
-sanity_check    == evaluate monsters, objects, and map prior to each turn
-wizweight       == augment object descriptions with their objects' weight
+Options (옵션):
+monpolycontrol  == 몬스터가 모습을 바꿀 때마다 새로운 형태를 묻는 프롬프트를 띄웁니다.
+sanity_check    == 매 턴이 시작되기 전에 몬스터, 아이템, 지도를 평가(검증)합니다.
+wizweight       == 아이템 설명에 해당 아이템의 무게 정보를 추가합니다.

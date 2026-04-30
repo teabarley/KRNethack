@@ -2,57 +2,57 @@
 #	Copyright (c) 1990-95 by M. Stephenson
 # NetHack may be freely redistributed.  See license for details.
 #
-#	The dungeon description file for the "standard" 3.1 NetHack.
+#	"표준" 3.1 넷핵을 위한 던전 설명(description) 파일입니다.
 #
-#	Note:	The order of the definition of dungeons in this file
-#		reflects in their order of creation in the real dungeon.
-#		The "Main" branch must *always* be first.
-#		Also note that the order of the dungeons in this file
-#		determines the order in which branch levels are assigned.
-#		If two dungeons have overlapping ranges for their entry
-#		points, then you should list the dungeon with the _least_
-#		number of choices for its branch level _first_.
+#	참고:	이 파일에서 던전이 정의되는 순서는
+#		실제 던전이 생성되는 순서를 반영합니다.
+#		"Main(메인)" 분기(branch)는 *반드시* 맨 처음에 와야 합니다.
+#		또한 이 파일의 던전 순서가
+#		분기 층(branch levels)이 할당되는 순서를 결정한다는 점에 유의하세요.
+#		만약 두 던전의 진입점 범위가 겹친다면,
+#		분기 층에 대한 선택의 수가 _가장 적은_ 던전을
+#		_먼저_ 나열해야 합니다.
 #
 
-DUNGEON:	"The Dungeons of Doom" "D" (25, 5)
+DUNGEON:	"파멸의 미궁" "D" (25, 5)
 ALIGNMENT:	unaligned
-BRANCH:		"The Gnomish Mines" @ (2, 3)
+BRANCH:		"노움 광산" @ (2, 3)
 LEVEL:		"rogue" "R" @ (15, 4)
 LEVELDESC:	roguelike
 LEVEL:		"oracle" "O" @ (5, 5)
 LEVALIGN:	neutral
-CHAINBRANCH:	"Sokoban" "oracle" + (1, 0) up
+CHAINBRANCH:	"소코반" "oracle" + (1, 0) up
 RNDLEVEL:	"bigrm" "B" @ (10, 3) 40 10
-CHAINBRANCH:	"The Quest" "oracle" + (6, 2) portal
-BRANCH:		"Fort Ludios" @ (18, 4) portal
+CHAINBRANCH:	"퀘스트" "oracle" + (6, 2) portal
+BRANCH:		"루디오스 요새" @ (18, 4) portal
 RNDLEVEL:	"medusa" "none" @ (-5, 4) 4
 LEVALIGN:	chaotic
 LEVEL:		"castle" "none" @ (-1, 0)
-CHAINBRANCH:	"Gehennom" "castle" + (0, 0) no_down
-BRANCH:		"The Elemental Planes" @ (1, 0) no_down up
+CHAINBRANCH:	"게헨놈" "castle" + (0, 0) no_down
+BRANCH:		"정령계" @ (1, 0) no_down up
 
 #
-#	Gehennom
+#	게헨놈
 #
-#	Now re-worked for 3.1, hell is hopefully going to be a little
-#	less boring.  Also, in 3.1, the tower is not considered as a
-#	part of hell, but is set up as a separate dungeon.
+#	이제 3.1 버전을 위해 재작업되었으며, 지옥이 조금 덜
+#	지루해지기를 바랍니다. 또한 3.1에서는 탑(tower)이 지옥의 
+#	일부로 간주되지 않고, 별도의 던전으로 설정됩니다.
 #
-#	Gehennom is no longer considered "hellish" as a complete dungeon.
-#	That is, fire resistance is no longer a condition for survival in
-#	it.  However, Gehennom, and the special levels in it in particular,
-#	is abundant with fire traps.  As a result, fire resistance is still
-#	a prudent survival strategy in Gehennom.
+#	게헨놈은 더 이상 전체 던전으로서 "지옥 같은(hellish)" 것으로 간주되지 않습니다.
+#	즉, 화염 저항이 더 이상 그곳에서의 생존을 위한 필수 조건이 
+#	아닙니다. 하지만 게헨놈, 그리고 그곳의 특수 층들은 특히
+#	불 함정(fire traps)이 풍부합니다. 결과적으로 화염 저항은 게헨놈에서
+#	여전히 신중하고 필수적인 생존 전략입니다.
 #
-#	Note:	Gehennom *must* be the second dungeon defined so that
-#		monsters can properly migrate here under certain
-#		circumstances.
+#	참고:	게헨놈은 특정 상황에서 몬스터들이 이곳으로 적절하게 
+#		이동(migrate)할 수 있도록 *반드시* 
+#		두 번째로 정의되는 던전이어야 합니다.
 #
-DUNGEON:	"Gehennom" "G" (20, 5)
+DUNGEON:	"게헨놈" "G" (20, 5)
 DESCRIPTION:	mazelike
 DESCRIPTION:	hellish
 ALIGNMENT:	noalign
-BRANCH:		"Vlad's Tower" @ (9, 5) up
+BRANCH:		"블라드의 탑" @ (9, 5) up
 LEVEL:		"valley" "V" @ (1, 0)
 LEVEL:		"sanctum" "none" @ (-1, 0)
 LEVEL:		"juiblex" "J" @ (4, 4)
@@ -66,9 +66,9 @@ LEVEL:		"fakewiz1" "F" @ (-6,4)
 LEVEL:		"fakewiz2" "G" @ (-6,4)
 
 #
-#	The Mines of the Gnomes of Zurich.
+#	취리히 노움들의 광산.
 #
-DUNGEON:	"The Gnomish Mines" "M" (8, 2)
+DUNGEON:	"노움 광산" "M" (8, 2)
 ALIGNMENT:	lawful
 DESCRIPTION:	mazelike
 RNDLEVEL:	"minetn" "T" @ (3, 2) 7
@@ -76,22 +76,22 @@ LEVELDESC:	town
 RNDLEVEL:	"minend" "E" @ (-1, 0) 3
 
 #
-#	The Questdungeon
+#	퀘스트 던전
 #
-#	This is a proto-dungeon.  The level file names will be prepended with
-#	three letter role abbreviation during initialization, replacing "x".
-#	A special "x-fill" level must be defined in the levels description
-#	file.  It will be used for all levels not defined explicitly below.
+#	이것은 프로토-던전(proto-dungeon)입니다. 층(level) 파일 이름은 초기화 중에
+#	"x"를 대체하여 3글자 직업(role) 약어가 앞에 붙게 됩니다.
+#	층 설명 파일에 특수한 "x-fill" 층이 반드시 정의되어야 합니다.
+#	이 층은 아래에 명시적으로 정의되지 않은 모든 층에 사용될 것입니다.
 #
-DUNGEON:	"The Quest" "Q" (5, 2)
+DUNGEON:	"퀘스트" "Q" (5, 2)
 LEVEL:	"x-strt" "none" @ (1, 1)
 LEVEL:	"x-loca" "L" @ (3, 1)
 LEVEL:	"x-goal" "none" @ (-1, 0)
 
 #
-# Sokoban
+# 소코반
 #
-DUNGEON:		"Sokoban" "none" (4, 0)
+DUNGEON:		"소코반" "none" (4, 0)
 DESCRIPTION:    mazelike
 ALIGNMENT:      neutral
 ENTRY:          -1
@@ -101,37 +101,37 @@ RNDLEVEL:		"soko3" "none" @ (3, 0) 2
 RNDLEVEL:		"soko4" "none" @ (4, 0) 2
 
 #
-#	The Central Vault of Croesus.
+#	크로이소스의 중앙 금고.
 #
-DUNGEON:	"Fort Ludios" "K" (1, 0)
+DUNGEON:	"루디오스 요새" "K" (1, 0)
 DESCRIPTION:	mazelike
 ALIGNMENT:	unaligned
 LEVEL:		"knox" "K" @ (-1, 0)
 #
-#	Vlad's Tower
+#	블라드의 탑
 #
-#	It has been removed from Gehennom, and it is surrounded by stone.
-#	Must not allow bones files for its top level.
+#	이곳은 게헨놈에서 제거되었으며, 돌(stone)로 둘러싸여 있습니다.
+#	이곳의 최상층에서는 뼈(bones) 파일이 생성되지 않도록 해야 합니다.
 #
-DUNGEON:	"Vlad's Tower" "T" (3, 0)
+DUNGEON:	"블라드의 탑" "T" (3, 0)
 PROTOFILE:	"tower"
 DESCRIPTION:	mazelike
 ALIGNMENT:	chaotic
 ENTRY:		-1
 LEVEL:		"tower1" "none" @ (1, 0)
-# it isn't necessary to list these last two, but doing so makes them
-# show up in ^O output and in the level teleport menu
+# 이 마지막 두 개를 굳이 나열할 필요는 없지만, 이렇게 하면
+# ^O 출력 화면과 레벨 텔레포트 메뉴에 나타나게 됩니다.
 LEVEL:		"tower2" "none" @ (2, 0)
 LEVEL:		"tower3" "none" @ (3, 0)
 
 #
-#	The Endgame levels
+#	엔드게임(Endgame) 층
 #
-#	Enter on 2nd level from bottom; 1st (from bottom) is a
-#	placeholder for surface level, and should be unreachable.
-#	[Note: the name "dummy" is checked for in init_dungeons().]
+#	밑에서부터 두 번째 층에서 진입합니다; 밑에서 1번째 층은
+#	지상 층을 위한 자리 표시자(placeholder)이며, 접근할 수 없어야 합니다.
+#	[참고: "dummy"라는 이름은 init_dungeons()에서 확인됩니다.]
 #
-DUNGEON:	"The Elemental Planes" "E" (6, 0)
+DUNGEON:	"정령계" "E" (6, 0)
 DESCRIPTION:	mazelike
 ALIGNMENT:	unaligned
 ENTRY:		-2
