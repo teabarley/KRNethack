@@ -238,7 +238,7 @@ int msgflg; /* positive => no message, zero => message, and */
 
     if (msgflg <= 0)
         /*KR You_feel("%s%s!", (incr > 1 || incr < -1) ? "very " : "", attrstr); */
-        You_feel("%s%s!", (incr > 1 || incr < -1) ? "매우 " : "", attrstr);
+        You("%s%s!", (incr > 1 || incr < -1) ? "매우 " : "", attrstr);
     context.botl = TRUE;
     if (program_state.in_moveloop && (ndx == A_STR || ndx == A_CON))
         (void) encumber_msg();
@@ -293,7 +293,7 @@ static const struct poison_effect_message {
 #if 0 /*KR:T*/
     { You_feel, "weaker" },             /* A_STR */
 #else
-    { You_feel, "약해졌다" },             /* A_STR */
+    { You, "약해졌다" },             /* A_STR */
 #endif
 #if 0 /*KR:T*/
     { Your, "brain is on fire" },       /* A_INT */
@@ -313,7 +313,7 @@ static const struct poison_effect_message {
 #if 0 /*KR:T*/
     { You_feel, "very sick" },          /* A_CON */
 #else
-    { You_feel, "몸 상태가 매우 나빠졌다" },          /* A_CON */
+    { You, "몸 상태가 매우 나빠졌다" },          /* A_CON */
 #endif
 #if 0 /*KR:T*/
     { You, "break out in hives" }       /* A_CHA */

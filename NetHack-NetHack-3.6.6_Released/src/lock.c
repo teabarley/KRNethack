@@ -856,19 +856,19 @@ int x, y;
         switch (door->doormask) {
         case D_BROKEN:
             /*KR mesg = " is broken"; */
-            mesg = " 부서져 있다";
+            mesg = "은 부서져 있다";
             break;
         case D_NODOOR:
             /*KR mesg = "way has no door"; */
-            mesg = "는 문이 없다";
+            mesg = "지방에는 문이 없다";
             break;
         case D_ISOPEN:
             /*KR mesg = " is already open"; */
-            mesg = " 이미 열려 있다";
+            mesg = "은 이미 열려 있다";
             break;
         default:
             /*KR mesg = " is locked"; */
-            mesg = " 잠겨 있다";
+            mesg = "은 잠겨 있다";
             break;
         }
         /*KR pline("This door%s.", mesg); */
@@ -1162,7 +1162,7 @@ int x, y;
                 pline("오래되고 원시적인 통로에 %s 일어났다.", dustcloud);
             else
                 /*KR You_hear("a swoosh."); */
-                You_hear("쉿 하는 소리를 들었다.");
+                You("쉿 하는 소리를 들었다.");
             if (obstructed(x, y, mysterywand)) {
                 if (vis)
                     /*KR pline_The("cloud %s.", quickly_dissipates); */
@@ -1240,7 +1240,7 @@ int x, y;
                         pline("콰앙!! 문이 폭발하는 것을 보았다.");
                     else
                         /*KR You_hear("a distant explosion."); */
-                        You_hear("멀리서 폭발음이 들린다.");
+                        You("멀리서 폭발음을 들었다.");
                 }
                 door->doormask = D_NODOOR;
                 unblock_point(x, y);
@@ -1255,7 +1255,7 @@ int x, y;
                     pline("문이 박살 나며 열렸다!");
                 else
                     /*KR You_hear("a crashing sound."); */
-                    You_hear("무언가 박살 나는 소리가 들린다.");
+                    You("무언가 박살 나는 소리를 들었다.");
             }
             unblock_point(x, y);
             newsym(x, y);

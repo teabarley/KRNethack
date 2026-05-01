@@ -401,7 +401,7 @@ int x, y;
             if (!Blind) {
                 sensed = 1;
                 /*KR You_see("a message scrawled in blood here."); */
-                You("여기에 글자가 피로 휘갈겨져 있다.");
+                pline("여기에 글자가 피로 휘갈겨져 있다.");
             }
             break;
         default:
@@ -847,7 +847,7 @@ doengrave()
 #else
                 Strcpy(post_engr_text,
                        (Blind && !Deaf)
-                          ? "구멍을 파는 소리가 들린다!"    /* Deaf-aware */
+                          ? "구멍을 파는 소리를 들었다!"    /* Deaf-aware */
                           : Blind
                              ? "당신은 진동을 느꼈다."
                              : IS_GRAVE(levl[u.ux][u.uy].typ)
@@ -892,7 +892,7 @@ doengrave()
                     Strcpy(post_engr_text, !Deaf
                         /*KR    ? "You hear crackling!"  /* Deaf-aware */
                            /*   : "Your hair stands up!"); */
-                                ? "당신은 빠직빠직 소리를 듣는다!"  /* Deaf-aware */
+                                ? "당신은 빠직빠직 소리를 들었다!"  /* Deaf-aware */
                                 : "당신의 머리가 곤두섰다!");
                 break;
 

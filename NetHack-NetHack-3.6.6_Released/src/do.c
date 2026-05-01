@@ -109,8 +109,8 @@ boolean pushing;
 #endif
                 } else if (!Deaf)
                     /*KR You_hear("a%s splash.", lava ? " sizzling" : ""); */
-                    You_hear("%s하고 튀는 소리를 들었다.",
-                             lava ? "치이익 " : "철퍽");
+                    You("%s하고 튀는 소리를 들었다.",
+                        lava ? "치이익 " : "철퍽");
                 wake_nearto(rx, ry, 40);
             }
 
@@ -256,7 +256,7 @@ const char *verb;
         if (*verb) {
             if (Blind && (x == u.ux) && (y == u.uy)) {
                 /*KR You_hear("a CRASH! beneath you."); */
-                You_hear("발밑에서 쾅! 하는 소리를 들었다.");
+                You("발밑에서 쾅! 하는 소리를 들었다.");
             } else if (!Blind && cansee(x, y)) {
 #if 0 /*KR:T*/
                 pline_The("boulder %s%s.",
@@ -274,7 +274,7 @@ const char *verb;
 #endif
             } else {
                 /*KR You_hear("a boulder %s.", verb); */
-                You_hear("바위가 %s 하는 소리를 듣는다.", verb);
+                You("바위가 %s 하는 소리를 들었다.", verb);
             }
         }
         /*
@@ -312,7 +312,7 @@ const char *verb;
                && (uteetering_at_seen_pit(t) || uescaped_shaft(t))) {
         if (Blind && !Deaf)
             /*KR You_hear("%s tumble downwards.", the(xname(obj))); */
-            You_hear("%s 아래로 굴러 떨어지는 소리를 듣는다.",
+            You("%s 아래로 굴러 떨어지는 소리를 들었다.",
                      append_josa(xname(obj), "이"));
         else
 #if 0 /*KR:T*/
@@ -518,11 +518,11 @@ STATIC_OVL void dosinkring(obj) register struct obj *obj;
         break;
     case RIN_CONFLICT:
         /*KR You_hear("loud noises coming from the drain."); */
-        You_hear("개수구에서 큰 소리가 났다.");
+        You("개수구에서 큰 소리를 들었다.");
         break;
     case RIN_SUSTAIN_ABILITY: /* KMH */
         /*KR pline_The("%s flow seems fixed.", hliquid("water")); */
-        pline_The("%s의 흐름이 일정해졌다.", hliquid("물"));
+        pline("%s의 흐름이 일정해졌다.", hliquid("물"));
         break;
     case RIN_GAIN_STRENGTH:
 #if 0 /*KR:T*/
@@ -687,7 +687,7 @@ STATIC_OVL void dosinkring(obj) register struct obj *obj;
         trycall(obj);
     else if (!nosink)
         /*KR You_hear("the ring bouncing down the drainpipe."); */
-        You_hear("반지가 배수관에 부딪히며 떨어지는 소리를 듣는다.");
+        You("반지가 배수관에 부딪히며 떨어지는 소리를 들었다.");
 
     if (!rn2(20) && !nosink) {
         /*KR pline_The("sink backs up, leaving %s.", doname(obj)); */
@@ -1877,7 +1877,7 @@ boolean at_stairs, falling, portal;
             display_nhwindow(WIN_MESSAGE, FALSE);
 #endif
             /*KR You_hear("groans and moans everywhere."); */
-            You_hear("여기저기서 구슬프게 울부짖는 신음소리를 듣는다.");
+            You("여기저기서 구슬프게 울부짖는 신음소리를 들었다.");
         } else
             /*KR pline("It is hot here.  You smell smoke..."); */
             pline("이곳은 덥다. 연기 냄새가 난다...");

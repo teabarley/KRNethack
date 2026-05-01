@@ -49,7 +49,7 @@ dowatersnakes()
 #endif
         else
             /*KR You_hear("%s hissing!", something); */
-            You_hear("무언가가 쉬익하는 소리를 듣는다!");
+            You("무언가가 쉬익하는 소리를 들었다!");
         while (num-- > 0)
             if ((mtmp = makemon(&mons[PM_WATER_MOCCASIN], u.ux, u.uy,
                                 NO_MM_FLAGS)) != 0
@@ -69,14 +69,12 @@ dowaterdemon()
     if (!(mvitals[PM_WATER_DEMON].mvflags & G_GONE)) {
         if ((mtmp = makemon(&mons[PM_WATER_DEMON], u.ux, u.uy,
                             NO_MM_FLAGS)) != 0) {
-            if (!Blind)
-                /*KR You("unleash %s!", a_monnam(mtmp));
-            else
-                You_feel("the presence of evil."); */
-
+            if (!Blind)                                
+           /*KR You("unleash %s!", a_monnam(mtmp)); */
                 You("%s을 해방시켰다!", a_monnam(mtmp));
             else
-                You_feel("악마의 존재를 느낀다.");
+           /* You_feel("the presence of evil."); */
+                You("악마의 존재를 느낀다.");
 
             /* Give those on low levels a (slightly) better chance of survival
              */
@@ -113,7 +111,7 @@ dowaternymph()
             You_hear("a seductive voice."); */
             You("%s를 끌어들인다!", a_monnam(mtmp));
         else
-            You_hear("유혹적인 목소리를 듣는다.");
+            You("유혹적인 목소리를 들었다.");
         mtmp->msleeping = 0;
         if (t_at(mtmp->mx, mtmp->my))
             (void) mintrap(mtmp);
@@ -123,7 +121,7 @@ dowaternymph()
         You_hear("a loud pop."); */
         pline("커다란 거품이 표면으로 올라와 터진다.");
     else
-        You_hear("커다란 펑 소리를 듣는다.");
+        You("커다란 펑 소리를 들었다.");
 }
 
 /* Gushing forth along LOS from (u.ux, u.uy) */
@@ -185,9 +183,9 @@ dofindgem()
         /*KR You("spot a gem in the sparkling waters!");
     else
         You_feel("a gem here!"); */
-        You("부글거리는 물 속에서 보석을 발견한다!");
+        You("부글거리는 물 속에서 보석을 발견했다!");
     else
-        You_feel("여기서 보석을 느낀다!");
+        You("여기서 보석을 느꼈다!");
     (void) mksobj_at(rnd_class(DILITHIUM_CRYSTAL, LUCKSTONE - 1), u.ux, u.uy,
                      FALSE, FALSE);
     SET_FOUNTAIN_LOOTED(u.ux, u.uy);
@@ -731,11 +729,11 @@ drinksink()
     /* more odd messages --JJB */
     case 11:
         /*KR You_hear("clanking from the pipes..."); */
-        You_hear("배수관에서 절꺽거리는 소리가 나는 것을 듣는다...");
+        You("배수관에서 절꺽거리는 소리가 나는 것을 듣는다...");
         break;
     case 12:
         /*KR You_hear("snatches of song from among the sewers..."); */
-        You_hear("하수도에 울려퍼지는 노래 몇 가닥을 듣는다...");
+        You("하수도에 울려퍼지는 노래 몇 가닥을 듣는다...");
         break;
     case 19:
         if (Hallucination) {

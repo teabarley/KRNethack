@@ -3806,8 +3806,8 @@ xchar x, y;
             c = ynaq(safe_qbuf(qbuf, qbuf, "?", obj, doname, thesimpleoname,
                                (obj->quan == 1L) ? "that" : "those"));
 #else /*KR: KRNethack 맞춤 번역 */
-            Sprintf(qsfx, "에 대한 대금으로 예치금 %ld %s을(를) 받겠습니까?",
-                    tmpcr, currency(tmpcr));
+            Sprintf(qsfx, "에 대한 대금으로 예치금 %ld %s 받겠습니까?", tmpcr,
+                    append_josa(currency(tmpcr), "을"));
             c = ynaq(safe_qbuf(qbuf, "", qsfx, obj, doname, thesimpleoname,
                                "이것"));
 #endif
@@ -4368,7 +4368,7 @@ boolean croaked;
 #if 0 /*KR: 원본*/
             You_feel("more claustrophobic than before.");
 #else /*KR: KRNethack 맞춤 번역 */
-            You_feel("전보다 폐소공포증이 더 심해지는 것을 느꼈다.");
+            You("전보다 폐소공포증이 더 심해지는 것을 느꼈다.");
 #endif
         else if (!Deaf && !rn2(10))
 #if 0 /*KR: 원본*/
@@ -4434,7 +4434,7 @@ boolean catchup; /* restoring a level */
 #if 0 /*KR: 원본*/
             You_hear("someone muttering an incantation.");
 #else /*KR: KRNethack 맞춤 번역 */
-            You_hear("누군가 주문을 중얼거리는 소리가 들렸다.");
+            You("누군가 주문을 중얼거리는 소리를 들었다.");
 #endif
         *once = 0;
     }
@@ -4745,7 +4745,7 @@ register int fall;
     if (!inhishop(shkp)) {
         if (Role_if(PM_KNIGHT)) {
             /*KR You_feel("like a common thief."); */
-            You_feel("흔해빠진 도둑놈이 된 기분이다.");
+            You("흔해빠진 도둑놈이 된 기분이다.");
             adjalign(-sgn(u.ualign.type));
         }
         return;
@@ -4774,7 +4774,7 @@ register int fall;
         }
         if (Role_if(PM_KNIGHT)) {
             /*KR You_feel("like a common thief."); */
-            You_feel("흔해빠진 도둑놈이 된 기분이다.");
+            You("흔해빠진 도둑놈이 된 기분이다.");
             adjalign(-sgn(u.ualign.type));
         }
     } else if (!um_dist(shkp->mx, shkp->my, 5) && !shkp->msleeping
@@ -4981,7 +4981,7 @@ boolean cant_mollify;
             if (!animal) {
                 if (!Deaf && !muteshk(shkp)) {
                     /*KR You_hear("an angry voice:"); */
-                    You_hear("분노에 찬 목소리가 들렸다:");
+                    You("분노에 찬 목소리를 들었다:");
                     /*KR verbalize("Out of my way, scum!"); */
                     verbalize("비켜라, 이 쓰레기야!");
                 }
@@ -5994,12 +5994,12 @@ boolean cant_mollify;
                               "to your credit; total is now",
                               eshkp->credit, currency(eshkp->credit));
 #else /*KR: KRNethack 맞춤 번역 */
-                        pline("%s 예치금에 %ld %s을(를) 추가했다. 총액은 "
+                        pline("%s 예치금에 %ld %s 추가했다. 총액은 "
                               "이제 %ld %s이다.",
                               append_josa(obj_typename(obj_absorbed->otyp),
                                           "은"),
-                              delta, currency(delta), eshkp->credit,
-                              currency(eshkp->credit));
+                              delta, append_josa(currency(delta), "을"),
+                              eshkp->credit, currency(eshkp->credit));
 #endif
                 }
             }

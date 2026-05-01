@@ -194,7 +194,7 @@ void awaken_soldiers(
             else if (!Deaf)
                 /*KR Norep("%s the rattle of battle gear being readied.",
                       "You hear"); */ /* Deaf-aware */
-                Norep("당신은 전투 장비를 챙기는 철그럭 소리를 듣는다.");
+                Norep("당신은 전투 장비를 챙기는 철그럭 소리를 들었다.");
         } else if ((distm =
                         ((bugler == &youmonst) ? distu(mtmp->mx, mtmp->my)
                                                : dist2(bugler->mx, bugler->my,
@@ -274,7 +274,7 @@ STATIC_OVL void do_earthquake(force) int force;
                               append_josa(Amonnam(mtmp), "은"));
                     else
                         /*KR You_hear("a thumping sound."); */
-                        You_hear("쿵 하는 소리가 들렸다.");
+                        You("쿵 하는 소리를 들었다.");
                     if (x == u.ux && y == u.uy)
                         /*KR You("easily dodge the falling %s.",
                          * mon_nam(mtmp)); */
@@ -376,7 +376,7 @@ STATIC_OVL void do_earthquake(force) int force;
                                         append_josa(Monnam(mtmp), "이"));
                                 else if (humanoid(mtmp->data))
                                     /*KR You_hear("a scream!"); */
-                                    You_hear("비명 소리를 들었다!");
+                                    You("비명 소리를 들었다!");
                             }
                             /* Falling is okay for falling down
                                within a pit from jostling too */
@@ -607,7 +607,7 @@ struct obj *instr;
             You("불쾌하게 윙윙거리는 소리를 퍼뜨렸다.");
         else
             /*KR You_feel("a monotonous vibration."); */
-            You_feel("단조로운 진동을 느낀다.");
+            You("단조로운 진동을 느낀다.");
         break;
     case PLAY_CONFUSED:
         if (!Deaf)
@@ -615,7 +615,7 @@ struct obj *instr;
             You("귀에 거슬리는 소음을 냈다.");
         else
             /*KR You_feel("a jarring vibration."); */
-            You_feel("귀에 거슬리는 진동을 느낀다.");
+            You("귀에 거슬리는 진동을 느낀다.");
         break;
     case PLAY_HALLU:
         /*KR You("disseminate a kaleidoscopic display of floating
@@ -662,7 +662,7 @@ struct obj *instr;
         else
             /*KR You_feel("%s %s.", yname(instr), do_spec ? "trill" : "toot");
              */
-            You_feel("%s %s.", append_josa(yname(instr), "이"),
+            You("%s %s.", append_josa(yname(instr), "이"),
                      do_spec ? "떨리는 것을" : "삑 소리를 내는 것을");
         if (do_spec)
             charm_snakes(u.ulevel * 3);
@@ -721,7 +721,7 @@ struct obj *instr;
                   append_josa(xname(instr), "은"));
         else
             /*KR You_feel("very soothing vibrations."); */
-            You_feel("아주 진정되는 진동을 느낀다.");
+            You("아주 진정되는 진동을 느낀다.");
         charm_monsters((u.ulevel - 1) / 3 + 1);
         exercise(A_DEX, TRUE);
         break;
@@ -737,7 +737,7 @@ struct obj *instr;
 #endif
         else
             /*KR You_feel("soothing vibrations."); */
-            You_feel("진정되는 진동을 느낀다.");
+            You("진정되는 진동을 느낀다.");
         if (do_spec)
             calm_nymphs(u.ulevel * 3);
         exercise(A_DEX, TRUE);
@@ -954,8 +954,8 @@ struct obj *instr;
                                      tumblers, plur(tumblers), gears,
                                      plur(gears));
 #else /*KR: KRNethack 맞춤 번역 */
-                            You_hear("%d개의 텀블러가 딸깍거리고 %d개의 "
-                                     "톱니바퀴가 돌아가는 소리가 들린다.",
+                            You("%d개의 텀블러가 딸깍거리고 %d개의 "
+                                     "톱니바퀴가 돌아가는 소리를 들었다.",
                                      tumblers, gears);
 #endif
                         else
@@ -963,14 +963,13 @@ struct obj *instr;
                             You_hear("%d tumbler%s click.", tumblers,
                                      plur(tumblers));
 #else /*KR: KRNethack 맞춤 번역 */
-                            You_hear(
-                                "%d개의 텀블러가 딸깍거리는 소리가 들린다.",
+                            You("%d개의 텀블러가 딸깍거리는 소리를 들었다.",
                                 tumblers);
 #endif
                     } else if (gears) {
                         /*KR You_hear("%d gear%s turn.", gears, plur(gears));
                          */
-                        You_hear("%d개의 톱니바퀴가 돌아가는 소리가 들린다.",
+                        You("%d개의 톱니바퀴가 돌아가는 소리를 들었다.",
                                  gears);
                         /* could only get `gears == 5' by playing five
                            correct notes followed by excess; otherwise,

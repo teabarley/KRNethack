@@ -924,7 +924,7 @@ register struct monst *mtmp;
                             is_whirly(mtmp->data) ? "rushing noise"
                             : "splat");
 #else
-                        You_hear("바로 근처에서 %s 소리를 듣는다.",
+                        You("바로 근처에서 %s 소리를 들었다.",
                             is_whirly(mtmp->data) ? "돌격하는"
                             : "철퍼덕 하는");
 #endif
@@ -1542,12 +1542,12 @@ register struct attack *mattk;
             if (mtmp->mcan) {
                 if (!Deaf)
                     /*KR You_hear("a cough from %s!", mon_nam(mtmp)); */
-                    You_hear("%s 콜록콜록 하는 소리를 듣는다!", append_josa(mon_nam(mtmp), "이"));
+                    You("%s 콜록콜록 하는 소리를 들었다!", append_josa(mon_nam(mtmp), "이"));
             }
             else {
                 if (!Deaf)
                     /*KR You_hear("%s hissing!", s_suffix(mon_nam(mtmp))); */
-                    You_hear("%s 쉬익 하는 소리를 듣는다!", append_josa(mon_nam(mtmp), "이"));
+                    You("%s 쉬익 하는 소리를 들었다!", append_josa(mon_nam(mtmp), "이"));
                 if (!rn2(10)
                     || (flags.moonphase == NEW_MOON && !have_lizard())) {
                 do_stone:
@@ -1891,7 +1891,7 @@ register struct attack *mattk;
             if (!Deaf) {
                 if (Blind)
                     /*KR You_hear("laughter."); */
-                    You_hear("웃음소리를 들었다.");
+                    You("웃음소리를 들었다.");
                 else
                     /*KR
                                         pline("%s chuckles.", Monnam(mtmp));

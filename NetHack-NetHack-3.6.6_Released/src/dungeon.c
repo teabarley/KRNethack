@@ -2997,8 +2997,8 @@ char *outbuf;
             Strcpy(tmp, "5음계 곡");
         /*KR Sprintf(outbuf, " (play %s to open or close drawbridge)", tmp);
          */
-        Sprintf(outbuf, " (%s을(를) 연주하면 도개교를 열거나 닫을 수 있음)",
-                tmp);
+        Sprintf(outbuf, " (%s 연주하면 도개교를 열거나 닫을 수 있음)",
+                append_josa(tmp, "을"));
     }
     return outbuf;
 }

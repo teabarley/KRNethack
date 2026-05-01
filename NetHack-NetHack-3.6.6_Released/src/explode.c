@@ -331,7 +331,7 @@ int expltype;
         }
         if (!Deaf && olet != SCROLL_CLASS)
             /*KR You_hear("a blast."); */
-            You_hear("폭발음을 들었다.");
+            You("폭발음을 들었다.");
     }
 
     if (dam)
@@ -746,7 +746,7 @@ struct obj *obj; /* only scatter this obj        */
                     pline("%s 쪼개졌다.", append_josa(xname(otmp), "은"));
                 else
                     /*KR You_hear("stone breaking."); */
-                    You_hear("돌이 부서지는 소리를 들었다.");
+                    You("돌이 부서지는 소리를 들었다.");
                 fracture_rock(otmp);
                 place_object(otmp, sx, sy);
                 if ((otmp = sobj_at(BOULDER, sx, sy)) != 0) {
@@ -765,7 +765,7 @@ struct obj *obj; /* only scatter this obj        */
                           append_josa(xname(otmp), "은"));
                 else
                     /*KR You_hear("stone crumbling."); */
-                    You_hear("돌이 바스러지는 소리를 들었다.");
+                    You("돌이 바스러지는 소리를 들었다.");
                 (void) break_statue(otmp);
 #ifndef FIX_BUG_C340_2
                 place_object(otmp, sx, sy); /* put fragments on floor */

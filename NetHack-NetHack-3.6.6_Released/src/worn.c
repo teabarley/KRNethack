@@ -871,7 +871,7 @@ boolean polyspot;
 #endif
             else
                 /*KR You_hear("a cracking sound."); */
-                You_hear("우지직 하는 소리를 들었다.");
+                You("우지직 하는 소리를 들었다.");
             m_useup(mon, otmp);
         }
         if ((otmp = which_armor(mon, W_ARMC)) != 0) {
@@ -898,7 +898,7 @@ boolean polyspot;
 #endif
                 else
                     /*KR You_hear("a ripping sound."); */
-                    You_hear("옷감이 찢어지는 소리를 들었다.");
+                    You("옷감이 찢어지는 소리를 들었다.");
                 m_useup(mon, otmp);
             }
         }
@@ -911,7 +911,7 @@ boolean polyspot;
 #endif
             else
                 /*KR You_hear("a ripping sound."); */
-                You_hear("옷감이 찢어지는 소리를 들었다.");
+                You("옷감이 찢어지는 소리를 들었다.");
             m_useup(mon, otmp);
         }
     } else if (sliparm(mdat)) {
@@ -925,7 +925,7 @@ boolean polyspot;
 #endif
             else
                 /*KR You_hear("a thud."); */
-                You_hear("쿵 하는 소리를 들었다.");
+                You("쿵 하는 소리를 들었다.");
             if (polyspot)
                 bypass_obj(otmp);
             m_lose_armor(mon, otmp);
@@ -1005,7 +1005,7 @@ boolean polyspot;
 #endif
             else
                 /*KR You_hear("a clank."); */
-                You_hear("철그럭 하는 소리를 들었다.");
+                You("철그럭 하는 소리를 들었다.");
             if (polyspot)
                 bypass_obj(otmp);
             m_lose_armor(mon, otmp);
@@ -1025,7 +1025,7 @@ boolean polyspot;
 #endif
             else
                 /*KR You_hear("a clank."); */
-                You_hear("철그럭 하는 소리를 들었다.");
+                You("철그럭 하는 소리를 들었다.");
             if (polyspot)
                 bypass_obj(otmp);
             m_lose_armor(mon, otmp);

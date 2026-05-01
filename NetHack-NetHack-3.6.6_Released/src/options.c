@@ -2458,7 +2458,8 @@ boolean tinitial, tfrom_file;
 #if 0  /*KR: 원본*/
                     config_error_add("Unrecognized pet type '%s'.", op);
 #else  /*KR: KRNethack 맞춤 번역 */
-                    pline("'%s'은(는) 애완동물 종류로 인식할 수 없습니다.", op);
+                    config_error_add(
+                        "'%s'은(는) 애완동물 종류로 인식할 수 없습니다.", op);
 #endif
                     return FALSE;
                     break;

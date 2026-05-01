@@ -29,7 +29,7 @@ struct monst *mtmp;
             pline("콰앙!! 문이 폭발하는 것을 보았다.");
         else if (!Deaf)
             /*KR You_hear("a distant explosion."); */
-            You_hear("멀리서 폭발음이 들린다.");
+            You("멀리서 폭발음을 들었다.");
     }
     wake_nearto(mtmp->mx, mtmp->my, 7 * 7);
     mtmp->mstun = 1;
@@ -84,7 +84,7 @@ const char *shout;
             pline("%s 외친다:", append_josa(Amonnam(mon), "은"));
         else
             /*KR You_hear("someone yell:"); */
-            You_hear("누군가 외치는 소리를 들었다:");
+            You("누군가 외치는 소리를 들었다:");
         verbalize1(shout);
     }
 }
@@ -1408,8 +1408,7 @@ postmov:
                                 You("문이 잠금 해제되며 열리는 것을 보았다.");
                             else if (!Deaf)
                                 /*KR You_hear("a door unlock and open."); */
-                                You_hear("문이 잠금 해제되며 열리는 소리가 "
-                                         "들렸다.");
+                                You("문이 잠금 해제되며 열리는 소리를 들었다.");
                         }
                         here->doormask = D_ISOPEN;
                         /* newsym(mtmp->mx, mtmp->my); */
@@ -1434,7 +1433,7 @@ postmov:
                                 You("문이 열리는 것을 보았다.");
                             else if (!Deaf)
                                 /*KR You_hear("a door open."); */
-                                You_hear("문이 열리는 소리가 들렸다.");
+                                You("문이 열리는 소리를 들었다.");
                         }
                         here->doormask = D_ISOPEN;
                         /* newsym(mtmp->mx, mtmp->my); */  /* done below */
@@ -1460,8 +1459,7 @@ postmov:
                                 You("문이 부서지며 열리는 것을 보았다.");
                             else if (!Deaf)
                                 /*KR You_hear("a door crash open."); */
-                                You_hear(
-                                    "문이 부서지며 열리는 소리가 들렸다.");
+                                You("문이 부서지며 열리는 소리를 들었다.");
                         }
                         if ((here->doormask & D_LOCKED) != 0 && !rn2(2))
                             here->doormask = D_NODOOR;

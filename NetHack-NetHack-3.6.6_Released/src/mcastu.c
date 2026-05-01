@@ -483,13 +483,13 @@ int spellnum;
     }
     case MGC_AGGRAVATION:
         /*KR You_feel("that monsters are aware of your presence."); */
-        You_feel("괴물들이 당신의 존재를 알아챈 것 같다.");
+        You("괴물들이 당신의 존재를 알아챈 것 같다.");
         aggravate();
         dmg = 0;
         break;
     case MGC_CURSE_ITEMS:
         /*KR You_feel("as if you need some help."); */
-        You_feel("어딘가 도움이 필요할 것 같은 기분이 든다.");
+        You("어딘가 도움이 필요할 것 같은 기분이 든다.");
         rndcurse();
         dmg = 0;
         break;
@@ -508,7 +508,7 @@ int spellnum;
         if (Antimagic) {
             shieldeff(u.ux, u.uy);
             /*KR You_feel("momentarily weakened."); */
-            You_feel("잠시 허약해진 느낌이 들었다.");
+            You("잠시 허약해진 느낌이 들었다.");
         } else {
             /*KR You("suddenly feel weaker!"); */
             You("갑자기 힘이 빠지는 것을 느꼈다!");
@@ -543,7 +543,7 @@ int spellnum;
             shieldeff(u.ux, u.uy);
             if (!Stunned)
                 /*KR You_feel("momentarily disoriented."); */
-                You_feel("순간적으로 방향 감각을 잃었다.");
+                You("순간적으로 방향 감각을 잃었다.");
             make_stunned(1L, FALSE);
         } else {
             /*KR You(Stunned ? "struggle to keep your balance." : "reel...");
@@ -657,7 +657,7 @@ int spellnum;
     }
     case CLC_CURSE_ITEMS:
         /*KR You_feel("as if you need some help."); */
-        You_feel("어딘가 도움이 필요할 것 같은 기분이 든다.");
+        You("어딘가 도움이 필요할 것 같은 기분이 든다.");
         rndcurse();
         dmg = 0;
         break;
@@ -702,7 +702,7 @@ int spellnum;
                 /* unseen caster fails or summons unseen critters,
                    or unconscious hero ("You dream that you hear...") */
                 /*KR You_hear("someone summoning %s.", makeplural(what)); */
-                You_hear("누군가 %s 소환하는 소리가 들린다.",
+                You("누군가 %s 소환하는 소리를 들었다.",
                          append_josa(what, "을"));
             } else {
                 /* unseen caster summoned seen critter(s) */
@@ -716,8 +716,7 @@ int spellnum;
 #else /*KR: KRNethack 맞춤 번역 */
                 arg = (char *) what;
                 if (!Deaf)
-                    You_hear("누군가 무언가를 소환하는 소리가 들렸고, %s "
-                             "나타났다.",
+                    You("누군가 무언가를 소환하는 소리를 들었고, %s 나타났다.",
                              append_josa(arg, "가"));
                 else
                     pline("%s 나타났다.", append_josa(arg, "가"));
@@ -799,7 +798,7 @@ int spellnum;
         if (Antimagic) {
             shieldeff(u.ux, u.uy);
             /*KR You_feel("momentarily dizzy."); */
-            You_feel("순간적으로 어지러움을 느꼈다.");
+            You("순간적으로 어지러움을 느꼈다.");
         } else {
             boolean oldprop = !!Confusion;
 
@@ -809,10 +808,10 @@ int spellnum;
             make_confused(HConfusion + dmg, TRUE);
             if (Hallucination)
                 /*KR You_feel("%s!", oldprop ? "trippier" : "trippy"); */
-                You_feel("%s몽롱하다!", oldprop ? "더욱 " : "");
+                You("%s몽롱하다!", oldprop ? "더욱 " : "");
             else
                 /*KR You_feel("%sconfused!", oldprop ? "more " : ""); */
-                You_feel("%s혼란스럽다!", oldprop ? "더욱 " : "");
+                You("%s혼란스럽다!", oldprop ? "더욱 " : "");
         }
         dmg = 0;
         break;

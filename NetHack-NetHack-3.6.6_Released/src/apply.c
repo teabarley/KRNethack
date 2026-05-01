@@ -284,7 +284,7 @@ int rx, ry, *resp;
         }
         /* variations on "He's dead, Jim." (Star Trek's Dr McCoy) */
         /* KR You_hear("a voice say, \"%s, Jim.\"", buf); */
-        You_hear("어떤 목소리가 들린다. \"%s, 짐.\"", buf);
+        You("어떤 목소리를 들었다. \"%s, 짐.\"", buf);
         *resp = 1;
         return TRUE;
 
@@ -366,7 +366,7 @@ if (Blind) { /* ignore statue->dknown; it'll always be set */
 }
 
 /*KR static const char hollow_str[] = "a hollow sound.  This must be a secret %s!"; */
-static const char hollow_str[] = "속이 빈 소리가 난다. 비밀의 %s임이 틀림없다!";
+static const char hollow_str[] = "속이 빈 소리를 들었다. 비밀의 %s임이 틀림없다!";
 
 /* Strictly speaking it makes no sense for usage of a stethoscope to
    not take any time; however, unless it did, the stethoscope would be
@@ -427,21 +427,21 @@ register struct obj *obj;
     } else if (u.dz) {
         if (Underwater)
             /*KR You_hear("faint splashing."); */
-            You_hear("희미하게 첨벙첨벙거리는 소리를 듣는다.");
+            You("희미하게 첨벙첨벙거리는 소리를 들었다.");
         else if (u.dz < 0 || !can_reach_floor(TRUE))
             cant_reach_floor(u.ux, u.uy, (u.dz < 0), TRUE);
         else if (its_dead(u.ux, u.uy, &res))
             ; /* message already given */
         else if (Is_stronghold(&u.uz))
             /*KR You_hear("the crackling of hellfire."); */
-            You_hear("지옥불이 타닥타닥 타오르는 소리를 듣는다.");
+            You("지옥불이 타닥타닥 타오르는 소리를 들었다.");
         else
             /*KR pline_The("%s seems healthy enough.", surface(u.ux, u.uy)); */
             pline("%s 충분히 건강해 보인다.", append_josa(surface(u.ux, u.uy), "은"));
         return res;
     } else if (obj->cursed && !rn2(2)) {
         /*KR You_hear("your heart beat."); */
-        You_hear("자신의 심장박동 소리를 듣는다.");
+        You("자신의 심장박동 소리를 들었다.");
         return res;
     }
     if (Stunned || (Confusion && !rn2(5)))
@@ -454,7 +454,7 @@ register struct obj *obj;
     ry = u.uy + u.dy;
     if (!isok(rx, ry)) {
         /*KR You_hear("a faint typing noise."); */
-        You_hear("희미하게 누군가가 키보드를 두드리는 소리를 듣는다.");
+        You("희미하게 누군가가 키보드를 두드리는 소리를 들었다.");
         return 0;
     }
     if ((mtmp = m_at(rx, ry)) != 0) {
@@ -534,13 +534,13 @@ register struct obj *obj;
     switch (lev->typ) {
     case SDOOR:
         /*KR You_hear(hollow_str, "door"); */
-        You_hear(hollow_str, "문");
+        You(hollow_str, "문");
         cvt_sdoor_to_door(lev); /* ->typ = DOOR */
         feel_newsym(rx, ry);
         return res;
     case SCORR:
         /*KR You_hear(hollow_str, "passage"); */
-        You_hear(hollow_str, "통로");
+        You(hollow_str, "통로");
         lev->typ = CORR, lev->flags = 0;
         unblock_point(rx, ry);
         feel_newsym(rx, ry);
@@ -576,7 +576,8 @@ struct obj *obj;
     } else {
         if (Deaf)
             /*KR You_feel("rushing air tickle your %s.", body_part(NOSE)); */
-            You_feel("공기의 흐름이 %s 간질인다.", append_josa(body_part(NOSE), "를"));
+            pline("공기의 흐름이 %s 간질인다.",
+                  append_josa(body_part(NOSE), "를"));
         else
             /*KR You(whistle_str, obj->cursed ? "shrill" : "high"); */
             You(whistle_str, obj->cursed ? "날카로운" : "새된");
@@ -925,7 +926,7 @@ next_to_u()
                         You_feel("%s leash go slack.",
                                  (number_leashed() > 1) ? "a" : "the");
 #else
-                        You("줄이 느슨해졌다.");
+                        Your("줄이 느슨해졌다.");
 #endif                           
                         mtmp->mleashed = 0;
                         otmp->leashmon = 0;
@@ -1198,7 +1199,7 @@ struct obj *obj;
                   append_josa(Monnam(mtmp), "은"));
         else
             /*KR You_hear("%s stop moving.", something); */
-            You_hear("무언가가 움직임을 멈추었다.");
+            You("무언가가 움직임을 멈추는 것을 들었다.");
         paralyze_monst(mtmp, (int) mtmp->mfrozen + tmp);
     } else if (monable && mtmp->data == &mons[PM_UMBER_HULK]) {
         if (vis)
@@ -1238,7 +1239,7 @@ struct obj *obj;
                     append_josa(mon_nam(mtmp), "로"));
             else
                 /*KR You_feel("a bit silly gesturing the mirror in that direction."); */
-                You_feel("거울을 그 방향으로 향하는 것은 조금 우습다고 느낀다.");
+                You("거울을 그 방향으로 향하는 것은 조금 우습다고 느낀다.");
             do_react = FALSE;
         }
         if (do_react) {
@@ -2097,11 +2098,11 @@ int magic; /* 0=Physical, otherwise skill level */
         }
         if (magic) {
             /*KR You("writhe a little in the grasp of %s!", mon_nam(u.ustuck)); */
-            You("%에게 붙잡혀있는 채로 몸을 조금 비틀었다!", mon_nam(u.ustuck));
+            You("%s에게 붙잡혀있는 채로 몸을 조금 비틀었다!", mon_nam(u.ustuck));
             return 1;
         }
         /*KR You("cannot escape from %s!", mon_nam(u.ustuck)); */
-        You("%에게서 벗어날 수 없다!", mon_nam(u.ustuck));
+        You("%s에게서 벗어날 수 없다!", mon_nam(u.ustuck));
         return 0;
     } else if (Levitation || Is_airlevel(&u.uz) || Is_waterlevel(&u.uz)) {
         if (magic) {
@@ -2626,10 +2627,10 @@ long timeout;
                 You_see("%s %s out of your pack%s!", monnambuf,
                         locomotion(mtmp->data, "drop"), and_vanish);
 #else
-                You_feel("%s 당신의 가방에서 %s 것 같다!", append_josa(something, "이"),
+                pline("%s 당신의 가방에서 %s 것 같다!", append_josa(something, "이"),
                     locomotion(mtmp->data, "떨어진"));
             else
-                You_see("%s 당신의 가방에서 %s 것을 보았다!", append_josa(monnambuf, "이"),
+                You("%s 당신의 가방에서 %s 것을 보았다!", append_josa(monnambuf, "이"),
                         locomotion(mtmp->data, "떨어지는"));
 
 #endif
@@ -2646,7 +2647,7 @@ long timeout;
 #else
                     pline("%s 갑자기 사라졌다!", append_josa(xname(figurine), "이"));
                 else
-                    You("모형이 %s 변했다!%s", append_josa(monnambuf, "로"),
+                    You("모형이 %s 변하는 것을 보았다!%s", append_josa(monnambuf, "로"),
                         and_vanish);
 #endif
                 redraw = TRUE; /* update figurine's map location */
@@ -2677,7 +2678,7 @@ long timeout;
                     Strcpy(carriedby, "텅 빈 물속");
                 else
                     Strcpy(carriedby, "텅 빈 공중");
-                You("%s %s에서 %s 것을 본다!%s", append_josa(monnambuf, "이"),
+                You("%s %s에서 %s 것을 보았다!%s", append_josa(monnambuf, "이"),
                     carriedby, locomotion(mtmp->data, "떨어지는"),
                     and_vanish);
 #endif                    

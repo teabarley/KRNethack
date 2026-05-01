@@ -505,7 +505,7 @@ struct obj *scroll;
 
     if ((u.uhave.amulet || On_W_tower_level(&u.uz)) && !rn2(3)) {
         /*KR You_feel("disoriented for a moment."); */
-        You_feel("잠시 방향 감각을 상실한 것 같다.");
+        You("잠시 방향 감각을 상실한 것 같다.");
         if (!wizard || yn("Override?") != 'y')
             return FALSE;
     }
@@ -828,7 +828,7 @@ level_tele()
     if ((u.uhave.amulet || In_endgame(&u.uz) || In_sokoban(&u.uz))
         && !wizard) {
         /*KR You_feel("very disoriented for a moment."); */
-        You_feel("일순간 방향 감각을 완전히 잃은 것 같다.");
+        You("일순간 방향 감각을 완전히 잃은 것 같다.");
         return;
     }
     if ((Teleport_control && !Stunned) || wizard) {
@@ -1013,7 +1013,7 @@ level_tele()
             Strcpy(killer.name, "너무 일찍 천국에 가버렸다");
         } else if (newlev == -9) {
             /*KR You_feel("deliriously happy."); */
-            You_feel("무아지경의 행복을 느낀다.");
+            You("무아지경의 행복을 느낀다.");
             /*KR pline("(In fact, you're on Cloud 9!)"); */
             pline("(사실, 당신은 가장 높은 하늘에 있다!)");
             display_nhwindow(WIN_MESSAGE, FALSE);
@@ -1130,7 +1130,7 @@ void domagicportal(ttmp) register struct trap *ttmp;
      */
     if (In_endgame(&u.uz) && !u.uhave.amulet) {
         /*KR You_feel("dizzy for a moment, but nothing happens..."); */
-        You_feel("잠시 어지러웠지만, 아무 일도 일어나지 않았다...");
+        You("잠시 어지러웠지만, 아무 일도 일어나지 않았다...");
         return;
     }
 
@@ -1147,7 +1147,7 @@ void tele_trap(trap) struct trap *trap;
         if (Antimagic)
             shieldeff(u.ux, u.uy);
         /*KR You_feel("a wrenching sensation."); */
-        You_feel("비틀리는 듯한 감각이 느껴졌다.");
+        You("비틀리는 듯한 감각이 느껴졌다.");
     } else if (!next_to_u()) {
         You1(shudder_for_moment);
     } else if (trap->once) {
@@ -1187,7 +1187,7 @@ unsigned trflags;
     }
     if (Antimagic || In_endgame(&u.uz)) {
         /*KR You_feel("a wrenching sensation."); */
-        You_feel("비틀리는 듯한 감각이 느껴졌다.");
+        You("비틀리는 듯한 감각이 느껴졌다.");
         return;
     }
     if (!Blind)

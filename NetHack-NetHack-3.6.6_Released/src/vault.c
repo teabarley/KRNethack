@@ -696,7 +696,7 @@ STATIC_OVL void wallify_vault(grd) struct monst *grd;
                   append_josa(noit_Monnam(grd), "은"));
         else
             /*KR You_hear("a distant chant."); */
-            You_hear("멀리서 성가가 들린다.");
+            You("멀리서 성가를 들었다.");
         if (movedgold)
             /*KR pline("A mysterious force moves the gold into the vault.");
              */
@@ -932,7 +932,7 @@ register struct monst *grd;
                                  ? "the shrill sound of a guard's whistle"
                                  : "angry shouting");
 #else /*KR: KRNethack 맞춤 번역 */
-                    You_hear("%s 들린다.",
+                    You("%s 들린다.",
                              m_carrying(grd, TIN_WHISTLE)
                                  ? "경비병의 날카로운 호루라기 소리가"
                                  : "분노에 찬 외침이");

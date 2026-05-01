@@ -35,7 +35,7 @@ register struct monst *mon;
                 }
                 if (howler)
                /*KR You_hear("a %s howling at the moon.", howler); */
-                    You_hear("달을 향해 %s 울부짖는 소리를 들었다.",
+                    You("달을 향해 %s 울부짖는 소리를 들었다.",
                              append_josa(howler, "가"));
             }
         }

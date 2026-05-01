@@ -3000,7 +3000,7 @@ struct obj *otmp2;
         if (Hallucination) {
             if (onfloor) {
                 /*KR You_see("parts of the floor melting!"); */
-                You_see("바닥의 일부가 녹아내리는 것을 보았다!");
+                You("바닥의 일부가 녹아내리는 것을 보았다!");
             } else if (inpack) {
                 /*KR Your("pack reaches out and grabs something!"); */
                 Your("배낭이 손을 뻗어 무언가를 움켜쥐었다!");
@@ -3025,7 +3025,7 @@ struct obj *otmp2;
         }
     } else {
         /*KR You_hear("a faint sloshing sound."); */
-        You_hear("희미하게 출렁거리는 소리가 들렸다.");
+        You("희미하게 출렁거리는 소리를 들었다.");
     }
 }
 

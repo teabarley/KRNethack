@@ -508,7 +508,7 @@ Helmet_on(VOID_ARGS)
                          ? "like sitting in a corner"
                          : "giddy");
 #else                       /*KR: KRNethack 맞춤 번역 */
-            You_feel("%s.", /* track INT change; ignore WIS */
+            You("%s.", /* track INT change; ignore WIS */
                      ACURR(A_INT)
                              <= (ABASE(A_INT) + ABON(A_INT) + ATEMP(A_INT))
                          ? "구석에 앉아 있고 싶어졌다"

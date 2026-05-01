@@ -184,7 +184,7 @@ struct obj *obj;
                      (distu(mon->mx, mon->my) <= range * range)
                         ? "nearby" : "in the distance");
 #else /*KR: KRNethack 맞춤 번역 */
-            You_hear("%s 지팡이 소리와 폭발음이 들린다.",
+            You("%s 지팡이 소리와 폭발음을 들었다.",
                      (distu(mon->mx, mon->my) <= range * range)
                          ? "가까운 곳에서"
                          : "먼 곳에서");
@@ -217,7 +217,7 @@ boolean self;
         You_hear("a %s zap.", (distu(mtmp->mx, mtmp->my) <= range * range)
                                  ? "nearby" : "distant");
 #else /*KR: KRNethack 맞춤 번역 */
-        You_hear("%s 지팡이 소리를 들었다.",
+        You("%s 지팡이 소리를 들었다.",
                  (distu(mtmp->mx, mtmp->my) <= range * range)
                      ? "가까운 곳에서"
                      : "멀리서");
@@ -256,7 +256,7 @@ boolean self;
                  (distu(mtmp->mx, mtmp->my) <= range * range)
                  ? "nearby" : "in the distance");
 #else /*KR: KRNethack 맞춤 번역 */
-        You_hear("%s 뿔피리 연주 소리가 들린다.",
+        You("%s 뿔피리 연주 소리를 들었다.",
                  (distu(mtmp->mx, mtmp->my) <= range * range) ? "근처에서"
                                                               : "멀리서");
 #endif
@@ -316,7 +316,7 @@ struct obj *otmp;
                           FALSE),
                  onambuf);
 #else /*KR: KRNethack 맞춤 번역 */
-        You_hear("%s %s 읽는 소리가 들린다.",
+        You("%s %s 읽는 소리를 들었다.",
                  append_josa(x_monnam(mtmp, ARTICLE_A, (char *) 0,
                                       (SUPPRESS_IT | SUPPRESS_INVISIBLE
                                        | SUPPRESS_SADDLE),
@@ -342,7 +342,7 @@ struct obj *otmp;
               append_josa(singular(otmp, doname), "을"));
     } else if (!Deaf)
         /*KR You_hear("a chugging sound."); */
-        You_hear("벌컥거리는 소리가 들렸다.");
+        You("벌컥거리는 소리를 들었다.");
 }
 
 /* Defines for various types of stuff.  The order in which monsters prefer
@@ -754,7 +754,7 @@ struct monst *mtmp;
                   append_josa(doname(otmp), "을"));
         else if (!Deaf)
             /*KR You_hear("a bugle playing reveille!"); */
-            You_hear("기상나팔 소리가 들린다!");
+            You("기상나팔 소리를 들었다!");
         awaken_soldiers(mtmp);
         return 2;
     case MUSE_WAN_TELEPORTATION_SELF:
@@ -877,7 +877,7 @@ struct monst *mtmp;
         You_hear("%s crash through the %s.", something,
                  surface(mtmp->mx, mtmp->my));
 #else /*KR: KRNethack 맞춤 번역 */
-            You_hear("무언가가 %s 뚫고 추락하는 소리가 들린다.",
+            You("무언가가 %s 뚫고 추락하는 소리를 들었다.",
                      append_josa(surface(mtmp->mx, mtmp->my), "을"));
 #endif
         /* we made sure that there is a level for mtmp to go to */
@@ -2523,7 +2523,7 @@ boolean stoning; /* True: stop petrification, False: cure stun && confusion */
         You_hear("%s.",
                  (obj->oclass == POTION_CLASS) ? "drinking" : "chewing");
 #else /*KR: KRNethack 맞춤 번역 */
-        You_hear("%s 소리가 들렸다.",
+        You("%s 소리를 들었다.",
                  (obj->otyp == POT_ACID) ? "꿀꺽거리는" : "우적우적 씹는");
 #endif
 

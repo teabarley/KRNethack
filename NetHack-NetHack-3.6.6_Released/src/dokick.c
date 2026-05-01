@@ -493,7 +493,7 @@ xchar x, y; /* coordinates where object was before the impact, not after */
             if (otmp->otyp == EGG && otmp->spe && otmp->corpsenm >= LOW_PM)
                 change_luck(-1);
             /*KR You_hear("a muffled %s.", result); */
-            You_hear("뭔가 안에서 %s 소리가 들렸다.", result);
+            You("안에서 %s 소리를 들었다.", result);
             if (costly) {
                 if (frominv && !otmp->unpaid)
                     otmp->no_charge = 1;
@@ -1311,8 +1311,7 @@ dokick()
 #if 0 /*KR: 원본*/
                     You_hear("a low buzzing."); /* a warning */
 #else /*KR: KRNethack 맞춤 번역 */
-                    You_hear(
-                        "낮게 웅웅거리는 소리가 들린다."); /* a warning */
+                    You("낮게 웅웅거리는 소리를 들었다."); /* a warning */
 #endif
                 goto ouch;
             }
@@ -1399,7 +1398,7 @@ dokick()
                        && !(mvitals[PM_BLACK_PUDDING].mvflags & G_GONE)) {
                 if (Blind)
                     /*KR You_hear("a gushing sound."); */
-                    You_hear("물이 세차게 뿜어져 나오는 소리가 들린다.");
+                    You("물이 세차게 뿜어져 나오는 소리를 들었다.");
                 else
                     /*KR pline("A %s ooze gushes up from the drain!",
                           hcolor(NH_BLACK)); */
@@ -1437,7 +1436,7 @@ dokick()
 #else /*KR: KRNethack 맞춤 번역 */
                 pline("%s%s%s.", !Deaf ? "철퍼덕! " : "",
                       !Blind  ? "배수구에서 진흙 같은 쓰레기가 튀어올랐다"
-                      : !Deaf ? "철썩거리는 소리가 들린다" /* Deaf-aware */
+                      : !Deaf ? "철썩거리는 소리를 들었다" /* Deaf-aware */
                               : "무언가가 당신의",
                       (!Blind || !Deaf) ? "" : append_josa(buf, "에 튀었다"));
 #endif
@@ -1757,7 +1756,7 @@ xchar dlev;                    /* if !0 send to dlev near player */
                     pline("\"%s, 너는 도둑이다!\"", plname);
             } else
                 /*KR You_hear("a scream, \"Thief!\""); */
-                You_hear("\"도둑이야!\" 하는 비명 소리가 들린다.");
+                You("\"도둑이야!\" 하는 비명 소리를 들었다.");
             hot_pursuit(shkp);
             (void) angry_guards(FALSE);
             return;
@@ -1874,7 +1873,7 @@ boolean shop_floor_obj;
             result = "철퍼덕";
         }
         /*KR You_hear("a muffled %s.", result); */
-        You_hear("안에서 들려오는 %s 소리를 들었다.", result);
+        You("안에서 들려오는 %s 소리를 들었다.", result);
         obj_extract_self(otmp);
         obfree(otmp, (struct obj *) 0);
         return TRUE;

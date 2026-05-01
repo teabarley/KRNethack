@@ -538,7 +538,7 @@ void intemple(roomno) int roomno;
             break;
         case 1:
             /*KR You_feel("like you are being watched."); */
-            You_feel("누군가 지켜보고 있는 것 같다.");
+            You("누군가 지켜보고 있는 것 같은 기분이 든다.");
             break;
         case 2:
             /*KR pline("A shiver runs down your %s.", body_part(SPINE)); */

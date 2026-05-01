@@ -120,7 +120,7 @@ STATIC_OVL void give_may_advance_msg(skill) int skill;
                      : (skill <= P_LAST_SPELL) ? "spell casting "
                          : "fighting ");
 #else
-    You_feel("당신의 %s스킬에 더욱 자신감이 붙은 것을 느낀다.",
+    You("당신의 %s스킬에 더욱 자신감이 붙은 것을 느낀다.",
              (skill == P_NONE)          ? ""
              : (skill <= P_LAST_WEAPON) ? "무기 "
              : (skill <= P_LAST_SPELL)  ? "마법 시전 "
@@ -1525,7 +1525,7 @@ enhance_weapon_skill()
 #if 0 /*KR: 원본*/
                         You_feel("you could be more dangerous!");
 #else
-                        You_feel("더욱 위협적인 존재가 될 수 있을 것 같다!");
+                        You("더욱 위협적인 존재가 될 수 있을 것 같다!");
 #endif
                     n++;
                     break;

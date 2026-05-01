@@ -140,25 +140,25 @@ dosounds()
                                      ? "someone counting money."
                                      : "the quarterback calling the play.");
 #else /*KR: KRNethack 맞춤 번역 */
-                        You_hear(
+                        You(
                             !hallu
                                 ? "누군가 돈을 세는 소리를 들었다."
                                 : "쿼터백이 작전을 지시하는 소리를 들었다.");
 #endif
                     else
                         /*KR You_hear("someone searching."); */
-                        You_hear("누군가 찾는 소리를 들었다.");
+                        You("누군가 찾는 소리를 들었다.");
                     break;
                 }
             }
                 /*FALLTHRU*/
             case 0:
                 /*KR You_hear("the footsteps of a guard on patrol."); */
-                You_hear("경비병이 순찰하는 발소리를 들었다.");
+                You("경비병이 순찰하는 발소리를 들었다.");
                 break;
             case 2:
                 /*KR You_hear("Ebenezer Scrooge!"); */
-                You_hear("에비니저 스크루지의 소리를 들었다!");
+                You("에비니저 스크루지의 소리를 들었다!");
                 break;
             }
         return;
@@ -172,18 +172,18 @@ dosounds()
                 switch (rn2(2) + hallu) {
                 case 0:
                     /*KR You_hear("a low buzzing."); */
-                    You_hear("낮게 웅웅거리는 소리를 들었다.");
+                    You("낮게 웅웅거리는 소리를 들었다.");
                     break;
                 case 1:
                     /*KR You_hear("an angry drone."); */
-                    You_hear("성난 윙윙거리는 소리를 들었다.");
+                    You("성난 윙윙거리는 소리를 들었다.");
                     break;
                 case 2:
 #if 0 /*KR: 원본*/
                     You_hear("bees in your %sbonnet!",
                              uarmh ? "" : "(nonexistent) ");
 #else /*KR: KRNethack 맞춤 번역 */
-                    You_hear("당신의 %s모자 안에 벌이 있는 소리를 들었다!",
+                    You("당신의 %s모자 안에 벌이 있는 소리를 들었다!",
                              uarmh ? "" : "(존재하지도 않는) ");
 #endif
                     break;
@@ -335,8 +335,8 @@ dosounds()
                 "#an animal carcass being offered in sacrifice.",
                 "*a strident plea for donations.",
 #else /*KR: KRNethack 맞춤 번역 */
-                "*누군가 %s 찬양하는 소리를 들었다.",
-                "*누군가 %s 간청하는 소리를 들었다.",
+                "*누군가 %s에게 찬양하는 소리를 들었다.",
+                "*누군가 %s에게 간청하는 소리를 들었다.",
                 "#동물 사체를 제물로 바치는 소리를 들었다.",
                 "*귀에 거슬리게 기부를 부탁하는 소리를 들었다.",
 #endif

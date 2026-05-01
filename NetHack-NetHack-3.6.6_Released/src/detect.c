@@ -450,7 +450,7 @@ outgoldmap:
         ter_typ |= TER_MON; /* so autodescribe will recognize hero */
     }
     /*KR You_feel("very greedy, and sense gold!"); */
-    You_feel("엄청난 탐욕과 함께 금화의 기운을 감지했다!");
+    You("엄청난 탐욕과 함께 금화의 기운을 감지했다!");
     exercise(A_WIS, TRUE);
 
 #if 0 /*KR: JNetHack에서 찾은 누락 파라미터*/
@@ -1114,7 +1114,7 @@ outtrapmap:
 #if 0 /*KR: 원본*/
     You_feel("%s.", cursed_src ? "very greedy" : "entrapped");
 #else
-    You_feel("%s.", cursed_src ? "큰 탐욕을 느꼈다" : "함정에 빠진 것 같다");
+    You("%s.", cursed_src ? "큰 탐욕을 느꼈다" : "함정에 빠진 것 같다");
 #endif
 
 #if 0 /*KR: JNetHack에서 찾은 누락 파라미터*/
@@ -1335,12 +1335,12 @@ void use_crystal_ball(optr) struct obj **optr;
                 break;
             case 4:
                 /*KR You_see("goldfish swimming above fluorescent rocks."); */
-                You_see("형광색 바위 위에서 금붕어들이 헤엄치고 있다.");
+                You("형광색 바위 위에서 금붕어들이 헤엄치는 것을 보았다.");
                 break;
             case 5:
                 /*KR You_see("tiny snowflakes spinning around a miniature
                  * farmhouse."); */
-                You_see("소형 농가 위로 작은 눈송이들이 맴돌고 있다.");
+                You("소형 농가 위로 작은 눈송이들이 맴도는 것을 보았다.");
                 break;
             default:
                 /*KR pline("Oh wow... like a kaleidoscope!"); */
@@ -1407,7 +1407,7 @@ void use_crystal_ball(optr) struct obj **optr;
                 You_see("%s, %s.", level_detects[i].what,
                         level_distance(level_detects[i].where));
 #else
-                You_see("%s %s 있는 것을 보았다.", level_detects[i].what,
+                You("%s %s 있는 것을 보았다.", level_detects[i].what,
                         append_josa(level_distance(level_detects[i].where),
                                     "이"));
 #endif
@@ -1418,7 +1418,7 @@ void use_crystal_ball(optr) struct obj **optr;
         if (ret) {
             if (!rn2(100)) /* make them nervous */
                 /*KR You_see("the Wizard of Yendor gazing out at you."); */
-                You_see("당신을 노려보는 옌더의 마법사가 보인다.");
+                You("당신을 노려보는 옌더의 마법사가 보인다.");
             else
                 /*KR pline_The("vision is unclear."); */
                 pline_The("환상이 선명하지 않다.");
@@ -1895,7 +1895,7 @@ boolean via_warning;
         if (!canspotmon(mtmp)) {
             map_invisible(x, y);
             /*KR You_feel("an unseen monster!"); */
-            You_feel("보이지 않는 몬스터의 기운을 느꼈다!");
+            You("보이지 않는 몬스터의 기운을 느꼈다!");
         } else if (!sensemon(mtmp)) {
 #if 0 /*KR: 원본*/
             You("find %s.", mtmp->mtame ? y_monnam(mtmp) : a_monnam(mtmp));

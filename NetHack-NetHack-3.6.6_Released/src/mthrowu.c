@@ -954,7 +954,7 @@ struct attack *mattk;
                           append_josa(Monnam(mtmp), "이"));
                 else
                     /*KR You_hear("a cough."); */
-                    You_hear("기침 소리를 들었다.");
+                    You("기침 소리를 들었다.");
             }
             return 0;
         }
@@ -1156,7 +1156,7 @@ struct attack *mattk;
                           append_josa(Monnam(mtmp), "이"));
                 else
                     /*KR You_hear("a cough."); */
-                    You_hear("기침 소리를 들었다.");
+                    You("기침 소리를 들었다.");
             }
             return 0;
         }
@@ -1289,8 +1289,8 @@ boolean your_fault, from_invent;
             else
                 /*KR You_hear(Hallucination ? "angry snakes!" : "a hissing
                  * noise."); */
-                You_hear(Hallucination ? "화난 뱀 소리를 들었다!"
-                                       : "쉬익거리는 소리를 들었다.");
+                You(Hallucination ? "화난 뱀 소리를 들었다!"
+                                  : "쉬익거리는 소리를 들었다.");
             if (!unbreakable)
                 dissolve_bars(barsx, barsy);
         }

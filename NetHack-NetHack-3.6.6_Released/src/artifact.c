@@ -1531,7 +1531,7 @@ int dieroll; /* needed for Magicbane and vorpal blades */
                          (otmp->oartifact == ART_STORMBRINGER)
                             ? "unholy blade" : "object", life);
 #else
-                You_feel("어떤 %s 당신의 %s 흡수하는 것을 느꼈다!",
+                You("어떤 %s 당신의 %s 흡수하는 것을 느꼈다!",
                          append_josa((otmp->oartifact == ART_STORMBRINGER)
                                        ? "불경스러운 칼날" : "물체", "이"),
                          append_josa(life, "을"));
@@ -1606,7 +1606,7 @@ struct obj *obj;
             You_feel("that %s %s ignoring you.", the(xname(obj)),
                      otense(obj, "are"));
 #else
-            You_feel("%s 무시하고 있는 기분이 들었다.",
+            You("%s 당신을 무시하는 것 같은 기분이 든다.",
                      append_josa(xname(obj), "이"));
 #endif
             /* and just got more so; patience is essential... */
@@ -1633,7 +1633,7 @@ struct obj *obj;
                 healamt = (u.mhmax + 1 - u.mh) / 2;
             if (healamt || Sick || Slimed || Blinded > creamed)
                 /*KR You_feel("better."); */
-                You_feel("기분이 나아졌다.");
+                You("기분이 나아졌다.");
             else
                 goto nothing_special;
             if (healamt > 0) {
@@ -1662,7 +1662,7 @@ struct obj *obj;
                 u.uen += epboost;
                 context.botl = TRUE;
                 /*KR You_feel("re-energized."); */
-                You_feel("에너지를 되찾은 기분이 든다.");
+                You("에너지를 되찾은 기분이 든다.");
             } else
                 goto nothing_special;
             break;
@@ -1743,14 +1743,14 @@ struct obj *obj;
             if (u.uhave.amulet || In_endgame(&u.uz) || In_endgame(&newlev)
                 || newlev.dnum == u.uz.dnum || !next_to_u()) {
                 /*KR You_feel("very disoriented for a moment."); */
-                You_feel("잠시 방향 감각을 크게 잃은 기분이 든다.");
+                You("잠시 방향 감각을 크게 잃은 기분이 든다.");
             } else {
                 if (!Blind)
                     /*KR You("are surrounded by a shimmering sphere!"); */
                     You("어른거리는 구체에 둘러싸였다!");
                 else
                     /*KR You_feel("weightless for a moment."); */
-                    You_feel("잠시 몸이 붕 뜨는 기분이 든다.");
+                    You("잠시 몸이 붕 뜨는 기분이 든다.");
                 goto_level(&newlev, FALSE, FALSE, FALSE);
             }
             break;
@@ -1800,7 +1800,7 @@ struct obj *obj;
             You_feel("that %s %s ignoring you.", the(xname(obj)),
                      otense(obj, "are"));
 #else
-            You_feel("%s 당신을 무시하는 것 같은 기분이 든다.",
+            You("%s 당신을 무시하는 것 같은 기분이 든다.",
                      append_josa(xname(obj), "이"));
 #endif
             /* can't just keep repeatedly trying */
@@ -1817,17 +1817,17 @@ struct obj *obj;
             /* you had the property from some other source too */
             if (carried(obj))
                 /*KR You_feel("a surge of power, but nothing seems to happen."); */
-                You_feel("힘이 솟구치는 것을 느꼈지만, 아무 일도 일어나지 않은 것 같다.");
+                You("힘이 솟구치는 것을 느꼈지만, 아무 일도 일어나지 않은 것 같다.");
             return 1;
         }
         switch (oart->inv_prop) {
         case CONFLICT:
             if (on)
                 /*KR You_feel("like a rabble-rouser."); */
-                You_feel("선동가가 된 것 같은 기분이 든다.");
+                You("선동가가 된 것 같은 기분이 든다.");
             else
                 /*KR You_feel("the tension decrease around you.");*/
-                You_feel("주변의 긴장감이 줄어든 것을 느낀다.");
+                You("주변의 긴장감이 줄어든 것을 느낀다.");
             break;
         case LEVITATION:
             if (on) {

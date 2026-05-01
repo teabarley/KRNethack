@@ -1250,7 +1250,7 @@ void done(how) int how;
             /*KR You("vomit ..."); */
             You("게워냈다...");
         /*KR You_feel("much better!"); */
-        You_feel("훨씬 나아졌다!");
+        You("훨씬 나아졌다!");
         /*KR pline_The("medallion crumbles to dust!"); */
         pline("메달은 부서져 먼지가 되었다!");
         if (uamul)
@@ -2148,7 +2148,7 @@ boolean ask;
                             !type_is_pname(&mons[i]) ? "the " : "",
                             mons[i].mname);
 #else /*KR: KRNethack 맞춤 번역 */
-                    Sprintf(buf, "%s", mons[i].mname);
+                    Sprintf(buf, "%s", get_kr_name(mons[i].mname));
 #endif
                     if (nkilled > 1) {
 #if 0 /*KR: 원본*/
@@ -2176,13 +2176,15 @@ boolean ask;
                     /* trolls or undead might have come back,
                        but we don't keep track of that */
                     if (nkilled == 1)
-                        Strcpy(buf, an(mons[i].mname));
+             /*KR 원본: Strcpy(buf, an(mons[i].mname)); */
+                        Strcpy(buf, get_kr_name(mons[i].mname));
                     else
 #if 0 /*KR: 원본*/
                         Sprintf(buf, "%3d %s", nkilled,
                                 makeplural(mons[i].mname));
 #else /*KR: KRNethack 맞춤 번역 */
-                        Sprintf(buf, "%3d마리의 %s", nkilled, mons[i].mname);
+                        Sprintf(buf, "%3d마리의 %s", nkilled,
+                                get_kr_name(mons[i].mname));
 #endif
                 }
                 /* number of leading spaces to match 3 digit prefix */
@@ -2305,7 +2307,12 @@ boolean ask;
                 if (UniqCritterIndx(i))
                     continue;
                 if (mvitals[i].mvflags & G_GONE) {
+#if 0 /*KR: 원본*/
                     Sprintf(buf, " %s", makeplural(mons[i].mname));
+#else /*KR: KRNethack 맞춤 번역 */
+                    /* makeplural 제거 및 get_kr_name 적용 */
+                    Sprintf(buf, " %s", get_kr_name(mons[i].mname));
+#endif
                     /*
                      * "Extinct" is unfortunate terminology.  A species
                      * is marked extinct when its birth limit is reached,

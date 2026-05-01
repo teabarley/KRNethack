@@ -963,7 +963,7 @@ register struct monst *mtmp;
 #endif
                 else if (flags.verbose)
                     /*KR You_hear("a crunching sound."); */
-                    You_hear("무언가 우적우적 씹어먹는 소리가 들렸다.");
+                    You("무언가 우적우적 씹어먹는 소리를 들었다.");
                 mtmp->meating = otmp->owt / 2 + 1;
                 /* Heal up to the object's weight in hp */
                 if (mtmp->mhp < mtmp->mhpmax) {
@@ -1114,7 +1114,7 @@ struct monst *mtmp;
             } else {
                 if (flags.verbose)
                     /*KR You_hear("a slurping sound."); */
-                    You_hear("꿀꺽 삼키는 소리가 들렸다.");
+                    You("꿀꺽 삼키는 소리를 들었다.");
             }
             /* Heal up to the object's weight in hp */
             if (mtmp->mhp < mtmp->mhpmax) {
@@ -1170,7 +1170,7 @@ struct monst *mtmp;
             You_hear("%s slurping sound%s.",
                      (ecount == 1) ? "a" : "several", plur(ecount));
 #else /*KR: KRNethack 맞춤 번역 */
-            You_hear("꿀꺽거리는 소리가 들렸다.");
+            You("꿀꺽거리는 소리를 들었다.");
 #endif
     }
     return (count > 0 || ecount > 0) ? 1 : 0;
@@ -2233,7 +2233,7 @@ boolean was_swallowed; /* digestion */
 #if 0 /*KR: 원본*/
                     You_hear("an explosion.");
 #else /*KR: KRNethack 맞춤 번역 */
-                    You_hear("폭발 소리가 들렸다.");
+                    You("폭발 소리를 들었다.");
 #endif
                     magr->mhp -= tmp;
                     if (DEADMONSTER(magr))
@@ -2427,7 +2427,7 @@ int how;
 #else /*KR: KRNethack 맞춤 번역 */
     {
         if (*fltxt) {
-            pline("%s %s 의해 %s!", append_josa(Monnam(mdef), "은"), fltxt,
+            pline("%s %s에 의해 %s!", append_josa(Monnam(mdef), "은"), fltxt,
                   nonliving(mdef->data) ? "파괴되었다" : "살해당했다");
         } else {
             pline("%s %s!", append_josa(Monnam(mdef), "은"),
@@ -2635,7 +2635,7 @@ int xkill_flags; /* 1: suppress message, 2: suppress corpse, 4: pacifist */
         HTelepat &= ~INTRINSIC;
         change_luck(-2);
         /*KR You("murderer!"); */
-        You("이 살인자!");
+        pline("이 살인자!");
         if (Blind && !Blind_telepat)
             see_monsters(); /* Can't sense monsters any more. */
     }
@@ -2644,7 +2644,7 @@ int xkill_flags; /* 1: suppress message, 2: suppress corpse, 4: pacifist */
     if (is_unicorn(mdat) && sgn(u.ualign.type) == sgn(mdat->maligntyp)) {
         change_luck(-5);
         /*KR You_feel("guilty..."); */
-        You_feel("죄책감이 들었다...");
+        You("죄책감이 들었다...");
     }
 
     /* give experience points */
@@ -2684,10 +2684,10 @@ int xkill_flags; /* 1: suppress message, 2: suppress corpse, 4: pacifist */
         /* your god is mighty displeased... */
         if (!Hallucination)
             /*KR You_hear("the rumble of distant thunder..."); */
-            You_hear("멀리서 천둥이 우르릉거리는 소리가 들렸다...");
+            You("멀리서 천둥이 우르릉거리는 소리를 들었다...");
         else
             /*KR You_hear("the studio audience applaud!"); */
-            You_hear("방청객이 박수 치는 소리가 들렸다!");
+            You("방청객이 박수 치는 소리를 들었다!");
     } else if (mtmp->mpeaceful)
         adjalign(-5);
 
@@ -2858,7 +2858,7 @@ int xkill_flags; /* 1: suppress message, 2: suppress corpse, 4: pacifist */
          if (!msgmv || (moves - msgmv) > 200L) {
              if (!msgmv || rn2(2))
                  /*KR You_feel("besieged."); */
-                 You_feel("포위된 것 같다.");
+                 You("포위된 것 같다.");
              msgmv = moves;
          }
          /*
@@ -3099,7 +3099,7 @@ int xkill_flags; /* 1: suppress message, 2: suppress corpse, 4: pacifist */
             peaceful--not vulnerable but attacking it is hypocritical) */
          && (onscary(u.ux, u.uy, mtmp) || mtmp->mpeaceful)) {
          /*KR You_feel("like a hypocrite."); */
-         You_feel("위선자가 된 기분이다.");
+         You("위선자가 된 기분이다.");
          /* AIS: Yes, I know alignment penalties and bonuses aren't balanced
             at the moment. This is about correct relative to other "small"
             penalties; it should be fairly large, as attacking while standing
@@ -4390,12 +4390,12 @@ boolean silent;
                     You_see("%sangry guard%s approaching!",
                             sct == 1 ? "an " : "", sct > 1 ? "s" : "");
 #else /*KR: KRNethack 맞춤 번역 */
-                    You_see("화난 경비병%s 다가오는 것을 보았다!",
+                    You("화난 경비병%s 다가오는 것을 보았다!",
                             sct > 1 ? "들이" : "이");
 #endif
             } else
                 /*KR You_hear("the shrill sound of a guard's whistle."); */
-                You_hear("경비병의 날카로운 호루라기 소리가 들렸다.");
+                You("경비병의 날카로운 호루라기 소리를 들었다.");
         }
         return TRUE;
     }

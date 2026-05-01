@@ -386,7 +386,7 @@ STATIC_OVL void fix_worst_trouble(trouble) int trouble;
         break;
     case TROUBLE_SICK:
         /*KR You_feel("better."); */
-        You_feel("나아졌다.");
+        You("나아졌다.");
         make_sick(0L, (char *) 0, FALSE, SICK_ALL);
         break;
     case TROUBLE_REGION:
@@ -398,7 +398,7 @@ STATIC_OVL void fix_worst_trouble(trouble) int trouble;
            5 or less hit points, so make sure they're always
            boosted to be more than that */
         /*KR You_feel("much better."); */
-        You_feel("훨씬 나아졌다.");
+        You("훨씬 나아졌다.");
         if (Upolyd) {
             u.mhmax += rnd(5);
             if (u.mhmax <= 5)
@@ -418,7 +418,7 @@ STATIC_OVL void fix_worst_trouble(trouble) int trouble;
         You_feel("%sstronger.",
                  (AMAX(A_STR) - ABASE(A_STR) > 6) ? "much " : "");
 #else /*KR: KRNethack 맞춤 번역 */
-        You_feel("%s강해진 기분이다.",
+        You("%s강해진 기분이다.",
                  (AMAX(A_STR) - ABASE(A_STR) > 6) ? "훨씬 " : "");
 #endif
         ABASE(A_STR) = AMAX(A_STR);
@@ -453,7 +453,7 @@ STATIC_OVL void fix_worst_trouble(trouble) int trouble;
             /* how else could you move between packed rocks or among
                lattice forming "solid" rock? */
             /*KR You_feel("much slimmer."); */
-            You_feel("몸이 훨씬 홀쭉해진 기분이다.");
+            You("몸이 훨씬 홀쭉해진 기분이다.");
         }
         break;
     case TROUBLE_CURSED_LEVITATION:
@@ -553,7 +553,7 @@ STATIC_OVL void fix_worst_trouble(trouble) int trouble;
                                                         패러디) */
         else
             /*KR You_feel("in good health again."); */
-            You_feel("다시 건강해진 기분이다.");
+            You("다시 건강해진 기분이다.");
         for (i = 0; i < A_MAX; i++) {
             if (ABASE(i) < AMAX(i)) {
                 ABASE(i) = AMAX(i);
@@ -591,7 +591,7 @@ STATIC_OVL void fix_worst_trouble(trouble) int trouble;
                 Sprintf(eos(msgbuf), "%s can hear again",
                         !*msgbuf ? "You" : " and you");
 #else /*KR: KRNethack 맞춤 번역 */
-                Sprintf(eos(msgbuf), "%s다시 소리가 들린다",
+                Sprintf(eos(msgbuf), "%s다시 소리를 들었다",
                         !*msgbuf ? "당신은 " : ", 그리고 ");
 #endif
         }
@@ -778,7 +778,7 @@ STATIC_OVL void angrygods(resp_god) aligntyp resp_god;
         You_feel("that %s is %s.", align_gname(resp_god),
                  Hallucination ? "bummed" : "displeased");
 #else /*KR: KRNethack 맞춤 번역 */
-        You_feel("%s %s 것 같다.", append_josa(align_gname(resp_god), "이"),
+        You("%s %s 것 같다.", append_josa(align_gname(resp_god), "이"),
                  Hallucination ? "토라진" : "언짢아하는");
 #endif
         break;
@@ -1045,7 +1045,7 @@ gcrownu()
     } else if (class_gift == STRANGE_OBJECT) {
         /* opportunity knocked, but there was nobody home... */
         /*KR You_feel("unworthy."); */
-        You_feel("스스로가 하찮게 느껴졌다.");
+        You("스스로가 하찮게 느껴졌다.");
     }
     update_inventory();
 
@@ -1069,7 +1069,7 @@ STATIC_OVL void pleased(g_align) aligntyp g_align;
                        ? Hallucination ? "ticklish" : "pleased"
                        : Hallucination ? "full" : "satisfied");
 #else /*KR: KRNethack 맞춤 번역 */
-    You_feel(
+    You(
         "%s %s.", append_josa(align_gname(g_align), "이"),
         (u.ualign.record >= DEVOUT)
             ? Hallucination ? "방방 뜨는 것 같다" : "매우 기뻐하시는 것 같다"
@@ -1191,7 +1191,7 @@ STATIC_OVL void pleased(g_align) aligntyp g_align;
                         You_feel("the power of %s over %s.", u_gname(),
                                  yname(uwep));
 #else /*KR: KRNethack 맞춤 번역 */
-                        You_feel("%s의 힘이 %s 깃드는 것을 느낀다.",
+                        You("%s의 힘이 %s 깃드는 것을 느낀다.",
                                  u_gname(), append_josa(yname(uwep), "에"));
 #endif
                     uncurse(uwep);
@@ -1214,7 +1214,7 @@ STATIC_OVL void pleased(g_align) aligntyp g_align;
                         You_feel("the blessing of %s over %s.", u_gname(),
                                  yname(uwep));
 #else /*KR: KRNethack 맞춤 번역 */
-                        You_feel("%s의 축복이 %s 깃드는 것을 느낀다.",
+                        You("%s의 축복이 %s 깃드는 것을 느낀다.",
                                  u_gname(), append_josa(yname(uwep), "에"));
 #endif
                     bless(uwep);
@@ -1267,7 +1267,7 @@ STATIC_OVL void pleased(g_align) aligntyp g_align;
                     break;
                 } else if (u.uevent.uheard_tune < 2) {
                     /*KR You_hear("a divine music..."); */
-                    You_hear("신성한 음악이 들려온다...");
+                    You("성가를 들었다...");
                     /*KR pline("It sounds like:  \"%s\".", tune); */
                     pline("다음과 같이 들린다:  \"%s\".", tune);
                     u.uevent.uheard_tune++;
@@ -1318,7 +1318,7 @@ STATIC_OVL void pleased(g_align) aligntyp g_align;
 
             if (Blind)
                 /*KR You_feel("the power of %s.", u_gname()); */
-                You_feel("%s의 권능이 느껴진다.", u_gname());
+                You("%s의 권능이 느껴진다.", u_gname());
             else
                 /*KR You("are surrounded by %s aura.",
                  * an(hcolor(NH_LIGHT_BLUE))); */
@@ -1737,12 +1737,11 @@ dosacrifice()
                 if (u.ualign.record < ALIGNLIM)
                     /*KR You_feel("appropriately %s.",
                      * align_str(u.ualign.type)); */
-                    You_feel("적절히 %s된 기분이다.",
+                    You("적절히 %s된 기분이다.",
                              align_str(u.ualign.type));
                 else
                     /*KR You_feel("you are thoroughly on the right path."); */
-                    You_feel("당신이 완벽하게 올바른 길을 걷고 있다는 기분이 "
-                             "든다.");
+                    You("자신이 완벽하게 올바른 길을 걷고 있다는 기분이 든다.");
                 adjalign(5);
                 value += 3;
             } else if (unicalign == u.ualign.type) {
@@ -1780,7 +1779,7 @@ dosacrifice()
                                /* else headed towards celestial disgrace */
                                : "ashamed");
 #else /*KR: KRNethack 맞춤 번역 */
-                You_feel("%s.",
+                You("%s.",
                          Hallucination ? "향수병이 도지는 것 같다"
                          /* if on track, give a big hint */
                          : (altaralign == u.ualign.type)
@@ -1881,7 +1880,7 @@ dosacrifice()
         if (!highaltar && !otmp->known)
             goto too_soon;
         /*KR You_hear("a nearby thunderclap."); */
-        You_hear("근처에서 천둥 치는 소리가 났다.");
+        You("근처에서 천둥 치는 소리를 들었다.");
         if (!otmp->known) {
 #if 0 /*KR: 원본*/
             You("realize you have made a %s.",
@@ -1921,7 +1920,7 @@ dosacrifice()
          * gets the god who owns it truly pissed off.
          */
         /*KR You_feel("the air around you grow charged..."); */
-        You_feel("당신 주변의 공기가 긴장감으로 팽팽해지는 것을 느낀다...");
+        You("주변의 공기가 긴장감으로 팽팽해지는 것을 느낀다...");
         /*KR pline("Suddenly, you realize that %s has noticed you...",
          * a_gname()); */
         pline("갑자기, 당신은 %s 당신을 알아차렸음을 깨달았다...",
@@ -1986,7 +1985,7 @@ dosacrifice()
                 if (rn2(8 + u.ulevel) > 5) {
                     struct monst *pri;
                     /*KR You_feel("the power of %s increase.", u_gname()); */
-                    You_feel("%s의 힘이 증가하는 것을 느낀다.", u_gname());
+                    You("%s의 힘이 증가하는 것을 느낀다.", u_gname());
                     exercise(A_WIS, TRUE);
                     change_luck(1);
                     /* Yes, this is supposed to be &=, not |= */
@@ -2084,7 +2083,7 @@ dosacrifice()
                 value = -u.ualign.record;
             adjalign(value);
             /*KR You_feel("partially absolved."); */
-            You_feel("죄를 부분적으로 용서받은 기분이다.");
+            You("죄를 부분적으로 용서받은 기분이다.");
         } else if (u.ublesscnt > 0) {
             u.ublesscnt -= ((value * (u.ualign.type == A_CHAOTIC ? 500 : 300))
                             / MAXVALUE);
@@ -2299,7 +2298,7 @@ prayer_done() /* M. Stephenson (1.0.3b) */
                      : "더 이상 걷지 마라, 자연의 이치에 어긋난 자여!");
 #endif
         /*KR You_feel("like you are falling apart."); */
-        You_feel("몸이 산산이 조각나는 것 같다.");
+        You("몸이 산산이 조각나는 것 같다.");
         /* KMH -- Gods have mastery over unchanging */
         rehumanize();
         /* no Half_physical_damage adjustment here */
@@ -2706,7 +2705,7 @@ void altar_wrath(x, y) register int x, y;
 #else /*KR: KRNethack 맞춤 번역 */
         pline("%s %s%s:", !Deaf ? "(설마" : "귀가 들리지 않음에도 불구하고,",
               align_gname(altaralign),
-              !Deaf ? "?)의 속삭임이 들린다" : "의 목소리가 들리는 듯하다");
+              !Deaf ? "?)의 속삭임을 들었다" : "의 목소리가 들리는 듯하다");
 #endif
         /*KR verbalize("Thou shalt pay, infidel!"); */
         verbalize("대가를 치를 것이다, 이교도여!");

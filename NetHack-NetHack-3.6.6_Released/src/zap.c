@@ -363,7 +363,7 @@ struct obj *otmp;
             if (is_animal(mtmp->data)) {
                 if (Blind)
                     /*KR You_feel("a sudden rush of air!");*/
-                    You_feel("갑자기 공기가 밀려드는 것을 느꼈다!");
+                    You("갑자기 공기가 밀려드는 것을 느꼈다!");
                 else
 #if 0 /*KR: 원본*/
                     pline("%s opens its mouth!", Monnam(mtmp));
@@ -2126,7 +2126,7 @@ struct obj *obj, *otmp;
 #endif
                 else
                     /*KR You_hear("a crumbling sound."); */
-                    You_hear("무언가 부서지는 소리가 들렸다.");
+                    You("무언가 부서지는 소리를 들었다.");
                 fracture_rock(obj);
             } else if (obj->otyp == STATUE) {
                 if (break_statue(obj)) {
@@ -2146,7 +2146,7 @@ struct obj *obj, *otmp;
 #endif
                     } else
                         /*KR You_hear("a crumbling sound."); */
-                        You_hear("무언가 부서지는 소리가 들렸다.");
+                        You("무언가 부서지는 소리를 들었다.");
                 }
             } else {
                 int oox = obj->ox;
@@ -2231,12 +2231,12 @@ struct obj *obj, *otmp;
 #if 0 /*KR: 원본*/
                                 You_hear("%s reviving.", corpsname);
 #else /*KR: KRNethack 맞춤 번역 */
-                                You_hear("%s 부활하는 소리가 들렸다.",
+                                You("%s 부활하는 소리를 들었다.",
                                          append_josa(corpsname, "이"));
 #endif
                             else
                                 /*KR You_hear("a defibrillator."); */
-                                You_hear("제세동기 소리가 들렸다.");
+                                You("제세동기 소리를 들었다.");
                             learn_it = TRUE;
                         }
                         if (canspotmon(mtmp))
@@ -2386,7 +2386,7 @@ void zapnodir(obj) register struct obj *obj;
     case WAN_ENLIGHTENMENT:
         known = TRUE;
         /*KR You_feel("self-knowledgeable..."); */
-        You_feel("스스로에 대해 잘 알게 된 것 같은 느낌이 든다...");
+        You("스스로에 대해 잘 알게 된 것 같은 느낌이 든다...");
         display_nhwindow(WIN_MESSAGE, FALSE);
         enlightenment(MAGICENLIGHTENMENT, ENL_GAMEINPROGRESS);
         /*KR pline_The("feeling subsides."); */
@@ -2549,7 +2549,7 @@ boolean ordinary;
         if (Fire_resistance) {
             shieldeff(u.ux, u.uy);
             /*KR You_feel("rather warm."); */
-            You_feel("꽤 따뜻하다.");
+            You("꽤 따뜻하다.");
             ugolemeffects(AD_FIRE, d(12, 6));
         } else {
             /*KR pline("You've set yourself afire!"); */
@@ -2571,7 +2571,7 @@ boolean ordinary;
         if (Cold_resistance) {
             shieldeff(u.ux, u.uy);
             /*KR You_feel("a little chill."); */
-            You_feel("약간 오싹하다.");
+            You("약간 오싹하다.");
             ugolemeffects(AD_COLD, d(12, 6));
         } else {
             /*KR You("imitate a popsicle!"); */
@@ -2628,7 +2628,7 @@ boolean ordinary;
 #if 0 /*KR: 원본*/
             You_feel("rather itchy under %s.", yname(uarmc));
 #else /*KR: KRNethack 맞춤 번역 */
-            You_feel("%s 아래가 꽤 가렵다고 느꼈다.",
+            You("%s 아래가 꽤 가렵다고 느꼈다.",
                      append_josa(yname(uarmc), "의"));
 #endif
             break;
@@ -2729,7 +2729,7 @@ boolean ordinary;
             You_feel("frightened and %sstunned.",
                      Stunned ? "even more " : "");
 #else /*KR: KRNethack 맞춤 번역 */
-            You_feel("겁에 질렸고 %s얼떨떨하다.", Stunned ? "더욱 " : "");
+            You("겁에 질렸고 %s얼떨떨하다.", Stunned ? "더욱 " : "");
 #endif
             make_stunned((HStun & TIMEOUT) + (long) rnd(30), FALSE);
         } else
@@ -2744,7 +2744,7 @@ boolean ordinary;
 #if 0 /*KR: 원본*/
         You_feel("%sbetter.", obj->otyp == SPE_EXTRA_HEALING ? "much " : "");
 #else /*KR: KRNethack 맞춤 번역 */
-        You_feel("상태가 %s나아졌다.",
+        You("상태가 %s나아졌다.",
                  obj->otyp == SPE_EXTRA_HEALING ? "훨씬 " : "");
 #endif
         break;
@@ -3058,7 +3058,7 @@ boolean youattack, allow_cancel_kill, self_cancel;
 #if 0                /*KR: 원본*/
                     You_feel("%s headed.", Hallucination ? "dark" : "light");
 #else                /*KR: KRNethack 맞춤 번역 */
-                    You_feel("머리가 %s 느낌이 든다.",
+                    You("머리가 %s 느낌이 든다.",
                              Hallucination ? "멍해진" : "가벼워진");
 #endif
                 u.mh = 0; /* fatal; death handled by rehumanize() */
@@ -3722,7 +3722,7 @@ struct obj **pobj; /* object tossed/used, set to NULL
 #if 0 /*KR: 원본*/
                     You_hear("%s skip.", yname(obj));
 #else /*KR: KRNethack 맞춤 번역 */
-                    You_hear("%s 통통 튀는 소리를 들었다.",
+                    You("%s 통통 튀는 소리를 들었다.",
                              append_josa(yname(obj), "이"));
 #endif
                 skipcount++;
@@ -4958,7 +4958,7 @@ short exploding_wand_typ;
                                          : (const char *) 0;
 #else /*KR: KRNethack 맞춤 번역 */
             const char *msgtxt =
-                (!Deaf) ? "쉭쉭거리는 가스 소리가 들렸다." /* Deaf-aware */
+                (!Deaf) ? "쉭쉭거리는 가스 소리를 들었다." /* Deaf-aware */
                 : (type >= 0) ? "별일 없이 무사히 지나간 것 같다."
                               : (const char *) 0;
 #endif
@@ -5003,7 +5003,7 @@ short exploding_wand_typ;
                           append_josa(The(hliquid("물")), "은"));
                 else
                     /*KR You_hear("a soft crackling."); */
-                    You_hear("가볍게 우두둑거리는 소리가 들렸다.");
+                    You("가볍게 우두둑거리는 소리를 들었다.");
                 rangemod -= 1000; /* stop */
             } else {
                 char buf[BUFSZ];
@@ -5036,7 +5036,7 @@ short exploding_wand_typ;
                     newsym(x, y);
                 } else if (!lava)
                     /*KR You_hear("a crackling sound."); */
-                    You_hear("우두둑거리는 소리가 들렸다.");
+                    You("우두둑거리는 소리를 들었다.");
 
                 if (x == u.ux && y == u.uy) {
                     if (u.uinwater) { /* not just `if (Underwater)' */
@@ -5188,14 +5188,14 @@ short exploding_wand_typ;
             /*KR see_txt = "The door disintegrates!"; */
             see_txt = "문이 가루가 되었다!";
             /*KR hear_txt = "crashing wood."; */
-            hear_txt = "나무가 부서지는 소리가 들린다.";
+            hear_txt = "나무가 부서지는 소리를 들었다.";
             break;
         case ZT_LIGHTNING:
             new_doormask = D_BROKEN;
             /*KR see_txt = "The door splinters!"; */
             see_txt = "문이 산산조각 났다!";
             /*KR hear_txt = "crackling."; */
-            hear_txt = "우두둑거리는 소리가 들린다.";
+            hear_txt = "우두둑거리는 소리를 들었다.";
             break;
         default:
         def_case:
@@ -5230,7 +5230,7 @@ short exploding_wand_typ;
 #endif
             } else
                 /*KR You_feel("vibrations."); */
-                You_feel("진동이 느껴진다.");
+                You("진동이 느껴진다.");
             break;
         }
         if (new_doormask >= 0) { /* door gets broken */
@@ -5343,7 +5343,7 @@ register struct obj *obj;
     }
     if (by_you && Role_if(PM_ARCHEOLOGIST) && (obj->spe & STATUE_HISTORIC)) {
         /*KR You_feel("guilty about damaging such a historic statue."); */
-        You_feel("그토록 역사적인 조각상을 훼손한 것에 대해 죄책감이 든다.");
+        You("그토록 역사적인 조각상을 훼손한 것에 대해 죄책감이 든다.");
         adjalign(-1);
     }
     obj->spe = 0;

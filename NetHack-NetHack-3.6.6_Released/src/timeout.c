@@ -700,7 +700,7 @@ nh_timeout()
                     You_feel("yourself slowing down%s.",
                              Fast ? " a bit" : "");
 #else /*KR: KRNethack 맞춤 번역 */
-                    You_feel("몸이 %s느려지는 것을 느낀다.",
+                    You("몸이 %s느려지는 것을 느낀다.",
                              Fast ? "조금 " : "");
 #endif
                 break;
@@ -811,7 +811,7 @@ nh_timeout()
                 if (!Passes_walls) {
                     if (stuck_in_wall())
                         /*KR You_feel("hemmed in again."); */
-                        You_feel("다시 갇힌 기분이다.");
+                        You("다시 갇힌 기분이다.");
                     else
 #if 0 /*KR: 원본*/
                         pline("You're back to your %s self again.",
@@ -1039,7 +1039,7 @@ long timeout;
                 You_feel("%s %s from your pack!", something,
                          locomotion(mon->data, "drop"));
 #else /*KR: KRNethack 맞춤 번역 */
-                You_feel("무언가가 배낭에서 빠져나온 것 같은 느낌이 든다!");
+                You("무언가가 배낭에서 빠져나온 것 같은 느낌이 든다!");
 #endif
             else
 #if 0 /*KR: 원본*/
@@ -1898,7 +1898,7 @@ do_storms()
         }
     } else
         /*KR You_hear("a rumbling noise."); */
-        You_hear("우르릉거리는 소리가 들린다.");
+        You("우르릉거리는 소리를 들었다.");
 }
 
 /* -------------------------------------------------------------------------

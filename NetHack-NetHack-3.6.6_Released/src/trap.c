@@ -880,14 +880,14 @@ unsigned ftflags;
 
             if (historic) {
                 /*KR You_feel("guilty %s.", historic_statue_is_gone); */
-                You_feel("%s에 대해 죄책감을 느꼈다.",
+                You("%s에 대해 죄책감을 느꼈다.",
                          historic_statue_is_gone);
                 adjalign(-1);
             }
         } else {
             if (historic && cansee(x, y))
                 /*KR You_feel("regret %s.", historic_statue_is_gone); */
-                You_feel("%s에 대해 후회했다.", historic_statue_is_gone);
+                You("%s에 대해 후회했다.", historic_statue_is_gone);
             /* no alignment penalty */
         }
 
@@ -1161,7 +1161,7 @@ unsigned ftflags;
         case ARROW_TRAP:
             if (trap->once && trap->tseen && !rn2(15)) {
                 /*KR You_hear("a loud click!"); */
-                You_hear("딸깍 하는 커다란 소리가 들렸다!");
+                You("딸깍 하는 커다란 소리를 들었다!");
                 deltrap(trap);
                 newsym(u.ux, u.uy);
                 break;
@@ -1192,7 +1192,7 @@ unsigned ftflags;
         case DART_TRAP:
             if (trap->once && trap->tseen && !rn2(15)) {
                 /*KR You_hear("a soft click."); */
-                You_hear("작게 딸깍 하는 소리가 들렸다.");
+                You("작게 딸깍 하는 소리를 들었다.");
                 deltrap(trap);
                 newsym(u.ux, u.uy);
                 break;
@@ -1842,9 +1842,9 @@ unsigned ftflags;
                                      : (dmgval2 >= hp / 4) ? "very lethargic."
                                                            : "sluggish.");
 #else /*KR: KRNethack 맞춤 번역 */
-            You_feel((dmgval2 >= hp) ? "견딜 수 없을 정도로 무기력해진 것을!"
-                                     : (dmgval2 >= hp / 4) ? "매우 나른해진 것을."
-                                                           : "게을러진 것을.");
+            You((dmgval2 >= hp) ? "견딜 수 없을 정도로 무기력해진 것을 느꼈다!"
+                                     : (dmgval2 >= hp / 4) ? "매우 나른해진 것을 느꼈다."
+                                                           : "게을러진 것을 느꼈다.");
 #endif
                 /* opposite of magical explosion */
            /*KR losehp(dmgval2, "anti-magic implosion", KILLED_BY_AN); */
@@ -2260,9 +2260,9 @@ boolean noprefix;
             You_hear(Hallucination ? "someone bowling."
                                    : "rumbling in the distance.");
 #else /*KR: KRNethack 맞춤 번역 */
-            You_hear(Hallucination
+            You(Hallucination
                              ? "누군가 볼링 치는 듯한 소리를 들었다."
-                             : "멀리서 우르릉거리는 소리가 들렸다.");
+                             : "멀리서 우르릉거리는 소리를 들었다.");
 #endif
             }
             style &= ~LAUNCH_UNSEEN;
@@ -2439,7 +2439,7 @@ boolean noprefix;
                         bmsg = " 한 바위가 다른 바위와 충돌하는 듯한";
 
                     /*KR You_hear("a loud crash%s!", */
-                    You_hear("커다란 충돌음%s이 들렸다!",
+                    You("커다란 충돌음%s이 들렸다!",
                              cansee(bhitpos.x, bhitpos.y) ? bmsg : "");
                     obj_extract_self(otmp2);
                     /* pass off the otrapped flag to the next boulder */
@@ -2763,7 +2763,7 @@ boolean noprefix;
                              (distu(mtmp->mx, mtmp->my) <= range * range)
                                  ? "nearby" : "in the distance");
 #else /*KR: KRNethack 맞춤 번역 */
-                    You_hear("%s 곳에서 %s으로 삐걱거리는 소리가 들렸다.",
+                    You("%s 곳에서 %s으로 삐걱거리는 소리를 들었다.",
                              (distu(mtmp->mx, mtmp->my) <= range * range)
                                  ? "가까운" : "먼", trapnote(trap, 1));
 #endif
@@ -2789,7 +2789,7 @@ boolean noprefix;
                         if (mptr == &mons[PM_OWLBEAR]
                             || mptr == &mons[PM_BUGBEAR])
                             /*KR You_hear("the roaring of an angry bear!"); */
-                            You_hear("분노의 포효를 내지르는 소리가 들렸다!");
+                            You("분노의 포효를 내지르는 소리를 들었다!");
                     }
                 } else if (force_mintrap) {
                     if (in_sight) {
@@ -3089,7 +3089,7 @@ boolean noprefix;
                 case PM_BUGBEAR:
                     if (!in_sight) {
                         /*KR You_hear("the roaring of a confused bear!"); */
-                        You_hear("공황에 빠진 곰의 포효가 들렸다!");
+                        You("공황에 빠진 곰의 포효를 들었다!");
                         mtmp->mtrapped = 1;
                         break;
                     }
@@ -3918,19 +3918,19 @@ domagictrap()
                 Your1(vision_clears);
         } else if (!Blind) {
             /*KR You_see("a flash of light!"); */
-            You_see("빛이 번쩍이는 것을 보았다!");
+            You("빛이 번쩍이는 것을 보았다!");
         }
 
         /* deafness effects */
         if (!Deaf) {
             /*KR You_hear("a deafening roar!"); */
-            You_hear("귀청이 터질 듯한 굉음이 들렸다!");
+            You("귀청이 터질 듯한 굉음이 들렸다!");
             incr_itimeout(&HDeaf, rn1(20, 30));
             context.botl = TRUE;
         } else {
             /* magic vibrations still hit you */
             /*KR You_feel("rankled."); */
-            You_feel("심기가 불편해짐을 느꼈다.");
+            You("심기가 불편해짐을 느꼈다.");
             incr_itimeout(&HDeaf, rn1(5, 15));
             context.botl = TRUE;
         }
@@ -3960,8 +3960,8 @@ domagictrap()
             You_hear(Hallucination ? "the moon howling at you."
                                    : "distant howling.");
 #else /*KR: KRNethack 맞춤 번역 */
-            You_hear(Hallucination ? "달이 당신에게 울부짖는 소리가 들렸다."
-                                   : "멀리서 울부짖는 소리가 들렸다.");
+            You(Hallucination ? "달이 당신에게 울부짖는 소리를 들었다."
+                                   : "멀리서 울부짖는 소리를 들었다.");
 #endif
             break;
         case 15:
@@ -3973,8 +3973,7 @@ domagictrap()
                         ? "oddly "
                         : "");
 #else /*KR: KRNethack 맞춤 번역 */
-                You_feel(
-                    "%s탕자가 된 듯한 기분이 들었다.",
+                You("%s탕자가 된 듯한 기분이 들었다.",
                     (flags.female || (Upolyd && is_neuter(youmonst.data)))
                         ? "묘하게도 "
                         : "");
@@ -4007,7 +4006,7 @@ domagictrap()
             break;
         case 18:
             /*KR You_feel("tired."); */
-            You_feel("피곤해짐을 느꼈다.");
+            You("피곤해짐을 느꼈다.");
             break;
 
         /* very occasionally something nice happens. */
@@ -4206,7 +4205,7 @@ xchar x, y;
 #if 0 /*KR: 원본*/
                 You_see("%s hit lava and burn up!", doname(obj));
 #else /*KR: KRNethack 맞춤 번역 */
-                You_see("%s 용암에 떨어져 완전히 타버렸다!",
+                You("%s 용암에 떨어져 완전히 타버린 것을 보았다!",
                         append_josa(doname(obj), "이"));
 #endif
         }
@@ -4722,7 +4721,7 @@ void drain_en(n) int n;
     if (!u.uenmax) {
         /* energy is completely gone */
         /*KR You_feel("momentarily lethargic."); */
-        You_feel("순간적으로 무기력해졌다.");
+        You("순간적으로 무기력해졌다.");
     } else {
         /* throttle further loss a bit when there's not much left to lose */
         if (n > u.uenmax || n > u.ulevel)
@@ -5019,7 +5018,7 @@ struct monst *mtmp;
         if (!rn2(3) && !rnl(8) && u.ualign.type == A_LAWFUL) {
             adjalign(1);
             /*KR You_feel("that you did the right thing."); */
-            You_feel("옳은 일을 한 것 같다.");
+            You("옳은 일을 한 것 같다.");
         }
     }
 }
@@ -6003,7 +6002,7 @@ boolean disarm;
             You_feel("a needle prick your %s.", body_part(bodypart));
             poisoned("needle", A_CON, "poisoned needle", 10, FALSE);
 #else /*KR: KRNethack 맞춤 번역 */
-            You_feel("바늘이 당신의 %s 찌르는 것을 느꼈다.",
+            You("바늘이 당신의 %s 찌르는 것을 느꼈다.",
                      append_josa(body_part(bodypart), "을"));
             poisoned("바늘", A_CON, "독침", 10, FALSE);
 #endif

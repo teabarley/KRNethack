@@ -1234,8 +1234,7 @@ int dieroll;
         } else if (u.ualign.type == A_LAWFUL && u.ualign.record > -10) {
             /*KR You_feel("like an evil coward for using a poisoned weapon.");
              */
-            You_feel(
-                "독이 묻은 무기를 사용하다니 사악한 겁쟁이가 된 기분이다.");
+            You("독이 묻은 무기를 사용해서 사악한 겁쟁이가 된 기분이다.");
             adjalign(-1);
         }
         if (obj && !rn2(nopoison)) {
@@ -2326,7 +2325,7 @@ int specialdmg; /* blessed and/or silver bonus against various things */
     if (DEADMONSTER(mdef)) {
         if (mdef->mtame && !cansee(mdef->mx, mdef->my)) {
             /*KR You_feel("embarrassed for a moment."); */
-            You_feel("잠시 당황했다.");
+            You("잠시 당황했다.");
             if (tmp)
                 xkilled(mdef,
                         XKILL_NOMSG); /* !tmp but hp<1: already killed */
@@ -3120,7 +3119,7 @@ register struct monst *mon;
                             || mon->data->mlet == S_MUMMY)
                         && rn2(5) && !Sick_resistance) {
                         /*KR You_feel("%ssick.", (Sick) ? "very " : ""); */
-                        You_feel("%s아픔을 느꼈다.", (Sick) ? "매우 " : "");
+                        You("%s아픔을 느꼈다.", (Sick) ? "매우 " : "");
                         mdamageu(mon, rnd(8));
                     }
                 }
@@ -3419,7 +3418,7 @@ boolean wep_was_destroyed;
                 if (Cold_resistance) {
                     shieldeff(u.ux, u.uy);
                     /*KR You_feel("a mild chill."); */
-                    You_feel("가벼운 한기가 느껴졌다.");
+                    You("가벼운 한기가 느껴졌다.");
                     ugolemeffects(AD_COLD, tmp);
                     break;
                 }
@@ -3444,7 +3443,7 @@ boolean wep_was_destroyed;
                 if (Fire_resistance) {
                     shieldeff(u.ux, u.uy);
                     /*KR You_feel("mildly warm."); */
-                    You_feel("약간 따뜻하게 느껴진다.");
+                    You("약간 따뜻하게 느껴진다.");
                     ugolemeffects(AD_FIRE, tmp);
                     break;
                 }
@@ -3457,7 +3456,7 @@ boolean wep_was_destroyed;
             if (Shock_resistance) {
                 shieldeff(u.ux, u.uy);
                 /*KR You_feel("a mild tingle."); */
-                You_feel("가벼운 따끔거림이 느껴졌다.");
+                You("가벼운 따끔거림이 느껴졌다.");
                 ugolemeffects(AD_ELEC, tmp);
                 break;
             }

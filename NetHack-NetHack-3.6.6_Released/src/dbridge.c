@@ -649,7 +649,7 @@ struct entity *etmp;
                           E_phrase(etmp, "are"));
                 else if (!Deaf)
                     /*KR You_hear("a crushing sound."); */
-                    You_hear("a crushing sound.");
+                    You("으스러지는 소리를 들었다.");
                 e_died(etmp,
                        XKILL_NOCORPSE | (e_inview ? XKILL_GIVEMSG
                                                   : XKILL_NOMSG),
@@ -764,7 +764,7 @@ struct entity *etmp;
         if (is_pool(etmp->ex, etmp->ey) && !e_inview)
             if (!Deaf)
                 /*KR You_hear("a splash."); */
-                You_hear("a splash.");
+                You("첨벙 소리를 들었다.");
         if (e_survives_at(etmp, etmp->ex, etmp->ey)) {
             if (e_inview && !is_flyer(etmp->edata)
                 && !is_floater(etmp->edata))
@@ -836,7 +836,7 @@ int x, y;
     y2 = y;
     get_wall_for_db(&x2, &y2);
     if (cansee(x, y) || cansee(x2, y2))
-#if 0 /*JP*/
+#if 0 /*KR*/
         You_see("a drawbridge %s up!",
                 (((u.ux == x || u.uy == y) && !Underwater)
                  || distu(x2, y2) < distu(x, y))
@@ -847,7 +847,7 @@ int x, y;
 #endif
     else /* "5 gears turn" for castle drawbridge tune */
         /*KR You_hear("chains rattling and gears turning."); */
-        You_hear("사슬이 짤그랑거리고 톱니바퀴가 돌아가는 소리를 들었다.");
+        You("사슬이 짤그랑거리고 톱니바퀴가 돌아가는 소리를 들었다.");
     lev1->typ = DRAWBRIDGE_UP;
     lev2 = &levl[x2][y2];
     lev2->typ = DBWALL;
@@ -869,7 +869,7 @@ int x, y;
     do_entity(&(occupants[1]));
     if (OBJ_AT(x, y) && !Deaf)
         /*KR You_hear("smashing and crushing."); */
-        You_hear("무언가 부서지고 으스러지는 소리를 들었다.");
+        You("무언가 부서지고 으스러지는 소리를 들었다.");
     (void) revive_nasty(x, y, (char *) 0);
     (void) revive_nasty(x2, y2, (char *) 0);
     delallobj(x, y);
@@ -912,7 +912,7 @@ int x, y;
 #endif
     else /* "5 gears turn" for castle drawbridge tune */
         /*KR You_hear("gears turning and chains rattling."); */
-        You_hear("톱니바퀴가 돌아가고 사슬이 짤그랑거리는 소리를 들었다.");
+        You("톱니바퀴가 돌아가고 사슬이 짤그랑거리는 소리를 들었다.");
     lev1->typ = DRAWBRIDGE_DOWN;
     lev2 = &levl[x2][y2];
     lev2->typ = DOOR;
@@ -975,7 +975,7 @@ int x, y;
 #endif
             else if (!Deaf)
                 /*KR You_hear("a loud *SPLASH*!"); */
-                You_hear("크게 *첨벙* 하는 소리를 들었다!");
+                You("크게 *첨벙* 하는 소리를 들었다!");
         } else {
             if (cansee(x, y))
 #if 0 /*KR: 원본*/
@@ -987,7 +987,7 @@ int x, y;
 #endif
             else if (!Deaf)
                 /*KR You_hear("a loud *SPLASH*!"); */
-                You_hear("크게 *첨벙* 하는 소리를 들었다!");
+                You("크게 *첨벙* 하는 소리를 들었다!");
         }
         lev1->typ = lava ? LAVAPOOL : MOAT;
         lev1->drawbridgemask = 0;
@@ -1002,7 +1002,7 @@ int x, y;
             pline("도개교가 산산조각났다!");
         else
             /*KR You_hear("a loud *CRASH*!"); */
-            You_hear("크게 *쾅* 하는 소리를 들었다!");
+            You("크게 *쾅* 하는 소리를 들었다!");
         lev1->typ = ((lev1->drawbridgemask & DB_ICE) ? ICE : ROOM);
         lev1->icedpool = ((lev1->drawbridgemask & DB_ICE) ? ICED_MOAT : 0);
     }
@@ -1081,7 +1081,7 @@ int x, y;
             } else {
                 if (!Deaf && !is_u(etmp1) && !is_pool(x, y)) {
                     /*KR You_hear("a crushing sound."); */
-                    You_hear("무언가 으스러지는 소리를 들었다.");
+                    You("무언가 으스러지는 소리를 들었다.");
                 } else {
                     debugpline1("%s from shrapnel", E_phrase(etmp1, "die"));
                 }

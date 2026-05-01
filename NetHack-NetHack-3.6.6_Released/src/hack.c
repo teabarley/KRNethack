@@ -146,10 +146,13 @@ moverock()
             if (Sokoban && u.dx && u.dy) {
                 if (Blind)
                     feel_location(sx, sy);
-                /*KR pline("%s won't roll diagonally on this %s.",
-                 * The(xname(otmp)), surface(sx, sy)); */
-                pline("%s 위에서는 %s 대각선으로 밀 수 없다.",
+#if 0 /*KR:T 소코반에서 바위를 대각선으로 밀려고 할 때 */
+                pline("%s won't roll diagonally on this %s.",
+                      The(xname(otmp)), surface(sx, sy));
+#else
+                pline("이 %s 위에서는 %s 대각선으로 밀 수 없다.",
                       surface(sx, sy), append_josa(The(xname(otmp)), "을"));
+#endif
                 goto cannot_push;
             }
 
@@ -1035,7 +1038,7 @@ int mode;
         /* Can't move at a diagonal out of a doorway with door. */
         if (mode == DO_MOVE && iflags.mention_walls)
             /*KR You_cant("move diagonally out of an intact doorway."); */
-            You_cant("멀쩡한 문간에서 대각선으로 나갈 수는 없다.");
+            You("멀쩡한 문간에서 대각선으로 나갈 수는 없다.");
         return FALSE;
     }
 
@@ -2165,9 +2168,8 @@ domove_core()
                  * patron deity care at all, let alone enough to get mad?]
                  */
                 if (rn2(4)) {
-                    /*KR You_feel("guilty about losing your pet like this.");
-                     */
-                    pline("이런 식으로 펫을 잃어 죄책감이 든다.");
+               /*KR You_feel("guilty about losing your pet like this."); */
+                    You("이런 식으로 애완동물을 잃어 죄책감이 든다.");
                     u.ugangr++;
                     adjalign(-15);
                 }
@@ -2303,7 +2305,7 @@ invocation_message()
             Sprintf(buf, "당신의 %s 아래에서 ", makeplural(body_part(FOOT)));
 
         /*KR You_feel("a strange vibration %s.", buf); */
-        You_feel("%s이상한 진동이 느껴진다.", buf);
+        You("%s이상한 진동이 느껴진다.", buf);
         u.uevent.uvibrated = 1;
         if (otmp && otmp->spe == 7 && otmp->lamplit)
 #if 0 /*KR: 원본*/
@@ -3422,8 +3424,8 @@ maybe_wail()
         You_hear(u.uhp == 1 ? "the wailing of the Banshee..."
                             : "the howling of the CwnAnnwn...");
 #else /*KR: KRNethack 맞춤 번역 */
-        You_hear(u.uhp == 1 ? "밴시의 통곡 소리가 들린다..."
-                            : "쿤 안눈의 울부짖음이 들린다...");
+        You(u.uhp == 1 ? "밴시의 통곡 소리를 들었다..."
+                            : "쿤 안눈의 울부짖음을 들었다...");
 #endif
     }
 }

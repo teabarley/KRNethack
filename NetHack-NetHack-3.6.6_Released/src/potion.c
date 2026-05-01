@@ -96,7 +96,7 @@ boolean talk;
             You_feel("%s now.",
                      Hallucination ? "less wobbly" : "a bit steadier");
 #else /*KR: KRNethack 맞춤 번역 */
-            You_feel("%s.", Hallucination ? "흔들거림이 줄어든 것 같다"
+            You("%s.", Hallucination ? "흔들거림이 줄어든 것 같다"
                                           : "안정을 되찾은 것 같다");
 #endif
     }
@@ -137,13 +137,13 @@ int type;
         if (!old) {
             /* newly sick */
             /*KR You_feel("deathly sick."); */
-            You_feel("죽을 것 같이 아프다.");
+            You("죽을 것 같이 아프다.");
         } else {
             /* already sick */
             if (talk)
                 /*KR You_feel("%s worse.", xtime <= Sick / 2L ? "much" :
                  * "even"); */
-                You_feel("%s 악화된 것 같다.",
+                You("%s 악화된 것 같다.",
                          xtime <= Sick / 2L ? "훨씬" : "조금 더");
         }
         set_itimeout(&Sick, xtime);
@@ -155,12 +155,12 @@ int type;
         if (u.usick_type) { /* only partly cured */
             if (talk)
                 /*KR You_feel("somewhat better."); */
-                You_feel("몸이 조금 나아졌다.");
+                You("몸이 조금 나아졌다.");
             set_itimeout(&Sick, Sick * 2); /* approximation */
         } else {
             if (talk)
                 /*KR You_feel("cured.  What a relief!"); */
-                pline("병이 나았다. 아, 다행이다!");
+                pline("병이 나았다. 휴, 다행이다!");
             Sick = 0L; /* set_itimeout(&Sick, 0L) */
         }
         context.botl = TRUE;
@@ -478,7 +478,7 @@ boolean talk;
         if (talk)
             /*KR You(old ? "can hear again." : "are unable to hear
              * anything."); */
-            You(old ? "다시 소리가 들린다." : "아무 소리도 들을 수 없다.");
+            You(old ? "다시 소리를 들을 수 있다." : "아무 소리도 들을 수 없다.");
     }
 }
 
@@ -748,7 +748,7 @@ register struct obj *otmp;
                 losehp(Maybe_Half_Phys(d(2, 6)), "성수", KILLED_BY_AN);
             } else if (otmp->cursed) {
                 /*KR You_feel("quite proud of yourself."); */
-                You_feel("스스로가 무척 자랑스럽다.");
+                You("스스로가 무척 자랑스럽다.");
                 healup(d(2, 6), 0, 0, 0);
                 if (u.ulycn >= LOW_PM && !Upolyd)
                     you_were();
@@ -757,7 +757,7 @@ register struct obj *otmp;
         } else {
             if (otmp->blessed) {
                 /*KR You_feel("full of awe."); */
-                You_feel("경외감으로 가득 찼다.");
+                You("경외심으로 가득 찼다.");
                 make_sick(0L, (char *) 0, TRUE, SICK_ALL);
                 exercise(A_WIS, TRUE);
                 exercise(A_CON, TRUE);
@@ -775,7 +775,7 @@ register struct obj *otmp;
                            KILLED_BY_AN);
                 } else
                     /*KR You_feel("full of dread."); */
-                    You_feel("공포감으로 가득 찼다.");
+                    You("공포심으로 가득 찼다.");
                 if (u.ulycn >= LOW_PM && !Upolyd)
                     you_were();
                 exercise(A_CON, FALSE);
@@ -820,7 +820,7 @@ register struct obj *otmp;
                 (void) adjattrib(A_WIS, 1, FALSE);
             }
             /*KR You_feel("self-knowledgeable..."); */
-            You_feel("스스로에 대해 깨달은 것 같다...");
+            You("스스로에 대해 깨달은 것 같다...");
             display_nhwindow(WIN_MESSAGE, FALSE);
             enlightenment(MAGICENLIGHTENMENT, ENL_GAMEINPROGRESS);
             /*KR pline_The("feeling subsides."); */
@@ -832,7 +832,7 @@ register struct obj *otmp;
         /* spell cannot penetrate mummy wrapping */
         if (BInvis && uarmc->otyp == MUMMY_WRAPPING) {
             /*KR You_feel("rather itchy under %s.", yname(uarmc)); */
-            You_feel("%s 아래가 다소 가렵다.",
+            You("%s 아래가 다소 가렵다.",
                      append_josa(yname(uarmc), "의"));
             break;
         }
@@ -970,7 +970,7 @@ register struct obj *otmp;
             see_monsters();
             if (unkn)
                 /*KR You_feel("lonely."); */
-                You_feel("외로워졌다.");
+                You("외로워졌다.");
             break;
         }
         if (monster_detect(otmp, 0))
@@ -1146,14 +1146,14 @@ register struct obj *otmp;
         break;
     case POT_HEALING:
         /*KR You_feel("better."); */
-        You_feel("기분이 나아졌다.");
+        You("나아졌다.");
         healup(d(6 + 2 * bcsign(otmp), 4), !otmp->cursed ? 1 : 0,
                !!otmp->blessed, !otmp->cursed);
         exercise(A_CON, TRUE);
         break;
     case POT_EXTRA_HEALING:
         /*KR You_feel("much better."); */
-        You_feel("기분이 훨씬 나아졌다.");
+        You("훨씬 나아졌다.");
         healup(d(6 + 2 * bcsign(otmp), 8),
                otmp->blessed   ? 5
                : !otmp->cursed ? 2
@@ -1165,7 +1165,7 @@ register struct obj *otmp;
         break;
     case POT_FULL_HEALING:
         /*KR You_feel("completely healed."); */
-        You_feel("완전히 치유되었다.");
+        You("완전히 치유되었다.");
         healup(400, 4 + 4 * bcsign(otmp), !otmp->cursed, TRUE);
         /* Restore one lost level if blessed */
         if (otmp->blessed && u.ulevel < u.ulevelmax) {
@@ -1248,7 +1248,7 @@ register struct obj *otmp;
 
         if (otmp->cursed)
             /*KR You_feel("lackluster."); */
-            You_feel("활기가 없다.");
+            You("활기가 없다.");
         else
             /*KR pline("Magical energies course through your body."); */
             pline("마법의 에너지가 당신의 몸을 타고 흐른다.");
@@ -1992,7 +1992,7 @@ void potionbreathe(obj) register struct obj *obj;
     case POT_BOOZE:
         if (!Confusion)
             /*KR You_feel("somewhat dizzy."); */
-            You_feel("약간 어지럽다.");
+            You("약간 어지럽다.");
         make_confused(itimeout_incr(HConfusion, rnd(5)), FALSE);
         break;
     case POT_INVISIBILITY:
@@ -2028,7 +2028,7 @@ void potionbreathe(obj) register struct obj *obj;
         kn++;
         if (!Free_action && !Sleep_resistance) {
             /*KR You_feel("rather tired."); */
-            You_feel("다소 피곤하다.");
+            You("다소 피곤하다.");
             nomul(-rnd(5));
             /*KR multi_reason = "sleeping off a magical draught"; */
             multi_reason = "마법의 물약으로 인해 잠들어서";

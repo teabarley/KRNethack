@@ -130,12 +130,12 @@ struct obj *bp;
     switch (rn2(lev)) {
     case 0:
         /*KR You_feel("a wrenching sensation."); */
-        You_feel("몸이 비틀어지는 듯한 감각을 느꼈다.");
+        You("비틀리는 듯한 감각이 느껴졌다.");
         tele(); /* teleport him */
         break;
     case 1:
         /*KR You_feel("threatened."); */
-        You_feel("위협받고 있는 것 같다.");
+        You("위협받고 있는 것 같다.");
         aggravate();
         break;
     case 2:
@@ -254,7 +254,7 @@ STATIC_OVL void deadbook(book2) struct obj *book2;
                   append_josa(body_part(SPINE), "을"));
             if (!u.uhave.bell)
                 /*KR You_hear("a faint chime..."); */
-                You_hear("희미한 종소리가 들린다...");
+                You("희미한 종소리를 들었다...");
             if (!u.uhave.menorah)
                 /*KR pline("Vlad's doppelganger is amused."); */
                 pline("블라드의 도플갱어가 즐거워한다.");
@@ -1066,7 +1066,7 @@ boolean atme;
        which case a turn will be used up in addition to the energy loss */
     if (u.uhave.amulet && u.uen >= energy) {
         /*KR You_feel("the amulet draining your energy away."); */
-        You_feel("부적이 당신의 에너지를 앗아가는 것을 느낀다.");
+        You("부적이 당신의 에너지를 앗아가는 것을 느낀다.");
         /* this used to be 'energy += rnd(2 * energy)' (without 'res'),
            so if amulet-induced cost was more than u.uen, nothing
            (except the "don't have enough energy" message) happened

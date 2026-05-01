@@ -1057,7 +1057,7 @@ get_kr_name(const char *en_name)
     if (!strcmp(en_name, "silver dagger"))
         return "은 단검";
     if (!strcmp(en_name, "athame"))
-        return "아테임";
+        return "의식용 칼";
     if (!strcmp(en_name, "scalpel"))
         return "메스";
 
@@ -2107,19 +2107,23 @@ get_kr_name(const char *en_name)
         return "은 종";
 
     /* [물약/보석/기타 색상 묘사] */
-    /* ruby, aquamarine은 이미 추가하셨으므로 생략 */
+    /* ruby, aquamarine, orange는 이미 있으니 생략 */
     if (!strcmp(en_name, "pink"))
         return "분홍색";
-    if (!strcmp(en_name, "orange"))
-        return "주황색";
+    if (!strcmp(en_name, "red"))
+        return "붉은색";
     if (!strcmp(en_name, "yellow"))
         return "노란색";
     if (!strcmp(en_name, "emerald"))
         return "에메랄드";
+    if (!strcmp(en_name, "green"))
+        return "초록색";
     if (!strcmp(en_name, "dark green"))
         return "진초록색";
     if (!strcmp(en_name, "cyan"))
         return "청록색";
+    if (!strcmp(en_name, "blue"))
+        return "파란색";
     if (!strcmp(en_name, "sky blue"))
         return "하늘색";
     if (!strcmp(en_name, "brilliant blue"))
@@ -2408,6 +2412,99 @@ get_kr_name(const char *en_name)
         return "손";
     if (!strcmp(en_name, "eyes"))
         return "눈";
+
+    /* [던전 이름] */
+    if (!strcmp(en_name, "The Quest"))
+        return "퀘스트";
+    if (!strcmp(en_name, "The Dungeons of Doom"))
+        return "파멸의 미궁";
+    if (!strcmp(en_name, "Gehennom"))
+        return "게헨놈";
+    if (!strcmp(en_name, "The Gnomish Mines"))
+        return "노움 광산";
+    if (!strcmp(en_name, "Sokoban"))
+        return "소코반";
+    if (!strcmp(en_name, "Town"))
+        return "마을";
+    if (!strcmp(en_name, "Vlad's Tower"))
+        return "블라드의 탑";
+
+/* ========================================== *
+     * 아티팩트 (Artifacts) 번역 사전               *
+     * ========================================== */
+
+    /* [일반 아티팩트] */
+    if (!strcmp(en_name, "Excalibur"))
+        return "엑스칼리버";
+    if (!strcmp(en_name, "Stormbringer"))
+        return "스톰브링거";
+    if (!strcmp(en_name, "Mjollnir"))
+        return "묠니르";
+    if (!strcmp(en_name, "Cleaver"))
+        return "클리버";
+    if (!strcmp(en_name, "Grimtooth"))
+        return "그림투스";
+    if (!strcmp(en_name, "Orcrist"))
+        return "오크리스트";
+    if (!strcmp(en_name, "Sting"))
+        return "스팅";
+    if (!strcmp(en_name, "Magicbane"))
+        return "매직베인";
+    if (!strcmp(en_name, "Frost Brand"))
+        return "프로스트 브랜드";
+    if (!strcmp(en_name, "Fire Brand"))
+        return "파이어 브랜드";
+    if (!strcmp(en_name, "Dragonbane"))
+        return "드래곤베인";
+    if (!strcmp(en_name, "Demonbane"))
+        return "데몬베인";
+    if (!strcmp(en_name, "Werebane"))
+        return "웨어베인";
+    if (!strcmp(en_name, "Grayswandir"))
+        return "그레이스완디르";
+    if (!strcmp(en_name, "Giantslayer"))
+        return "자이언트슬레이어";
+    if (!strcmp(en_name, "Ogresmasher"))
+        return "오우거스매셔";
+    if (!strcmp(en_name, "Trollsbane"))
+        return "트롤베인";
+    if (!strcmp(en_name, "Vorpal Blade"))
+        return "보팔 블레이드";
+    if (!strcmp(en_name, "Snickersnee"))
+        return "스니커스니";
+    if (!strcmp(en_name, "Sunsword"))
+        return "선소드";
+
+    /* [직업별 퀘스트 아티팩트] */
+    if (!strcmp(en_name, "The Orb of Detection"))
+        return "탐지의 오브";
+    if (!strcmp(en_name, "The Heart of Ahriman"))
+        return "아리만의 심장";
+    if (!strcmp(en_name, "The Sceptre of Might"))
+        return "권능의 홀";
+    if (!strcmp(en_name, "The Palantir of Westernesse"))
+        return "웨스터니스의 팔란티르"; /* 주석 처리된 구버전 아티팩트지만
+                                           혹시 몰라 포함 */
+    if (!strcmp(en_name, "The Staff of Aesculapius"))
+        return "아스클레피오스의 지팡이";
+    if (!strcmp(en_name, "The Magic Mirror of Merlin"))
+        return "멀린의 마법 거울";
+    if (!strcmp(en_name, "The Eyes of the Overworld"))
+        return "오버월드의 눈";
+    if (!strcmp(en_name, "The Mitre of Holiness"))
+        return "신성함의 주교관";
+    if (!strcmp(en_name, "The Longbow of Diana"))
+        return "다이애나의 장궁";
+    if (!strcmp(en_name, "The Master Key of Thievery"))
+        return "도둑질의 마스터 키";
+    if (!strcmp(en_name, "The Tsurugi of Muramasa"))
+        return "무라마사의 츠루기";
+    if (!strcmp(en_name, "The Platinum Yendorian Express Card"))
+        return "플래티넘 옌도리안 익스프레스 카드";
+    if (!strcmp(en_name, "The Orb of Fate"))
+        return "운명의 오브";
+    if (!strcmp(en_name, "The Eye of the Aethiopica"))
+        return "에티오피카의 눈";
 
     return (char *) en_name; /* 사전에 없으면 원래 영어 반환 */
 }

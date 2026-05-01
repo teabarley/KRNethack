@@ -1165,7 +1165,7 @@ STATIC_OVL void dig_up_grave(cc) coord *cc;
     if (Role_if(PM_ARCHEOLOGIST)) {
         adjalign(-sgn(u.ualign.type) * 3);
         /*KR You_feel("like a despicable grave-robber!"); */
-        You_feel("비열한 도굴꾼이 된 기분이다!");
+        You("비열한 도굴꾼이 된 기분이다!");
 
     } else if (Role_if(PM_SAMURAI)) {
         adjalign(-sgn(u.ualign.type));
@@ -1668,7 +1668,7 @@ register struct monst *mtmp;
         /* KMH -- Okay on arboreal levels (room walls are still stone) */
         if (flags.verbose && !rn2(5))
             /*KR You_hear("crashing rock."); */
-            You_hear("바위가 부서지는 소리를 들었다.");
+            You("바위가 부서지는 소리를 들었다.");
         if (*in_rooms(mtmp->mx, mtmp->my, SHOPBASE))
             add_damage(mtmp->mx, mtmp->my, 0L);
         if (level.flags.is_maze_lev) {
@@ -1714,7 +1714,7 @@ boolean unexpected;
     if (unexpected) {
         if (!Hallucination)
             /*KR You_feel("an unexpected draft."); */
-            You_feel("예기치 않은 외풍을 느꼈다.");
+            You("예기치 않은 외풍을 느꼈다.");
         else
             /* U.S. classification system uses 1-A for eligible to serve
                and 4-F for ineligible due to physical or mental defect;
@@ -1727,7 +1727,7 @@ boolean unexpected;
                                                                : "1-A");
 #else
             /* 징병(draft) 말장난 */
-            You_feel("당신은 %s 판정을 받은 것 같은 기분이 든다.",
+            You("당신은 %s 판정을 받은 것 같은 기분이 든다.",
                      (ACURR(A_STR) < 6 || ACURR(A_DEX) < 6 
                       || ACURR(A_CON) < 6 || ACURR(A_CHA) < 6 
                       || ACURR(A_INT) < 6 || ACURR(A_WIS) < 6) ? "4급"
@@ -1736,7 +1736,7 @@ boolean unexpected;
     } else {
         if (!Hallucination) {
             /*KR You_feel("a draft."); */
-            You_feel("외풍을 느꼈다.");
+            You("외풍을 느꼈다.");
         } else {
             /* "marching" is deliberately ambiguous; it might mean drills
                 after entering military service or mean engaging in protests */
@@ -1752,7 +1752,7 @@ boolean unexpected;
                 /* L: +(0..2), N: +(-1..1), C: +(-2..0); all: 0..3 */
                 dridx += rn1(3, sgn(u.ualign.type) - 1);
             /*KR You_feel("like %s.", draft_reaction[dridx]); */
-            You_feel("마치 %s 것 같은 기분이 든다.", draft_reaction[dridx]);
+            You("마치 %s 것 같은 기분이 든다.", draft_reaction[dridx]);
         }
     }
 }
@@ -2490,7 +2490,7 @@ bury_you()
     if (!Levitation && !Flying) {
         if (u.uswallow)
        /*KR You_feel("a sensation like falling into a trap!"); */
-            You_feel("함정에 빠지는 듯한 감각을 느꼈다!");
+            You("함정에 빠지는 듯한 감각을 느꼈다!");
         else
             /*KR pline_The("%s opens beneath you and you fall in!", */
             pline_The("발밑의 %s 열리고, 당신은 떨어졌다!",

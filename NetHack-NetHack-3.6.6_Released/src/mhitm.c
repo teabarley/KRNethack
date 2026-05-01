@@ -53,7 +53,7 @@ register struct attack *mattk;
                  (mattk->aatyp == AT_EXPL) ? "an explosion" : "some noises",
                  farq ? " in the distance" : "");
 #else /*KR: KRNethack 맞춤 번역 */
-        You_hear("%s%s 들린다.", farq ? "멀리서 " : "",
+        You("%s%s 들린다.", farq ? "멀리서 " : "",
                  (mattk->aatyp == AT_EXPL) ? "폭발음이" : "소음이");
 #endif
     }
@@ -1472,7 +1472,7 @@ register struct attack *mattk;
             if (!Deaf) {
                 if (!vis)
                     /*KR You_hear("laughter."); */
-                    You_hear("웃음소리가 들린다.");
+                    You("웃음소리를 들었다.");
                 else if (canseemon(magr))
                     /*KR pline("%s chuckles.", Monnam(magr)); */
                     pline("%s 낄낄거린다.",

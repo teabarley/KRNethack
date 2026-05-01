@@ -225,7 +225,7 @@ boolean talk;
                 You_feel("%s booming voice:",
                          s_suffix(align_gname(alignment)));
 #else /*KR: KRNethack 맞춤 번역 */
-                You_feel("%s 울려 퍼지는 목소리를 느꼈다:",
+                You("%s 울려 퍼지는 목소리를 느꼈다:",
                          s_suffix(align_gname(alignment)));
 #endif
             /*KR verbalize("Thou shalt pay for thine indiscretion!"); */
@@ -563,7 +563,7 @@ gain_guardian_angel()
             pline("어떤 목소리가 울려 퍼졌다:");
         else
             /*KR You_feel("a booming voice:"); */
-            You_feel("울려 퍼지는 목소리를 느꼈다:");
+            You("울려 퍼지는 목소리를 느꼈다:");
         /*KR verbalize("Thy desire for conflict shall be fulfilled!"); */
         verbalize("투쟁에 대한 너의 갈망이 채워질지어다!");
         /* send in some hostile angels instead */
@@ -574,7 +574,7 @@ gain_guardian_angel()
             pline("어떤 목소리가 속삭였다:");
         else
             /*KR You_feel("a soft voice:"); */
-            You_feel("부드러운 목소리를 느꼈다:");
+            You("부드러운 목소리를 느꼈다:");
         /*KR verbalize("Thou hast been worthy of me!"); */
         verbalize("너는 나의 인정을 받을 자격이 있다!");
         mm.x = u.ux;
@@ -598,7 +598,7 @@ gain_guardian_angel()
             else
                 /*KR You_feel("the presence of a friendly angel near you.");
                  */
-                You_feel("당신 근처에 우호적인 천사가 있음을 느꼈다.");
+                You("당신 근처에 우호적인 천사가 있음을 느꼈다.");
             /* make him strong enough vs. endgame foes */
             mtmp->m_lev = rn1(8, 15);
             mtmp->mhp = mtmp->mhpmax =

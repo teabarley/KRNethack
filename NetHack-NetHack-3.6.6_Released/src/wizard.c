@@ -721,7 +721,7 @@ intervene()
     case 0:
     case 1:
         /*KR You_feel("vaguely nervous."); */
-        You_feel("왠지 모르게 불안해진다.");
+        You("왠지 모르게 불안해진다.");
         break;
     case 2:
         if (!Blind)

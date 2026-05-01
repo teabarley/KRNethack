@@ -2236,7 +2236,7 @@ int final;
                 In_quest(&u.uz) ? dunlev(&u.uz) : depth(&u.uz));
 #else /*KR: KRNethack 맞춤 번역 (층수/계층 구분)*/
         if (In_quest(&u.uz)) {
-            Sprintf(tmpbuf, "제%d계층", dunlev(&u.uz));
+            Sprintf(tmpbuf, "제 %d계층", dunlev(&u.uz));
         } else {
             Sprintf(tmpbuf, "지하 %d층", depth(&u.uz));
         }
@@ -2254,7 +2254,8 @@ int final;
             Strcat(tmpbuf, ", 원시적인 구역");
         else if (Is_bigroom(&u.uz) && !Blind)
             Strcat(tmpbuf, ", 아주 거대한 방");
-        Sprintf(buf, "%s %s에", dgnbuf, tmpbuf);
+        /* 던전명을 번역 사전에서 불러옴 */
+        Sprintf(buf, "%s %s에 ", get_kr_name(dgnbuf), tmpbuf);
 #endif
     }
 #if 0 /*KR: 원본*/
@@ -3256,7 +3257,7 @@ int final;
         const char *what = get_kr_name(weapon_descr(uwep));
 
         /* 한국어는 복수형을 강제하지 않으므로 단순화 가능 */
-        Sprintf(buf, "%s(을)를 장비하고 ", what);
+        Sprintf(buf, "%s 장비하고 ", append_josa(what, "을"));
         enl_msg_kr(You_, buf, "", "있다", "있었다");
 #endif
     }

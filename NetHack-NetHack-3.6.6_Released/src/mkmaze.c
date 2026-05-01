@@ -1369,7 +1369,7 @@ fumaroles()
 #if 0 /*KR: 원본*/
         Norep("You hear a %swhoosh!", loud ? "loud " : "");  /* Deaf-aware */
 #else
-        Norep("%s슈우욱 하는 소리가 들린다!",
+        Norep("%s슈우욱 하는 소리를 들었다!",
               loud ? "크게 " : ""); /* Deaf-aware */
 #endif
 }

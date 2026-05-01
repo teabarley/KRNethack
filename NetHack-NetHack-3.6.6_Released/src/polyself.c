@@ -639,7 +639,7 @@ int mntmp;
 
     if (mvitals[mntmp].mvflags & G_GENOD) { /* allow G_EXTINCT */
         /*KR You_feel("rather %s-ish.", mons[mntmp].mname); */
-        You_feel("다소 %s 같아진 기분이다.", mons[mntmp].mname);
+        You("다소 %s 같아진 기분이다.", mons[mntmp].mname);
         exercise(A_WIS, TRUE);
         return 0;
     }

@@ -1439,7 +1439,7 @@ struct obj *sobj; /* scroll, or fake spellbook object for scroll-like spell */
         if (youmonst.data->mlet != S_HUMAN || scursed) {
             if (!HConfusion)
                 /*KR You_feel("confused."); */
-                You_feel("혼란스러움을 느낀다.");
+                You("혼란스러움을 느낀다.");
             make_confused(HConfusion + rnd(100), FALSE);
         } else if (confused) {
 #if 0 /*KR: 원본*/
@@ -1456,15 +1456,21 @@ struct obj *sobj; /* scroll, or fake spellbook object for scroll-like spell */
             }
 #else /*KR: KRNethack 맞춤 번역 */
             if (!sblessed) {
-                Your("%s %s %s시작했다.",
-                     append_josa(makeplural(body_part(HAND)), "이"),
-                     Blind ? "" : hcolor(NH_PURPLE),
-                     Blind ? "따끔거리기 " : "빛나기 ");
+                if (Blind)
+                    Your("%s 따끔거리기 시작했다.",
+                         append_josa(makeplural(body_part(HAND)), "이"));
+                else
+                    Your("%s %s 빛으로 빛나기 시작했다.",
+                         append_josa(makeplural(body_part(HAND)), "이"),
+                         hcolor(NH_PURPLE));
                 make_confused(HConfusion + rnd(100), FALSE);
             } else {
-                pline("%s%s 당신의 %s 감쌌다.", Blind ? "" : hcolor(NH_RED),
-                      Blind ? "희미한 윙윙거림이" : " 빛이",
-                      append_josa(body_part(HEAD), "을"));
+                if (Blind)
+                    pline("희미한 윙윙거림이 당신의 %s 감쌌다.",
+                          append_josa(body_part(HEAD), "을"));
+                else
+                    pline("%s 빛이 당신의 %s 감쌌다.", hcolor(NH_RED),
+                          append_josa(body_part(HEAD), "을"));
                 make_confused(0L, TRUE);
             }
 #endif
@@ -1492,11 +1498,14 @@ struct obj *sobj; /* scroll, or fake spellbook object for scroll-like spell */
             }
 #else /*KR: KRNethack 맞춤 번역 */
             if (!sblessed) {
-                Your("%s %s%s%s.",
-                     append_josa(makeplural(body_part(HAND)), "이"),
-                     Blind ? "" : hcolor(NH_RED),
-                     u.umconf ? " 더욱 더 " : " ",
-                     Blind ? "따끔거린다" : "빛나기 시작했다");
+                if (Blind)
+                    Your("%s %s따끔거린다.",
+                         append_josa(makeplural(body_part(HAND)), "이"),
+                         u.umconf ? "더욱 더 " : "");
+                else
+                    Your("%s %s%s 빛으로 빛나기 시작했다.",
+                         append_josa(makeplural(body_part(HAND)), "이"),
+                         u.umconf ? "더욱 더 " : "", hcolor(NH_RED));
                 u.umconf++;
             } else {
                 if (Blind)
@@ -1504,9 +1513,10 @@ struct obj *sobj; /* scroll, or fake spellbook object for scroll-like spell */
                          append_josa(makeplural(body_part(HAND)), "이"),
                          u.umconf ? "더욱 더 날카롭게" : "매우 날카롭게");
                 else
-                    Your("%s %s 찬란한 %s 빛난다.",
+                    Your("%s %s찬란한 %s 빛으로 빛난다.",
                          append_josa(makeplural(body_part(HAND)), "이"),
-                         u.umconf ? "더욱 더" : "", hcolor(NH_RED));
+                         u.umconf ? "더욱 더 " : "", hcolor(NH_RED));
+
                 /* after a while, repeated uses become less effective */
                 if (u.umconf >= 40)
                     u.umconf++;
@@ -1538,9 +1548,9 @@ struct obj *sobj; /* scroll, or fake spellbook object for scroll-like spell */
             /*KR You_hear("%s %s.", (confused || scursed) ? "sad wailing"
              * : "maniacal laughter",
              * !ct ? "in the distance" : "close by"); */
-            You_hear("%s %s 들린다.", !ct ? "멀리서" : "가까이에서",
-                     (confused || scursed) ? "슬픈 통곡 소리가"
-                                           : "광기 어린 웃음소리가");
+            You("%s %s 들었다.", !ct ? "멀리서" : "가까이에서",
+                     (confused || scursed) ? "슬픈 통곡 소리를"
+                                           : "광기 어린 웃음소리를");
         break;
     }
     case SCR_BLANK_PAPER:
@@ -1557,16 +1567,19 @@ struct obj *sobj; /* scroll, or fake spellbook object for scroll-like spell */
     case SPE_REMOVE_CURSE: {
         register struct obj *obj;
 
-        /*KR You_feel(!Hallucination
+#if 0 /*KR: 원본*/
+        You_feel(!Hallucination
                  ? (!confused ? "like someone is helping you."
                               : "like you need some help.")
                  : (!confused ? "in touch with the Universal Oneness."
-                              : "the power of the Force against you!")); */
-        You_feel(!Hallucination
+                              : "the power of the Force against you!"));
+#else
+        You(!Hallucination
                      ? (!confused ? "누군가 당신을 돕고 있는 것 같다."
                                   : "누군가의 도움이 필요한 것 같다.")
                      : (!confused ? "우주의 일체감과 맞닿은 것 같다."
                                   : "포스의 힘이 당신을 거스르는 것 같다!"));
+#endif
 
         if (scursed) {
             /*KR pline_The("scroll disintegrates."); */
@@ -1832,11 +1845,11 @@ struct obj *sobj; /* scroll, or fake spellbook object for scroll-like spell */
         if (confused) {
             if (scursed) {
                 /*KR You_feel("discharged."); */
-                You_feel("방전된 기분이다.");
+                You("방전된 기분이다.");
                 u.uen = 0;
             } else {
                 /*KR You_feel("charged up!"); */
-                You_feel("충전된 기분이다!");
+                You("충전된 기분이다!");
                 u.uen += d(sblessed ? 6 : 4, 4);
                 if (u.uen > u.uenmax) /* if current energy is already at   */
                     u.uenmax = u.uen; /* or near maximum, increase maximum */
@@ -1958,7 +1971,7 @@ struct obj *sobj; /* scroll, or fake spellbook object for scroll-like spell */
                 else
                     /*KR You_feel("a pleasant warmth in your %s.",
                      * makeplural(body_part(HAND))); */
-                    You_feel("당신의 %s에서 기분 좋은 따뜻함이 느껴진다.",
+                    You("%s에서 기분 좋은 온기를 느꼈다.",
                              makeplural(body_part(HAND)));
             } else {
                 /*KR pline_The("scroll catches fire and you burn your %s.",
@@ -2012,7 +2025,7 @@ struct obj *sobj; /* scroll, or fake spellbook object for scroll-like spell */
             /* Identify the scroll */
             if (u.uswallow)
                 /*KR You_hear("rumbling."); */
-                You_hear("우르릉거리는 소리가 들린다.");
+                You("우르릉거리는 소리를 들었다.");
             else
 #if 0 /*KR: 원본*/
                 pline_The("%s rumbles %s you!", ceiling(u.ux, u.uy),
@@ -2051,7 +2064,7 @@ struct obj *sobj; /* scroll, or fake spellbook object for scroll-like spell */
         known = TRUE;
         if (confused || sblessed) {
             /*KR You_feel("guilty."); */
-            You_feel("죄책감이 든다.");
+            You("죄책감이 든다.");
             break;
         }
         punish(sobj);
@@ -2206,7 +2219,7 @@ boolean confused, byu;
             if (mtmp->minvis && !canspotmon(mtmp))
                 map_invisible(mtmp->mx, mtmp->my);
         } else if (u.uswallow && mtmp == u.ustuck)
-            You_hear("당신의 %s 위에서 무언가가 %s %s 때리는 소리를 들었다!",
+            You("당신의 %s 위에서 무언가가 %s %s 때리는 소리를 들었다!",
                      body_part(HEAD), s_suffix(mon_nam(mtmp)),
                      mbodypart(mtmp, STOMACH));
 
@@ -2217,7 +2230,7 @@ boolean confused, byu;
                     pline("다행히도, %s 단단한 투구를 쓰고 있다.",
                           append_josa(mon_nam(mtmp), "은"));
                 else if (!Deaf)
-                    You_hear("쨍그랑거리는 소리가 났다.");
+                    You("쨍그랑거리는 소리를 들었다.");
                 if (mdmg > 2)
                     mdmg = 2;
             } else {
@@ -2593,7 +2606,7 @@ do_class_genocide()
                         if (Upolyd) {
                             if (!feel_dead++)
                                 /*KR You_feel("%s inside.", udeadinside()); */
-                                You_feel("내면이 %s.", udeadinside());
+                                You("내면이 %s.", udeadinside());
                         } else {
                             if (!feel_dead++)
                                 /*KR You("die."); */
@@ -2826,7 +2839,7 @@ void do_genocide(how) int how;
             if (Upolyd && ptr != youmonst.data) {
                 delayed_killer(POLYMORPH, killer.format, killer.name);
                 /*KR You_feel("%s inside.", udeadinside()); */
-                You_feel("내면이 %s.", udeadinside());
+                You("내면이 %s.", udeadinside());
             } else
                 done(GENOCIDED);
         } else if (ptr == youmonst.data) {

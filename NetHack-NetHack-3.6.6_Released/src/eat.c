@@ -970,7 +970,7 @@ register struct permonst *ptr;
         debugpline0("Trying to give disintegration resistance");
         if (!(HDisint_resistance & FROMOUTSIDE)) {
             /*KR You_feel(Hallucination ? "totally together, man." : "very firm."); */ /*포켓몬스터 무인편 엔딩 */
-            You_feel(Hallucination ? "노래를 흥얼거렸다. 우리는 모두 친구~ (맞아~)" : "매우 단단해진 기분이 들었다.");
+            You(Hallucination ? "노래를 흥얼거렸다. 우리는 모두 친구~ (맞아~)" : "매우 단단해진 기분이 들었다.");
             HDisint_resistance |= FROMOUTSIDE;
         }
         break;
@@ -990,7 +990,7 @@ register struct permonst *ptr;
         debugpline0("Trying to give poison resistance");
         if (!(HPoison_resistance & FROMOUTSIDE)) {
             /*KR You_feel(Poison_resistance ? "especially healthy." : "healthy."); */
-            You_feel(Poison_resistance ? "*특별히* 건강해진 기분이 든다." : "건강해진 기분이 든다.");
+            You(Poison_resistance ? "*특별히* 건강해진 기분이 든다." : "건강해진 기분이 든다.");
             HPoison_resistance |= FROMOUTSIDE;
         }
         break;
@@ -1009,7 +1009,7 @@ register struct permonst *ptr;
             You_feel(Hallucination ? "centered in your personal space."
                                    : "in control of yourself.");
 #else
-            You_feel(Hallucination ? "이기적이게 된 기분이 든다."
+            You(Hallucination ? "이기적이게 된 기분이 든다."
                                    : "스스로를 통제할 수 있게 된 기분이 든다.");
 #endif
             HTeleport_control |= FROMOUTSIDE;
@@ -1021,8 +1021,8 @@ register struct permonst *ptr;
 #if 0 /*KR:T*/
             You_feel(Hallucination ? "in touch with the cosmos."
                                    : "a strange mental acuity.");
-#else /*빵상아줌마 드립 마렵네*/
-            You_feel(Hallucination ? "우주와 접신한 기분이 든다."
+#else /*빵상아줌마*/
+            You(Hallucination ? "우주와 접신한 기분이 든다."
                                    : "기묘한 정신적 예리함을 느꼈다.");
 #endif
             HTelepat |= FROMOUTSIDE;
@@ -1189,7 +1189,7 @@ int pm;
 #if 0 /*KR:T*/
             You_feel("momentarily different."); /* same as poly trap */
 #else
-            You_feel("잠시 달라졌다고 느낀다."); /* same as poly trap */
+            You("잠시 달라졌다고 느꼈다."); /* same as poly trap */
 #endif
         } else {
             /*KR You_feel("a change coming over you."); */
@@ -2607,7 +2607,7 @@ struct obj *otmp;
                 You("잠에 빠졌다.");
             else
                 /*KR You_hear("sinister laughter as you fall asleep..."); */
-                You_hear("잠에 빠져들며 사악한 웃음소리를 듣는다...");
+                You("잠에 빠져들며 사악한 웃음소리를 들었다...");
             fall_asleep(-rn1(11, 20), TRUE);
         }
         break;

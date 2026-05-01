@@ -616,7 +616,7 @@ int x, y;
 
     if (!isok(x, y)) {
         /*KR You_feel("the spirits holding you back."); */
-        You_feel("정령들이 당신을 가로막는 것을 느낀다.");
+        You("정령들이 당신을 가로막는 것을 느낀다.");
         return FALSE;
     } else if (!in_out_region(x, y)) {
         return FALSE;
@@ -894,7 +894,7 @@ boolean verbose;
      */
     if (Punished && !carried(uball)) {
         /*KR You_feel("a tug from the iron ball."); */
-        You_feel("철구에서 무언가 당기는 느낌이 든다.");
+        You("철구에서 무언가 당기는 느낌이 든다.");
         nomul(0);
         return;
     } else if (u.utrap) {
@@ -2292,7 +2292,7 @@ boolean in_view;
     case POT_WATER: /* really, all potions */
         if (!in_view)
             /*KR You_hear("%s shatter!", something); */
-            You_hear("%s 산산조각 나는 소리가 들린다!",
+            You("%s 산산조각 나는 소리를 들었다!",
                      append_josa(something, "이"));
         else
 #if 0 /*KR: 원본*/
