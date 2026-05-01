@@ -64,7 +64,7 @@ NetHack General Public License (NGPL) 을 따릅니다.
 - [JNetHack Project](http://jnethack.sourceforge.jp/)
 - [JNetHack GitHub](https://github.com/jnethack/jnethack-release)
 
-- [Google Gemini](gemini.google.com)
+- [Google Gemini](https://gemini.google.com/)
 
 README.txt 재작성에는 HanNetHack(https://github.com/timfr09/HanNetHack) 의 README를 많이 참고했습니다. 이 자리를 빌어 감사를 표합니다.
 
