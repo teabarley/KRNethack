@@ -264,7 +264,7 @@ const char *c_obj_colors[] = {
     "자홍색",      /* CLR_MAGENTA */
     "청록색",      /* CLR_CYAN */
     "회색",        /* CLR_GRAY */
-    "투명한",      /* no_color */
+    "투명",      /* no_color */
     "주황색",      /* CLR_ORANGE */
     "밝은 녹색",   /* CLR_BRIGHT_GREEN */
     "노란색",      /* CLR_YELLOW */

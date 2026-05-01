@@ -202,10 +202,16 @@ getlock()
     CloseHandle(f);
 
     /* prompt user that the game alredy exist */
+#if 0 /*KR:T*/
     choice = MessageBox(GetNHApp()->hMainWnd,
                         TEXT("There are files from a game in progress under "
                              "your name. Recover?"),
                         TEXT("Nethack"), MB_YESNO | MB_DEFBUTTON1);
+#else
+    choice = MessageBox(GetNHApp()->hMainWnd,
+                        TEXT("당신의 이름으로 진행 중인 게임 파일이 있습니다. 복구하시겠습니까?"),
+                        TEXT("Nethack"), MB_YESNO | MB_DEFBUTTON1);
+#endif
     switch (choice) {
     case IDYES:
         if (recover_savefile()) {

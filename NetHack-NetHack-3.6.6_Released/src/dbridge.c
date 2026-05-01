@@ -627,9 +627,14 @@ struct entity *etmp;
                 Strcpy(killer.name, "도개교 밑에 깔려 죽음");
 #endif
             }
-            /*KR pline("%s crushed underneath the drawbridge.", */
+#if 0 /*KR: 원본*/
             pline("%s crushed underneath the drawbridge.",
-                  E_phrase(etmp, "are"));             /* no jump */
+                  E_phrase(etmp, "are")); /* no jump */
+#else /*KR: KRNethack 맞춤 번역 */
+            /* upstart는 대문자화라 한글에 무의미해서 과감히 삭제! */
+            pline("%s 도개교 밑에 깔렸다.", append_josa(e_nam(etmp), "은"));
+#endif           
+            
             e_died(etmp,
                    XKILL_NOCORPSE | (e_inview ? XKILL_GIVEMSG : XKILL_NOMSG),
                    CRUSHING); /* no corpse */
@@ -643,10 +648,15 @@ struct entity *etmp;
                 relocates = TRUE;
                 debugpline0("Jump succeeds!");
             } else {
+#if 0 /*KR: 원본*/
                 if (e_inview)
-                    /*KR pline("%s crushed by the falling portcullis!", */
                     pline("%s crushed by the falling portcullis!",
                           E_phrase(etmp, "are"));
+#else /* 여기서도 upstart 삭제! */                
+                if (e_inview)
+                    pline("%s 떨어지는 내리닫이 쇠창살문에 깔렸다!",
+                          append_josa(e_nam(etmp), "은"));
+#endif
                 else if (!Deaf)
                     /*KR You_hear("a crushing sound."); */
                     You("으스러지는 소리를 들었다.");

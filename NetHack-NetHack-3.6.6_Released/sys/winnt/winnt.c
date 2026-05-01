@@ -14,6 +14,10 @@
 #include "win10.h"
 #include "winos.h"
 
+#if 1 /* KR: 멀티바이트 문자열 처리 함수(_mbsrchr 등) 사용 위해 추가 */
+#include <mbstring.h>
+#endif
+
 #define NEED_VARARGS
 #include "hack.h"
 #include <dos.h>
@@ -177,7 +181,11 @@ register char *s;
     for (lp = s; *lp; lp++)
         if (*lp == '?' || *lp == '"' || *lp == '\\' || *lp == '/'
             || *lp == '>' || *lp == '<' || *lp == '*' || *lp == '|'
-            || *lp == ':' || (*lp > 127))
+            || *lp == ':' 
+#if 0 /*KR 한글 계정명 파손 방지를 위해 ASCII 127 초과 제한 해제 */
+            || (*lp > 127)
+#endif
+           )
             *lp = '_';
 }
 
@@ -204,9 +212,19 @@ int *lan_username_size;
 #endif
 
     if (allowUserName) {
+#if 1 /*KR:T 한글 사용자 이름의 정확한 획득 (get_username) */
+        /* KR: 유니코드 API를 사용하여 한글 이름을 안전하게 가져옴 */
+        WCHAR w_user[BUFSZ];
+        DWORD w_size = BUFSZ;
+        if (GetUserNameW(w_user, &w_size)) {
+            WideCharToMultiByte(949, 0, w_user, -1, (char *) username_buffer,
+                                BUFSZ, NULL, NULL);
+        }
+#else /*KR: 원본 */
         /* i gets updated with actual size */
         if (GetUserName(username_buffer, &i))
             username_buffer[i] = '\0';
+#endif
     }
 
     if (lan_username_size)
@@ -677,11 +695,26 @@ char *name;
 
     if (!*name)
         return;
+#if 1 /*KR:T 멀티바이트 안전한 경로 구분자 추가 (append_slash) */
+    /* KR: 멀티바이트(CP949)를 인식하는 안전한 마지막 문자 검사 */
+    if (!*name)
+        return;
+    ptr = (char *) _mbsrchr((const unsigned char *) name, '\\');
+    char *ptr_alt = (char *) _mbsrchr((const unsigned char *) name, '/');
+    char *ptr_colon = (char *) _mbsrchr((const unsigned char *) name, ':');
+
+    /* 실제 문자열의 가장 마지막 바이트가 구분자인지 확인 */
+    char *last = name + strlen(name) - 1;
+    if (last != ptr && last != ptr_alt && last != ptr_colon) {
+        strcat(name, "\\");
+    }
+#else /* 원본 (1바이트 단위로만 체크하여 한글경로 깨질 위험) */
     ptr = name + (strlen(name) - 1);
     if (*ptr != '\\' && *ptr != '/' && *ptr != ':') {
         *++ptr = '\\';
         *++ptr = '\0';
     }
+#endif
     return;
 }
 

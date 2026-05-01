@@ -8,7 +8,7 @@
 // Generated from the TEXTINCLUDE 2 resource.
 //
 #if defined(__BORLANDC__)
-LANGUAGE LANG_ENGLISH,SUBLANG_ENGLISH_US
+LANGUAGE LANG_KOREAN, SUBLANG_DEFAULT
 #endif
 #define APSTUDIO_HIDDEN_SYMBOLS
 #include "windows.h"
@@ -19,11 +19,11 @@ LANGUAGE LANG_ENGLISH,SUBLANG_ENGLISH_US
 #undef APSTUDIO_READONLY_SYMBOLS
 
 /////////////////////////////////////////////////////////////////////////////
-// English (United States) resources
+// 한국어(대한민국) resources
 
-#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_ENU)
-LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_US
-#pragma code_page(1252)
+#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_KOR)
+LANGUAGE LANG_KOREAN, SUBLANG_DEFAULT
+#pragma code_page(949)
 
 /////////////////////////////////////////////////////////////////////////////
 //
@@ -42,15 +42,15 @@ IDI_NETHACKW            ICON                    "NETHACK.ICO"
 
 IDC_NETHACKW MENU
 BEGIN
-    POPUP "&File"
+    POPUP "파일 (&F)"
     BEGIN
-        MENUITEM "&Save and Exit",              IDM_SAVE
+        MENUITEM "저장 및 종료 (&S)",                IDM_SAVE
         MENUITEM SEPARATOR
-        MENUITEM "&Quit",                       IDM_EXIT
+        MENUITEM "종료 (&Q)",                        IDM_EXIT
     END
-    POPUP "&Map"
+    POPUP "지도 (&M)"
     BEGIN
-        MENUITEM "&0 - Use Tiles",              IDM_MAP_TILES
+        MENUITEM "&0 - 타일 모드",                  IDM_MAP_TILES
         MENUITEM "&1 - ASCII (4x6)",            IDM_MAP_ASCII4X6
         MENUITEM "&2 - ASCII (6x8)",            IDM_MAP_ASCII6X8
         MENUITEM "&3 - ASCII (8x8)",            IDM_MAP_ASCII8X8
@@ -61,33 +61,33 @@ BEGIN
         MENUITEM "&8 - ASCII (12x16)",          IDM_MAP_ASCII12X16
         MENUITEM "&9 - ASCII  (10x18)",         IDM_MAP_ASCII10X18
         MENUITEM SEPARATOR
-        MENUITEM "&Fit To Screen ",             IDM_MAP_FIT_TO_SCREEN
+        MENUITEM "화면에 맞춤 (&F) ",                IDM_MAP_FIT_TO_SCREEN
         MENUITEM SEPARATOR
-        MENUITEM "&Copy To Clipboard (ASCII)",  IDM_SETTING_SCREEN_TO_CLIPBOARD
-        MENUITEM "&Save to File (ASCII)",       IDM_SETTING_SCREEN_TO_FILE
+        MENUITEM "클립보드로 복사(ASCII) (&C)",        IDM_SETTING_SCREEN_TO_CLIPBOARD
+        MENUITEM "파일로 저장(ASCII) (&S)",          IDM_SETTING_SCREEN_TO_FILE
     END
-    POPUP "Windows &Settings"
+    POPUP "설정 및 창 (&S)"
     BEGIN
-        MENUITEM "NetHack Mode",                IDM_NHMODE
+        MENUITEM "NetHack 모드",                  IDM_NHMODE
         MENUITEM SEPARATOR
-        MENUITEM "&Clear All Settings",         IDM_CLEARSETTINGS
+        MENUITEM "현재 설정 초기화 (&C)",              IDM_CLEARSETTINGS
         MENUITEM SEPARATOR
-        MENUITEM "Auto &Arrange Windows",       IDM_SETTING_AUTOLAYOUT
-        MENUITEM "&Lock Windows",               IDM_SETTING_LOCKWINDOWS
+        MENUITEM "창 자동 배치 (&A)",                IDM_SETTING_AUTOLAYOUT
+        MENUITEM "창 고정 (&L)",                    IDM_SETTING_LOCKWINDOWS
     END
-    POPUP "&Help"
+    POPUP "도움말(&H)"
     BEGIN
-        MENUITEM "&About ...",                  IDM_ABOUT
-        MENUITEM "&Long description of the game", IDM_HELP_LONG
-        MENUITEM "List of &commands",           IDM_HELP_COMMANDS
-        MENUITEM "&History of NetHack",         IDM_HELP_HISTORY
-        MENUITEM "&Info on a character",        IDM_HELP_INFO_CHAR
-        MENUITEM "Info on what a given &key does", IDM_HELP_INFO_KEY
-        MENUITEM "List of game &options",       IDM_HELP_OPTIONS
-        MENUITEM "&Longer list of game options", IDM_HELP_OPTIONS_LONG
-        MENUITEM "List of e&xtended commands",  IDM_HELP_EXTCMD
-        MENUITEM "The &NetHack license",        IDM_HELP_LICENSE
-        MENUITEM "NetHack for &Windows help",   IDM_HELP_PORTHELP
+        MENUITEM "NetHack 정보... (&A)",        IDM_ABOUT
+        MENUITEM "도움말 및 긴 가이드 (&L)",            IDM_HELP_LONG
+        MENUITEM "명령어 목록 (&c)",                  IDM_HELP_COMMANDS
+        MENUITEM "NetHack의 역사 (&H)",            IDM_HELP_HISTORY
+        MENUITEM "캐릭터 정보 (&I)",                IDM_HELP_INFO_CHAR
+        MENUITEM "키보드 조작 가이드 (&k)",            IDM_HELP_INFO_KEY
+        MENUITEM "게임 옵션 설정(&o)",            IDM_HELP_OPTIONS
+        MENUITEM "옵션 가이드 및 설명(&L)",        IDM_HELP_OPTIONS_LONG
+        MENUITEM "확장 명령어 목록(&x)",              IDM_HELP_EXTCMD
+        MENUITEM "NetHack 라이선스 (&N)",            IDM_HELP_LICENSE
+        MENUITEM "윈도우 버전 NetHack 가이드 (&W)",     IDM_HELP_PORTHELP
     END
 END
 
@@ -109,93 +109,93 @@ END
 // Dialog
 //
 
-IDD_ABOUTBOX DIALOG 22, 17, 230, 75
+IDD_ABOUTBOX DIALOGEX 22, 17, 230, 75
 STYLE DS_SETFONT | DS_MODALFRAME | WS_CAPTION | WS_SYSMENU
-CAPTION "About"
-FONT 8, "System"
+CAPTION "정보"
+FONT 9, "굴림", 0, 0, 0x0
 BEGIN
     LTEXT           "NetHack",IDC_ABOUT_VERSION,10,10,170,15,SS_NOPREFIX
     LTEXT           "Copyright",IDC_ABOUT_COPYRIGHT,10,30,210,40
-    DEFPUSHBUTTON   "OK",IDOK,195,6,30,11,WS_GROUP
+    DEFPUSHBUTTON   "확인",IDOK,195,6,30,11,WS_GROUP
 END
 
 IDD_NHTEXT DIALOGEX 0, 0, 172, 178
 STYLE DS_SETFONT | WS_CHILD | WS_CLIPSIBLINGS | WS_THICKFRAME
 EXSTYLE WS_EX_CLIENTEDGE | WS_EX_CONTROLPARENT
-FONT 8, "MS Sans Serif", 0, 0, 0x1
+FONT 9, "굴림", 0, 0, 0x1
 BEGIN
     EDITTEXT        IDC_TEXT_CONTROL,0,0,172,160,ES_MULTILINE | ES_OEMCONVERT | ES_READONLY | WS_VSCROLL | WS_HSCROLL | NOT WS_TABSTOP
-    DEFPUSHBUTTON   "OK",IDOK,54,163,50,14,BS_FLAT | NOT WS_TABSTOP
+    DEFPUSHBUTTON   "확인",IDOK,54,163,50,14,BS_FLAT | NOT WS_TABSTOP
 END
 
 IDD_MENU DIALOGEX 0, 0, 187, 153
 STYLE DS_SETFONT | WS_CHILD | WS_CLIPSIBLINGS | WS_THICKFRAME
 EXSTYLE WS_EX_CLIENTEDGE | WS_EX_CONTROLPARENT
-FONT 8, "MS Sans Serif", 0, 0, 0x1
+FONT 9, "굴림", 0, 0, 0x1
 BEGIN
     LISTBOX         IDC_MENU_LIST,10,10,170,55,LBS_SORT | NOT WS_BORDER
     EDITTEXT        IDC_MENU_TEXT,10,70,170,60,ES_MULTILINE | ES_OEMCONVERT | ES_READONLY | NOT WS_BORDER | WS_VSCROLL | WS_HSCROLL | NOT WS_TABSTOP
-    DEFPUSHBUTTON   "OK",IDOK,7,132,50,14,BS_FLAT | NOT WS_TABSTOP
-    PUSHBUTTON      "Cancel",IDCANCEL,130,132,50,14,BS_FLAT | NOT WS_TABSTOP
+    DEFPUSHBUTTON   "확인",IDOK,7,132,50,14,BS_FLAT | NOT WS_TABSTOP
+    PUSHBUTTON      "취소",IDCANCEL,130,132,50,14,BS_FLAT | NOT WS_TABSTOP
 END
 
-IDD_GETLIN DIALOG 0, 0, 131, 29
+IDD_GETLIN DIALOGEX 0, 0, 195, 30
 STYLE DS_SETFONT | DS_MODALFRAME | DS_CENTER | WS_POPUP | WS_CAPTION | WS_SYSMENU
-CAPTION "Question?"
-FONT 8, "MS Sans Serif"
+CAPTION "질문"
+FONT 9, "굴림", 0, 0, 0x0
 BEGIN
-    DEFPUSHBUTTON   "OK",IDOK,0,15,65,14
-    PUSHBUTTON      "Cancel",IDCANCEL,65,15,65,14
-    EDITTEXT        IDC_GETLIN_EDIT,0,0,130,13,ES_AUTOHSCROLL
+    DEFPUSHBUTTON   "확인",IDOK,21,16,65,14
+    PUSHBUTTON      "취소",IDCANCEL,109,16,65,14
+    EDITTEXT        IDC_GETLIN_EDIT,1,0,193,13,ES_AUTOHSCROLL
 END
 
-IDD_EXTCMD DIALOG 0, 0, 137, 117
+IDD_EXTCMD DIALOGEX 0, 0, 137, 117
 STYLE DS_SETFONT | DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
-CAPTION "Extended Commands"
-FONT 8, "MS Sans Serif"
+CAPTION "확장 명령어"
+FONT 9, "굴림", 0, 0, 0x0
 BEGIN
-    DEFPUSHBUTTON   "OK",IDOK,80,7,50,14
-    PUSHBUTTON      "Cancel",IDCANCEL,80,24,50,14
+    DEFPUSHBUTTON   "확인",IDOK,80,7,50,14
+    PUSHBUTTON      "취소",IDCANCEL,80,24,50,14
     LISTBOX         IDC_EXTCMD_LIST,7,7,65,103,LBS_NOINTEGRALHEIGHT | WS_VSCROLL | WS_TABSTOP
 END
 
 IDD_PLAYER_SELECTOR DIALOGEX 0, 0, 225, 212
 STYLE DS_SETFONT | DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
-CAPTION "What are you?"
-FONT 8, "MS Sans Serif", 0, 0, 0x0
+CAPTION "캐릭터 선택"
+FONT 9, "굴림", 0, 0, 0x0
 BEGIN
-    DEFPUSHBUTTON   "Play",IDOK,12,192,54,14,WS_GROUP
-    PUSHBUTTON      "Quit",IDCANCEL,162,192,54,14,WS_GROUP
+    DEFPUSHBUTTON   "확인",IDOK,12,192,54,14,WS_GROUP
+    PUSHBUTTON      "취소",IDCANCEL,162,192,54,14,WS_GROUP
     EDITTEXT        IDC_PLSEL_NAME,12,12,105,12,ES_AUTOHSCROLL | ES_READONLY | WS_GROUP | NOT WS_TABSTOP
-    CONTROL         "Neutral",IDC_PLSEL_ALIGN_NEUTRAL,"Button",BS_AUTORADIOBUTTON,168,60,37,10
-    CONTROL         "Lawful",IDC_PLSEL_ALIGN_LAWFUL,"Button",BS_AUTORADIOBUTTON | WS_GROUP,168,48,35,10
-    CONTROL         "Chaotic",IDC_PLSEL_ALIGN_CHAOTIC,"Button",BS_AUTORADIOBUTTON,168,72,38,10
-    CONTROL         "Male",IDC_PLSEL_GENDER_MALE,"Button",BS_AUTORADIOBUTTON | WS_GROUP,168,108,30,10
-    CONTROL         "Female",IDC_PLSEL_GENDER_FEMALE,"Button",BS_AUTORADIOBUTTON,168,120,38,10
-    GROUPBOX        "Alignment",IDC_PLSEL_ALIGNMENT_GROUP,162,36,48,54
-    GROUPBOX        "Gender",IDC_PLSEL_GENDER_GROUP,162,96,48,42
-    GROUPBOX        "Role",IDC_PLSEL_ROLE_GROUP,6,36,72,150
-    GROUPBOX        "Race",IDC_PLSEL_RACE_GROUP,84,36,72,72
-    PUSHBUTTON      "Random",IDC_PLSEL_RANDOM,90,192,54,14,WS_GROUP
-    GROUPBOX        "Name",IDC_PLSEL_NAME_GROUP,6,0,120,30
+    CONTROL         "중립",IDC_PLSEL_ALIGN_NEUTRAL,"Button",BS_AUTORADIOBUTTON,168,60,37,10
+    CONTROL         "질서",IDC_PLSEL_ALIGN_LAWFUL,"Button",BS_AUTORADIOBUTTON | WS_GROUP,168,48,35,10
+    CONTROL         "혼돈",IDC_PLSEL_ALIGN_CHAOTIC,"Button",BS_AUTORADIOBUTTON,168,72,38,10
+    CONTROL         "남성",IDC_PLSEL_GENDER_MALE,"Button",BS_AUTORADIOBUTTON | WS_GROUP,168,108,30,10
+    CONTROL         "여성",IDC_PLSEL_GENDER_FEMALE,"Button",BS_AUTORADIOBUTTON,168,120,38,10
+    GROUPBOX        "성향",IDC_PLSEL_ALIGNMENT_GROUP,162,36,48,54
+    GROUPBOX        "성별",IDC_PLSEL_GENDER_GROUP,162,96,48,42
+    GROUPBOX        "직업",IDC_PLSEL_ROLE_GROUP,6,36,72,150
+    GROUPBOX        "종족",IDC_PLSEL_RACE_GROUP,84,36,72,72
+    PUSHBUTTON      "무작위",IDC_PLSEL_RANDOM,90,192,54,14,WS_GROUP
+    GROUPBOX        "이름",IDC_PLSEL_NAME_GROUP,6,0,120,30
     CONTROL         "",IDC_PLSEL_ROLE_LIST,"SysListView32",LVS_REPORT | LVS_SINGLESEL | LVS_OWNERDRAWFIXED | LVS_ALIGNLEFT | LVS_NOSCROLL | LVS_NOCOLUMNHEADER | WS_BORDER | WS_GROUP | WS_TABSTOP,12,48,60,130
     CONTROL         "",IDC_PLSEL_RACE_LIST,"SysListView32",LVS_REPORT | LVS_SINGLESEL | LVS_OWNERDRAWFIXED | LVS_ALIGNLEFT | LVS_NOSCROLL | LVS_NOCOLUMNHEADER | WS_BORDER | WS_GROUP | WS_TABSTOP,90,48,60,51
 END
 
 IDD_NHRIP DIALOGEX 0, 0, 281, 209
 STYLE DS_SETFONT | DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
-CAPTION "Here lies..."
-FONT 8, "MS Sans Serif", 0, 0, 0x1
+CAPTION "삼가 고인의 명복을..."
+FONT 9, "굴림", 0, 0, 0x1
 BEGIN
-    DEFPUSHBUTTON   "OK",IDOK,82,188,50,14
+    DEFPUSHBUTTON   "확인",IDOK,82,188,50,14
 END
 
-IDD_SPLASH DIALOG 0, 0, 281, 257
+IDD_SPLASH DIALOGEX 0, 0, 281, 257
 STYLE DS_SETFONT | DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
-CAPTION "Welcome to NetHack"
-FONT 8, "MS Sans Serif"
+CAPTION "NetHack에 오신 것을 환영합니다"
+FONT 9, "굴림", 0, 0, 0x0
 BEGIN
-    DEFPUSHBUTTON   "OK",IDOK,224,236,50,14
+    DEFPUSHBUTTON   "확인",IDOK,224,236,50,14
     EDITTEXT        IDC_EXTRAINFO,7,176,267,52,ES_MULTILINE | ES_READONLY | WS_VSCROLL
 END
 
@@ -209,7 +209,7 @@ END
 2 TEXTINCLUDE 
 BEGIN
     "#if defined(__BORLANDC__)\r\n"
-    "LANGUAGE LANG_ENGLISH,SUBLANG_ENGLISH_US\r\n"
+    "LANGUAGE LANG_KOREAN,SUBLANG_DEFAULT\r\n"
     "#endif\r\n"
     "#define APSTUDIO_HIDDEN_SYMBOLS\r\n"
     "#include ""windows.h""\r\n"
@@ -237,7 +237,7 @@ END
 // Bitmap
 //
 
-IDB_TILES               BITMAP                  "tiles.bmp"
+IDB_TILES                BITMAP                  "tiles.bmp"
 
 IDB_MENU_SEL            BITMAP                  "mnsel.bmp"
 
@@ -262,6 +262,10 @@ IDB_SPLASH              BITMAP                  "splash.bmp"
 #ifdef APSTUDIO_INVOKED
 GUIDELINES DESIGNINFO
 BEGIN
+    IDD_ABOUTBOX, DIALOG
+    BEGIN
+    END
+
     IDD_NHTEXT, DIALOG
     BEGIN
         BOTTOMMARGIN, 177
@@ -277,7 +281,8 @@ BEGIN
 
     IDD_GETLIN, DIALOG
     BEGIN
-        BOTTOMMARGIN, 22
+        RIGHTMARGIN, 131
+        BOTTOMMARGIN, 23
     END
 
     IDD_EXTCMD, DIALOG
@@ -334,21 +339,20 @@ VS_VERSION_INFO VERSIONINFO
 BEGIN
     BLOCK "StringFileInfo"
     BEGIN
-        BLOCK "040904b0"
+        BLOCK "041204b0"
         BEGIN
-            VALUE "FileDescription", "NetHack for Windows - Graphical Interface"
+            VALUE "FileDescription", "윈도우용 NetHack - 그래픽 인터페이스"
             VALUE "FileVersion", "3.6.6"
             VALUE "InternalName", "NetHackW"
-            VALUE "LegalCopyright", "Copyright (C) 1985 - 2020.  By Stichting Mathematisch Centrum and M. Stephenson.  See license for details."
+            VALUE "LegalCopyright", "Copyright (C) 1985-2020. 원작자: Stichting Mathematisch Centrum & M. Stephenson."
             VALUE "OriginalFilename", "NetHackW.exe"
-            VALUE "PrivateBuild", "140606"
-            VALUE "ProductName", "NetHack"
+            VALUE "ProductName", "NetHack 한국어판"
             VALUE "ProductVersion", "3.6.6"
         END
     END
     BLOCK "VarFileInfo"
     BEGIN
-        VALUE "Translation", 0x409, 1200
+        VALUE "Translation", 0x412, 1200
     END
 END
 
@@ -363,6 +367,41 @@ BEGIN
     0
 END
 
+IDD_SPLASH AFX_DIALOG_LAYOUT
+BEGIN
+    0
+END
+
+IDD_NHTEXT AFX_DIALOG_LAYOUT
+BEGIN
+    0
+END
+
+IDD_ABOUTBOX AFX_DIALOG_LAYOUT
+BEGIN
+    0
+END
+
+IDD_EXTCMD AFX_DIALOG_LAYOUT
+BEGIN
+    0
+END
+
+IDD_MENU AFX_DIALOG_LAYOUT
+BEGIN
+    0
+END
+
+IDD_NHRIP AFX_DIALOG_LAYOUT
+BEGIN
+    0
+END
+
+IDD_GETLIN AFX_DIALOG_LAYOUT
+BEGIN
+    0
+END
+
 
 /////////////////////////////////////////////////////////////////////////////
 //
@@ -371,12 +410,12 @@ END
 
 STRINGTABLE
 BEGIN
-    IDS_APP_TITLE           "NetHack for Windows - Graphical Interface"
+    IDS_APP_TITLE           "윈도우 버전 NetHack - 그래픽 인터페이스"
     IDC_NETHACKW            "NETHACKW"
-    IDS_APP_TITLE_SHORT     "NetHack for Windows"
+    IDS_APP_TITLE_SHORT     "윈도우 버전 NetHack"
 END
 
-#endif    // English (United States) resources
+#endif    // 한국어 resources
 /////////////////////////////////////////////////////////////////////////////
 
 

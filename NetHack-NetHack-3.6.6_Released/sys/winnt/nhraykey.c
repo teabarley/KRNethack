@@ -391,8 +391,13 @@ int portdebug;
         ReadConsole(hConIn, &ch2, 1, &count, NULL);
         /* Prevent high characters from being interpreted as alt
          * sequences; also filter the bogus_key */
+#if 0 /*KR: 원본*/
         if (ch2 & 0x80)
             *valid = FALSE;
+#else /*KR: 쓰레기값(0x80)만 정확히 걸러내고 한글(0x81 이상)은 통과시킴! */
+        if ((unsigned char) ch2 == 0x80)
+            *valid = FALSE;
+#endif
         else
             ch = ch2;
         if (ch == 0)

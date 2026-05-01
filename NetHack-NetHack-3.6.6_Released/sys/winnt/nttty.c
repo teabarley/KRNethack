@@ -100,6 +100,10 @@ static boolean orig_QuickEdit;
  * from the command line.
  */
 int GUILaunched = FALSE;
+#if 1 /*KR 커서 이동 시 초기화를 위해 전역 변수로 선언 */
+int cp949_idx = 0;
+unsigned char cp949_buf[2]; /* 버퍼도 전역으로 빼줍니다 */
+#endif
 /* Flag for whether unicode is supported */
 static boolean init_ttycolor_completed;
 #ifdef PORT_DEBUG
@@ -211,6 +215,7 @@ keyboard_handler_t keyboard_handler;
 
 /* Console buffer flipping support */
 
+#if 0 /*KR: 원본*/
 static void back_buffer_flip()
 {
     cell_t * back = console.back_buffer;
@@ -241,6 +246,44 @@ static void back_buffer_flip()
         }
     }
 }
+#else /*KR: 한글 전각 문자 반쪽 깨짐 방지 */
+static void
+back_buffer_flip()
+{
+    cell_t *back = console.back_buffer;
+    cell_t *front = console.front_buffer;
+    COORD pos;
+    DWORD unused;
+
+    for (pos.Y = 0; pos.Y < console.height; pos.Y++) {
+        for (pos.X = 0; pos.X < console.width; pos.X++) {
+            if (back->attribute != front->attribute) {
+                WriteConsoleOutputAttribute(console.hConOut, &back->attribute,
+                                            1, pos, &unused);
+                front->attribute = back->attribute;
+            }
+            if (back->character != front->character) {
+                /* KR: 더미 문자(L'\0')는 출력하지 않고 건너뛰어 한글 꼬리
+                 * 훼손을 막음 */
+                if (back->character != L'\0') {
+                    if (console.has_unicode) {
+                        WriteConsoleOutputCharacterW(console.hConOut,
+                                                     &back->character, 1, pos,
+                                                     &unused);
+                    } else {
+                        char ch = (char) back->character;
+                        WriteConsoleOutputCharacterA(console.hConOut, &ch, 1,
+                                                     pos, &unused);
+                    }
+                }
+                *front = *back;
+            }
+            back++;
+            front++;
+        }
+    }
+}
+#endif /*KR*/
 
 void buffer_fill_to_end(cell_t * buffer, cell_t * fill, int x, int y)
 {
@@ -396,9 +439,10 @@ DWORD ctrltype;
 {
     DWORD cmode;
 
-    /* [추가한 부분] 강제로 콘솔의 입력과 출력을 UTF-8(65001)로 맞춥니다. */
-    SetConsoleCP(CP_UTF8);
-    SetConsoleOutputCP(CP_UTF8);
+#if 1 /*KR 강제로 콘솔의 입력과 출력을 CP949(윈도우 기본 한글)로 */
+    SetConsoleCP(949);
+    SetConsoleOutputCP(949);
+#endif
 
     /* Initialize the function pointer that points to     * the kbhit()
      * equivalent, in this TTY case nttty_kbhit()     */
@@ -536,6 +580,7 @@ really_move_cursor()
     SetConsoleCursorPosition(console.hConOut, console.cursor);
 }
 
+#if 0 /*KR: 원본*/
 void
 cmov(x, y)
 register int x, y;
@@ -555,6 +600,25 @@ int x, y;
 
     set_console_cursor(x, y);
 }
+#else /*KR: 커서 이동 시 한글 조립 상태(cp949_idx) 초기화 추가 */
+void cmov(x, y) register int x, y;
+{
+    cp949_idx = 0; /* KR: 커서가 이동하면 한글 조립 상태 리셋 */
+    ttyDisplay->cury = y;
+    ttyDisplay->curx = x;
+
+    set_console_cursor(x, y);
+}
+
+void nocmov(x, y) int x, y;
+{
+    cp949_idx = 0; /* KR: 커서가 이동하면 한글 조립 상태 리셋 */
+    ttyDisplay->curx = x;
+    ttyDisplay->cury = y;
+
+    set_console_cursor(x, y);
+}
+#endif /*KR*/
 
 /* same signature as 'putchar()' with potential failure result ignored */
 int
@@ -586,9 +650,9 @@ const char *s;
  * two routines that actually place output
  * on the display.
  */
+#if 0 /*KR: 원본*/
 void
-xputc_core(ch)
-char ch;
+xputc_core(ch)char ch;
 {
     nhassert(console.cursor.X >= 0 && console.cursor.X < console.width);
     nhassert(console.cursor.Y >= 0 && console.cursor.Y < console.height);
@@ -640,6 +704,119 @@ char ch;
     nhassert(console.cursor.X >= 0 && console.cursor.X < console.width);
     nhassert(console.cursor.Y >= 0 && console.cursor.Y < console.height);
 }
+#else /*KR: KRNethack 맞춤 번역 (CP949 화면 출력 및 전각 커서 처리) */
+/* CP949 바이트 조립을 위한 상태 변수들 */
+static boolean
+is_fullwidth(WCHAR wch)
+{
+    if (wch >= 0x1100 && wch <= 0x115F)
+        return TRUE;
+    if (wch >= 0x2E80 && wch <= 0xA4CF)
+        return TRUE;
+    if (wch >= 0xAC00 && wch <= 0xD7A3)
+        return TRUE;
+    if (wch >= 0xF900 && wch <= 0xFAFF)
+        return TRUE;
+    if (wch >= 0xFE10 && wch <= 0xFE19)
+        return TRUE;
+    if (wch >= 0xFF00 && wch <= 0xFF60)
+        return TRUE;
+    return FALSE;
+}
+
+void
+xputc_core(char ch)
+{
+    nhassert(console.cursor.X >= 0 && console.cursor.X < console.width);
+    nhassert(console.cursor.Y >= 0 && console.cursor.Y < console.height);
+
+    boolean inverse = FALSE;
+    cell_t cell;
+    unsigned char uc = (unsigned char) ch;
+    WCHAR final_wch = 0;
+    int char_width = 1;
+
+    /* 제어 문자 처리 (\n, \r, \b) */
+    if (cp949_idx == 0 && (uc == '\n' || uc == '\r' || uc == '\b')) {
+        switch (uc) {
+        case '\n':
+            if (console.cursor.Y < console.height - 1)
+                console.cursor.Y++;
+        /* fall through */
+        case '\r':
+            console.cursor.X = 1;
+            break;
+        case '\b':
+            if (console.cursor.X > 1) {
+                console.cursor.X--;
+            } else if (console.cursor.Y > 0) {
+                console.cursor.X = console.width - 1;
+                console.cursor.Y--;
+            }
+            break;
+        }
+        return;
+    }
+
+    /* CP949 디코딩 로직 (1바이트 영어 vs 2바이트 한글) */
+    if (cp949_idx == 0) {
+        if (uc >= 0x81 && uc <= 0xFE) {
+            /* 한글/한자의 첫 번째 바이트 (Lead byte) 도착 -> 버퍼에 넣고 대기
+             */
+            cp949_buf[0] = uc;
+            cp949_idx = 1;
+            return;
+        } else {
+            /* 1바이트 영문/숫자 (ASCII) -> 바로 유니코드로 변환 */
+            MultiByteToWideChar(949, 0, (LPCSTR) &uc, 1, &final_wch, 1);
+            char_width = 1;
+        }
+    } else {
+        /* 두 번째 바이트 (Trail byte) 도착 -> 완성된 한글을 유니코드로 변환
+         */
+        cp949_buf[1] = uc;
+        MultiByteToWideChar(949, 0, (LPCSTR) cp949_buf, 2, &final_wch, 1);
+        char_width = 2; /* 완성된 CP949 문자는 무조건 전각(2칸) */
+        cp949_idx = 0;
+    }
+
+    /* 화면 속성(색상) 적용 */
+    inverse = (console.current_nhattr[ATR_INVERSE] && iflags.wc_inverse);
+    console.attr = (inverse) ? ttycolors_inv[console.current_nhcolor]
+                             : ttycolors[console.current_nhcolor];
+    if (console.current_nhattr[ATR_BOLD])
+        console.attr |=
+            (inverse) ? BACKGROUND_INTENSITY : FOREGROUND_INTENSITY;
+
+    cell.attribute = console.attr;
+    cell.character = final_wch;
+
+    /* 버퍼에 글자 쓰기 */
+    buffer_write(console.back_buffer, &cell, console.cursor);
+
+    /* 한글(전각) 문자인 경우, 다음 칸을 보이지 않는 더미(\0)로 채움 */
+    if (char_width == 2 && console.cursor.X + 1 < console.width) {
+        COORD next_pos = console.cursor;
+        next_pos.X++;
+        cell_t dummy_cell;
+        dummy_cell.attribute = console.attr;
+        dummy_cell.character = L'\0';
+        buffer_write(console.back_buffer, &dummy_cell, next_pos);
+    }
+
+    /* 커서 이동 (전각 문자는 2칸 이동) */
+    console.cursor.X += char_width;
+
+    if (console.cursor.X >= console.width) {
+        if (console.cursor.Y < console.height - 1) {
+            console.cursor.X = 1;
+            console.cursor.Y++;
+        } else {
+            console.cursor.X = console.width - 1;
+        }
+    }
+}
+#endif
 
 /*
  * Overrides wintty.c function of the same name
@@ -709,12 +886,22 @@ raw_clear_screen()
     }
 }
 
+#if 0 /*KR: 원본*/
 void
 clear_screen()
 {
-    buffer_fill_to_end(console.back_buffer, &clear_cell, 0, 0);    
+    buffer_fill_to_end(console.back_buffer, &clear_cell, 0, 0);   
     home();
 }
+#else /*KR: 화면 지울 때 한글 조립 상태 초기화 추가 */
+void
+clear_screen()
+{
+    cp949_idx = 0; /* KR: 화면 지울 때 조립 상태 리셋 */
+    buffer_fill_to_end(console.back_buffer, &clear_cell, 0, 0);
+    home();
+}
+#endif /*KR*/
 
 void
 home()
@@ -723,12 +910,22 @@ home()
     set_console_cursor(ttyDisplay->curx, ttyDisplay->cury);
 }
 
+#if 0 /*KR: 원본*/
 void
 backsp()
 {
     set_console_cursor(ttyDisplay->curx, ttyDisplay->cury);
     xputc_core('\b');
 }
+#else /*KR: 백스페이스 칠 때 한글 조립 상태 초기화 추가 */
+void
+backsp()
+{
+    cp949_idx = 0; /* KR: 백스페이스 칠 때 조립 상태 리셋 */
+    set_console_cursor(ttyDisplay->curx, ttyDisplay->cury);
+    xputc_core('\b');
+}
+#endif /*KR*/
 
 void
 cl_eos()
@@ -1579,11 +1776,14 @@ static int CALLBACK EnumFontCallback(
 void
 check_and_set_font()
 {
+#if 0 /*KR: KRNethack - 넷핵 엔진이 멋대로 영문 폰트/인코딩으로 바꾸는 것을 \
+         차단 */
     if (!check_font_widths()) {
         raw_print("WARNING: glyphs too wide in console font."
                   "  Changing code page to 437 and font to Consolas\n");
         set_known_good_console_font();
     }
+#endif
 }
 
 /* check_font_widths returns TRUE if all glyphs in current console font
@@ -1947,6 +2147,7 @@ void nethack_enter_nttty()
 #endif
     SetConsoleMode(console.hConIn, cmode);
 
+#if 0 /*KR: 원본*/
     /* load default keyboard handler */
     HKL keyboard_layout = GetKeyboardLayout(0);
     DWORD primary_language = (UINT_PTR) keyboard_layout & 0x3f;
@@ -1963,6 +2164,13 @@ void nethack_enter_nttty()
                 error("Unable to load nhraykey.dll");
         }
     }
+#else /*KR: 멍청한 ToAscii를 쓰는 nhdefkey 대신, 한글을 지원하는 nhraykey만 \
+         무조건 강제 사용! */
+    if (!iflags.altkeyhandler[0]) {
+        if (!load_keyboard_handler("nhraykey"))
+            error("Unable to load nhraykey.dll");
+    }
+#endif
 }
 #endif /* TTY_GRAPHICS */
 

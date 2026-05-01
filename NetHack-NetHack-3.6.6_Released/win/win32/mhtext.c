@@ -49,7 +49,8 @@ mswin_init_text_window()
     }
 
     /* Set window caption */
-    SetWindowText(ret, "Text");
+    /*KR SetWindowText(ret, "Text"); */
+    SetWindowText(ret, "≈ÿΩ∫∆Æ");
 
     mswin_apply_window_style(ret);
 

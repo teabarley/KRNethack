@@ -122,7 +122,8 @@ mswin_init_menu_window(int type)
     }
 
     /* Set window caption */
-    SetWindowText(ret, "Menu/Text");
+    /*KR SetWindowText(ret, "Menu/Text"); */
+    SetWindowText(ret, "메뉴/텍스트");
 
     mswin_apply_window_style(ret);
 
@@ -1166,9 +1167,11 @@ onDrawItem(HWND hWnd, WPARAM wParam, LPARAM lParam)
             && data->menu.items[lpdis->itemID].count != 0
             && item->glyph != NO_GLYPH) {
             if (data->menu.items[lpdis->itemID].count == -1) {
-                _stprintf(wbuf, TEXT("Count: All"));
+                /*KR _stprintf(wbuf, TEXT("Count: All")); */
+                _stprintf(wbuf, TEXT("개수: 모두"));
             } else {
-                _stprintf(wbuf, TEXT("Count: %d"),
+                /*KR _stprintf(wbuf, TEXT("Count: %d"), */
+                _stprintf(wbuf, TEXT("개수: %d"),
                           data->menu.items[lpdis->itemID].count);
             }
 
@@ -1364,7 +1367,8 @@ onListChar(HWND hWnd, HWND hwndList, WORD ch)
             char buf[BUFSZ];
 
             reset_menu_count(hwndList, data);
-            if (mswin_getlin_window("Search for:", buf, BUFSZ) == IDCANCEL) {
+       /*KR if (mswin_getlin_window("Search for:", buf, BUFSZ) == IDCANCEL) { */
+            if (mswin_getlin_window("검색어 입력:", buf, BUFSZ) == IDCANCEL) {
                 strcpy(buf, "\033");
             }
             if (data->is_active)

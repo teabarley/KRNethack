@@ -468,7 +468,8 @@ MainWndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
             bail((char *) 0);
         } else {
             /* prompt user for action */
-            switch (NHMessageBox(hWnd, TEXT("Save?"),
+            /*KR switch (NHMessageBox(hWnd, TEXT("Save?"), */
+            switch (NHMessageBox(hWnd, TEXT("저장하시겠습니까?"),
                                  MB_YESNOCANCEL | MB_ICONQUESTION)) {
             case IDYES:
 #ifdef SAFERHANGUP
@@ -880,7 +881,8 @@ onWMCommand(HWND hWnd, WPARAM wParam, LPARAM lParam)
         len = strlen(p);
 
         if (!OpenClipboard(hWnd)) {
-            NHMessageBox(hWnd, TEXT("Cannot open clipboard"),
+            /*KR NHMessageBox(hWnd, TEXT("Cannot open clipboard"), */
+            NHMessageBox(hWnd, TEXT("클립보드를 열 수 없습니다"),
                          MB_OK | MB_ICONERROR);
             free(p);
             return 0;
@@ -981,8 +983,8 @@ onWMCommand(HWND hWnd, WPARAM wParam, LPARAM lParam)
         /* Notify the user that windows settings will not be saved this time.
          */
         NHMessageBox(GetNHApp()->hMainWnd,
-                     TEXT("Your Windows Settings will not be stored when you "
-                          "exit this time."),
+        /*KR TEXT("Your Windows Settings will not be stored when you exit this time."), */
+                     TEXT("이번에 종료하면 윈도우 설정이 저장되지 않습니다."),
                      MB_OK | MB_ICONINFORMATION);
         break;
     }
