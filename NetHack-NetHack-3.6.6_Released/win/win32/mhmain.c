@@ -23,6 +23,11 @@ extern winid WIN_STATUS;
 
 static TCHAR szMainWindowClass[] = TEXT("MSNHMainWndClass");
 static TCHAR szTitle[MAX_LOADSTRING];
+
+#if 1 /*KR: 한글 2바이트 처리용 상태 변수*/
+static int doublebyte = 0;
+#endif
+
 extern void mswin_display_splash_window(BOOL);
 
 LRESULT CALLBACK MainWndProc(HWND, UINT, WPARAM, LPARAM);
@@ -390,6 +395,20 @@ MainWndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 
         } /* end switch */
     } break;
+
+#if 1 /*KR: 한글(멀티바이트) 입력기 대응*/
+    case WM_CHAR: {
+        if (doublebyte == 1) {
+            NHEVENT_KBD(wParam & 0xFF);
+            doublebyte = 0;
+            return 0;
+        } else if (IsDBCSLeadByte((BYTE) (wParam & 0xFF))) {
+            NHEVENT_KBD(wParam & 0xFF);
+            doublebyte = 1;
+            return 0;
+        }
+    } break;
+#endif
 
     case WM_SYSCHAR: /* Alt-char pressed */
     {

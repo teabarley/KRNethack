@@ -1743,13 +1743,42 @@ mswin_getlin(const char *question, char *input)
                 if (input[0])
                     mswin_putstr_ex(WIN_MESSAGE, ATR_NONE, input, -len);
                 if (c == VK_BACK) {
+#if 0 /*KR: 원본*/
                     if (len > 0)
                         len--;
+#else /*KR: KRNethack 맞춤 번역 (한글 백스페이스 2바이트 동시 삭제) */
+                    if (len > 0) {
+                        int is_hangul_tail = 0;
+                        int i;
+                        /* 앞에서부터 스캔하여 마지막 글자가 2바이트 문자인지
+                         * 추적 */
+                        for (i = 0; i < len; i++) {
+                            if (IsDBCSLeadByte((BYTE) input[i])) {
+                                is_hangul_tail = 1;
+                                i++; /* 트레일 바이트 건너뛰기 */
+                            } else {
+                                is_hangul_tail = 0;
+                            }
+                        }
+                        len--; /* 기본 1바이트 지움 */
+                        /* 방금 지운게 한글의 뒷부분(트레일)이었다면
+                         * 앞부분(리드)도 마저 지움 */
+                        if (is_hangul_tail && len > 0)
+                            len--;
+                    }
+#endif
                     input[len] = '\0';
                 } else if (len>=(BUFSZ-1)) {
                     PlaySound((LPCSTR)SND_ALIAS_SYSTEMEXCLAMATION, NULL, SND_ALIAS_ID|SND_ASYNC);
                 } else {
                     input[len++] = c;
+#if 1 /*KR: 한글의 첫 바이트를 읽었다면, 뒷부분 바이트도 큐에서 즉시 \
+         꺼내온다*/
+                    if (IsDBCSLeadByte((BYTE) c)) {
+                        c = mswin_nhgetch();
+                        input[len++] = c;
+                    }
+#endif
                     input[len] = '\0';
                 }
                 mswin_putstr_ex(WIN_MESSAGE, ATR_NONE, input, 1);
