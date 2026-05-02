@@ -63,7 +63,7 @@ struct attack *mattk;
             pline("%s kicks%c", Monst_name,
                 thick_skinned(youmonst.data) ? '.' : '!');
 #else
-            pline("%s 걷어찬다%s", append_josa(Monst_name, "은"),
+            pline("%s 걷어찬다%s", append_josa(Monst_name, "이"),
                 thick_skinned(youmonst.data) ? "." : "!");
 #endif
             break;

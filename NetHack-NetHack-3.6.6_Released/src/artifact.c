@@ -108,7 +108,12 @@ int artinum;
 {
     if (artinum <= 0 || artinum > NROFARTIFACTS)
         return "";
+#if 0 /*KR: 원본*/
     return artilist[artinum].name;
+#else /*KR: KRNethack 맞춤 번역 */
+    extern char *get_kr_name(const char *);
+    return get_kr_name(artilist[artinum].name);
+#endif
 }
 
 /*
@@ -230,7 +235,14 @@ short *otyp;
         aname = a->name;
         if (!strncmpi(aname, "the ", 4))
             aname += 4;
+#if 0 /*KR: 원본*/
         if (!strcmpi(name, aname)) {
+#else /*KR: KRNethack 맞춤 번역 */
+        extern char *get_kr_name(const char *);
+        /* 영어 스펠링(aname)과 일치하거나, 한글 번역 이름과 일치하면 통과! */
+        /* 한글은 대소문자가 없으므로 strcmp를 씁니다. */
+        if (!strcmpi(name, aname) || !strcmp(name, get_kr_name(a->name))) {
+#endif
             *otyp = a->otyp;
             return a->name;
         }
@@ -1407,7 +1419,12 @@ int dieroll; /* needed for Magicbane and vorpal blades */
 
             if (youattack && u.uswallow && mdef == u.ustuck)
                 return FALSE;
+#if 0 /*KR: 원본*/
             wepdesc = artilist[ART_VORPAL_BLADE].name;
+#else /*KR: KRNethack 맞춤 번역 */
+            extern char *get_kr_name(const char *);
+            wepdesc = get_kr_name(artilist[ART_VORPAL_BLADE].name);
+#endif
             if (!youdefend) {
                 if (!has_head(mdef->data) || notonhead || u.uswallow) {
 #if 0 /*KR: 원본*/

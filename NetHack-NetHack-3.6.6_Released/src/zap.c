@@ -4581,7 +4581,7 @@ boolean say; /* Announce out of sight hit/miss events if true */
                                             "But it reflects from %s %s!");
 #else /*KR: KRNethack 맞춤 번역 */
                         (void) mon_reflects(
-                            mon, "하지만 그것은 %s %s 반사되었다!");
+                            mon, "하지만 그것은 %s의 %s에 반사되었다!");
 #endif
                     }
                     dx = -dx;

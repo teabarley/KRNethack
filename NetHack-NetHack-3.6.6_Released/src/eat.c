@@ -1553,7 +1553,7 @@ const char *mesg;
                   tintxts[r].txt, fingers_or_gloves(TRUE));
 #else
             pline("기름진 음식을 먹어서 당신의 %s 미끄러워졌다.",
-                append_josa(fingers_or_gloves(TRUE), "이(가)"));
+                append_josa(fingers_or_gloves(TRUE), "이"));
 #endif
         }
 

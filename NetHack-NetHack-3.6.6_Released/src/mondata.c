@@ -681,12 +681,6 @@ struct alt_spl {
 /* figure out what type of monster a user-supplied string is specifying */
 int name_to_mon(in_str) const char *in_str;
 {
-#if 1 /*KR: 한글 입력을 매칭하기 위한 변환*/
-    extern char *get_kr_name(const char *);
-    if (in_str) {
-        in_str = get_kr_name(in_str);
-    }
-#endif
     /* Be careful.  We must check the entire string in case it was
      * something such as "ettin zombie corpse".  The calling routine
      * doesn't know about the "corpse" until the monster name has
@@ -793,6 +787,7 @@ int name_to_mon(in_str) const char *in_str;
                 return namep->pm_val;
     }
 
+#if 0 /*KR: 원본*/
     for (len = 0, i = LOW_PM; i < NUMMONS; i++) {
         register int m_i_len = (int) strlen(mons[i].mname);
 
@@ -801,7 +796,6 @@ int name_to_mon(in_str) const char *in_str;
                 mntmp = i;
                 break; /* exact match */
             } else if (slen > m_i_len
-#if 0 /*KR: 원본*/
                        && (str[m_i_len] == ' '
                            || !strcmpi(&str[m_i_len], "s")
                            || !strncmpi(&str[m_i_len], "s ", 2)
@@ -811,14 +805,41 @@ int name_to_mon(in_str) const char *in_str;
                            || !strncmpi(&str[m_i_len], "'s ", 3)
                            || !strcmpi(&str[m_i_len], "es")
                            || !strncmpi(&str[m_i_len], "es ", 3))) {
-#else /*KR: KRNethack 맞춤 번역 (복수형 검사 최소화)*/
-                       && (str[m_i_len] == ' ')) {
-#endif
                 mntmp = i;
                 len = m_i_len;
             }
         }
     }
+#else /*KR: KRNethack 맞춤 번역 - 영/한 동시 검색 지원 및 복수형 검사 최소화 \
+       */
+    extern char *get_kr_name(const char *);
+    for (len = 0, i = LOW_PM; i < NUMMONS; i++) {
+        register int m_i_len = (int) strlen(mons[i].mname);
+        const char *kr_name = get_kr_name(mons[i].mname);
+        register int kr_i_len = (int) strlen(kr_name);
+
+        /* 1. 영문 원본 이름과 비교 (대소문자 무시) */
+        if (m_i_len > len && !strncmpi(mons[i].mname, str, m_i_len)) {
+            if (m_i_len == slen) {
+                mntmp = i;
+                break; /* exact match */
+            } else if (slen > m_i_len && (str[m_i_len] == ' ')) {
+                mntmp = i;
+                len = m_i_len;
+            }
+        }
+        /* 2. 한글 번역 이름과 비교 (정확히 일치) */
+        else if (kr_i_len > len && !strncmp(kr_name, str, kr_i_len)) {
+            if (kr_i_len == slen) {
+                mntmp = i;
+                break; /* exact match */
+            } else if (slen > kr_i_len && (str[kr_i_len] == ' ')) {
+                mntmp = i;
+                len = kr_i_len;
+            }
+        }
+    }
+#endif
     if (mntmp == NON_PM)
         mntmp = title_to_mon(str, (int *) 0, (int *) 0);
     return mntmp;

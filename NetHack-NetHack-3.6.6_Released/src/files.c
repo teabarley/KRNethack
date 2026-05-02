@@ -585,7 +585,7 @@ char errbuf[];
         Sprintf(errbuf, "Cannot open file \"%s\" for level %d (errno %d).",
                 lock, lev, errno);
 #else
-        Sprintf(errbuf, "지하 %d층의 파일 \"%s\"을(를) 열 수 없습니다 (errno %d)．", 
+        Sprintf(errbuf, "지하 %d층의 파일 \"%s\"를 열 수 없습니다 (errno %d)．", 
                 lev, lock, errno);
 #endif
 

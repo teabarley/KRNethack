@@ -367,7 +367,7 @@ int ef_flags;
 #else /*KR: KRNethack 맞춤 번역 */
                 if (!vismon)
                     pline("%s 완전히 %s 것 같다.",
-                          append_josa(ostr, "이(가)"), msg[type]);
+                          append_josa(ostr, "이"), msg[type]);
                 else
                     pline("%s %s 완전히 %s 것 같다.",
                           s_suffix(Monnam(victim)),
@@ -4085,7 +4085,7 @@ xchar x, y;
         /* Container is burnt up - dump contents out */
         if (in_sight)
             /*KR pline("%s catches fire and burns.", Yname2(obj)); */
-            pline("%s 불이 붙어 타버렸다.", Yname2(obj));
+            pline("%s 불이 붙어 타버렸다.", append_josa(Yname2(obj), "는"));
         if (Has_contents(obj)) {
             if (in_sight)
                 /*KR pline("Its contents fall out."); */

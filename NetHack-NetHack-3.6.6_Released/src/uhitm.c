@@ -1383,60 +1383,94 @@ int dieroll;
 #endif
     }
 
+#if 0 /*KR: 원본*/
     if (silvermsg) {
         const char *fmt;
         char *whom = mon_nam(mon);
         char silverobjbuf[BUFSZ];
-
+		
         if (canspotmon(mon)) {
             if (barehand_silver_rings == 1)
-                /*KR fmt = "Your silver ring sears %s!"; */
-                fmt = "당신의 은반지가 %s 태웠다!";
+                fmt = "Your silver ring sears %s!";
             else if (barehand_silver_rings == 2)
-                /*KR fmt = "Your silver rings sear %s!"; */
-                fmt = "당신의 은반지들이 %s 태웠다!";
+                fmt = "Your silver rings sear %s!";
             else if (silverobj && saved_oname[0]) {
                 /* guard constructed format string against '%' in
                    saved_oname[] from xname(via cxname()) */
-#if 0 /*KR: 원본*/
                 Sprintf(silverobjbuf, "Your %s%s %s",
                         strstri(saved_oname, "silver") ? "" : "silver ",
                         saved_oname, vtense(saved_oname, "sear"));
                 (void) strNsubst(silverobjbuf, "%", "%%", 0);
                 Strcat(silverobjbuf, " %s!");
-#else /*KR: KRNethack 맞춤 번역 */
-                /* '은' 또는 '은빛'이 이미 포함된 무기 이름인지 확인합니다 */
-                {
-                    char temp_wep[BUFSZ];
-                /* 무기 이름에 '은빛 '을 붙일지 판별하여 임시 버퍼에 저장 */
-                    Sprintf(temp_wep, "%s%s",
-                            strstri(saved_oname, "은") ? "" : "은빛 ",
-                            saved_oname);
 
-                    /* 완성된 무기 이름에 조사를 붙여서 최종 포맷팅 */
-                    Sprintf(silverobjbuf, "당신의 %s %%s 태웠다!",
-                            append_josa(temp_wep, "이(가)"));
-                }
-                (void) strNsubst(silverobjbuf, "%%", "%", 0);
-#endif
                 fmt = silverobjbuf;
             } else
-                /*KR fmt = "The silver sears %s!"; */
-                fmt = "은이 %s 태웠다!";
+                fmt = "The silver sears %s!";
         } else {
             *whom = highc(*whom); /* "it" -> "It" */
-            /*KR fmt = "%s is seared!"; */
-            fmt = "%s 화상을 입었다!";
+            fmt = "%s is seared!";
         }
         /* note: s_suffix returns a modifiable buffer */
         if (!noncorporeal(mdat) && !amorphous(mdat))
-#if 0 /*KR: 원본*/
             whom = strcat(s_suffix(whom), " flesh");
-#else /*KR: KRNethack 맞춤 번역 */
-            whom = strcat(s_suffix(whom), " 살을");
-#endif
+
         pline(fmt, whom);
     }
+#else /*KR: KRNethack 맞춤 번역 (어순, 조사 완벽 대응 및 메모리 안정성 강화) \
+       */
+    if (silvermsg) {
+        const char *fmt;
+        char *whom;
+        char silverobjbuf[BUFSZ];
+        char target_buf[BUFSZ];
+        char whom_buf[BUFSZ]; /* 추가: append_josa 버퍼 충돌 방지용 전용 그릇
+                               */
+
+        /* 1. 기본 대상 문자열 완성 (예: "안개 구름" 또는 "오크의 살") */
+        Strcpy(target_buf, mon_nam(mon));
+        if (!noncorporeal(mdat) && !amorphous(mdat)) {
+            /* s_suffix("오크") -> "오크의" + " 살" -> "오크의 살" */
+            Strcpy(target_buf, s_suffix(target_buf));
+            Strcat(target_buf, " 살");
+        }
+
+        /* 2. 상황에 맞춰 조사를 붙이고 포맷을 결정 */
+        if (canspotmon(mon)) {
+            /* 플레이어가 공격을 볼 수 있으면 대상을 목적어(을/를)로 만듦 */
+            /* 주의: append_josa 반환값을 전용 버퍼에 복사하여 덮어쓰기 방지!
+             */
+            Strcpy(whom_buf, append_josa(target_buf, "을"));
+            whom = whom_buf;
+
+            if (barehand_silver_rings == 1)
+                fmt = "당신의 은반지가 %s 태웠다!";
+            else if (barehand_silver_rings == 2)
+                fmt = "당신의 은반지들이 %s 태웠다!";
+            else if (silverobj && saved_oname[0]) {
+                char temp_wep[BUFSZ];
+                Sprintf(temp_wep, "%s%s",
+                        strstri(saved_oname, "은") ? "" : "은빛 ",
+                        saved_oname);
+
+                /* 여기서 append_josa가 한 번 더 쓰여도,
+                   whom은 이미 whom_buf에 피신해 있으므로 안전합니다! */
+                Sprintf(silverobjbuf, "당신의 %s %%s 태웠다!",
+                        append_josa(temp_wep, "이"));
+                (void) strNsubst(silverobjbuf, "%%", "%", 0);
+                fmt = silverobjbuf;
+            } else
+                fmt = "은이 %s 태웠다!";
+        } else {
+            /* 몬스터가 안 보이면 대상을 주어(이/가)로 만듦 */
+            Strcpy(whom_buf, append_josa(target_buf, "이"));
+            whom = whom_buf;
+            fmt = "%s 화상을 입었다!";
+        }
+
+        /* 3. 최종 출력 */
+        pline(fmt, whom);
+    }
+#endif
     if (lightobj) {
         const char *fmt;
         char *whom = mon_nam(mon);

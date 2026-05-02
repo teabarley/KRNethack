@@ -919,7 +919,7 @@ Amulet_off()
                     hliquid("water"));
 #else /*KR: KRNethack 맞춤 번역 */
                 You("갑자기 엄청난 양의 %s 들이마셨다!",
-                    append_josa(hliquid("water"), "을"));
+                    append_josa(hliquid("물"), "을"));
 #endif
                 (void) drown();
             }

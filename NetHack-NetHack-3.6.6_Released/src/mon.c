@@ -2070,12 +2070,12 @@ void mondead(mtmp) register struct monst *mtmp;
                              (SUPPRESS_INVISIBLE | SUPPRESS_IT), FALSE),
                     spec_death ? "reconstitutes" : "transforms");
 #else /*KR: KRNethack 맞춤 번역 */
-            Sprintf(buf, "%s 갑자기 %s, %%s(으)로 일어났다!",
+            Sprintf(buf, "%s 갑자기 %s, %%s 일어났다!",
                     append_josa(
                         x_monnam(mtmp, ARTICLE_NONE,
                                  spec_mon ? (char *) 0 : "죽은 줄 알았던",
                                  (SUPPRESS_INVISIBLE | SUPPRESS_IT), FALSE),
-                        "은"),
+                        "이"),
                     spec_death ? "재구성되더니" : "변신하더니");
 #endif
             mtmp->mcanmove = 1;
@@ -2107,10 +2107,21 @@ void mondead(mtmp) register struct monst *mtmp;
                 /* 3.6.0 used a_monnam(mtmp); that was weird if mtmp was
                    named: "Dracula suddenly transforms and rises as Dracula";
                    3.6.1 used mtmp->data->mname; that ignored hallucination */
+#if 0 /* 원본 */
                 pline(upstart(buf), x_monnam(mtmp, ARTICLE_A, (char *) 0,
                                              (SUPPRESS_NAME | SUPPRESS_IT
                                               | SUPPRESS_INVISIBLE),
                                              FALSE));
+#else /* KR: KRNethack 맞춤 번역 - 변신 후 이름에 '으로' 부착 */
+                /* x_monnam의 결과를 변수에 담지 않고 바로 append_josa에
+                 * 넣습니다. */
+                pline(upstart(buf),
+                      append_josa(x_monnam(mtmp, ARTICLE_NONE, (char *) 0,
+                                           (SUPPRESS_NAME | SUPPRESS_IT
+                                            | SUPPRESS_INVISIBLE),
+                                           FALSE),
+                                  "으로"));
+#endif
                 vamp_rise_msg = TRUE;
             }
             newsym(x, y);

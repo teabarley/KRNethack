@@ -1226,14 +1226,19 @@ int role, race, gend;
 void
 tty_askname()
 {
-    static const char who_are_you[] = "Who are you? ";
+    /*KR static const char who_are_you[] = "Who are you? "; */
+    static const char who_are_you[] = "당신은 누구입니까? ";
     register int c, ct, tryct = 0;
 
 #ifdef SELECTSAVED
     if (iflags.wc2_selectsaved && !iflags.renameinprogress)
         switch (restore_menu(BASE_WINDOW)) {
         case -1:
+#if 0 /*KR:T*/
             bail("Until next time then..."); /* quit */
+#else
+            bail("그럼 다음에 봅시다..."); /* quit */
+#endif
             /*NOTREACHED*/
         case 0:
             break; /* no game chosen; start new game */

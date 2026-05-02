@@ -3720,15 +3720,17 @@ choose_value:
         Sprintf(attrqry, "Choose attribute to always hilite %s:",
                 initblstats[fld].fldname);
 #else
-        Sprintf(colorqry, "%s이(가) '%s'일 때의 색상을 선택하세요:",
-                initblstats[fld].fldname, hilite.textmatch);
-        Sprintf(attrqry, "%s이(가) '%s'일 때의 속성을 선택하세요:",
-                initblstats[fld].fldname, hilite.textmatch);
+        Sprintf(colorqry, "%s '%s'일 때의 색상을 선택하세요:",
+                append_josa(initblstats[fld].fldname, "이"),
+                hilite.textmatch);
+        Sprintf(attrqry, "%s '%s'일 때의 속성을 선택하세요:",
+                append_josa(initblstats[fld].fldname, "이"),
+                hilite.textmatch);
     } else if (behavior == BL_TH_ALWAYS_HILITE) {
-        Sprintf(colorqry, "%s을(를) 항상 강조할 색상을 선택하세요:",
-                initblstats[fld].fldname);
-        Sprintf(attrqry, "%s을(를) 항상 강조할 속성을 선택하세요:",
-                initblstats[fld].fldname);
+        Sprintf(colorqry, "%s 항상 강조할 색상을 선택하세요:",
+                append_josa(initblstats[fld].fldname, "를"));
+        Sprintf(attrqry, "%s 항상 강조할 속성을 선택하세요:",
+                append_josa(initblstats[fld].fldname, "를"));
 #endif
     }
 

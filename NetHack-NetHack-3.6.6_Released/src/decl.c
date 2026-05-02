@@ -230,8 +230,8 @@ NEARDATA struct c_color_names c_color_names = {
 };
 #else
 NEARDATA struct c_color_names c_color_names = {
-    "검은",   "호박색의", "금빛의",   "하늘색의", "붉은색의",    "녹색의",
-    "은빛의", "파란색의", "보라색의", "흰색의",   "주황색의"
+    "검은", "호박", "금",   "하늘", "붉은",  "녹색",
+    "은", "푸른", "보랏", "하얀",   "주황"
 };
 #endif
 

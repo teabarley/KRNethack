@@ -3712,7 +3712,7 @@ boolean picked_some;
             You("%s no objects here.", verb);
 #else 
         if (!skip_objects && (Blind || !dfeature))
-            You("여기에는 %s 물건이 없다.", Blind ? "만져지는" : "보이는");
+            You("여기서 %s 물건이 없다.", Blind ? "만져지는" : "보이는");
 #endif
         return !!Blind;
     }

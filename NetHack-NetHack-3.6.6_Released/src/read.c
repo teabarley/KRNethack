@@ -1986,7 +1986,7 @@ struct obj *sobj; /* scroll, or fake spellbook object for scroll-like spell */
             /*KR pline_The("%s around you vaporizes violently!",
              * hliquid("water")); */
             pline("당신 주변의 %s 격렬하게 증발했다!",
-                  append_josa(hliquid("water"), "이"));
+                  append_josa(hliquid("물"), "이"));
         } else {
             if (sblessed) {
                 if (!already_known)

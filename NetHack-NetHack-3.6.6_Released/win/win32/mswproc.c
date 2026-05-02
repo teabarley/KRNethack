@@ -273,7 +273,8 @@ mswin_player_selection(void)
                 flags.initrole = pick_role(flags.initrace, flags.initgend,
                                            flags.initalign, PICK_RANDOM);
                 if (flags.initrole < 0) {
-                    raw_print("Incompatible role!");
+                    /*KR raw_print("Incompatible role!"); */
+                    raw_print("호환되지 않는 직업입니다!");
                     flags.initrole = randrole(FALSE);
                 }
             }
@@ -283,7 +284,8 @@ mswin_player_selection(void)
                 flags.initrace = pick_race(flags.initrole, flags.initgend,
                                            flags.initalign, PICK_RANDOM);
                 if (flags.initrace < 0) {
-                    raw_print("Incompatible race!");
+                    /*KR raw_print("Incompatible race!"); */
+                    raw_print("호환되지 않는 종족입니다!");
                     flags.initrace = randrace(flags.initrole);
                 }
             }
@@ -294,7 +296,8 @@ mswin_player_selection(void)
                 flags.initgend = pick_gend(flags.initrole, flags.initrace,
                                            flags.initalign, PICK_RANDOM);
                 if (flags.initgend < 0) {
-                    raw_print("Incompatible gender!");
+                    /*KR raw_print("Incompatible gender!"); */
+                    raw_print("호환되지 않는 성별입니다!");
                     flags.initgend = randgend(flags.initrole, flags.initrace);
                 }
             }
@@ -305,7 +308,8 @@ mswin_player_selection(void)
                 flags.initalign = pick_align(flags.initrole, flags.initrace,
                                              flags.initgend, PICK_RANDOM);
                 if (flags.initalign < 0) {
-                    raw_print("Incompatible alignment!");
+                    /*KR raw_print("Incompatible alignment!"); */
+                    raw_print("호환되지 않는 성향입니다!");
                     flags.initalign =
                         randalign(flags.initrole, flags.initrace);
                 }
@@ -437,12 +441,21 @@ prompt_for_player_selection(void)
                                   flags.initalign, PICK_RANDOM) + 1;
             if (any.a_int == 0) /* must be non-zero */
                 any.a_int = randrole(FALSE) + 1;
+#if 0 /*KR: 원본*/
             add_menu(win, NO_GLYPH, &any, '*', 0, ATR_NONE, "Random",
                      MENU_UNSELECTED);
             any.a_int = i + 1; /* must be non-zero */
             add_menu(win, NO_GLYPH, &any, 'q', 0, ATR_NONE, "Quit",
                      MENU_UNSELECTED);
             Sprintf(pbuf, "Pick a role for your %s", plbuf);
+#else /*KR: KRNethack 맞춤 번역 */
+            add_menu(win, NO_GLYPH, &any, '*', 0, ATR_NONE, "무작위",
+                     MENU_UNSELECTED);
+            any.a_int = i + 1; /* must be non-zero */
+            add_menu(win, NO_GLYPH, &any, 'q', 0, ATR_NONE, "종료",
+                     MENU_UNSELECTED);
+            Sprintf(pbuf, "%s의 직업을 선택하세요", plbuf);
+#endif
             end_menu(win, pbuf);
             n = select_menu(win, PICK_ONE, &selected);
             destroy_nhwindow(win);
@@ -510,12 +523,21 @@ prompt_for_player_selection(void)
                                       flags.initalign, PICK_RANDOM) + 1;
                 if (any.a_int == 0) /* must be non-zero */
                     any.a_int = randrace(flags.initrole) + 1;
+#if 0 /*KR: 원본*/
                 add_menu(win, NO_GLYPH, &any, '*', 0, ATR_NONE, "Random",
                          MENU_UNSELECTED);
                 any.a_int = i + 1; /* must be non-zero */
                 add_menu(win, NO_GLYPH, &any, 'q', 0, ATR_NONE, "Quit",
                          MENU_UNSELECTED);
                 Sprintf(pbuf, "Pick the race of your %s", plbuf);
+#else /*KR: KRNethack 맞춤 번역 */
+                add_menu(win, NO_GLYPH, &any, '*', 0, ATR_NONE, "무작위",
+                         MENU_UNSELECTED);
+                any.a_int = i + 1; /* must be non-zero */
+                add_menu(win, NO_GLYPH, &any, 'q', 0, ATR_NONE, "종료",
+                         MENU_UNSELECTED);
+                Sprintf(pbuf, "%s의 종족을 선택하세요", plbuf);
+#endif
                 end_menu(win, pbuf);
                 n = select_menu(win, PICK_ONE, &selected);
                 destroy_nhwindow(win);
@@ -584,12 +606,21 @@ prompt_for_player_selection(void)
                                       flags.initalign, PICK_RANDOM) + 1;
                 if (any.a_int == 0) /* must be non-zero */
                     any.a_int = randgend(flags.initrole, flags.initrace) + 1;
+#if 0 /*KR: 원본*/
                 add_menu(win, NO_GLYPH, &any, '*', 0, ATR_NONE, "Random",
                          MENU_UNSELECTED);
                 any.a_int = i + 1; /* must be non-zero */
                 add_menu(win, NO_GLYPH, &any, 'q', 0, ATR_NONE, "Quit",
                          MENU_UNSELECTED);
                 Sprintf(pbuf, "Pick the gender of your %s", plbuf);
+#else /*KR: KRNethack 맞춤 번역 */
+                add_menu(win, NO_GLYPH, &any, '*', 0, ATR_NONE, "무작위",
+                         MENU_UNSELECTED);
+                any.a_int = i + 1; /* must be non-zero */
+                add_menu(win, NO_GLYPH, &any, 'q', 0, ATR_NONE, "종료",
+                         MENU_UNSELECTED);
+                Sprintf(pbuf, "%s의 성별을 선택하세요", plbuf);
+#endif
                 end_menu(win, pbuf);
                 n = select_menu(win, PICK_ONE, &selected);
                 destroy_nhwindow(win);
@@ -657,12 +688,21 @@ prompt_for_player_selection(void)
                                        flags.initgend, PICK_RANDOM) + 1;
                 if (any.a_int == 0) /* must be non-zero */
                     any.a_int = randalign(flags.initrole, flags.initrace) + 1;
+#if 0 /*KR: 원본*/
                 add_menu(win, NO_GLYPH, &any, '*', 0, ATR_NONE, "Random",
                          MENU_UNSELECTED);
                 any.a_int = i + 1; /* must be non-zero */
                 add_menu(win, NO_GLYPH, &any, 'q', 0, ATR_NONE, "Quit",
                          MENU_UNSELECTED);
                 Sprintf(pbuf, "Pick the alignment of your %s", plbuf);
+#else /*KR: KRNethack 맞춤 번역 */
+                add_menu(win, NO_GLYPH, &any, '*', 0, ATR_NONE, "무작위",
+                         MENU_UNSELECTED);
+                any.a_int = i + 1; /* must be non-zero */
+                add_menu(win, NO_GLYPH, &any, 'q', 0, ATR_NONE, "종료",
+                         MENU_UNSELECTED);
+                Sprintf(pbuf, "%s의 성향을 선택하세요", plbuf);
+#endif
                 end_menu(win, pbuf);
                 n = select_menu(win, PICK_ONE, &selected);
                 destroy_nhwindow(win);
@@ -684,8 +724,8 @@ void
 mswin_askname(void)
 {
     logDebug("mswin_askname()\n");
-
-    if (mswin_getlin_window("Who are you?", plname, PL_NSIZ) == IDCANCEL) {
+/*KR if (mswin_getlin_window("Who are you?", plname, PL_NSIZ) == IDCANCEL) { */
+    if (mswin_getlin_window("당신은 누구입니까?", plname, PL_NSIZ) == IDCANCEL) {
         bail("bye-bye");
         /* not reached */
     }
@@ -1043,8 +1083,13 @@ mswin_display_file(const char *filename, BOOLEAN_P must_exist)
     if (!f) {
         if (must_exist) {
             TCHAR message[90];
+#if 0 /*KR: 원본*/
             _stprintf(message, TEXT("Warning! Could not find file: %s\n"),
                       NH_A2W(filename, wbuf, sizeof(wbuf)));
+#else /*KR: KRNethack 맞춤 번역 */
+            _stprintf(message, TEXT("경고! 파일을 찾을 수 없습니다: %s\n"),
+                      NH_A2W(filename, wbuf, sizeof(wbuf)));
+#endif
             NHMessageBox(GetNHApp()->hMainWnd, message,
                          MB_OK | MB_ICONEXCLAMATION);
         }
@@ -1764,10 +1809,17 @@ mswin_get_ext_cmd()
                     if (!strcmpi(cmd, extcmdlist[i].ef_txt))
                         break;
 
+#if 0 /*KR: 원본*/
                 if (extcmdlist[i].ef_txt == (char *) 0) {
                     pline("%s: unknown extended command.", cmd);
                     i = -1;
                 }
+#else /*KR: KRNethack 맞춤 번역 */
+                if (extcmdlist[i].ef_txt == (char *) 0) {
+                    pline("%s: 알 수 없는 확장 명령어입니다.", cmd);
+                    i = -1;
+                }
+#endif
                 break;
             default:
                 if (cmd[0])
@@ -2160,9 +2212,15 @@ initMapTiles(void)
         char errmsg[BUFSZ];
 
         errcode = GetLastError();
+#if 0 /*KR: 원본*/
         Sprintf(errmsg, "%s (0x%x).",
             "Cannot load tiles from the file. Reverting back to default",
             errcode);
+#else /*KR: KRNethack 맞춤 번역 */
+        Sprintf(errmsg, "%s (0x%x).",
+                "파일에서 타일을 불러올 수 없습니다. 기본값으로 되돌립니다",
+                errcode);
+#endif
         raw_print(errmsg);
         return FALSE;
     }
@@ -2172,8 +2230,10 @@ initMapTiles(void)
     if (bm.bmWidth % iflags.wc_tile_width
         || bm.bmHeight % iflags.wc_tile_height) {
         DeleteObject(hBmp);
-        raw_print("Tiles bitmap does not match tile_width and tile_height "
-                  "options. Reverting back to default.");
+        /*KR raw_print("Tiles bitmap does not match tile_width and tile_height
+         * options. Reverting back to default."); */
+        raw_print("타일 비트맵이 tile_width 및 tile_height 옵션과 일치하지 "
+                  "않습니다. 기본값으로 되돌립니다.");
         return FALSE;
     }
 
@@ -2181,8 +2241,10 @@ initMapTiles(void)
              * (bm.bmHeight / iflags.wc_tile_height);
     if (tl_num < total_tiles_used) {
         DeleteObject(hBmp);
-        raw_print("Number of tiles in the bitmap is less than required by "
-                  "the game. Reverting back to default.");
+        /*KR raw_print("Number of tiles in the bitmap is less than required by
+         * the game. Reverting back to default."); */
+        raw_print("비트맵의 타일 수가 게임에서 요구하는 것보다 적습니다. "
+                  "기본값으로 되돌립니다.");
         return FALSE;
     }
 
@@ -2800,6 +2862,7 @@ static mswin_status_string _status_strings[MAXBLSTATS];
 static mswin_status_string _condition_strings[BL_MASK_BITS];
 static mswin_status_field _status_fields[MAXBLSTATS];
 
+#if 0 /*KR: 원본*/
 static mswin_condition_field _condition_fields[BL_MASK_BITS] = {
     { BL_MASK_STONE, "Stone" },
     { BL_MASK_SLIME, "Slime" },
@@ -2815,6 +2878,17 @@ static mswin_condition_field _condition_fields[BL_MASK_BITS] = {
     { BL_MASK_FLY, "Fly" },
     { BL_MASK_RIDE, "Ride" }
 };
+#else /*KR: KRNethack 맞춤 번역 */
+static mswin_condition_field _condition_fields[BL_MASK_BITS] = {
+    { BL_MASK_STONE, "석화" },     { BL_MASK_SLIME, "슬라임" },
+    { BL_MASK_STRNGL, "질식" },    { BL_MASK_FOODPOIS, "식중독" },
+    { BL_MASK_TERMILL, "불치병" }, { BL_MASK_BLIND, "눈멂" },
+    { BL_MASK_DEAF, "귀먹음" },    { BL_MASK_STUN, "기절" },
+    { BL_MASK_CONF, "혼란" },      { BL_MASK_HALLU, "환각" },
+    { BL_MASK_LEV, "부유" },       { BL_MASK_FLY, "비행" },
+    { BL_MASK_RIDE, "승마" }
+};
+#endif
 
 
 extern winid WIN_STATUS;

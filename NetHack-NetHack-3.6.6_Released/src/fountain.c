@@ -423,8 +423,8 @@ drinkfountain()
             pline("This tepid %s is tasteless.",
                 hliquid("water"));
 #else
-            pline("이 미지근한 %s은 아무 맛도 나지 않는다.",
-                hliquid("물"));
+            pline("이 미지근한 %s 아무 맛도 나지 않는다.",
+                append_josa(hliquid("물"), "은"));
 #endif
             break;
         }

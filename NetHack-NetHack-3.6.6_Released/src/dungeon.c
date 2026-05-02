@@ -2143,8 +2143,18 @@ donamelevel()
         Sprintf(tmpbuf, "Replace annotation \"%.30s%s\" with?", mptr->custom,
                 (strlen(mptr->custom) > 30) ? "..." : "");
 #else /*KR: KRNethack 맞춤 번역 */
-        Sprintf(tmpbuf, "메모 \"%.30s%s\"을(를) 무엇으로 교체하겠습니까?",
-                mptr->custom, (strlen(mptr->custom) > 30) ? "..." : "");
+        {
+            /* 1. 알맹이(메모 내용 + 줄임표)를 먼저 하나의 문자열로
+             * 완성합니다. */
+            char annobuf[BUFSZ];
+            Sprintf(annobuf, "%.30s%s", mptr->custom,
+                    (strlen(mptr->custom) > 30) ? "..." : "");
+
+            /* 2. 따옴표 뒤에 %s를 하나 더 뚫어두고, get_jongseong으로 조사를
+             * 수동 결정합니다. */
+            Sprintf(tmpbuf, "메모 \"%s\"%s 무엇으로 교체하겠습니까?", annobuf,
+                    get_jongseong(annobuf) ? "을" : "를");
+        }
 #endif
         getlin(tmpbuf, nbuf);
     } else

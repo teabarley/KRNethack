@@ -1447,16 +1447,16 @@ struct trap *desttrap; /* nonnull if another trap at <x,y> */
                     You("lead %s to the edge of the %s.", steedname,
                         hliquid("lava"));
 #else /*KR: KRNethack 맞춤 번역 */
-                    You("%s %s 가장자리로 이끌었다.",
-                        append_josa(steedname, "을"), hliquid("lava"));
+                    You("%s %s의 가장자리로 이끌었다.",
+                        append_josa(steedname, "을"), hliquid("용암"));
 #endif
                 else
 #if 0 /*KR: 원본*/
                     You("pull yourself to the edge of the %s.",
                         hliquid("lava"));
 #else /*KR: KRNethack 맞춤 번역 */
-                    You("몸을 끌어당겨 %s 가장자리로 빠져나왔다.",
-                        hliquid("lava"));
+                    You("몸을 끌어당겨 %s의 가장자리로 빠져나왔다.",
+                        hliquid("용암"));
 #endif
             }
         }

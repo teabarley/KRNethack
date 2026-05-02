@@ -237,7 +237,7 @@ int x, y;
     } else if (Is_waterlevel(&u.uz)) {
         if (verbose)
             /*KR pline_The("%s splashes and subsides.", hliquid("water")); */
-            pline_The("%s 튀어오르다 가라앉는다.", hliquid("water"));
+            pline("%s이 튀다가 가라앉는다.", hliquid("물"));
         return FALSE;
     } else if ((IS_ROCK(levl[x][y].typ) && levl[x][y].typ != SDOOR
                 && (levl[x][y].wall_info & W_NONDIGGABLE) != 0)

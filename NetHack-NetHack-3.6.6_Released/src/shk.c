@@ -3746,10 +3746,9 @@ xchar x, y;
                       delta, currency(delta), eshkp->credit,
                       currency(eshkp->credit));
 #else /*KR: KRNethack 맞춤 번역 */
-                pline("예치금에 %ld %s이(가) 추가되었다. 총액은 이제 %ld "
-                      "%s이다.",
-                      delta, currency(delta), eshkp->credit,
-                      currency(eshkp->credit));
+                pline("예치금에 %ld %s 추가되었다. 총액은 이제 %ld %s.",
+                      delta, append_josa(currency(delta), "이"), eshkp->credit,
+                      append_josa(currency(eshkp->credit), "이다"));
 #endif
         }
 

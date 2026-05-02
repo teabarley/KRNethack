@@ -789,7 +789,7 @@ case POTION_CLASS:
             Sprintf(eos(buf), "%s 물약", actualn);
         } else if (un) {
             /* 유저가 이름을 지어줬을 때 */
-            Sprintf(eos(buf), "%s(이)라고 불리는 물약", un);
+            Sprintf(eos(buf), "%s고 불리는 물약", append_josa(un, "이라"));
         } else {
             /* 묘사만 알 때 (예: 루비 물약) */
             Sprintf(eos(buf), "%s 물약", get_kr_name(dn));
@@ -2505,14 +2505,14 @@ struct obj *obj;
     return outbuf;
 }
 
-#if 0 /*KR*/
+
 static const char *wrp[] = {
     "wand",   "ring",      "potion",     "scroll", "gem",
     "amulet", "spellbook", "spell book",
     /* for non-specific wishes */
     "weapon", "armor",     "tool",       "food",   "comestible",
 };
-#endif
+
 static const char wrpsym[] = { WAND_CLASS,   RING_CLASS,   POTION_CLASS,
                                SCROLL_CLASS, GEM_CLASS,    AMULET_CLASS,
                                SPBOOK_CLASS, SPBOOK_CLASS, WEAPON_CLASS,
@@ -4258,10 +4258,10 @@ struct obj *no_wish;
         goto any;
     }
 
-#if 0 /*KR*/
-    /*KR 영어에서는 XXXXX potion은 불확정명, 
+#if 0 /*KR: 원본*/
+    /*KR 영어에서는 XXXXX potion은 불확정명,
      * potion of XXXXX는 확정명이라고 한다.
-     * 구분은 가능하지만, 한국어에서는 둘 다 
+     * 구분은 가능하지만, 한국어에서는 둘 다
      * "XXXXX의 약"이므로 여기서는 구분하지 않는다 */
     /* Search for class names: XXXXX potion, scroll of XXXXX.  Avoid */
     /* false hits on, e.g., rings for "ring mail". */
@@ -4315,7 +4315,95 @@ struct obj *no_wish;
                 goto srch;
             }
         }
+#else /*KR: KRNethack 맞춤 번역 - 영/한 클래스명 동시 추출 지원 */
+    /* Search for class names: XXXXX potion, scroll of XXXXX.  Avoid */
+    /* false hits on, e.g., rings for "ring mail". */
+    if (strncmpi(bp, "enchant ", 8) && strncmpi(bp, "destroy ", 8)
+        && strncmpi(bp, "detect food", 11)
+        && strncmpi(bp, "food detection", 14) && strncmpi(bp, "ring mail", 9)
+        && strncmpi(bp, "studded leather armor", 21)
+        && strncmpi(bp, "leather armor", 13)
+        && strncmpi(bp, "tooled horn", 11) && strncmpi(bp, "food ration", 11)
+        && strncmpi(bp, "meat ring", 9)) {
+        /* 1. 영문 어순 처리 (scroll of genocide, healing potion 등 원본 기능)
+         */
+        for (i = 0; i < (int) (sizeof wrpsym); i++) {
+            register int j = strlen(wrp[i]);
+
+            if (!strncmpi(bp, wrp[i], j)) {
+                oclass = wrpsym[i];
+                if (oclass != AMULET_CLASS) {
+                    bp += j;
+                    if (!strncmpi(bp, " of ", 4))
+                        actualn = bp + 4;
+                } else
+                    actualn = bp;
+                goto srch;
+            }
+            if (!BSTRCMPI(bp, p - j, wrp[i])) {
+                oclass = wrpsym[i];
+                if (oclass != AMULET_CLASS) {
+                    p -= j;
+                    *p = '\0';
+                    if (p > bp && p[-1] == ' ')
+                        p[-1] = '\0';
+                } else {
+                    if (!strncmpi(bp, "versus poison ", 14)) {
+                        typ = AMULET_VERSUS_POISON;
+                        goto typfnd;
+                    }
+                }
+                actualn = dn = bp;
+                goto srch;
+            }
+        }
+    }
+
+/* 2. 한국어 어순 처리 ("학살의 두루마리", "치료 물약" 등 추가 기능) */
+    /* 한국어 고유 명사 예외 처리 (절단기에 남아있는 클래스명과 겹치는 고유
+     * 아이템들만 추가) */
+    if (strcmp(bp, "소설책") != 0
+        && strcmp(bp, "아스클레피오스의 지팡이") != 0
+        && strcmp(bp, "지팡이") != 0) {
+        static const struct {
+            const char *kname;
+            char ksym;
+        } kr_wrp[] = {
+            /* 주의: 부적, 갑옷, 무기는 korean.c에 이미 풀네임으로
+               번역되었으므로 절대 여기서 자르지 않도록 배열에서 삭제했습니다!
+             */
+            { "의 지팡이", WAND_CLASS },     { " 지팡이", WAND_CLASS },
+            { "의 반지", RING_CLASS },       { " 반지", RING_CLASS },
+            { "의 물약", POTION_CLASS },     { " 물약", POTION_CLASS },
+            { "의 두루마리", SCROLL_CLASS }, { " 두루마리", SCROLL_CLASS },
+            { "의 보석", GEM_CLASS },        { " 보석", GEM_CLASS },
+            { "의 주문서", SPBOOK_CLASS },   { " 주문서", SPBOOK_CLASS },
+            { "의 책", SPBOOK_CLASS },       { " 책", SPBOOK_CLASS }
+        };
+
+        int k, j;
+        for (k = 0; k < SIZE(kr_wrp); k++) {
+            j = strlen(kr_wrp[k].kname);
+
+            /* 안전장치: 입력 문자열이 접미사보다 짧으면 비교하지 않음 (메모리
+             * 크래시 완벽 방어) */
+            if ((p - bp) >= j && !BSTRCMPI(bp, p - j, kr_wrp[k].kname)) {
+                oclass = kr_wrp[k].ksym; /* SCROLL_CLASS 등 설정 */
+                p -= j;                  /* "~의 두루마리" 등 꼬리 자르기 */
+                *p = '\0';
+
+                /* 혹시 앞에 공백이 남았다면 깔끔하게 정리 (예: "학살 " ->
+                 * "학살") */
+                if (p > bp && p[-1] == ' ') {
+                    p[-1] = '\0';
+                }
+                actualn = dn = bp; /* 순수한 알맹이만 남김 */
+                goto srch;         /* 검색으로 직행 */
+            }
+        }
+    }
 #endif
+
 
     /* Wishing in wizard mode can create traps and furniture.
      * Part I:  distinguish between trap and object for the two
@@ -4412,9 +4500,9 @@ struct obj *no_wish;
     actualn = bp;
     if (!dn)
         dn = actualn; /* ex. "skull cap" */
-#if 0 /*KR*/
+
  srch:
-#endif
+
     /* check real names of gems first */
     if (!oclass && actualn) {
         for (i = bases[GEM_CLASS]; i <= LAST_GEM; i++) {

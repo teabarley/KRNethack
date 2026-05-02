@@ -3400,74 +3400,74 @@ int final;
 #if 0 /*KR: 원본*/
         you_are("fire resistant", from_what(FIRE_RES));
 #else
-        you_have("불에 대한 내성", from_what(FIRE_RES));
+        you_have("화염 저항", from_what(FIRE_RES));
 #endif
     if (Cold_resistance)
 #if 0 /*KR: 원본*/
         you_are("cold resistant", from_what(COLD_RES));
 #else
-        you_have("추위에 대한 내성", from_what(COLD_RES));
+        you_have("냉기 저항", from_what(COLD_RES));
 #endif
     if (Sleep_resistance)
 #if 0 /*KR: 원본*/
         you_are("sleep resistant", from_what(SLEEP_RES));
 #else
-        you_have("수면에 대한 내성", from_what(SLEEP_RES));
+        you_have("수면 저항", from_what(SLEEP_RES));
 #endif
     if (Disint_resistance)
 #if 0 /*KR: 원본*/
         you_are("disintegration-resistant", from_what(DISINT_RES));
 #else
-        you_have("분해에 대한 내성", from_what(DISINT_RES));
+        you_have("분해 저항", from_what(DISINT_RES));
 #endif
     if (Shock_resistance)
 #if 0 /*KR: 원본*/
         you_are("shock resistant", from_what(SHOCK_RES));
 #else
-        you_have("전격에 대한 내성", from_what(SHOCK_RES));
+        you_have("전격 저항", from_what(SHOCK_RES));
 #endif
     if (Poison_resistance)
 #if 0 /*KR: 원본*/
         you_are("poison resistant", from_what(POISON_RES));
 #else
-        you_have("독에 대한 내성", from_what(POISON_RES));
+        you_have("독 저항", from_what(POISON_RES));
 #endif
     if (Acid_resistance)
 #if 0 /*KR: 원본*/
         you_are("acid resistant", from_what(ACID_RES));
 #else
-        you_have("산에 대한 내성", from_what(ACID_RES));
+        you_have("산성 저항", from_what(ACID_RES));
 #endif
     if (Drain_resistance)
 #if 0 /*KR: 원본*/
         you_are("level-drain resistant", from_what(DRAIN_RES));
 #else
-        you_have("레벨 흡수에 대한 내성", from_what(DRAIN_RES));
+        you_have("레벨 흡수 저항", from_what(DRAIN_RES));
 #endif
     if (Sick_resistance)
 #if 0 /*KR: 원본*/
         you_are("immune to sickness", from_what(SICK_RES));
 #else
-        you_have("질병에 대한 면역", from_what(SICK_RES));
+        you_have("질병 면역", from_what(SICK_RES));
 #endif
     if (Stone_resistance)
 #if 0 /*KR: 원본*/
         you_are("petrification resistant", from_what(STONE_RES));
 #else
-        you_have("석화에 대한 내성", from_what(STONE_RES));
+        you_have("석화 저항", from_what(STONE_RES));
 #endif
     if (Halluc_resistance)
 #if 0 /*KR: 원본*/
         enl_msg(You_, "resist", "resisted", " hallucinations",
                 from_what(HALLUC_RES));
 #else
-        you_have("환각에 대한 내성", from_what(HALLUC_RES));
+        you_have("환각 저항", from_what(HALLUC_RES));
 #endif
     if (u.uedibility)
 #if 0 /*KR: 원본*/
         you_can("recognize detrimental food", "");
 #else
-        you_can("유해한 음식을 식별", "");
+        you_can("유해 음식 식별", "");
 #endif
 
     /*** Vision and senses ***/
@@ -7024,8 +7024,11 @@ if (typ <= SCORR)
             x_monnam(mtmp, ARTICLE_THE, (char *) 0, SUPPRESS_SADDLE, FALSE);
 
         if (!u.usteed) {
-            /*KR Sprintf(buf, "Ride %s", mnam); */
-            Sprintf(buf, "%s(을)를 탄다", mnam);
+#if 0 /*KR: 원본*/
+            Sprintf(buf, "Ride %s", mnam);
+#else /*KR: KRNethack 맞춤 번역 */
+            Sprintf(buf, "%s 탄다", append_josa(mnam, "를"));
+#endif
             add_herecmd_menuitem(win, doride, buf), ++K;
         }
         /*KR Sprintf(buf, "Remove saddle from %s", mnam); */
@@ -7111,9 +7114,12 @@ if (IS_FOUNTAIN(typ) || IS_SINK(typ)) {
         Sprintf(buf, "Go up the %s",
                 (u.ux == xupladder && u.uy == yupladder)
                 ? "ladder" : "stairs");
-#else
-        Sprintf(buf, "%s(을)를 올라간다",
-                (u.ux == xupladder && u.uy == yupladder) ? "사다리" : "계단");
+#else /*KR: KRNethack 맞춤 번역 */
+        Sprintf(buf, "%s 올라간다",
+                append_josa((u.ux == xupladder && u.uy == yupladder)
+                                ? "사다리"
+                                : "계단",
+                            "를"));
 #endif
         add_herecmd_menuitem(win, doup, buf);
     }
@@ -7125,8 +7131,11 @@ if (IS_FOUNTAIN(typ) || IS_SINK(typ)) {
                 (u.ux == xupladder && u.uy == yupladder)
                 ? "ladder" : "stairs");
 #else
-        Sprintf(buf, "%s(을)를 내려간다",
-                (u.ux == xupladder && u.uy == yupladder) ? "사다리" : "계단");
+        Sprintf(buf, "%s 내려간다",
+                append_josa((u.ux == xupladder && u.uy == yupladder)
+                                ? "사다리"
+                                : "계단",
+                            "를"));
 #endif
         add_herecmd_menuitem(win, dodown, buf);
     }
@@ -7156,19 +7165,19 @@ if (IS_FOUNTAIN(typ) || IS_SINK(typ)) {
 #if 0 /*KR: 원본*/
         Sprintf(buf, "Pick up %s", otmp->nexthere ? "items" : doname(otmp));
 #else
-        Sprintf(buf, "%s(을)를 줍는다",
-                otmp->nexthere ? "물건들" : doname(otmp));
+        Sprintf(buf, "%s 줍는다",
+                append_josa(otmp->nexthere ? "물건들" : doname(otmp), "를"));
 #endif
         add_herecmd_menuitem(win, dopickup, buf);
 
         if (Is_container(otmp)) {
             /*KR Sprintf(buf, "Loot %s", doname(otmp)); */
-            Sprintf(buf, "%s(을)를 뒤진다", doname(otmp));
+            Sprintf(buf, "%s 뒤진다", append_josa(doname(otmp), "를"));
             add_herecmd_menuitem(win, doloot, buf);
         }
         if (otmp->oclass == FOOD_CLASS) {
             /*KR Sprintf(buf, "Eat %s", doname(otmp)); */
-            Sprintf(buf, "%s(을)를 먹는다", doname(otmp));
+            Sprintf(buf, "%s 먹는다", append_josa(doname(otmp), "를"));
             add_herecmd_menuitem(win, doeat, buf);
         }
     }
