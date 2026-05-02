@@ -3201,9 +3201,12 @@ boolean printdun;
                 mptr->flags.unreachable ? " (돌아갈 길이 없다...)" : "");
 #endif
         if (u.uevent.qcompleted)
-            /*KR Sprintf(buf, "%sCompleted quest for %s.", PREFIX, ldrname());
-             */
-            Sprintf(buf, "%s%s(을)를 위한 퀘스트 완료.", PREFIX, ldrname());
+#if 0 /*KR: 원본*/
+            Sprintf(buf, "%sCompleted quest for %s.", PREFIX, ldrname());
+#else
+            Sprintf(buf, "%s%s 위한 퀘스트 완료.", 
+                    PREFIX, append_josa(ldrname(), "을"));
+#endif
         else if (mptr->flags.questing)
             /*KR Sprintf(buf, "%sGiven quest by %s.", PREFIX, ldrname()); */
             Sprintf(buf, "%s%s에게서 퀘스트를 받음.", PREFIX, ldrname());
@@ -3239,8 +3242,9 @@ boolean printdun;
         Sprintf(buf, "%s%s to %s", PREFIX, br_string2(mptr->br),
                 dungeons[mptr->br->end2.dnum].dname);
 #else /*KR: KRNethack 맞춤 번역 */
-        Sprintf(buf, "%s%s(으)로 향하는 %s", PREFIX,
-                dungeons[mptr->br->end2.dnum].dname, br_string2(mptr->br));
+        Sprintf(buf, "%s%s 향하는 %s", PREFIX,
+                append_josa(dungeons[mptr->br->end2.dnum].dname, "으로"),
+                br_string2(mptr->br));
 #endif
 
         /* Since mapseen objects are printed out in increasing order

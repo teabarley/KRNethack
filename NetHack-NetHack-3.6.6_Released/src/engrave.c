@@ -964,7 +964,7 @@ doengrave()
                     dengr = TRUE;
                 } else
                     /*KR pline("%s can't wipe out this engraving.", Yname2(otmp)); */
-                    pline("이 글자는 %s(으)로는 닦아낼 수 없다.", xname(otmp));
+                    pline("이 글자는 %s는 닦아낼 수 없다.", append_josa(xname(otmp), "으로"));
             else
 #if 0 /*KR:T*/
                 pline("%s %s.", Yobjnam2(otmp, "get"),

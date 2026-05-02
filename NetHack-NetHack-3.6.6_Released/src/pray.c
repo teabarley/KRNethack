@@ -535,9 +535,9 @@ STATIC_OVL void fix_worst_trouble(trouble) int trouble;
                   what ? what : (const char *) Yobjnam2(otmp, "softly glow"),
                   hcolor(NH_AMBER));
 #else /*KR: KRNethack 맞춤 번역 */
-            Your("%s %s 은은하게 빛났다.",
-                 what ? what : (const char *) xname(otmp),
-                 hcolor(NH_AMBER));
+            pline("%s %s으로 은은하게 빛났다.",
+                  what ? what : append_josa(Yname2(otmp), "이"),
+                  hcolor(NH_AMBER));
 #endif
             iflags.last_msg = PLNMSG_OBJ_GLOWS;
             otmp->bknown = !Hallucination; /* ok to skip set_bknown() */
@@ -617,11 +617,14 @@ STATIC_OVL void fix_worst_trouble(trouble) int trouble;
     case TROUBLE_SADDLE:
         otmp = which_armor(u.usteed, W_SADDLE);
         if (!Blind) {
-            /*KR pline("%s %s.", Yobjnam2(otmp, "softly glow"),
-             * hcolor(NH_AMBER)); */
-            pline("%s %s 은은하게 빛났다.",
-                  append_josa(y_monnam(u.usteed), "은"),
+#if 0 /*KR:T*/
+            pline("%s %s.", Yobjnam2(otmp, "softly glow"),
+             * hcolor(NH_AMBER));
+#else
+            pline("%s %s으로 은은하게 빛났다.",
+                  append_josa(y_monnam(u.usteed), "이"),
                   hcolor(NH_AMBER));
+#endif
             set_bknown(otmp, 1);
         }
         uncurse(otmp);
@@ -1181,9 +1184,9 @@ STATIC_OVL void pleased(g_align) aligntyp g_align;
                         pline("%s %s%s.", Yobjnam2(uwep, "softly glow"),
                               hcolor(NH_AMBER), repair_buf);
 #else /*KR: KRNethack 맞춤 번역 */
-                        Your("%s %s 은은하게 빛났다%s.",
-                             append_josa(xname(uwep), "이"),
-                             hcolor(NH_AMBER), repair_buf);
+                        pline("%s %s으로 은은하게 빛났다%s.",
+                              append_josa(Yname2(uwep), "이"),
+                              hcolor(NH_AMBER), repair_buf);
 #endif
                         iflags.last_msg = PLNMSG_OBJ_GLOWS;
                     } else
@@ -1204,9 +1207,9 @@ STATIC_OVL void pleased(g_align) aligntyp g_align;
                               Yobjnam2(uwep, "softly glow"),
                               an(hcolor(NH_LIGHT_BLUE)), repair_buf);
 #else /*KR: KRNethack 맞춤 번역 */
-                        Your("%s %s 오라와 함께 은은하게 빛났다%s.",
-                             append_josa(xname(uwep), "이"),
-                             an(hcolor(NH_LIGHT_BLUE)), repair_buf);
+                        pline("%s %s 오라와 함께 은은하게 빛났다%s.",
+                              append_josa(Yname2(uwep), "이"),
+                              hcolor(NH_LIGHT_BLUE), repair_buf);
 #endif
                         iflags.last_msg = PLNMSG_OBJ_GLOWS;
                     } else
@@ -1332,9 +1335,9 @@ STATIC_OVL void pleased(g_align) aligntyp g_align;
                         pline("%s %s.", Yobjnam2(otmp, "softly glow"),
                               hcolor(NH_AMBER));
 #else /*KR: KRNethack 맞춤 번역 */
-                        Your("%s %s 은은하게 빛났다.",
-                             append_josa(xname(otmp), "이"),
-                             hcolor(NH_AMBER));
+                        pline("%s %s으로 은은하게 빛났다.",
+                              append_josa(Yname2(otmp), "이"),
+                              hcolor(NH_AMBER));
 #endif
                         iflags.last_msg = PLNMSG_OBJ_GLOWS;
                         otmp->bknown = 1; /* ok to bypass set_bknown() */
@@ -1466,11 +1469,10 @@ boolean bless_water;
               ((other || changed > 1L) ? "s" : ""), (changed > 1L ? "" : "s"),
               (bless_water ? hcolor(NH_LIGHT_BLUE) : hcolor(NH_BLACK)));
 #else /*KR: KRNethack 맞춤 번역 */
-        pline(
-            "제단 위의 물약%s 잠시 %s 빛났다.",
-            (other && changed > 1L) ? " 중 일부가"
-                                    : (other ? " 중 하나가" : "이"),
-            (bless_water ? hcolor(NH_LIGHT_BLUE) : hcolor(NH_BLACK)));
+        pline("제단 위의 물약%s 잠시 %s으로 빛났다.",
+              (other && changed > 1L) ? " 중 일부가"
+                                      : (other ? " 중 하나가" : "이"),
+              (bless_water ? hcolor(NH_LIGHT_BLUE) : hcolor(NH_BLACK)));
 #endif
     }
     return (boolean) (changed > 0L);

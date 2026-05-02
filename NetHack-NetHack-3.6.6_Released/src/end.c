@@ -457,7 +457,7 @@ int how;
         /*KR Strcat(buf, "hallucinogen-distorted "); */
         Strcat(buf, "환각으로 일그러진 ");
 
-    if (imitator) {
+if (imitator) {
         char shape[BUFSZ];
         const char *realnm = champtr->mname, *fakenm = mptr->mname;
         boolean alt = is_vampshifter(mtmp);
@@ -473,6 +473,8 @@ int how;
                to redundant looking "vampire in vampire bat form" */
             fakenm = "bat";
         }
+
+#if 0 /*KR: 원본*/
         /* for the alternate format, always suppress any article;
            pname and the_unique should also have s_suffix() applied,
            but vampires don't take on any shapes which warrant that */
@@ -483,47 +485,75 @@ int how;
         else /* "a"/"an" */
             Strcpy(shape, an(fakenm));
         /* omit "called" to avoid excessive verbosity */
-#if 0 /*KR: 원본*/
         Sprintf(eos(buf),
                 alt ? "%s in %s form"
                     : mimicker ? "%s disguised as %s"
                                : "%s imitating %s",
                 realnm, shape);
-#else /*KR: KRNethack 맞춤 번역 */
-        Sprintf(eos(buf),
-                alt        ? "%s의 모습을 한 %s"
-                : mimicker ? "%s(으)로 위장한 %s"
-                           : "%s(을)를 흉내내는 %s",
-                shape, realnm);
+#else /*KR: KRNethack 맞춤 번역 (관사 제거, 한국어 어순 및 조사 자동 부착) \
+       */
+        /* 한국어에서는 a/an/the 같은 관사가 필요 없으므로 번역명만
+         * 가져옵니다. */
+        extern char *get_kr_name(const char *);
+        Strcpy(shape, get_kr_name(fakenm));
+
+        /* realnm도 번역명으로 변환하여 임시 보관 */
+        const char *kr_realnm = get_kr_name(realnm);
+
+        /* append_josa를 활용해 괄호 없는 완벽한 문장 조립 */
+        if (alt) {
+            Sprintf(eos(buf), "%s의 모습을 한 %s", shape, kr_realnm);
+        } else if (mimicker) {
+            Sprintf(eos(buf), "%s 위장한 %s", append_josa(shape, "으로"),
+                    kr_realnm);
+        } else {
+            Sprintf(eos(buf), "%s 흉내 내는 %s", append_josa(shape, "을"),
+                    kr_realnm);
+        }
 #endif
         mptr = mtmp->data; /* reset for mimicker case */
+
+#if 0 /*KR: 원본*/
     } else if (mptr == &mons[PM_GHOST]) {
-        /*KR Strcat(buf, "ghost"); */
-        Strcat(buf, "유령");
+        Strcat(buf, "ghost");
         if (has_mname(mtmp))
-            /*KR Sprintf(eos(buf), " of %s", MNAME(mtmp)); */
-            Sprintf(eos(buf), " (%s의 유령)", MNAME(mtmp));
+            Sprintf(eos(buf), " of %s", MNAME(mtmp));
+#else /*KR: KRNethack 맞춤 번역 (유령 단어 중복 방지) */
+    } else if (mptr == &mons[PM_GHOST]) {
+        if (has_mname(mtmp))
+            Sprintf(eos(buf), "%s의 유령", MNAME(mtmp));
+        else
+            Strcat(buf, "유령");
+#endif
+
     } else if (mtmp->isshk) {
         const char *shknm = shkname(mtmp),
                    *honorific = shkname_is_pname(mtmp) ? ""
                                 : mtmp->female         ? "Ms. "
                                                        : "Mr. ";
-
 #if 0 /*KR: 원본*/
         Sprintf(eos(buf), "%s%s, the shopkeeper", honorific, shknm);
 #else /*KR: KRNethack 맞춤 번역 */
-        Sprintf(eos(buf), "%s%s 상점주인", honorific, shknm);
+        Sprintf(eos(buf), "상점주인 %s%s", honorific, shknm);
 #endif
         killer.format = KILLED_BY;
+
     } else if (mtmp->ispriest || mtmp->isminion) {
         /* m_monnam() suppresses "the" prefix plus "invisible", and
            it overrides the effect of Hallucination on priestname() */
         Strcat(buf, m_monnam(mtmp));
     } else {
+#if 0 /*KR: 원본*/
         Strcat(buf, mptr->mname);
         if (has_mname(mtmp))
-            /*KR Sprintf(eos(buf), " called %s", MNAME(mtmp)); */
+            Sprintf(eos(buf), " called %s", MNAME(mtmp));
+#else /*KR: KRNethack 맞춤 번역 */
+        extern char *get_kr_name(const char *);
+        Strcat(buf, get_kr_name(mptr->mname)); /* 영어 이름 방어 */
+
+        if (has_mname(mtmp))
             Sprintf(eos(buf), " (이름: %s)", MNAME(mtmp));
+#endif
     }
 
     Strcpy(killer.name, buf);
@@ -1512,10 +1542,10 @@ STATIC_OVL void really_done(how) int how;
                  : "revenant persists",
              an(mons[u.ugrave_arise].mname));
 #else /*KR: KRNethack 맞춤 번역 */
-        Your("%s %s(으)로 일어났다...",
+        Your("%s %s 일어났다...",
              (u.ugrave_arise != PM_GREEN_SLIME) ? "시체가 죽음에서 깨어나"
                                                 : "망령이",
-             mons[u.ugrave_arise].mname);
+             append_josa(mons[u.ugrave_arise].mname, "으로"));
 #endif
         display_nhwindow(WIN_MESSAGE, FALSE);
     }

@@ -3752,20 +3752,20 @@ int final;
     /* actively walking on water handled earlier as a status condition */
     if (Wwalking && !walking_on_water())
         /*KR you_can("walk on water", from_what(WWALKING)); */
-        you_can("물 위를 걸을", from_what(WWALKING));
+        you_can("수면 보행을", from_what(WWALKING));
     /* actively swimming (in water but not under it) handled earlier */
     if (Swimming && (Underwater || !u.uinwater))
         /*KR you_can("swim", from_what(SWIMMING)); */
-        you_can("수영할", from_what(SWIMMING));
+        you_can("수영", from_what(SWIMMING));
     if (Breathless)
         /*KR you_can("survive without air", from_what(MAGICAL_BREATHING)); */
-        you_can("공기 없이도 생존할", from_what(MAGICAL_BREATHING));
+        you_can("공기 없이도 생존", from_what(MAGICAL_BREATHING));
     else if (Amphibious)
         /*KR you_can("breathe water", from_what(MAGICAL_BREATHING)); */
-        you_can("물속에서 호흡할", from_what(MAGICAL_BREATHING));
+        you_can("물속에서 호흡", from_what(MAGICAL_BREATHING));
     if (Passes_walls)
         /*KR you_can("walk through walls", from_what(PASSES_WALLS)); */
-        you_can("벽을 통과할", from_what(PASSES_WALLS));
+        you_can("벽을 통과", from_what(PASSES_WALLS));
 
     /*** Physical attributes ***/
     if (Regeneration)
@@ -3875,8 +3875,8 @@ int final;
         Sprintf(buf, "polymorphed into %s", an(youmonst.data->mname));
 #else
         extern char *get_kr_name(const char *);
-        Sprintf(buf, "%s(으)로 폴리모프된 상태",
-                get_kr_name(youmonst.data->mname));
+        Sprintf(buf, "%s 폴리모프된 상태",
+                append_josa(get_kr_name(youmonst.data->mname), "으로"));
 #endif
         if (wizard)
             Sprintf(eos(buf), " (%d)", u.mtimedone);

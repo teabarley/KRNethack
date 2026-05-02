@@ -1350,7 +1350,7 @@ int dieroll;
             pline("%s divides as you hit it%s!", Monnam(mon), withwhat);
 #else /*KR: KRNethack 맞춤 번역 */
             if (u.twoweap && flags.verbose)
-                Sprintf(withwhat, " %s(으)로", yname(obj));
+                Sprintf(withwhat, " %s", append_josa(yname(obj), "으로"));
             pline("%s 당신이%s 치자 분열했다!",
                   append_josa(Monnam(mon), "은"), withwhat);
 #endif
@@ -2500,7 +2500,7 @@ register struct attack *mattk;
             You("그것을 집어삼켰다가 뱉어냈다.");
             if (canspotmon(mdef))
                 /*KR pline("It turns into %s.", a_monnam(mdef)); */
-                pline("그것은 %s(으)로 변했다.", a_monnam(mdef));
+                pline("그것은 %s 변했다.", append_josa(a_monnam(mdef), "으로"));
             else
                 map_invisible(mdef->mx, mdef->my);
             return 1;

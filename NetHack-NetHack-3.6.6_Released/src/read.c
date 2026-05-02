@@ -617,7 +617,7 @@ register const char *color;
           Blind ? "" : " ", Blind ? "" : hcolor(color));
 #else /*KR: KRNethack 맞춤 번역 */
     pline("%s 잠시 동안 %s%s.", append_josa(Yname2(otmp), "이"),
-          Blind ? "" : hcolor(color), Blind ? "진동했다" : " 빛났다");
+          Blind ? "" : hcolor(color), Blind ? "진동했다" : "으로 빛났다");
 #endif
 }
 
@@ -1358,11 +1358,14 @@ struct obj *sobj; /* scroll, or fake spellbook object for scroll-like spell */
                  ? "" : hcolor(scursed ? NH_BLACK : NH_SILVER),
               (s * s > 1) ? "while" : "moment");
 #else /*KR: KRNethack 맞춤 번역 */
-        pline("%s %s %s%s%s.", append_josa(Yname2(otmp), "이"),
+        pline("%s %s %s%s%s%s.", append_josa(Yname2(otmp), "이"),
               (s * s > 1) ? "잠시 동안" : "잠깐", s == 0 ? "격렬하게 " : "",
               (Blind || same_color) ? ""
                                     : hcolor(scursed ? NH_BLACK : NH_SILVER),
-              Blind ? " 진동했다" : " 빛났다");
+              (Blind || same_color)
+                  ? ""
+                  : "으로 ", /* 색상이 있을 때만 '으로 ' 붙임 */
+              Blind ? "진동했다" : "빛났다");
 #endif
         /* [this cost handling will need updating if shop pricing is
            ever changed to care about curse/bless status of armor] */

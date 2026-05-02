@@ -3007,7 +3007,7 @@ doeat()
 #else
                 {
                     char jbuf[BUFSZ];
-                    Sprintf(jbuf, "%s(으)로", xname(otmp));
+                    Sprintf(jbuf, "%s", append_josa(xname(otmp), "으로"));
                     losehp(rnd(15), jbuf, KILLED_BY_AN);
                 }
 #endif

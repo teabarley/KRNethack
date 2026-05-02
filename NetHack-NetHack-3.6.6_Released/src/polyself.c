@@ -501,7 +501,7 @@ void polyself(psflags) int psflags;
                 else if (!type_is_pname(&mons[mntmp]))
                     pm_name = an(pm_name);
                 /*KR You_cant("polymorph into %s.", pm_name); */
-                You_cant("%s(으)로 변이할 수 없다.", pm_name);
+                You_cant("%s 변이할 수 없다.", append_josa(pm_name, "으로"));
             } else
                 break;
         } while (--tryct > 0);

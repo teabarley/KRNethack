@@ -737,7 +737,7 @@ doforce()
                     append_josa(yname(uwep), "을"));
             else
                 /*KR You("start bashing it with %s.", yname(uwep)); */
-                You("%s(으)로 그것을 내려치기 시작했다.", yname(uwep));
+                You("%s 그것을 내려치기 시작했다.", append_josa(yname(uwep), "으로"));
             xlock.box = otmp;
             xlock.chance = objects[uwep->otyp].oc_wldam * 2;
             xlock.picktyp = picktyp;

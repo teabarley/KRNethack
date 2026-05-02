@@ -829,7 +829,7 @@ const char *goal;
     for (;;) {
         if (show_goal_msg) {
             /*KR pline("Move cursor to %s:", goal); */
-            pline("커서를 %s(으)로 이동시키십시오:", goal);
+            pline("커서를 %s 이동시키십시오:", append_josa(goal, "으로"));
             curs(WIN_MAP, cx, cy);
             flush_screen(0);
             show_goal_msg = FALSE;

@@ -230,8 +230,8 @@ NEARDATA struct c_color_names c_color_names = {
 };
 #else
 NEARDATA struct c_color_names c_color_names = {
-    "°ËÀº", "È£¹Ú", "±Ý",   "ÇÏ´Ã", "ºÓÀº",  "³ì»ö",
-    "Àº", "Çª¸¥", "º¸¶ù", "ÇÏ¾á",   "ÁÖÈ²"
+    "°ËÀººû", "È£¹Úºû", "±Ýºû",   "ÇÏ´Ãºû", "ºÓÀººû",  "³ì»öºû",
+    "Àººû", "Çª¸¥ºû", "º¸¶ùºû", "ÇÏ¾áºû",   "ÁÖÈ²ºû"
 };
 #endif
 

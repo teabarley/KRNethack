@@ -1471,8 +1471,8 @@ coord *click_cc;
                 if (flags.verbose)
                     /*KR pline("Please move the cursor to %s.",
                           what_is_an_unknown_object); */
-                    pline("커서를 %s(으)로 이동시켜주세요.",
-                          what_is_an_unknown_object);
+                    pline("커서를 %s 이동시켜주세요.",
+                          append_josa(what_is_an_unknown_object, "으로"));
                 else
                     /*KR pline("Pick an object."); */
                     pline("물체를 선택하세요.");

@@ -207,8 +207,8 @@ you_were()
         Sprintf(qbuf, "Do you want to change into %s?",
                 an(mons[u.ulycn].mname + 4));
 #else /*KR: KRNethack 맞춤 번역*/
-        Sprintf(qbuf, "%s(으)로 변신하시겠습니까?",
-                get_kr_name(mons[u.ulycn].mname + 4));
+        Sprintf(qbuf, "%s 변신하시겠습니까?",
+                append_josa(get_kr_name(mons[u.ulycn].mname + 4), "으로"));
 #endif
         if (!paranoid_query(ParanoidWerechange, qbuf))
             return;

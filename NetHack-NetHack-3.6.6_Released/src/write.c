@@ -461,8 +461,8 @@ char *outbuf;
             break;
 
     Sprintf(outbuf, "%s%s", *comp_p ? "into " : "", descr);
-#else  /*KR: KRNethack 맞춤 번역 (모든 설명을 '~(으)로' 처리)*/
-    Sprintf(outbuf, "%s(으)로", OBJ_DESCR(objects[booktype]));
+#else  /*KR: 으로 or 로 유동 적용 */
+    Strcpy(outbuf, append_josa(OBJ_DESCR(objects[booktype]), "으로"));
 #endif
     return outbuf;
 }

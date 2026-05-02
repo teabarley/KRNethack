@@ -4443,9 +4443,9 @@ short otyp;
                   The(simple_typename(ap)),
                   c_obj_colors[objects[ap].oc_color]);
 #else /*KR: KRNethack 맞춤 번역 */
-            pline("%s 이전보다 더 선명한 %s(으)로 보인다.",
+            pline("%s 이전보다 더 선명한 %s 보인다.",
                   append_josa(The(simple_typename(ap)), "은"),
-                  c_obj_colors[objects[ap].oc_color]);
+                  append_josa(c_obj_colors[objects[ap].oc_color], "으로"));
 #endif
         }
         break;

@@ -431,7 +431,7 @@ polymorph_sink()
     if (levl[u.ux][u.uy].typ != ROOM)
         /*KR pline_The("sink transforms into %s!",
          * an(defsyms[sym].explanation)); */
-        pline_The("싱크대가 %s(으)로 변했다!", defsyms[sym].explanation);
+        pline_The("싱크대가 %s 변했다!", append_josa(defsyms[sym].explanation, "으로"));
     else
         /*KR pline_The("sink vanishes."); */
         pline("싱크대가 사라졌다.");
@@ -1981,7 +1981,7 @@ boolean at_stairs, falling, portal;
 
     if ((annotation = get_annotation(&u.uz)) != 0)
         /*KR You("remember this level as %s.", annotation); */
-        You("이 층을 %s(으)로 기억하고 있다.", annotation);
+        You("이 층을 %s 기억하고 있다.", append_josa(annotation, "으로"));
 
     /* assume this will always return TRUE when changing level */
     (void) in_out_region(u.ux, u.uy);

@@ -4175,7 +4175,7 @@ struct obj *obj;
                                 fillmsg
                                   ? (char *) 0
                        /*KR : "Some holes are quickly filled with %s!"); */
-                                  : "구멍이 빠르게 %s(으)로 채워졌다!");
+                                  : "구멍이 빠르게 %s 채워졌다!");
                     fillmsg = TRUE;
                 } else
                     digactualhole(x, y, BY_OBJECT, (rn2(obj->spe) < 3

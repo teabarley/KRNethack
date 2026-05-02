@@ -957,8 +957,9 @@ const char *fillmsg;
     if (fillmsg)
 #if 0 /*KR: 원본*/
         pline(fillmsg, hliquid(typ == LAVAPOOL ? "lava" : "water"));
-#else
-        pline(fillmsg, hliquid(typ == LAVAPOOL ? "용암" : "물"));
+#else /*KR: KRNethack 맞춤 번역 - 치환될 단어에 '으로' 부착 */
+        pline(fillmsg,
+              append_josa(hliquid(typ == LAVAPOOL ? "용암" : "물"), "으로"));
 #endif
     if (u_spot && !(Levitation || Flying)) {
         if (typ == LAVAPOOL)
@@ -1012,9 +1013,10 @@ coord *cc;
 #if 0 /*KR: 원본*/
         pline_The("%s sloshes furiously for a moment, then subsides.",
                   hliquid(is_lava(dig_x, dig_y) ? "lava" : "water"));
-#else
+#else /*KR: KRNethack 맞춤 번역 */
         pline_The("%s 잠시 맹렬하게 출렁이다가 가라앉았다.",
-                  hliquid(is_lava(dig_x, dig_y) ? "용암" : "물"));
+                  append_josa(hliquid(is_lava(dig_x, dig_y) ? "용암" : "물"),
+                              "이"));
 #endif
         wake_nearby(); /* splashing */
 
@@ -1081,7 +1083,7 @@ coord *cc;
                       (dig_x != u.ux || dig_y != u.uy) ? "t" : "");
 #else
             pline_The("이곳의 %s 파내기에는 너무 단단하다.",
-                      surface(dig_x, dig_y));
+                      append_josa(surface(dig_x, dig_y), "은"));
 #endif
             return FALSE;
         }
@@ -1093,7 +1095,7 @@ coord *cc;
                     "As you dig, the hole fills with %s!");
 #else
         liquid_flow(dig_x, dig_y, typ, ttmp,
-                    "당신이 파내자, 구멍이 %s(으)로 채워진다!");
+                    "당신이 파내자, 구멍이 %s 채워진다!");
 #endif
         return TRUE;
 
@@ -1119,7 +1121,7 @@ coord *cc;
                         "As you dig, the hole fills with %s!");
 #else
             liquid_flow(dig_x, dig_y, typ, ttmp,
-                        "당신이 파내자, 구멍이 %s(으)로 채워진다!");
+                        "당신이 파내자, 구멍이 %s 채워진다!");
 #endif
             return TRUE;
         }

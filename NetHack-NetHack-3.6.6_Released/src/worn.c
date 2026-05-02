@@ -642,9 +642,10 @@ outer_break:
                 pline("%s %s %s %s for a moment.", s_suffix(Monnam(mon)),
                       simpleonames(best), otense(best, "glow"),
                       hcolor(NH_BLACK));
-#else
-                pline("%s %s Àá½Ã %s ºû³µ´Ù.", s_suffix(Monnam(mon)),
-                      simpleonames(best), hcolor(NH_BLACK));
+#else /*KR: KRNethack ¸ÂÃã ¹ø¿ª */
+                pline("%s %s Àá½Ã %sÀ¸·Î ºû³µ´Ù.", s_suffix(Monnam(mon)),
+                      append_josa(simpleonames(best), "ÀÌ"),
+                      hcolor(NH_BLACK));
 #endif
         } /* can see it */
         m_delay += objects[best->otyp].oc_delay;
