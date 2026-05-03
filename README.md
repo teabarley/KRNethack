@@ -6,7 +6,8 @@
 <img width="1136" height="690" alt="Image" src="https://github.com/user-attachments/assets/1ec43bb4-0a90-4f82-8483-a1643c2dbc5e" />
 
 NetHack 3.6.6 Windows Graphical Interface 버전을 기반으로 하는 한국어 번역 개인 프로젝트입니다.  
-일본어 번역판인 JNetHack의 코드 구조를 일부 참고하여, 한국어의 어순과 문법에 맞게 엔진 단에서부터 텍스트 출력 구조를 재설계하고 있습니다.
+일본어 번역판인 JNetHack의 코드 구조를 일부 참고하여,  
+한국어의 어순과 문법에 맞게 엔진 단에서부터 텍스트 출력 구조를 재설계하고 있습니다.
 
 > **Disclaimer** : 이 프로젝트는 넷핵을 사랑하는 개인 팬에 의해 진행되는 비공식 번역 프로젝트이며,  
 > 공식 NetHack DevTeam 및 JNetHack 개발팀과 어떠한 공식적인 관련도 없습니다.  
