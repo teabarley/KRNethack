@@ -1709,10 +1709,17 @@ STATIC_OVL boolean
 noneoftheabove(hl_text)
 const char *hl_text;
 {
+#if 0 /*KR: 원본*/
     if (fuzzymatch(hl_text, "none of the above", "\" -_", TRUE)
         || fuzzymatch(hl_text, "(polymorphed)", "\"()", TRUE)
         || fuzzymatch(hl_text, "none of the above (polymorphed)",
                       "\" -_()", TRUE))
+#else /*KR: KRNethack 맞춤 번역 (메뉴 번역과 동일하게 텍스트 매칭 수정) */
+    if (fuzzymatch(hl_text, "위 항목에 없음", "\" -_", TRUE)
+        || fuzzymatch(hl_text, "(폴리모프 상태)", "\"()", TRUE)
+        || fuzzymatch(hl_text, "위 항목에 없음 (폴리모프 상태)", "\" -_()",
+                      TRUE))
+#endif
         return TRUE;
     return FALSE;
 }
@@ -2208,7 +2215,11 @@ boolean from_configfile;
         return TRUE;
     }
     if (fld == BL_FLUSH) {
+#if 0 /*KR: 원본*/
         config_error_add("Unknown status field '%s'", s[sidx]);
+#else /*KR: KRNethack 맞춤 번역 */
+        config_error_add("알 수 없는 상태 필드 '%s'입니다", s[sidx]);
+#endif
         return FALSE;
     }
     if (fld == BL_CONDITION)
@@ -2345,10 +2356,18 @@ boolean from_configfile;
             txt = s[sidx];
             txtval = TRUE;
         } else {
+#if 0 /*KR: 원본*/
             config_error_add(has_ltgt_percentnumber(s[sidx])
                  ? "Wrong format '%s', expected a threshold number or percent"
                  : "Unknown behavior '%s'",
                              s[sidx]);
+#else /*KR: KRNethack 맞춤 번역 */
+            config_error_add(
+                has_ltgt_percentnumber(s[sidx])
+                    ? "잘못된 형식 '%s': 임계값 숫자나 백분율이 필요합니다"
+                    : "알 수 없는 동작 '%s'입니다",
+                s[sidx]);
+#endif
             return FALSE;
         }
 
@@ -2369,8 +2388,14 @@ boolean from_configfile;
             hilite.rel = LT_VALUE;
 
         if (initblstats[fld].anytype == ANY_STR && (percent || numeric)) {
+#if 0 /*KR: 원본*/
             config_error_add("Field '%s' does not support numeric values",
                              initblstats[fld].fldname);
+#else /*KR: KRNethack 맞춤 번역 */
+            /* 여기서 fldname은 "title", "hp" 등이므로 조사를 붙여줍니다 */
+            config_error_add("%s 숫자 값을 지원하지 않습니다",
+                             append_josa(initblstats[fld].fldname, "은"));
+#endif
             return FALSE;
         }
 
@@ -2530,7 +2555,11 @@ query_conditions()
                  valid_conditions[i].id, MENU_UNSELECTED);
     }
 
+#if 0 /*KR: 원본*/
     end_menu(tmpwin, "Choose status conditions");
+#else /*KR: KRNethack 맞춤 번역 */
+    end_menu(tmpwin, "상태 조건을 선택하세요");
+#endif
 
     res = select_menu(tmpwin, PICK_ANY, &picks);
     destroy_nhwindow(tmpwin);
@@ -3099,7 +3128,11 @@ status_hilite_menu_choose_field()
                  initblstats[i].fldname, MENU_UNSELECTED);
     }
 
+#if 0 /*KR: 원본*/
     end_menu(tmpwin, "Select a hilite field:");
+#else /*KR: KRNethack 맞춤 번역 */
+    end_menu(tmpwin, "강조할 필드를 선택하세요:");
+#endif
 
     res = select_menu(tmpwin, PICK_ONE, &picks);
     destroy_nhwindow(tmpwin);

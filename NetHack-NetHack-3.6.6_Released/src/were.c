@@ -99,10 +99,7 @@ void
 new_were(mon)
 register struct monst *mon;
 {
-    register int pm;
-#if 1 /*KR: get_kr_name 사용을 위한 외부 선언*/
-    extern char *get_kr_name(const char *);
-#endif    
+    register int pm;  
 
     pm = counter_were(monsndx(mon->data));
     if (pm < LOW_PM) {
@@ -195,9 +192,6 @@ you_were()
 {
     char qbuf[QBUFSZ];
     boolean controllable_poly = Polymorph_control && !(Stunned || Unaware);
-#if 1 /*KR: get_kr_name 사용을 위한 외부 선언*/
-    extern char *get_kr_name(const char *);
-#endif 
 
     if (Unchanging || u.umonnum == u.ulycn)
         return;

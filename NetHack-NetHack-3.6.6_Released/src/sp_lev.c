@@ -1689,7 +1689,6 @@ struct mkroom *croom;
             case M_AP_OBJECT: 
 #if 1 /*KR (엔진의 영어 검색어를 한글로 변환하여 매칭) */
             {
-                extern char *get_kr_name(const char *);
                 const char *search_str = get_kr_name(m->appear_as.str);
 #else
                 const char *search_str = m->appear_as.str;

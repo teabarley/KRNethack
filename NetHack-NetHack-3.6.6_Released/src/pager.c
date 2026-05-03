@@ -100,9 +100,9 @@ char *outbuf;
             (Invis && (senseself() || !Blind)) ? "invisible " : "", race,
             mons[u.umonnum].mname, plname);
 #else /*KR: KRNethack 맞춤 번역 */
-    Sprintf(outbuf, "%s%s%s(이)라는 이름의 %s",
+    Sprintf(outbuf, "%s%s%s는 이름의 %s",
             (Invis && (senseself() || !Blind)) ? "보이지 않는 " : "", race,
-            plname, mons[u.umonnum].mname);
+             append_josa(plname, "이라"), mons[u.umonnum].mname);
 #endif
     if (u.usteed)
         /*KR Sprintf(eos(outbuf), ", mounted on %s", y_monnam(u.usteed)); */

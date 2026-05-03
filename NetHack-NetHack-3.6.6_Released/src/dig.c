@@ -197,9 +197,9 @@ int x, y;
 #if 0 /*KR: 원본*/
     const char *verb =
         (madeby == BY_YOU && uwep && is_axe(uwep)) ? "chop" : "dig in";
-#else
+#else /*KR: KRNethack 맞춤 번역 (뒤에 오는 문맥에 맞춘 관형사형 활용) */
     const char *verb =
-        (madeby == BY_YOU && uwep && is_axe(uwep)) ? "베어내기" : "파내기";
+        (madeby == BY_YOU && uwep && is_axe(uwep)) ? "베어낼" : "파낼";
 #endif
 
     if (On_stairs(x, y)) {
@@ -209,35 +209,48 @@ int x, y;
                 pline_The("ladder resists your effort.");
         } else if (verbose)
             pline_The("stairs are too hard to %s.", verb);
-#else
+#else /*KR: KRNethack 맞춤 번역 (pline_The의 'The ' 자동 삽입 방지) */
         if (x == xdnladder || x == xupladder) {
             if (verbose)
-                pline_The("사다리는 당신의 노력에도 끄떡없다.");
+                pline("사다리는 당신의 노력에도 끄떡없다.");
         } else if (verbose)
-            pline_The("계단은 %s에는 너무 단단하다.", verb);
+            pline("계단은 %s 수 없을 만큼 단단하다.", verb);
 #endif
         return FALSE;
     } else if (IS_THRONE(levl[x][y].typ) && madeby != BY_OBJECT) {
         if (verbose)
-            /*KR pline_The("throne is too hard to break apart."); */
-            pline_The("왕좌는 부수기에는 너무 단단하다.");
+#if 0 /*KR: 원본*/
+            pline_The("throne is too hard to break apart.");
+#else
+            pline("왕좌는 부수기에는 너무 단단하다.");
+#endif
         return FALSE;
     } else if (IS_ALTAR(levl[x][y].typ)
                && (madeby != BY_OBJECT || Is_astralevel(&u.uz)
                    || Is_sanctum(&u.uz))) {
         if (verbose)
-            /*KR pline_The("altar is too hard to break apart."); */
-            pline_The("제단은 부수기에는 너무 단단하다.");
+#if 0 /*KR: 원본*/
+            pline_The("altar is too hard to break apart.");
+#else
+            pline("제단은 부수기에는 너무 단단하다.");
+#endif
         return FALSE;
     } else if (Is_airlevel(&u.uz)) {
         if (verbose)
-            /*KR You("cannot %s thin air.", verb); */
+#if 0 /*KR: 원본*/
+            You("cannot %s thin air.", verb);
+#else
             You("허공을 %s 수는 없다.", verb);
+#endif
         return FALSE;
     } else if (Is_waterlevel(&u.uz)) {
         if (verbose)
-            /*KR pline_The("%s splashes and subsides.", hliquid("water")); */
-            pline("%s이 튀다가 가라앉는다.", hliquid("물"));
+#if 0 /*KR: 원본*/
+            pline_The("%s splashes and subsides.", hliquid("water"));
+#else /*KR: KRNethack 맞춤 번역 (내부 함수 인자 보호 및 번역기 적용) */
+        pline("%s 튀다가 가라앉는다.",
+              append_josa(get_kr_name(hliquid("water")), "이"));
+#endif
         return FALSE;
     } else if ((IS_ROCK(levl[x][y].typ) && levl[x][y].typ != SDOOR
                 && (levl[x][y].wall_info & W_NONDIGGABLE) != 0)
@@ -246,9 +259,12 @@ int x, y;
                        || ttmp->ttyp == VIBRATING_SQUARE
                        || (!Can_dig_down(&u.uz) && !levl[x][y].candig)))) {
         if (verbose)
-            /*KR pline_The("%s here is too hard to %s.", surface(x, y), verb);
-             */
-            pline_The("이곳의 %s %s에는 너무 단단하다.", surface(x, y), verb);
+#if 0 /*KR: 원본*/
+            pline_The("%s here is too hard to %s.", surface(x, y), verb);
+#else /*KR: KRNethack 맞춤 번역 (영어 반환값 번역 및 조사 처리) */
+        pline("이곳의 %s %s 수 없을 만큼 단단하다.",
+              append_josa(get_kr_name(surface(x, y)), "은"), verb);
+#endif
         return FALSE;
     } else if (sobj_at(BOULDER, x, y)) {
         if (verbose)
@@ -1811,11 +1827,11 @@ zap_dig()
                 losehp(Maybe_Half_Phys(dmg), "falling rock", KILLED_BY_AN);
 #else
                 if (On_stairs(u.ux, u.uy))
-                    pline_The("광선이 %s에서 튕겨나와 %s(을)를 맞췄다.",
+                    pline_The("광선이 %s에서 튕겨나와 %s 맞췄다.",
                               (u.ux == xdnladder || u.ux == xupladder)
                                   ? "사다리"
                                   : "계단",
-                              ceiling(u.ux, u.uy));
+                              append_josa(ceiling(u.ux, u.uy), "을"));
                 You("%s에서 돌을 떼어냈다.", ceiling(u.ux, u.uy));
                 pline("돌이 당신의 %s에 떨어졌다!", body_part(HEAD));
                 dmg = rnd((uarmh && is_metallic(uarmh)) ? 2 : 6);

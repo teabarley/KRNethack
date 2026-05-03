@@ -2720,7 +2720,8 @@ int xkill_flags; /* 1: suppress message, 2: suppress corpse, 4: pacifist */
 #if 0 /*KR: 원본*/
                 pline("Now it's %s.", an(mtmp->data->mname));
 #else /*KR: KRNethack 맞춤 번역 */
-                 pline("이제 %s(이)가 되었다.", mtmp->data->mname);
+                 pline("이제 %s 되었다.", 
+                       append_josa(mtmp->data->mname, "이"));
 #endif
          } else {
              if (canseemon(mtmp))

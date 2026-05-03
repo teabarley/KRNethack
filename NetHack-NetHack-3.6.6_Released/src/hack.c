@@ -3359,7 +3359,8 @@ void unmul(msg_override) const char *msg_override;
 #else /*KR: "당신은 살아남았다" 등으로 번역됨 */
         if (Upolyd && !strncmp(nomovemsg, "당신은 살아남았다",
                         strlen("당신은 살아남았다")))
-            You("%s(이)다.", mons[u.umonnum].mname); /* (ignore Hallu) */
+            You("%s.", 
+                append_josa(mons[u.umonnum].mname, "이다")); /* (ignore Hallu) */
 #endif
     }
     nomovemsg = 0;

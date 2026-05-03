@@ -377,12 +377,12 @@ newman()
                    ? urace.individual.m
                    : urace.noun);
 #else /*KR: KRNethack 맞춤 번역 */
-    polyman("새로운 %s(이)가 된 기분이다!",
+    polyman("새로운 %s 된 기분이다!",
             /* use saved gender we're about to revert to, not current */
-            ((Upolyd ? u.mfemale : flags.female) && urace.individual.f)
+            append_josa(((Upolyd ? u.mfemale : flags.female) && urace.individual.f)
                 ? urace.individual.f
-            : (urace.individual.m) ? urace.individual.m
-                                   : urace.noun);
+                : (urace.individual.m) ? urace.individual.m
+                                       : urace.noun, "이"));
 #endif
     if (Slimed) {
         /*KR Your("body transforms, but there is still slime on you."); */
@@ -575,7 +575,7 @@ void polyself(psflags) int psflags;
 #if 0 /*KR: 원본*/
                 Sprintf(buf, "Become %s?", an(mons[mntmp].mname));
 #else /*KR: KRNethack 맞춤 번역 */
-                Sprintf(buf, "%s(이)가 되시겠습니까?", mons[mntmp].mname);
+                Sprintf(buf, "%s 되시겠습니까?", append_josa(mons[mntmp].mname, "이"));
 #endif
                 if (yn(buf) != 'y')
                     return;
@@ -1252,7 +1252,7 @@ rehumanize()
             mon_nam(u.usteed), surface(u.ux, u.uy));
 #else /*KR: KRNethack 맞춤 번역 */
         You("%s 함께 %s 위로 사뿐히 내려앉았다.",
-            append_josa(mon_nam(u.usteed), "와(과)"), surface(u.ux, u.uy));
+            append_josa(mon_nam(u.usteed), "와"), surface(u.ux, u.uy));
 #endif
     retouch_equipment(2);
     if (!uarmg)

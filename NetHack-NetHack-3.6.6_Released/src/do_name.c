@@ -99,13 +99,12 @@ int gloc;
                                   : "move the cursor to ",
             gloc_descr[gloc][2 + iflags.getloc_usemenu],
             gloc_filtertxt[iflags.getloc_filter]);
-#else
-    Sprintf(sbuf, "'%s'가 '%s'로 %s %s %s.",
-        k1, k2,
-        gloc_filtertxt[iflags.getloc_filter],
-        gloc_descr[gloc][2 + iflags.getloc_usemenu],
-        iflags.getloc_usemenu ? "의 메뉴를 표시한다"
-                              : "에 커서를 옮긴다");
+#else /*KR: KRNethack 맞춤 번역 (자연스러운 띄어쓰기) */
+    Sprintf(sbuf, "'%s'나 '%s' 키로 %s %s%s.", k1, k2,
+            gloc_filtertxt[iflags.getloc_filter],
+            gloc_descr[gloc][2 + iflags.getloc_usemenu],
+            iflags.getloc_usemenu ? "의 메뉴를 표시합니다"
+                                  : "에 커서를 옮깁니다");
 #endif
     putstr(tmpwin, 0, sbuf);
 }
@@ -1268,6 +1267,7 @@ char *monnambuf, *usrbuf;
 {
     char pronounbuf[10], *p;
 
+#if 0 /*KR: 원본*/
     if (fuzzymatch(usrbuf, monnambuf, " -_", TRUE)
         /* catch trying to name "the Oracle" as "Oracle" */
         || (!strncmpi(monnambuf, "the ", 4)
@@ -1278,22 +1278,41 @@ char *monnambuf, *usrbuf;
         /* catch trying to name "the {priest,Angel} of Crom" as "Crom" */
         || ((p = strstri(monnambuf, " of ")) != 0
             && fuzzymatch(usrbuf, p + 4, " -_", TRUE))) {
+#else /*KR: KRNethack 맞춤 번역 (한국어 문법에 맞춘 문자열 검사) */
+    if (fuzzymatch(usrbuf, monnambuf, " -_", TRUE)
+        /* "보이지 않는 오르쿠스"를 "오르쿠스"로 지으려 할 때
+           (sizeof를 사용하여 CP949/UTF-8 상관없이 컴파일러가 길이를 자동
+           계산) */
+        || ((p = strstri(monnambuf, "보이지 않는 ")) != 0
+            && fuzzymatch(usrbuf, p + (sizeof("보이지 않는 ") - 1), " -_",
+                          TRUE))
+        /* "크롬의 사제"를 "크롬"으로 지으려 할 때
+           (한국어는 "의" 앞부분이 이름이므로 usrbuf와 길이를 비교합니다) */
+        || ((p = strstri(monnambuf, "의 ")) != 0
+            && !strncmp(monnambuf, usrbuf, p - monnambuf))) {
+#endif
 #if 0 /*KR: 원본*/
         pline("%s is already called %s.",
               upstart(strcpy(pronounbuf, mhe(mtmp))), monnambuf);
 #else /*KR: KRNethack 맞춤 번역 */
-        pline("%s 이미 %s(이)라고 불리고 있다.",
+        pline("%s 이미 %s고 불리고 있다.",
               append_josa(upstart(strcpy(pronounbuf, mhe(mtmp))), "은"),
-              monnambuf);
+              append_josa(monnambuf, "이라"));
 #endif
         return TRUE;
+#if 0 /*KR: 원본*/
     } else if (mtmp->data == &mons[PM_JUIBLEX]
                && strstri(monnambuf, "Juiblex")
                && !strcmpi(usrbuf, "Jubilex")) {
+#else /*KR: KRNethack 맞춤 번역 (쥬블렉스 오타 이스터에그) */
+    } else if (mtmp->data == &mons[PM_JUIBLEX]
+               && strstri(monnambuf, "쥬블렉스") 
+               && !strcmp(usrbuf, "쥬빌렉스")) {
+#endif
         /*KR pline("%s doesn't like being called %s.", 
          *         upstart(monnambuf), usrbuf); */
-        pline("%s %s(이)라고 불리는 것을 싫어한다.",
-              append_josa(upstart(monnambuf), "은"), usrbuf);
+        pline("%s %s고 불리는 것을 싫어한다.",
+              append_josa(upstart(monnambuf), "은"), append_josa(usrbuf, "이라"));
         return TRUE;
     }
     return FALSE;
@@ -1329,8 +1348,8 @@ do_mname()
             pline("This %s creature is called %s and cannot be renamed.",
                   beautiful(), plname);
 #else /*KR: KRNethack 맞춤 번역 */
-            pline("이 %s 생명체는 %s(이)라 불리며, 이름을 바꿀 수 없다.",
-                  beautiful(), plname);
+            pline("이 %s 생명체는 %s 불리며, 이름을 바꿀 수 없다.",
+                  beautiful(), append_josa(plname, "이라"));
 #endif
             return;
         }
@@ -1391,7 +1410,9 @@ do_mname()
                     || mtmp->data->msound <= MS_ANIMAL)) {
         if (!alreadynamed(mtmp, monnambuf, buf))
             /*KR verbalize("I'm %s, not %s.", shkname(mtmp), buf); */
-            verbalize("나는 %s(이)지, %s(이)가 아니다.", shkname(mtmp), buf);
+            verbalize("나는 %s, %s 아니다.", 
+                      append_josa(shkname(mtmp), "이지"), 
+                      append_josa(buf, "이"));
     } else if (mtmp->ispriest || mtmp->isminion || mtmp->isshk) {
         if (!alreadynamed(mtmp, monnambuf, buf))
 #if 0 /*KR: 원본*/
@@ -2022,7 +2043,8 @@ boolean called;
         if (mdat == &mons[PM_SHOPKEEPER] && !do_invis) {
             Strcpy(buf, shkname(mtmp));
         } else {
-            Sprintf(buf, "%s(이)라는 이름의 %s%s", shkname(mtmp),
+            Sprintf(buf, "%s는 이름의 %s%s", 
+                    append_josa(shkname(mtmp), "이라"),
                     do_invis ? "보이지 않는 " : "", pm_name);
         }
         if (adjective && article == ARTICLE_THE) {
@@ -2086,7 +2108,8 @@ boolean called;
         } else {
 #else /*KR: (위에서 이미 직업 칭호를 앞으로 뺐음) */
         } else if (called) {
-            Sprintf(eos(buf), "%s(이)라고 불리는 %s", name, pm_name);
+            Sprintf(eos(buf), "%s고 불리는 %s", 
+                    append_josa(name, "이라"), pm_name);
 #if 0 /*KR*/
             name_at_start = (boolean) type_is_pname(mdat);
 #endif
@@ -2418,7 +2441,11 @@ char *code;
     if (name >= SPECIAL_PM) {
         mname = bogusmon(buf, code);
     } else {
+#if 0 /*KR: 원본*/
         mname = strcpy(buf, mons[name].mname);
+#else /*KR: KRNethack 맞춤 번역 (환각 상태 영어 노출 방어) */
+        mname = strcpy(buf, get_kr_name(mons[name].mname));
+#endif
     }
     return mname;
 #undef BOGUSMONSIZE
@@ -2505,12 +2532,13 @@ static NEARDATA const char *const hliquids[] = {
     "fruit juice", "glowing lava", "gastric acid", "mineral water",
     "cough syrup", "quicksilver", "sweet vitriol", "grey goo", "pink slime",
 #else /*KR: KRNethack 맞춤 번역 */
-    "요거트", "우블렉", "응혈", "희석된 물", "정제수", "인스턴트 커피",
-    "홍차", "허브티", "액체 무지개", "크림 거품", "따뜻한 와인", "부이용",
-    "과즙", "그로그", "플러버", "케첩", "느린 빛", "기름", "비네그레트 소스",
-    "액정", "꿀", "캐러멜 소스", "잉크", "방수", "대용유", "과일 주스",
-    "빛나는 용암", "위산", "광천수", "기침 시럽", "수은", "단 황산",
-    "그레이 구", "핑크 슬라임",
+    "요거트", "우블렉", "응혈", "희석된 물", "정제수", 
+    "인스턴트 커피", "홍차", "허브티", "액체 무지개", 
+    "크림 거품", "따뜻한 와인", "부이용", "과즙", "그로그", "플러버", 
+    "케첩", "느린 빛", "기름", "비네그레트 소스", "액정", "꿀", 
+    "캐러멜 소스", "잉크", "방수", "대용유", 
+    "과일 주스", "빛나는 용암", "위산", "광천수", 
+    "기침 시럽", "수은", "단 황산", "그레이 구", "핑크 슬라임",
 #endif
 };
 
@@ -2589,8 +2617,12 @@ const char *gang, *other;
         boolean nameit = FALSE;
 
         if (gang && orcname) {
+#if 0 /*KR: 원본*/
             Sprintf(buf, "%s of %s", upstart(orcname),
                     upstart(strcpy(gbuf, gang)));
+#else /*KR: KRNethack 맞춤 번역 (한국어 소속 어순) */
+            Sprintf(buf, "%s의 %s", strcpy(gbuf, gang), orcname);
+#endif
             nameit = TRUE;
         } else if (other && orcname) {
             Sprintf(buf, "%s%s", upstart(orcname), other);

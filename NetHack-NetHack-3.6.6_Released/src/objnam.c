@@ -210,7 +210,8 @@ register int otyp;
 
 #if 1 /*KR:T (유저가 지어준 이름 복구) */
     if (un)
-        Sprintf(eos(buf), " [%s(이)라고 불림]", un);
+        Sprintf(eos(buf), " [%s고 불림]", 
+                append_josa(un, "이라"));
 #endif
 
     return buf;
@@ -653,7 +654,8 @@ unsigned cxn_flags; /* bitmask of CXN_xxx values */
                 p = "방패";
             else
                 p = "갑옷";
-            Sprintf(eos(buf), "%s(이)라 불리는 %s", un, p);
+            Sprintf(eos(buf), "%s 불리는 %s", 
+                    append_josa(un, "이라"), p);
 #endif
         } else
             Strcat(buf, dn);
@@ -821,7 +823,8 @@ case POTION_CLASS:
         } else if (nn) {
             Sprintf(eos(buf), "%s 두루마리", actualn);
         } else if (un) {
-            Sprintf(eos(buf), "%s(이)라고 불리는 두루마리", un);
+            Sprintf(eos(buf), "%s고 불리는 두루마리", 
+                    append_josa(un, "이라"));
         } else if (ocl->oc_magic) {
             /* 마법 두루마리일 때 (예: "ZELGO MER"라고 적힌 두루마리) */
             Sprintf(eos(buf), "\"%s\"라고 적힌 두루마리", get_kr_name(dn));
@@ -847,7 +850,8 @@ case POTION_CLASS:
         } else if (nn) {
             Sprintf(eos(buf), "%s 지팡이", actualn);
         } else if (un) {
-            Sprintf(eos(buf), "%s(이)라고 불리는 지팡이", un);
+            Sprintf(eos(buf), "%s고 불리는 지팡이", 
+                    append_josa(un, "이라"));
         } else {
 #if 1 /*KR: tin(주석/통조림) 사전 충돌 예외 처리 */
             const char *wand_desc = dn;
@@ -893,7 +897,8 @@ case POTION_CLASS:
             else if (nn)
                 Sprintf(buf, "%s 소설", actualn);
             else if (un)
-                Sprintf(buf, "%s(이)라고 불리는 소설", un);
+                Sprintf(buf, "%s고 불리는 소설", 
+                        append_josa(un, "이라"));
             else
                 Sprintf(buf, "%s 책", get_kr_name(dn));
         } else {
@@ -902,7 +907,8 @@ case POTION_CLASS:
             else if (nn)
                 Sprintf(eos(buf), "%s 주문서", actualn);
             else if (un)
-                Sprintf(eos(buf), "%s(이)라고 불리는 주문서", un);
+                Sprintf(eos(buf), "%s고 불리는 주문서", 
+                        append_josa(un, "이라"));
             else
                 Sprintf(eos(buf), "%s 주문서", get_kr_name(dn));
         }
@@ -925,7 +931,8 @@ case POTION_CLASS:
         } else if (nn) {
             Sprintf(eos(buf), "%s 반지", actualn);
         } else if (un) {
-            Sprintf(eos(buf), "%s(이)라고 불리는 반지", un);
+            Sprintf(eos(buf), "%s고 불리는 반지", 
+                    append_josa(un, "이라"));
         } else {
             Sprintf(eos(buf), "%s 반지", get_kr_name(dn));
         }
@@ -957,7 +964,8 @@ case POTION_CLASS:
       * 포함되어 있으므로 actualn만 붙입니다 */
             Strcpy(buf, actualn);
         } else if (un) {
-            Sprintf(eos(buf), "%s(이)라고 불리는 %s", un, kr_rock);
+            Sprintf(eos(buf), "%s고 불리는 %s", 
+                    append_josa(un, "이라"), kr_rock);
         } else {
             Sprintf(eos(buf), "%s %s", get_kr_name(dn), kr_rock);
         }
@@ -1544,7 +1552,8 @@ unsigned doname_flags;
 #else
             if (has_oname(obj) && dknown) {
                 /* 예: Zaz(이)라는 이름의 저주받은 언덕 오크 */
-                Sprintf(prefix, "%s(이)라는 이름의 %s ", ONAME(obj), cxstr);
+                Sprintf(prefix, "%s는 이름의 %s ", 
+                        append_josa(ONAME(obj), "이라"), cxstr);
             } else {
                 /* 예: 저주받은 언덕 오크의 */
                 Sprintf(prefix, "%s의 ", cxstr);
@@ -2494,7 +2503,11 @@ struct obj *obj;
 
     if (obj->oartifact) {
         outbuf = nextobuf();
+#if 0 /*KR: 원본*/
         Strcpy(outbuf, artiname(obj->oartifact));
+#else /*KR: KRNethack 맞춤 번역 */
+        Strcpy(outbuf, get_kr_name(artiname(obj->oartifact)));
+#endif
 #if 0 /*KR*/
         if (!strncmp(outbuf, "The ", 4))
             outbuf[0] = lowc(outbuf[0]);

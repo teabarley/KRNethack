@@ -2587,7 +2587,7 @@ boolean ordinary;
         if (Antimagic) {
             shieldeff(u.ux, u.uy);
             /*KR pline_The("missiles bounce!"); */
-            pline("마법의 화살들이 튕겨 나갔다!");
+            pline("매직 미사일들이 튕겨 나갔다!");
         } else {
             damage = d(4, 6);
             /*KR pline("Idiot!  You've shot yourself!"); */
@@ -4188,7 +4188,7 @@ xchar sx, sy;
         if (Antimagic) {
             shieldeff(sx, sy);
             /*KR pline_The("missiles bounce off!"); */
-            pline("마법의 화살은 튕겨 나갔다!");
+            pline("매직 미사일들이 튕겨 나갔다!");
         } else {
             dam = d(nd, 6);
             exercise(A_STR, FALSE);

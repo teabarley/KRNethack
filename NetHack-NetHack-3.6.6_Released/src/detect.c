@@ -1839,7 +1839,8 @@ void find_trap(trap) struct trap *trap;
 #if 0 /*KR: 원본*/
     You("find %s.", an(defsyms[trap_to_defsym(tt)].explanation));
 #else
-    You("%s(을)를 발견했다.", defsyms[trap_to_defsym(tt)].explanation);
+    You("%s 발견했다.", 
+        append_josa(defsyms[trap_to_defsym(tt)].explanation, "을"));
 #endif
 
     if (cleared) {

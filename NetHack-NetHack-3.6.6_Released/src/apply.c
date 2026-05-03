@@ -104,7 +104,7 @@ struct obj *obj;
 
     if (!freehand()) {
         /*KR You("have no free %s!", body_part(HAND)); */
-        You("빈 %s(이)가 없다!", body_part(HAND));
+        You("빈 %s 없다!", append_josa(body_part(HAND), "이"));
         return 0;
     } else if (obj == ublindf) {
         /*KR You("cannot use it while you're wearing it!"); */
@@ -2347,7 +2347,7 @@ struct obj *obj;
                                    doname(can), (const char *) 0);
 #else
         (void)hold_another_object(can, "통조림으로 만들었지만, %s 집어들 수는 없었다.",
-                                   append_josa(doname(can), "을"), (const char*)0);
+                                   append_josa(doname(can), "을"), (const char *) 0);
 #endif
     } else
         impossible("Tinning failed.");

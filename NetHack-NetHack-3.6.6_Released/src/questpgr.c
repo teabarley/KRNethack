@@ -382,9 +382,8 @@ char c;
         break;
     case 'O':
     case 'o':
-        /*KR str = the(artiname(urole.questarti)); */
-        str = artiname(urole.questarti);
 #if 0 /*KR: 원본*/
+        str = the(artiname(urole.questarti));
         if (c == 'O') {
             /* shorten "the Foo of Bar" to "the Foo"
                (buffer returned by the() is modifiable) */
@@ -393,6 +392,8 @@ char c;
             if (p)
                 *p = '\0';
         }
+#else /*KR: "의"를 잘라내면 의미가 훼손되므로 자르는 로직 생략 */  
+        str = get_kr_name(artiname(urole.questarti));
 #endif
         break;
     case 'n':

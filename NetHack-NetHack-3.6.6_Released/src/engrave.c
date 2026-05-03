@@ -1228,6 +1228,7 @@ doengrave()
     if (len != 1 || (!index(ebuf, 'x') && !index(ebuf, 'X')))
         u.uconduct.literate++;
 
+#if 0 /*KR: 원본*/
     /* Mix up engraving if surface or state of mind is unsound.
        Note: this won't add or remove any spaces. */
     for (sp = ebuf; *sp; sp++) {
@@ -1236,10 +1237,39 @@ doengrave()
         if (((type == DUST || type == ENGR_BLOOD) && !rn2(25))
             || (Blind && !rn2(11)) || (Confusion && !rn2(7))
             || (Stunned && !rn2(4)) || (Hallucination && !rn2(2)))
-            /*JP 일본어에서는 jrndm_replace라는 것으로 랜덤화시킴. 수정필요*/
             *sp = ' ' + rnd(96 - 2); /* ASCII '!' thru '~'
                                         (excludes ' ' and DEL) */
     }
+#else /*KR: KRNethack 맞춤 번역 (한글 2바이트 깨짐 완벽 방어) */
+    /* 표면이나 정신 상태가 온전하지 않으면 새긴 글자를 망가뜨림.
+       주의: 멀티바이트 문자(한글)가 반으로 쪼개져 깨지는 것을 방지함. */
+    for (sp = ebuf; *sp; sp++) {
+        /* 표준 C 연산으로 한글(MSB 1) 감지 */
+        if ((unsigned char) (*sp) >= 0x80) {
+            /* 한글(2바이트)인 경우 */
+            if (((type == DUST || type == ENGR_BLOOD) && !rn2(25))
+                || (Blind && !rn2(11)) || (Confusion && !rn2(7))
+                || (Stunned && !rn2(4)) || (Hallucination && !rn2(2))) {
+                /* [안전장치] 비정상적인 문자열 절단으로 인해 널 문자('\0')를
+                   덮어써서 버퍼 오버플로우가 발생하는 것을 방지 */
+                if (*(sp + 1) != '\0') {
+                    *sp = (char) (' ' + rnd(96 - 2));
+                    *(sp + 1) = (char) (' ' + rnd(96 - 2));
+                }
+            }
+            sp++; /* 뒷부분 바이트(Trail Byte) 무조건 건너뛰기 */
+            continue;
+        }
+
+        /* 일반 1바이트(영어 등)인 경우 원본 로직 수행 */
+        if (*sp == ' ')
+            continue;
+        if (((type == DUST || type == ENGR_BLOOD) && !rn2(25))
+            || (Blind && !rn2(11)) || (Confusion && !rn2(7))
+            || (Stunned && !rn2(4)) || (Hallucination && !rn2(2)))
+            *sp = (char) (' ' + rnd(96 - 2));
+    }
+#endif
 
     /* Previous engraving is overwritten */
     if (eow) {

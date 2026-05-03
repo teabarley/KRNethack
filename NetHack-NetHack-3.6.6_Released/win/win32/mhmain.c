@@ -974,7 +974,13 @@ onWMCommand(HWND hWnd, WPARAM wParam, LPARAM lParam)
         pFile = _tfopen(filename, TEXT("wt+,ccs=UTF-8"));
         if (!pFile) {
             TCHAR buf[4096];
+#if 0 /*KR: 원본*/
             _stprintf(buf, TEXT("Cannot open %s for writing!"), filename);
+#else /*KR: KRNethack 맞춤 번역 */
+            /* filename이 한글 경로일 경우를 대비해 조사를 붙여줍니다. */
+            _stprintf(buf, TEXT("%s 쓰기 모드로 열 수 없습니다!"),
+                      append_josa(filename, "을"));
+#endif
             NHMessageBox(hWnd, buf, MB_OK | MB_ICONERROR);
             free(text);
             return FALSE;

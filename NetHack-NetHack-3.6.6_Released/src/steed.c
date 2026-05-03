@@ -419,7 +419,7 @@ boolean force;      /* Quietly force this animal */
         if (Flying)
             /*KR You("and %s take flight together.", mon_nam(mtmp)); */
             You("%s 함께 비행을 시작했다.",
-                append_josa(mon_nam(mtmp), "와(과)"));
+                append_josa(mon_nam(mtmp), "와"));
     }
     /* setuwep handles polearms differently when you're mounted */
     if (uwep && is_pole(uwep))
@@ -624,8 +624,8 @@ void dismount_steed(reason) int reason; /* Player was thrown off etc. */
             You("can't.  The saddle %s cursed.",
                 otmp->bknown ? "is" : "seems to be");
 #else /*KR: KRNethack 맞춤 번역 */
-            You("내릴 수 없다. 안장이 저주받은 것 %s.",
-                otmp->bknown ? "같다" : "같다");
+            You("내릴 수 없다. 안장이 저주받%s.",
+                otmp->bknown ? "았다" : "은 것 같다");
 #endif
             otmp->bknown = 1; /* ok to skip set_bknown() here */
             return;
@@ -639,7 +639,7 @@ void dismount_steed(reason) int reason; /* Player was thrown off etc. */
             /*KR pline("You've been through the dungeon on %s with no name.",
                   an(mtmp->data->mname)); */
             pline("당신은 이름 없는 %s 함께 이 던전을 지나왔다.",
-                  append_josa(an(mtmp->data->mname), "와(과)"));
+                  append_josa(an(mtmp->data->mname), "와"));
             if (Hallucination)
                 /*KR pline("It felt good to get out of the rain."); */
                 pline("비를 피할 수 있어 기분이 좋았다.");

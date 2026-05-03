@@ -810,9 +810,7 @@ int name_to_mon(in_str) const char *in_str;
             }
         }
     }
-#else /*KR: KRNethack 맞춤 번역 - 영/한 동시 검색 지원 및 복수형 검사 최소화 \
-       */
-    extern char *get_kr_name(const char *);
+#else /*KR: 영/한 동시 검색 지원 및 복수형 검사 최소화 */
     for (len = 0, i = LOW_PM; i < NUMMONS; i++) {
         register int m_i_len = (int) strlen(mons[i].mname);
         const char *kr_name = get_kr_name(mons[i].mname);

@@ -1,21 +1,21 @@
-NetHack History file for release 3.6
+넷핵 3.6 버전 히스토리 파일
 
-Behold, mortal, the origins of NetHack...
+보라, 필멸자여, 이는 넷핵의 기원일지니...
 
-Jay Fenlason wrote the original Hack with help from Kenny Woodland,
-Mike Thome, and Jon Payne.
+제이 펜레슨이 케니 우드랜드, 마이크 톰, 존 페인의 도움을 받아 
+오리지널 핵을 작성했다.
 
-Andries Brouwer did a major re-write, transforming Hack into a very different
-game, and published (at least) three versions (1.0.1, 1.0.2, and 1.0.3) for
-UNIX(tm) machines to the Usenet.
+안드리 브라우어가 핵을 다시 쓰고 변환하여 다른 게임으로 만드는데 
+주된 역할을 했으며, 유즈넷에 유닉스(tm)의 (적어도) 세 가지 버전 
+(1.0.1, 1.0.2, 1.0.3)을 발표했다.
 
 Don G. Kneller ported Hack 1.0.3 to Microsoft(tm) C and MS-DOS(tm), producing
 PC HACK 1.01e, added support for DEC Rainbow graphics in version 1.03g, and
 went on to produce at least four more versions (3.0, 3.2, 3.51, and 3.6;
 note that these are old Hack version numbers, not contemporary NetHack ones).
 
-R. Black ported PC HACK 3.51 to Lattice(tm) C and the Atari 520/1040ST,
-producing ST Hack 1.03.
+R. 블랙은 PC 핵 3.51을 래티스(tm) C와 아타리 520/1040ST로 이식하고, 
+ST 핵 1.03을 개발했다.
 
 Mike Stephenson merged these various versions back together, incorporating
 many of the added features, and produced NetHack version 1.4 in 1987.  He

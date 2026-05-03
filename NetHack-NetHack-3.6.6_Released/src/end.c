@@ -494,7 +494,6 @@ if (imitator) {
        */
         /* 한국어에서는 a/an/the 같은 관사가 필요 없으므로 번역명만
          * 가져옵니다. */
-        extern char *get_kr_name(const char *);
         Strcpy(shape, get_kr_name(fakenm));
 
         /* realnm도 번역명으로 변환하여 임시 보관 */
@@ -548,7 +547,6 @@ if (imitator) {
         if (has_mname(mtmp))
             Sprintf(eos(buf), " called %s", MNAME(mtmp));
 #else /*KR: KRNethack 맞춤 번역 */
-        extern char *get_kr_name(const char *);
         Strcat(buf, get_kr_name(mptr->mname)); /* 영어 이름 방어 */
 
         if (has_mname(mtmp))

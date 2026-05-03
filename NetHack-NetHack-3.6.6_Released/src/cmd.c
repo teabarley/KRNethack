@@ -2057,7 +2057,6 @@ int final;
         {
             /* 몬스터 이름을 한글로 가져오기 위한 사전 함수 선언 (C89 에러
              * 방지를 위해 중괄호로 묶음) */
-            extern char *get_kr_name(const char *);
             Sprintf(buf, "%s%s%s의 모습", !final ? "현재 " : "", tmpbuf,
                     get_kr_name(uasmon->mname));
             you_are(buf, "");
@@ -2743,9 +2742,9 @@ int final;
         you_are(buf, "");
         Sprintf(eos(youtoo), "and %s ", steedname);
 #else /*KR: KRNethack 맞춤 번역*/
-        Sprintf(buf, "%s(을)를 타고 ", steedname);
+        Sprintf(buf, "%s 타고 ", append_josa(steedname, "을"));
         enl_msg_kr(You_, buf, "", "있다", "있었다");
-        Sprintf(youtoo, "당신과 %s(은)는 ", steedname);
+        Sprintf(youtoo, "당신과 %s ", append_josa(steedname, "은"));
 #endif
     }
     /* other movement situations that hero should always know */
@@ -3001,7 +3000,7 @@ int final;
                     (anchored ? "were " : "was "), predicament, "");
 #else
             /* 말과 함께 함정/무거운 쇠구슬에 걸렸을 때의 주어 처리 */
-            Sprintf(buf, "%s%s(은)는 ", anchored ? "당신과 " : "", steedname);
+            Sprintf(buf, "%s%s ", anchored ? "당신과 " : "", append_josa(steedname, "은"));
             enl_msg_kr(buf, predicament, "", "있다", "있었다");
 #endif
         } else
@@ -3029,11 +3028,15 @@ int final;
                 (Upolyd && sticks(youmonst.data)) ? "holding" : "held by",
                 a_monnam(u.ustuck));
         you_are(buf, "");
-#else
-        /* 내가 몬스터를 붙잡고 있는지, 몬스터에게 붙잡힌 건지 구분 */
-        Sprintf(buf, "%s%s ", a_monnam(u.ustuck),
-                (Upolyd && sticks(youmonst.data)) ? "(을)를 붙잡고"
-                                                  : "에게 붙잡혀");
+#else /*KR: KRNethack 맞춤 번역 */
+        /* 내가 몬스터를 붙잡고 있는지, 몬스터에게 붙잡힌 건지 구분하여 조사
+         * 분리 */
+        if (Upolyd && sticks(youmonst.data)) {
+            Sprintf(buf, "%s 붙잡고 ", append_josa(a_monnam(u.ustuck), "을"));
+        } else {
+            Sprintf(buf, "%s에게 붙잡혀 ",
+                    a_monnam(u.ustuck)); /* '에게'는 불변이므로 하드코딩 */
+        }
         enl_msg_kr(You_, buf, "", "있다", "있었다");
 #endif
     }
@@ -3253,7 +3256,6 @@ int final;
         you_are(buf, "");
 #else
         /* get_kr_name을 사용해 무기 묘사를 한글로 받아옵니다. */
-        extern char *get_kr_name(const char *);
         const char *what = get_kr_name(weapon_descr(uwep));
 
         /* 한국어는 복수형을 강제하지 않으므로 단순화 가능 */
@@ -3295,7 +3297,6 @@ int final;
             (void) lcase(skill_level_name(wtype, sklvlbuf));
 
         /* skill_name 한글화 가설 */
-        extern char *get_kr_name(const char *);
         Sprintf(buf, "%s 숙련도가 %s 상태", get_kr_name(skill_name(wtype)),
                 sklvlbuf);
 
@@ -3558,7 +3559,6 @@ int final;
         you_are(buf, from_what(WARN_OF_MON));
 #else
         /* get_kr_name을 사용해 몬스터 이름을 한글로 받아옵니다. */
-        extern char *get_kr_name(const char *);
         Sprintf(buf, "%s의 존재를 감지하는 능력",
                 get_kr_name(mons[context.warntype.speciesidx].mname));
         you_have(buf, from_what(WARN_OF_MON));
@@ -3874,7 +3874,6 @@ int final;
 #if 0 /*KR: 원본 (변수 호출 구조 변경)*/
         Sprintf(buf, "polymorphed into %s", an(youmonst.data->mname));
 #else
-        extern char *get_kr_name(const char *);
         Sprintf(buf, "%s 폴리모프된 상태",
                 append_josa(get_kr_name(youmonst.data->mname), "으로"));
 #endif
@@ -3892,7 +3891,6 @@ int final;
         if (u.umonnum == u.ulycn) {
             Strcat(buf, " in beast form");
 #else
-        extern char *get_kr_name(const char *);
         Strcpy(buf, get_kr_name(mons[u.ulycn].mname));
         if (u.umonnum == u.ulycn) {
             Strcat(buf, " 야수 형태");
@@ -4032,7 +4030,8 @@ int final;
             Sprintf(buf, "Fruit #%d ", f->fid);
             enl_msg(buf, "is ", "was ", f->fname, "");
 #else /*KR: KRNethack 맞춤 번역*/
-            Sprintf(buf, "과일 #%d(은)는 ", f->fid);
+         /* 숫자는 append_josa를 못 써서 은(는) 직접 붙임. */
+            Sprintf(buf, "과일 #%d은(는) ", f->fid);
             enl_msg_kr(buf, f->fname, "", "이다", "이었다");
 #endif
         }
@@ -4342,7 +4341,6 @@ int msgflag;          /* for variant message phrasing */
         }
 #else /*KR: KRNethack 맞춤 번역 (어순 재배치)*/
         if (U_AP_TYPE == M_AP_OBJECT) {
-            extern char *get_kr_name(const char *);
             Strcpy(buf, get_kr_name(simple_typename(youmonst.mappearance)));
         } else if (U_AP_TYPE == M_AP_FURNITURE) {
             Strcpy(buf, "무언가");

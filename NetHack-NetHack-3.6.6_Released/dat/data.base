@@ -77,7 +77,7 @@ sacrific*
 	돌 상판에는 피가 흐를 홈이 파여 있을 것이며, 
 	전체적으로 이전의 희생 의식에서 남은 
 	기분 나쁘게 말라붙은 갈색 얼룩들로 덮여 있을 것이다.
-	  [ 판타지랜드 터프 가이드, 다이애나 윈 존스 ]
+	  [ 판타지랜드 생존 여행 가이드, 다이애나 윈 존스 ]
 
 	이 땅 위의 모든 사람에게
 	죽음은 빠르든 늦든 찾아온다네;
@@ -528,7 +528,7 @@ boomerang
 	신고 벗기 쉽고 결코 발 냄새가 나지 않는다. 
 	안타깝게도 이 훌륭한 신발을 만드는 공식은 극비 사항이며, 
 	아마도 비인간 종족(드워프, 엘프, 노움 참조)에게서 유래했을 것이다.
-	  [ 판타지랜드 터프 가이드, 다이애나 윈 존스 ]
+	  [ 판타지랜드 생존 여행 가이드, 다이애나 윈 존스 ]
 *booze
 potion of sleeping
 	잠에서 깨어나니 그는 글렌의 노인을 처음 보았던 푸른 언덕 위에 있는 자신을 발견했다. 
@@ -807,8 +807,8 @@ chih*sung*tzu
 
 chromatic dragon
 tiamat
-	티아마트(Tiamat)는 사악한 드래곤들의 어머니로 알려져 있다. 
-	그녀는 극도로 허영심이 강하다.
+	티아마트는 모든 악한 용들의 어머니라고 일컬어진다. 
+	그녀는 대단히 허영심이 강하다.
 
 citrine*
 	토파즈와 비슷한 옅은 노란색 변종의 결정질 석영(황수정).
@@ -836,15 +836,14 @@ cleaver
 ~elven cloak
 ~oilskin cloak
 *cloak*
-	망토(Cloak)는 바바리안이 아닌 모든 이들의 보편적인 겉옷이다. 
-	그 이유는 알기 어렵다. 
+	망토(Cloak)는 바바리안이 아닌 모든 이들의 보편적인 겉옷이다. 그 이유는 알기 어렵다. 
 	망토는 앞이 열려 있어서 대부분의 경우 손 하나를 써서 옷깃을 여며야만 한다. 
 	말을 탈 때는 셔츠 소매만 입은 팔과 몸통 대부분이 바람과 날씨에 고스란히 노출된다. 
 	망토에 대한 OMT [공식 관리 용어]는 그 불편함을 잘 표현해 준다. 
 	망토는 비 오는 날씨에 끊임없이 _소용돌이치고 뚝뚝 떨어지며_ _물에 젖어 무거워지고_, 
 	_나무_나 _칼_에 _얽히거나_, _추위에 떠는 몸 주위로 끌어당겨_ 감싸야만 한다. 
 	이는 고된 여행을 하는 사람 누구에게나 망토가 실용적이지 못하다는 것을 시사하는 듯하다.
-	  [ 판타지랜드 터프 가이드, 다이애나 윈 존스 ]
+	  [ 판타지랜드 생존 여행 가이드, 다이애나 윈 존스 ]
 
 cloud*
 	나는 골짜기와 언덕 위를 높이 떠도는
@@ -949,7 +948,7 @@ cornuthaum
 	wizardish.
 			[ The Elfin Ship, James P. Blaylock ]
 couatl
-	A mythical feathered serpent.  The couatl are very rare.
+	신화상으로 존재하는 깃털 달린 뱀. 코아틀은 매우 희귀하다.
 coyote
 	This carnivore is known for its voracious appetite and
 	inflated view of its own intelligence.
@@ -1015,11 +1014,12 @@ crossbow*
 	I shot the Albatross.
 	  [ The Rime of the Ancient Mariner, by Samuel Taylor Coleridge ]
 crystal ball
-	You look into one of these and see _vapours swirling like
-	clouds_.  These shortly clear away to show a sort of video
-	without sound of something that is going to happen to you
-	soon.  It is seldom good news.
-	  [ The Tough Guide to Fantasyland, by Diana Wynne Jones ]
+	당신이 이걸 들여다 본다면 
+	_수증기가 마치 구름처럼 소용돌이 치는_ 걸 볼 수 있다. 
+	이 증기가 곧 걷히고 나면 소리 없는 영상과도 같은 것이 
+	선명하게 보이며 그 영상은 당신에게 곧 일어날 일을 보여준다. 
+	이 영상이 좋은 소식인 경우는 대단히 드물다. 
+	  [ 판타지랜드 생존 여행 가이드, 다이애나 윈 존스]
 curse*
 	Curses are longstanding ill-wishings which, in Fantasyland,
 	often manifest as semisentient.  They have to be broken or
@@ -1184,8 +1184,8 @@ dingo
 		[ Webster's Encyclopedic Unabridged Dictionary
 		    of the English Language ]
 disenchanter
-	Ask not, what your magic can do to it.  Ask what it can do
-	to your magic.
+	그대의 마법이 놈에게 무엇을 할 수 있는지 묻지 말라. 
+	놈이 그대의 마법에 무엇을 할 수 있는지 물으라.
 dispater
 	The Roman ruler of the underworld and fortune, similar to the
 	Greek Hades.  Every hundred years, the Ludi Tarentini were
@@ -1196,14 +1196,13 @@ dispater
 	earth.
 		[ Encyclopedia Mythica, ed. M.F. Lindemans ]
 djinn*
-	The djinn are genies from the elemental plane of Air.  There,
-	among their kind, they have their own societies.  They are
-	sometimes encountered on earth and may even be summoned here
-	to perform some service for powerful wizards.  The wizards
-	often leave them about for later service, safely tucked away
-	in a flask or lamp.  Once in a while, such a tool is found by
-	a lucky rogue, and some djinn are known to be so grateful
-	when released that they might grant their rescuer a wish.
+	지니는 공기의 정령계에서 온 정령이다. 그들은 그 곳에서 
+	동족들과 함께 자기들만의 사회를 이루고 있다. 지니는 때때로 
+	인간 세계에 나타나며, 강력한 마법사를 돕도록 소환되기도 한다. 
+	마법사들은 종종 나중에 쓸 목적으로 그들을 플라스크나 램프에 
+	안전하게 넣어 놓는다. 이따끔씩 운 좋은 도둑이 그런 물건을 찾을 때, 
+	일부 지니들은 자신을 해방시킨 사람의 소원을 들어 줄 정도로 
+	감사의 뜻을 표한다고 알려졌다.
 # takes "dog or other canine" when specifying 'd'
 ~hachi
 ~slasher
@@ -1387,26 +1386,26 @@ egg
 	in my house for one minute."
 		[ The Enormous Egg, by Oliver Butterworth ]
 elbereth
-	... Even as they stepped over the threshold a single clear
-	voice rose in song.
-
-		A Elbereth Gilthoniel,
-		silivren penna miriel
-		o menel aglar elenath!
-		Na-chaered palan-diriel
-		o galadhremmin ennorath,
-		Fanuilos, le linnathon
-		nef aear, si nef aearon!
-
-	Frodo halted for a moment, looking back.  Elrond was in his
-	chair and the fire was on his face like summer-light upon the
-	trees.  Near him sat the Lady Arwen.  [...]
-	He stood still enchanted, while the sweet syllables of the
-	elvish song fell like clear jewels of blended word and melody.
-	"It is a song to Elbereth," said Bilbo.  "They will sing that,
-	and other songs of the Blessed Realm, many times tonight.
-	Come on!"
-	   [ The Fellowship of the Ring, by J.R.R. Tolkien ]
+	... 그들이 막 입구를 지나는 순간에 
+	노래 속에서 청명한 한 목소리가 솟아올랐다. 
+	
+		오, 별의 여왕, 불 밝히는 이시여! 
+		보석처럼 반짝이는 은빛 비추네 
+		온 별 영광의 하늘로부터! 
+		멀리서 바라보네 
+		나무 얽힌 가운데땅에서 
+		그대 불멸의 눈빛(雪光)을 위해 노래하리 
+		대해(大海) 이곳에서, 여기 대해 이곳에서! 
+		
+	프로도는 뒤돌아보며 잠시 멈춰 있었다. 엘론드는 의자에 앉아 있었고 
+	그의 얼굴에 비친 불은 마치 나무 위에 비친 여름 태양빛 같았다. 
+	그 옆에는 아르웬이 앉아 있었다. [...] 
+	맑은 옥구슬과 노래 선율이 가미된 것 같은 달콤한 
+	엘프의 노래 구절이 연주되는 동안 그는 계속 매혹되어 서 있었다. 
+	"이건 엘베레스에게 바치는 노래라네," 빌보가 말했다. 
+	"그들은 오늘 밤에도 여러번 이를 노래하고 
+	축복 받은 왕국의 다른 노래도 할 거라네. 얼른 오게나!" 
+		[ 반지 원정대, J.R.R. 톨킨 ]
 electric eel
 	South-American fish (_Gymnotus electricus_), living in fresh
 	water.  Shaped like a serpent, it can grow up to 2 metres.
@@ -1507,8 +1506,9 @@ A.S*
 		[ Wikipedia, the free encyclopedia ]
 erinys
 erinyes
-	These female-seeming devils named after the Furies of mythology
-	attack hand to hand and poison their unwary victims as well.
+	이 여성처럼 보이는 악마의 이름은 신화에 나오는 복수의 여신들의 
+	이름에서 따왔다. 이들은 맨 손으로 공격하며 부주의한 상대를 
+	중독시키기도 한다.
 ettin
 	The two-headed giant, or ettin, is a vicious and unpredictable
 	hunter that stalks by night and eats any meat it can catch.
@@ -1656,14 +1656,13 @@ floating eye
 		[ The Magic Flute, by Wolfgang Amadeus Mozart ]
 # also takes fog/vapor cloud
 fog* cloud
-	The fog comes
-	on little cat feet.
-
-	It sits looking
-	over harbor and city
-	on silent haunches
-	and then moves on.
-	     [ Fog, by Carl Sandburg ]
+	안개는 다가온다 
+	작은 고양이의 발걸음으로. 
+	
+	그것은 조용히 눌러 앉아서 
+	항구와 도시를 둘러보다가 
+	다시금 움직인다. 
+		 [ 안개, 칼 샌더버그 ]
 # includes "food detection" and "detect food", which might not be the best
 *food*
 	The little girl stood on tip-toe and picked one of the nicest
@@ -2251,8 +2250,8 @@ cornucopia
 		[ Os Lusiadas, by Luis Vaz de Camoes ]
 horned devil
 barbed devil
-	These devils lack any real special abilities, though they
-	are quite difficult to kill.
+	이 악마들은 어떤 특별한 능력도 갖고 있지 않다. 
+	다만 그들을 죽이기는 상당히 어렵다.
 ~horsem*
 *horse
 	King Richard III: A horse! a horse! my kingdom for a horse!
@@ -2534,10 +2533,10 @@ jade*
 	"The eyes!" Duke Avan Astran said.  "They're gone!"
 		[ The Jade Man's Eyes, by Michael Moorcock ]
 jaguar
-	Large, flesh-eating animal of the cat family, of Central and
-	South America.  This feline predator (_Panthera onca_) is
-	sometimes incorrectly called a panther.
-	    [ Van Dale's Groot Woordenboek der Nederlandse Taal ]
+	중남미에 서식하는 고양이과의 거대한 육식동물. 
+	이 고양이과의 포식자 (_Panthera onca_)는 
+	종종 표범으로 잘못 불리기도 한다. 
+		[ 판 달의 네덜란드어 대사전 ]
 jellyfish
 	I do not care to share the seas
 	With jellyfishes such as these;
@@ -2583,9 +2582,9 @@ kabuto
 	downwards into a flange that rested against the forehead.
 	   [ Arms & Armour of the Samurai, by Bottomley & Hopson ]
 katana
-	The katana is a long, single-edged samurai sword with a
-	slightly curved blade.  Its long handle is designed to allow
-	it to be wielded with either one or two hands.
+	카타나는 약간 휘고 한쪽에만 날이 있는 사무라이용 칼이다. 
+	카타나의 긴 손잡이는 한 손이나 양 손 어느 쪽으로든 
+	칼을 쥘 수 있게 하기 위해 고안되었다.
 kelp*
 *frond
 	I noticed that all the plants were attached to the soil by
@@ -2703,7 +2702,7 @@ kos
 	sword Graywand here at my side!"
 	   [ Swords and Deviltry, by Fritz Leiber ]
 koto
-	A Japanese harp.
+	일본의 현악기이다.
 kraken
 	Out from the water a long sinuous tentacle had crawled; it
 	was pale-green and luminous and wet.  Its fingered end had
@@ -2841,6 +2840,7 @@ lembas*
 	Men, and it is more pleasant than cram, by all accounts.'
 		[ The Fellowship of the Ring, by J.R.R. Tolkien ]
 lemure
+	지옥의 거주자들 중 최하층민이다.
 larvae
 	The Larvae (Lemures) are Roman spirits of deceased family
 	members.  These malignant spirits dwell throughout the house
@@ -3055,8 +3055,8 @@ sceptre
 	their rights.
 		[ Brewer's Concise Dictionary of Phrase and Fable ]
 magic marker
-	The pen is mightier than the sword.
-		[ Richelieu, by Edward Bulwer-Lytton ]
+	펜은 칼보다 강하다. 
+		[ 리슐리외, 에드워드 벌워 리튼 ]
 magic mirror of merlin
 	  [...] In Dehenbarth (that now South Wales is hight,
 	  What time King Ryence reigned, and dealed right)
@@ -3114,11 +3114,11 @@ marduk
 	events in the lives of men.
 		[ The Immortals, by Derek and Julia Parker ]
 marilith
-	The marilith has a torso shaped like that of a human female,
-	and the lower body of a great snake.  It has multiple arms,
-	and can freely attack with all of them.  Since it is
-	intelligent enough to use weapons, this means it can cause
-	great damage.
+	마릴리스는 배 위 쪽으로는 인간 여성의, 	그 아래로는	거대한 뱀의 
+	형상을 띄고 있다. 마릴리스는 여러개의 팔을 갖고 있으며, 자신의 
+	적을 공격하는 데 모든 팔들을 자유자재로 활용한다. 마릴리스는 
+	무기를 사용할 정도의 충분한 지능을 가지고 있기 때문에 
+	상대에게 대단히 큰 피해를 입힐 수 있다.
 mars
 	The god of war, and one of the most prominent and worshipped
 	gods.  In early Roman history he was a god of spring, growth in
@@ -3231,9 +3231,9 @@ melon
 	fruit as they were, I doubt if I ever thought anything nicer.
 		[ King Solomon's Mines, by H. Rider Haggard ]
 mercury
-	Roman god of commerce, trade and travellers.  He is commonly
-	depicted carrying a caduceus (a staff with two snakes
-	intertwining around it) and a purse.
+	상업과 무역 그리고 여행자를 지켜주는 로마의 신. 
+	머큐리는 흔히 카두세우스(두개의 뱀이 감겨있는 지팡이)와 
+	지갑을 지닌 모습으로 묘사된다.
 *mimic
 	The ancestors of the modern day chameleon, these creatures can
 	assume the form of anything in their surroundings.  They may
@@ -3483,8 +3483,8 @@ naginata
 	blade snapped at the hilt."
 	    [ Story of Tsutsui no Jomio Meishu from Tales of Heike ]
 nalfeshnee
-	Not only do these demons do physical damage with their claws
-	and bite, but they are capable of using magic as well.
+	이 악마들은 손톱으로 물리적 피해를 주며 물기도 한다.
+	뿐만 아니라 이들은 마법 또한 사용할 수 있다.
 nalzok
 	Nalzok is Moloch's cunning and unfailingly loyal battle
 	lieutenant, to whom he trusts the command of warfare when he
@@ -3521,7 +3521,7 @@ newt
 	Like a hell-broth boil and bubble."
 		[ Macbeth, by William Shakespeare ]
 ninja-to
-	A Japanese broadsword.
+	일본의 브로드소드.
 *norn
 	The Norns were the three Norse Fates, or the goddesses of fate.
 	Female giants, they brought the wonderful Golden Age to an end.
@@ -4110,8 +4110,8 @@ quantum mechanic
 	be less accurate because of the lower wavelength.
 		[ A Concise Dictionary of Physics ]
 quasit
-	Quasits are small, evil creatures, related to imps.  Their
-	talons release a very toxic poison when used in an attack.
+	콰짓은 작고 사악한 임프의 사촌격인 생물이다. 
+	콰짓의 손톱은 공격할 때 매우 유독한 독을 내뿜는다.
 *quest
 	Many, possibly most, Tours are organized as a Quest.  This
 	is like a large-scale treasure hunt, with clues scattered
@@ -5431,9 +5431,9 @@ weapon
 	A weapon is a device for making your enemy change his mind.
 		[ The Vor Game, by Lois McMaster Bujold ]
 web
-	Oh what a tangled web we weave,
-	When first we practise to deceive!
-		[ Marmion, by Sir Walter Scott ]
+	오 우리가 처음으로 거짓을 연습했던 때, 
+	우린 얼마나 사악한 함정을 파놓았던가! 
+		[ 마르미온, 월터 스콧 경 ]
 whistle
 	There were legends both on the front and on the back of the
 	whistle. The one read thus:

@@ -347,7 +347,7 @@ boolean foundyou;
         break;
     case AD_MAGM:
         /*KR You("are hit by a shower of missiles!"); */
-        You("마법의 화살 세례를 맞았다!");
+        You("매직 미사일 세례를 맞았다!");
         if (Antimagic) {
             shieldeff(u.ux, u.uy);
             /*KR pline_The("missiles bounce off!"); */

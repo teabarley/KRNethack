@@ -174,7 +174,6 @@ boolean incl_helpless;
         /* PANICKED, TRICKED, QUIT, ESCAPED, ASCENDED */
         "", "", "", "", ""
     };
-    extern char *get_kr_name(const char *); /* korean.c의 함수 호출 선언 */
     char c, *kname = get_kr_name(killer.name);
     char *buf_start = buf;
 

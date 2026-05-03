@@ -108,12 +108,7 @@ int artinum;
 {
     if (artinum <= 0 || artinum > NROFARTIFACTS)
         return "";
-#if 0 /*KR: 원본*/
     return artilist[artinum].name;
-#else /*KR: KRNethack 맞춤 번역 */
-    extern char *get_kr_name(const char *);
-    return get_kr_name(artilist[artinum].name);
-#endif
 }
 
 /*
@@ -238,7 +233,6 @@ short *otyp;
 #if 0 /*KR: 원본*/
         if (!strcmpi(name, aname)) {
 #else /*KR: KRNethack 맞춤 번역 */
-        extern char *get_kr_name(const char *);
         /* 영어 스펠링(aname)과 일치하거나, 한글 번역 이름과 일치하면 통과! */
         /* 한글은 대소문자가 없으므로 strcmp를 씁니다. */
         if (!strcmpi(name, aname) || !strcmp(name, get_kr_name(a->name))) {
@@ -408,9 +402,15 @@ const char *name;
         aname = a->name;
         if (!strncmpi(aname, "the ", 4))
             aname += 4;
+#if 0 /*KR: 원본*/
         if (!strcmp(aname, name))
             return (boolean) ((a->spfx & (SPFX_NOGEN | SPFX_RESTR)) != 0
                               || otmp->quan > 1L);
+#else /*KR: KRNethack 맞춤 번역 (한글 이름으로 꼼수 쓰는 것도 방어) */
+        if (!strcmp(aname, name) || !strcmp(get_kr_name(aname), name))
+            return (boolean) ((a->spfx & (SPFX_NOGEN | SPFX_RESTR)) != 0
+                              || otmp->quan > 1L);
+#endif
     }
 
     return FALSE;
@@ -709,8 +709,11 @@ struct monst *mon;
         /* add half (maybe quarter) of the usual silver damage bonus */
         if (objects[obj->otyp].oc_material == SILVER && Hate_silver)
             tmp = rnd(10), dmg += Maybe_Half_Phys(tmp);
-        /*KR Sprintf(buf, "touching %s", oart->name); */
-        Sprintf(buf, "%s에 닿아서", oart->name);
+#if 0 /*KR: 원본*/
+        Sprintf(buf, "touching %s", oart->name);
+#else /*KR: KRNethack 맞춤 번역 */
+        Sprintf(buf, "%s에 닿아서", get_kr_name(oart->name));
+#endif
         losehp(dmg, buf, KILLED_BY); /* magic damage, not physical */
         exercise(A_WIS, FALSE);
     }
@@ -932,8 +935,14 @@ winid tmpwin; /* supplied by dodiscover() */
             putstr(tmpwin, iflags.menu_headings, "아티팩트");
         m = artidisco[i];
         otyp = artilist[m].otyp;
+#if 0 /*KR: 원본*/
         Sprintf(buf, "  %s [%s %s]", artiname(m),
                 align_str(artilist[m].alignment), simple_typename(otyp));
+#else /*KR: KRNethack 맞춤 번역 */
+        Sprintf(buf, "  %s [%s %s]", get_kr_name(artiname(m)),
+                align_str(artilist[m].alignment),
+                get_kr_name(simple_typename(otyp)));
+#endif
         putstr(tmpwin, 0, buf);
     }
     return i;
@@ -1422,7 +1431,6 @@ int dieroll; /* needed for Magicbane and vorpal blades */
 #if 0 /*KR: 원본*/
             wepdesc = artilist[ART_VORPAL_BLADE].name;
 #else /*KR: KRNethack 맞춤 번역 */
-            extern char *get_kr_name(const char *);
             wepdesc = get_kr_name(artilist[ART_VORPAL_BLADE].name);
 #endif
             if (!youdefend) {

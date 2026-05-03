@@ -1285,14 +1285,18 @@ ustatusline()
         else
             Strcat(info, ", held by ");
         Strcat(info, mon_nam(u.ustuck));
-#else
+#else /*KR: KRNethack 맞춤 번역 (Strcat 조립 분리) */
         Strcat(info, ", ");
-        Strcat(info, mon_nam(u.ustuck));
-        if (sticks(youmonst.data))
-            /*KR append_josa를 적용할 수 있을지도 모름 */
-            Strcat(info, "(을)를 붙잡고 있음"); 
-        else
+        if (sticks(youmonst.data)) {
+            /* 1. 내가 몬스터를 붙잡고 있는 경우 ('을/를' 필요) */
+            Strcat(info, append_josa(mon_nam(u.ustuck), "을"));
+            Strcat(info, " 붙잡고 있음");
+        } else {
+            /* 2. 몬스터에게 붙잡힌 경우 ('에게'는 고정 조사이므로 하드코딩)
+             */
+            Strcat(info, mon_nam(u.ustuck));
             Strcat(info, "에게 붙잡혀 있음");
+        }
 #endif
     }
 

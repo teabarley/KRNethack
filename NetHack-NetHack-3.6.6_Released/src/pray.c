@@ -1020,7 +1020,11 @@ gcrownu()
             obj = mksobj(RUNESWORD, FALSE, FALSE);
             obj = oname(obj, artiname(ART_STORMBRINGER));
             obj->spe = 1;
+#if 0 /*KR: 원본*/
             at_your_feet(An(swordbuf));
+#else /*KR: An 제거 */
+            at_your_feet(swordbuf);
+#endif
             dropy(obj);
             u.ugifts++;
         }
@@ -1982,7 +1986,7 @@ dosacrifice()
                     a_gname());
 #else /*KR: KRNethack 맞춤 번역 */
                 You("%s %s 사이에 갈등이 느껴진다.",
-                    append_josa(u_gname(), "와(과)"), a_gname());
+                    append_josa(u_gname(), "와"), a_gname());
 #endif
                 if (rn2(8 + u.ulevel) > 5) {
                     struct monst *pri;

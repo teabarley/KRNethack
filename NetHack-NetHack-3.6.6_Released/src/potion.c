@@ -989,8 +989,8 @@ register struct obj *otmp;
         if (otmp->blessed) {
             /*KR pline("(But in fact it was mildly stale %s.)",
              * fruitname(TRUE)); */
-            pline("(하지만 사실 이것은 약간 상한 %s(이)다.)",
-                  fruitname(TRUE));
+            pline("(하지만 사실 이것은 약간 상한 %s.)",
+                  append_josa(fruitname(TRUE), "이다"));
             if (!Role_if(PM_HEALER)) {
                 /* NB: blessed otmp->fromsink is not possible */
                 /*KR losehp(1, "mildly contaminated potion", KILLED_BY_AN); */
@@ -1000,8 +1000,8 @@ register struct obj *otmp;
             if (Poison_resistance)
                 /*KR pline("(But in fact it was biologically contaminated
                  * %s.)", fruitname(TRUE)); */
-                pline("(하지만 사실 이것은 생물학적으로 오염된 %s(이)다.)",
-                      fruitname(TRUE));
+                pline("(하지만 사실 이것은 생물학적으로 오염된 %s.)",
+                      append_josa(fruitname(TRUE), "이다"));
             if (Role_if(PM_HEALER)) {
                 /*KR pline("Fortunately, you have been immunized."); */
                 pline("다행히도, 당신은 면역이 되어 있다.");

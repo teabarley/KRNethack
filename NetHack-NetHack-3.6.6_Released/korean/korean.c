@@ -80,8 +80,12 @@ append_josa(const char *word, const char *josa)
         has_jong ? "이라" : "라";
     else if (strstr(josa, "이야") || strstr(josa, "야")) j =
         has_jong ? "이야" : "야";
+    else if (strstr(josa, "이고") || strstr(josa, "고")) j = 
+        has_jong ? "이고" : "고";
     else if (strstr(josa, "이다") || strstr(josa, "다")) j =
         has_jong ? "이다" : "다";
+    else if (strstr(josa, "이지") || strstr(josa, "지")) j = 
+        has_jong ? "이지" : "지";
     /* 짧은 기본 조사는 마지막에 검사 */
     else if (strstr(josa, "은") || strstr(josa, "는"))
         j = has_jong ? "은" : "는";
@@ -98,24 +102,18 @@ append_josa(const char *word, const char *josa)
     return buf;
 }
 
-/* 1. 현재 바이트가 몇 바이트짜리 문자의 시작인지 판별하는 함수 (UTF-8 규칙)
+/* 1. 현재 바이트가 몇 바이트짜리 문자의 시작인지 판별하는 함수 (CP949 규칙)
  */
 int
-utf8_char_bytes(unsigned char c)
+cp949_char_bytes(unsigned char c)
 {
     if (c < 0x80)
-        return 1; // 1바이트 (영어/숫자)
-    if ((c & 0xE0) == 0xC0)
-        return 2; // 2바이트 (유럽어 등)
-    if ((c & 0xF0) == 0xE0)
-        return 3; // 3바이트 (한글/한자/일본어)
-    if ((c & 0xF8) == 0xF0)
-        return 4; // 4바이트 (이모지 등)
-    return 1;     // 알 수 없는 경우 1바이트 처리
+        return 1; // 1바이트 (일반 영어/숫자/공백)
+    else
+        return 2; // CP949는 MSB가 1이면 무조건 2바이트 한글/특수기호의 시작
 }
 
-/* 2. 문자열의 '바이트 수'가 아닌 '화면 출력 칸 수(Display Width)'를 계산하는
-   함수 원본 넷핵의 strlen()을 대체하게 됩니다. */
+/* 2. 문자열의 화면 출력 칸 수(Display Width)를 계산하는 함수 (CP949 규칙) */
 int
 korean_strwidth(const char *str)
 {
@@ -124,19 +122,14 @@ korean_strwidth(const char *str)
 
     while (*p) {
         if (*p < 0x80) {
-            width += 1; // 영어나 띄어쓰기는 1칸
+            width += 1; // 일반 ASCII (1칸 차지)
             p += 1;
-        } else if ((*p & 0xE0) == 0xC0) {
-            width += 1; // 2바이트 문자도 보통 화면에선 1칸
-            p += 2;
-        } else if ((*p & 0xF0) == 0xE0) {
-            width += 2; // 한글(3바이트)은 화면에서 2칸(전각)을 차지함
-            p += 3;
-        } else if ((*p & 0xF8) == 0xF0) {
-            width += 2; // 특수문자/이모지도 2칸
-            p += 4;
         } else {
-            p++; // 에러 방지용 전진
+            width += 2; // CP949 한글/특수문자는 모두 2칸(전각) 차지
+            p += 1;
+            if (*p)
+                p += 1; // 안전장치: 문자열이 비정상적으로 잘렸을 때 널 문자
+                        // 보호
         }
     }
     return width;
@@ -863,7 +856,7 @@ get_kr_name(const char *en_name)
     if (!strcmp(en_name, "balrog"))
         return "발록";
     if (!strcmp(en_name, "Juiblex"))
-        return "주블렉스";
+        return "쥬블렉스";
     if (!strcmp(en_name, "Yeenoghu"))
         return "예노구";
     if (!strcmp(en_name, "Orcus"))
@@ -1236,9 +1229,9 @@ get_kr_name(const char *en_name)
     if (!strcmp(en_name, "banded mail"))
         return "밴디드 메일";
     if (!strcmp(en_name, "dwarvish mithril-coat"))
-        return "드워프제 미스릴 코트";
+        return "드워프제 미스릴 갑옷";
     if (!strcmp(en_name, "elven mithril-coat"))
-        return "엘프제 미스릴 코트";
+        return "엘프제 미스릴 갑옷";
     if (!strcmp(en_name, "crystal plate mail"))
         return "수정 판금 갑옷";
 
@@ -1852,23 +1845,23 @@ get_kr_name(const char *en_name)
     if (!strcmp(en_name, "jade"))
         return "옥";
     if (!strcmp(en_name, "worthless piece of white glass"))
-        return "가치 없는 하얀 유리 조각";
+        return "쓸모없는 하얀 유리 조각";
     if (!strcmp(en_name, "worthless piece of blue glass"))
-        return "가치 없는 푸른 유리 조각";
+        return "쓸모없는 푸른 유리 조각";
     if (!strcmp(en_name, "worthless piece of red glass"))
-        return "가치 없는 붉은 유리 조각";
+        return "쓸모없는 붉은 유리 조각";
     if (!strcmp(en_name, "worthless piece of yellowish brown glass"))
-        return "가치 없는 황갈색 유리 조각";
+        return "쓸모없는 황갈색 유리 조각";
     if (!strcmp(en_name, "worthless piece of orange glass"))
-        return "가치 없는 주황색 유리 조각";
+        return "쓸모없는 주황색 유리 조각";
     if (!strcmp(en_name, "worthless piece of yellow glass"))
-        return "가치 없는 노란 유리 조각";
+        return "쓸모없는 노란 유리 조각";
     if (!strcmp(en_name, "worthless piece of black glass"))
-        return "가치 없는 검은 유리 조각";
+        return "쓸모없는 검은 유리 조각";
     if (!strcmp(en_name, "worthless piece of green glass"))
-        return "가치 없는 초록색 유리 조각";
+        return "쓸모없는 초록색 유리 조각";
     if (!strcmp(en_name, "worthless piece of violet glass"))
-        return "가치 없는 보라색 유리 조각";
+        return "쓸모없는 보라색 유리 조각";
     if (!strcmp(en_name, "luckstone"))
         return "행운의 돌";
     if (!strcmp(en_name, "loadstone"))
