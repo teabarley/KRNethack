@@ -516,19 +516,17 @@ unsigned cxn_flags; /* bitmask of CXN_xxx values */
         goto nameit;
 #else
     {
-        Strcat(buf, ONAME(obj));
+        Strcat(buf, get_kr_name(ONAME(obj)));
         goto nameit;
     }
 #endif
 #if 1 /*KR*/
     if (has_oname(obj) && dknown) {
-        /* 사체(CORPSE)일 때는 여기서 이름을 붙이지 않고, doname_base에서
-         * 자연스럽게 조립하도록 미룹니다. */
+        /* 사체(CORPSE)일 때는 여기서 이름을 붙이지 않고, *
+         * doname_base에서 자연스럽게 조립하도록 미룸.    */
         if (obj->otyp != CORPSE) {
-            /* "이라" 또는 "(이)라"를 넘겨주면 알아서 종성에 맞춰 "라" 또는
-             * "이라"로 변환합니다. */
             Sprintf(eos(buf), "%s 이름붙인 ",
-                    append_josa(ONAME(obj), "이라"));
+                    append_josa(get_kr_name(ONAME(obj)), "이라"));
         }
     }
 #endif
@@ -1552,8 +1550,8 @@ unsigned doname_flags;
 #else
             if (has_oname(obj) && dknown) {
                 /* 예: Zaz(이)라는 이름의 저주받은 언덕 오크 */
-                Sprintf(prefix, "%s는 이름의 %s ", 
-                        append_josa(ONAME(obj), "이라"), cxstr);
+                Sprintf(prefix, "%s는 이름의 %s ",
+                        append_josa(get_kr_name(ONAME(obj)), "이라"), cxstr);
             } else {
                 /* 예: 저주받은 언덕 오크의 */
                 Sprintf(prefix, "%s의 ", cxstr);
