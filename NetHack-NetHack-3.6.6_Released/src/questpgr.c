@@ -352,6 +352,9 @@ convert_arg(c)
 char c;
 {
     register const char *str;
+#if 1 /*KR korean.c의 번역 사전 호출 */ 
+    extern char *get_kr_name(const char *); 
+#endif
 
     switch (c) {
     case 'p':
@@ -375,14 +378,22 @@ char c;
         str = (flags.female) ? "딸" : "아들";
         break;
     case 'l':
+#if 0 /*KR 퀘스트 리더 이름 한글화 */
         str = ldrname();
+#else
+        str = get_kr_name(ldrname());
+#endif
         break;
     case 'i':
+#if 0 /*KR 퀘스트 중간 지점 이름 한글화 */
         str = intermed();
+#else
+        str = get_kr_name(intermed());
+#endif
         break;
     case 'O':
     case 'o':
-#if 0 /*KR: 원본*/
+#if 0 /*KR: 퀘스트 아티팩트 이름 한글화 */
         str = the(artiname(urole.questarti));
         if (c == 'O') {
             /* shorten "the Foo of Bar" to "the Foo"
@@ -397,16 +408,28 @@ char c;
 #endif
         break;
     case 'n':
+#if 0 /*KR 퀘스트 네메시스 이름 한글화 */
         str = neminame();
+#else
+        str = get_kr_name(neminame());
+#endif
         break;
     case 'g':
+#if 0 /*KR 퀘스트 가디언 이름 한글화 */
         str = guardname();
+#else
+        str = get_kr_name(guardname());
+#endif
         break;
     case 'G':
         str = align_gtitle(u.ualignbase[A_ORIGINAL]);
         break;
     case 'H':
+#if 0 /*KR 퀘스트 고향 이름 한글화 */
         str = homebase();
+#else
+        str = get_kr_name(homebase());
+#endif
         break;
     case 'a':
         str = align_str(u.ualignbase[A_ORIGINAL]);
@@ -437,7 +460,11 @@ char c;
         str = Blind ? "느낀다" : "본다";
         break;
     case 'Z':
+#if 0 /*KR 퀘스트 던전 이름 한글화 */
         str = dungeons[0].dname;
+#else
+        str = get_kr_name(dungeons[0].dname);
+#endif
         break;
     case '%':
         str = "%";
@@ -446,7 +473,13 @@ char c;
         str = "";
         break;
     }
+#if 0 /*KR: 원본 (버퍼 오버플로우 위험) */
     Strcpy(cvt_buf, str);
+#else /*KR: KRNethack 맞춤 번역 (메모리 오염 방어) */
+    /* cvt_buf의 최대 크기(64)를 넘지 않도록 안전하게 복사 */
+    strncpy(cvt_buf, str, sizeof(cvt_buf) - 1);
+    cvt_buf[sizeof(cvt_buf) - 1] = '\0'; /* 널 문자 확실히 보장 */
+#endif
 }
 
 STATIC_OVL void convert_line(in_line, out_line) char *in_line, *out_line;

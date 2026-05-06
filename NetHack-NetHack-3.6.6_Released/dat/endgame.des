@@ -11,9 +11,9 @@
 
 MAZE:"earth",' '
 FLAGS: noteleport,hardfloor,shortsighted
-MESSAGE: "Well done, mortal!"
-MESSAGE: "But now thou must face the final Test..."
-MESSAGE: "Prove thyself worthy or perish!"
+MESSAGE: "잘 하였도다, 필멸자여!"
+MESSAGE: "하지만 이제 그대는 마지막 시험에 직면해야 하느니라..."
+MESSAGE: "자신이 합당함을 증명하라, 그렇지 않으면 멸망하리라!"
 
 GEOMETRY:center,center
 # The player lands, upon arrival, in the
@@ -131,8 +131,8 @@ MAZE:"air",' '
 FLAGS: noteleport,hardfloor,shortsighted
 # The following messages are somewhat obtuse, to make then
 # equally meaningful if the player can see or not.
-MESSAGE: "What a strange feeling!"
-MESSAGE: "You notice that there is no gravity here."
+MESSAGE: "정말 이상한 기분이다!"
+MESSAGE: "당신은 이 곳이 무중력이라는 것을 깨닫는다."
 GEOMETRY:center,center
 # The player lands, upon arrival, in the
 # lower-left area.  The location of the
@@ -381,7 +381,7 @@ OBJECT:('`',"boulder"),random
 
 MAZE:"water",' '
 FLAGS: noteleport,hardfloor,shortsighted
-MESSAGE: "You find yourself suspended in an air bubble surrounded by water."
+MESSAGE: "당신은 자신이 물로 둘러싸인 공기 방울 속에 떠 있는 것을 깨달았다."
 GEOMETRY:center,center
 # The player lands upon arrival to an air bubble
 # within the leftmost third of the level.  The
@@ -478,9 +478,9 @@ MONSTER:('E',"water elemental"),random,hostile
 
 MAZE:"astral",' '
 FLAGS: noteleport,hardfloor,nommap,shortsighted,solidify
-MESSAGE: "You arrive on the Astral Plane!"
-MESSAGE: "Here the High Temple of %d is located."
-MESSAGE: "You sense alarm, hostility, and excitement in the air!"
+MESSAGE: "당신은 천상계에 도달했다!"
+MESSAGE: "여기에 %d의 대성전이 있다."
+MESSAGE: "당신은 공기 중에 공포심, 적대감, 그리고 흥분을 느낀다!"
 GEOMETRY:center,center
 MAP
                               ---------------                              

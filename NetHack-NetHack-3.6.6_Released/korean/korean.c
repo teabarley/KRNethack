@@ -2421,6 +2421,10 @@ get_kr_name(const char *en_name)
         return "마을";
     if (!strcmp(en_name, "Vlad's Tower"))
         return "블라드의 탑";
+    if (!strcmp(en_name, "The Elemental Planes"))
+        return "정령계";
+    if (!strcmp(en_name, "Fort Ludios"))
+        return "루디오스 요새";
 
 /* ========================================== *
      * 아티팩트 (Artifacts) 번역 사전               *

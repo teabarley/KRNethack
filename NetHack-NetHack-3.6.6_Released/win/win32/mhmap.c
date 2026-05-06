@@ -130,7 +130,8 @@ mswin_init_map_window()
     }
 
     /* Set window caption */
-    SetWindowText(hWnd, "Map");
+    /*KR SetWindowText(hWnd, "Map"); */
+    SetWindowText(hWnd, "Áöµµ");
 
     mswin_apply_window_style(hWnd);
 
