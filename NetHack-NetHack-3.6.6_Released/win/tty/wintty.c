@@ -1099,7 +1099,11 @@ int race, gend, algn; /* all ROLE_NONE for !filtering case */
             any.a_int = i + 1;
         else
             any.a_string = roles[i].name.m;
+#if 0 /*KR 단축키 추출 연쇄 붕괴 차단: setup_rolemenu */
         thisch = lowc(*roles[i].name.m);
+#else
+        thisch = 0;
+#endif
         if (thisch == lastch)
             thisch = highc(thisch);
         Strcpy(rolenamebuf, roles[i].name.m);
@@ -1142,7 +1146,11 @@ int role, gend, algn;
             any.a_int = i + 1;
         else
             any.a_string = races[i].noun;
+#if 0 /*KR 단축키 추출 연쇄 붕괴 차단: setup_racemenu */
         this_ch = *races[i].noun;
+#else
+        this_ch = 0;
+#endif
         /* filtering: picking race, so choose by first letter, with
            capital letter as unseen accelerator;
            !filtering: resetting filter rather than picking, choose by
@@ -1175,7 +1183,11 @@ int role, race, algn;
             any.a_int = i + 1;
         else
             any.a_string = genders[i].adj;
+#if 0 /*KR 단축키 추출 연쇄 붕괴 차단: setup_gendmenu */
         this_ch = *genders[i].adj;
+#else
+        this_ch = 0;
+#endif
         /* (see setup_racemenu for explanation of selector letters
            and setup_rolemenu for preselection) */
         add_menu(win, NO_GLYPH, &any,
@@ -1206,7 +1218,11 @@ int role, race, gend;
             any.a_int = i + 1;
         else
             any.a_string = aligns[i].adj;
+#if 0 /*KR 단축키 추출 연쇄 붕괴 차단: setup_algnmenu */
         this_ch = *aligns[i].adj;
+#else
+        this_ch = 0;
+#endif
         /* (see setup_racemenu for explanation of selector letters
            and setup_rolemenu for preselection) */
         add_menu(win, NO_GLYPH, &any,
@@ -1728,7 +1744,11 @@ tty_menu_item *item;
     HUPSKIP();
     tty_curs(window, 4, lineno);
     term_start_attr(item->attr);
+#if 0 /*KR 도화지 무시하는 putchar 퇴출 */
     (void) putchar(ch);
+#else
+    xputc(ch);
+#endif
     ttyDisplay->curx++;
     term_end_attr(item->attr);
 }
@@ -1930,7 +1950,11 @@ struct WinDesc *cw;
                     if (cw->offx)
                         cl_end();
 
+#if 0 /*KR 도화지 무시하는 putchar 퇴출 */
                     (void) putchar(' ');
+#else
+                    xputc(' ');
+#endif
                     ++ttyDisplay->curx;
 
                     if (!iflags.use_menu_color
@@ -1972,11 +1996,23 @@ struct WinDesc *cw;
                             && curr->identifier.a_void != 0
                             && curr->selected) {
                             if (curr->count == -1L)
+#if 0 /*KR 도화지 무시하는 putchar 퇴출 */
                                 (void) putchar('+'); /* all selected */
                             else
                                 (void) putchar('#'); /* count selected */
+#else
+                                xputc('+'); /* all selected */
+                            else
+                                xputc('#'); /* count selected */
+#endif
                         } else
+#if 0 /*KR*/
                             (void) putchar(*cp);
+#else
+                        {
+                            (void) xputc(*cp);
+                        }
+#endif
                     } /* for *cp */
                     if (n > attr_n && (color != NO_COLOR || attr != ATR_NONE))
                         toggle_menu_attr(FALSE, color, attr);
@@ -2219,7 +2255,9 @@ winid window;
 struct WinDesc *cw;
 {
     int i, n, attr;
+#if 0 /*KR 참조되지 않은 지역 변수 경고 해제용 */
     boolean linestart;
+#endif
     register char *cp;
 
     for (n = 0, i = 0; i < cw->maxrow; i++) {
@@ -2253,7 +2291,11 @@ struct WinDesc *cw;
                 ++ttyDisplay->curx;
             }
             term_start_attr(attr);
+#if 0 /*KR 첫 글자 집어삼키기 버그 완전 삭제 */
             for (cp = &cw->data[i][1], linestart = TRUE;
+#else
+            for (cp = &cw->data[i][1];
+#endif
 #ifndef WIN32CON
                  *cp && (int) ++ttyDisplay->curx < (int) ttyDisplay->cols;
                  cp++
@@ -2262,6 +2304,7 @@ struct WinDesc *cw;
                  cp++, ttyDisplay->curx++
 #endif
                  ) {
+#if 0 /*KR*/
                 /* message recall for msg_window:full/combination/reverse
                    might have output from '/' in it (see redotoplin()) */
                 if (linestart && (*cp & 0x80) != 0) {
@@ -2271,6 +2314,9 @@ struct WinDesc *cw;
                 } else {
                     (void) putchar(*cp);
                 }
+#else
+                    xputc(*cp);
+#endif
             }
             term_end_attr(attr);
         }
@@ -2542,7 +2588,11 @@ register int x, y; /* not xchar: perhaps xchar is unsigned and
         nocmov(x, y);
 #ifndef NO_TERMS
     } else if ((x <= 3 && cy <= 3) || (!nh_CM && x < cx)) {
+#if 0 /*KR 도화지 무시하는 putchar 퇴출 */
         (void) putchar('\r');
+#else
+        xputc('\r');
+#endif
         ttyDisplay->curx = 0;
         nocmov(x, y);
     } else if (!nh_CM) {
@@ -2576,7 +2626,11 @@ char ch;
     case NHW_MAP:
     case NHW_BASE:
         tty_curs(window, x, y);
+#if 0 /*KR*/
         (void) putchar(ch);
+#else
+        g_putch(ch);
+#endif
         ttyDisplay->curx++;
         cw->curx++;
         break;
@@ -2713,7 +2767,11 @@ const char *str;
         tty_curs(window, cw->curx + 1, cw->cury);
         term_start_attr(attr);
         while (*str && (int) ttyDisplay->curx < (int) ttyDisplay->cols - 1) {
+#if 0 /*KR 도화지 무시하는 putchar 퇴출 */
             (void) putchar(*str);
+#else
+            xputc(*str);
+#endif
             str++;
             ttyDisplay->curx++;
         }
@@ -2730,7 +2788,11 @@ const char *str;
                 cw->cury++;
                 tty_curs(window, cw->curx + 1, cw->cury);
             }
+#if 0 /*KR 도화지 무시하는 putchar 퇴출 */
             (void) putchar(*str);
+#else
+            xputc(*str);
+#endif
             str++;
             ttyDisplay->curx++;
         }
@@ -4208,7 +4270,11 @@ int x, y;
         for (i = 0; i < lth; ++i) {
             n = i + x;
             if (n < ncols && *text) {
+#if 0 /*KR*/
                 (void) putchar(*text);
+#else
+                xputc(*(unsigned char *) text); 
+#endif
                 ttyDisplay->curx++;
                 cw->curx++;
                 cw->data[y][n - 1] = *text;

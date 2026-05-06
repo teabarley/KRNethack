@@ -116,8 +116,8 @@ const struct Role roles[] = {
       "the Camp of the Duali Tribe",
       "the Duali Oasis",
 #else
-      "Duali 족의 진영",
-      "Duali 족의 오아시스",
+      "두알리 족의 진영",
+      "두알리 족의 오아시스",
 #endif
       PM_BARBARIAN,
       NON_PM,
@@ -1999,7 +1999,7 @@ int buflen, rolenum, racenum, gendnum, alignnum;
 #if 0 /*KR*/
     Sprintf(buf, "%s", s_suffix(tmpbuf));
 #else 
-    Sprintf(buf, "%s의", tmpbuf);
+    Sprintf(buf, "%s의 ", tmpbuf);
 #endif
 #if 0 /*KR:한국어에서는 불필요*/
     /* don't bother splitting caveman/cavewoman or priest/priestess
