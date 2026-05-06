@@ -85,14 +85,12 @@ STATIC_DCL void FDECL(nsb_unmung_line, (char *) );
 static winid toptenwin = WIN_ERR;
 
 /* "killed by",&c ["an"] 'killer.name' */
-#if 0 /*KR: 원본*/
-void
-formatkiller(buf, siz, how, incl_helpless)
-char *buf;
+void formatkiller(buf, siz, how, incl_helpless) char *buf;
 unsigned siz;
 int how;
 boolean incl_helpless;
 {
+#if 0 /*KR: 원본*/
     static NEARDATA const char *const killed_by_prefix[] = {
         /* DIED, CHOKING, POISONING, STARVING, */
         "killed by ", "choked on ", "poisoned by ", "died of ",
@@ -156,13 +154,7 @@ boolean incl_helpless;
             Strcpy(buf, ", while helpless");
         /* else extra death info won't fit, so leave it out */
     }
-}
 #else /*KR: KRNethack 맞춤 번역 */
-void formatkiller(buf, siz, how, incl_helpless) char *buf;
-unsigned siz;
-int how;
-boolean incl_helpless;
-{
     static NEARDATA const char *const killed_by_suffix[] = {
         /* DIED, CHOKING, POISONING, STARVING, */
         "에게 살해당했다", " 때문에 질식했다", "의 독으로 죽었다",
@@ -177,16 +169,20 @@ boolean incl_helpless;
     char c, *kname = get_kr_name(killer.name);
     char *buf_start = buf;
 
-    buf[0] = '\0';
+    buf[0] = '\0'; /* lint suppression */
+
+    /* 1. 한국어 어순에 맞게 "무방비 상태인 동안,"을 문장 맨 앞에 배치 */
     if (incl_helpless && multi) {
         if (multi_reason && strlen(multi_reason) + sizeof " 동안, " <= siz)
             Sprintf(buf, "%s 동안, ", multi_reason);
         else if (sizeof "무방비 상태인 동안, " <= siz)
             Strcpy(buf, "무방비 상태인 동안, ");
+
         buf += strlen(buf);
         siz -= (unsigned) (buf - buf_start);
     }
 
+    /* 2. 몬스터 및 사물 이름 복사 (쉼표, 등호 등 안전하게 치환) */
     while (--siz > 0) {
         c = *kname++;
         if (!c)
@@ -201,15 +197,26 @@ boolean incl_helpless;
     }
     *buf = '\0';
 
+    /* 3. 문장 끝에 사인(Suffix) 및 조사 분기 처리 붙이기 */
     if (killer.format != NO_KILLER_PREFIX) {
         if (how == DIED || how == GENOCIDED) {
-            strncat(buf_start, "에게 살해당했다", siz - 1);
+            /* KR: 사물 이름에 이미 조사가 붙어있는 경우("지팡이로", "함정에"
+             * 등) 분기 처리 */
+            size_t curlen = strlen(buf_start);
+            if (curlen >= 2
+                && (!strncmp(buf_start + curlen - 2, "로", 2)
+                    || !strncmp(buf_start + curlen - 2, "에", 2)
+                    || !strncmp(buf_start + curlen - 2, "게", 2))) {
+                strncat(buf_start, " 살해당했다", siz - 1);
+            } else {
+                strncat(buf_start, "에게 살해당했다", siz - 1);
+            }
         } else {
             strncat(buf_start, killed_by_suffix[how], siz - 1);
         }
     }
-}
 #endif
+}
 
 STATIC_OVL void topten_print(x) const char *x;
 {
