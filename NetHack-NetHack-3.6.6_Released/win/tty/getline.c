@@ -318,7 +318,8 @@ tty_get_ext_cmd()
     }
 
     if (extcmdlist[i].ef_txt == (char *) 0) {
-        pline("%s: unknown extended command.", buf);
+        /*KR pline("%s: unknown extended command.", buf); */
+        pline("%s: 알 수 없는 확장 명령어.", buf);
         i = -1;
     }
 

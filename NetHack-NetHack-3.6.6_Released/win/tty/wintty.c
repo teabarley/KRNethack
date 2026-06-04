@@ -260,9 +260,7 @@ int i, c, d;
 
 
 /* clean up and quit */
-STATIC_OVL void
-bail(mesg)
-const char *mesg;
+STATIC_OVL void bail(mesg) const char *mesg;
 {
     clearlocks();
     tty_exit_nhwindows(mesg);
@@ -271,17 +269,17 @@ const char *mesg;
 }
 
 #if defined(SIGWINCH) && defined(CLIPPING)
-STATIC_DCL void FDECL(winch_handler, (int));
+STATIC_DCL void FDECL(winch_handler, (int) );
 
-    /*
-     * This really ought to just set a flag like the hangup handler does,
-     * then check the flag at "safe" times, in case the signal arrives
-     * while something fragile is executing.  Better to have a brief period
-     * where display updates don't fit the new size than for tty internals
-     * to become corrupted.
-     *
-     * 'winch_seen' has been "notyet" for a long time....
-     */
+/*
+ * This really ought to just set a flag like the hangup handler does,
+ * then check the flag at "safe" times, in case the signal arrives
+ * while something fragile is executing.  Better to have a brief period
+ * where display updates don't fit the new size than for tty internals
+ * to become corrupted.
+ *
+ * 'winch_seen' has been "notyet" for a long time....
+ */
 /*ARGUSED*/
 STATIC_OVL void
 winch_handler(sig_unused) /* signal handler is called with at least 1 arg */
@@ -383,9 +381,7 @@ new_status_window()
 }
 
 /*ARGSUSED*/
-void
-tty_init_nhwindows(argcp, argv)
-int *argcp UNUSED;
+void tty_init_nhwindows(argcp, argv) int *argcp UNUSED;
 char **argv UNUSED;
 {
     int wid, hgt, i;
@@ -411,7 +407,6 @@ char **argv UNUSED;
     setftty(); /* calls start_screen */
 
     /* set up tty descriptor */
-    ttyDisplay = (struct DisplayDesc *) alloc(sizeof (struct DisplayDesc));
     ttyDisplay->toplin = 0;
     ttyDisplay->rows = hgt;
     ttyDisplay->cols = wid;
@@ -448,12 +443,8 @@ char **argv UNUSED;
 #ifndef CLIPPING
                                   (LI < 1 + ROWNO + 2) ? DISP_IN_GAME :
 #endif
-                                   SET_IN_GAME);
 }
 
-void
-tty_preference_update(pref)
-const char *pref;
 {
     if (!strcmp(pref, "statuslines") && iflags.window_inited) {
         new_status_window();
@@ -514,8 +505,6 @@ tty_player_selection()
     if (ROLE == ROLE_NONE || RACE == ROLE_NONE || GEND == ROLE_NONE
         || ALGN == ROLE_NONE) {
         int echoline;
-        char *prompt = build_plselection_prompt(pbuf, QBUFSZ,
-                                                ROLE, RACE, GEND, ALGN);
 
         /* this prompt string ends in "[ynaq]?":
            y - game picks role,&c then asks player to confirm;
@@ -548,7 +537,7 @@ tty_player_selection()
             goto give_up;
     }
 
- makepicks:
+makepicks:
     nextpick = RS_ROLE;
     do {
         if (nextpick == RS_ROLE) {
@@ -584,7 +573,8 @@ tty_player_selection()
                     if (gotrolefilter())
                         role_menu_extra(RS_filter, win, FALSE);
                     role_menu_extra(ROLE_NONE, win, FALSE); /* quit */
-                    Strcpy(pbuf, "Pick a role or profession");
+                    /*KR Strcpy(pbuf, "Pick a role or profession"); */
+                    Strcpy(pbuf, "직업을 선택하세요");
                     end_menu(win, pbuf);
                     n = select_menu(win, PICK_ONE, &selected);
                     /*
@@ -632,7 +622,7 @@ tty_player_selection()
                 }
                 ROLE = k;
             } /* needed role */
-        }     /* picking role */
+        } /* picking role */
 
         if (nextpick == RS_RACE) {
             nextpick = (ROLE < 0) ? RS_ROLE : RS_GENDER;
@@ -683,7 +673,8 @@ tty_player_selection()
                         if (gotrolefilter())
                             role_menu_extra(RS_filter, win, FALSE);
                         role_menu_extra(ROLE_NONE, win, FALSE); /* quit */
-                        Strcpy(pbuf, "Pick a race or species");
+                        /*KR Strcpy(pbuf, "Pick a race or species"); */
+                        Strcpy(pbuf, "종족을 선택하세요");
                         end_menu(win, pbuf);
                         n = select_menu(win, PICK_ONE, &selected);
                         if (n > 0) {
@@ -724,11 +715,12 @@ tty_player_selection()
                 }
                 RACE = k;
             } /* needed race */
-        }     /* picking race */
+        } /* picking race */
 
         if (nextpick == RS_GENDER) {
-            nextpick = (ROLE < 0) ? RS_ROLE : (RACE < 0) ? RS_RACE
-                       : RS_ALGNMNT;
+            nextpick = (ROLE < 0)   ? RS_ROLE
+                       : (RACE < 0) ? RS_RACE
+                                    : RS_ALGNMNT;
             /* Select a gender, if necessary;
                force compatibility with role/race, try for compatibility
                with pre-selected alignment. */
@@ -776,7 +768,8 @@ tty_player_selection()
                         if (gotrolefilter())
                             role_menu_extra(RS_filter, win, FALSE);
                         role_menu_extra(ROLE_NONE, win, FALSE); /* quit */
-                        Strcpy(pbuf, "Pick a gender or sex");
+                        /*KR Strcpy(pbuf, "Pick a gender or sex"); */
+                        Strcpy(pbuf, "성별을 선택하세요");
                         end_menu(win, pbuf);
                         n = select_menu(win, PICK_ONE, &selected);
                         if (n > 0) {
@@ -817,10 +810,12 @@ tty_player_selection()
                 }
                 GEND = k;
             } /* needed gender */
-        }     /* picking gender */
+        } /* picking gender */
 
         if (nextpick == RS_ALGNMNT) {
-            nextpick = (ROLE < 0) ? RS_ROLE : (RACE < 0) ? RS_RACE : RS_GENDER;
+            nextpick = (ROLE < 0)   ? RS_ROLE
+                       : (RACE < 0) ? RS_RACE
+                                    : RS_GENDER;
             /* Select an alignment, if necessary;
                force compatibility with role/race/gender. */
             if (ALGN < 0 || !validalign(ROLE, RACE, ALGN)) {
@@ -865,7 +860,8 @@ tty_player_selection()
                         if (gotrolefilter())
                             role_menu_extra(RS_filter, win, FALSE);
                         role_menu_extra(ROLE_NONE, win, FALSE); /* quit */
-                        Strcpy(pbuf, "Pick an alignment or creed");
+                        /*KR Strcpy(pbuf, "Pick an alignment or creed"); */
+                        Strcpy(pbuf, "성향을 선택하세요");
                         end_menu(win, pbuf);
                         n = select_menu(win, PICK_ONE, &selected);
                         if (n > 0) {
@@ -906,7 +902,7 @@ tty_player_selection()
                 }
                 ALGN = k;
             } /* needed alignment */
-        }     /* picking alignment */
+        } /* picking alignment */
 
     } while (ROLE < 0 || RACE < 0 || GEND < 0 || ALGN < 0);
 
@@ -945,27 +941,31 @@ tty_player_selection()
                 races[RACE].adj,
                 (GEND == 1 && roles[ROLE].name.f) ? roles[ROLE].name.f
                                                   : roles[ROLE].name.m);
-        add_menu(win, NO_GLYPH, &any, 0, 0, ATR_NONE, pbuf,
-                 MENU_UNSELECTED);
+        add_menu(win, NO_GLYPH, &any, 0, 0, ATR_NONE, pbuf, MENU_UNSELECTED);
         /* blank separator */
         any.a_int = 0;
         add_menu(win, NO_GLYPH, &any, 0, 0, ATR_NONE, "", MENU_UNSELECTED);
         /* [ynaq] menu choices */
         any.a_int = 1;
-        add_menu(win, NO_GLYPH, &any, 'y', 0, ATR_NONE, "Yes; start game",
+        /*KR add_menu(win, NO_GLYPH, &any, 'y', 0, ATR_NONE, "Yes; start game", */
+        add_menu(win, NO_GLYPH, &any, 'y', 0, ATR_NONE, "예; 게임을 시작한다",
                  MENU_SELECTED);
         any.a_int = 2;
         add_menu(win, NO_GLYPH, &any, 'n', 0, ATR_NONE,
-                 "No; choose role again", MENU_UNSELECTED);
+                 /*KR "No; choose role again", MENU_UNSELECTED); */
+                 "아니오; 직업을 다시 선택한다", MENU_UNSELECTED);
         if (iflags.renameallowed) {
             any.a_int = 3;
             add_menu(win, NO_GLYPH, &any, 'a', 0, ATR_NONE,
-                     "Not yet; choose another name", MENU_UNSELECTED);
+                     /*KR "Not yet; choose another name", MENU_UNSELECTED); */
+                     "아직; 이름을 바꾼다", MENU_UNSELECTED);
         }
         any.a_int = -1;
-        add_menu(win, NO_GLYPH, &any, 'q', 0, ATR_NONE, "Quit",
+        /*KR add_menu(win, NO_GLYPH, &any, 'q', 0, ATR_NONE, "Quit", */
+        add_menu(win, NO_GLYPH, &any, 'q', 0, ATR_NONE, "나간다",
                  MENU_UNSELECTED);
-        Sprintf(pbuf, "Is this ok? [yn%sq]", iflags.renameallowed ? "a" : "");
+        /*KR Sprintf(pbuf, "Is this ok? [yn%sq]", iflags.renameallowed ? "a" : ""); */
+        Sprintf(pbuf, "이것으로 괜찮습니까? [yn%sq]", iflags.renameallowed ? "a" : "");
         end_menu(win, pbuf);
         n = select_menu(win, PICK_ONE, &selected);
         /* [pick-one menus with a preselected entry behave oddly...] */
@@ -990,14 +990,14 @@ tty_player_selection()
             /* plnamesuffix() can change any or all of ROLE, RACE,
                GEND, ALGN; we'll override that and honor only the name */
             saveROLE = ROLE, saveRACE = RACE, saveGEND = GEND,
-                saveALGN = ALGN;
+            saveALGN = ALGN;
             *plname = '\0';
             plnamesuffix(); /* calls askname() when plname[] is empty */
             ROLE = saveROLE, RACE = saveRACE, GEND = saveGEND,
-                ALGN = saveALGN;
+            ALGN = saveALGN;
             break; /* getconfirmation is still True */
         }
-        case 2:    /* 'n' */
+        case 2: /* 'n' */
             /* start fresh, but bypass "shall I pick everything for you?"
                step; any partial role selection via config file, command
                line, or name suffix is discarded this time */
@@ -1016,7 +1016,7 @@ tty_player_selection()
     tty_display_nhwindow(BASE_WINDOW, FALSE);
     return;
 
- give_up:
+give_up:
     /* Quit */
     if (selected)
         free((genericptr_t) selected); /* [obsolete] */
@@ -1038,23 +1038,23 @@ reset_role_filtering()
     any = zeroany;
 
     /* no extra blank line preceding this entry; end_menu supplies one */
-    add_menu(win, NO_GLYPH, &any, 0, 0, ATR_NONE,
-             "Unacceptable roles", MENU_UNSELECTED);
+    add_menu(win, NO_GLYPH, &any, 0, 0, ATR_NONE, "Unacceptable roles",
+             MENU_UNSELECTED);
     setup_rolemenu(win, FALSE, ROLE_NONE, ROLE_NONE, ROLE_NONE);
 
     add_menu(win, NO_GLYPH, &any, 0, 0, ATR_NONE, "", MENU_UNSELECTED);
-    add_menu(win, NO_GLYPH, &any, 0, 0, ATR_NONE,
-             "Unacceptable races", MENU_UNSELECTED);
+    add_menu(win, NO_GLYPH, &any, 0, 0, ATR_NONE, "Unacceptable races",
+             MENU_UNSELECTED);
     setup_racemenu(win, FALSE, ROLE_NONE, ROLE_NONE, ROLE_NONE);
 
     add_menu(win, NO_GLYPH, &any, 0, 0, ATR_NONE, "", MENU_UNSELECTED);
-    add_menu(win, NO_GLYPH, &any, 0, 0, ATR_NONE,
-             "Unacceptable genders", MENU_UNSELECTED);
+    add_menu(win, NO_GLYPH, &any, 0, 0, ATR_NONE, "Unacceptable genders",
+             MENU_UNSELECTED);
     setup_gendmenu(win, FALSE, ROLE_NONE, ROLE_NONE, ROLE_NONE);
 
     add_menu(win, NO_GLYPH, &any, 0, 0, ATR_NONE, "", MENU_UNSELECTED);
-    add_menu(win, NO_GLYPH, &any, 0, 0, ATR_NONE,
-             "Unacceptable alignments", MENU_UNSELECTED);
+    add_menu(win, NO_GLYPH, &any, 0, 0, ATR_NONE, "Unacceptable alignments",
+             MENU_UNSELECTED);
     setup_algnmenu(win, FALSE, ROLE_NONE, ROLE_NONE, ROLE_NONE);
 
     end_menu(win, "Pick all that apply");
@@ -1079,9 +1079,7 @@ reset_role_filtering()
 #undef ALGN
 
 /* add entries a-Archeologist, b-Barbarian, &c to menu being built in 'win' */
-STATIC_OVL void
-setup_rolemenu(win, filtering, race, gend, algn)
-winid win;
+STATIC_OVL void setup_rolemenu(win, filtering, race, gend, algn) winid win;
 boolean filtering; /* True => exclude filtered roles; False => filter reset */
 int race, gend, algn; /* all ROLE_NONE for !filtering case */
 {
@@ -1099,11 +1097,7 @@ int race, gend, algn; /* all ROLE_NONE for !filtering case */
             any.a_int = i + 1;
         else
             any.a_string = roles[i].name.m;
-#if 0 /*KR 단축키 추출 연쇄 붕괴 차단: setup_rolemenu */
         thisch = lowc(*roles[i].name.m);
-#else
-        thisch = 0;
-#endif
         if (thisch == lastch)
             thisch = highc(thisch);
         Strcpy(rolenamebuf, roles[i].name.m);
@@ -1126,9 +1120,7 @@ int race, gend, algn; /* all ROLE_NONE for !filtering case */
     }
 }
 
-STATIC_OVL void
-setup_racemenu(win, filtering, role, gend, algn)
-winid win;
+STATIC_OVL void setup_racemenu(win, filtering, role, gend, algn) winid win;
 boolean filtering;
 int role, gend, algn;
 {
@@ -1146,26 +1138,18 @@ int role, gend, algn;
             any.a_int = i + 1;
         else
             any.a_string = races[i].noun;
-#if 0 /*KR 단축키 추출 연쇄 붕괴 차단: setup_racemenu */
         this_ch = *races[i].noun;
-#else
-        this_ch = 0;
-#endif
         /* filtering: picking race, so choose by first letter, with
            capital letter as unseen accelerator;
            !filtering: resetting filter rather than picking, choose by
            capital letter since lowercase role letters will be present */
-        add_menu(win, NO_GLYPH, &any,
-                 filtering ? this_ch : highc(this_ch),
-                 filtering ? highc(this_ch) : 0,
-                 ATR_NONE, races[i].noun,
+        add_menu(win, NO_GLYPH, &any, filtering ? this_ch : highc(this_ch),
+                 filtering ? highc(this_ch) : 0, ATR_NONE, races[i].noun,
                  (!filtering && !race_ok) ? MENU_SELECTED : MENU_UNSELECTED);
     }
 }
 
-STATIC_DCL void
-setup_gendmenu(win, filtering, role, race, algn)
-winid win;
+STATIC_DCL void setup_gendmenu(win, filtering, role, race, algn) winid win;
 boolean filtering;
 int role, race, algn;
 {
@@ -1183,24 +1167,16 @@ int role, race, algn;
             any.a_int = i + 1;
         else
             any.a_string = genders[i].adj;
-#if 0 /*KR 단축키 추출 연쇄 붕괴 차단: setup_gendmenu */
         this_ch = *genders[i].adj;
-#else
-        this_ch = 0;
-#endif
         /* (see setup_racemenu for explanation of selector letters
            and setup_rolemenu for preselection) */
-        add_menu(win, NO_GLYPH, &any,
-                 filtering ? this_ch : highc(this_ch),
-                 filtering ? highc(this_ch) : 0,
-                 ATR_NONE, genders[i].adj,
+        add_menu(win, NO_GLYPH, &any, filtering ? this_ch : highc(this_ch),
+                 filtering ? highc(this_ch) : 0, ATR_NONE, genders[i].adj,
                  (!filtering && !gend_ok) ? MENU_SELECTED : MENU_UNSELECTED);
     }
 }
 
-STATIC_DCL void
-setup_algnmenu(win, filtering, role, race, gend)
-winid win;
+STATIC_DCL void setup_algnmenu(win, filtering, role, race, gend) winid win;
 boolean filtering;
 int role, race, gend;
 {
@@ -1218,17 +1194,11 @@ int role, race, gend;
             any.a_int = i + 1;
         else
             any.a_string = aligns[i].adj;
-#if 0 /*KR 단축키 추출 연쇄 붕괴 차단: setup_algnmenu */
         this_ch = *aligns[i].adj;
-#else
-        this_ch = 0;
-#endif
         /* (see setup_racemenu for explanation of selector letters
            and setup_rolemenu for preselection) */
-        add_menu(win, NO_GLYPH, &any,
-                 filtering ? this_ch : highc(this_ch),
-                 filtering ? highc(this_ch) : 0,
-                 ATR_NONE, aligns[i].adj,
+        add_menu(win, NO_GLYPH, &any, filtering ? this_ch : highc(this_ch),
+                 filtering ? highc(this_ch) : 0, ATR_NONE, aligns[i].adj,
                  (!filtering && !algn_ok) ? MENU_SELECTED : MENU_UNSELECTED);
     }
 }
@@ -1270,7 +1240,8 @@ tty_askname()
                 bail("Giving up after 10 tries.\n");
             tty_curs(BASE_WINDOW, 1, wins[BASE_WINDOW]->cury - 1);
             tty_putstr(BASE_WINDOW, 0, "Enter a name for your character...");
-            /* erase previous prompt (in case of ESC after partial response) */
+            /* erase previous prompt (in case of ESC after partial response)
+             */
             tty_curs(BASE_WINDOW, 1, wins[BASE_WINDOW]->cury), cl_end();
         }
         tty_putstr(BASE_WINDOW, 0, who_are_you);
@@ -1315,7 +1286,8 @@ tty_askname()
             }
 #if defined(UNIX) || defined(VMS)
             if (c != '-' && c != '@')
-                if (!(c >= 'a' && c <= 'z') && !(c >= 'A' && c <= 'Z')
+                if (!(c >= 'a' && c <= 'z')
+                    && !(c >= 'A' && c <= 'Z')
                     /* reject leading digit but allow digits elsewhere
                        (avoids ambiguity when character name gets
                        appended to uid to construct save file name) */
@@ -1373,9 +1345,7 @@ getret()
 }
 #endif
 
-void
-tty_suspend_nhwindows(str)
-const char *str;
+void tty_suspend_nhwindows(str) const char *str;
 {
     settty(str); /* calls end_screen, perhaps raw_print */
     if (!str)
@@ -1390,9 +1360,7 @@ tty_resume_nhwindows()
     docrt();
 }
 
-void
-tty_exit_nhwindows(str)
-const char *str;
+void tty_exit_nhwindows(str) const char *str;
 {
     winid i;
 
@@ -1451,7 +1419,7 @@ int type;
         return WIN_ERR;
     }
 
-    newwin = (struct WinDesc *) alloc(sizeof (struct WinDesc));
+    newwin = (struct WinDesc *) alloc(sizeof(struct WinDesc));
     wins[newid] = newwin;
 
     newwin->type = type;
@@ -1525,10 +1493,10 @@ int type;
     }
 
     if (newwin->maxrow) {
-        newwin->data = (char **) alloc(
-                               (unsigned) (newwin->maxrow * sizeof (char *)));
-        newwin->datlen = (short *) alloc(
-                                (unsigned) (newwin->maxrow * sizeof (short)));
+        newwin->data =
+            (char **) alloc((unsigned) (newwin->maxrow * sizeof(char *)));
+        newwin->datlen =
+            (short *) alloc((unsigned) (newwin->maxrow * sizeof(short)));
         for (i = 0; i < newwin->maxrow; i++) {
             if (newwin->maxcol) { /* WIN_STATUS */
                 newwin->data[i] = (char *) alloc((unsigned) newwin->maxcol);
@@ -1548,9 +1516,7 @@ int type;
     return newid;
 }
 
-STATIC_OVL void
-erase_menu_or_text(window, cw, clear)
-winid window;
+STATIC_OVL void erase_menu_or_text(window, cw, clear) winid window;
 struct WinDesc *cw;
 boolean clear;
 {
@@ -1568,9 +1534,7 @@ boolean clear;
     }
 }
 
-STATIC_OVL void
-free_window_info(cw, free_data)
-struct WinDesc *cw;
+STATIC_OVL void free_window_info(cw, free_data) struct WinDesc *cw;
 boolean free_data;
 {
     int i;
@@ -1616,9 +1580,7 @@ boolean free_data;
     }
 }
 
-void
-tty_clear_nhwindow(window)
-winid window;
+void tty_clear_nhwindow(window) winid window;
 {
     int i, j, m, n;
     register struct WinDesc *cw = 0;
@@ -1712,9 +1674,7 @@ long count;
     return FALSE;
 }
 
-STATIC_OVL void
-dmore(cw, s)
-register struct WinDesc *cw;
+STATIC_OVL void dmore(cw, s) register struct WinDesc *cw;
 const char *s; /* valid responses */
 {
     const char *prompt = cw->morestr ? cw->morestr : defmorestr;
@@ -1733,9 +1693,7 @@ const char *s; /* valid responses */
     xwaitforspace(s);
 }
 
-STATIC_OVL void
-set_item_state(window, lineno, item)
-winid window;
+STATIC_OVL void set_item_state(window, lineno, item) winid window;
 int lineno;
 tty_menu_item *item;
 {
@@ -1744,18 +1702,12 @@ tty_menu_item *item;
     HUPSKIP();
     tty_curs(window, 4, lineno);
     term_start_attr(item->attr);
-#if 0 /*KR 도화지 무시하는 putchar 퇴출 */
     (void) putchar(ch);
-#else
-    xputc(ch);
-#endif
     ttyDisplay->curx++;
     term_end_attr(item->attr);
 }
 
-STATIC_OVL void
-set_all_on_page(window, page_start, page_end)
-winid window;
+STATIC_OVL void set_all_on_page(window, page_start, page_end) winid window;
 tty_menu_item *page_start, *page_end;
 {
     tty_menu_item *curr;
@@ -1768,9 +1720,7 @@ tty_menu_item *page_start, *page_end;
         }
 }
 
-STATIC_OVL void
-unset_all_on_page(window, page_start, page_end)
-winid window;
+STATIC_OVL void unset_all_on_page(window, page_start, page_end) winid window;
 tty_menu_item *page_start, *page_end;
 {
     tty_menu_item *curr;
@@ -1784,9 +1734,8 @@ tty_menu_item *page_start, *page_end;
         }
 }
 
-STATIC_OVL void
-invert_all_on_page(window, page_start, page_end, acc)
-winid window;
+STATIC_OVL void invert_all_on_page(window, page_start, page_end,
+                                   acc) winid window;
 tty_menu_item *page_start, *page_end;
 char acc; /* group accelerator, 0 => all */
 {
@@ -1807,9 +1756,7 @@ char acc; /* group accelerator, 0 => all */
 /*
  * Invert all entries that match the give group accelerator (or all if zero).
  */
-STATIC_OVL void
-invert_all(window, page_start, page_end, acc)
-winid window;
+STATIC_OVL void invert_all(window, page_start, page_end, acc) winid window;
 tty_menu_item *page_start, *page_end;
 char acc; /* group accelerator, 0 => all */
 {
@@ -1838,9 +1785,7 @@ char acc; /* group accelerator, 0 => all */
 }
 
 /* support menucolor in addition to caller-supplied attribute */
-STATIC_OVL void
-toggle_menu_attr(on, color, attr)
-boolean on;
+STATIC_OVL void toggle_menu_attr(on, color, attr) boolean on;
 int color, attr;
 {
     if (on) {
@@ -1862,9 +1807,7 @@ int color, attr;
 #endif
 }
 
-STATIC_OVL void
-process_menu_window(window, cw)
-winid window;
+STATIC_OVL void process_menu_window(window, cw) winid window;
 struct WinDesc *cw;
 {
     tty_menu_item *page_start, *page_end, *curr;
@@ -1950,11 +1893,7 @@ struct WinDesc *cw;
                     if (cw->offx)
                         cl_end();
 
-#if 0 /*KR 도화지 무시하는 putchar 퇴출 */
                     (void) putchar(' ');
-#else
-                    xputc(' ');
-#endif
                     ++ttyDisplay->curx;
 
                     if (!iflags.use_menu_color
@@ -1967,9 +1906,8 @@ struct WinDesc *cw;
                        lines (including fake ones that simulate grayed-out
                        entries, so we don't rely on curr->identifier here) */
                     attr_n = 0; /* whole line */
-                    if (curr->str[0] && curr->str[1] == ' '
-                        && curr->str[2] && index("-+#", curr->str[2])
-                        && curr->str[3] == ' ')
+                    if (curr->str[0] && curr->str[1] == ' ' && curr->str[2]
+                        && index("-+#", curr->str[2]) && curr->str[3] == ' ')
                         /* [0]=letter, [1]==space, [2]=[-+#], [3]=space */
                         attr_n = 4; /* [4:N]=entry description */
 
@@ -1983,36 +1921,23 @@ struct WinDesc *cw;
                     for (n = 0, cp = curr->str;
                          *cp &&
 #ifndef WIN32CON
-                            (int) ++ttyDisplay->curx < (int) ttyDisplay->cols;
+                         (int) ++ttyDisplay->curx < (int) ttyDisplay->cols;
 #else
-                            (int) ttyDisplay->curx < (int) ttyDisplay->cols;
+                         (int) ttyDisplay->curx < (int) ttyDisplay->cols;
                          ttyDisplay->curx++,
 #endif
                          cp++, n++) {
-                        if (n == attr_n && (color != NO_COLOR
-                                            || attr != ATR_NONE))
+                        if (n == attr_n
+                            && (color != NO_COLOR || attr != ATR_NONE))
                             toggle_menu_attr(TRUE, color, attr);
-                        if (n == 2
-                            && curr->identifier.a_void != 0
+                        if (n == 2 && curr->identifier.a_void != 0
                             && curr->selected) {
                             if (curr->count == -1L)
-#if 0 /*KR 도화지 무시하는 putchar 퇴출 */
                                 (void) putchar('+'); /* all selected */
                             else
                                 (void) putchar('#'); /* count selected */
-#else
-                                xputc('+'); /* all selected */
-                            else
-                                xputc('#'); /* count selected */
-#endif
                         } else
-#if 0 /*KR*/
                             (void) putchar(*cp);
-#else
-                        {
-                            (void) xputc(*cp);
-                        }
-#endif
                     } /* for *cp */
                     if (n > attr_n && (color != NO_COLOR || attr != ATR_NONE))
                         toggle_menu_attr(FALSE, color, attr);
@@ -2224,7 +2149,7 @@ struct WinDesc *cw;
                 tty_nhbell();
                 break;
             } else if (index(gacc, morc)) {
- group_accel:
+            group_accel:
                 /* group accelerator; for the PICK_ONE case, we know that
                    it matches exactly one item in order to be in gacc[] */
                 invert_all(window, page_start, page_end, morc);
@@ -2249,15 +2174,11 @@ struct WinDesc *cw;
     free((genericptr_t) morestr);
 }
 
-STATIC_OVL void
-process_text_window(window, cw)
-winid window;
+STATIC_OVL void process_text_window(window, cw) winid window;
 struct WinDesc *cw;
 {
     int i, n, attr;
-#if 0 /*KR 참조되지 않은 지역 변수 경고 해제용 */
     boolean linestart;
-#endif
     register char *cp;
 
     for (n = 0, i = 0; i < cw->maxrow; i++) {
@@ -2291,11 +2212,7 @@ struct WinDesc *cw;
                 ++ttyDisplay->curx;
             }
             term_start_attr(attr);
-#if 0 /*KR 첫 글자 집어삼키기 버그 완전 삭제 */
             for (cp = &cw->data[i][1], linestart = TRUE;
-#else
-            for (cp = &cw->data[i][1];
-#endif
 #ifndef WIN32CON
                  *cp && (int) ++ttyDisplay->curx < (int) ttyDisplay->cols;
                  cp++
@@ -2303,8 +2220,7 @@ struct WinDesc *cw;
                  *cp && (int) ttyDisplay->curx < (int) ttyDisplay->cols;
                  cp++, ttyDisplay->curx++
 #endif
-                 ) {
-#if 0 /*KR*/
+            ) {
                 /* message recall for msg_window:full/combination/reverse
                    might have output from '/' in it (see redotoplin()) */
                 if (linestart && (*cp & 0x80) != 0) {
@@ -2314,9 +2230,6 @@ struct WinDesc *cw;
                 } else {
                     (void) putchar(*cp);
                 }
-#else
-                    xputc(*cp);
-#endif
             }
             term_end_attr(attr);
         }
@@ -2338,9 +2251,7 @@ struct WinDesc *cw;
 }
 
 /*ARGSUSED*/
-void
-tty_display_nhwindow(window, blocking)
-winid window;
+void tty_display_nhwindow(window, blocking) winid window;
 boolean blocking; /* with ttys, all windows are blocking */
 {
     register struct WinDesc *cw = 0;
@@ -2395,8 +2306,8 @@ boolean blocking; /* with ttys, all windows are blocking */
                              ttyDisplay->cols - s_maxcol - 1);
 #else
         /* avoid converting to uchar before calculations are finished */
-        cw->offx = (uchar) max((int) 10,
-                               (int) (ttyDisplay->cols - s_maxcol - 1));
+        cw->offx =
+            (uchar) max((int) 10, (int) (ttyDisplay->cols - s_maxcol - 1));
 #endif
         if (cw->offx < 0)
             cw->offx = 0;
@@ -2405,8 +2316,7 @@ boolean blocking; /* with ttys, all windows are blocking */
         if (ttyDisplay->toplin == 1)
             tty_display_nhwindow(WIN_MESSAGE, TRUE);
 #ifdef H2344_BROKEN
-        if (cw->maxrow >= (int) ttyDisplay->rows
-            || !iflags.menu_overlay)
+        if (cw->maxrow >= (int) ttyDisplay->rows || !iflags.menu_overlay)
 #else
         if (cw->offx == 10 || cw->maxrow >= (int) ttyDisplay->rows
             || !iflags.menu_overlay)
@@ -2433,9 +2343,7 @@ boolean blocking; /* with ttys, all windows are blocking */
     cw->active = 1;
 }
 
-void
-tty_dismiss_nhwindow(window)
-winid window;
+void tty_dismiss_nhwindow(window) winid window;
 {
     register struct WinDesc *cw = 0;
 
@@ -2479,9 +2387,7 @@ winid window;
     cw->flags = 0;
 }
 
-void
-tty_destroy_nhwindow(window)
-winid window;
+void tty_destroy_nhwindow(window) winid window;
 {
     register struct WinDesc *cw = 0;
 
@@ -2500,9 +2406,7 @@ winid window;
     wins[window] = 0; /* available for re-use */
 }
 
-void
-tty_curs(window, x, y)
-winid window;
+void tty_curs(window, x, y) winid window;
 register int x, y; /* not xchar: perhaps xchar is unsigned and
                       curx-x would be unsigned as well */
 {
@@ -2546,7 +2450,8 @@ register int x, y; /* not xchar: perhaps xchar is unsigned and
             s = "[base window]";
             break;
         }
-        debugpline4("bad curs positioning win %d %s (%d,%d)", window, s, x, y);
+        debugpline4("bad curs positioning win %d %s (%d,%d)", window, s, x,
+                    y);
         /* This return statement caused a functional difference between
            DEBUG and non-DEBUG operation, so it is being commented
            out. It caused tty_curs() to fail to move the cursor to the
@@ -2588,11 +2493,7 @@ register int x, y; /* not xchar: perhaps xchar is unsigned and
         nocmov(x, y);
 #ifndef NO_TERMS
     } else if ((x <= 3 && cy <= 3) || (!nh_CM && x < cx)) {
-#if 0 /*KR 도화지 무시하는 putchar 퇴출 */
         (void) putchar('\r');
-#else
-        xputc('\r');
-#endif
         ttyDisplay->curx = 0;
         nocmov(x, y);
     } else if (!nh_CM) {
@@ -2605,9 +2506,7 @@ register int x, y; /* not xchar: perhaps xchar is unsigned and
     ttyDisplay->cury = y;
 }
 
-STATIC_OVL void
-tty_putsym(window, x, y, ch)
-winid window;
+STATIC_OVL void tty_putsym(window, x, y, ch) winid window;
 int x, y;
 char ch;
 {
@@ -2626,11 +2525,7 @@ char ch;
     case NHW_MAP:
     case NHW_BASE:
         tty_curs(window, x, y);
-#if 0 /*KR*/
         (void) putchar(ch);
-#else
-        g_putch(ch);
-#endif
         ttyDisplay->curx++;
         cw->curx++;
         break;
@@ -2642,9 +2537,7 @@ char ch;
     }
 }
 
-STATIC_OVL const char *
-compress_str(str)
-const char *str;
+STATIC_OVL const char *compress_str(str) const char *str;
 {
     static char cbuf[BUFSZ];
 
@@ -2673,9 +2566,7 @@ const char *str;
     return str;
 }
 
-void
-tty_putstr(window, attr, str)
-winid window;
+void tty_putstr(window, attr, str) winid window;
 int attr;
 const char *str;
 {
@@ -2767,11 +2658,7 @@ const char *str;
         tty_curs(window, cw->curx + 1, cw->cury);
         term_start_attr(attr);
         while (*str && (int) ttyDisplay->curx < (int) ttyDisplay->cols - 1) {
-#if 0 /*KR 도화지 무시하는 putchar 퇴출 */
             (void) putchar(*str);
-#else
-            xputc(*str);
-#endif
             str++;
             ttyDisplay->curx++;
         }
@@ -2788,11 +2675,7 @@ const char *str;
                 cw->cury++;
                 tty_curs(window, cw->curx + 1, cw->cury);
             }
-#if 0 /*KR 도화지 무시하는 putchar 퇴출 */
             (void) putchar(*str);
-#else
-            xputc(*str);
-#endif
             str++;
             ttyDisplay->curx++;
         }
@@ -2858,9 +2741,7 @@ const char *str;
     }
 }
 
-void
-tty_display_file(fname, complain)
-const char *fname;
+void tty_display_file(fname, complain) const char *fname;
 boolean complain;
 {
 #ifdef DEF_PAGER /* this implies that UNIX is defined */
@@ -2923,7 +2804,7 @@ boolean complain;
 #ifndef NO_TERMS
                 && nh_CD
 #endif
-                ) {
+            ) {
                 /* attempt to scroll text below map window if there's room */
                 wins[datawin]->offy = wins[WIN_STATUS]->offy + 3;
                 if ((int) wins[datawin]->offy + 12 > (int) ttyDisplay->rows)
@@ -2952,9 +2833,7 @@ boolean complain;
 #endif /* DEF_PAGER */
 }
 
-void
-tty_start_menu(window)
-winid window;
+void tty_start_menu(window) winid window;
 {
     tty_clear_nhwindow(window);
     return;
@@ -2965,9 +2844,8 @@ winid window;
  * Add a menu item to the beginning of the menu list.  This list is reversed
  * later.
  */
-void
-tty_add_menu(window, glyph, identifier, ch, gch, attr, str, preselected)
-winid window;               /* window to use, must be of type NHW_MENU */
+void tty_add_menu(window, glyph, identifier, ch, gch, attr, str, preselected)
+    winid window;           /* window to use, must be of type NHW_MENU */
 int glyph UNUSED;           /* glyph to display with item (not used) */
 const anything *identifier; /* what to return if selected */
 char ch;                    /* keyboard accelerator (0 = pick our own) */
@@ -2985,8 +2863,7 @@ boolean preselected;        /* item is marked as selected */
     if (str == (const char *) 0)
         return;
 
-    if (window == WIN_ERR
-        || (cw = wins[window]) == (struct WinDesc *) 0
+    if (window == WIN_ERR || (cw = wins[window]) == (struct WinDesc *) 0
         || cw->type != NHW_MENU)
         panic(winpanicstr, window);
 
@@ -3041,10 +2918,8 @@ tty_menu_item *curr;
  * keyboard accelerators as needed.  Finally we decide on the width and
  * height of the window.
  */
-void
-tty_end_menu(window, prompt)
-winid window;       /* menu to use */
-const char *prompt; /* prompt to for menu */
+void tty_end_menu(window, prompt) winid window; /* menu to use */
+const char *prompt;                             /* prompt to for menu */
 {
     struct WinDesc *cw = 0;
     tty_menu_item *curr;
@@ -3089,7 +2964,7 @@ const char *prompt; /* prompt to for menu */
             free((genericptr_t) cw->plist);
         cw->plist_size = cw->npages + 1;
         cw->plist = (tty_menu_item **) alloc(cw->plist_size
-                                             * sizeof (tty_menu_item *));
+                                             * sizeof(tty_menu_item *));
     }
 
     cw->cols = 0;  /* cols is set when the win is initialized... (why?) */
@@ -3268,16 +3143,14 @@ tty_wait_synch()
     }
 }
 
-void
-docorner(xmin, ymax)
-register int xmin, ymax;
+void docorner(xmin, ymax) register int xmin, ymax;
 {
     register int y;
     register struct WinDesc *cw = wins[WIN_MAP];
 
     HUPSKIP();
-#if 0   /* this optimization is not valuable enough to justify
-           abusing core internals... */
+#if 0  /* this optimization is not valuable enough to justify \
+          abusing core internals... */
     if (u.uswallow) { /* Can be done more efficiently */
         swallowed(1);
         /* without this flush, if we happen to follow --More-- displayed in
@@ -3340,9 +3213,7 @@ end_glyphout()
 }
 
 #ifndef WIN32
-void
-g_putch(in_ch)
-int in_ch;
+void g_putch(in_ch) int in_ch;
 {
     register char ch = (char) in_ch;
 
@@ -3352,8 +3223,8 @@ int in_ch;
         /* for DECgraphics, lower-case letters with high bit set mean
            switch character set and render with high bit clear;
            user might want 8-bits for other characters */
-        || (iflags.eight_bit_tty && (!SYMHANDLING(H_DEC)
-                                     || (in_ch & 0x7f) < 0x60))) {
+        || (iflags.eight_bit_tty
+            && (!SYMHANDLING(H_DEC) || (in_ch & 0x7f) < 0x60))) {
         /* IBM-compatible displays don't need other stuff */
         (void) putchar(ch);
     } else if (ch & 0x80) {
@@ -3389,9 +3260,7 @@ setclipped()
     clipymax = LI - 1 - iflags.wc2_statuslines;
 }
 
-void
-tty_cliparound(x, y)
-int x, y;
+void tty_cliparound(x, y) int x, y;
 {
     int oldx = clipx, oldy = clipy;
 
@@ -3427,9 +3296,7 @@ int x, y;
  *  position and glyph are always correct (checked there)!
  */
 
-void
-tty_print_glyph(window, x, y, glyph, bkglyph)
-winid window;
+void tty_print_glyph(window, x, y, glyph, bkglyph) winid window;
 xchar x, y;
 int glyph;
 int bkglyph UNUSED;
@@ -3506,9 +3373,7 @@ int bkglyph UNUSED;
     ttyDisplay->curx++;   /* the real cursor moved too */
 }
 
-void
-tty_raw_print(str)
-const char *str;
+void tty_raw_print(str) const char *str;
 {
     HUPSKIP();
     if (ttyDisplay)
@@ -3522,9 +3387,7 @@ const char *str;
 #endif
 }
 
-void
-tty_raw_print_bold(str)
-const char *str;
+void tty_raw_print_bold(str) const char *str;
 {
     HUPSKIP();
     if (ttyDisplay)
@@ -3573,10 +3436,10 @@ tty_nhgetch()
         i = randomkey();
     } else {
 #ifdef UNIX
-        i = (++nesting == 1)
-              ? tgetch()
-              : (read(fileno(stdin), (genericptr_t) &nestbuf, 1) == 1)
-                  ? (int) nestbuf : EOF;
+        i = (++nesting == 1) ? tgetch()
+            : (read(fileno(stdin), (genericptr_t) &nestbuf, 1) == 1)
+                ? (int) nestbuf
+                : EOF;
         --nesting;
 #else
         i = tgetch();
@@ -3627,7 +3490,7 @@ int *x, *y, *mod;
         i = '\033'; /* map NUL or EOF to ESC, nethack doesn't expect either */
     if (ttyDisplay && ttyDisplay->toplin == 1)
         ttyDisplay->toplin = 2;
-#else /* !WIN32CON */
+#else  /* !WIN32CON */
     nhUse(x);
     nhUse(y);
     nhUse(mod);
@@ -3637,9 +3500,7 @@ int *x, *y, *mod;
     return i;
 }
 
-void
-win_tty_init(dir)
-int dir;
+void win_tty_init(dir) int dir;
 {
     if (dir != WININIT)
         return;
@@ -3647,16 +3508,13 @@ int dir;
 }
 
 #ifdef POSITIONBAR
-void
-tty_update_positionbar(posbar)
-char *posbar;
+void tty_update_positionbar(posbar) char *posbar;
 {
 #ifdef MSDOS
     video_update_positionbar(posbar);
 #endif
 }
 #endif /* POSITIONBAR */
-
 
 /*
  * +------------------+
@@ -3723,18 +3581,20 @@ extern winid WIN_STATUS;
 
 #ifdef STATUS_HILITES
 #ifdef TEXTCOLOR
-STATIC_DCL int FDECL(condcolor, (long, unsigned long *));
+STATIC_DCL int FDECL(condcolor, (long, unsigned long *) );
 #endif
-STATIC_DCL int FDECL(condattr, (long, unsigned long *));
+STATIC_DCL int FDECL(condattr, (long, unsigned long *) );
 static unsigned long *tty_colormasks;
 static long tty_condition_bits;
 static struct tty_status_fields tty_status[2][MAXBLSTATS]; /* 2: NOW,BEFORE */
 static int hpbar_percent, hpbar_color;
 static struct condition_t {
     long mask;
-    const char *text[3]; /* 3: potential display vals, progressively shorter */
+    const char
+        *text[3]; /* 3: potential display vals, progressively shorter */
 } conditions[] = {
     /* The sequence order of these matters */
+#if 0 /*KR*/
     { BL_MASK_STONE,    { "Stone",    "Ston",  "Sto" } },
     { BL_MASK_SLIME,    { "Slime",    "Slim",  "Slm" } },
     { BL_MASK_STRNGL,   { "Strngl",   "Stngl", "Str" } },
@@ -3748,39 +3608,59 @@ static struct condition_t {
     { BL_MASK_LEV,      { "Lev",      "Lev",   "Lv"  } },
     { BL_MASK_FLY,      { "Fly",      "Fly",   "Fl"  } },
     { BL_MASK_RIDE,     { "Ride",     "Rid",   "Rd"  } },
+#else
+    { BL_MASK_STONE, { "석화", "Ston", "Sto" } },
+    { BL_MASK_SLIME, { "슬라임", "Slim", "Slm" } },
+    { BL_MASK_STRNGL, { "질식", "Stngl", "Str" } },
+    { BL_MASK_FOODPOIS, { "식중독", "Fpois", "Poi" } },
+    { BL_MASK_TERMILL, { "불치병", "Ill", "Ill" } },
+    { BL_MASK_BLIND, { "눈멂", "Blnd", "Bl" } },
+    { BL_MASK_DEAF, { "귀먹음", "Def", "Df" } },
+    { BL_MASK_STUN, { "기절", "Stun", "St" } },
+    { BL_MASK_CONF, { "혼란", "Cnf", "Cf" } },
+    { BL_MASK_HALLU, { "환각", "Hal", "Hl" } },
+    { BL_MASK_LEV, { "부유", "Lev", "Lv" } },
+    { BL_MASK_FLY, { "비행", "Fly", "Fl" } },
+    { BL_MASK_RIDE, { "승마", "Rid", "Rd" } },
+#endif
 };
 static const char *encvals[3][6] = {
+#if 0 /*KR*/
     { "", "Burdened", "Stressed", "Strained", "Overtaxed", "Overloaded" },
-    { "", "Burden",   "Stress",   "Strain",   "Overtax",   "Overload"   },
-    { "", "Brd",      "Strs",     "Strn",     "Ovtx",      "Ovld"       }
+    { "", "Burden", "Stress", "Strain", "Overtax", "Overload" },
+    { "", "Brd", "Strs", "Strn", "Ovtx", "Ovld" }
+#else
+    { "", "부담됨", "압박받음", "긴장됨", "너무 무거움", "과부하" },
+    { "", "Burden", "Stress", "Strain", "Overtax", "Overload" },
+    { "", "Brd", "Strs", "Strn", "Ovtx", "Ovld" }
+#endif
 };
 #define blPAD BL_FLUSH
 #define MAX_PER_ROW 15
 /* 2 or 3 status lines */
-static const enum statusfields
-    twolineorder[3][MAX_PER_ROW] = {
-    { BL_TITLE, BL_STR, BL_DX, BL_CO, BL_IN, BL_WI, BL_CH, BL_ALIGN,
-      BL_SCORE, BL_FLUSH, blPAD, blPAD, blPAD, blPAD, blPAD },
-    { BL_LEVELDESC, BL_GOLD, BL_HP, BL_HPMAX, BL_ENE, BL_ENEMAX,
-      BL_AC, BL_XP, BL_EXP, BL_HD, BL_TIME, BL_HUNGER,
-      BL_CAP, BL_CONDITION, BL_FLUSH },
-    /* third row of array isn't used for twolineorder */
-    { BL_FLUSH, blPAD, blPAD, blPAD, blPAD, blPAD, blPAD, blPAD,
-      blPAD, blPAD, blPAD, blPAD, blPAD, blPAD, blPAD }
-},
+static const enum statusfields twolineorder
+    [3][MAX_PER_ROW] = { { BL_TITLE, BL_STR, BL_DX, BL_CO, BL_IN, BL_WI,
+                           BL_CH, BL_ALIGN, BL_SCORE, BL_FLUSH, blPAD, blPAD,
+                           blPAD, blPAD, blPAD },
+                         { BL_LEVELDESC, BL_GOLD, BL_HP, BL_HPMAX, BL_ENE,
+                           BL_ENEMAX, BL_AC, BL_XP, BL_EXP, BL_HD, BL_TIME,
+                           BL_HUNGER, BL_CAP, BL_CONDITION, BL_FLUSH },
+                         /* third row of array isn't used for twolineorder */
+                         { BL_FLUSH, blPAD, blPAD, blPAD, blPAD, blPAD, blPAD,
+                           blPAD, blPAD, blPAD, blPAD, blPAD, blPAD, blPAD,
+                           blPAD } },
     /* Align moved from 1 to 2, Leveldesc+Time+Condition moved from 2 to 3 */
     threelineorder[3][MAX_PER_ROW] = {
-    { BL_TITLE, BL_STR, BL_DX, BL_CO, BL_IN, BL_WI, BL_CH,
-      BL_SCORE, BL_FLUSH, blPAD, blPAD, blPAD, blPAD, blPAD, blPAD },
-    { BL_ALIGN, BL_GOLD, BL_HP, BL_HPMAX, BL_ENE, BL_ENEMAX,
-      BL_AC, BL_XP, BL_EXP, BL_HD, BL_HUNGER,
-      BL_CAP, BL_FLUSH, blPAD, blPAD },
-    { BL_LEVELDESC, BL_TIME, BL_CONDITION, BL_FLUSH, blPAD, blPAD,
-      blPAD, blPAD, blPAD, blPAD, blPAD, blPAD, blPAD, blPAD, blPAD }
-};
+        { BL_TITLE, BL_STR, BL_DX, BL_CO, BL_IN, BL_WI, BL_CH, BL_SCORE,
+          BL_FLUSH, blPAD, blPAD, blPAD, blPAD, blPAD, blPAD },
+        { BL_ALIGN, BL_GOLD, BL_HP, BL_HPMAX, BL_ENE, BL_ENEMAX, BL_AC, BL_XP,
+          BL_EXP, BL_HD, BL_HUNGER, BL_CAP, BL_FLUSH, blPAD, blPAD },
+        { BL_LEVELDESC, BL_TIME, BL_CONDITION, BL_FLUSH, blPAD, blPAD, blPAD,
+          blPAD, blPAD, blPAD, blPAD, blPAD, blPAD, blPAD, blPAD }
+    };
 static const enum statusfields (*fieldorder)[MAX_PER_ROW];
 
-static int finalx[3][2];    /* [rows][NOW or BEFORE] */
+static int finalx[3][2]; /* [rows][NOW or BEFORE] */
 static boolean windowdata_init = FALSE;
 static int cond_shrinklvl = 0;
 static int enclev = 0, enc_shrinklvl = 0;
@@ -3804,7 +3684,7 @@ static int do_field_opt =
     1;
 #endif
 
-#endif  /* STATUS_HILITES */
+#endif /* STATUS_HILITES */
 
 /*
  *  tty_status_init()
@@ -3825,8 +3705,8 @@ tty_status_init()
         tty_status[NOW][i].color = NO_COLOR; /* no color */
         tty_status[NOW][i].attr = ATR_NONE;
         tty_status[NOW][i].x = tty_status[NOW][i].y = 0;
-        tty_status[NOW][i].valid  = FALSE;
-        tty_status[NOW][i].dirty  = FALSE;
+        tty_status[NOW][i].valid = FALSE;
+        tty_status[NOW][i].dirty = FALSE;
         tty_status[NOW][i].redraw = FALSE;
         tty_status[NOW][i].sanitycheck = FALSE;
         tty_status[BEFORE][i] = tty_status[NOW][i];
@@ -3839,9 +3719,7 @@ tty_status_init()
     genl_status_init();
 }
 
-void
-tty_status_enablefield(fieldidx, nm, fmt, enable)
-int fieldidx;
+void tty_status_enablefield(fieldidx, nm, fmt, enable) int fieldidx;
 const char *nm;
 const char *fmt;
 boolean enable;
@@ -3908,9 +3786,9 @@ boolean enable;
  *         See doc/window.doc for more details.
  */
 
-void
-tty_status_update(fldidx, ptr, chg, percent, color, colormasks)
-int fldidx, chg UNUSED, percent, color;
+void tty_status_update(fldidx, ptr, chg, percent, color,
+                       colormasks) int fldidx,
+    chg UNUSED, percent, color;
 genericptr_t ptr;
 unsigned long *colormasks;
 {
@@ -3962,9 +3840,9 @@ unsigned long *colormasks;
         /* should be checking for first enabled field here rather than
            just first field, but 'fieldorder' doesn't start any rows
            with fields which can be disabled so [any_row][0] suffices */
-        if (*fmt == ' ' && (fldidx == fieldorder[0][0]
-                            || fldidx == fieldorder[1][0]
-                            || fldidx == fieldorder[2][0]))
+        if (*fmt == ' '
+            && (fldidx == fieldorder[0][0] || fldidx == fieldorder[1][0]
+                || fldidx == fieldorder[2][0]))
             ++fmt; /* skip leading space for first field on line */
         Sprintf(status_vals[fldidx], fmt, text);
         tty_status[NOW][fldidx].idx = fldidx;
@@ -3979,8 +3857,7 @@ unsigned long *colormasks;
 
     /* The core botl engine sends a single blank to the window port
        for carrying-capacity when its unused. Let's suppress that */
-    if (fldidx >= 0 && fldidx < MAXBLSTATS
-        && tty_status[NOW][fldidx].lth == 1
+    if (fldidx >= 0 && fldidx < MAXBLSTATS && tty_status[NOW][fldidx].lth == 1
         && status_vals[fldidx][0] == ' ') {
         status_vals[fldidx][0] = '\0';
         tty_status[NOW][fldidx].lth = 0;
@@ -4005,7 +3882,7 @@ unsigned long *colormasks;
            Let's suppress the trailing blanks */
         if (tty_status[NOW][fldidx].lth > 0) {
             p = status_vals[fldidx];
-            for (lastchar = eos(p); lastchar > p && *--lastchar == ' '; ) {
+            for (lastchar = eos(p); lastchar > p && *--lastchar == ' ';) {
                 *lastchar = '\0';
                 tty_status[NOW][fldidx].lth--;
             }
@@ -4058,7 +3935,7 @@ boolean force_update;
         requirement = rowsz[condrow] - 1;
         if (requirement <= wins[WIN_STATUS]->cols - 1) {
             fitting = requirement;
-            break;  /* we're good */
+            break; /* we're good */
         }
         if (trycnt < 2) {
             if (cond_shrinklvl < trycnt + 1) {
@@ -4204,13 +4081,16 @@ status_sanity_check(VOID_ARGS)
     int i;
     static boolean in_sanity_check = FALSE;
     static const char *const idxtext[] = {
-        "BL_TITLE", "BL_STR", "BL_DX", "BL_CO", "BL_IN", "BL_WI", /* 0.. 5   */
-        "BL_CH","BL_ALIGN", "BL_SCORE", "BL_CAP", "BL_GOLD",     /* 6.. 10  */
-        "BL_ENE", "BL_ENEMAX", "BL_XP", "BL_AC", "BL_HD",       /* 11.. 15 */
-        "BL_TIME", "BL_HUNGER", "BL_HP", "BL_HPMAX",           /* 16.. 19 */
-        "BL_LEVELDESC", "BL_EXP", "BL_CONDITION"              /* 20.. 22 */
+        "BL_TITLE",     "BL_STR",    "BL_DX",       "BL_CO",
+        "BL_IN",        "BL_WI", /* 0.. 5   */
+        "BL_CH",        "BL_ALIGN",  "BL_SCORE",    "BL_CAP",
+        "BL_GOLD", /* 6.. 10  */
+        "BL_ENE",       "BL_ENEMAX", "BL_XP",       "BL_AC",
+        "BL_HD",                                                /* 11.. 15 */
+        "BL_TIME",      "BL_HUNGER", "BL_HP",       "BL_HPMAX", /* 16.. 19 */
+        "BL_LEVELDESC", "BL_EXP",    "BL_CONDITION"             /* 20.. 22 */
     };
-   
+
     if (in_sanity_check)
         return;
     in_sanity_check = TRUE;
@@ -4246,9 +4126,7 @@ status_sanity_check(VOID_ARGS)
 /*
  * This is what places a field on the tty display.
  */
-STATIC_OVL void
-tty_putstatusfield(text, x, y)
-const char *text;
+STATIC_OVL void tty_putstatusfield(text, x, y) const char *text;
 int x, y;
 {
     int i, n, ncols, nrows, lth = 0;
@@ -4270,11 +4148,7 @@ int x, y;
         for (i = 0; i < lth; ++i) {
             n = i + x;
             if (n < ncols && *text) {
-#if 0 /*KR*/
                 (void) putchar(*text);
-#else
-                xputc(*(unsigned char *) text); 
-#endif
                 ttyDisplay->curx++;
                 cw->curx++;
                 cw->data[y][n - 1] = *text;
@@ -4309,9 +4183,7 @@ set_condition_length()
     tty_status[NOW][BL_CONDITION].lth = lth;
 }
 
-STATIC_OVL void
-shrink_enc(lvl)
-int lvl;
+STATIC_OVL void shrink_enc(lvl) int lvl;
 {
     /* shrink or restore the encumbrance word */
     if (lvl <= 2) {
@@ -4321,9 +4193,7 @@ int lvl;
     tty_status[NOW][BL_CAP].lth = strlen(status_vals[BL_CAP]);
 }
 
-STATIC_OVL void
-shrink_dlvl(lvl)
-int lvl;
+STATIC_OVL void shrink_dlvl(lvl) int lvl;
 {
     /* try changing Dlvl: to Dl: */
     char buf[BUFSZ];
@@ -4377,10 +4247,10 @@ unsigned long *bmarray;
 #else
 /* might need something more elaborate if some compiler complains that
    the condition where this gets used always has the same value */
-#define condcolor(bm,bmarray) NO_COLOR
+#define condcolor(bm, bmarray) NO_COLOR
 #define term_start_color(color) /*empty*/
-#define term_end_color() /*empty*/
-#endif /* TEXTCOLOR */
+#define term_end_color()        /*empty*/
+#endif                          /* TEXTCOLOR */
 
 STATIC_OVL int
 condattr(bm, bmarray)
@@ -4416,36 +4286,36 @@ unsigned long *bmarray;
     return attr;
 }
 
-#define Begin_Attr(m) \
-    do {                                        \
-        if (m) {                                \
-            if ((m) & HL_BOLD)                  \
-                term_start_attr(ATR_BOLD);      \
-            if ((m) & HL_INVERSE)               \
-                term_start_attr(ATR_INVERSE);   \
-            if ((m) & HL_ULINE)                 \
-                term_start_attr(ATR_ULINE);     \
-            if ((m) & HL_BLINK)                 \
-                term_start_attr(ATR_BLINK);     \
-            if ((m) & HL_DIM)                   \
-                term_start_attr(ATR_DIM);       \
-        }                                       \
+#define Begin_Attr(m)                         \
+    do {                                      \
+        if (m) {                              \
+            if ((m) & HL_BOLD)                \
+                term_start_attr(ATR_BOLD);    \
+            if ((m) & HL_INVERSE)             \
+                term_start_attr(ATR_INVERSE); \
+            if ((m) & HL_ULINE)               \
+                term_start_attr(ATR_ULINE);   \
+            if ((m) & HL_BLINK)               \
+                term_start_attr(ATR_BLINK);   \
+            if ((m) & HL_DIM)                 \
+                term_start_attr(ATR_DIM);     \
+        }                                     \
     } while (0)
 
-#define End_Attr(m) \
-    do {                                        \
-        if (m) {                                \
-            if ((m) & HL_DIM)                   \
-                term_end_attr(ATR_DIM);         \
-            if ((m) & HL_BLINK)                 \
-                term_end_attr(ATR_BLINK);       \
-            if ((m) & HL_ULINE)                 \
-                term_end_attr(ATR_ULINE);       \
-            if ((m) & HL_INVERSE)               \
-                term_end_attr(ATR_INVERSE);     \
-            if ((m) & HL_BOLD)                  \
-                term_end_attr(ATR_BOLD);        \
-        }                                       \
+#define End_Attr(m)                         \
+    do {                                    \
+        if (m) {                            \
+            if ((m) & HL_DIM)               \
+                term_end_attr(ATR_DIM);     \
+            if ((m) & HL_BLINK)             \
+                term_end_attr(ATR_BLINK);   \
+            if ((m) & HL_ULINE)             \
+                term_end_attr(ATR_ULINE);   \
+            if ((m) & HL_INVERSE)           \
+                term_end_attr(ATR_INVERSE); \
+            if ((m) & HL_BOLD)              \
+                term_end_attr(ATR_BOLD);    \
+        }                                   \
     } while (0)
 
 STATIC_OVL void
@@ -4472,11 +4342,12 @@ render_status(VOID_ARGS)
                 continue;
             x = tty_status[NOW][idx].x;
             text = status_vals[idx]; /* always "" for BL_CONDITION */
-            tlth = (int) tty_status[NOW][idx].lth; /* valid for BL_CONDITION */
+            tlth =
+                (int) tty_status[NOW][idx].lth; /* valid for BL_CONDITION */
 
             if (tty_status[NOW][idx].redraw || !do_field_opt) {
-                boolean hitpointbar = (idx == BL_TITLE
-                                       && iflags.wc2_hitpointbar);
+                boolean hitpointbar =
+                    (idx == BL_TITLE && iflags.wc2_hitpointbar);
 
                 if (idx == BL_CONDITION) {
                     /*
@@ -4530,8 +4401,8 @@ render_status(VOID_ARGS)
                             }
                             condtext = conditions[c].text[cond_shrinklvl];
                             if (x >= cw->cols && !truncation_expected) {
-                                impossible(
-                         "Unexpected condition placement overflow for \"%s\"",
+                                impossible("Unexpected condition placement "
+                                           "overflow for \"%s\"",
                                            condtext);
                                 condtext = "";
                                 bits = 0L; /* skip any remaining conditions */
@@ -4645,7 +4516,7 @@ render_status(VOID_ARGS)
             }
             finalx[row][NOW] = x - 1;
             /* reset .redraw and .dirty now that field has been rendered */
-            tty_status[NOW][idx].dirty  = FALSE;
+            tty_status[NOW][idx].dirty = FALSE;
             tty_status[NOW][idx].redraw = FALSE;
             tty_status[NOW][idx].sanitycheck = FALSE;
             /*
